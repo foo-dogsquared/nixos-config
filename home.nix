@@ -5,12 +5,6 @@
     ./modules
   ];
 
-  # Setting my personal public information.
-  # accounts.email.accounts."Gabriel Arazas" = {
-  #   address = "christiangabrielarazas@gmail.com";
-  #   aliases = [ "foo.dogsquared@gmail.com" ];
-  # };
-
   nixpkgs.config = {
     allowUnfree = true;
   };
@@ -40,13 +34,18 @@
     shell = {
       base.enable = true;
       lf.enable = true;
-      git.enable = true;
+      git = {
+        enable = true;
+        config = {
+          userName = "Gabriel Arazas";
+          userEmail = "foo.dogsquared@gmail.com";
+        };
+      };
+      zsh.enable = true;
     };
   };
 
-  programs.git = lib.mkIf config.modules.shell.git.enable {
-    userName = "foo-dogsquared";
-    userEmail = "christiangabrielarazas@gmail.com";
+  programs.git = {
   };
 
   # Additional programs that doesn't need much configuration (or at least personally configured).
@@ -55,8 +54,7 @@
   #   cookiecutter    # A generic project scaffolding tool.
   # ];
 
-  # Home Manager needs a bit of information about you and the
-  # paths it should manage.
+  # Home Manager needs a bit of information about you and the paths it should manage.
   home.username = "foo-dogsquared";
   home.homeDirectory = "/home/foo-dogsquared";
 

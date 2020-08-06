@@ -38,10 +38,13 @@ nixos-config
 └── README.adoc
 ----
 
-- The directory paid with the most attention would most likely be the `modules/` folder.
+* The directory paid with the most attention would most likely be the `modules/` folder.
 Each module (and submodule) can contain multiple modules for multiple programs (i.e., `modules/shell/git`, `modules/desktop/bspwm`).
 It could also contain a `base.nix` file where Nix packages with no configurations are placed similar to Arch package groups (i.e., `base`, `base-devel`, `xfce`).
 
-- The `config/` directory is simply the ad hoc configuration of several programs.
+** Another folder worthy of attention is the `modules/themes` which sets up a complete desktop environment for you so you don't have to.
+For safety, you should have a bare installation ala-Arch Linux.
+
+* The `config/` directory is simply the ad hoc configuration of several programs.
 In this case, it is my https://github.com/foo-dogsquared/dotflies[dotfiles] directory.
 
