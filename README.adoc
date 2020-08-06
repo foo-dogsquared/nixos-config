@@ -1,0 +1,47 @@
+= foo-dogsquared's NixOS config
+
+This is the configuration setup for my https://nixos.org[NixOS] instance.
+A major part of this setup is inspired (or stolen, whichever you prefer) from https://github.com/hlissner/dotfiles[hlissner's NixOS config].
+The difference is https://github.com/rycee/home-manager[home-manager] is a big requirement and uses it a whole lot.
+
+
+
+
+== Getting started
+
+Before installing this setup, be sure to install NixOS and logged in as a user.
+This project setup also assumes the operating system has the following configurations:
+
+- Uses the nixpkgs unstable channel as `nixos` (i.e., `nix-channels --update https://nixos.org/channels/nixos-unstable`).
+- Have the https://github.com/rycee/home-manager[home-manager] installed with the unstable release.
+- You start with the TTY and nothing else is installed (i.e., bare installation similar in spirit to Arch Linux).
+
+[source, shell]
+----
+git clone <GIT_URL_OF_THIS_REPO>
+make
+----
+
+
+
+
+== Project structure
+
+The project structure should look like the following:
+
+[source, tree]
+----
+nixos-config
+├── config/
+├── home.nix
+├── modules/
+└── README.adoc
+----
+
+- The directory paid with the most attention would most likely be the `modules/` folder.
+Each module (and submodule) can contain multiple modules for multiple programs (i.e., `modules/shell/git`, `modules/desktop/bspwm`).
+It could also contain a `base.nix` file where Nix packages with no configurations are placed similar to Arch package groups (i.e., `base`, `base-devel`, `xfce`).
+
+- The `config/` directory is simply the ad hoc configuration of several programs.
+In this case, it is my https://github.com/foo-dogsquared/dotflies[dotfiles] directory.
+

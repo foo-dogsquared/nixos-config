@@ -1,0 +1,32 @@
+# modules/editors/vim.nix - https://neovim.org
+# (Neo)Vim is love, (Neo)Vim is life.
+{ config, options, lib, pkgs, ... }:
+
+with lib;
+{
+  options.modules.editors.neovim = {
+    enable = mkOption {
+      type = types.bool;
+      default = false;
+    };
+  };
+
+  config = mkIf config.modules.editors.neovim.enable { 
+    home = {
+      packages = with pkgs; [
+        editorconfig-core-c     # Editorconfig is a MUST, you feel me?!
+      ];
+    };
+
+    programs.neovim = {
+      enable = true;
+      withPython3 = true;
+      withRuby = true;
+    };
+
+    xdg.configFile."nvim" = {
+      source = ../../config/nvim;
+      recursive = true;
+    };
+  };
+}
