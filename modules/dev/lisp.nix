@@ -20,7 +20,7 @@ in
   };
 
   config = {
-    home.packages = with pkgs;
+    my.packages = with pkgs;
       (if cfg.clojure.enable then [
         clojure     # Improved Java version.
       ] else []) ++

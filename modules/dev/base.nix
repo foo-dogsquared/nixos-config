@@ -11,9 +11,12 @@ with lib;
   };
 
   config = mkIf config.modules.dev.base.enable {
-    home.packages = with pkgs; [
+    my.packages = with pkgs; [
+      caddy2            # THE ULTIMATE HTTPS/2 SERVER FOR 'YER GOLFIN' SESSIONS!!!
       cookiecutter      # A project scaffolding tool.
+      direnv            # Augment your shell with automatic environment variables loading and unloading.
       gnumake           # Make your life easier with GNU Make.
+      tldr		# What manuals should include.
       universal-ctags   # Enable fast traveling to your code (assuming written in a supported language).
     ];
   };

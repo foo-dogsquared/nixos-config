@@ -8,7 +8,6 @@ with lib;
   imports = [
     ./emacs.nix
     ./neovim.nix
-    ./vscode.nix
   ];
 
   options.modules.editors = {
@@ -16,5 +15,9 @@ with lib;
       type = types.str;
       default = "vim";
     };
+  };
+
+  config = {
+    my.env.EDITOR = config.modules.editors.default;
   };
 }

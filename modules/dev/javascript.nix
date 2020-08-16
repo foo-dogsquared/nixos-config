@@ -19,13 +19,13 @@ in
   };
 
   config = {
-    home.packages = with pkgs;
+    my.packages = with pkgs;
       (if cfg.deno.enable then [
         deno        # The Deltarune of Node.
       ] else []) ++
 
       (if cfg.node.enable then [
-        node        # The JavaScript framework/runtime where you don't have to kill. :)
+        nodejs      # The JavaScript framework/runtime where you don't have to kill someone for bad code. :)
       ] else []);
   };
 }

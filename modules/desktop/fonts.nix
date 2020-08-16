@@ -11,12 +11,25 @@ with lib;
   };
 
   config = mkIf config.modules.desktop.fonts.enable {
-    home.packages = with pkgs; [
-      fira-code             # The programming font with fancy symbols.
-      ibm-plex              # IBM's face.
-      noto-fonts            # It's all about family and that's what so powerful about it.
-      noto-fonts-cjk        # The universal font, Japanese-Chinese-Korean version.
-      stix-otf              # The font you need for them math moonrunes.
-    ];
+    # Enable fontconfig to easily discover fonts installed from home-manager.
+    fonts = {
+      enableFontDir = true;
+      enableGhostscriptFonts = true;
+      fontconfig.enable = true;
+
+      fonts = with pkgs; [
+       fira-code             # The programming font with fancy symbols.
+       ibm-plex              # IBM's face, is it professional?
+       iosevka               # The fancy monofont with fancy ligatures.
+       jetbrains-mono        # Jet to the face, land on the brains.
+       latinmodern-math      # The ol' mathematical typeface.
+       noto-fonts            # It's all about family and that's what so powerful about it.
+       noto-fonts-cjk        # I don't condone anime.
+       source-code-pro       # The Adobe pro code.
+       source-serif-pro      # The Adobe serif code.
+       source-sans-pro       # The above descriptions doesn't make much sense.
+       stix-otf              # The font you need for them math moonrunes.
+      ];
+    };
   };
 }

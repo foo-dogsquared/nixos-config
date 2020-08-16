@@ -15,9 +15,26 @@ with lib;
     programs.zsh = {
       enable = true;
       enableCompletion = true;
-      enableAutosuggestions = true;
-      dotDir = "${config.xdg.configHome}";
-      history.path = "${config.xdg.dataHome}/zsh/history";
+      autosuggestions.enable = true;
+      histFile = "\$XDG_DATA_HOME/zsh/history";
+      loginShellInit = "
+        export ZDOTDIR=\"\$XDG_CONFIG_HOME/zsh\"
+      ";
+
+      # Adding basic version control support to the zsh prompt. 
+      # https://git-scm.com/book/en/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Zsh
+      promptInit = "
+        autoload -Uz vcs_info
+        precmd_vcs_info() { vcs_info }
+        precmd_functions+=( precmd_vcs_info )
+        setopt prompt_subst
+        zstyle ':vcs_info:*' formats '[%s] (%b)'
+        autoload -U colors && colors
+        PROMPT=\"%F%{\${fg[white]}%}%(0?.√.%?) %B%{\$fg[magenta]%}%1~%{\$reset_color%} \$vcs_info_msg_0_ $%f%b \"
+        RPROMPT=\"[%D %*]\"
+      ";
+
+      syntaxHighlighting.enable = true;
     };
   };
 }

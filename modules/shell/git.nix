@@ -10,12 +10,13 @@ with lib;
       type = types.bool;
       default = false;
     };
+
+    config = mkOption {
+      type = types.submodule;
+    };
   };
 
   config = mkIf config.modules.shell.git.enable {
-    home.packages = with pkgs; [
-      gitAndTools.delta
-      gitAndTools.diff-so-fancy
-    ];
+    modules.shell.git.config = mkAliasDefinitions options.programs.git;
   };
 }

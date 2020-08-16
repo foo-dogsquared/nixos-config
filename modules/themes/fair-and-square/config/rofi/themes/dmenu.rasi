@@ -1,0 +1,66 @@
+/**
+ * ROFI Color theme
+ * User: Qball
+ * Copyright: Dave Davenport
+ * Modified by: Gabriel Arazas (foo-dogsquared)
+ */
+
+* {
+    /* The color swatch */
+    /* Useful for quick editing of the colors */
+    background: #2E3440;
+    foreground: #D8DEE9;
+    color0: #3B4252;
+    color1: #BF616A;
+    color2: #A3BE8C;
+    color3: #EBCB8B;
+    color4: #81A1C1;
+    color5: #B48EAD;
+    color6: #88C0D0;
+    color7: #E5E9F0;
+    color8: #727B8A;
+    color9: #BF616A;
+    color10: #A3BE8C;
+    color11: #EBCB8B;
+    color12: #81A1C1;
+    color13: #B48EAD;
+    color14: #8FBCBB;
+    color15: #ECEFF4;
+
+    background-color:      @background;
+    border-color:          @foreground;
+    text-color:           @foreground;
+    font:            "Iosevka 12";
+}
+
+window {
+    anchor:     north;
+    location:   north;
+    width:      100%;
+    padding:    7px;
+    children:   [ horibox ];
+}
+
+horibox {
+    orientation: horizontal;
+    children:   [ prompt, entry, listview ];
+}
+
+listview {
+    layout:     horizontal;
+    spacing:    5px;
+    lines:      100;
+}
+
+entry {
+    expand:     false;
+    width:      10em;
+}
+
+element {
+    padding: 0px 2px;
+}
+
+element.selected {
+    background-color: @color6;
+}

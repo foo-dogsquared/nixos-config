@@ -11,7 +11,7 @@ with lib;
   };
 
   config = mkIf config.modules.dev.cc.enable {
-    home.packages = with pkgs; [
+    my.packages = with pkgs; [
       cmake     # Yo dawg, I heard you like Make.
       # clang     # A C compiler frontend for LLVM.
       gcc       # A compiler toolchain.

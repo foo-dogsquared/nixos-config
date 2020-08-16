@@ -12,21 +12,21 @@ with lib;
   };
 
   config = mkIf config.modules.editors.neovim.enable { 
-    home = {
-      packages = with pkgs; [
+    my.packages = with pkgs; [
         editorconfig-core-c     # Editorconfig is a MUST, you feel me?!
       ];
-    };
 
-    programs.neovim = {
-      enable = true;
-      withPython3 = true;
-      withRuby = true;
-    };
+    my.home = {
+      programs.neovim = {
+        enable = true;
+        withPython3 = true;
+        withRuby = true;
+      };
 
-    xdg.configFile."nvim" = {
-      source = ../../config/nvim;
-      recursive = true;
+      xdg.configFile."nvim" = {
+        source = ../../config/nvim;
+        recursive = true;
+      };
     };
   };
 }

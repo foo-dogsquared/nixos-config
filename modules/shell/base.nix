@@ -11,22 +11,26 @@ with lib;
   };
 
   config = mkIf config.modules.shell.base.enable {
-    home.packages = with pkgs; [
-      aspell        # Want to check spelling on the command-line?
+    my.packages = with pkgs; [
+      aspell        # Hunt down a spelling bee champion to come to your shell.
       bat           # cat(1) with wings.
       buku          # A developer-oriented browser-independent bookmark manager.
       exa           # ls(1) after an exodus.
-      fd            # find(1) after a cognitive behavioral therpay.
-      fzf           # A fuzzy finder, not furry finder which is a common misconception.
-      hexyl         # Binary viewer on the command-line.
+      fd            # find(1) after a cognitive behavioral therapy.
+      fzf           # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
+      hexyl         # Binary viewer with a cool name on the command-line.
+      hledger       # Do your accountancy thing ON THE COMMAND LINE, sure why not!
+      httpie        # Want a piece of the HTTP pie.
       gopass        # The improved version of Password Store which is a password manager for hipsters.
-      maim          # A command-line interface for screenshots.
+      maim          # A command-line interface for parsing screenshots.
       jq            # A command-line interface for parsing JSON.
       pup           # A command-line interface for parsing HTML.
-      ripgrep       # Super-fast full-text searcher.
+      (ripgrep.override { withPCRE2 = true; })       # Super-fast full-text searcher.
+      (recoll.override { withGui = false; })          # Bring the search engine to the desktop!
       sqlite        # Battle-tested cute little database that can grow into an abomination of a data spaghetti.
       tree          # I'm not a scammer, I swear.
-      youtube-dl    # A command-line interface for downloading videos.
+      unzip         # Unzip what? The world may never know.
+      youtube-dl    # A program that can be sued for false advertisement as you can download from other video sources.
     ];
   };
 }

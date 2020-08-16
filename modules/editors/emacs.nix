@@ -11,10 +11,20 @@ with lib;
       type = types.bool;
       default = false;
     };
+
+    # Just make sure the unstable version of Emacs is available as a package by creating an overlay.
+    pkg = mkOption {
+      type = types.package;
+      default = pkgs.emacsUnstable;
+    };
   };
 
   config = mkIf config.modules.editors.emacs.enable {
-    home.packages = with pkgs; [
+    my.packages = with pkgs; [
+      ((emacsPackagesNgGen config.modules.editors.emacs.pkg).emacsWithPackages (epkgs: [
+        epkgs.vterm
+      ]))
+
       # Doom dependencies
       git
       (ripgrep.override { withPCRE2 = true; })
@@ -42,21 +52,14 @@ with lib;
 
       ## :tools lookup & :lang org+roam
       sqlite
-    ] ++
+    ];
 
-    ## :lang javascript
-    (if config.modules.dev.javascript.node.enable then [
-      nodePackages.javascript-typescript-langserver     # The LSP for JS/TS.
-    ] else []) ++
-
-    ## :lang cc
-    (if config.modules.dev.cc.enable then [
-      ccls
-    ] else []);
-
+    fonts.fonts = with pkgs; [
+      emacs-all-the-icons-fonts
+    ];
 
     # Placing the Doom Emacs config.
-    xdg.configFile."doom" = {
+    my.home.xdg.configFile."doom" = {
       source = ../../config/emacs;
       recursive = true;
     };

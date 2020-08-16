@@ -12,14 +12,13 @@ in {
       type = types.bool;
       default = bool;
     }; in {
-      enable = mkBoolDefault false;
       raster.enable = mkBoolDefault false;
       vector.enable = mkBoolDefault false;
       _3d.enable = mkBoolDefault false;
     };
 
-  config = mkIf cfg.enable {
-    home.packages = with pkgs;
+  config = {
+    my.packages = with pkgs;
       [
         font-manager    # Self-explanatory name is self-explanatory.
         imagemagick     # A command-line tool for manipulating images.
@@ -28,7 +27,7 @@ in {
       (if cfg.raster.enable then [
         gimp            # Adobe Photoshop replacement.
         krita           # A good painting program useful for "pure" digital arts.
-        aseprite        # A pixel art editor.
+        aseprite-unfree        # A pixel art editor.
       ] else []) ++
 
       (if cfg.vector.enable then [

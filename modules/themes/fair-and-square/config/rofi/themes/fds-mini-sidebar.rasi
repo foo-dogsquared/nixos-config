@@ -1,0 +1,122 @@
+* {
+    /* The color configuration */
+    /* Useful for quick editing in case for compiled templates */
+    background: #2E3440;
+    foreground: #D8DEE9;
+    color0: #3B4252;
+    color1: #BF616A;
+    color2: #A3BE8C;
+    color3: #EBCB8B;
+    color4: #81A1C1;
+    color5: #B48EAD;
+    color6: #88C0D0;
+    color7: #E5E9F0;
+    color8: #727B8A;
+    color9: #BF616A;
+    color10: #A3BE8C;
+    color11: #EBCB8B;
+    color12: #81A1C1;
+    color13: #B48EAD;
+    color14: #8FBCBB;
+    color15: #ECEFF4;
+
+    /* General theme settings */
+    highlight: bold italic;
+    scrollbar: true;
+
+    /* Font settings */
+    text-color: @foreground;
+    background-color: @background;
+    font: "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid 14";
+    font: "Iosevka 12";
+
+}
+
+window {
+    background-color: transparent;
+
+    height: 65%;
+    width: 35%;
+    position: southwest;
+    location: southwest;
+    text-color: @foreground;
+}
+
+mainbox {
+    background-color: @background;
+    border: 2;
+    border-color: @color6;
+    children: [ inputbar, listview, mode-switcher ];
+    padding: 0.5em;
+}
+
+inputbar,
+listview {
+    background: @background;
+    margin: 0 0 0.5em 0;
+}
+
+inputbar {
+    orientation: vertical;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    text-style: underline;
+    width: 100%;
+}
+
+entry {
+    background-color: @color0;
+    margin: 0 1em 0 0;
+}
+
+element {
+    background-color: @color0;
+    padding: 5;
+}
+
+element selected.normal {
+    background-color: @color6;
+    text-color: @background;
+}
+
+scrollbar {
+    background-color: @color0;
+    border-radius: 30%;
+    handle-color: @color6;
+    handle-width: 15px;
+    height: 100%;
+    text-color: @background;
+    width: 10px;
+}
+
+listview {
+    cyclic: true;
+    spacing: 0.6em;
+}
+
+element, button {
+    border-radius: 30%;
+}
+
+button,
+case-indicator,
+entry,
+inputbar {
+    padding: 5;
+}
+
+sidebar {
+    padding: 5;
+    margin: 5;
+}
+
+button {
+    margin: 0.25em;
+}
+
+button.selected {
+    background-color: @color6;
+    text-color: @background;
+}

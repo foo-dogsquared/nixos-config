@@ -12,13 +12,13 @@ with lib;
   };
 
   config = mkIf config.modules.dev.rust.enable {
-    home.packages = with pkgs; [
+    my.packages = with pkgs; [
       rustup
     ];
 
-    programs.zsh.sessionVariables = mkIf config.modules.shell.zsh.enable {
-      CARGO_HOME = "${config.xdg.dataHome}/cargo";
-      RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
+    my.env = {
+      CARGO_HOME = "$XDG_DATA_HOME/cargo";
+      RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
       PATH = [ "$CARGO_HOME/bin" ];
     };
   };

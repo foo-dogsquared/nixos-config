@@ -12,7 +12,7 @@ with lib;
   };
 
   config = mkIf config.modules.dev.java.enable {
-    home.packages = [
+    my.packages = with pkgs; [
       jdk       # The Java Development Kit.
       jre       # The Java Runtime Environment for running Java apps.
     ];

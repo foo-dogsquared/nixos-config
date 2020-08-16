@@ -1,26 +1,50 @@
 = foo-dogsquared's NixOS config
 
 This is the configuration setup for my https://nixos.org[NixOS] instance.
-A major part of this setup is inspired (or stolen, whichever you prefer) from https://github.com/hlissner/dotfiles[hlissner's NixOS config].
-The difference is https://github.com/rycee/home-manager[home-manager] is a big requirement and uses it a whole lot.
+This setup is stolen from https://github.com/hlissner/dotfiles[hlissner's NixOS config] foot:[The author and one-man maintainer of Doom Emacs.].
+The whole setup is mostly intended for single-user systems but you can easily configure it for multi-user systems.
 
 
 
 
 == Getting started
 
-Before installing this setup, be sure to install NixOS and logged in as a user.
-This project setup also assumes the operating system has the following configurations:
+You can replace your NixOS configuration with this bad boi.
+
+To install, you have to do the following first:
+
+- Set up your partitions.
+- Copy this setup (either with `git` or what-have-you) to `/etc/dotfiles`.
+- Install GNU Make.
+
+Then simply run `make install`.
+The default behavior of the installation installs my default setup.
+It is equivalent to the following command:
+
+[source, shell]
+----
+PREFIX=/mnt USER=foo-dogsquared HOST=zilch make --directory /etc/dotfiles install
+----
+
+For more information, simply inspect the Makefile.
+
+Assuming you did install, your project will have the following stuff.
 
 - Uses the nixpkgs unstable channel as `nixos` (i.e., `nix-channels --update https://nixos.org/channels/nixos-unstable`).
 - Have the https://github.com/rycee/home-manager[home-manager] installed with the unstable release.
 - You start with the TTY and nothing else is installed (i.e., bare installation similar in spirit to Arch Linux).
 
-[source, shell]
-----
-git clone <GIT_URL_OF_THIS_REPO>
-make
-----
+
+=== Precautions
+
+There are some things you need to keep in mind when using this setup.
+
+* This setup is not meant to be fully reproducible.
+It is a personal setup for a person who wants to live on the bleeding edge, personally.
+Despite being a NixOS setup which should be reproducible on paper, it mainly uses the unstable versions of the channels and packages.
+If we're to install this setup at separate times, the full list of installed packages with their depedencies and versions wouldn't be the same.
+
+* It may use third-party channels for certain versions of the packages, hammering the first precaution even further regarding reproducibility.
 
 
 
@@ -33,18 +57,73 @@ The project structure should look like the following:
 ----
 nixos-config
 ├── config/
-├── home.nix
+├── hosts/
 ├── modules/
-└── README.adoc
+├── packages/
+├── default.nix*
+├── Makefile*
+└── README.adoc*
 ----
 
 * The directory paid with the most attention would most likely be the `modules/` folder.
 Each module (and submodule) can contain multiple modules for multiple programs (i.e., `modules/shell/git`, `modules/desktop/bspwm`).
-It could also contain a `base.nix` file where Nix packages with no configurations are placed similar to Arch package groups (i.e., `base`, `base-devel`, `xfce`).
+It could also contain a `base.nix` file where Nix packages with no configurations are placed similar to Arch package groups.
 
 ** Another folder worthy of attention is the `modules/themes` which sets up a complete desktop environment for you so you don't have to.
-For safety, you should have a bare installation ala-Arch Linux.
+For more information, see the <<Themes>> section.
 
 * The `config/` directory is simply the ad hoc configuration of several programs.
 In this case, it is my https://github.com/foo-dogsquared/dotflies[dotfiles] directory.
+
+* The `hosts/` contains the individual system configuration of my machine (I've only one but I plan to NixOS for my new ones).
+Each folder inside of this directory represents one machine.
+It is also used on the installation phase (from `make install`) by setting the `HOST` variable (i.e., `HOST=zilch make -C /etc/install`) with the folder name as the argument.  
+
+* The `packages/` folder is my custom packages either the new ones that haven't made into nixpkgs yet or packages with overrides.
+Also contains third-party package repositories and overlays such as the NUR or the unstable branch of Emacs.
+
+
+
+
+== Themes
+
+My setup feature themes as a NixOS modules (in link:./modules/themes[`modules/themes`]) which sets up a complete graphical environment.
+This lets me easily switch my graphical setup with a simple toggle (i.e., `theme.$THEME_NAME.enable = true;`).
+For safety, you should have a bare installation ala-Arch Linux.
+
+As you can see in the `default.nix` of the `modules/theme` directory, a theme should also pass in certain data to `modules.theme` as if it's enabled.
+The following is an example metadata object of a theme.
+
+[source, nix]
+----
+{
+  name = "Fair and square";
+  version = "0.1.0";
+  path = ./.;
+  wallpaper = "${config.modules.theme.path}/config/wallpaper";
+}
+----
+
+For best practice, the general project structure of a theme should look like the following:
+
+[source, tree]
+----
+$THEME_NAME
+├── config/
+│   ├── PROGRAM_1/
+│   ├── PROGRAM_2/
+│   ├── PROGRAM_3/
+│   └── wallpaper*
+├── default.nix*
+└── README.adoc*
+----
+
+* The `config/` folder is where all of the specific configurations will go.
+Each program to be configured is stored in its own folder (i.e., polybar, bspwm, sxhkd).
+A wallpaper can be placed at `config/wallpaper` for convenience.
+
+* `default.nix` is simply the entry point for our theme module.
+This is where you can add certain packages, enable certain settings, setup your files to the home directory, and pass the theme metadata.
+
+* For convenience, you should make the NixOS theme module as a https://github.com/cookiecutter/cookiecutter[Cookiecutter template] to easily replace the color schemes, fonts, and what-have-you.
 

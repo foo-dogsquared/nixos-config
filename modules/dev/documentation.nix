@@ -16,20 +16,34 @@ in
     }; in {
     enable = mkBoolOption false;
 
+    # Jupyter does need a bit of setup so separate option.
+    jupyter.enable = mkBoolOption false;
+
     # Since my usual LaTeX needs are somewhat big, I'm keeping it as a separate option.
     latex.enable = mkBoolOption false;
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      asciidoctor       # Keeping Asciidoc alive with the improved version.
+    my.packages = with pkgs; [
+      asciidoctor       # An Asciidoctor document keeps a handful of few frustrated users a day.
+      aspell            # The not-opinionated spell checker.
+      aspellDicts.en
+      aspellDicts.en-computers
+      aspellDicts.en-science
       hugo              # An SSG for your DDD (documentation-driven development) workflow.
+      languagetool      # A grammar checker with a HUGE data set.
       pandoc            # The Swiss army knife for document conversion.
+      vale              # The customizable linter for your intended writings.
 
       # TODO: Make Neuron its own package.
       (let neuronSrc = builtins.fetchTarball "https://github.com/srid/neuron/archive/master.tar.gz";
         in import neuronSrc {})     # Neurons and zettels are good for the brain.
     ] ++
+
+    (if cfg.jupyter.enable then [
+      jupyter           # The interactive notebook.
+      iruby             # The Ruby kernel for Jupyter.
+    ] else []) ++
 
     (if cfg.latex.enable then [
       texlive.combined.scheme-medium       # The all-in-one LaTeX distribution for your offline typesetting needs.

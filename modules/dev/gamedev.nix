@@ -18,14 +18,14 @@ in
     };
 
   config = {
-    home.packages = with pkgs;
+    my.packages = with pkgs;
       (if cfg.godot.enable then [
         godot       # The Godot, not to be confused with a certain prosecutor.
       ] else []) ++
 
       (if cfg.unity3d.enable then [
-        unity3d
-        unityhub
+        unity3d     # The Unity, not to be confused with a certain ideal.
+        unityhub    # The ideal hub for your Unity projects.
       ] else []);
   };
 }

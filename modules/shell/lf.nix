@@ -12,11 +12,11 @@ with lib;
   };
 
   config = mkIf config.modules.shell.lf.enable {
-    home.packages = with pkgs; [
+    my.packages = with pkgs; [
       lf
     ];
 
-    xdg.configFile."lf" = {
+    my.home.xdg.configFile."lf" = {
       source = ../../config/lf;
       recursive = true;
     };

@@ -3,9 +3,11 @@
 
 {
   imports = [
+    ./browsers.nix
     ./files.nix
     ./fonts.nix
     ./graphics.nix
+    ./multimedia.nix
     ./music.nix
   ];
 }

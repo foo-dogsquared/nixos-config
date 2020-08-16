@@ -1,0 +1,24 @@
+# Paths to synchronize 
+path = writings
+path = projects
+path = library
+
+# My GnuPG keys
+path = .gnupg
+
+# The password store of gopass
+path = .password-store
+
+# Some regexps specifying names and paths to ignore
+ignore = Name temp.*
+ignore = Name *~
+ignore = Name .*~
+ignore = Name *.o
+ignore = Name *.tmp
+
+# Use this command for displaying diffs
+diff = diff -y -W 79 --suppress-common-lines
+
+# Log actions to the terminal
+log = true
+
