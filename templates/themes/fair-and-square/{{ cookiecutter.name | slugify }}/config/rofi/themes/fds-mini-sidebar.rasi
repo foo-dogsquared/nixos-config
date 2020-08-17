@@ -1,0 +1,122 @@
+* {
+    /* The color configuration */
+    /* Useful for quick editing in case for compiled templates */
+    background: {{ cookiecutter.special.background }};
+    foreground: {{ cookiecutter.special.foreground }};
+    color0: {{ cookiecutter.colors.color0 }};
+    color1: {{ cookiecutter.colors.color1 }};
+    color2: {{ cookiecutter.colors.color2 }};
+    color3: {{ cookiecutter.colors.color3 }};
+    color4: {{ cookiecutter.colors.color4 }};
+    color5: {{ cookiecutter.colors.color5 }};
+    color6: {{ cookiecutter.colors.color6 }};
+    color7: {{ cookiecutter.colors.color7 }};
+    color8: {{ cookiecutter.colors.color8 }};
+    color9: {{ cookiecutter.colors.color9 }};
+    color10: {{ cookiecutter.colors.color10 }};
+    color11: {{ cookiecutter.colors.color11 }};
+    color12: {{ cookiecutter.colors.color12 }};
+    color13: {{ cookiecutter.colors.color13 }};
+    color14: {{ cookiecutter.colors.color14 }};
+    color15: {{ cookiecutter.colors.color15 }};
+
+    /* General theme settings */
+    highlight: bold italic;
+    scrollbar: true;
+
+    /* Font settings */
+    text-color: @foreground;
+    background-color: @background;
+    font: "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid 14";
+    font: "{{ cookiecutter.font.mono.name }} {{ cookiecutter.font.mono.baseSize }}";
+
+}
+
+window {
+    background-color: transparent;
+
+    height: 65%;
+    width: 35%;
+    position: southwest;
+    location: southwest;
+    text-color: @foreground;
+}
+
+mainbox {
+    background-color: @background;
+    border: 2;
+    border-color: @color6;
+    children: [ inputbar, listview, mode-switcher ];
+    padding: 0.5em;
+}
+
+inputbar,
+listview {
+    background: @background;
+    margin: 0 0 0.5em 0;
+}
+
+inputbar {
+    orientation: vertical;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    text-style: underline;
+    width: 100%;
+}
+
+entry {
+    background-color: @color0;
+    margin: 0 1em 0 0;
+}
+
+element {
+    background-color: @color0;
+    padding: 5;
+}
+
+element selected.normal {
+    background-color: @color6;
+    text-color: @background;
+}
+
+scrollbar {
+    background-color: @color0;
+    border-radius: 30%;
+    handle-color: @color6;
+    handle-width: 15px;
+    height: 100%;
+    text-color: @background;
+    width: 10px;
+}
+
+listview {
+    cyclic: true;
+    spacing: 0.6em;
+}
+
+element, button {
+    border-radius: 30%;
+}
+
+button,
+case-indicator,
+entry,
+inputbar {
+    padding: 5;
+}
+
+sidebar {
+    padding: 5;
+    margin: 5;
+}
+
+button {
+    margin: 0.25em;
+}
+
+button.selected {
+    background-color: @color6;
+    text-color: @background;
+}

@@ -1,0 +1,66 @@
+/**
+ * ROFI Color theme
+ * User: Qball
+ * Copyright: Dave Davenport
+ * Modified by: Gabriel Arazas (foo-dogsquared)
+ */
+
+* {
+    /* The color swatch */
+    /* Useful for quick editing of the colors */
+    background: {{ cookiecutter.special.background }};
+    foreground: {{ cookiecutter.special.foreground }};
+    color0: {{ cookiecutter.colors.color0 }};
+    color1: {{ cookiecutter.colors.color1 }};
+    color2: {{ cookiecutter.colors.color2 }};
+    color3: {{ cookiecutter.colors.color3 }};
+    color4: {{ cookiecutter.colors.color4 }};
+    color5: {{ cookiecutter.colors.color5 }};
+    color6: {{ cookiecutter.colors.color6 }};
+    color7: {{ cookiecutter.colors.color7 }};
+    color8: {{ cookiecutter.colors.color8 }};
+    color9: {{ cookiecutter.colors.color9 }};
+    color10: {{ cookiecutter.colors.color10 }};
+    color11: {{ cookiecutter.colors.color11 }};
+    color12: {{ cookiecutter.colors.color12 }};
+    color13: {{ cookiecutter.colors.color13 }};
+    color14: {{ cookiecutter.colors.color14 }};
+    color15: {{ cookiecutter.colors.color15 }};
+
+    background-color:      @background;
+    border-color:          @foreground;
+    text-color:           @foreground;
+    font:            "{{ cookiecutter.font.mono.name }} {{ cookiecutter.font.mono.baseSize }}";
+}
+
+window {
+    anchor:     north;
+    location:   north;
+    width:      100%;
+    padding:    7px;
+    children:   [ horibox ];
+}
+
+horibox {
+    orientation: horizontal;
+    children:   [ prompt, entry, listview ];
+}
+
+listview {
+    layout:     horizontal;
+    spacing:    5px;
+    lines:      100;
+}
+
+entry {
+    expand:     false;
+    width:      10em;
+}
+
+element {
+    padding: 0px 2px;
+}
+
+element.selected {
+    background-color: @color6;
+}

@@ -1,0 +1,9 @@
+configuration {
+    display-drun: "Application";
+    display-run: "Execute";
+    display-window: "Window";
+    display-ssh: "SSH";
+    font: "{{ cookiecutter.font.mono.name }} {{ cookiecutter.font.mono.baseSize }}";
+    show-icons: true;
+    theme: "themes/fds-mini-sidebar";
+}

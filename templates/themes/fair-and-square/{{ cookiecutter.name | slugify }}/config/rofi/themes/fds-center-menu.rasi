@@ -1,0 +1,93 @@
+* {
+    /* The color configuration */
+    /* Useful for quick editing in case for compiled templates */
+    background: {{ cookiecutter.special.background }};
+    foreground: {{ cookiecutter.special.foreground }};
+    color0: {{ cookiecutter.colors.color0 }};
+    color1: {{ cookiecutter.colors.color1 }};
+    color2: {{ cookiecutter.colors.color2 }};
+    color3: {{ cookiecutter.colors.color3 }};
+    color4: {{ cookiecutter.colors.color4 }};
+    color5: {{ cookiecutter.colors.color5 }};
+    color6: {{ cookiecutter.colors.color6 }};
+    color7: {{ cookiecutter.colors.color7 }};
+    color8: {{ cookiecutter.colors.color8 }};
+    color9: {{ cookiecutter.colors.color9 }};
+    color10: {{ cookiecutter.colors.color10 }};
+    color11: {{ cookiecutter.colors.color11 }};
+    color12: {{ cookiecutter.colors.color12 }};
+    color13: {{ cookiecutter.colors.color13 }};
+    color14: {{ cookiecutter.colors.color14 }};
+    color15: {{ cookiecutter.colors.color15 }};
+
+    /* Theme settings */
+    highlight: bold italic;
+    scrollbar: true;
+
+    /* Style */
+    text-color: @foreground;
+    background-color: @background;
+    font: "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid 14";
+    font: "{{ cookiecutter.font.mono.name }} {{ cookiecutter.font.mono.baseSize }}";
+}
+
+window {
+    background-color: transparent;
+
+    height: 65%;
+    width: 45%;
+    position: center;
+    location: center;
+    text-color: @foreground;
+}
+
+mainbox {
+    background-color: @background;
+    border: 2;
+    border-color: @color6;
+    children: [ inputbar, listview, mode-switcher ];
+}
+
+inputbar,
+listview {
+    background: @background;
+}
+
+inputbar {
+    orientation: vertical;
+    children: [ prompt, entry ];
+    background-color: @color0;
+}
+
+entry,
+prompt {
+    background-color: @color0;
+}
+
+listview {
+    cyclic: true;
+}
+
+element selected.normal {
+    background-color: @color6;
+    text-color: @background;
+}
+
+scrollbar {
+    background-color: @color0;
+    handle-color: @color6;
+    handle-width: 10px;
+    height: 100%;
+}
+
+button,
+case-indicator,
+inputbar,
+element {
+    padding: 5;
+}
+
+button.selected {
+    background-color: @color6;
+    text-color: @background;
+}

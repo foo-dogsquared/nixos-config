@@ -1,0 +1,19 @@
+= {{ cookiecutter.name }}
+
+A theme featuring fairly simple graphics with not much bells and whistles.
+Thus, it focuses on snapiness and efficient use of keyboard shortcuts.
+Intended to be used for potatoes (READ: cheap low-end computers) like mine.
+
+This theme is mainly composed of the following components:
+
+- bspwm as the window manager
+- polybar for the bars
+- rofi for the application laucher and the generic interface
+- dunst (and libnotify) for desktop notifications
+- Arc is the chosen GTK theme
+
+Other miscellaneous stuff:
+
+- sxhkd (since you're using bspwm, anyways)
+- feh (for setting the background)
+

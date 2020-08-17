@@ -77,7 +77,7 @@ In this case, it is my https://github.com/foo-dogsquared/dotflies[dotfiles] dire
 
 * The `hosts/` contains the individual system configuration of my machine (I've only one but I plan to NixOS for my new ones).
 Each folder inside of this directory represents one machine.
-It is also used on the installation phase (from `make install`) by setting the `HOST` variable (i.e., `HOST=zilch make -C /etc/install`) with the folder name as the argument.  
+It is also used on the installation phase (from `make install`) by setting the `HOST` variable (i.e., `HOST=zilch make -C /etc/install`) with the folder name as the argument.
 
 * The `packages/` folder is my custom packages either the new ones that haven't made into nixpkgs yet or packages with overrides.
 Also contains third-party package repositories and overlays such as the NUR or the unstable branch of Emacs.
@@ -87,7 +87,7 @@ Also contains third-party package repositories and overlays such as the NUR or t
 
 == Themes
 
-My setup feature themes as a NixOS modules (in link:./modules/themes[`modules/themes`]) which sets up a complete graphical environment.
+My setup feature themes as a NixOS module (in link:./modules/themes[`modules/themes`]) which sets up a complete graphical environment.
 This lets me easily switch my graphical setup with a simple toggle (i.e., `theme.$THEME_NAME.enable = true;`).
 For safety, you should have a bare installation ala-Arch Linux.
 
@@ -119,11 +119,12 @@ $THEME_NAME
 ----
 
 * The `config/` folder is where all of the specific configurations will go.
-Each program to be configured is stored in its own folder (i.e., polybar, bspwm, sxhkd).
+Each program to be configured is stored in its own folder (e.g., polybar, bspwm, sxhkd).
 A wallpaper can be placed at `config/wallpaper` for convenience.
 
 * `default.nix` is simply the entry point for our theme module.
 This is where you can add certain packages, enable certain settings, setup your files to the home directory, and pass the theme metadata.
 
 * For convenience, you should make the NixOS theme module as a https://github.com/cookiecutter/cookiecutter[Cookiecutter template] to easily replace the color schemes, fonts, and what-have-you.
+I have my theme templates stored in link:./templates[`./templates`].
 
