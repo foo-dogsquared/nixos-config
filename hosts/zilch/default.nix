@@ -71,7 +71,12 @@
       base.enable = true;
       documentation = {
         enable = true;
+        jupyter.enable = true;
         latex.enable = true;
+      };
+      gamedev = {
+        godot.enable = true;
+        unity3d.enable = true;
       };
       java.enable = true;
       javascript = {
@@ -98,7 +103,6 @@
 
     shell = {
       base.enable = true;
-      git.enable = true;
       lf.enable = true;
       zsh.enable = true;
     };
@@ -112,10 +116,16 @@
     # defold
     nim         # Jack the nimble, jack jumped over the nightstick, and got over not being the best pick.
     python      # *insert Monty Python quote here*
+  ];
 
+  my.packages = with pkgs; [
     # Muh games.
-    zeroad
-    wesnoth
+    unstable.dwarf-fortress      # Losing is fun!
+    unstable.endless-sky         # Losing is meh!
+    unstable.minetest            # Losing?! What's that?
+    unstable.openmw              # Losing is even more meh1
+    unstable.wesnoth             # Losing is frustrating!
+    unstable.zeroad              # Losing is fun and frustrating!
   ];
 
   my.env = {
@@ -130,24 +140,26 @@
   time.timeZone = "Asia/Manila";
   services.openssh.enable = true;
   services.lorri.enable = true;
+
+  # Setup GnuPG.
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
     pinentryFlavor = "gnome3";
   };
 
+  # Install a proprietary Nvidia graphics driver.
+  services.xserver.videoDrivers = [ "nvidiaLegacy390" ];
+
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
+  # Additional host-specific program configurations.
   my.home.programs = {
     # My personal Git config.
     git = {
       enable = true;
-
-      # Enable the syntax highlighter with Delta.
-      # https://github.com/dandavison/delta
-      delta.enable = true;
 
       # Enable Large File Storage.
       lfs.enable = true;
@@ -160,29 +172,13 @@
     };
   };
 
-  my.home.services = {
-    # Unison backup strat.
-    unison = {
-      enable = true;
-
-      pairs.mainbackup = 
-        let
-          homeDirectory = "/home/${config.my.username}";
-          backupDrive = "/run/media/${config.my.username}/Seagate Backup Plus Drive";
-        in {
-        roots = [
-          homeDirectory
-          backupDrive
-        ];
-        commandOptions = {
-          # Unison may delete the entire stuff so indicate that the other is a mount point.
-          mountpoint = backupDrive;
-          force = homeDirectory;
-
-          # My GnuPG keys.
-          path = ".gnupg .password-store";
-        };
-      };
-    };
+  # Moving all of the host-specific configurations into its appropriate place.
+  my.home.xdg.dataFile =
+    let insertXDGDataFolder = name: {
+      source = ./config + "/${name}";
+      recursive = true;
+    }; in {
+      "recoll" = insertXDGDataFolder "recoll";
+      "unison" = insertXDGDataFolder "unison";
   };
 }

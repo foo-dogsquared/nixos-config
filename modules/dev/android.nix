@@ -14,8 +14,8 @@ with lib;
     my.packages = with pkgs; [
       android-studio        # The apartment for Android development.
       dart                  # It's JavaScript except saner and slimmer.
-      flutter               # It's Electron except saner and slimmer.
-      kotlin                # It's Java except saner and slimmer.
+      unstable.flutter               # It's Electron except saner and slimmer.
+      unstable.kotlin                # It's Java except saner and slimmer.
     ];
 
     # Enable Android Debug Bridge for some device debugging.

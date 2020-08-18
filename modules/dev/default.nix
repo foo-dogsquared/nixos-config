@@ -11,6 +11,7 @@
     ./javascript.nix
     ./lisp.nix
     ./math.nix
+    ./perl.nix
     ./rust.nix
   ];
 }

@@ -30,9 +30,10 @@ For more information, simply inspect the Makefile.
 
 Assuming you did install, your project will have the following stuff.
 
-- Uses the nixpkgs unstable channel as `nixos` (i.e., `nix-channels --update https://nixos.org/channels/nixos-unstable`).
-- Have the https://github.com/rycee/home-manager[home-manager] installed with the unstable release.
+- Add the nixpkgs unstable channel as `nixpkgs-unstable` (i.e., `nix-channels --update https://nixos.org/channels/nixos-unstable`).
+- Have the https://github.com/rycee/home-manager[home-manager] installed with the stable release.
 - You start with the TTY and nothing else is installed (i.e., bare installation similar in spirit to Arch Linux).
+To setup your graphical installation, see the <<Themes>> section.
 
 
 === Precautions
@@ -80,7 +81,7 @@ Each folder inside of this directory represents one machine.
 It is also used on the installation phase (from `make install`) by setting the `HOST` variable (i.e., `HOST=zilch make -C /etc/install`) with the folder name as the argument.
 
 * The `packages/` folder is my custom packages either the new ones that haven't made into nixpkgs yet or packages with overrides.
-Also contains third-party package repositories and overlays such as the NUR or the unstable branch of Emacs.
+Also contains third-party package repositories and overlays such as the https://github.com/nix-community/NUR[NUR], https://github.com/nix-community/emacs-overlay[unstable branch of Emacs], or the unstable branch of https://github.com/NixOS/nixpkgs/[nixpkgs].
 
 
 
@@ -126,5 +127,6 @@ A wallpaper can be placed at `config/wallpaper` for convenience.
 This is where you can add certain packages, enable certain settings, setup your files to the home directory, and pass the theme metadata.
 
 * For convenience, you should make the NixOS theme module as a https://github.com/cookiecutter/cookiecutter[Cookiecutter template] to easily replace the color schemes, fonts, and what-have-you.
-I have my theme templates stored in link:./templates[`./templates`].
+Then, edit `modules/themes/default.nix` to add the theme to the selection.
+I have my theme templates stored in link:./templates[`./templates`] as an example.
 

@@ -14,7 +14,7 @@ with lib;
     my.packages = with pkgs; [
       aspell        # Hunt down a spelling bee champion to come to your shell.
       bat           # cat(1) with wings.
-      buku          # A developer-oriented browser-independent bookmark manager.
+      # buku          # A developer-oriented browser-independent bookmark manager.
       exa           # ls(1) after an exodus.
       fd            # find(1) after a cognitive behavioral therapy.
       fzf           # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.

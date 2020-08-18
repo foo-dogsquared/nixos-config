@@ -17,9 +17,6 @@ with lib;
       enableCompletion = true;
       autosuggestions.enable = true;
       histFile = "\$XDG_DATA_HOME/zsh/history";
-      loginShellInit = "
-        export ZDOTDIR=\"\$XDG_CONFIG_HOME/zsh\"
-      ";
 
       # Adding basic version control support to the zsh prompt. 
       # https://git-scm.com/book/en/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Zsh
@@ -35,6 +32,12 @@ with lib;
       ";
 
       syntaxHighlighting.enable = true;
+    };
+
+    my.home.home.file = {
+      ".zshenv".text = ''
+        export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+      '';
     };
   };
 }

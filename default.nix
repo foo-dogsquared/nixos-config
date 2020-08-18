@@ -8,6 +8,7 @@
 
 device: username:
 { pkgs, options, lib, config, ... }:
+
 {
   networking.hostName = lib.mkDefault device;
   my.username = username;
@@ -21,7 +22,12 @@ device: username:
     /etc/nixos/hardware-configuration.nix
   ] else []);
 
-  ### NixOS
+  # GARBAGE DAY!
+  nix.gc = {
+    automatic = true;
+    dates = "daily";
+    options = "--delete-older-than 3d";
+  };
   nix.autoOptimiseStore = true;
   nix.nixPath = options.nix.nixPath.default ++ [
     # So we can use absolute import paths
@@ -33,7 +39,7 @@ device: username:
   nixpkgs.overlays = import ./packages;
   nixpkgs.config.allowUnfree = true;  # forgive me Stallman senpai
 
-  # These are the things I want installed on all my systems
+  # These are the things I want installed on all my systems.
   environment.systemPackages = with pkgs; [
     # Just the bear necessities~
     coreutils
@@ -52,8 +58,8 @@ device: username:
     cachix                # less time buildin' mo time nixin'
   ];
 
-  # Default settings for primary user account. `my` is defined in
-  # modules/default.nix
+  # Default settings for primary user account.
+  # `my` is defined in 'modules/default.nix'.
   my.user = {
     isNormalUser = true;
     uid = 1000;

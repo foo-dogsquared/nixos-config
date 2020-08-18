@@ -5,7 +5,6 @@ with lib;
 {
   imports = [
     ./base.nix
-    ./git.nix
     ./lf.nix
     ./zsh.nix
   ];
