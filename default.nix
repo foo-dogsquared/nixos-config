@@ -4,7 +4,7 @@
 # License: MIT
 #
 # This is ground zero, where the absolute essentials go, to be present on all systems I use nixos on.
-# Most of which are single user systems (the ones that aren't are configured from their hosts/*/default.nix).
+# Contains cluser-wide configurations shared between all of the systems (located in `hosts/`).
 
 device: username:
 { pkgs, options, lib, config, ... }:
@@ -49,7 +49,7 @@ device: username:
     killall
     ntfs3g
     sshfs
-    udiskie 
+    udiskie
     unzip
     vim
     wget

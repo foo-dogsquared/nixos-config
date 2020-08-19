@@ -37,8 +37,8 @@ window {
 
     height: 65%;
     width: 35%;
-    position: southwest;
-    location: southwest;
+    position: center;
+    location: center;
     text-color: @foreground;
 }
 

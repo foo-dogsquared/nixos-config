@@ -1,9 +1,13 @@
+# My NixOS config...
+# This is where the specific setup go from setting environment variables, specific aliases, installing specific packages (e.g., muh games), and so forth.
 { config, pkgs, lib, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
   ];
+
+  nixpkgs.overlays = import ./modules/overlays.nix;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -74,7 +78,7 @@
         jupyter.enable = true;
         latex.enable = true;
       };
-      gamedev = {
+      game-dev = {
         godot.enable = true;
         unity3d.enable = true;
       };
@@ -126,15 +130,28 @@
     unstable.openmw              # Losing is even more meh1
     unstable.wesnoth             # Losing is frustrating!
     unstable.zeroad              # Losing is fun and frustrating!
+
+    # Installing some of the dependencies required for my scripts.
+    ffcast
+    giflib
+    leptonica
+    libpng
+    libwebp
+    maim
+    (tesseract.override { enableLanguages = [ "eng" ]; })
+    slop
+    xdg-user-dirs
+    zbar
   ];
 
+  # Setting up the shell environment.
   my.env = {
     BROWSER = "firefox";
     FILE = "lf";
     READ = "zathura";
     SUDO_ASKPASS = <config/bin/askpass>;
   };
-  my.alias.dots = "USER=${config.my.username} make -C /etc/install";
+  my.alias.dots = "USER=${config.my.username} make -C /etc/dotfiles";
 
   # Set your time zone.
   time.timeZone = "Asia/Manila";

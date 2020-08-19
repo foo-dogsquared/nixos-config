@@ -15,7 +15,7 @@ with lib;
     # Just make sure the unstable version of Emacs is available as a package by creating an overlay.
     pkg = mkOption {
       type = types.package;
-      default = pkgs.emacs;
+      default = pkgs.unstable.emacs;
     };
   };
 

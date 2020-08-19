@@ -20,12 +20,12 @@ in
   config = {
     my.packages = with pkgs;
       (if cfg.godot.enable then [
-        godot       # The Godot, not to be confused with a certain prosecutor.
+        unstable.godot       # The Godot, not to be confused with a certain prosecutor.
       ] else []) ++
 
       (if cfg.unity3d.enable then [
-        unity3d     # The Unity, not to be confused with a certain ideal.
-        unityhub    # The ideal hub for your Unity projects.
+        unstable.unity3d     # The Unity, not to be confused with a certain ideal.
+        unstable.unityhub    # The ideal hub for your Unity projects.
       ] else []);
   };
 }

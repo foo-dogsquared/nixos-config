@@ -1,7 +1,8 @@
 = foo-dogsquared's NixOS config
+:toc:
 
 This is the configuration setup for my https://nixos.org[NixOS] instance.
-This setup is stolen from https://github.com/hlissner/dotfiles[hlissner's NixOS config] foot:[The author and one-man maintainer of Doom Emacs.].
+This setup is stolen from https://github.com/hlissner/dotfiles[hlissner's NixOS config] footnote:[The author and one-man maintainer of Doom Emacs.].
 The whole setup is mostly intended for single-user systems but you can easily configure it for multi-user systems.
 
 
@@ -61,27 +62,64 @@ nixos-config
 ├── hosts/
 ├── modules/
 ├── packages/
+├── templates/
 ├── default.nix*
 ├── Makefile*
 └── README.adoc*
 ----
 
-* The directory paid with the most attention would most likely be the `modules/` folder.
-Each module (and submodule) can contain multiple modules for multiple programs (i.e., `modules/shell/git`, `modules/desktop/bspwm`).
-It could also contain a `base.nix` file where Nix packages with no configurations are placed similar to Arch package groups.
+* The directory paid with the most attention would most likely be the `modules/` folder which contains cluster-wide footnote:[Whenever I say 'cluster-wide', I really mean my laptop (which I have none at the moment) and desktop (which I have only one at the moment).]  modules intended to be used in each device.
 
 ** Another folder worthy of attention is the `modules/themes` which sets up a complete desktop environment for you so you don't have to.
 For more information, see the <<Themes>> section.
 
-* The `config/` directory is simply the ad hoc configuration of several programs.
+* The `config/` directory is simply the all-seeing cluster-wide ad hoc configuration of several programs.
 In this case, it is my https://github.com/foo-dogsquared/dotflies[dotfiles] directory.
 
-* The `hosts/` contains the individual system configuration of my machine (I've only one but I plan to NixOS for my new ones).
-Each folder inside of this directory represents one machine.
+* The `hosts/` contains the machine-specific configurations of the machine (I've only one but I plan to install NixOS for my new ones).
 It is also used on the installation phase (from `make install`) by setting the `HOST` variable (i.e., `HOST=zilch make -C /etc/install`) with the folder name as the argument.
+See the <<Hosts>> section for more details.
 
 * The `packages/` folder is my custom packages either the new ones that haven't made into nixpkgs yet or packages with overrides.
 Also contains third-party package repositories and overlays such as the https://github.com/nix-community/NUR[NUR], https://github.com/nix-community/emacs-overlay[unstable branch of Emacs], or the unstable branch of https://github.com/NixOS/nixpkgs/[nixpkgs].
+
+* The `templates/` directory is a bunch of https://github.com/cookiecutter/cookiecutter/[Cookiecutter] templates intended for easy creation/deployment of customized systems (e.g., graphical desktop environments, customized modules).
+
+
+
+
+== Hosts
+
+Each machine is represented with a directory in link:./hosts/[`./hosts`] with the name of the directory as the name of the machine.
+footnote:[It is basically using the pets approach (from pets versus cattle thing).]
+
+Each host should have an entrypoint at `./hosts/$HOST/default.nix` which is then used from the entrypoint of this setup at link:./default.nix[`./default.nix`] (i.e., `import /etc/dotfiles "$HOST" "$USER"`).
+It may contain machine-specific configurations (e.g., specific systemd units, Recoll index building, GNU Nano configurations), other Nix modules for modularity, and other sorts of knick-knacks (e.g., other wallpapers, machine-specific scripts).
+
+For best practice, you may want to follow the following project structure:
+
+[source, tree]
+----
+./hosts/$HOST
+├── config/
+├── modules/
+├── default.nix*
+├── hardware-configuration.nix*
+└── README.adoc
+----
+
+* `config/` contains the specific config files.
+
+* `modules/` stores the other Nix modules to be used in `default.nix`.
+
+* `default.nix` is the entrypoint for our host module.
+It contains configuration of our link:./modules[`./modules`], NixOS (i.e., `man configuration.nix`), https://github.com/rycee/home-manager[home-manager] (i.e., `man home-configuration.nix`), and other things you might want to include in the host-specific `$HOST/modules/` folder.
+
+* `hardware-configuration.nix` is there for hardware configurations...
+(I plan to remove this one since it should use the dynamically generated hardware config at `/etc/nixos/hardware-configuration.nix`.)
+
+* A README file in whatever format you prefer.
+(I just choose https://asciidoctor.org/[Asciidoctor] with the `.adoc` file extension since it's my go-to document format.)
 
 
 
@@ -89,8 +127,8 @@ Also contains third-party package repositories and overlays such as the https://
 == Themes
 
 My setup feature themes as a NixOS module (in link:./modules/themes[`modules/themes`]) which sets up a complete graphical environment.
-This lets me easily switch my graphical setup with a simple toggle (i.e., `theme.$THEME_NAME.enable = true;`).
-For safety, you should have a bare installation ala-Arch Linux.
+This lets me easily switch my graphical setup with a simple toggle (i.e., `theme.$THEME_NAME.enable = true;`) in my machine configuration (i.e., `./hosts/$HOST/default.nix`).
+For safety from conflicting modules and configuration, you should have a bare installation ala-Arch Linux.
 
 As you can see in the `default.nix` of the `modules/theme` directory, a theme should also pass in certain data to `modules.theme` as if it's enabled.
 The following is an example metadata object of a theme.
