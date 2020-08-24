@@ -13,7 +13,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -29,6 +28,16 @@
     XDG_CACHE_HOME  = "$HOME/.cache";
     XDG_DATA_HOME   = "$HOME/.local/share";
     XDG_BIN_HOME    = "$HOME/.local/bin";
+  };
+
+  # Moving all of the host-specific configurations into its appropriate place.
+  my.home.xdg.dataFile =
+    let insertXDGDataFolder = name: {
+      source = ./config + "/${name}";
+      recursive = true;
+    }; in {
+      "recoll" = insertXDGDataFolder "recoll";
+      "unison" = insertXDGDataFolder "unison";
   };
 
   # Install documentations for tools and whatnot.
@@ -75,7 +84,6 @@
       base.enable = true;
       documentation = {
         enable = true;
-        jupyter.enable = true;
         latex.enable = true;
       };
       game-dev = {
@@ -102,7 +110,16 @@
 
     services = {
       recoll.enable = true;
-      unison.enable = true;
+      unison = {
+        enable = true;
+        flags =
+          let
+            homeDirectory = "/home/${config.my.username}";
+            backupDrive = "/run/media/${config.my.username}/Seagate Backup Plus Drive";
+          in ''
+            -root ${homeDirectory} -root ${backupDrive} -auto -batch -fat -force ${homeDirectory} -mountpoint ${backupDrive} -ignorearchives
+        '';
+      };
     };
 
     shell = {
@@ -124,12 +141,12 @@
 
   my.packages = with pkgs; [
     # Muh games.
-    unstable.dwarf-fortress      # Losing is fun!
-    unstable.endless-sky         # Losing is meh!
-    unstable.minetest            # Losing?! What's that?
-    unstable.openmw              # Losing is even more meh1
-    unstable.wesnoth             # Losing is frustrating!
-    unstable.zeroad              # Losing is fun and frustrating!
+    dwarf-fortress      # Losing is fun!
+    endless-sky         # Losing is meh!
+    minetest            # Losing?! What's that?
+    openmw              # Losing is even more meh1
+    wesnoth             # Losing is frustrating!
+    zeroad              # Losing is fun and frustrating!
 
     # Installing some of the dependencies required for my scripts.
     ffcast
@@ -173,29 +190,21 @@
   hardware.pulseaudio.enable = true;
 
   # Additional host-specific program configurations.
-  my.home.programs = {
-    # My personal Git config.
-    git = {
-      enable = true;
+  my.home = {
+    programs = {
+      # My personal Git config.
+      git = {
+        enable = true;
 
-      # Enable Large File Storage.
-      lfs.enable = true;
+        # Enable Large File Storage.
+        lfs.enable = true;
 
-      # Use the entire suite.
-      package = pkgs.gitAndTools.gitFull;
+        # Use the entire suite.
+        package = pkgs.gitAndTools.gitFull;
 
-      userName = "Gabriel Arazas";
-      userEmail = "${config.my.email}";
+        userName = "Gabriel Arazas";
+        userEmail = "${config.my.email}";
+      };
     };
-  };
-
-  # Moving all of the host-specific configurations into its appropriate place.
-  my.home.xdg.dataFile =
-    let insertXDGDataFolder = name: {
-      source = ./config + "/${name}";
-      recursive = true;
-    }; in {
-      "recoll" = insertXDGDataFolder "recoll";
-      "unison" = insertXDGDataFolder "unison";
   };
 }

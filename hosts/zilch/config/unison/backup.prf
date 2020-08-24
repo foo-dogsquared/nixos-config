@@ -1,4 +1,4 @@
-# Paths to synchronize 
+# Paths to synchronize
 path = writings
 path = projects
 path = library
@@ -9,6 +9,9 @@ path = .gnupg
 # The password store of gopass
 path = .password-store
 
+# My SSH keys
+path = .ssh
+
 # Some regexps specifying names and paths to ignore
 ignore = Name temp.*
 ignore = Name *~
@@ -16,8 +19,14 @@ ignore = Name .*~
 ignore = Name *.o
 ignore = Name *.tmp
 
-# Use this command for displaying diffs
-diff = diff -y -W 79 --suppress-common-lines
+# Node cache
+ignore = Name node_modules
+
+# Rust build caches
+ignore = Name target
+
+# The diff command with the unified style (the same style Git uses for showing diffs)
+diff = diff --unified
 
 # Log actions to the terminal
 log = true

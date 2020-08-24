@@ -3,7 +3,7 @@
     # defold = (callPackage ./defold.nix {});
 
     # Add packages from the unstable channel with `pkgs.unstable.$PKG`.
-    unstable = import <nixpkgs-unstable> { inherit config; };
+    # unstable = import <nixpkgs-unstable> { inherit config; };
   })
 
   # The unstable branch of Emacs.

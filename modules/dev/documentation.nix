@@ -42,7 +42,7 @@ in
 
     (if cfg.jupyter.enable then [
       jupyter           # The interactive notebook.
-      unstable.iruby             # The Ruby kernel for Jupyter.
+      iruby             # The Ruby kernel for Jupyter.
     ] else []) ++
 
     (if cfg.latex.enable then [

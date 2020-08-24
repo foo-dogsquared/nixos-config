@@ -19,9 +19,7 @@ in {
       (recoll.override {
         withGui = false;
       })                    # Bring the search engine to the desktop!
-      (unison.override {
-        enableX11 = false;
-      })                    # Bridge the gap between your storage.
+      unison
       magic-wormhole        # Magically transfer stuff between your wormholes!
       transmission          # One of the components for sailing the high seas.
       syncthing             # A peer-to-peer synchro summoning.

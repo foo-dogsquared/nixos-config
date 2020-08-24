@@ -30,7 +30,7 @@ in
       type = with types; nullOr path;
       default = if cfg.path != null
                 then "${cfg.path}/config/wallpaper"
-		else null;
+        else null;
     };
   };
 

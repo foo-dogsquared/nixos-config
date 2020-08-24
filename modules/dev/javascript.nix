@@ -21,7 +21,7 @@ in
   config = {
     my.packages = with pkgs;
       (if cfg.deno.enable then [
-        unstable.deno        # The Deltarune of Node.
+        deno        # The Deltarune of Node.
       ] else []) ++
 
       (if cfg.node.enable then [

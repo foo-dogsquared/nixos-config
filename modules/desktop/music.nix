@@ -31,7 +31,7 @@ in {
         fluidsynth  # Synth for fluid sounds.
         helm        # A great synthesizer plugin.
         hydrogen    # Them drum beats composition will get good.
-        unstable.polyphone   # Edit your fonts for sound.
+        polyphone   # Edit your fonts for sound.
         zynaddsubfx # Ze most advanced synthesizer I've seen so far (aside from the upcoming Vital syntehsizer).
 
         # As of 2020-07-03, lmms has some trouble regarding Qt or something so at least use the "unstable" channel just to be safe.

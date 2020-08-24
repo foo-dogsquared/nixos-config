@@ -35,3 +35,6 @@ install: channels update
 
 upgrade: update switch
 
+rollback:
+	@sudo nix-env --rollback
+

@@ -30,7 +30,7 @@ in
         Service = {
           ExecStart = "${(pkgs.unison.override { enableX11 = false; })}/bin/unison ${cfg.flags}";
           Environment = [ "UNISON=\"$XDG_DATA_HOME/unison\"" ];
-          RestartSec = "5mins";
+          RestartSec = "2h";
         };
 
         Install = {

@@ -38,16 +38,16 @@ with lib;
       };
     };
 
+    # Enable QT configuration to style with the GTK theme.
+    qt5 = {
+      style = "gtk2";
+      platformTheme = "gtk2";
+    };
+
+
     my.env.TERMINAL = "alacritty";
 
     my.home = {
-      # Enable GTK configuration.
-      gtk.enable = true;
-
-      # Enable QT configuration.
-      qt.enable = true;
-      qt.platformTheme = "gtk";
-
       # Install all of the configurations in the XDG config home.
       xdg.configFile = mkMerge [
         (let recursiveXdgConfig = name: {
@@ -66,9 +66,9 @@ with lib;
           };
         })
 
-        (mkIf config.services.xserver.enable {
+        {
           "gtk-3.0/settings.ini".text = ''
-	    [Settings]
+            [Settings]
             gtk-theme-name=Arc
             gtk-icon-theme-name=Arc
             gtk-fallback-icon-theme=gnome
@@ -78,15 +78,18 @@ with lib;
             gtk-xft-hintstyle=hintfull
             gtk-xft-rgba=none
           '';
-
-          "gtk-2.0/gtkrc".text = ''
-            gtk-theme-name="Arc"
-            gtk-icon-theme-name="Arc"
-            gtk-font-name="Sans 10"
-            gtk-cursor-theme-name="Adwaita"
-          '';
-        })
+        }
       ];
+
+      # Except for the GTK2 config which still needs to be in `$HOME/.gtkrc-2.0`.
+      home.file = {
+        ".gtkrc-2.0".text = ''
+          gtk-theme-name="Arc"
+          gtk-icon-theme-name="Arc"
+          gtk-font-name="Sans 10"
+          gtk-cursor-theme-name="Adwaita"
+        '';
+      };
     };
 
     my.packages = with pkgs; [
