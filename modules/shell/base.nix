@@ -12,6 +12,7 @@ with lib;
 
   config = mkIf config.modules.shell.base.enable {
     my.packages = with pkgs; [
+      aria2         # The sequel to aria(1).
       aspell        # Hunt down a spelling bee champion to come to your shell.
       bat           # cat(1) with wings.
       # buku          # A developer-oriented browser-independent bookmark manager.

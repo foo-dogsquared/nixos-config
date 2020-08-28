@@ -63,7 +63,7 @@ device: username:
   my.user = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "wheel" "video" "networkmanager" "libvirtd" ];
+    extraGroups = [ "wheel" "video" "libvirtd" ];
     shell = pkgs.zsh;
   };
 

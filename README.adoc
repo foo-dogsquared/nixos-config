@@ -19,15 +19,17 @@ To install, you have to do the following first:
 - Install GNU Make.
 
 Then simply run `make install`.
-The default behavior of the installation installs my default setup.
 It is equivalent to the following command:
 
 [source, shell]
 ----
-PREFIX=/mnt USER=foo-dogsquared HOST=zilch make --directory /etc/dotfiles install
+USER=foo-dogsquared HOST=zilch make --directory /etc/dotfiles install
 ----
 
-For more information, simply inspect the Makefile.
+As of 2020-08-28, it wouldn't work since it assumes the installation root is at `/` rather than `/mnt`.
+To correct this behavior, simply configure the `PREFIX` variable (e.g., `PREFIX=/mnt make install`).
+
+For more information, simply inspect the link:./Makefile[`./Makefile`].
 
 Assuming you did install, your project will have the following stuff.
 
@@ -67,6 +69,11 @@ nixos-config
 ├── Makefile*
 └── README.adoc*
 ----
+
+* The entrypoint of this setup is link:./default.nix[`./default.nix`] (which is like `index.html` for webpages).
+It contains a function that accepts two arguments: the name of the host and the username of the main user.
+The host should exist at `./hosts/$HOST/` (see <<Hosts>> for more info).
+Meanwhile, the main user is primarily referred with the `my` attribute defined at link:./modules/default.nix[`./modules/default.nix`].
 
 * The directory paid with the most attention would most likely be the `modules/` folder which contains cluster-wide footnote:[Whenever I say 'cluster-wide', I really mean my laptop (which I have none at the moment) and desktop (which I have only one at the moment).]  modules intended to be used in each device.
 

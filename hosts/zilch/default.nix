@@ -141,12 +141,12 @@
 
   my.packages = with pkgs; [
     # Muh games.
-    dwarf-fortress      # Losing is fun!
-    endless-sky         # Losing is meh!
-    minetest            # Losing?! What's that?
-    openmw              # Losing is even more meh1
-    wesnoth             # Losing is frustrating!
-    zeroad              # Losing is fun and frustrating!
+    unstable.dwarf-fortress      # Losing is fun!
+    unstable.endless-sky         # Losing is meh!
+    unstable.minetest            # Losing?! What's that?
+    unstable.openmw              # Losing is even more meh1
+    unstable.wesnoth             # Losing is frustrating!
+    unstable.zeroad              # Losing is fun and frustrating!
 
     # Installing some of the dependencies required for my scripts.
     ffcast

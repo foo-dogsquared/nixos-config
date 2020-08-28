@@ -3,7 +3,3 @@
 These are some of my themes om NixOS as a module ala-link:https://github.com/hlissner/dotfiles[hlissner NixOS modules] as a https://github.com/cookiecutter/cookiecutter[Cookiecutter template].
 Most of them just need a Pywal JSON scheme in the appropriate config file and generate the module with the given color scheme as a result.
 
-Also, to make them working, you need to have home-manager installed (or do the hardwork of converting them to be suitable for system configuration yourself, your choice).
-Furthermore, be careful when using the themes as they may override some of the current configuration.
-The modules assume you don't have much installed and/or enabled (e.g., display servers, window managers) and handle installing those packages for you.
-
