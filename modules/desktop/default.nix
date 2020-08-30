@@ -10,5 +10,6 @@
     ./graphics.nix
     ./multimedia.nix
     ./music.nix
+    ./research.nix
   ];
 }

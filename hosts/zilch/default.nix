@@ -3,10 +3,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
-
   nixpkgs.overlays = import ./modules/overlays.nix;
 
   # Use the systemd-boot EFI boot loader.
@@ -106,6 +102,7 @@
       default = "nvim";
       emacs.enable = true;
       neovim.enable = true;
+      vscode.enable = true;
     };
 
     services = {

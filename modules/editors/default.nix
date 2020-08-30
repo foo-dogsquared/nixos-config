@@ -8,6 +8,7 @@ with lib;
   imports = [
     ./emacs.nix
     ./neovim.nix
+    ./vscode.nix
   ];
 
   options.modules.editors = {
