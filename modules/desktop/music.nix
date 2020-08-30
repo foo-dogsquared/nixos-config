@@ -19,13 +19,13 @@ in {
     my.packages = with pkgs;
       (if cfg.composition.enable then [
         lilypond            # Prevent your compositions to be forever lost when you're in grave by engraving them now (or whenever you feel like it).
-        musescore           # A music composer for creating musical cheatsheets.
+        unstable.musescore           # A music composer for creating musical cheatsheets.
         soundfont-fluid     # A soundfont for it or something.
-        supercollider       # Programming platform for synthesizing them 'zics.
+        unstable.supercollider       # Programming platform for synthesizing them 'zics.
       ] else []) ++
 
       (if cfg.production.enable then [
-        ardour      # A DAW focuses on hardware recording but it can be used for something else.
+        unstable.ardour      # A DAW focuses on hardware recording but it can be used for something else.
         audacity    # Belongs in the great city of "Simple tools for short audio samples".
         carla       # A plugin host useful for a consistent hub for them soundfonts and SFZs.
         fluidsynth  # Synth for fluid sounds.

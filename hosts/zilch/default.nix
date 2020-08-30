@@ -157,6 +157,7 @@
     maim
     (tesseract.override { enableLanguages = [ "eng" ]; })
     slop
+    xclip
     xdg-user-dirs
     zbar
   ];
@@ -183,7 +184,12 @@
   };
 
   # Install a proprietary Nvidia graphics driver.
-  services.xserver.videoDrivers = [ "nvidiaLegacy390" ];
+  services.xserver = {
+    libinput = {
+      middleEmulation = true;
+    };
+    videoDrivers = [ "nvidiaLegacy390" ];
+  };
 
   # Enable sound.
   sound.enable = true;

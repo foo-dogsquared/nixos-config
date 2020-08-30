@@ -50,6 +50,11 @@ If we're to install this setup at separate times, the full list of installed pac
 
 * It may use third-party channels for certain versions of the packages, hammering the first precaution even further regarding reproducibility.
 
+* The main user configuration is tightly integrated with the system configuration.
+In other words, all upgrades would have to affect the entire system.
+If you want separate user profiles (just like how Nix intended to be) with each user having its own pace of upgrading their local system, you're missing out with this config setup.
+That said, it is still possible to create user profiles by just declaring the user in `./hosts/$HOST/default.nix` (e.g., `users.users.$USERNAME`), leaving it blank, and configure it at your own pace in `$HOME`.
+
 
 
 
