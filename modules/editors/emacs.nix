@@ -1,4 +1,3 @@
-# modules/editors/emacs.nix - https://gnu.org/emacs/
 # Ah yes, the bane of my endless configuration hell (or heaven, whichever your personal preferences).
 # Or specifically, Org-mode...
 # Doom Emacs saved me from being a configuration demon.

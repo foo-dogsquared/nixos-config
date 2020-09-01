@@ -12,6 +12,7 @@ with lib;
 
   config = mkIf config.modules.desktop.multimedia.enable {
     my.packages = with pkgs; [
+      ffmpeg            # The ultimate multimedia toolkit for everybody!
       hexchat           # The ultimate IRC client for neckbeards.
       kdenlive          # A decent free and open source video editor.
       mpv               # The ultimate media player for hipsters.

@@ -1,4 +1,3 @@
-# modules/editors/vim.nix - https://neovim.org
 # (Neo)Vim is love, (Neo)Vim is life.
 { config, options, lib, pkgs, ... }:
 

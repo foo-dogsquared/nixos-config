@@ -58,6 +58,12 @@ device: username:
 
     gnumake               # for our own makefile
     cachix                # less time buildin' mo time nixin'
+
+    # nix-shell with the modified Nix path.
+    (writeScriptBin "nix-shell" ''
+      #!${stdenv.shell}
+      NIX_PATH="nixpkgs-overlays=/etc/dotfiles/packages/default.nix:$NIX_PATH" ${nix}/bin/nix-shell "$@"
+    '')
   ];
 
   # Default settings for primary user account.

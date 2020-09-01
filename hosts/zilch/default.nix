@@ -61,6 +61,7 @@
         brave.enable = true;
         firefox.enable = true;
       };
+      cad.enable = true;
       fonts.enable = true;
       files.enable = true;
       graphics = {
@@ -73,6 +74,7 @@
         composition.enable = true;
         production.enable = true;
       };
+      research.enable = true;
     };
 
     dev = {
@@ -131,7 +133,6 @@
   # Additional programs that doesn't need much configuration (or at least personally configured).
   # It is pointless to create modules for it, anyways.
   environment.systemPackages = with pkgs; [
-    # defold
     nim         # Jack the nimble, jack jumped over the nightstick, and got over not being the best pick.
     python      # *insert Monty Python quote here*
   ];
@@ -156,6 +157,7 @@
     slop
     xclip
     xdg-user-dirs
+    xorg.xwininfo
     zbar
   ];
 

@@ -1,4 +1,5 @@
 # Visual Studio but for codes...
+# The code is really stolen from the NixOS wiki at https://nixos.wiki/wiki/Vscode.
 { config, options, lib, pkgs, ... }:
 
 with lib;
@@ -17,12 +18,27 @@ let
       sha256 = "1jh28qqa0qcycmj3h69dxg49l6zka5yb1vsdqyzc9cqnf8m6ps2a";
     }
 
+    # Make VS Code more practical with style!
+    {
+      name = "bracket-pair-colorizer-2";
+      publisher = "CoenraadS";
+      version = "0.2.0";
+      sha256 = "0nppgfbmw0d089rka9cqs3sbd5260dhhiipmjfga3nar9vp87slh";
+    }
+
     # Your favorite programming language for a game of barnyard darts.
     {
       name = "dart-code";
       publisher = "Dart-Code";
       version = "3.13.2";
       sha256 = "05pyqijwkqby4q9izkddkrhlfd0jhdc1xqdf6342l1r7p8bwyqyr";
+    }
+
+    {
+      name = "vscode-eslint";
+      publisher = "dbaeumer";
+      version = "2.1.8";
+      sha256 = "18yw1c2yylwbvg5cfqfw8h1r2nk9vlixh0im2px8lr7lw0airl28";
     }
 
     # RULES RULE, INCONSISTENCY DROOLS!
@@ -33,12 +49,20 @@ let
       sha256 = "18r19dn1an81l2nw1h8iwh9x3sy71d4ab0s5fvng5y7dcg32zajd";
     }
 
-    # Flutter like a butter, sting like a b.
+    # Flutter like a butter, dart like a bee.
     {
       name = "flutter";
       publisher = "Dart-Code";
       version = "3.13.2";
       sha256 = "1jpb01a3fazwi89b2f59sm8sbzbfaawdxaais53dsay1wbg5hncz";
+    }
+
+    # Git those lens with a magnifying glass, son.
+    {
+      name = "gitlens";
+      publisher = "eamodio";
+      version = "10.2.2";
+      sha256 = "00fp6pz9jqcr6j6zwr2wpvqazh1ssa48jnk1282gnj5k560vh8mb";
     }
 
     # Muh consistent theming.

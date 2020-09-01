@@ -94,6 +94,7 @@ See the <<Hosts>> section for more details.
 
 * The `packages/` folder is my custom packages either the new ones that haven't made into nixpkgs yet or packages with overrides.
 Also contains third-party package repositories and overlays such as the https://github.com/nix-community/NUR[NUR], https://github.com/nix-community/emacs-overlay[unstable branch of Emacs], or the unstable branch of https://github.com/NixOS/nixpkgs/[nixpkgs].
+See the <<Packages>> section for more information.
 
 * The `templates/` directory is a bunch of https://github.com/cookiecutter/cookiecutter/[Cookiecutter] templates intended for easy creation/deployment of customized systems (e.g., graphical desktop environments, customized modules).
 
@@ -180,3 +181,92 @@ This is where you can add certain packages, enable certain settings, setup your 
 Then, edit `modules/themes/default.nix` to add the theme to the selection.
 I have my theme templates stored in link:./templates[`./templates`] as an example.
 
+
+
+
+== Packages
+
+The link:./packages/[`./packages/`] directory contains cluster-wide https://nixos.wiki/wiki/Overlays[overlays], https://nixos.wiki/wiki/Nix_Channels[channels], and custom packages.
+The overlays should be put in a separate folder in `./packages/overlays/`.
+For any other packages, it should be put on the same level as `./packages/default.nix`.
+
+To make this section longer, here is the workflow summary in creating a package:
+
+- Create a test file (i.e., `./packages/$PACKAGE.nix`).
+Either as an initial draft or a final prototype that you'll never check once it successfully built.
+
+- Fetch the to-be package.
+In case you want to know the SHA256 hash of the to-be package from fetching (e.g., `fetchTarball`, `fetchFromGitHub`), you can use `lib.fakeSha256` and wait for the error to appear.
+It should give you the expected hash.
+footnote:[Don't forget to visit the nixpkgs repo and look at the source code for the nth time.]
+
+- Give the build inputs and the instructions for individual phases (e.g., `unpackPhase`, `preInstallPhase`, `buildPhase`).
+
+
+
+
+== Why NixOS?
+
+It'll be a full-time geeky story if I have to explain so I'll put it in a bullet list.
+
+* You can configure your system from the system-wide packages, user-specific packages, boot loader settings, graphical environments, and what-have-you.
+That fact alone blew my mind ever since I saw @hlissner's NixOS and the temptation just keeps growing ever since.
+This is where the real power of NixOS (and also https://guix.gnu.org/[GuixSD]) really made it worth: declarative configuration.
+
+* It is reproducible (in a way, anyway).
+Compared to other distros I've used in the past before discovering NixOS (which is only Arch and Fedora), it is very easy to reproduce the config.
+In my first day of using NixOS, I just enabled hlissner's default config and I was able to boot in just fine.
+(Though, changing my config into something that I want to takes the most time.)
+
+* Rollbacks...
+Rollbacks are good.
+In system state, life with a time machine, and fighting games.
+You can just `nixos-rebuild switch --rollback` and you'll be back into your previous config.
+It's like Windows Restore on steroids.
+
+* The packaging process is straightforward (or so I've heard).
+I've yet to create one but it'll quickly change once I found my ideal set up for starting game dev as a hobby.
+
+
+=== Want to learn NixOS?
+
+I was able to get up and running with NixOS in a day (which is impressive for the smoothbrain that I am) thanks to these resources:
+
+* https://nixos.org/manual/nixos/[The NixOS manual] is your starting point.
+Personally, I find it a bit confusing but it is still good to get an installation working.
+
+* https://www.youtube.com/watch?v=NYyImy-lqaA&list=PLRGI9KQ3_HP_OFRG6R-p4iFgMSK1t5BHs[The Nixology video series by Burke Libbey] which gives a practical insight on Nix and NixOS, in general.
+I give it a wholehearted recommendation to check it out.
+
+* I learn a whole lot from tinkering with https://github.com/hlissner/dotfiles[@hlissner's dotfiles].
+It's like the practical application of the things I've learned for the day.
+Though, it did cost me to spend a week debugging footnote:[Which mostly compose of trial-and-erroring the hardcore way.] the config from the never-ending tinkering (which is a stupid decision on my part).
+It could've been resolved in a day or two if I had joined the https://discord.gg/qvGgnVx[Doom Emacs Discord server].
+
+* Speaking of the Doom Emacs Discord server, the https://discord.gg/qvGgnVx[Doom Emacs Discord server] is pretty cool.
+Despite it is a Discord server on Doom Emacs, it is welcoming on non-Doom Emacs stuff and you can find a lot of NixOS (and Guix) geeks over there.
+
+* With the https://stephank.nl/p/2020-06-01-a-nix-primer-by-a-newcomer.html[help of the newcomers documented their learnings], I was able to quickly pick the terminologies surrounding the system.
+
+If you want to look out for some go-to resources, the https://nixos.org/learn.html[official manuals] will never fade in the list.
+It may be horrible for a newcomer (in my opinion) but it is great for someone who's already familiar with Nix.
+The https://nixos.wiki/[unofficial NixOS wiki] is one of the more reliable sources especially with its practical example.
+
+For more learning on the Nix conventions, ecosystem, and practices, I recommend https://nix.dev/[nix.dev] to look out for.
+It provides some information that the official (and unofficial) sources misses.
+
+NixOS is a wildly different beast compared to other distros.
+I did go through some rocky road to learning it;
+my time learning NixOS is not composed of 100% absorbing the information efficiently.
+
+* One of the biggest problem I've encountered is the hidden conventions on the code.
+The biggest example I can think of is the parameters of a nixpkgs module (i.e., `{ config, options, lib, pkgs, ... }`).
+For an acquintance with Nix, it may not be that much of a problem.
+However, for a newcomer, it is pretty hard to find those information with those https://nixos.org/learn.html[three manuals].
+
+* It does throw a bunch of traditional concepts usually found on most Linux distros with the removal of filesystem hierarchy the biggest change of them all.
+Thankfully, there's been remedy to mitigate against the sudden change by retaining `/usr/bin/env` for your scripts.
+
+* The error messages are horrible (when it's horrible)!
+There is a https://opencollective.com/nix-errors-enhancement/updates/revising-our-road-map-phase-3[recent push on improving Nix in that aspect] but it focuses on the formatting.
+The interpreter sometimes points at the opposite way (at least to me).

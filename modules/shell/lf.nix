@@ -1,4 +1,3 @@
-# modules/shell/git.nix
 # A file manager for hipsters.
 { config, options, lib, pkgs, ... }:
 
