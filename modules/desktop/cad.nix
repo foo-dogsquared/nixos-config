@@ -15,6 +15,7 @@ with lib;
       freecad       # FREE AS A BIRD, FREE AS A ALL-YOU-CAN-EAT BUFFER!
       kicad         # The CAD for ki which is a form of energy found everywhere.
       leocad        # A CAD for leos, a well-known brand of toys.
+      openscad      # A programmable CAD for programmers.
     ];
   };
 }

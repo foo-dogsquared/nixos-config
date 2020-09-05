@@ -13,6 +13,7 @@ in
       type = types.bool;
       default = bool;
     }; in {
+      defold.enable = mkBoolOption false;
       godot.enable = mkBoolOption false;
       unity3d.enable = mkBoolOption false;
     };
@@ -21,6 +22,10 @@ in
     my.packages = with pkgs;
       (if cfg.godot.enable then [
         godot       # The Godot, not to be confused with a certain prosecutor.
+      ] else []) ++
+
+      (if cfg.defold.enable then [
+        defold
       ] else []) ++
 
       (if cfg.unity3d.enable then [

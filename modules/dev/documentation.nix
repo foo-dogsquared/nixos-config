@@ -33,10 +33,13 @@ in
       hugo              # An SSG for your DDD (documentation-driven development) workflow.
       languagetool      # A grammar checker with a HUGE data set.
       pandoc            # The Swiss army knife for document conversion.
+      R                 # Rated G for accessibility.
       vale              # The customizable linter for your intended writings.
 
       # TODO: Make Neuron its own package.
-      (let neuronSrc = builtins.fetchTarball "https://github.com/srid/neuron/archive/master.tar.gz";
+      (let
+        neuronRev = "3c46adea8cfa2262ac2d50d3d9b1a96cb13a512d";
+        neuronSrc = builtins.fetchTarball "https://github.com/srid/neuron/archive/${neuronRev}.tar.gz";
         in import neuronSrc {})     # Neurons and zettels are good for the brain.
     ] ++
 

@@ -13,6 +13,7 @@ with lib;
   config = mkIf config.modules.dev.base.enable {
     my.packages = with pkgs; [
       caddy2            # THE ULTIMATE HTTPS/2 SERVER FOR 'YER GOLFIN' SESSIONS!!!
+      cmake             # Yo, I heard you like Makefiles.
       cookiecutter      # A project scaffolding tool.
       gnumake           # Make your life easier with GNU Make.
       hyperfine         # You shouldn't be feel just fine with your programs...

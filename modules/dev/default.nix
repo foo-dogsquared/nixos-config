@@ -13,5 +13,6 @@
     ./math.nix
     ./perl.nix
     ./rust.nix
+    ./vcs.nix
   ];
 }

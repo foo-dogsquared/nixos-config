@@ -15,7 +15,7 @@ with lib;
       aria2         # The sequel to aria(1).
       aspell        # Hunt down a spelling bee champion to come to your shell.
       bat           # cat(1) with wings.
-      # buku          # A developer-oriented browser-independent bookmark manager.
+      buku          # A developer-oriented browser-independent bookmark manager.
       exa           # ls(1) after an exodus.
       fd            # find(1) after a cognitive behavioral therapy.
       fzf           # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
@@ -23,6 +23,7 @@ with lib;
       hledger       # Do your accountancy thing ON THE COMMAND LINE, sure why not!
       httpie        # Want a piece of the HTTP pie.
       gopass        # The improved version of Password Store which is a password manager for hipsters.
+      graphviz      # The biz central for graphical flowcharts.
       maim          # A command-line interface for parsing screenshots.
       jq            # A command-line interface for parsing JSON.
       pup           # A command-line interface for parsing HTML.

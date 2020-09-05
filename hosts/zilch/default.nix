@@ -98,6 +98,7 @@
         racket.enable = true;
       };
       rust.enable = true;
+      vcs.enable = true;
     };
 
     editors = {
@@ -155,10 +156,16 @@
     maim
     (tesseract.override { enableLanguages = [ "eng" ]; })
     slop
+    virt-manager
     xclip
     xdg-user-dirs
     xorg.xwininfo
     zbar
+
+    # My custom packages.
+    # fds-nur.brl-cad
+    # fds-nur.hypermail
+    # fds-nur.wikiman
   ];
 
   # Setting up the shell environment.
@@ -168,7 +175,15 @@
     READ = "zathura";
     SUDO_ASKPASS = <config/bin/askpass>;
   };
-  my.alias.dots = "USER=${config.my.username} make -C /etc/dotfiles";
+
+  # foo-dogsquared is my only alias.
+  my.alias = {
+    # Convenience alias for my NixOS config.
+    dots = "USER=${config.my.username} make -C /etc/dotfiles";
+
+    # Assume you've installed Doom Emacs.
+    org-capture = "$XDG_CONFIG_HOME/emacs/bin/org-capture";
+  };
 
   # Set your time zone.
   time.timeZone = "Asia/Manila";
@@ -212,4 +227,6 @@
       };
     };
   };
+
+  my.user.extraGroups = [ "docker" ];
 }

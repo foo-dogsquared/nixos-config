@@ -28,6 +28,11 @@ in {
       udiskie               # An automounter for external devices with authentication.
     ];
 
+    # Enable peer-to-peer synchro summoning service.
+    my.home.services = {
+      syncthing.enable = true;
+    };
+
     # Clean 'yer home!
     my.env = {
       RECOLL_CONFDIR = "$XDG_DATA_HOME/recoll";

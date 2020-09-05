@@ -92,7 +92,7 @@ In this case, it is my https://github.com/foo-dogsquared/dotflies[dotfiles] dire
 It is also used on the installation phase (from `make install`) by setting the `HOST` variable (i.e., `HOST=zilch make -C /etc/install`) with the folder name as the argument.
 See the <<Hosts>> section for more details.
 
-* The `packages/` folder is my custom packages either the new ones that haven't made into nixpkgs yet or packages with overrides.
+* Though my custom packages are now placed in my https://github.com/foo-dogsquared/nur-packages[NUR repo], the `packages/` folder still exists here intended for "private" packages.
 Also contains third-party package repositories and overlays such as the https://github.com/nix-community/NUR[NUR], https://github.com/nix-community/emacs-overlay[unstable branch of Emacs], or the unstable branch of https://github.com/NixOS/nixpkgs/[nixpkgs].
 See the <<Packages>> section for more information.
 

@@ -12,6 +12,7 @@ in {
       type = types.bool;
       default = bool;
     }; in {
+      programmable.enable = mkBoolDefault false;
       raster.enable = mkBoolDefault false;
       vector.enable = mkBoolDefault false;
       _3d.enable = mkBoolDefault false;
@@ -22,7 +23,12 @@ in {
       [
         font-manager    # Self-explanatory name is self-explanatory.
         imagemagick     # A command-line tool for manipulating images.
+        graphviz        # The biz central for graphical flowcharts.
       ] ++
+
+      (if cfg.programmable.enable then [
+        processing      # A visually-oriented language with an energertic train conductor as the mascot.
+      ] else []) ++
 
       (if cfg.raster.enable then [
         gimp            # Adobe Photoshop replacement.

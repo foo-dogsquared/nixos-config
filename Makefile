@@ -41,3 +41,6 @@ upgrade: update switch
 rollback:
 	@sudo nix-env --rollback
 
+test:
+	@nixos-rebuild $(FLAGS) test
+

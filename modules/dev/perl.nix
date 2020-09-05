@@ -2,7 +2,15 @@
 { config, options, lib, pkgs, ... }:
 
 with lib;
-{
+let
+  perlWithPackages = pkgs.perl.withPackages (p: with pkgs.perlPackages;
+  [
+    ModernBuild
+    ModuleInfo
+    ModuleInstall
+    ModernPerl
+  ]);
+in {
   options.modules.dev.perl = {
     enable = mkOption {
       type = types.bool;
@@ -11,12 +19,6 @@ with lib;
   };
 
   config = mkIf config.modules.dev.perl.enable {
-    my.packages = with pkgs; [
-      perl
-      perlPackages.ModernPerl
-      perlPackages.ModuleBuild
-      perlPackages.ModuleInfo
-      perlPackages.ModuleInstall
-    ];
+    my.packages = perlWithPackages;
   };
 }

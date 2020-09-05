@@ -32,8 +32,8 @@ with lib;
       # Optional depedencies
       fd                # faster projectile
       imagemagick       # image-dired
-      # (lib.mkIf (config.programs.gnupg.agent.enable)
-      #  pinentry_emacs)    # gnupg-emacs
+      (lib.mkIf (config.programs.gnupg.agent.enable)
+       pinentry_emacs)    # gnupg-emacs
       zstd      # for undo-fu-sessions
 
       # Module dependencies

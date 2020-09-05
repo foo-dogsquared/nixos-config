@@ -1,6 +1,9 @@
 [
   (self: super: with super; {
-    # defold = (callPackage ./defold.nix {});
+    nur-foo-dogsquared = import (
+      fetchTarball "https://github.com/foo-dogsquared/nix-expressions/archive/master.tar.gz") { };
+    );
+  );
 
     # Add packages from the unstable channel with `pkgs.unstable.$PKG`.
     unstable = import <nixpkgs-unstable> { inherit config; };
