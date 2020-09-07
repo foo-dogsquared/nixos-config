@@ -17,6 +17,7 @@ with lib;
       cookiecutter      # A project scaffolding tool.
       gnumake           # Make your life easier with GNU Make.
       hyperfine         # You shouldn't be feel just fine with your programs...
+      nixfmt            # Formatter for uniform Nix code.
       stow              # Build your symlink farm on the other side of the country, er, filesystem.
       tldr              # What manuals should include.
       universal-ctags   # Enable fast traveling to your code (assuming written in a supported language).

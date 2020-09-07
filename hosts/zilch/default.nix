@@ -9,6 +9,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Clean up the /tmp directory.
+  boot.cleanTmpDir = true;
+
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -80,6 +83,8 @@
     dev = {
       android.enable = true;
       base.enable = true;
+      cc.enable = true;
+      data.enable = true;
       documentation = {
         enable = true;
         latex.enable = true;
@@ -166,6 +171,7 @@
     # fds-nur.brl-cad
     # fds-nur.hypermail
     # fds-nur.wikiman
+    nur.foo-dogsquared.segno
   ];
 
   # Setting up the shell environment.

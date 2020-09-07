@@ -1,12 +1,11 @@
 [
   (self: super: with super; {
-    nur-foo-dogsquared = import (
-      fetchTarball "https://github.com/foo-dogsquared/nix-expressions/archive/master.tar.gz") { };
-    );
-  );
 
     # Add packages from the unstable channel with `pkgs.unstable.$PKG`.
     unstable = import <nixpkgs-unstable> { inherit config; };
+    nur.foo-dogsquared = import (
+      fetchTarball "https://github.com/foo-dogsquared/nur-packages/archive/develop.tar.gz"
+    ) { inherit pkgs; };
   })
 
   # The unstable branch of Emacs.

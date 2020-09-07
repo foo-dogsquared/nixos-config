@@ -5,6 +5,7 @@
     ./android.nix
     ./base.nix
     ./cc.nix
+    ./data.nix
     ./documentation.nix
     ./gamedev.nix
     ./java.nix
