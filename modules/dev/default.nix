@@ -13,6 +13,7 @@
     ./lisp.nix
     ./math.nix
     ./perl.nix
+    ./python.nix
     ./rust.nix
     ./vcs.nix
   ];

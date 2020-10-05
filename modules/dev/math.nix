@@ -12,23 +12,20 @@ in
       type = types.bool;
       default = false;
     }; in {
-      python.enable = mkEnableOption;
+      enable = mkEnableOption;
       r.enable = mkEnableOption;
   };
 
-  config = {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       gnuplot       # I came for the plots.
+      julia         # A statistics-focused languaged named after a character in an iconic fighting game.
       octave        # Matlab's hipster brother.
     ] ++
 
-    (if cfg.python.enable then [
-      python        # Serious question: do I really need to install this?
-      python38Packages.sympy        # The Python library that always being noticed.
-    ] else []) ++
-
     (if cfg.r.enable then [
       R             # Rated G for accessibility.
+      rstudio       # It's not that kind of studio.
     ] else []);
   };
 }

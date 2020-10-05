@@ -4,6 +4,16 @@
 { config, options, lib, pkgs, ... }:
 
 with lib;
+let
+  emacsOrgProtocolDesktopEntry = pkgs.makeDesktopItem {
+    name = "org-protocol";
+    desktopName = "Org-Protocol";
+    exec = "emacsclient %u";
+    icon = "emacs-icon";
+    type = "Application";
+    mimeType = "x-scheme-handler/org-protocol";
+  };
+in
 {
   options.modules.editors.emacs = {
     enable = mkOption {
@@ -14,7 +24,7 @@ with lib;
     # Just make sure the unstable version of Emacs is available as a package by creating an overlay.
     pkg = mkOption {
       type = types.package;
-      default = pkgs.unstable.emacs;
+      default = pkgs.emacs;
     };
   };
 
@@ -23,6 +33,8 @@ with lib;
       ((emacsPackagesNgGen config.modules.editors.emacs.pkg).emacsWithPackages (epkgs: [
         epkgs.vterm
       ]))
+
+      emacsOrgProtocolDesktopEntry
 
       # Doom dependencies
       git
@@ -49,6 +61,9 @@ with lib;
       ## :tools editorconfig
       editorconfig-core-c
 
+      ## :tools lookup
+      wordnet
+
       ## :tools lookup & :lang org+roam
       sqlite
     ];
@@ -56,11 +71,5 @@ with lib;
     fonts.fonts = with pkgs; [
       emacs-all-the-icons-fonts
     ];
-
-    # Placing the Doom Emacs config.
-    my.home.xdg.configFile."doom" = {
-      source = ../../config/emacs;
-      recursive = true;
-    };
   };
 }

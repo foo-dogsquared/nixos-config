@@ -28,8 +28,6 @@ with lib;
       xserver = {
         displayManager = {
           lightdm.enable = true;
-          lightdm.greeters.mini.enable = true;
-          lightdm.greeters.mini.user = config.my.username;
           defaultSession = "none+bspwm";
         };
         enable = true;
@@ -77,6 +75,7 @@ with lib;
             gtk-xft-hinting=1
             gtk-xft-hintstyle=hintfull
             gtk-xft-rgba=none
+            gtk-font-name=Sans 10
           '';
         }
       ];

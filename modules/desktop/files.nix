@@ -21,17 +21,13 @@ in {
       })                    # Bring the search engine to the desktop!
       unison
       magic-wormhole        # Magically transfer stuff between your wormholes!
+      qbittorrent           # Free version of uBittorrent.
       transmission          # One of the components for sailing the high seas.
       syncthing             # A peer-to-peer synchro summoning.
       xfce.thunar           # A graphical file manager.
       xfce.thunar-volman    # A Thunar plugin on volume management for external devices.
       udiskie               # An automounter for external devices with authentication.
     ];
-
-    # Enable peer-to-peer synchro summoning service.
-    my.home.services = {
-      syncthing.enable = true;
-    };
 
     # Clean 'yer home!
     my.env = {

@@ -1,14 +1,18 @@
 { config, options, lib, ... }:
+
 with lib;
-let mkOptionStr = value: mkOption
-  { type = types.str;
-    default = value; };
+
+let
+  mkOptionStr = value: mkOption
+    { type = types.str;
+      default = value; };
 in {
   imports = [
     <home-manager/nixos>
 
     ./desktop
     ./dev
+    ./drivers
     ./editors
     ./shell
     ./services
@@ -23,7 +27,7 @@ in {
 
       # Convenience aliases
       home = mkOption { type = options.home-manager.users.type.functor.wrapped; };
-      user = mkOption { type = types.submodule; };
+      user = mkOption { type = options.users.users.type; };
       packages = mkOption { type = with types; listOf package; };
 
       # Environment

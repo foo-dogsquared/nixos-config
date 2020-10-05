@@ -22,6 +22,7 @@ with lib;
       hexyl         # Binary viewer with a cool name on the command-line.
       hledger       # Do your accountancy thing ON THE COMMAND LINE, sure why not!
       httpie        # Want a piece of the HTTP pie.
+      gitAndTools.tig # The Deltarune of Git.
       gopass        # The improved version of Password Store which is a password manager for hipsters.
       graphviz      # The biz central for graphical flowcharts.
       maim          # A command-line interface for parsing screenshots.
@@ -34,5 +35,14 @@ with lib;
       unzip         # Unzip what? The world may never know.
       youtube-dl    # A program that can be sued for false advertisement as you can download from other video sources.
     ];
+
+    my.home = {
+      programs.bat = {
+        enable = true;
+        config = {
+          theme = "base16";
+        };
+      };
+    };
   };
 }

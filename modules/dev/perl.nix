@@ -5,7 +5,7 @@ with lib;
 let
   perlWithPackages = pkgs.perl.withPackages (p: with pkgs.perlPackages;
   [
-    ModernBuild
+    ModuleBuild
     ModuleInfo
     ModuleInstall
     ModernPerl
@@ -19,6 +19,6 @@ in {
   };
 
   config = mkIf config.modules.dev.perl.enable {
-    my.packages = perlWithPackages;
+    my.packages = [ perlWithPackages ];
   };
 }

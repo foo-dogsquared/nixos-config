@@ -21,11 +21,6 @@ with lib;
         withPython3 = true;
         withRuby = true;
       };
-
-      xdg.configFile."nvim" = {
-        source = ../../config/nvim;
-        recursive = true;
-      };
     };
   };
 }

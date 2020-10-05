@@ -22,7 +22,7 @@ in {
     my.packages = with pkgs;
       [
         font-manager    # Self-explanatory name is self-explanatory.
-        imagemagick     # A command-line tool for manipulating images.
+        imagemagick7    # A command-line tool for manipulating images.
         graphviz        # The biz central for graphical flowcharts.
       ] ++
 

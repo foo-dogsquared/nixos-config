@@ -14,10 +14,18 @@ with lib;
     # Enable fontconfig to easily discover fonts installed from home-manager.
     fonts = {
       enableFontDir = true;
-      enableGhostscriptFonts = true;
-      fontconfig.enable = true;
+      enableDefaultFonts = true;
+      fontconfig = {
+        enable = true;
+        defaultFonts = {
+          sansSerif = [ "Source Sans Pro" "IBM Plex Sans" ];
+          serif = [ "Source Serif Pro" "IBM Plex Serif" ];
+          monospace = [ "Source Code Pro" "IBM Plex Mono" ];
+        };
+      };
 
       fonts = with pkgs; [
+       dejavu_fonts
        fira-code             # The programming font with fancy symbols.
        ibm-plex              # IBM's face, is it professional?
        iosevka               # The fancy monofont with fancy ligatures.

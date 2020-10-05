@@ -38,7 +38,7 @@ in
 
       # TODO: Make Neuron its own package.
       (let
-        neuronRev = "3c46adea8cfa2262ac2d50d3d9b1a96cb13a512d";
+        neuronRev = "5c37dd3bbfff7d203883417bee2e2970d41cd70d";
         neuronSrc = builtins.fetchTarball "https://github.com/srid/neuron/archive/${neuronRev}.tar.gz";
         in import neuronSrc {})     # Neurons and zettels are good for the brain.
     ] ++
