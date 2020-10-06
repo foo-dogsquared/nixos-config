@@ -36,7 +36,7 @@ window {
     background-color: transparent;
 
     height: 65%;
-    width: 45%;
+    width: 35%;
     position: center;
     location: center;
     text-color: @foreground;

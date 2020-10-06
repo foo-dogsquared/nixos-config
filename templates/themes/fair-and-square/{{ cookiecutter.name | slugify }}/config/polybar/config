@@ -59,23 +59,7 @@
 
     modules-left = bspwm
     modules-center = date
-    modules-right = pulseaudio eth memory home-fs root-fs
-
-
-[module/home-fs]
-    type = internal/fs
-    mount-0 = /home
-    format-margin = 0
-    format-padding = 0
-    label-margin = 0
-    label-padding = 0
-
-    format-mounted-prefix = ""
-    format-mounted-prefix-margin-right = 1
-    format-unmounted-prefix = ""
-    format-unmounted-prefix-margin-right = 1
-    label-mounted = %free%
-    label-unmounted = N/A
+    modules-right = pulseaudio eth memory root-fs
 
 
 [module/root-fs]
@@ -155,9 +139,9 @@
     ; We've formatted the time string to alter between the time and the date instead.
     ; Although, I feel it's a hacky workaround, it still is functional as a date module.
     date = "%A, %F"
-    date-alt = "%B %d, %Y"
+    date-alt = "%B %d, %Y (%F)"
     time = %T
-    time-alt = %F
+    time-alt =
 
     format-prefix = ""
     label = %date% %time%

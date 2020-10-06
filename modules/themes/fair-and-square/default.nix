@@ -11,23 +11,26 @@ with lib;
 
   config = mkIf config.modules.themes."fair-and-square".enable {
     # Pass the metadata of the theme.
-    modules.themes = {
+    modules.theme = {
       name = "Fair and square";
       version = "0.1.0";
       path = ./.;
     };
 
-    # Enable picom compositor.
     services = {
+      # Enable picom compositor.
       picom = {
         enable = true;
         fade = false;
         shadow = false;
       };
 
+      # Enable certain Xorg-related services.
       xserver = {
         displayManager = {
           lightdm.enable = true;
+          lightdm.greeters.mini.enable = true;
+          lightdm.greeters.mini.user = config.my.username;
           defaultSession = "none+bspwm";
         };
         enable = true;
@@ -36,16 +39,16 @@ with lib;
       };
     };
 
-    # Enable QT configuration to style with the GTK theme.
-    qt5 = {
-      style = "gtk2";
-      platformTheme = "gtk2";
-    };
-
-
     my.env.TERMINAL = "alacritty";
 
     my.home = {
+      # Enable GTK configuration.
+      gtk.enable = true;
+
+      # Enable QT configuration and set it to the same GTK config.
+      qt.enable = true;
+      qt.platformTheme = "gtk";
+
       # Install all of the configurations in the XDG config home.
       xdg.configFile = mkMerge [
         (let recursiveXdgConfig = name: {
@@ -64,7 +67,8 @@ with lib;
           };
         })
 
-        {
+        # Applying the theme for GTK.
+        ({
           "gtk-3.0/settings.ini".text = ''
             [Settings]
             gtk-theme-name=Arc
@@ -75,20 +79,24 @@ with lib;
             gtk-xft-hinting=1
             gtk-xft-hintstyle=hintfull
             gtk-xft-rgba=none
-            gtk-font-name=Sans 10
           '';
-        }
-      ];
 
-      # Except for the GTK2 config which still needs to be in `$HOME/.gtkrc-2.0`.
-      home.file = {
-        ".gtkrc-2.0".text = ''
-          gtk-theme-name="Arc"
-          gtk-icon-theme-name="Arc"
-          gtk-font-name="Sans 10"
-          gtk-cursor-theme-name="Adwaita"
-        '';
-      };
+          "gtk-2.0/gtkrc".text = ''
+            gtk-theme-name="Arc"
+            gtk-icon-theme-name="Arc"
+            gtk-font-name="Sans 10"
+            gtk-cursor-theme-name="Adwaita"
+          '';
+        })
+      ];
+    };
+
+    # Set the cursor theme.
+    xdg.dataFile = {
+      "icons/default/index.theme".text = ''
+        [icon theme]
+        Inherits=Adwaita
+      '';
     };
 
     my.packages = with pkgs; [

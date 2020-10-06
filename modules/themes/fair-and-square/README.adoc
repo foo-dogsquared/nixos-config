@@ -4,16 +4,17 @@ A theme featuring fairly simple graphics with not much bells and whistles.
 Thus, it focuses on snapiness and efficient use of keyboard shortcuts.
 Intended to be used for potatoes (READ: cheap low-end computers) like mine.
 
-This theme is mainly composed of the following components:
+This theme is mainly composed of the following components that are already configured:
 
 - bspwm as the window manager
 - polybar for the bars
 - rofi for the application laucher and the generic interface
 - dunst (and libnotify) for desktop notifications
+- feh (for setting the background) with the wallpaper to be used at `./config/wallpaper`.
 - Arc is the chosen GTK theme
 
-Other miscellaneous stuff:
+Here are the miscellaneous programs that are being used.
+The theme provides no configuration so you have to make sure the configuration is in the already placed.
 
 - sxhkd (since you're using bspwm, anyways)
-- feh (for setting the background)
 

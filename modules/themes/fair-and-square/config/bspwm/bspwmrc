@@ -1,14 +1,15 @@
 #!/bin/sh
 
-# Starting all of the required programs.
+# Open all of the programs needed.
 pkill polybar || polybar "fds-bar" &
-pkill feh || feh $HOME/.background-image
+pkill feh || feh --bg-fill $HOME/.background-image
+pkill dunst || dunst &
 
-# Removing all rules at startup to prevent duplicating rules. 
+# Removing all rules at startup to prevent duplicating rules.
 bspc rule -r "*"
 
 # Set up the desktops (workspaces) for the monitor
-bspc monitor -d I II III IV V 
+bspc monitor -d I II III IV V
 
 bspc config border_width        2
 bspc config window_gap          9
@@ -25,5 +26,5 @@ xsetroot -cursor_name left_ptr
 # Rules
 bspc rule -a code-oss desktop=^2
 bspc rule -a firefox desktop=^1
-bspc rule -a Emacs state=tiled
+bspc rule -a emacs state=tiled
 

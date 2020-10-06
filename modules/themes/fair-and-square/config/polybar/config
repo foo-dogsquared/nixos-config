@@ -139,9 +139,9 @@
     ; We've formatted the time string to alter between the time and the date instead.
     ; Although, I feel it's a hacky workaround, it still is functional as a date module.
     date = "%A, %F"
-    date-alt = "%B %d, %Y"
+    date-alt = "%B %d, %Y (%F)"
     time = %T
-    time-alt = %F
+    time-alt =
 
     format-prefix = ""
     label = %date% %time%

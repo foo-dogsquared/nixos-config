@@ -17,14 +17,15 @@ with lib;
       path = ./.;
     };
 
-    # Enable picom compositor.
     services = {
+      # Enable picom compositor.
       picom = {
         enable = true;
         fade = false;
         shadow = false;
       };
 
+      # Enable certain Xorg-related services.
       xserver = {
         displayManager = {
           lightdm.enable = true;
@@ -44,7 +45,7 @@ with lib;
       # Enable GTK configuration.
       gtk.enable = true;
 
-      # Enable QT configuration.
+      # Enable QT configuration and set it to the same GTK config.
       qt.enable = true;
       qt.platformTheme = "gtk";
 
@@ -66,9 +67,10 @@ with lib;
           };
         })
 
-        (mkIf config.services.xserver.enable {
+        # Applying the theme for GTK.
+        ({
           "gtk-3.0/settings.ini".text = ''
-	    [Settings]
+            [Settings]
             gtk-theme-name=Arc
             gtk-icon-theme-name=Arc
             gtk-fallback-icon-theme=gnome
@@ -87,6 +89,14 @@ with lib;
           '';
         })
       ];
+    };
+
+    # Set the cursor theme.
+    xdg.dataFile = {
+      "icons/default/index.theme".text = ''
+        [icon theme]
+        Inherits=Adwaita
+      '';
     };
 
     my.packages = with pkgs; [
