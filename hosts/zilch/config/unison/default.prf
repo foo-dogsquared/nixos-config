@@ -1,7 +1,8 @@
 # Paths to synchronize
-path = writings
-path = projects
 path = library
+path = phone
+path = projects
+path = writings
 
 # My GnuPG keys
 path = .gnupg
@@ -18,12 +19,16 @@ ignore = Name *~
 ignore = Name .*~
 ignore = Name *.o
 ignore = Name *.tmp
+ignore = Name *.qcow2
 
 # Node cache
 ignore = Name node_modules
 
 # Rust build caches
 ignore = Name target
+
+# Nix build result
+ignore = Name result
 
 # The diff command with the unified style (the same style Git uses for showing diffs)
 diff = diff --unified

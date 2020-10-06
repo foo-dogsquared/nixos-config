@@ -1,25 +1,19 @@
-# Ah yes, Rust...
-# The programming language that made me appreciate/tolerate C++ even more.
+# Go, go, Golang coders!
 { config, options, lib, pkgs, ... }:
 
 with lib;
 {
-  options.modules.dev.rust = {
+  options.modules.dev.go = {
     enable = mkOption {
       type = types.bool;
       default = false;
     };
   };
 
-  config = mkIf config.modules.dev.rust.enable {
+  config = mkIf config.modules.dev.go.enable {
     my.packages = with pkgs; [
-      rustup
+      delve     # Wait, Go doesn't have a proper debugger?
+      go        # The other zoomer proglang (READ: proglang is a zoomer term for programming language).
     ];
-
-    my.env = {
-      CARGO_HOME = "$XDG_DATA_HOME/cargo";
-      RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
-      PATH = [ "$CARGO_HOME/bin" ];
-    };
   };
 }

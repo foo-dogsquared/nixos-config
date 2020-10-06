@@ -3,13 +3,13 @@
 
 {
   imports = [
+    ./audio.nix
     ./browsers.nix
     ./cad.nix
     ./files.nix
     ./fonts.nix
     ./graphics.nix
     ./multimedia.nix
-    ./music.nix
     ./research.nix
   ];
 }

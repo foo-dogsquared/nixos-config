@@ -12,7 +12,7 @@ with lib;
 
   config = mkIf config.modules.dev.vcs.enable {
     my.packages = with pkgs; [
-      git
+      gitAndTools.gitFull
       mercurial
       subversion
     ];

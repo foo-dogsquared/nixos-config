@@ -31,7 +31,6 @@ in
         Service = {
           Environment = [ "RECOLL_CONFDIR=\"$XDG_DATA_HOME/recoll\"" ];
           ExecStart = "${(pkgs.recoll.override { withGui = false; })}/bin/recollindex ${cfg.flags}";
-          Restart = "on-failure";
         };
 
         Install = {

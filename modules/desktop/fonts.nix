@@ -25,7 +25,7 @@ with lib;
       };
 
       fonts = with pkgs; [
-       dejavu_fonts
+       dejavu_fonts          # Makes you feel like you've seen them before.
        fira-code             # The programming font with fancy symbols.
        ibm-plex              # IBM's face, is it professional?
        iosevka               # The fancy monofont with fancy ligatures.

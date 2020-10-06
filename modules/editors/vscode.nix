@@ -96,10 +96,15 @@ let
       version = "4.2.0";
       sha256 = "1in8lj5gim3jdy33harib9z8qayp5jn8pz6j0zpicbzxx87g2hm1";
     }
+
+    # Creating a Rust mini-IDE.
+    {
+      name = "rust";
+      publisher = "rust-lang";
+      version = "0.7.8";
+      sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
+    }
   ];
-  vscode-with-extensions = pkgs.vscode-with-extensions.override {
-    vscodeExtensions = extensions;
-  };
 in
 {
   options.modules.editors.vscode = {
@@ -110,8 +115,21 @@ in
   };
 
   config = mkIf config.modules.editors.vscode.enable {
-    my.packages = [
-      vscode-with-extensions
-    ];
+    my.home = {
+      programs.vscode = {
+        enable = true;
+        extensions = extensions;
+        userSettings = {
+          "diffEditor.codeLens" = true;
+          "editor.fontFamily" = "'Iosevka', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'";
+          "editor.fontLigatures" = true;
+          "eslint.alwaysShowStatus" = true;
+          "git.alwaysShowStagedChangesResourceGroup" = true;
+          "update.mode" = "none";
+          "workbench.colorTheme" = "Nord";
+          "workbench.iconTheme" = "material-icon-theme";
+        };
+      };
+    };
   };
 }

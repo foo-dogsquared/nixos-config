@@ -1,22 +1,35 @@
+# My audio tools...
 # I create "music" (with no experience whatsoever) so here's my "music" workflow.
+# TODO: I may have to switch to Pipewire for the FUTURE.
 { config, options, lib, pkgs, ... }:
 
 with lib;
 
 let
-  cfg = config.modules.desktop.music;
+  cfg = config.modules.desktop.audio;
 in {
-  options.modules.desktop.music = 
+  options.modules.desktop.audio =
     let mkBoolDefault = bool: mkOption {
       type = types.bool;
       default = bool;
     }; in {
+      enable = mkBoolDefault false;
       composition.enable = mkBoolDefault false;
       production.enable = mkBoolDefault false;
     };
 
-  config = {
+  config = mkIf cfg.enable {
+    # Enable JACK for the most serious audio applications.
+    services.jack = {
+      alsa.enable = true;
+      jackd.enable = true;
+    };
+
     my.packages = with pkgs;
+      [
+        cadence
+      ] ++
+
       (if cfg.composition.enable then [
         lilypond            # Prevent your compositions to be forever lost when you're in grave by engraving them now (or whenever you feel like it).
         musescore           # A music composer for creating musical cheatsheets.
@@ -40,5 +53,11 @@ in {
         # As of 2020-07-03, lmms has some trouble regarding Qt or something so at least use the "unstable" channel just to be safe.
         # lmms
       ] else []);
+
+    # Required when enabling JACK daemon.
+    my.user.extraGroups = [ "jackaudio" ];
+
+    # Add the sequencer and the MIDI kernel module.
+    boot.kernelModules = [ "snd-seq" "snd-rawmidi" ];
   };
 }

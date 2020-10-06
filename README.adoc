@@ -31,10 +31,10 @@ To correct this behavior, simply configure the `PREFIX` variable (e.g., `PREFIX=
 
 For more information, simply inspect the link:./Makefile[`./Makefile`].
 
-Assuming you did install, your project will have the following stuff.
+Assuming you did install, your NixOS setup will have the following stuff.
 
-- Add the nixpkgs unstable channel as `nixpkgs-unstable` (i.e., `nix-channels --update https://nixos.org/channels/nixos-unstable`).
-- Have the https://github.com/rycee/home-manager[home-manager] installed with the stable release.
+- Uses the NixOS unstable channel (https://nixos.org/channels/nixos-unstable) for its package set.
+- Have the https://github.com/rycee/home-manager[home-manager] installed with the unstable release.
 - You start with the TTY and nothing else is installed (i.e., bare installation similar in spirit to Arch Linux).
 To setup your graphical installation, see the <<Themes>> section.
 
@@ -45,8 +45,8 @@ There are some things you need to keep in mind when using this setup.
 
 * This setup is not meant to be fully reproducible.
 It is a personal setup for a person who wants to live on the bleeding edge, personally.
-Despite being a NixOS setup which should be reproducible on paper, it mainly uses the unstable versions of the channels and packages.
-If we're to install this setup at separate times, the full list of installed packages with their depedencies and versions wouldn't be the same.
+Despite being a NixOS setup which should be reproducible on paper, it mainly uses the unstable versions of the channels and packages meaning you would have a different installation each time (unless you do something like https://nixos.org/guides/towards-reproducibility-pinning-nixpkgs.html[pinning the nixpkgs repo] or using https://www.tweag.io/blog/2020-05-25-flakes/[the flakes feature]).
+footnote:[I'm most likely using the Nix flakes some time in the future.]
 
 * It may use third-party channels for certain versions of the packages, hammering the first precaution even further regarding reproducibility.
 
@@ -117,7 +117,6 @@ For best practice, you may want to follow the following project structure:
 ├── config/
 ├── modules/
 ├── default.nix*
-├── hardware-configuration.nix*
 └── README.adoc
 ----
 
@@ -127,9 +126,6 @@ For best practice, you may want to follow the following project structure:
 
 * `default.nix` is the entrypoint for our host module.
 It contains configuration of our link:./modules[`./modules`], NixOS (i.e., `man configuration.nix`), https://github.com/rycee/home-manager[home-manager] (i.e., `man home-configuration.nix`), and other things you might want to include in the host-specific `$HOST/modules/` folder.
-
-* `hardware-configuration.nix` is there for hardware configurations...
-(I plan to remove this one since it should use the dynamically generated hardware config at `/etc/nixos/hardware-configuration.nix`.)
 
 * A README file in whatever format you prefer.
 (I just choose https://asciidoctor.org/[Asciidoctor] with the `.adoc` file extension since it's my go-to document format.)
@@ -209,9 +205,9 @@ footnote:[Don't forget to visit the nixpkgs repo and look at the source code for
 
 It'll be a full-time geeky story if I have to explain so I'll put it in a bullet list.
 
-* You can configure your system from the system-wide packages, user-specific packages, boot loader settings, graphical environments, and what-have-you.
-That fact alone blew my mind ever since I saw @hlissner's NixOS and the temptation just keeps growing ever since.
-This is where the real power of NixOS (and also https://guix.gnu.org/[GuixSD]) really made it worth: declarative configuration.
+* You can configure your system from the system-wide packages, user-specific packages, boot loader settings, graphical environments, and what-have-you stored in text files.
+That fact alone blew my mind ever since I saw @hlissner's NixOS and the temptation just keeps growing ever since I see more NixOS-related posts.
+This is where the real power of NixOS (and also https://guix.gnu.org/[GuixSD]) really made it worth the try: declarative system and local configuration.
 
 * It is reproducible (in a way, anyway).
 Compared to other distros I've used in the past before discovering NixOS (which is only Arch and Fedora), it is very easy to reproduce the config.
@@ -226,6 +222,14 @@ It's like Windows Restore on steroids.
 
 * The packaging process is straightforward (or so I've heard).
 I've yet to create one but it'll quickly change once I found my ideal set up for starting game dev as a hobby.
+
+* Hipster points.
+https://www.archlinux.org/[Arch?]
+https://k1ss.org/[KISS Linux?]
+https://www.gentoo.org/[Gentoo?]
+http://www.linuxfromscratch.org/[Linux From Scratch?]
+Forget that!
+NixOS-influenced distros are the future and I'll continue to shill it for the rest of my computing shtick.
 
 
 === Want to learn NixOS?
@@ -254,6 +258,9 @@ The https://nixos.wiki/[unofficial NixOS wiki] is one of the more reliable sourc
 
 For more learning on the Nix conventions, ecosystem, and practices, I recommend https://nix.dev/[nix.dev] to look out for.
 It provides some information that the official (and unofficial) sources misses.
+
+
+=== Problems encountered along the way
 
 NixOS is a wildly different beast compared to other distros.
 I did go through some rocky road to learning it;

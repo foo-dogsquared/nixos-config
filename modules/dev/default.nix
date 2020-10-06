@@ -8,6 +8,7 @@
     ./data.nix
     ./documentation.nix
     ./gamedev.nix
+    ./go.nix
     ./java.nix
     ./javascript.nix
     ./lisp.nix
