@@ -3,6 +3,10 @@
 { config, options, lib, pkgs, ... }:
 
 with lib;
+
+let
+  cfg = config.modules.dev.rust;
+in
 {
   options.modules.dev.rust = {
     enable = mkOption {
@@ -11,7 +15,7 @@ with lib;
     };
   };
 
-  config = mkIf config.modules.dev.rust.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       rustup
     ];

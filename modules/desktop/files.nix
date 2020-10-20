@@ -19,8 +19,9 @@ in {
       (recoll.override {
         withGui = false;
       })                    # Bring the search engine to the desktop!
-      unison
+      unison                # Back those files up, son.
       magic-wormhole        # Magically transfer stuff between your wormholes!
+      oneshot               # Basically `python -m http.server` that can deliver files to various devices.
       qbittorrent           # Free version of uBittorrent.
       xfce.thunar           # A graphical file manager.
       xfce.thunar-volman    # A Thunar plugin on volume management for external devices.

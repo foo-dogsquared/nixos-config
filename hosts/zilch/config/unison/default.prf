@@ -13,6 +13,9 @@ path = .password-store
 # My SSH keys
 path = .ssh
 
+# My Cachix signing key
+path = .config/cachix
+
 # Some regexps specifying names and paths to ignore
 ignore = Name temp.*
 ignore = Name *~

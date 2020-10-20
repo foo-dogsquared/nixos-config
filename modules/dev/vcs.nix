@@ -2,6 +2,10 @@
 { config, options, lib, pkgs, ... }:
 
 with lib;
+
+let
+  cfg = config.modules.dev.vcs;
+in
 {
   options.modules.dev.vcs = {
     enable = mkOption {
@@ -10,7 +14,7 @@ with lib;
     };
   };
 
-  config = mkIf config.modules.dev.vcs.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       gitAndTools.gitFull
       mercurial

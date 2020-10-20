@@ -21,7 +21,6 @@ in {
   config = mkIf cfg.enable {
     # Enable JACK for the most serious audio applications.
     services.jack = {
-      alsa.enable = true;
       jackd.enable = true;
     };
 
@@ -55,7 +54,7 @@ in {
       ] else []);
 
     # Required when enabling JACK daemon.
-    my.user.extraGroups = [ "jackaudio" ];
+    my.user.extraGroups = [ "audio" "jackaudio" ];
 
     # Add the sequencer and the MIDI kernel module.
     boot.kernelModules = [ "snd-seq" "snd-rawmidi" ];

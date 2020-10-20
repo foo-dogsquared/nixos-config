@@ -15,8 +15,8 @@ You can replace your NixOS configuration with this bad boi.
 To install, you have to do the following first:
 
 - Set up your partitions.
-- Copy this setup (either with `git` or what-have-you) to `/etc/dotfiles`.
-- Install GNU Make.
+- Copy this setup (either with `git` or what-have-you) in whatever location you prefer.
+- Install GNU Make (i.e., `nix-env -i gnumake`).
 
 Then simply run `make install`.
 It is equivalent to the following command:
@@ -67,6 +67,7 @@ The project structure should look like the following:
 nixos-config
 ├── config/
 ├── hosts/
+├── lib/
 ├── modules/
 ├── packages/
 ├── templates/
@@ -91,6 +92,8 @@ In this case, it is my https://github.com/foo-dogsquared/dotflies[dotfiles] dire
 * The `hosts/` contains the machine-specific configurations of the machine (I've only one but I plan to install NixOS for my new ones).
 It is also used on the installation phase (from `make install`) by setting the `HOST` variable (i.e., `HOST=zilch make -C /etc/install`) with the folder name as the argument.
 See the <<Hosts>> section for more details.
+
+* A little library in link:./lib[`./lib`] based from https://github.com/hlissner/dotfiles[original source] which being used for various uses (e.g., limiting certain modules).
 
 * Though my custom packages are now placed in my https://github.com/foo-dogsquared/nur-packages[NUR repo], the `packages/` folder still exists here intended for "private" packages.
 Also contains third-party package repositories and overlays such as the https://github.com/nix-community/NUR[NUR], https://github.com/nix-community/emacs-overlay[unstable branch of Emacs], or the unstable branch of https://github.com/NixOS/nixpkgs/[nixpkgs].

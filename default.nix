@@ -5,6 +5,7 @@
 #
 # This is ground zero, where the absolute essentials go, to be present on all systems I use nixos on.
 # Contains cluser-wide configurations shared between all of the systems (located in `hosts/`).
+# TODO: Convert into a flake-based configuration so it'll make my life easier.
 
 device: username:
 { pkgs, options, lib, config, ... }:

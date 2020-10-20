@@ -18,6 +18,7 @@ with lib;
       jq            # A JSON parser on the command-line (with the horrible syntax, in my opinion).
       pup           # A cute little puppy that can understand HTML.
       sqlite        # A cute little battle-tested library for your data abominations.
+      sqlitebrowser # Skim the DB and create a quick scraping script for it.
     ];
   };
 }

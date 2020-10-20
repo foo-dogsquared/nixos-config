@@ -3,6 +3,18 @@
 { config, pkgs, lib, ... }:
 
 {
+  nixpkgs.config.permittedInsecurePackages = [
+    "spidermonkey-38.8.0"
+  ];
+
+  # Set the Nix package manager to use the unstable version for flakes.
+  nix = {
+    package = pkgs.nixUnstable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

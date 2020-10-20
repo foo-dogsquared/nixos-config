@@ -13,7 +13,7 @@ with lib;
   config = mkIf config.modules.desktop.fonts.enable {
     # Enable fontconfig to easily discover fonts installed from home-manager.
     fonts = {
-      enableFontDir = true;
+      fontDir.enable = true;
       enableDefaultFonts = true;
       fontconfig = {
         enable = true;
