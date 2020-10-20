@@ -2,21 +2,14 @@
 
 with lib;
 {
-  options.modules.themes."{{ cookiecutter.name | slugify }}" = {
+  options.modules.themes."{{ cookiecutter.slug }}" = {
     enable = mkOption {
       type = types.bool;
       default = false;
     };
   };
 
-  config = mkIf config.modules.themes."{{ cookiecutter.name | slugify }}".enable {
-    # Pass the metadata of the theme.
-    modules.theme = {
-      name = "{{ cookiecutter.name }}";
-      version = "{{ cookiecutter.version }}";
-      path = ./.;
-    };
-
+  config = mkIf config.modules.themes."{{ cookiecutter.slug }}".enable {
     services = {
       # Enable picom compositor.
       picom = {
@@ -29,8 +22,6 @@ with lib;
       xserver = {
         displayManager = {
           lightdm.enable = true;
-          lightdm.greeters.mini.enable = true;
-          lightdm.greeters.mini.user = config.my.username;
           defaultSession = "none+bspwm";
         };
         enable = true;
@@ -44,6 +35,9 @@ with lib;
     my.home = {
       # Enable GTK configuration.
       gtk.enable = true;
+
+      # Set the wallpaper.
+      home.file.".background-image".source = ./config/wallpaper;
 
       # Enable QT configuration and set it to the same GTK config.
       qt.enable = true;
@@ -89,14 +83,14 @@ with lib;
           '';
         })
       ];
-    };
 
-    # Set the cursor theme.
-    xdg.dataFile = {
-      "icons/default/index.theme".text = ''
-        [icon theme]
-        Inherits=Adwaita
-      '';
+      # Set the cursor theme.
+      xdg.dataFile = {
+        "icons/default/index.theme".text = ''
+          [icon theme]
+          Inherits=Adwaita
+        '';
+      };
     };
 
     my.packages = with pkgs; [

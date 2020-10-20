@@ -5,6 +5,5 @@
 {
   imports = [
     ./recoll.nix
-    ./unison.nix
   ];
 }

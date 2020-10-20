@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = kernel.moduleBuildDependencies;
 
   patchPhase = ''
-    sed -i Makefile -e 's/modprobe veikk//' -e 's/depmod//'
+    sed -i Makefile -e 's/modprobe veikk/#modprobe veikk/' -e 's/depmod/#depmod/'
   '';
 
   INSTALL_MOD_PATH = "\${out}";
