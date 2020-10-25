@@ -4,10 +4,8 @@
 
 with lib;
 
-let
-  cfg = config.modules.services.recoll;
-in
-{
+let cfg = config.modules.services.recoll;
+in {
   options.modules.services.recoll = {
     enable = mkOption {
       type = types.bool;
@@ -25,24 +23,30 @@ in
       systemd.user.services.recoll = {
         Unit = {
           Description = "Recoll periodic index update";
-          Documentation = [ "man:recollindex.1" "https://www.lesbonscomptes.com/recoll/pages/documentation.html" ];
+          Documentation = [
+            "man:recollindex.1"
+            "https://www.lesbonscomptes.com/recoll/pages/documentation.html"
+          ];
         };
 
         Service = {
-          Environment = [ "RECOLL_CONFDIR=\"$XDG_DATA_HOME/recoll\"" ];
-          ExecStart = "${(pkgs.recoll.override { withGui = false; })}/bin/recollindex ${cfg.flags}";
+          Environment = [ ''RECOLL_CONFDIR="$XDG_DATA_HOME/recoll"'' ];
+          ExecStart = "${
+              (pkgs.recoll.override { withGui = false; })
+            }/bin/recollindex ${cfg.flags}";
         };
 
-        Install = {
-          WantedBy = [ "default.target" ];
-        };
+        Install = { WantedBy = [ "default.target" ]; };
       };
 
       # Make the service run every 4 hours (and still activate if it misses the interval).
       systemd.user.timers.recoll = {
         Unit = {
           Description = "Recoll periodic index update";
-          Documentation = [ "man:recollindex.1" "https://www.lesbonscomptes.com/recoll/pages/documentation.html" ];
+          Documentation = [
+            "man:recollindex.1"
+            "https://www.lesbonscomptes.com/recoll/pages/documentation.html"
+          ];
         };
 
         Timer = {
@@ -50,9 +54,7 @@ in
           Persistent = true;
         };
 
-        Install = {
-          WantedBy = [ "default.target" ];
-        };
+        Install = { WantedBy = [ "default.target" ]; };
       };
     };
   };

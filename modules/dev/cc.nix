@@ -1,8 +1,7 @@
 # My stuff for C and C++.
 { config, options, lib, pkgs, ... }:
 
-with lib;
-{
+with lib; {
   options.modules.dev.cc = {
     enable = mkOption {
       type = types.bool;
@@ -12,11 +11,11 @@ with lib;
 
   config = mkIf config.modules.dev.cc.enable {
     my.packages = with pkgs; [
-      cmake     # Yo dawg, I heard you like Make.
+      cmake # Yo dawg, I heard you like Make.
       # clang     # A C compiler frontend for LLVM.
-      gcc       # A compiler toolchain.
-      gdb       # GNU Debugger.
-      llvmPackages.libcxx      # When GCC has become too bloated for someone's taste.
+      gcc # A compiler toolchain.
+      gdb # GNU Debugger.
+      llvmPackages.libcxx # When GCC has become too bloated for someone's taste.
     ];
   };
 }

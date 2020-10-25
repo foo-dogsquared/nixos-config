@@ -5,27 +5,33 @@
 { config, options, lib, pkgs, ... }:
 
 with lib;
-let
-  cfg = config.modules.dev.javascript;
-in
-{
-  options.modules.dev.javascript =
-    let mkBoolOption = bool: mkOption {
-      type = types.bool;
-      default = bool;
-    }; in {
-      deno.enable = mkBoolOption false;
-      node.enable = mkBoolOption false;
+let cfg = config.modules.dev.javascript;
+in {
+  options.modules.dev.javascript = let
+    mkBoolOption = bool:
+      mkOption {
+        type = types.bool;
+        default = bool;
+      };
+  in {
+    deno.enable = mkBoolOption false;
+    node.enable = mkBoolOption false;
   };
 
   config = {
     my.packages = with pkgs;
-      (if cfg.deno.enable then [
-       deno        # The Deltarune of Node.
-      ] else []) ++
+      (if cfg.deno.enable then
+        [
+          deno # The Deltarune of Node.
+        ]
+      else
+        [ ]) ++
 
-      (if cfg.node.enable then [
-        nodejs      # The JavaScript framework/runtime where you don't have to kill someone for bad code. :)
-      ] else []);
+      (if cfg.node.enable then
+        [
+          nodejs # The JavaScript framework/runtime where you don't have to kill someone for bad code. :)
+        ]
+      else
+        [ ]);
   };
 }

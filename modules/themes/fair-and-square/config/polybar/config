@@ -75,7 +75,7 @@
 
 [module/home-fs]
     type = internal/fs
-    mount-0 = /home/
+    mount-0 = /home
     format-mounted-prefix = ""
     format-mounted-prefix-margin-right = 1
     format-unmounted-prefix = ""

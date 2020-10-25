@@ -105,8 +105,7 @@ let
       sha256 = "039ns854v1k4jb9xqknrjkj8lf62nfcpfn0716ancmjc4f0xlzb3";
     }
   ];
-in
-{
+in {
   options.modules.editors.vscode = {
     enable = mkOption {
       type = types.bool;
@@ -121,7 +120,8 @@ in
         extensions = extensions;
         userSettings = {
           "diffEditor.codeLens" = true;
-          "editor.fontFamily" = "'Iosevka', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'";
+          "editor.fontFamily" =
+            "'Iosevka', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'";
           "editor.fontLigatures" = true;
           "eslint.alwaysShowStatus" = true;
           "git.alwaysShowStagedChangesResourceGroup" = true;

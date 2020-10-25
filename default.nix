@@ -14,16 +14,19 @@ device: username:
   networking.hostName = lib.mkDefault device;
   my.username = username;
 
-  imports = [
-    ./modules
-    "${./hosts}/${device}"
-  ] ++ (if builtins.pathExists(/etc/nixos/cachix.nix) then [
-    /etc/nixos/cachix.nix
-  ] else []) ++ (if builtins.pathExists(/etc/nixos/hardware-configuration.nix) then [
-    /etc/nixos/hardware-configuration.nix
-  ] else []) ++ (if builtins.pathExists(/mnt/etc/nixos/hardware-configuration.nix) then [
-    /mnt/etc/nixos/hardware-configuration.nix
-  ] else []);
+  imports = [ ./modules "${./hosts}/${device}" ]
+    ++ (if builtins.pathExists (/etc/nixos/cachix.nix) then
+      [ /etc/nixos/cachix.nix ]
+    else
+      [ ])
+    ++ (if builtins.pathExists (/etc/nixos/hardware-configuration.nix) then
+      [ /etc/nixos/hardware-configuration.nix ]
+    else
+      [ ])
+    ++ (if builtins.pathExists (/mnt/etc/nixos/hardware-configuration.nix) then
+      [ /mnt/etc/nixos/hardware-configuration.nix ]
+    else
+      [ ]);
 
   # GARBAGE DAY!
   nix.gc = {
@@ -40,7 +43,7 @@ device: username:
 
   # Add custom packages & unstable channel, so they can be accessed via pkgs.*
   nixpkgs.overlays = import ./packages;
-  nixpkgs.config.allowUnfree = true;  # forgive me Stallman senpai
+  nixpkgs.config.allowUnfree = true; # forgive me Stallman senpai
 
   # These are the things I want installed on all my systems.
   environment.systemPackages = with pkgs; [
@@ -57,8 +60,8 @@ device: username:
     vim
     wget
 
-    gnumake               # for our own makefile
-    cachix                # less time buildin' mo time nixin'
+    gnumake # for our own makefile
+    cachix # less time buildin' mo time nixin'
 
     # nix-shell with the modified Nix path.
     (writeScriptBin "nix-shell" ''

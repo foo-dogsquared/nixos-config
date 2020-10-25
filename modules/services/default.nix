@@ -3,7 +3,5 @@
 { config, options, lib, pkgs, ... }:
 
 {
-  imports = [
-    ./recoll.nix
-  ];
+  imports = [ ./recoll.nix ];
 }

@@ -3,10 +3,8 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.vcs;
-in
-{
+let cfg = config.modules.dev.vcs;
+in {
   options.modules.dev.vcs = {
     enable = mkOption {
       type = types.bool;
@@ -15,10 +13,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    my.packages = with pkgs; [
-      gitAndTools.gitFull
-      mercurial
-      subversion
-    ];
+    my.packages = with pkgs; [ gitAndTools.gitFull mercurial subversion ];
   };
 }

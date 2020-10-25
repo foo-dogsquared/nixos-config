@@ -4,10 +4,8 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.java;
-in
-{
+let cfg = config.modules.dev.java;
+in {
   options.modules.dev.java = {
     enable = mkOption {
       type = types.bool;
@@ -17,8 +15,8 @@ in
 
   config = mkIf cfg.enable {
     my.packages = with pkgs; [
-      jdk       # The Java Development Kit.
-      jre       # The Java Runtime Environment for running Java apps.
+      jdk # The Java Development Kit.
+      jre # The Java Runtime Environment for running Java apps.
     ];
   };
 }

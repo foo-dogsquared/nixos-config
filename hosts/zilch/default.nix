@@ -3,9 +3,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  nixpkgs.config.permittedInsecurePackages = [
-    "spidermonkey-38.8.0"
-  ];
+  nixpkgs.config.permittedInsecurePackages = [ "spidermonkey-38.8.0" ];
 
   # Set the Nix package manager to use the unstable version for flakes.
   nix = {
@@ -38,19 +36,21 @@
   my.home.xdg.enable = true;
   environment.variables = {
     XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_CACHE_HOME  = "$HOME/.cache";
-    XDG_DATA_HOME   = "$HOME/.local/share";
-    XDG_BIN_HOME    = "$HOME/.local/bin";
+    XDG_CACHE_HOME = "$HOME/.cache";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_BIN_HOME = "$HOME/.local/bin";
+    PATH = "$PATH:$XDG_BIN_HOME";
   };
 
   # Moving all of the host-specific configurations into its appropriate place.
-  my.home.xdg.dataFile =
-    let insertXDGDataFolder = name: {
+  my.home.xdg.dataFile = let
+    insertXDGDataFolder = name: {
       source = ./config + "/${name}";
       recursive = true;
-    }; in {
-      "recoll" = insertXDGDataFolder "recoll";
-      "unison" = insertXDGDataFolder "unison";
+    };
+  in {
+    "recoll" = insertXDGDataFolder "recoll";
+    "unison" = insertXDGDataFolder "unison";
   };
 
   # Install documentations for tools and whatnot.
@@ -62,13 +62,9 @@
 
   # Enable virutialization.
   virtualisation = {
-    docker = {
-      enable = true;
-    };
+    docker = { enable = true; };
 
-    libvirtd = {
-      enable = true;
-    };
+    libvirtd = { enable = true; };
   };
 
   # Enable some font configs.
@@ -122,9 +118,11 @@
         node.enable = true;
       };
       lisp = {
+        clojure.enable = true;
         guile.enable = true;
         racket.enable = true;
       };
+      math.enable = true;
       perl.enable = true;
       python = {
         enable = true;
@@ -134,9 +132,7 @@
       vcs.enable = true;
     };
 
-    drivers = {
-      veikk.enable = true;
-    };
+    drivers = { veikk.enable = true; };
 
     editors = {
       default = "nvim";
@@ -145,9 +141,7 @@
       vscode.enable = true;
     };
 
-    services = {
-      recoll.enable = true;
-    };
+    services = { recoll.enable = true; };
 
     shell = {
       base.enable = true;
@@ -161,42 +155,41 @@
   # Additional programs that doesn't need much configuration (or at least personally configured).
   # It is pointless to create modules for it, anyways.
   environment.systemPackages = with pkgs; [
-    nim         # Jack the nimble, jack jumped over the nightstick, and got over not being the best pick.
-    python      # *insert Monty Python quote here*
+    nim # Jack the nimble, jack jumped over the nightstick, and got over not being the best pick.
+    python # *insert Monty Python quote here*
+    ruby # Gems, lots of gems.
   ];
 
-  my.packages = with pkgs; [
-    # Muh games.
-    dwarf-fortress      # Losing is fun!
-    endless-sky         # Losing is meh!
-    minetest            # Losing?! What's that?
-    openmw              # Losing is even more meh1
-    wesnoth             # Losing is frustrating!
-    zeroad              # Losing is fun and frustrating!
+  my.packages = with pkgs;
+    [
+      # Muh games.
+      dwarf-fortress # Losing is fun!
+      endless-sky # Losing is meh!
+      minetest # Losing?! What's that?
+      wesnoth # Losing is frustrating!
+      zeroad # Losing is fun and frustrating!
 
-    # Installing some of the dependencies required for my scripts.
-    ffcast
-    giflib
-    leptonica
-    libpng
-    libwebp
-    maim
-    (tesseract.override { enableLanguages = [ "eng" ]; })
-    slop
-    virt-manager
-    xclip
-    xdg-user-dirs
-    xorg.xwininfo
-    zbar
+      # Installing some of the dependencies required for my scripts.
+      ffcast
+      giflib
+      leptonica
+      libpng
+      libwebp
+      maim
+      (tesseract.override { enableLanguages = [ "eng" ]; })
+      slop
+      virt-manager
+      xclip
+      xdg-user-dirs
+      xorg.xwininfo
+      zbar
 
-    # Some other packages.
-    screenkey
-  ]
+      # Some other packages.
+      screenkey
+    ]
 
-  # My custom packages.
-  ++ (with pkgs.nur.foo-dogsquared; [
-    segno
-  ]);
+    # My custom packages.
+    ++ (with pkgs.nur.foo-dogsquared; [ segno ]);
 
   # Setting up the shell environment.
   my.env = {
@@ -233,7 +226,7 @@
       enable = true;
       middleEmulation = true;
     };
-    # digimend.enable = true;
+    digimend.enable = true;
     # videoDrivers = [ "nvidiaLegacy390" ];
   };
 
@@ -242,9 +235,7 @@
   hardware.pulseaudio.enable = true;
 
   # Enable OpenGL.
-  hardware = {
-    opengl.enable = true;
-  };
+  hardware = { opengl.enable = true; };
 
   # Additional host-specific program configurations.
   my.home = {
@@ -267,7 +258,8 @@
     services = {
       unison = let
         homeDirectory = "/home/${config.my.username}";
-        backupDrive = "/run/media/${config.my.username}/Seagate Backup Plus Drive";
+        backupDrive =
+          "/run/media/${config.my.username}/Seagate Backup Plus Drive";
       in {
         enable = true;
         pairs.mainBackup = {
@@ -291,5 +283,5 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "20.03"; # Did you read the comment?
+  system.stateVersion = "20.09"; # Did you read the comment?
 }

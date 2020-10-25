@@ -19,12 +19,12 @@ stdenv.mkDerivation rec {
 
   INSTALL_MOD_PATH = "\${out}";
 
-  makeFlags = [
-    "BUILD_DIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
-  ];
+  makeFlags =
+    [ "BUILD_DIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build" ];
 
   meta = with stdenv.lib; {
-    description = "Linux device driver for supported VEIKK tablets (e.g., S640, A50, A30).";
+    description =
+      "Linux device driver for supported VEIKK tablets (e.g., S640, A50, A30).";
     homepage = "https://github.com/jlam55555/veikk-linux-driver";
     licenses = licenses.free;
     maintainers = with maintainers; [ foo-dogsquared ];

@@ -3,13 +3,8 @@
 # The entryway to all of your text editors and IDEs.
 { config, options, lib, pkgs, ... }:
 
-with lib;
-{
-  imports = [
-    ./emacs.nix
-    ./neovim.nix
-    ./vscode.nix
-  ];
+with lib; {
+  imports = [ ./emacs.nix ./neovim.nix ./vscode.nix ];
 
   options.modules.editors = {
     default = mkOption {
@@ -18,7 +13,5 @@ with lib;
     };
   };
 
-  config = {
-    my.env.EDITOR = config.modules.editors.default;
-  };
+  config = { my.env.EDITOR = config.modules.editors.default; };
 }

@@ -13,8 +13,7 @@ let
     type = "Application";
     mimeType = "x-scheme-handler/org-protocol";
   };
-in
-{
+in {
   options.modules.editors.emacs = {
     enable = mkOption {
       type = types.bool;
@@ -30,9 +29,8 @@ in
 
   config = mkIf config.modules.editors.emacs.enable {
     my.packages = with pkgs; [
-      ((emacsPackagesNgGen config.modules.editors.emacs.pkg).emacsWithPackages (epkgs: [
-        epkgs.vterm
-      ]))
+      ((emacsPackagesNgGen config.modules.editors.emacs.pkg).emacsWithPackages
+        (epkgs: [ epkgs.vterm ]))
 
       emacsOrgProtocolDesktopEntry
 
@@ -42,18 +40,18 @@ in
       gnutls
 
       # Optional depedencies
-      fd                # faster projectile
-      imagemagick       # image-dired
+      fd # faster projectile
+      imagemagick # image-dired
       (lib.mkIf (config.programs.gnupg.agent.enable)
-       pinentry_emacs)    # gnupg-emacs
-      zstd      # for undo-fu-sessions
+        pinentry_emacs) # gnupg-emacs
+      zstd # for undo-fu-sessions
 
       # Module dependencies
       ## :checkers spell
       aspell
       aspellDicts.en
       aspellDicts.en-computers
-      aspellDicts.en-science
+      #aspellDicts.en-science
 
       ## :checkers grammar
       languagetool
@@ -68,8 +66,6 @@ in
       sqlite
     ];
 
-    fonts.fonts = with pkgs; [
-      emacs-all-the-icons-fonts
-    ];
+    fonts.fonts = with pkgs; [ emacs-all-the-icons-fonts ];
   };
 }

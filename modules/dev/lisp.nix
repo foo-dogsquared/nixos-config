@@ -5,33 +5,40 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.lisp;
-in
-{
-  options.modules.dev.lisp =
-    let mkBoolDefault = bool: mkOption {
-      type = types.bool;
-      default = bool;
-    }; in {
-      clojure.enable = mkBoolDefault false;
-      guile.enable = mkBoolDefault false;
-      racket.enable = mkBoolDefault false;
+let cfg = config.modules.dev.lisp;
+in {
+  options.modules.dev.lisp = let
+    mkBoolDefault = bool:
+      mkOption {
+        type = types.bool;
+        default = bool;
+      };
+  in {
+    clojure.enable = mkBoolDefault false;
+    guile.enable = mkBoolDefault false;
+    racket.enable = mkBoolDefault false;
   };
 
   config = {
     my.packages = with pkgs;
       (if cfg.clojure.enable then [
-        clojure     # Improved Java version.
-        leiningen   # Install Clojure projects without pulling your hair.
-      ] else []) ++
+        clojure # Improved Java version.
+        leiningen # Install Clojure projects without pulling your hair.
+      ] else
+        [ ]) ++
 
-      (if cfg.guile.enable then [
-        guile       # A general-purpose language for stuff, named after a certain pop culture icon from an iconic fighting game.
-      ] else []) ++
+      (if cfg.guile.enable then
+        [
+          guile # A general-purpose language for stuff, named after a certain pop culture icon from an iconic fighting game.
+        ]
+      else
+        [ ]) ++
 
-      (if cfg.racket.enable then [
-        racket      # A DSL for DSLs.
-      ] else []);
+      (if cfg.racket.enable then
+        [
+          racket # A DSL for DSLs.
+        ]
+      else
+        [ ]);
   };
 }

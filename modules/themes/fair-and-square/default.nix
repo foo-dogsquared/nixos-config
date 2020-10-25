@@ -1,7 +1,6 @@
 { config, options, lib, pkgs, ... }:
 
-with lib;
-{
+with lib; {
   options.modules.themes."fair-and-square" = {
     enable = mkOption {
       type = types.bool;
@@ -45,10 +44,12 @@ with lib;
 
       # Install all of the configurations in the XDG config home.
       xdg.configFile = mkMerge [
-        (let recursiveXdgConfig = name: {
-          source = ./config + "/${name}";
-          recursive = true;
-        }; in {
+        (let
+          recursiveXdgConfig = name: {
+            source = ./config + "/${name}";
+            recursive = true;
+          };
+        in {
           "alacritty" = recursiveXdgConfig "alacritty";
           "bspwm" = recursiveXdgConfig "bspwm";
           "dunst" = recursiveXdgConfig "dunst";
@@ -94,25 +95,22 @@ with lib;
     };
 
     my.packages = with pkgs; [
-      alacritty         # Muh GPU-accelerated terminal emulator.
-      dunst             # Add more annoying pop-ups on your screen!
-      feh               # Meh, it's a image viewer that can set desktop background, what gives?
+      alacritty # Muh GPU-accelerated terminal emulator.
+      dunst # Add more annoying pop-ups on your screen!
+      feh # Meh, it's a image viewer that can set desktop background, what gives?
       gnome3.adwaita-icon-theme
-      libnotify         # Library for yer notifications.
+      libnotify # Library for yer notifications.
       (polybar.override {
         pulseSupport = true;
         nlSupport = true;
-      })                # Add some bars to your magnum opus.
-      rofi              # A ricer's best friend (one of them at least).
+      }) # Add some bars to your magnum opus.
+      rofi # A ricer's best friend (one of them at least).
 
       # The Arc theme
       arc-icon-theme
       arc-theme
     ];
 
-    fonts.fonts = with pkgs; [
-      iosevka
-      font-awesome-ttf
-    ];
+    fonts.fonts = with pkgs; [ iosevka font-awesome-ttf ];
   };
 }

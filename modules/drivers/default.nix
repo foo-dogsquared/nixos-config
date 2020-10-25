@@ -1,7 +1,5 @@
 { config, lib, ... }:
 
 {
-  imports = [
-    ./veikk.nix
-  ];
+  imports = [ ./veikk.nix ];
 }

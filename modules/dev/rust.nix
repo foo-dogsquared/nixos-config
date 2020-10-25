@@ -4,10 +4,8 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.rust;
-in
-{
+let cfg = config.modules.dev.rust;
+in {
   options.modules.dev.rust = {
     enable = mkOption {
       type = types.bool;
@@ -16,9 +14,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    my.packages = with pkgs; [
-      rustup
-    ];
+    my.packages = with pkgs; [ rustup ];
 
     my.env = {
       CARGO_HOME = "$XDG_DATA_HOME/cargo";

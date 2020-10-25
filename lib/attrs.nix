@@ -1,8 +1,7 @@
 { lib, ... }:
 
 with builtins;
-with lib;
-rec {
+with lib; rec {
   # attrsToList
   attrsToList = attrs:
     mapAttrsToList (name: value: { inherit name value; }) attrs;
