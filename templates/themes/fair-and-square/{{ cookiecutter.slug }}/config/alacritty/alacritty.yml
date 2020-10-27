@@ -56,28 +56,28 @@ window:
 
 colors:
   primary:
-    background: "{{ cookiecutter.special.background }}"
-    foreground: "{{ cookiecutter.special.foreground }}"
+    background: "{{ cookiecutter.base00 }}"
+    foreground: "{{ cookiecutter.base07 }}"
 
   normal:
-    black: "{{ cookiecutter.colors.color0 }}"
-    red: "{{ cookiecutter.colors.color1 }}"
-    green: "{{ cookiecutter.colors.color2 }}"
-    yellow: "{{ cookiecutter.colors.color3 }}"
-    blue: "{{ cookiecutter.colors.color4 }}"
-    magenta: "{{ cookiecutter.colors.color5 }}"
-    cyan: "{{ cookiecutter.colors.color6 }}"
-    white: "{{ cookiecutter.colors.color7 }}"
+    black:      "{{ cookiecutter.base00 }}"
+    red:        "{{ cookiecutter.base01 }}"
+    green:      "{{ cookiecutter.base02 }}"
+    yellow:     "{{ cookiecutter.base03 }}"
+    blue:       "{{ cookiecutter.base04 }}"
+    magenta:    "{{ cookiecutter.base05 }}"
+    cyan:       "{{ cookiecutter.base06 }}"
+    white:      "{{ cookiecutter.base07 }}"
 
   bright:
-    black: "{{ cookiecutter.colors.color8 }}"
-    red: "{{ cookiecutter.colors.color9 }}"
-    green: "{{ cookiecutter.colors.color10 }}"
-    yellow: "{{ cookiecutter.colors.color11 }}"
-    blue: "{{ cookiecutter.colors.color12 }}"
-    magenta: "{{ cookiecutter.colors.color13 }}"
-    cyan: "{{ cookiecutter.colors.color14 }}"
-    white: "{{ cookiecutter.colors.color15 }}"
+    black:      "{{ cookiecutter.base08 }}"
+    red:        "{{ cookiecutter.base09 }}"
+    green:      "{{ cookiecutter.base0A }}"
+    yellow:     "{{ cookiecutter.base0B }}"
+    blue:       "{{ cookiecutter.base0C }}"
+    magenta:    "{{ cookiecutter.base0D }}"
+    cyan:       "{{ cookiecutter.base0E }}"
+    white:      "{{ cookiecutter.base0F }}"
 
 
 scrolling:
@@ -93,8 +93,8 @@ scrolling:
 # Font configuration (changes require restart)
 font:
   normal: 
-    family: monospace
     family: {{ cookiecutter.font.mono.name }}
+    family: monospace
 
   # Point size
   size: 13.0

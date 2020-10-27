@@ -1,24 +1,24 @@
 * {
-    /* The color configuration */
-    /* Useful for quick editing in case for compiled templates */
-    background: {{ cookiecutter.special.background }};
-    foreground: {{ cookiecutter.special.foreground }};
-    color0: {{ cookiecutter.colors.color0 }};
-    color1: {{ cookiecutter.colors.color1 }};
-    color2: {{ cookiecutter.colors.color2 }};
-    color3: {{ cookiecutter.colors.color3 }};
-    color4: {{ cookiecutter.colors.color4 }};
-    color5: {{ cookiecutter.colors.color5 }};
-    color6: {{ cookiecutter.colors.color6 }};
-    color7: {{ cookiecutter.colors.color7 }};
-    color8: {{ cookiecutter.colors.color8 }};
-    color9: {{ cookiecutter.colors.color9 }};
-    color10: {{ cookiecutter.colors.color10 }};
-    color11: {{ cookiecutter.colors.color11 }};
-    color12: {{ cookiecutter.colors.color12 }};
-    color13: {{ cookiecutter.colors.color13 }};
-    color14: {{ cookiecutter.colors.color14 }};
-    color15: {{ cookiecutter.colors.color15 }};
+    /* The color swatch */
+    /* Useful for quick editing of the colors */
+    background: {{ cookiecutter.base00 }};
+    foreground: {{ cookiecutter.base07 }};
+    color0: {{ cookiecutter.base00 }};
+    color1: {{ cookiecutter.base01 }};
+    color2: {{ cookiecutter.base02 }};
+    color3: {{ cookiecutter.base03 }};
+    color4: {{ cookiecutter.base04 }};
+    color5: {{ cookiecutter.base05 }};
+    color6: {{ cookiecutter.base06 }};
+    color7: {{ cookiecutter.base07 }};
+    color8: {{ cookiecutter.base08 }};
+    color9: {{ cookiecutter.base09 }};
+    color10: {{ cookiecutter.base0A }};
+    color11: {{ cookiecutter.base0B }};
+    color12: {{ cookiecutter.base0C }};
+    color13: {{ cookiecutter.base0D }};
+    color14: {{ cookiecutter.base0E }};
+    color15: {{ cookiecutter.base0F }};
 
     /* General theme settings */
     highlight: bold italic;

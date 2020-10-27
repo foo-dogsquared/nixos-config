@@ -2,11 +2,11 @@
 ; However, formats in RGB is fine.
 ; This is where all of the colors should be placed for those who are lazy to scroll down (like me).
 [colors]
-    background = "{{ cookiecutter.special.background }}"
-    background-light = "{{ cookiecutter.colors.color8 }}"
-    foreground = "{{ cookiecutter.special.foreground }}"
-    foreground-light = "{{ cookiecutter.colors.color15 }}"
-    accent = "{{ cookiecutter.colors.color6 }}"
+    background = "{{ cookiecutter.base00 }}"
+    background-light = "{{ cookiecutter.base01 }}"
+    foreground = "{{ cookiecutter.base06 }}"
+    foreground-light = "{{ cookiecutter.base07 }}"
+    accent = "{{ cookiecutter.base08 }}"
 
 
 ; The common style between bars.
@@ -24,13 +24,14 @@
     module-margin = 1
     module-padding = 1
 
-    font-0 = "Iosevka;2"
-    font-1 = "Fira Code;2"
+    font-1 = "{{ cookiecutter.font.mono.name }};2"
+    font-2 = "Iosevka;2"
+    font-3 = "Fira Code;2"
 
     ; Our fallback fonts are mostly used as icon fonts.
     ; For future references, the version of Font Awesome used here is at v5.13.0.
     ; I also installed the font myself that I downloaded from the official website (https://fontawesome.com/).
-    font-2 = "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid;2"
+    font-4 = "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid;2"
 
     ; This creates the illusion as if the modules are in the center.
     __border-size = 5
@@ -59,7 +60,7 @@
 
     modules-left = bspwm
     modules-center = date
-    modules-right = pulseaudio eth memory root-fs
+    modules-right = pulseaudio eth memory root-fs home-fs
 
 
 [module/root-fs]
@@ -68,6 +69,17 @@
     format-mounted-prefix = ""
     format-mounted-prefix-margin-right = 1
     format-unmounted-prefix = ""
+    format-unmounted-prefix-margin-right = 1
+    label-mounted = %free%
+    label-unmounted = N/A
+
+
+[module/home-fs]
+    type = internal/fs
+    mount-0 = /home
+    format-mounted-prefix = ""
+    format-mounted-prefix-margin-right = 1
+    format-unmounted-prefix = ""
     format-unmounted-prefix-margin-right = 1
     label-mounted = %free%
     label-unmounted = N/A
