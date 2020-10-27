@@ -16,30 +16,37 @@ in {
   in {
     enable = mkBoolOption false;
     math.enable = mkBoolOption false;
+    pkg = mkOption {
+      type = types.package;
+      default = pkgs.python37;
+    };
   };
 
   config = mkIf cfg.enable {
-    my.packages = with pkgs;
-      [
-        (python37.withPackages (p:
-          with python3Packages;
-          [
-            beautifulsoup4 # How soups are beautiful again?
-            requests # The requests for your often-asked questions.
-            pip # Named after a certain mouse that lives in a barnyard and its ability to keep track of dependencies.
-            pytools # It's the little things that counts.
-            pytest # Try to make a good grade or else.
-            poetry # It rhymes...
-            scrapy # Create an extractor from a box of scraps.
-            setuptools # Setup your stuff.
-          ]
+    assertions = [{
+      assertion = versionAtLeast cfg.pkg.version "3";
+      message = "Python version should be only 3 and above.";
+    }];
+    my.packages = with pkgs; [
+      (cfg.pkg.withPackages (p:
+        with python3Packages;
+        [
+          beautifulsoup4 # How soups are beautiful again?
+          requests # The requests for your often-asked questions.
+          pytools # It's the little things that counts.
+          pytest # Try to make a good grade or else.
+          poetry # It rhymes...
+          scrapy # Create an extractor from a box of scraps.
+          setuptools # Setup your stuff.
+        ]
 
-          ++ (if cfg.math.enable then [
-            numpy # Numbers are also good, right?
-            sympy # When will you notice that math is good?
-          ] else
-            [ ])))
-      ];
+        ++ (if cfg.math.enable then [
+          numpy # Numbers are also good, right?
+          sympy # When will you notice that math is good?
+        ] else
+          [ ])))
+      python3Packages.pip # Named after a certain animal that lives in a barnyard.
+    ];
   };
 }
 

@@ -21,11 +21,11 @@ in {
 
   config = mkIf cfg.enable {
     # Enable JACK for the most serious audio applications.
-    services.jack = {
-      jackd.enable = true;
-      alsa.enable = false;
-      loopback = { enable = true; };
-    };
+    # services.jack = {
+    #   jackd.enable = true;
+    #   alsa.enable = false;
+    #   loopback = { enable = true; };
+    # };
 
     hardware.pulseaudio.package =
       pkgs.pulseaudio.override { jackaudioSupport = true; };

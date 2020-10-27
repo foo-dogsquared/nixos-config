@@ -113,10 +113,6 @@
       };
       go.enable = true;
       java.enable = true;
-      javascript = {
-        deno.enable = true;
-        node.enable = true;
-      };
       lisp = {
         clojure.enable = true;
         guile.enable = true;
@@ -130,6 +126,14 @@
       };
       rust.enable = true;
       vcs.enable = true;
+      web = {
+        enable = true;
+        javascript = {
+          deno.enable = true;
+          node.enable = true;
+        };
+        php.enable = true;
+      };
     };
 
     drivers = { veikk.enable = true; };
@@ -189,7 +193,7 @@
     ]
 
     # My custom packages.
-    ++ (with pkgs.nur.foo-dogsquared; [ segno ]);
+    ++ (with pkgs.nur.foo-dogsquared; [ julia-bin license-cli openring segno ]);
 
   # Setting up the shell environment.
   my.env = {

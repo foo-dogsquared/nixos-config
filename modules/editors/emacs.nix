@@ -5,6 +5,7 @@
 
 with lib;
 let
+  cfg = config.modules.editors.emacs;
   emacsOrgProtocolDesktopEntry = pkgs.makeDesktopItem {
     name = "org-protocol";
     desktopName = "Org-Protocol";
@@ -27,10 +28,9 @@ in {
     };
   };
 
-  config = mkIf config.modules.editors.emacs.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
-      ((emacsPackagesNgGen config.modules.editors.emacs.pkg).emacsWithPackages
-        (epkgs: [ epkgs.vterm ]))
+      ((emacsPackagesNgGen cfg.pkg).emacsWithPackages (epkgs: [ epkgs.vterm ]))
 
       emacsOrgProtocolDesktopEntry
 
