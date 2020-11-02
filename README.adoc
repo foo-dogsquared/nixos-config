@@ -142,19 +142,6 @@ My setup feature themes as a NixOS module (in link:./modules/themes[`modules/the
 This lets me easily switch my graphical setup with a simple toggle (i.e., `theme.$THEME_NAME.enable = true;`) in my machine configuration (i.e., `./hosts/$HOST/default.nix`).
 For safety from conflicting modules and configuration, you should have a bare installation ala-Arch Linux.
 
-As you can see in the `default.nix` of the `modules/theme` directory, a theme should also pass in certain data to `modules.theme` as if it's enabled.
-The following is an example metadata object of a theme.
-
-[source, nix]
-----
-{
-  name = "Fair and square";
-  version = "0.1.0";
-  path = ./.;
-  wallpaper = "${config.modules.theme.path}/config/wallpaper";
-}
-----
-
 For best practice, the general project structure of a theme should look like the following:
 
 [source, tree]
@@ -189,6 +176,8 @@ The link:./packages/[`./packages/`] directory contains cluster-wide https://nixo
 The overlays should be put in a separate folder in `./packages/overlays/`.
 For any other packages, it should be put on the same level as `./packages/default.nix`.
 
+Even though I have https://github.com/foo-dogsquared/nur-packages[a separate repo] for my packages, the packages defined here is only applicable to the setup.
+
 To make this section longer, here is the workflow summary in creating a package:
 
 - Create a test file (i.e., `./packages/$PACKAGE.nix`).
@@ -212,19 +201,25 @@ It'll be a full-time geeky story if I have to explain so I'll put it in a bullet
 That fact alone blew my mind ever since I saw @hlissner's NixOS and the temptation just keeps growing ever since I see more NixOS-related posts.
 This is where the real power of NixOS (and also https://guix.gnu.org/[GuixSD]) really made it worth the try: declarative system and local configuration.
 
+* A https://github.com/NixOS/nixpkgs/[gigantic package set] featuring \~65000 packages (similar number to AUR) as of 2020-10-29.
+While NixOS is technically a source distribution (e.g., Gentoo, KISS Linux), with the reproducibility features of Nix, its https://hydra.nixos.org/[build farm], and its https://cache.nixos.org/[very large cache], you get the binary artifacts for most of its packages for free.
+footnote:[If you want NixOS to be "truly a source distro", you can disable it by setting no binary caches in `nix.binaryCaches`.]
+
+** With https://nixos.org/nixpkgs/manual/[overlays], you can change how the package is built from its source to its build instructions.
+
 * It is reproducible (in a way, anyway).
 Compared to other distros I've used in the past before discovering NixOS (which is only Arch and Fedora), it is very easy to reproduce the config.
 In my first day of using NixOS, I just enabled hlissner's default config and I was able to boot in just fine.
 (Though, changing my config into something that I want to takes the most time.)
 
-* Rollbacks...
+* Rollbacks.
 Rollbacks are good.
 In system state, life with a time machine, and fighting games.
 You can just `nixos-rebuild switch --rollback` and you'll be back into your previous config.
 It's like Windows Restore on steroids.
 
-* The packaging process is straightforward (or so I've heard).
-I've yet to create one but it'll quickly change once I found my ideal set up for starting game dev as a hobby.
+* The packaging process is straightforward.
+Furthermore, it is secure since it is sandboxed (if you enabled it with `nix.useSandbox`).
 
 * Hipster points.
 https://www.archlinux.org/[Arch?]
@@ -274,8 +269,15 @@ The biggest example I can think of is the parameters of a nixpkgs module (i.e., 
 For an acquintance with Nix, it may not be that much of a problem.
 However, for a newcomer, it is pretty hard to find those information with those https://nixos.org/learn.html[three manuals].
 
-* It does throw a bunch of traditional concepts usually found on most Linux distros with the removal of filesystem hierarchy the biggest change of them all.
-Thankfully, there's been remedy to mitigate against the sudden change by retaining `/usr/bin/env` for your scripts.
+* The filesystem hierarchy standard is completely thrown out of the window.
+This means prebuilt binaries (including https://appimage.org/[AppImages]) will not work since the libraries needed are not in the intended locations.
+If you want to use them inside Nix (or NixOS), you have https://nixos.wiki/wiki/Packaging/Binaries[to package them].
+Thankfully, `/usr/bin/env` is kept for your user scripts.
+
+* While the Nix language is nice and all, the https://github.com/NixOS/nixpkgs/tree/master/lib[standard library] which is essential if you want to go far with Nix, is pretty hard to navigate for a newcomer.
+
+* Fully going into the "Nix way" is sometimes painful with the effort required to package a certain program compared to.
+On the other hand, it is "write once, build everywhere".
 
 * The error messages are horrible (when it's horrible)!
 There is a https://opencollective.com/nix-errors-enhancement/updates/revising-our-road-map-phase-3[recent push on improving Nix in that aspect] but it focuses on the formatting.

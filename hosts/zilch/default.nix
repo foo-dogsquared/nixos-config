@@ -102,7 +102,10 @@
       android.enable = true;
       base.enable = true;
       cc.enable = true;
-      data.enable = true;
+      data = {
+        enable = true;
+        dhall.enable = true;
+      };
       documentation = {
         enable = true;
         latex.enable = true;
@@ -136,7 +139,10 @@
       };
     };
 
-    drivers = { veikk.enable = true; };
+    hardware = {
+      audio.enable = true;
+      veikk.enable = true;
+    };
 
     editors = {
       default = "nvim";
@@ -171,7 +177,7 @@
       endless-sky # Losing is meh!
       minetest # Losing?! What's that?
       wesnoth # Losing is frustrating!
-      zeroad # Losing is fun and frustrating!
+      #zeroad # Losing is fun and frustrating!
 
       # Installing some of the dependencies required for my scripts.
       ffcast

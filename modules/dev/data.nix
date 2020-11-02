@@ -1,15 +1,23 @@
 # A bunch of data-related tools and libraries.
 { config, options, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+let
+  cfg = config.modules.dev.data;
+in {
   options.modules.dev.data = {
     enable = mkOption {
       type = types.bool;
       default = false;
     };
+
+    dhall.enable = mkOption {
+      type = types.bool;
+      default = false;
+    };
   };
 
-  config = mkIf config.modules.dev.data.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       cfitsio # A data library for FITS images which is an image used for analyzing your fitness level.
       hdf5 # A binary data format with hierarchy and metadata.
@@ -18,6 +26,15 @@ with lib; {
       pup # A cute little puppy that can understand HTML.
       sqlite # A cute little battle-tested library for your data abominations.
       sqlitebrowser # Skim the DB and create a quick scraping script for it.
-    ];
+    ] ++
+
+    (if cfg.dhall.enable then [
+      dhall # A dull programmable configuration Turing-incomplete language for your guaranteed termination, neat.
+      dhall-nix
+      dhall-bash
+      dhall-json
+      dhall-text
+      dhall-lsp-server
+    ] else []);
   };
 }

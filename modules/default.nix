@@ -14,7 +14,7 @@ in {
 
     ./desktop
     ./dev
-    ./drivers
+    ./hardware
     ./editors
     ./shell
     ./services

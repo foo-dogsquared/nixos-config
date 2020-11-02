@@ -23,6 +23,6 @@ in {
       (if cfg.brave.enable then [ brave ] else [ ])
       ++ (if cfg.firefox.enable then [ firefox-bin ] else [ ])
       ++ (if cfg.chromium.enable then [ chromium ] else [ ])
-      ++ (if cfg.nyxt.enable then [ next ] else [ ]);
+      ++ (if cfg.nyxt.enable then [ nyxt ] else [ ]);
   };
 }

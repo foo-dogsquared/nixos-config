@@ -19,17 +19,8 @@ in {
     production.enable = mkBoolDefault false;
   };
 
+
   config = mkIf cfg.enable {
-    # Enable JACK for the most serious audio applications.
-    # services.jack = {
-    #   jackd.enable = true;
-    #   alsa.enable = false;
-    #   loopback = { enable = true; };
-    # };
-
-    hardware.pulseaudio.package =
-      pkgs.pulseaudio.override { jackaudioSupport = true; };
-
     my.packages = with pkgs;
       [
         cadence # A JACK interface for newbs.
@@ -52,19 +43,12 @@ in {
         geonkick # Create them percussions.
         helm # A great synthesizer plugin.
         hydrogen # Them drum beats composition will get good.
+        lmms # A decent libre FL Studio clone.
         polyphone # Edit your fonts for sound.
-        #zrythm              # An up-and-coming DAW in Linux town.
+        sunvox # A modular sequencer... ooh...
+        #zrythm # An up-and-coming DAW in Linux town.
         zynaddsubfx # Ze most advanced synthesizer I've seen so far (aside from the upcoming Vital syntehsizer).
-
-        # As of 2020-07-03, lmms has some trouble regarding Qt or something so at least use the "unstable" channel just to be safe.
-        # lmms
       ] else
         [ ]);
-
-    # Required when enabling JACK daemon.
-    my.user.extraGroups = [ "audio" "jackaudio" ];
-
-    # Add the sequencer and the MIDI kernel module.
-    boot.kernelModules = [ "snd-seq" "snd-rawmidi" ];
   };
 }
