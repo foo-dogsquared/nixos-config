@@ -4,7 +4,8 @@
 
 with lib;
 
-let cfg = config.modules.dev.java;
+let
+  cfg = config.modules.dev.java;
 in {
   options.modules.dev.java = {
     enable = mkOption {

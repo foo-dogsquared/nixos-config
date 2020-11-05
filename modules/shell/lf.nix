@@ -1,7 +1,11 @@
 # A file manager for hipsters.
 { config, options, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+
+let
+  cfg = config.modules.shell.lf;
+in {
   options.modules.shell.lf = {
     enable = mkOption {
       type = types.bool;
@@ -9,7 +13,7 @@ with lib; {
     };
   };
 
-  config = mkIf config.modules.shell.lf.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [ lf ];
 
     my.home.xdg.configFile."lf" = {

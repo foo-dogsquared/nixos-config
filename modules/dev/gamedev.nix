@@ -4,7 +4,8 @@
 
 with lib;
 
-let cfg = config.modules.dev.game-dev;
+let
+  cfg = config.modules.dev.game-dev;
 in {
   options.modules.dev.game-dev = let
     mkBoolOption = bool:

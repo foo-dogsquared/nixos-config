@@ -3,7 +3,8 @@
 
 with lib;
 
-let cfg = config.modules.dev.math;
+let
+  cfg = config.modules.dev.math;
 in {
   options.modules.dev.math = let
     mkEnableOption = mkOption {

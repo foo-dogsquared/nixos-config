@@ -3,7 +3,8 @@
 
 with lib;
 
-let cfg = config.modules.dev.go;
+let
+  cfg = config.modules.dev.go;
 in {
   options.modules.dev.go = {
     enable = mkOption {

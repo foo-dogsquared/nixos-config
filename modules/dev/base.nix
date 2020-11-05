@@ -1,7 +1,11 @@
 # The utmost requirements for a development workflow.
 { config, options, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+
+let
+  cfg = config.modules.dev.base;
+in {
   options.modules.dev.base = {
     enable = mkOption {
       type = types.bool;
@@ -9,7 +13,7 @@ with lib; {
     };
   };
 
-  config = mkIf config.modules.dev.base.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       caddy # THE ULTIMATE HTTPS/2 SERVER FOR 'YER GOLFIN' SESSIONS!!!
       cmake # Yo, I heard you like Makefiles.

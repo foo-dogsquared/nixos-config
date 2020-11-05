@@ -1,7 +1,11 @@
 # Muh consumer applications...
 { config, options, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+
+let
+  cfg = config.modules.desktop.multimedia;
+in {
   options.modules.desktop.multimedia = {
     enable = mkOption {
       type = types.bool;
@@ -9,7 +13,7 @@ with lib; {
     };
   };
 
-  config = mkIf config.modules.desktop.multimedia.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       ffmpeg # The ultimate multimedia toolkit for everybody!
       hexchat # The ultimate IRC client for neckbeards.

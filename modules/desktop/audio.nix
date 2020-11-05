@@ -5,7 +5,8 @@
 
 with lib;
 
-let cfg = config.modules.desktop.audio;
+let
+  cfg = config.modules.desktop.audio;
 in {
   options.modules.desktop.audio = let
     mkBoolDefault = bool:

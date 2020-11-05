@@ -90,6 +90,7 @@
       fonts.enable = true;
       files.enable = true;
       graphics = {
+        enable = true;
         raster.enable = true;
         vector.enable = true;
         _3d.enable = true;
@@ -123,6 +124,10 @@
       };
       math.enable = true;
       perl.enable = true;
+      perl = {
+        enable = true;
+        raku.enable = true;
+      };
       python = {
         enable = true;
         math.enable = true;

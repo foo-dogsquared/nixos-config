@@ -1,7 +1,11 @@
 # Here are the base packages for my shell workflow.
 { config, options, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+
+let
+  cfg = config.modules.shell.base;
+in {
   options.modules.shell.base = {
     enable = mkOption {
       type = types.bool;
@@ -9,7 +13,7 @@ with lib; {
     };
   };
 
-  config = mkIf config.modules.shell.base.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       aria2 # The sequel to aria(1).
       aspell # Hunt down a spelling bee champion to come to your shell.

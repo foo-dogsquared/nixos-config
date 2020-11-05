@@ -1,7 +1,11 @@
 # Even if my designs are computer-aided, it's still horrible. :(
 { config, options, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+
+let
+  cfg = config.modules.desktop.cad;
+in {
   options.modules.desktop.cad = {
     enable = mkOption {
       type = types.bool;
@@ -9,7 +13,7 @@ with lib; {
     };
   };
 
-  config = mkIf config.modules.desktop.cad.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       freecad # FREE AS A BIRD, FREE AS A ALL-YOU-CAN-EAT BUFFER!
       #kicad         # The CAD for ki which is a form of energy found everywhere.

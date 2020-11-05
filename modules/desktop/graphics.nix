@@ -4,7 +4,8 @@
 
 with lib;
 
-let cfg = config.modules.desktop.graphics;
+let
+  cfg = config.modules.desktop.graphics;
 in {
   options.modules.desktop.graphics = let
     mkBoolDefault = bool:
@@ -13,13 +14,14 @@ in {
         default = bool;
       };
   in {
+    enable = mkBoolDefault false;
     programmable.enable = mkBoolDefault false;
     raster.enable = mkBoolDefault false;
     vector.enable = mkBoolDefault false;
     _3d.enable = mkBoolDefault false;
   };
 
-  config = {
+  config = mkIf cfg.enable {
     my.packages = with pkgs;
       [
         font-manager # Self-explanatory name is self-explanatory.

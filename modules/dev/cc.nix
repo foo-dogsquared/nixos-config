@@ -1,7 +1,11 @@
 # My stuff for C and C++.
 { config, options, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+
+let
+  cfg = config.modules.dev.cc;
+in {
   options.modules.dev.cc = {
     enable = mkOption {
       type = types.bool;
@@ -9,7 +13,7 @@ with lib; {
     };
   };
 
-  config = mkIf config.modules.dev.cc.enable {
+  config = mkIf cfg.enable {
     my.packages = with pkgs; [
       cmake # Yo dawg, I heard you like Make.
       # clang     # A C compiler frontend for LLVM.

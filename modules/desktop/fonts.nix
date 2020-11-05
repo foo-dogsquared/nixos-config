@@ -1,7 +1,11 @@
 # My selection of fonts for this setup.
 { config, options, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+
+let
+  cfg = config.modules.desktop.fonts;
+in {
   options.modules.desktop.fonts = {
     enable = mkOption {
       type = types.bool;
@@ -9,7 +13,7 @@ with lib; {
     };
   };
 
-  config = mkIf config.modules.desktop.fonts.enable {
+  config = mkIf cfg.enable {
     # Enable fontconfig to easily discover fonts installed from home-manager.
     fonts = {
       fontDir.enable = true;

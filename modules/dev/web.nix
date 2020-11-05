@@ -5,7 +5,9 @@
 { config, options, lib, pkgs, ... }:
 
 with lib;
-let cfg = config.modules.dev.web;
+
+let
+  cfg = config.modules.dev.web;
 in {
   options.modules.dev.web = let
     mkBoolOption = bool:

@@ -3,7 +3,8 @@
 
 with lib;
 
-let cfg = config.modules.desktop.files;
+let
+  cfg = config.modules.desktop.files;
 in {
   options.modules.desktop.files = {
     enable = mkOption {
