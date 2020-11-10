@@ -29,7 +29,7 @@
     # the top and down respectively.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "350x50-10+50"
+    geometry = "350x50-10-50"
 
     # Show how many messages are currently hidden (because of geometry).
     indicate_hidden = yes
@@ -283,8 +283,8 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
-    background = "{{ cookiecutter.base00 }}"
-    foreground = "{{ cookiecutter.base0F }}"
+    background = "{{ cookiecutter.base01 }}"
+    foreground = "{{ cookiecutter.base07 }}"
     timeout = 10
     # Icon for notifications with low urgency, uncomment to enable
     #icon = /path/to/icon

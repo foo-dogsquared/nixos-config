@@ -16,6 +16,12 @@ path = .ssh
 # My Cachix signing key
 path = .config/cachix
 
+# My Cookiecutter templates
+path = templates
+
+# My encrypted files
+path = secrets
+
 # Some regexps specifying names and paths to ignore
 ignore = Name temp.*
 ignore = Name *~

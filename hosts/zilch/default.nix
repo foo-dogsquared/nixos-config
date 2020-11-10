@@ -105,7 +105,7 @@
       cc.enable = true;
       data = {
         enable = true;
-        dhall.enable = true;
+        #dhall.enable = true;
       };
       documentation = {
         enable = true;
@@ -123,7 +123,6 @@
         racket.enable = true;
       };
       math.enable = true;
-      perl.enable = true;
       perl = {
         enable = true;
         raku.enable = true;

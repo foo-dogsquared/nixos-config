@@ -42,6 +42,7 @@ in {
         carla # A plugin host useful for a consistent hub for them soundfonts and SFZs.
         fluidsynth # Synth for fluid sounds.
         geonkick # Create them percussions.
+        giada # A hardcore loop machine for wannabe musicians like me.
         helm # A great synthesizer plugin.
         hydrogen # Them drum beats composition will get good.
         lmms # A decent libre FL Studio clone.

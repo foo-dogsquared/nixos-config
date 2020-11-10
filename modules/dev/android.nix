@@ -26,7 +26,7 @@ in {
     programs.adb.enable = true;
 
     # Install Anbox emulation.
-    virtualisation.anbox.enable = true;
+    #virtualisation.anbox.enable = true;
 
     my.user.extraGroups = [ "adbusers" ];
   };

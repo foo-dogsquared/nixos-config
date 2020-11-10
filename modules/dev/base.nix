@@ -29,8 +29,19 @@ in {
 
     # Augment your shell with automatic environment variables loading and unloading.
     my.home.programs = {
-      direnv.enable = true;
+      direnv = {
+        enable = true;
+        enableBashIntegration = true;
+        enableFishIntegration = true;
+        enableZshIntegration = true;
+      };
       fish.enable = true;
     };
+  };
+
+  my.zsh = {
+    rc = ''
+      eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
+    '';
   };
 }
