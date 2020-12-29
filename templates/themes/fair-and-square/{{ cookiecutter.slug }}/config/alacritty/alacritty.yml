@@ -56,28 +56,28 @@ window:
 
 colors:
   primary:
-    background: "{{ cookiecutter.base00 }}"
-    foreground: "{{ cookiecutter.base07 }}"
+    background: "#{{ cookiecutter.base00 }}"
+    foreground: "#{{ cookiecutter.base06 }}"
 
   normal:
-    black:      "{{ cookiecutter.base00 }}"
-    red:        "{{ cookiecutter.base01 }}"
-    green:      "{{ cookiecutter.base02 }}"
-    yellow:     "{{ cookiecutter.base03 }}"
-    blue:       "{{ cookiecutter.base04 }}"
-    magenta:    "{{ cookiecutter.base05 }}"
-    cyan:       "{{ cookiecutter.base06 }}"
-    white:      "{{ cookiecutter.base07 }}"
+    black:      "#{{ cookiecutter.base00 }}"
+    red:        "#{{ cookiecutter.base08 }}"
+    green:      "#{{ cookiecutter.base0B }}"
+    yellow:     "#{{ cookiecutter.base0A }}"
+    blue:       "#{{ cookiecutter.base0D }}"
+    magenta:    "#{{ cookiecutter.base0E }}"
+    cyan:       "#{{ cookiecutter.base0C }}"
+    white:      "#{{ cookiecutter.base05 }}"
 
   bright:
-    black:      "{{ cookiecutter.base08 }}"
-    red:        "{{ cookiecutter.base09 }}"
-    green:      "{{ cookiecutter.base0A }}"
-    yellow:     "{{ cookiecutter.base0B }}"
-    blue:       "{{ cookiecutter.base0C }}"
-    magenta:    "{{ cookiecutter.base0D }}"
-    cyan:       "{{ cookiecutter.base0E }}"
-    white:      "{{ cookiecutter.base0F }}"
+    black:      "#{{ cookiecutter.base03 }}"
+    red:        "#{{ cookiecutter.base08 }}"
+    green:      "#{{ cookiecutter.base0B }}"
+    yellow:     "#{{ cookiecutter.base0A }}"
+    blue:       "#{{ cookiecutter.base0D }}"
+    magenta:    "#{{ cookiecutter.base0E }}"
+    cyan:       "#{{ cookiecutter.base0C }}"
+    white:      "#{{ cookiecutter.base06 }}"
 
 
 scrolling:
@@ -93,8 +93,8 @@ scrolling:
 # Font configuration (changes require restart)
 font:
   normal: 
-    family: {{ cookiecutter.font.mono.name }}
     family: monospace
+    family: {{ cookiecutter.font.mono.name }}
 
   # Point size
   size: 13.0

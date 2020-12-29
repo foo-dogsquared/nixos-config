@@ -1,14 +1,14 @@
 { config, options, lib, pkgs, ... }:
 
 with lib; {
-  options.modules.themes."{{ cookiecutter.slug }}" = {
+  options.modules.themes."fair-and-square" = {
     enable = mkOption {
       type = types.bool;
       default = false;
     };
   };
 
-  config = mkIf config.modules.themes."{{ cookiecutter.slug }}".enable {
+  config = mkIf config.modules.themes."fair-and-square".enable {
     services = {
       # Enable picom compositor.
       picom = {
@@ -111,6 +111,6 @@ with lib; {
       arc-theme
     ];
 
-    fonts.fonts = with pkgs; [ iosevka nerdfonts font-awesome-ttf ];
+    fonts.fonts = with pkgs; [ nerdfonts iosevka font-awesome-ttf ];
   };
 }

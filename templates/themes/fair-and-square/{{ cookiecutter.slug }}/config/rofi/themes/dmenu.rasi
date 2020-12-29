@@ -8,24 +8,24 @@
 * {
     /* The color swatch */
     /* Useful for quick editing of the colors */
-    background: {{ cookiecutter.base00 }};
-    foreground: {{ cookiecutter.base07 }};
-    color0: {{ cookiecutter.base00 }};
-    color1: {{ cookiecutter.base01 }};
-    color2: {{ cookiecutter.base02 }};
-    color3: {{ cookiecutter.base03 }};
-    color4: {{ cookiecutter.base04 }};
-    color5: {{ cookiecutter.base05 }};
-    color6: {{ cookiecutter.base06 }};
-    color7: {{ cookiecutter.base07 }};
-    color8: {{ cookiecutter.base08 }};
-    color9: {{ cookiecutter.base09 }};
-    color10: {{ cookiecutter.base0A }};
-    color11: {{ cookiecutter.base0B }};
-    color12: {{ cookiecutter.base0C }};
-    color13: {{ cookiecutter.base0D }};
-    color14: {{ cookiecutter.base0E }};
-    color15: {{ cookiecutter.base0F }};
+    background: #{{ cookiecutter.base00 }};
+    foreground: #{{ cookiecutter.base07 }};
+    color0: #{{ cookiecutter.base00 }};
+    color1: #{{ cookiecutter.base01 }};
+    color2: #{{ cookiecutter.base02 }};
+    color3: #{{ cookiecutter.base03 }};
+    color4: #{{ cookiecutter.base04 }};
+    color5: #{{ cookiecutter.base05 }};
+    color6: #{{ cookiecutter.base06 }};
+    color7: #{{ cookiecutter.base07 }};
+    color8: #{{ cookiecutter.base08 }};
+    color9: #{{ cookiecutter.base09 }};
+    color10: #{{ cookiecutter.base0A }};
+    color11: #{{ cookiecutter.base0B }};
+    color12: #{{ cookiecutter.base0C }};
+    color13: #{{ cookiecutter.base0D }};
+    color14: #{{ cookiecutter.base0E }};
+    color15: #{{ cookiecutter.base0F }};
 
     background-color:      @background;
     border-color:          @foreground;
