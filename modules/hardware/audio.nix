@@ -1,8 +1,7 @@
 { config, options, lib, pkgs, ... }:
 
 with lib;
-let
-  cfg = config.modules.hardware.audio;
+let cfg = config.modules.hardware.audio;
 in {
   options.modules.hardware.audio = let
     mkBoolDefault = bool:
@@ -10,9 +9,9 @@ in {
         type = types.bool;
         default = false;
       };
-    in {
-      enable = mkBoolDefault false;
-      jack.enable = mkBoolDefault false;
+  in {
+    enable = mkBoolDefault false;
+    jack.enable = mkBoolDefault false;
   };
 
   config = mkIf cfg.enable {

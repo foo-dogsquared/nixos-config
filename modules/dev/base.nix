@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.base;
+let cfg = config.modules.dev.base;
 in {
   options.modules.dev.base = {
     enable = mkOption {
@@ -19,11 +18,13 @@ in {
       cmake # Yo, I heard you like Makefiles.
       cookiecutter # A project scaffolding tool.
       gnumake # Make your life easier with GNU Make.
+      gitAndTools.hub # I wish Gitlab has something called lab.
       hyperfine # You shouldn't be feel just fine with your programs...
       kmon # A Linux kernel monitoring tool, right...
       nixfmt # Formatter for uniform Nix code.
+      radare2-cutter # Rev-eng tools to feel like a hacker.
       stow # Build your symlink farm on the other side of the country, er, filesystem.
-      tldr # What manuals should include.
+      tealdeer # What manuals should include.
       universal-ctags # Enable fast traveling to your code (assuming written in a supported language).
     ];
 
@@ -35,13 +36,11 @@ in {
         enableFishIntegration = true;
         enableZshIntegration = true;
       };
-      fish.enable = true;
-    };
-  };
 
-  my.zsh = {
-    rc = ''
-      eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
-    '';
+      # Enabling all of the shells for cross-testing purposes.
+      fish.enable = true;
+      bash.enable = true;
+      zsh.enable = true;
+    };
   };
 }

@@ -4,8 +4,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.desktop.graphics;
+let cfg = config.modules.desktop.graphics;
 in {
   options.modules.desktop.graphics = let
     mkBoolDefault = bool:
@@ -40,6 +39,7 @@ in {
         gimp # Adobe Photoshop replacement.
         krita # A good painting program useful for "pure" digital arts.
         aseprite-unfree # A pixel art editor.
+        rawtherapee # A therapy session for improving your photos.
       ] else
         [ ]) ++
 

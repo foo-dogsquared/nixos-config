@@ -2,8 +2,7 @@
 { config, options, lib, pkgs, ... }:
 
 with lib;
-let
-  cfg = config.modules.hardware.veikk;
+let cfg = config.modules.hardware.veikk;
 in {
   options.modules.hardware.veikk = {
     enable = mkOption {
@@ -12,7 +11,6 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    boot.extraModulePackages = [ pkgs.veikk-linux-driver ];
-  };
+  config =
+    mkIf cfg.enable { boot.extraModulePackages = [ pkgs.veikk-linux-driver ]; };
 }

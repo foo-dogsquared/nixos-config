@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.desktop.research;
+let cfg = config.modules.desktop.research;
 in {
   options.modules.desktop.research = {
     enable = mkOption {

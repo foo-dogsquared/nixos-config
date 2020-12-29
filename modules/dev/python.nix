@@ -5,8 +5,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.python;
+let cfg = config.modules.dev.python;
 in {
   options.modules.dev.python = let
     mkBoolOption = bool:

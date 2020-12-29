@@ -18,8 +18,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Change the Linux kernel version.
-  boot.kernelPackages = pkgs.linuxPackages_5_8;
-  boot.extraModulePackages = [ pkgs.linuxPackages_5_8.nvidia_x11 ];
+  boot.kernelPackages = pkgs.linuxPackages_5_10;
+  boot.extraModulePackages = [ pkgs.linuxPackages_5_10.nvidia_x11 ];
 
   # Clean up the /tmp directory.
   boot.cleanTmpDir = true;
@@ -73,6 +73,11 @@
     fontconfig.enable = true;
   };
 
+  location = {
+    latitude = 15.0;
+    longitude = 121.0;
+  };
+
   # Module configurations.
   modules = {
     desktop = {
@@ -86,7 +91,7 @@
         firefox.enable = true;
         nyxt.enable = true;
       };
-      cad.enable = true;
+      #cad.enable = true;
       fonts.enable = true;
       files.enable = true;
       graphics = {
@@ -97,6 +102,7 @@
       };
       multimedia.enable = true;
       research.enable = true;
+      wine.enable = true;
     };
 
     dev = {
@@ -158,6 +164,7 @@
     services = { recoll.enable = true; };
 
     shell = {
+      archiving.enable = true;
       base.enable = true;
       lf.enable = true;
       zsh.enable = true;
@@ -180,12 +187,14 @@
       dwarf-fortress # Losing is fun!
       endless-sky # Losing is meh!
       minetest # Losing?! What's that?
+      the-powder-toy # Losing? The only thing losing is your time!
       wesnoth # Losing is frustrating!
       #zeroad # Losing is fun and frustrating!
 
       # Installing some of the dependencies required for my scripts.
       ffcast
       giflib
+      imageworsener
       leptonica
       libpng
       libwebp
@@ -199,11 +208,18 @@
       zbar
 
       # Some other packages.
+      leocad
       screenkey
     ]
 
     # My custom packages.
-    ++ (with pkgs.nur.foo-dogsquared; [ julia-bin license-cli openring segno ]);
+    ++ (with pkgs.nur.foo-dogsquared; [
+      flavours
+      julia-bin
+      hantemcli
+      license-cli
+      segno
+    ]);
 
   # Setting up the shell environment.
   my.env = {
@@ -224,8 +240,6 @@
 
   # Set your time zone.
   time.timeZone = "Asia/Manila";
-  services.openssh.enable = true;
-  services.lorri.enable = true;
 
   # Setup GnuPG.
   programs.gnupg.agent = {
@@ -235,12 +249,32 @@
   };
 
   # Install a proprietary Nvidia graphics driver.
-  services.xserver = {
-    libinput = {
-      enable = true;
-      middleEmulation = true;
+  services = {
+    xserver = {
+      digimend.enable = true;
+      libinput = {
+        enable = true;
+        middleEmulation = true;
+      };
     };
-    digimend.enable = true;
+    lorri.enable = true;
+    nfs = {
+      server = {
+        enable = true;
+        exports = ''
+        /home 192.168.1.0/24(rw,sync,no_root_squash,no_subtree_check)
+        '';
+      };
+    };
+    openssh = {
+      enable = true;
+      permitRootLogin = "yes";
+      extraConfig = ''
+        PasswordAuthentication yes
+      '';
+      ports = [ 22664 ];
+    };
+    redshift.enable = true;
     # videoDrivers = [ "nvidiaLegacy390" ];
   };
 
@@ -264,8 +298,19 @@
         # Use the entire suite.
         package = pkgs.gitAndTools.gitFull;
 
+        # Enable Delta syntax highlighter.
+        delta.enable = true;
+
         userName = "Gabriel Arazas";
         userEmail = "${config.my.email}";
+      };
+
+      # Enable this to make your prompt out of this world.
+      starship = {
+        enableBashIntegration = true;
+        enableFishIntegration = true;
+        enableZshIntegration = true;
+        enable = true;
       };
     };
 
@@ -281,9 +326,12 @@
           commandOptions = {
             auto = "true";
             batch = "true";
+            dontchmod = "true";
             fat = "true";
             force = "${homeDirectory}";
+            group = "true";
             links = "false";
+            rsrc = "true";
             ui = "text";
           };
         };

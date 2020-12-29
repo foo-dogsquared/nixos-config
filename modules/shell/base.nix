@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.shell.base;
+let cfg = config.modules.shell.base;
 in {
   options.modules.shell.base = {
     enable = mkOption {
@@ -15,7 +14,6 @@ in {
 
   config = mkIf cfg.enable {
     my.packages = with pkgs; [
-      aria2 # The sequel to aria(1).
       aspell # Hunt down a spelling bee champion to come to your shell.
       bat # cat(1) with wings.
       buku # A developer-oriented browser-independent bookmark manager.
@@ -27,7 +25,7 @@ in {
       graphviz # The biz central for graphical flowcharts.
       hexyl # Binary viewer with a cool name on the command-line.
       hledger # Do your accountancy thing ON THE COMMAND LINE, sure why not!
-      httpie # Want a piece of the HTTP pie.
+      httpie # Want a piece of the humble pie to humbly HTTP requests?
       jq # A command-line interface for parsing JSON.
       lazygit # For the lazy gits who cannot get good at Git.
       lazydocker # For the lazy gits who cannot get good at Docker.
@@ -51,13 +49,9 @@ in {
           enable = true;
           config = { theme = "base16"; };
         };
-      };
-    };
 
-    my.zsh = {
-      rc = ''
-        eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
-      '';
+        zoxide.enable = true;
+      };
     };
   };
 }

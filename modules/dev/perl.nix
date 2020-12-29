@@ -26,7 +26,6 @@ in {
 
   config = mkIf cfg.enable {
     my.packages = [ perlWithPackages ]
-    ++ (if cfg.raku.enable then [
-      pkgs.rakudo
-    ] else []); };
+      ++ (if cfg.raku.enable then [ pkgs.rakudo ] else [ ]);
+  };
 }

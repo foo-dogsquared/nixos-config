@@ -56,28 +56,28 @@ window:
 
 colors:
   primary:
-    background: "#2E3440"
-    foreground: "#D8DEE9"
+    background: "#2b221f"
+    foreground: "#fefefe"
 
   normal:
-    black: "#3B4252"
-    red: "#BF616A"
-    green: "#A3BE8C"
-    yellow: "#EBCB8B"
-    blue: "#81A1C1"
-    magenta: "#B48EAD"
-    cyan: "#88C0D0"
-    white: "#E5E9F0"
+    black:      "#2b221f"
+    red:        "#d03e68"
+    green:      "#afa644"
+    yellow:     "#dbbc48"
+    blue:       "#a15c40"
+    magenta:    "#8b7ab9"
+    cyan:       "#df937a"
+    white:      "#e9d3ce"
 
   bright:
-    black: "#727B8A"
-    red: "#BF616A"
-    green: "#A3BE8C"
-    yellow: "#EBCB8B"
-    blue: "#81A1C1"
-    magenta: "#B48EAD"
-    cyan: "#8FBCBB"
-    white: "#ECEFF4"
+    black:      "#8d5c4c"
+    red:        "#d03e68"
+    green:      "#afa644"
+    yellow:     "#dbbc48"
+    blue:       "#a15c40"
+    magenta:    "#8b7ab9"
+    cyan:       "#df937a"
+    white:      "#fefefe"
 
 
 scrolling:
@@ -94,7 +94,7 @@ scrolling:
 font:
   normal: 
     family: monospace
-    family: Iosevka
+    family: Iosevka Nerd Font
 
   # Point size
   size: 13.0

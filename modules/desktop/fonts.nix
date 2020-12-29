@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.desktop.fonts;
+let cfg = config.modules.desktop.fonts;
 in {
   options.modules.desktop.fonts = {
     enable = mkOption {

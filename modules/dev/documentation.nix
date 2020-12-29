@@ -5,8 +5,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.documentation;
+let cfg = config.modules.dev.documentation;
 in {
   options.modules.dev.documentation = let
     mkBoolOption = bool:

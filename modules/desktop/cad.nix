@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.desktop.cad;
+let cfg = config.modules.desktop.cad;
 in {
   options.modules.desktop.cad = {
     enable = mkOption {
@@ -16,7 +15,7 @@ in {
   config = mkIf cfg.enable {
     my.packages = with pkgs; [
       freecad # FREE AS A BIRD, FREE AS A ALL-YOU-CAN-EAT BUFFER!
-      #kicad         # The CAD for ki which is a form of energy found everywhere.
+      kicad # The CAD for ki which is a form of energy found everywhere.
       leocad # A CAD for leos, a well-known brand of toys.
       openscad # A programmable CAD for programmers.
     ];

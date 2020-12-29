@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.cc;
+let cfg = config.modules.dev.cc;
 in {
   options.modules.dev.cc = {
     enable = mkOption {

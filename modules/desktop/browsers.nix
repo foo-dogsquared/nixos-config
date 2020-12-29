@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.desktop.browsers;
+let cfg = config.modules.desktop.browsers;
 in {
   options.modules.desktop.browsers = let
     mkBoolDefault = bool:

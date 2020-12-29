@@ -5,8 +5,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.lisp;
+let cfg = config.modules.dev.lisp;
 in {
   options.modules.dev.lisp = let
     mkBoolDefault = bool:

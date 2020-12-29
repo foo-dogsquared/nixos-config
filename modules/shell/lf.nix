@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.shell.lf;
+let cfg = config.modules.shell.lf;
 in {
   options.modules.shell.lf = {
     enable = mkOption {

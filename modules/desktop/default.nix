@@ -11,5 +11,6 @@
     ./graphics.nix
     ./multimedia.nix
     ./research.nix
+    ./wine.nix
   ];
 }

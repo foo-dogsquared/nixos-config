@@ -3,8 +3,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.desktop.multimedia;
+let cfg = config.modules.desktop.multimedia;
 in {
   options.modules.desktop.multimedia = {
     enable = mkOption {

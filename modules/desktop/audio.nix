@@ -5,8 +5,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.desktop.audio;
+let cfg = config.modules.desktop.audio;
 in {
   options.modules.desktop.audio = let
     mkBoolDefault = bool:
@@ -19,7 +18,6 @@ in {
     composition.enable = mkBoolDefault false;
     production.enable = mkBoolDefault false;
   };
-
 
   config = mkIf cfg.enable {
     my.packages = with pkgs;
@@ -47,7 +45,7 @@ in {
         hydrogen # Them drum beats composition will get good.
         lmms # A decent libre FL Studio clone.
         polyphone # Edit your fonts for sound.
-        sunvox # A modular sequencer... ooh...
+        #sunvox # A modular sequencer... ooh...
         #zrythm # An up-and-coming DAW in Linux town.
         zynaddsubfx # Ze most advanced synthesizer I've seen so far (aside from the upcoming Vital syntehsizer).
       ] else

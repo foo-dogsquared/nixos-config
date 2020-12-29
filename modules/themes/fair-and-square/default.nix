@@ -111,6 +111,6 @@ with lib; {
       arc-theme
     ];
 
-    fonts.fonts = with pkgs; [ iosevka font-awesome-ttf ];
+    fonts.fonts = with pkgs; [ iosevka nerdfonts font-awesome-ttf ];
   };
 }

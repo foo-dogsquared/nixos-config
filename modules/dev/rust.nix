@@ -4,8 +4,7 @@
 
 with lib;
 
-let
-  cfg = config.modules.dev.rust;
+let cfg = config.modules.dev.rust;
 in {
   options.modules.dev.rust = {
     enable = mkOption {

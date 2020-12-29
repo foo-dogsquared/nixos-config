@@ -1,24 +1,24 @@
 * {
-    /* The color configuration */
-    /* Useful for quick editing in case for compiled templates */
-    background: #2E3440;
-    foreground: #D8DEE9;
-    color0: #3B4252;
-    color1: #BF616A;
-    color2: #A3BE8C;
-    color3: #EBCB8B;
-    color4: #81A1C1;
-    color5: #B48EAD;
-    color6: #88C0D0;
-    color7: #E5E9F0;
-    color8: #727B8A;
-    color9: #BF616A;
-    color10: #A3BE8C;
-    color11: #EBCB8B;
-    color12: #81A1C1;
-    color13: #B48EAD;
-    color14: #8FBCBB;
-    color15: #ECEFF4;
+    /* The color swatch */
+    /* Useful for quick editing of the colors */
+    background: #2b221f;
+    foreground: #eb8a65;
+    color0: #2b221f;
+    color1: #412c26;
+    color2: #54352c;
+    color3: #8d5c4c;
+    color4: #e1bcb2;
+    color5: #e9d3ce;
+    color6: #fefefe;
+    color7: #eb8a65;
+    color8: #d03e68;
+    color9: #eb914a;
+    color10: #dbbc48;
+    color11: #afa644;
+    color12: #df937a;
+    color13: #a15c40;
+    color14: #8b7ab9;
+    color15: #6f3920;
 
     /* Theme settings */
     highlight: bold italic;
@@ -28,7 +28,7 @@
     text-color: @foreground;
     background-color: @background;
     font: "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid 14";
-    font: "Iosevka 12";
+    font: "Iosevka Nerd Font 12";
 }
 
 window {

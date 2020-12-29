@@ -2,5 +2,5 @@
 { config, options, lib, pkgs, ... }:
 
 with lib; {
-  imports = [ ./base.nix ./lf.nix ./zsh.nix ];
+  imports = [ ./archiving.nix ./base.nix ./lf.nix ./zsh.nix ];
 }

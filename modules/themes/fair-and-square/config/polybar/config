@@ -2,11 +2,11 @@
 ; However, formats in RGB is fine.
 ; This is where all of the colors should be placed for those who are lazy to scroll down (like me).
 [colors]
-    background = "#2E3440"
-    background-light = "#727B8A"
-    foreground = "#D8DEE9"
-    foreground-light = "#ECEFF4"
-    accent = "#88C0D0"
+    background = "#2b221f"
+    background-light = "#412c26"
+    foreground = "#fefefe"
+    foreground-light = "#eb8a65"
+    accent = "#d03e68"
 
 
 ; The common style between bars.
@@ -24,8 +24,8 @@
     module-margin = 1
     module-padding = 1
 
-    font-0 = "Iosevka;2"
-    font-1 = "Fira Code;2"
+    font-0 = "Iosevka Nerd Font;2"
+    font-1 = "Iosevka;2"
 
     ; Our fallback fonts are mostly used as icon fonts.
     ; For future references, the version of Font Awesome used here is at v5.13.0.
@@ -76,9 +76,9 @@
 [module/home-fs]
     type = internal/fs
     mount-0 = /home
-    format-mounted-prefix = ""
+    format-mounted-prefix = ""
     format-mounted-prefix-margin-right = 1
-    format-unmounted-prefix = ""
+    format-unmounted-prefix = ""
     format-unmounted-prefix-margin-right = 1
     label-mounted = %free%
     label-unmounted = N/A
