@@ -2,7 +2,7 @@
     /* The color swatch */
     /* Useful for quick editing of the colors */
     background: #{{ cookiecutter.base00 }};
-    foreground: #{{ cookiecutter.base07 }};
+    foreground: #{{ cookiecutter.base05 }};
     color0: #{{ cookiecutter.base00 }};
     color1: #{{ cookiecutter.base01 }};
     color2: #{{ cookiecutter.base02 }};

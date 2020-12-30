@@ -284,7 +284,7 @@
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
     background = "#{{ cookiecutter.base01 }}"
-    foreground = "#{{ cookiecutter.base07 }}"
+    foreground = "#{{ cookiecutter.base05 }}"
     timeout = 10
     # Icon for notifications with low urgency, uncomment to enable
     #icon = /path/to/icon
@@ -293,7 +293,7 @@
 
 [urgency_normal]
     background = "#{{ cookiecutter.base00 }}"
-    foreground = "#{{ cookiecutter.base07 }}"
+    foreground = "#{{ cookiecutter.base06 }}"
     timeout = 10
     # Icon for notifications with normal urgency, uncomment to enable
     #icon = /path/to/icon

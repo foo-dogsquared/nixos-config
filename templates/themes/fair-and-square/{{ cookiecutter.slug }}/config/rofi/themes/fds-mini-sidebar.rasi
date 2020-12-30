@@ -2,7 +2,7 @@
     /* The color swatch */
     /* Useful for quick editing of the colors */
     background: #{{ cookiecutter.base00 }};
-    foreground: #{{ cookiecutter.base07 }};
+    foreground: #{{ cookiecutter.base05 }};
     color0: #{{ cookiecutter.base00 }};
     color1: #{{ cookiecutter.base01 }};
     color2: #{{ cookiecutter.base02 }};
@@ -67,12 +67,12 @@ prompt {
 }
 
 entry {
-    background-color: @color0;
+    background-color: @color1;
     margin: 0 1em 0 0;
 }
 
 element {
-    background-color: @color0;
+    background-color: @color1;
     padding: 5;
 }
 
