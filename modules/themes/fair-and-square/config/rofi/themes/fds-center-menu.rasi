@@ -2,7 +2,7 @@
     /* The color swatch */
     /* Useful for quick editing of the colors */
     background: #2b221f;
-    foreground: #eb8a65;
+    foreground: #e9d3ce;
     color0: #2b221f;
     color1: #412c26;
     color2: #54352c;

@@ -9,7 +9,7 @@ pkill dunst; dunst &
 bspc rule -r "*"
 
 # Set up the desktops (workspaces) for the monitor
-bspc monitor -d I II III IV V
+bspc monitor -d web text dev graphics 3d mail music vm
 
 bspc config border_width        2
 bspc config window_gap          5

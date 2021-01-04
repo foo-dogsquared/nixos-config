@@ -16,9 +16,7 @@ in {
     my.packages = with pkgs; [
       croc # Despite the name, it is a good and tame tool to send your files over.
       exiftool # A file metadata reader/writer/manager/helicopter.
-      (recoll.override {
-        withGui = false;
-      }) # Bring the search engine to the desktop!
+      recoll # Bring the search engine to the desktop!
       unison # Back those files up, son.
       oneshot # Basically `python -m http.server` that can deliver files to various devices.
       qbittorrent # Free version of uBittorrent.
