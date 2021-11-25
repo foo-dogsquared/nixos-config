@@ -3,16 +3,17 @@
 # That can be found in the `themes` module.
 { config, options, lib, pkgs, ... }:
 
-let
-  cfg = config.modules.desktop;
-in
-{
+let cfg = config.modules.desktop;
+in {
   options.modules.desktop = {
-    enable = lib.mkEnableOption "Enables all desktop-related services and default programs.";
-    audio.enable = lib.mkEnableOption "Enables all desktop audio-related services such as Pipewire.";
+    enable = lib.mkEnableOption
+      "Enables all desktop-related services and default programs.";
+    audio.enable = lib.mkEnableOption
+      "Enables all desktop audio-related services such as Pipewire.";
+    fonts.enable = lib.mkEnableOption "Enables font-related config.";
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [ 
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
       # Enable Flatpak for additional options for installing desktop applications.
       services.flatpak.enable = true;
@@ -43,9 +44,25 @@ in
 
       # Enable MPD-related services.
       services.mpd.enable = true;
-      environment.systemPackages = with pkgs; [
-        ncmpcpp   # Has the worst name for a music client WTF?
-      ];
+      environment.systemPackages = with pkgs;
+        [
+          ncmpcpp # Has the worst name for a music client WTF?
+        ];
+    })
+
+    (lib.mkIf cfg.fonts.enable {
+      fonts = {
+        enableDefaultFonts = true;
+        fontconfig = {
+          enable = true;
+          includeUserConf = true;
+        };
+
+        fonts = with pkgs;
+          [
+
+          ];
+      };
     })
   ]);
 }

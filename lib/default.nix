@@ -3,8 +3,7 @@
 let
   # Default system for our host configuration.
   sys = "x86_64-linux";
-in
-rec {
+in rec {
   /* Create an attribute set that represents the structure of the modules
      inside of a directory.  While it can recurse into directories, it will
      stop once it detects `default.nix` inside.
@@ -21,23 +20,22 @@ rec {
   filesToAttr = dirPath:
     let
       isModule = file: type:
-        (type == "regular" && lib.hasSuffix ".nix" file) || (type == "directory");
+        (type == "regular" && lib.hasSuffix ".nix" file)
+        || (type == "directory");
 
       collect = file: type: {
         name = lib.removeSuffix ".nix" file;
-	value =
-	  let
-	    path = dirPath + "/${file}";
-	  in
-	    if (type == "regular") || (type == "directory" && lib.pathExists (path + "/default.nix"))
-	    then path
-	    else filesToAttr path;
-	};
+        value = let path = dirPath + "/${file}";
+        in if (type == "regular")
+        || (type == "directory" && lib.pathExists (path + "/default.nix")) then
+          path
+        else
+          filesToAttr path;
+      };
 
       files = lib.filterAttrs isModule (builtins.readDir dirPath);
-      in 
-        lib.filterAttrs (name: value: value != { }) (lib.mapAttrs' collect files);
-
+    in lib.filterAttrs (name: value: value != { })
+    (lib.mapAttrs' collect files);
 
   /* Like `filesToAttr` but does it recursively.  Those modules with
      `default.nix` are ignored and gives the full module directory this time.
@@ -54,24 +52,24 @@ rec {
 
       collect = name: file: {
         inherit name;
-	
-	# Since `filesToAttr` has already filtered the files, we can be assured
-	# it is only either a Nix file or a directory containing a
-	# `default.nix`.
-	value = if (lib.pathIsDirectory file) then filesToAttr file else file;
+
+        # Since `filesToAttr` has already filtered the files, we can be assured
+        # it is only either a Nix file or a directory containing a
+        # `default.nix`.
+        value = if (lib.pathIsDirectory file) then filesToAttr file else file;
       };
-    in
-      lib.listToAttrs (lib.mapAttrsToList collect files);
+    in lib.listToAttrs (lib.mapAttrsToList collect files);
 
   /* Create a NixOS system through a given host folder.
      It will automate some of the things such as making the last component
      of the path as the hostname.
-     
+
      Example:
        mkHost ./hosts/june {}
        => { ... } # NixOS configuration attrset
   */
-  mkHost = file: attrs@{ system ? sys, ... }:
+  mkHost = file:
+    attrs@{ system ? sys, ... }:
     lib.nixosSystem {
       inherit system;
       specialArgs = { inherit lib system inputs; };
@@ -79,34 +77,33 @@ rec {
       # We also set the following in order for priority.
       # Later modules will override previously imported modules.
       modules = [
-	# Set the hostname.
-        { networking.hostName = builtins.baseNameOf file; }
+        # Set the hostname.
+        {
+          networking.hostName = builtins.baseNameOf file;
+        }
 
-	# Put the given attribute set (except for the system).
-	(lib.filterAttrs (n: v: !lib.elem n [ "system" ]) attrs)
+        # Put the given attribute set (except for the system).
+        (lib.filterAttrs (n: v: !lib.elem n [ "system" ]) attrs)
 
-	# The entry point of the module.
+        # The entry point of the module.
         file
       ]
       # Append with our custom modules from the modules folder.
-      ++ (lib.mapAttrsToList (n: v: import v) (filesToAttr ../modules));
+        ++ (lib.mapAttrsToList (n: v: import v) (filesToAttr ../modules));
     };
 
   /* Create an attribute set from two lists (or a zip).
 
-    Examples:
-      zipToAttrs [ "tails" "breed" ] [ 1 "Doggo" ]
-      => { tails = 1; breed = "Doggo" }
+     Examples:
+       zipToAttrs [ "tails" "breed" ] [ 1 "Doggo" ]
+       => { tails = 1; breed = "Doggo" }
 
-      zipToAttrs [ "hello" "d" ] [ { r = 5; f = "dogs"; } { r = 532; f = "dogsso"; } ] 
-      => { d = { ... }; hello = { ... }; }
+       zipToAttrs [ "hello" "d" ] [ { r = 5; f = "dogs"; } { r = 532; f = "dogsso"; } ]
+       => { d = { ... }; hello = { ... }; }
   */
   zipToAttrs = keys: values:
-    lib.listToAttrs (
-      lib.zipListsWith (name: value: { inherit name value; })
-      keys
-      values
-    );
+    lib.listToAttrs
+    (lib.zipListsWith (name: value: { inherit name value; }) keys values);
 
   /* Count the attributes with the given predicate.
 
@@ -115,5 +112,6 @@ rec {
      => 2
   */
   countAttrs = pred: attrs:
-    lib.count (attr: pred attr.name attr.value) (lib.mapAttrsToList lib.nameValuePair attrs);
+    lib.count (attr: pred attr.name attr.value)
+    (lib.mapAttrsToList lib.nameValuePair attrs);
 }

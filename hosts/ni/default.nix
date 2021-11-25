@@ -5,10 +5,9 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [ # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # My custom configuration with my custom modules starts here.
   modules = {
@@ -63,22 +62,20 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    git
-    wget
-    brave
-    lf
-    fd
-    ripgrep
-  ];
+  environment.systemPackages = with pkgs; [ git wget brave lf fd ripgrep ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs.mtr.enable = true;
-  security.doas.enable = true;
 
-  # List services that you want to enable:
-  #services.borgmatic.enable = true;
+  # The usual doas config.
+  security.doas = {
+    enable = true;
+    extraRules = [{
+      groups = [ "wheel" ];
+      persist = true;
+    }];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -89,44 +86,46 @@
   system.stateVersion = "21.11"; # Did you read the comment?
 
   # This is my external hard disk so it has to be non-blocking.
-  fileSystems."/archive" = 
-    { device = "/dev/disk/by-uuid/665A391C5A38EB07";
-      fsType = "ntfs";
-      noCheck = true;
-      options = [ "nofail" "noauto" "user" "x.systemd.automount" "x.systemd.device.timeout=1ms" ];
-    };
+  fileSystems."/mnt/archive" = {
+    device = "/dev/disk/by-uuid/665A391C5A38EB07";
+    fsType = "ntfs";
+    noCheck = true;
+    options = [
+      "nofail"
+      "noauto"
+      "user"
+      "x.systemd.automount"
+      "x.systemd.device.timeout=1ms"
+    ];
+  };
 
   # Automated backup for my external storage.
   services.borgbackup.jobs = {
     personal_archive = {
       exclude = [
-	"/home/*/.cache"
+        "/home/*/.cache"
 
-	# The usual NodeJS shenanigans.
-	"*/node_modules"
-	"*/.next"
+        # The usual NodeJS shenanigans.
+        "*/node_modules"
+        "*/.next"
 
-	# Rust-related files.
-	"projects/software/*/result"
-	"projects/software/*/build"
-	"projects/software/*/target"
+        # Rust-related files.
+        "projects/software/*/result"
+        "projects/software/*/build"
+        "projects/software/*/target"
       ];
       doInit = false;
       removableDevice = true;
       repo = "/archive/backups";
-      paths = [
-	"~/dotfiles"
-	"~/library"
-	"~/writings"
-      ];
+      paths = [ "~/dotfiles" "~/library" "~/writings" ];
       encryption = {
         mode = "repokey";
-	passCommand = "${pkgs.gopass}/bin/gopass show misc/BorgBackup_pass"
+        passCommand = "${pkgs.gopass}/bin/gopass show misc/BorgBackup_pass";
       };
       compression = "auto,lzma";
       startAt = "daily";
       prune = {
-	prefix = "{hostname}-";
+        prefix = "{hostname}-";
         keep = {
           within = "1d";
           daily = 30;
