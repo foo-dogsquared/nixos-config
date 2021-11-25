@@ -1,18 +1,16 @@
+# Themes are your graphical sessions.
+# It also contains your aesthetics even specific workflow and whatnots.
+# You can also show your desktop being modularized like this.
 { config, options, lib, pkgs, ... }:
-
-with lib;
 
 let
   cfg = config.modules.themes;
-  my = import ../../lib {
-    inherit pkgs;
-    lib = lib;
-  };
-in {
+in
+{
   assertions = [{
-    assertion = my.countAttrs (_: x: x.enable) cfg < 2;
-    message = "Can't have more than one theme enabled at a time";
+    assertion = (lib.countAttrs (_: theme: theme.enable) cfg) < 2;
+    message = "Can't have more than one theme enabled at any given time.";
   }];
 
-  imports = [ ./fair-and-square ];
+  imports = lib.mapAttrsToList (n: v: import v) (lib.filterAttrs (n: v: n != "default") (lib.filesToAttr ./.));
 }

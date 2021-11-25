@@ -1,9 +1,0 @@
-configuration {
-    display-drun: "Application";
-    display-run: "Execute";
-    display-window: "Window";
-    display-ssh: "SSH";
-    font: "Iosevka Nerd Font 12";
-    show-icons: true;
-    theme: "themes/fds-mini-sidebar";
-}

@@ -1,284 +1,57 @@
 = foo-dogsquared's NixOS config
-:toc:
+:todo:
 
-This is the configuration setup for my https://nixos.org[NixOS] instance.
-This setup is stolen from https://github.com/hlissner/dotfiles[hlissner's NixOS config] footnote:[The author and one-man maintainer of Doom Emacs.].
-The whole setup is mostly intended for single-user systems but you can easily configure it for multi-user systems.
+This is my NixOS config as a link:https://www.tweag.io/blog/2020-05-25-flakes/[Nix flake].
+
+I finally have some time trying to grok flakes and redo my NixOS config from scratch after leaving NixOs (because I have work and have to quickly set things up without me trying to debug how NixOS works).
+Here is the result.
 
 
 
 
-== Getting started
+== Installation
 
-You can replace your NixOS configuration with this bad boi.
-
-To install, you have to do the following first:
-
-- Set up your partitions.
-- Copy this setup (either with `git` or what-have-you) in whatever location you prefer.
-- Install GNU Make (i.e., `nix-env -i gnumake`).
-
-Then simply run `make install`.
-It is equivalent to the following command:
+This primarily uses Nix flakes so you can have a preview of what's available in my config.
 
 [source, shell]
 ----
-USER=foo-dogsquared HOST=zilch make --directory /etc/dotfiles install
+nix flake show github:foo-dogsquared/nixos-config
 ----
 
-As of 2020-08-28, it wouldn't work since it assumes the installation root is at `/` rather than `/mnt`.
-To correct this behavior, simply configure the `PREFIX` variable (e.g., `PREFIX=/mnt make install`).
+It should only export my NixOS configurations of my different hosts (of only one so far excluding VMs and VPSs ;p).
 
-For more information, simply inspect the link:./Makefile[`./Makefile`].
 
-Assuming you did install, your NixOS setup will have the following stuff.
 
-- Uses the NixOS unstable channel (https://nixos.org/channels/nixos-unstable) for its package set.
-- Have the https://github.com/rycee/home-manager[home-manager] installed with the unstable release.
-- You start with the TTY and nothing else is installed (i.e., bare installation similar in spirit to Arch Linux).
-To setup your graphical installation, see the <<Themes>> section.
 
 
-=== Precautions
+== TODO
 
-There are some things you need to keep in mind when using this setup.
+In order of priority:
 
-* This setup is not meant to be fully reproducible.
-It is a personal setup for a person who wants to live on the bleeding edge, personally.
-Despite being a NixOS setup which should be reproducible on paper, it mainly uses the unstable versions of the channels and packages meaning you would have a different installation each time (unless you do something like https://nixos.org/guides/towards-reproducibility-pinning-nixpkgs.html[pinning the nixpkgs repo] or using https://www.tweag.io/blog/2020-05-25-flakes/[the flakes feature]).
-footnote:[I'm most likely using the Nix flakes some time in the future.]
+* Create custom modules.
+** Create a themes system similar to link:https://github.com/hlissner/dotfiles[this NixOS config].
 
-* It may use third-party channels for certain versions of the packages, hammering the first precaution even further regarding reproducibility.
+* Manage secrets with agenix.
 
-* The main user configuration is tightly integrated with the system configuration.
-In other words, all upgrades would have to affect the entire system.
-If you want separate user profiles (just like how Nix intended to be) with each user having its own pace of upgrading their local system, you're missing out with this config setup.
-That said, it is still possible to create user profiles by just declaring the user in `./hosts/$HOST/default.nix` (e.g., `users.users.$USERNAME`), leaving it blank, and configure it at your own pace in `$HOME`.
+* Automate backups with NixOS config.
 
+* Create custom packages and export it to flakes. (Maybe consider making it to upstream)
 
+* Create cluser-wide configs.
 
+* Create host-wide configs.
 
-== Project structure
+* Create user-specific configs with home-manager.
 
-The project structure should look like the following:
+* ~Steal~ Get some ideas from link:https://github.com/divnix/devos[this overengineered template].
 
-[source, tree]
-----
-nixos-config
-├── config/
-├── hosts/
-├── lib/
-├── modules/
-├── packages/
-├── templates/
-├── default.nix*
-├── Makefile*
-└── README.adoc*
-----
+* Make use of other established utilities such as link:https://github.com/divnix/digga/[digga], link:https://github.com/gytis-ivaskevicius/flake-utils-plus[flake-utils-plus], and link:https://github.com/nix-community/home-manager[home-manager] once I'm familiar to create my own Nix programs.
 
-* The entrypoint of this setup is link:./default.nix[`./default.nix`] (which is like `index.html` for webpages).
-It contains a function that accepts two arguments: the name of the host and the username of the main user.
-The host should exist at `./hosts/$HOST/` (see <<Hosts>> for more info).
-Meanwhile, the main user is primarily referred with the `my` attribute defined at link:./modules/default.nix[`./modules/default.nix`].
+Out of scope:
 
-* The directory paid with the most attention would most likely be the `modules/` folder which contains cluster-wide footnote:[Whenever I say 'cluster-wide', I really mean my laptop (which I have none at the moment) and desktop (which I have only one at the moment).]  modules intended to be used in each device.
+* Text editor configurations.
+They are often updated. I don't want to rebuild it every time I change it.
 
-** Another folder worthy of attention is the `modules/themes` which sets up a complete desktop environment for you so you don't have to.
-For more information, see the <<Themes>> section.
+* Migration of my link:https://github.com/foo-dogsquared/dotfiles[dotfiles].
+I still use it on other non-NixOS systems.
 
-* The `config/` directory is simply the all-seeing cluster-wide ad hoc configuration of several programs.
-In this case, it is my https://github.com/foo-dogsquared/dotflies[dotfiles] directory.
-
-* The `hosts/` contains the machine-specific configurations of the machine (I've only one but I plan to install NixOS for my new ones).
-It is also used on the installation phase (from `make install`) by setting the `HOST` variable (i.e., `HOST=zilch make -C /etc/install`) with the folder name as the argument.
-See the <<Hosts>> section for more details.
-
-* A little library in link:./lib[`./lib`] based from https://github.com/hlissner/dotfiles[original source] which being used for various uses (e.g., limiting certain modules).
-
-* Though my custom packages are now placed in my https://github.com/foo-dogsquared/nur-packages[NUR repo], the `packages/` folder still exists here intended for "private" packages.
-Also contains third-party package repositories and overlays such as the https://github.com/nix-community/NUR[NUR], https://github.com/nix-community/emacs-overlay[unstable branch of Emacs], or the unstable branch of https://github.com/NixOS/nixpkgs/[nixpkgs].
-See the <<Packages>> section for more information.
-
-* The `templates/` directory is a bunch of https://github.com/cookiecutter/cookiecutter/[Cookiecutter] templates intended for easy creation/deployment of customized systems (e.g., graphical desktop environments, customized modules).
-
-
-
-
-== Hosts
-
-Each machine is represented with a directory in link:./hosts/[`./hosts`] with the name of the directory as the name of the machine.
-footnote:[It is basically using the pets approach (from pets versus cattle thing).]
-
-Each host should have an entrypoint at `./hosts/$HOST/default.nix` which is then used from the entrypoint of this setup at link:./default.nix[`./default.nix`] (i.e., `import /etc/dotfiles "$HOST" "$USER"`).
-It may contain machine-specific configurations (e.g., specific systemd units, Recoll index building, GNU Nano configurations), other Nix modules for modularity, and other sorts of knick-knacks (e.g., other wallpapers, machine-specific scripts).
-
-For best practice, you may want to follow the following project structure:
-
-[source, tree]
-----
-./hosts/$HOST
-├── config/
-├── modules/
-├── default.nix*
-└── README.adoc
-----
-
-* `config/` contains the specific config files.
-
-* `modules/` stores the other Nix modules to be used in `default.nix`.
-
-* `default.nix` is the entrypoint for our host module.
-It contains configuration of our link:./modules[`./modules`], NixOS (i.e., `man configuration.nix`), https://github.com/rycee/home-manager[home-manager] (i.e., `man home-configuration.nix`), and other things you might want to include in the host-specific `$HOST/modules/` folder.
-
-* A README file in whatever format you prefer.
-(I just choose https://asciidoctor.org/[Asciidoctor] with the `.adoc` file extension since it's my go-to document format.)
-
-
-
-
-== Themes
-
-My setup feature themes as a NixOS module (in link:./modules/themes[`modules/themes`]) which sets up a complete graphical environment.
-This lets me easily switch my graphical setup with a simple toggle (i.e., `theme.$THEME_NAME.enable = true;`) in my machine configuration (i.e., `./hosts/$HOST/default.nix`).
-For safety from conflicting modules and configuration, you should have a bare installation ala-Arch Linux.
-
-For best practice, the general project structure of a theme should look like the following:
-
-[source, tree]
-----
-$THEME_NAME
-├── config/
-│   ├── PROGRAM_1/
-│   ├── PROGRAM_2/
-│   ├── PROGRAM_3/
-│   └── wallpaper*
-├── default.nix*
-└── README.adoc*
-----
-
-* The `config/` folder is where all of the specific configurations will go.
-Each program to be configured is stored in its own folder (e.g., polybar, bspwm, sxhkd).
-A wallpaper can be placed at `config/wallpaper` for convenience.
-
-* `default.nix` is simply the entry point for our theme module.
-This is where you can add certain packages, enable certain settings, setup your files to the home directory, and pass the theme metadata.
-
-* For convenience, you should make the NixOS theme module as a https://github.com/cookiecutter/cookiecutter[Cookiecutter template] to easily replace the color schemes, fonts, and what-have-you.
-Then, edit `modules/themes/default.nix` to add the theme to the selection.
-I have my theme templates stored in link:./templates[`./templates`] as an example.
-
-
-
-
-== Packages
-
-The link:./packages/[`./packages/`] directory contains cluster-wide https://nixos.wiki/wiki/Overlays[overlays], https://nixos.wiki/wiki/Nix_Channels[channels], and custom packages.
-The overlays should be put in a separate folder in `./packages/overlays/`.
-For any other packages, it should be put on the same level as `./packages/default.nix`.
-
-Even though I have https://github.com/foo-dogsquared/nur-packages[a separate repo] for my packages, the packages defined here is only applicable to the setup.
-
-To make this section longer, here is the workflow summary in creating a package:
-
-- Create a test file (i.e., `./packages/$PACKAGE.nix`).
-Either as an initial draft or a final prototype that you'll never check once it successfully built.
-
-- Fetch the to-be package.
-In case you want to know the SHA256 hash of the to-be package from fetching (e.g., `fetchTarball`, `fetchFromGitHub`), you can use `lib.fakeSha256` and wait for the error to appear.
-It should give you the expected hash.
-footnote:[Don't forget to visit the nixpkgs repo and look at the source code for the nth time.]
-
-- Give the build inputs and the instructions for individual phases (e.g., `unpackPhase`, `preInstallPhase`, `buildPhase`).
-
-
-
-
-== Why NixOS?
-
-It'll be a full-time geeky story if I have to explain so I'll put it in a bullet list.
-
-* You can configure your system from the system-wide packages, user-specific packages, boot loader settings, graphical environments, and what-have-you stored in text files.
-That fact alone blew my mind ever since I saw @hlissner's NixOS and the temptation just keeps growing ever since I see more NixOS-related posts.
-This is where the real power of NixOS (and also https://guix.gnu.org/[GuixSD]) really made it worth the try: declarative system and local configuration.
-
-* A https://github.com/NixOS/nixpkgs/[gigantic package set] featuring \~65000 packages (similar number to AUR) as of 2020-10-29.
-While NixOS is technically a source distribution (e.g., Gentoo, KISS Linux), with the reproducibility features of Nix, its https://hydra.nixos.org/[build farm], and its https://cache.nixos.org/[very large cache], you get the binary artifacts for most of its packages for free.
-footnote:[If you want NixOS to be "truly a source distro", you can disable it by setting no binary caches in `nix.binaryCaches`.]
-
-** With https://nixos.org/nixpkgs/manual/[overlays], you can change how the package is built from its source to its build instructions.
-
-* It is reproducible (in a way, anyway).
-Compared to other distros I've used in the past before discovering NixOS (which is only Arch and Fedora), it is very easy to reproduce the config.
-In my first day of using NixOS, I just enabled hlissner's default config and I was able to boot in just fine.
-(Though, changing my config into something that I want to takes the most time.)
-
-* Rollbacks.
-Rollbacks are good.
-In system state, life with a time machine, and fighting games.
-You can just `nixos-rebuild switch --rollback` and you'll be back into your previous config.
-It's like Windows Restore on steroids.
-
-* The packaging process is straightforward.
-Furthermore, it is secure since it is sandboxed (if you enabled it with `nix.useSandbox`).
-
-* Hipster points.
-https://www.archlinux.org/[Arch?]
-https://k1ss.org/[KISS Linux?]
-https://www.gentoo.org/[Gentoo?]
-http://www.linuxfromscratch.org/[Linux From Scratch?]
-Forget that!
-NixOS-influenced distros are the future and I'll continue to shill it for the rest of my computing shtick.
-
-
-=== Want to learn NixOS?
-
-I was able to get up and running with NixOS in a day (which is impressive for the smoothbrain that I am) thanks to these resources:
-
-* https://nixos.org/manual/nixos/[The NixOS manual] is your starting point.
-Personally, I find it a bit confusing but it is still good to get an installation working.
-
-* https://www.youtube.com/watch?v=NYyImy-lqaA&list=PLRGI9KQ3_HP_OFRG6R-p4iFgMSK1t5BHs[The Nixology video series by Burke Libbey] which gives a practical insight on Nix and NixOS, in general.
-I give it a wholehearted recommendation to check it out.
-
-* I learn a whole lot from tinkering with https://github.com/hlissner/dotfiles[@hlissner's dotfiles].
-It's like the practical application of the things I've learned for the day.
-Though, it did cost me to spend a week debugging footnote:[Which mostly compose of trial-and-erroring the hardcore way.] the config from the never-ending tinkering (which is a stupid decision on my part).
-It could've been resolved in a day or two if I had joined the https://discord.gg/qvGgnVx[Doom Emacs Discord server].
-
-* Speaking of the Doom Emacs Discord server, the https://discord.gg/qvGgnVx[Doom Emacs Discord server] is pretty cool.
-Despite it is a Discord server on Doom Emacs, it is welcoming on non-Doom Emacs stuff and you can find a lot of NixOS (and Guix) geeks over there.
-
-* With the https://stephank.nl/p/2020-06-01-a-nix-primer-by-a-newcomer.html[help of the newcomers documented their learnings], I was able to quickly pick the terminologies surrounding the system.
-
-If you want to look out for some go-to resources, the https://nixos.org/learn.html[official manuals] will never fade in the list.
-It may be horrible for a newcomer (in my opinion) but it is great for someone who's already familiar with Nix.
-The https://nixos.wiki/[unofficial NixOS wiki] is one of the more reliable sources especially with its practical example.
-
-For more learning on the Nix conventions, ecosystem, and practices, I recommend https://nix.dev/[nix.dev] to look out for.
-It provides some information that the official (and unofficial) sources misses.
-
-
-=== Problems encountered along the way
-
-NixOS is a wildly different beast compared to other distros.
-I did go through some rocky road to learning it;
-my time learning NixOS is not composed of 100% absorbing the information efficiently.
-
-* One of the biggest problem I've encountered is the hidden conventions on the code.
-The biggest example I can think of is the parameters of a nixpkgs module (i.e., `{ config, options, lib, pkgs, ... }`).
-For an acquintance with Nix, it may not be that much of a problem.
-However, for a newcomer, it is pretty hard to find those information with those https://nixos.org/learn.html[three manuals].
-
-* The filesystem hierarchy standard is completely thrown out of the window.
-This means prebuilt binaries (including https://appimage.org/[AppImages]) will not work since the libraries needed are not in the intended locations.
-If you want to use them inside Nix (or NixOS), you have https://nixos.wiki/wiki/Packaging/Binaries[to package them].
-Thankfully, `/usr/bin/env` is kept for your user scripts.
-
-* While the Nix language is nice and all, the https://github.com/NixOS/nixpkgs/tree/master/lib[standard library] which is essential if you want to go far with Nix, is pretty hard to navigate for a newcomer.
-
-* Fully going into the "Nix way" is sometimes painful with the effort required to package a certain program compared to.
-On the other hand, it is "write once, build everywhere".
-
-* The error messages are horrible (when it's horrible)!
-There is a https://opencollective.com/nix-errors-enhancement/updates/revising-our-road-map-phase-3[recent push on improving Nix in that aspect] but it focuses on the formatting.
-The interpreter sometimes points at the opposite way (at least to me).

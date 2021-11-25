@@ -1,5 +1,0 @@
-= NixOS desktop themes
-
-These are some of my themes om NixOS as a module ala-link:https://github.com/hlissner/dotfiles[hlissner NixOS modules] as a https://github.com/cookiecutter/cookiecutter[Cookiecutter template].
-Most of them just need a Base16 color scheme in the appropriate config file and generate the module with the given color scheme as a result.
-
