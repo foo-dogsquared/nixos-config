@@ -26,12 +26,12 @@
       neovim.enable = true;
     };
     themes.a-happy-gnome.enable = true;
+    users.users = [ "foo-dogsquared" ];
   };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
   # Set your time zone.
   time.timeZone = "Asia/Manila";
 
@@ -53,12 +53,6 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   hardware.opentabletdriver.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.foo-dogsquared = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

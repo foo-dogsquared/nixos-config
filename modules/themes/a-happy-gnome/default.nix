@@ -15,6 +15,9 @@ in
     services.gnome.chrome-gnome-shell.enable = true;
 
     environment.systemPackages = with pkgs; [
+      # It is required for custom menus in extensions.
+      gnome-menus
+
       gnomeExtensions.arcmenu
       gnomeExtensions.x11-gestures
       gnomeExtensions.gsconnect

@@ -20,6 +20,7 @@ in {
           git
           ripgrep
           gnutls
+          emacs-all-the-icons-fonts
 
           # Optional dependencies.
           fd

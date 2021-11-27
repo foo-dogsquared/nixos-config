@@ -8,11 +8,13 @@
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+
+    digga.url = "github:divnix/digga";
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
     let
-      lib = nixpkgs.lib.extend
+      libExtended = nixpkgs.lib.extend
         (final: prev: (import ./lib { inherit inputs; lib = final; }));
 
       hostDefaultConfig = {
@@ -36,16 +38,17 @@
         '';
       };
     in {
-      inherit lib;
+      # Exposes only my library with the custom functions to make it easier to include in other flakes.
+      lib = import ./lib { inherit inputs; lib = nixpkgs.lib; };
 
       # A list of NixOS configurations from the `./hosts` folder.
       # It also has some sensible default configurations.
       nixosConfigurations =
-        lib.mapAttrs (host: path: lib.mkHost path hostDefaultConfig) (lib.filesToAttr ./hosts); 
+        libExtended.mapAttrs (host: path: libExtended.mkHost path hostDefaultConfig) (libExtended.filesToAttr ./hosts); 
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
       nixosModules =
-        lib.mapAttrs (_: path: import path) (lib.filesToAttr ./modules);
+        libExtended.mapAttrs (_: path: import path) (libExtended.filesToAttr ./modules);
     };
 }

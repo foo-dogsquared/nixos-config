@@ -56,11 +56,35 @@ in {
         fontconfig = {
           enable = true;
           includeUserConf = true;
+
+          defaultFonts = {
+            monospace = [ "Iosevka" "Source Code Pro" ];
+            sansSerif = [ "Source Sans Pro" "Noto Sans" ];
+            serif = [ "Source Serif Pro" "Noto Serif" ];
+          };
         };
 
         fonts = with pkgs;
           [
+            iosevka
 
+            # Noto font family
+            noto-fonts
+            noto-fonts-cjk
+            noto-fonts-extra
+            noto-fonts-emoji
+
+            # Adobe Source font family
+            source-code-pro
+            source-sans-pro
+            source-han-sans
+            source-serif-pro
+            source-han-serif
+            source-han-mono
+
+            # Math fonts
+            stix-two
+            xits-math
           ];
       };
     })

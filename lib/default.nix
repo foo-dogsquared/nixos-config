@@ -8,6 +8,14 @@ in rec {
      inside of a directory.  While it can recurse into directories, it will
      stop once it detects `default.nix` inside.
 
+     Signature:
+       path -> attrset
+     Where:
+       - `path` is the starting point.
+     Returns:
+       An attribute set. The keys are the basename of the file or the directory
+       and the values are the filepath to the Nix file.
+
      !!! Implementation detail is based from
      https://github.com/divnix/digga/blob/main/src/importers.nix looking at it
      multiple times for the purpose of familiarizing myself to coding in Nix
@@ -42,9 +50,17 @@ in rec {
      This is only suitable if you intend to use all of the modules in a given
      directory.
 
+     Signature:
+       path -> attrset
+     Where:
+       - `path` is the starting point of the scan.
+     Returns:
+       An attribute set. The keys are the basename for each Nix file/directory
+       and the values are the path to the file.
+
      Examples:
-     filesToAttrRec ./modules
-     => { agenix = /home/foo-dogsquared/nixos-config/modules/agenix.nix; archiving = /home/foo-dogsquared/nixos-config/modules/archiving.nix; desktop = /home/foo-dogsquared/nixos-config/modules/desktop.nix; dev = /home/foo-dogsquared/nixos-config/modules/dev.nix; editors = /home/foo-dogsquared/nixos-config/modules/editors.nix; themes = { a-happy-gnome = /home/foo-dogsquared/nixos-config/modules/themes/a-happy-gnome; default = /home/foo-dogsquared/nixos-config/modules/themes/default.nix; }; }
+       filesToAttrRec ./modules
+       => { agenix = /home/foo-dogsquared/nixos-config/modules/agenix.nix; archiving = /home/foo-dogsquared/nixos-config/modules/archiving.nix; desktop = /home/foo-dogsquared/nixos-config/modules/desktop.nix; dev = /home/foo-dogsquared/nixos-config/modules/dev.nix; editors = /home/foo-dogsquared/nixos-config/modules/editors.nix; themes = { a-happy-gnome = /home/foo-dogsquared/nixos-config/modules/themes/a-happy-gnome; default = /home/foo-dogsquared/nixos-config/modules/themes/default.nix; }; }
   */
   filesToAttrRec = dir:
     let
@@ -63,6 +79,15 @@ in rec {
   /* Create a NixOS system through a given host folder.
      It will automate some of the things such as making the last component
      of the path as the hostname.
+
+     Signature:
+       path -> attrset -> NixOS configuration
+     Where:
+       - `path` is a path to a Nix file for the host; the basename of the file
+         is also used as the hostname
+       - `attrset` is the attribute set to be included in the host configuration
+     Returns:
+       An attribute set from the `lib.nixosSystem` from `nixpkgs` flake.
 
      Example:
        mkHost ./hosts/june {}
