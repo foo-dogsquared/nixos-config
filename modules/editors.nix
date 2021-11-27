@@ -31,7 +31,7 @@ in {
           # :checkers spell
           aspell
           aspellDicts.en
-          aspellDicts.en-computer
+          aspellDicts.en-computers
 
           # :tools lookup
           wordnet

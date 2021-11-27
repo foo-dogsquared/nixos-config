@@ -16,6 +16,7 @@
     desktop = {
       enable = true;
       audio.enable = true;
+      fonts.enable = true;
     };
     dev = {
       enable = true;
@@ -23,6 +24,7 @@
     };
     editors = {
       emacs.enable = true;
+      emacs.doom.enable = true;
       neovim.enable = true;
     };
     themes.a-happy-gnome.enable = true;
@@ -54,8 +56,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   hardware.opentabletdriver.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [ git wget brave lf fd ripgrep ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -80,7 +80,7 @@
   system.stateVersion = "21.11"; # Did you read the comment?
 
   # This is my external hard disk so it has to be non-blocking.
-  fileSystems."/mnt/archive" = {
+  fileSystems."/mnt/external-storage" = {
     device = "/dev/disk/by-uuid/665A391C5A38EB07";
     fsType = "ntfs";
     noCheck = true;
@@ -88,8 +88,12 @@
       "nofail"
       "noauto"
       "user"
-      "x.systemd.automount"
-      "x.systemd.device.timeout=1ms"
+
+      # See systemd.mount.5 and systemd.automount.5 manual page for more
+      # details.
+      "x-systemd.automount"
+      "x-systemd.device-timeout=2"
+      "x-systemd.idle-timeout=2"
     ];
   };
 
@@ -110,7 +114,7 @@
       ];
       doInit = false;
       removableDevice = true;
-      repo = "/archive/backups";
+      repo = "/mnt/external-storage/backups";
       paths = [ "~/dotfiles" "~/library" "~/writings" ];
       encryption = {
         mode = "repokey";

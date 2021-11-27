@@ -2,8 +2,11 @@
 
 let
   cfg = config.modules.users;
-  users = lib.attrNames (lib.filesToAttr ../users);
+  userModules = lib.filesToAttr ../users;
+
+  users = lib.attrNames userModules;
   nonexistentUsers = lib.filter (name: !lib.elem name users) cfg.users;
+  validUsers = lib.filterAttrs (n: v: lib.elem n users) userModules;
 in
 {
   options.modules.users = {
@@ -14,13 +17,12 @@ in
     };
   };
 
-  imports = [ inputs.home-manager.nixosModules.home-manager ];
-  config = lib.mkMerge [
-    ({
-      assertions = [{
-        assertion = (builtins.length nonexistentUsers) > 1;
-        message = "${lib.concatStringsSep "," users} ${lib.concatStringsSep "," nonexistentUsers} is not found in the directory.";
-      }];
-    })
-  ];
+  imports = [ inputs.home-manager.nixosModules.home-manager ] ++ (lib.attrValues validUsers);
+
+  config = {
+    assertions = [{
+      assertion = (builtins.length nonexistentUsers) < 1;
+      message = "${lib.concatMapStringsSep ", " (u: "'${u}'") nonexistentUsers} is not found in the `./users` directory.";
+    }];
+  };
 }
