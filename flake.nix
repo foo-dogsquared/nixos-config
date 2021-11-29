@@ -86,5 +86,7 @@
         }) (libExtended.filterAttrs (n: v: !libExtended.elem n excludedModules)
           (libExtended.filesToAttr ./users));
 
+      packages = forAllSystems
+        (system: import ./pkgs { pkgs = import nixpkgs { inherit system; }; });
     };
 }

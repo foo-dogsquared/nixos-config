@@ -9,29 +9,28 @@ let
   nonexistentUsers = lib.filter (name: !lib.elem name users) cfg.users;
 
   mkUser = user: path:
-  let
-    userModule = import path;
-    defaultConfig = {
-      home.username = user;
-      home.homeDirectory = "/home/${user}";
+    let
+      userModule = import path;
+      defaultConfig = {
+        home.username = user;
+        home.homeDirectory = "/home/${user}";
 
-      xdg.enable = true;
+        xdg.enable = true;
+      };
+    in {
+      users.users.${user} = {
+        isNormalUser = true;
+        extraGroups = [ "wheel" ];
+      };
+      home-manager.users.${user} = userModule // defaultConfig;
     };
-  in
-  {
-    users.users.${user} = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ];
-    };
-    home-manager.users.${user} = userModule // defaultConfig;
-  };
-in
-{
+in {
   options.modules.users = {
     users = lib.mkOption {
-      default = [];
+      default = [ ];
       type = with lib.types; listOf str;
-      description = "A list of users from the `./users` directory to be included in the NixOS config.";
+      description =
+        "A list of users from the `./users` directory to be included in the NixOS config.";
     };
   };
 
@@ -52,7 +51,9 @@ in
   config = {
     assertions = [{
       assertion = (builtins.length nonexistentUsers) < 1;
-      message = "${lib.concatMapStringsSep ", " (u: "'${u}'") nonexistentUsers} is not found in the `./users` directory.";
+      message = "${
+          lib.concatMapStringsSep ", " (u: "'${u}'") nonexistentUsers
+        } is not found in the `./users` directory.";
     }];
   };
 }

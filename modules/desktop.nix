@@ -64,28 +64,27 @@ in {
           };
         };
 
-        fonts = with pkgs;
-          [
-            iosevka
+        fonts = with pkgs; [
+          iosevka
 
-            # Noto font family
-            noto-fonts
-            noto-fonts-cjk
-            noto-fonts-extra
-            noto-fonts-emoji
+          # Noto font family
+          noto-fonts
+          noto-fonts-cjk
+          noto-fonts-extra
+          noto-fonts-emoji
 
-            # Adobe Source font family
-            source-code-pro
-            source-sans-pro
-            source-han-sans
-            source-serif-pro
-            source-han-serif
-            source-han-mono
+          # Adobe Source font family
+          source-code-pro
+          source-sans-pro
+          source-han-sans
+          source-serif-pro
+          source-han-serif
+          source-han-mono
 
-            # Math fonts
-            stix-two
-            xits-math
-          ];
+          # Math fonts
+          stix-two
+          xits-math
+        ];
       };
     })
   ]);
