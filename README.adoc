@@ -25,20 +25,55 @@ To install it, run the `nixos-install --flake github:foo-dogsquared/nixos-config
 
 
 
+== Project structure
+
+My NixOS config should look like the following:
+
+[source, tree]
+----
+nixos-config
+├── hosts/
+├── lib/
+├── modules/
+├── pkgs/
+├── users/
+├── flake.lock
+├── flake.nix
+└── README.adoc
+----
+
+* link:./hosts/[`./hosts/`] contain machine-specific configuration.
+This usually configures like the hardware setup, timezone, and users.
+Host configurations are also exported in the flakes in `outputs.nixosConfigurations`.
+
+* link:./modules/[`./modules/`] contain my custom link:https://nixos.org/manual/nixos/stable/index.html#sec-writing-modules[NixOS modules].
+For more information, see the link:./modules/README.adoc[related documentation].
+It is also exported from the flake in `outputs.nixosModules`.
+
+* link:./pkgs/[`./pkgs/`] contains my custom packages.
+It is exported in the flakes at `outputs.packages` compiled through various systems.
+
+* link:./users/[`./users/`] contains my link:https://github.com/nix-community/home-manager[home-manager] configurations and modules.
+It is exported in the flakes at `outputs.homeConfigurations`.
+For more information, see the link:./users/README.adoc[related documentation].
+
+
+
+
 == TODO
 
 In order of priority:
 
 * [x] Create custom modules.
 * [x] Create a themes system similar to link:https://github.com/hlissner/dotfiles[this NixOS config].
-* [ ] Manage secrets with agenix.
+* [x] Manage secrets with agenix.
 * [x] Automate backups with NixOS config.
-* [ ] Create custom packages and export it to flakes. (Maybe consider making it to upstream)
+* [x] Create custom packages and export it to flakes. (Maybe consider making it to upstream)
 * [x] Create cluser-wide configs.
 * [x] Create host-wide configs.
-* [ ] Create user-specific configs with home-manager.
-* [ ] ~Steal~ Get some ideas from link:https://github.com/divnix/devos[this overengineered template].
-* [ ] Make use of other established utilities such as link:https://github.com/divnix/digga/[digga], link:https://github.com/gytis-ivaskevicius/flake-utils-plus[flake-utils-plus], and link:https://github.com/nix-community/home-manager[home-manager] once I'm familiar to create my own Nix programs.
+* [x] Create user-specific configs with home-manager.
+* [x] ~Steal~ Get some ideas from link:https://github.com/divnix/devos[this overengineered template].
+* [x] Make use of other established utilities such as link:https://github.com/divnix/digga/[digga], link:https://github.com/gytis-ivaskevicius/flake-utils-plus[flake-utils-plus], and link:https://github.com/nix-community/home-manager[home-manager] once I'm familiar to create my own Nix programs.
 
 Out of scope:
 
@@ -63,3 +98,13 @@ I've written link:https://foo-dogsquared.github.io/blog/posts/moving-into-nixos/
 Any requirements for this setup?::
 You only need Nix 2.4 installed with the experimental features for Nix command and flakes enabled (i.e., `experimental-features = nix-command flakes`).
 
+
+
+
+== Inspirations
+
+I ~stole~ got the ideas from the following projects:
+
+* link:https://github.com/divnix/devos[devos, an overengineered configuration framework.]
+* link:https://github.com/divnix/digga/[digga, an flake utility library for your overengineered config.]
+* link:https://github.com/hlissner/dotfiles/[hlissner's dotfiles, the original inspiration for the structure and whatnot.]

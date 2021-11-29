@@ -1,0 +1,13 @@
+= Packages
+:toc:
+
+My custom packages live here.
+It is setup similar to link:https://github.com/NixOS/nixpkgs/[nixpkgs] and link:https://github.com/foo-dogsquared/nur[my previous NUR].
+Thus, the conventions are similar to the package definitions in the mentioned repositories.
+
+To build the packages...
+
+* With Nix pre-v2.3, `nix-build ./pkgs -A ${pkg}`.
+
+* Nix v2.4 and enabled Nix flakes experimental feature and new CLi (e.g., `experimental-features = nix-command flakes`), `nix build .#${pkg}`.
+
