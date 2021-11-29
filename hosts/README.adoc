@@ -1,0 +1,12 @@
+= Host-specific configuration
+:toc:
+
+These are configurations that are specific to a machine (e.g., desktop, servers, VM, containers).
+Ideally, it should be made minimal as much as possible considering you also have to manage your users.
+
+For managing users, there are multiple ways to manage them with this config:
+
+* The usual `users.users.${user}` from system configuration (see `man configuration.nix.5`).
+
+* Modularize them (see link:../users/README.adoc[User-specific configuration] for more information).
+If you have user-specific configs in set, you have to manage them with link:../modules/users.nix[`modules.users.users`] which is my implementation of managing users (e.g., `modules.users.users = [ "foo-dogsquared" ]`).

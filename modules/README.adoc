@@ -42,8 +42,8 @@ modules/
   dev = path/to/dev.nix;
   editors = path/to/editors.nix;
   specific = {
-    borg = path/to/specific/borg.nix
-    prometheus = path/to/specific/prometheus.nix
+    borg = path/to/specific/borg.nix;
+    prometheus = path/to/specific/prometheus.nix;
   };
   themes = path/to/themes; # Since it has a 'default.nix' detected, we're using it instead.
   users = path/to/users.nix;

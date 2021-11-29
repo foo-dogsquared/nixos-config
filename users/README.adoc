@@ -19,3 +19,36 @@ Here's an example of a sample user config placed in `users/hello.nix`.
 ----
 
 This is to be imported to `homeManagerConfiguration` in the flake outputs and when indicated from `config.modules.users.users` (e.g., `modules.users.users = [ "hello" ];`).
+
+
+
+
+== Modules
+
+There are also user modules (in link:./modules[`./modules`]) that are imported to use with home-manager, allowing you to extend it as you wish.
+It works just like link:https://github.com/nix-community/home-manager/tree/master/modules[home-manager modules].
+
+For easier identification, it should be stored with `modules` as the top-level attribute (e.g., `modules.alacritty`, `modules.i18n`).
+
+Here's an example user module that simply ports my Alacritty config.
+
+[source, nix]
+----
+{ config, options, lib, pkgs, ... }:
+
+let
+  cfg = config.modules.alacritty;
+in
+{
+  options.modules.alacritty.enable = lib.mkEnableOption "Ports my Alacritty configuration.";
+
+  config = lib.mkIf cfg.enable {
+    home.packages = with pkgs; [ alacritty ];
+    xdg.configFile."alacritty" = {
+      source = ../config/alacritty
+      recursive = true;
+    };
+  };
+}
+----
+

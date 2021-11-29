@@ -21,6 +21,7 @@
     dev = {
       enable = true;
       shell.enable = true;
+      virtualization.enable = true;
     };
     editors = {
       emacs.enable = true;

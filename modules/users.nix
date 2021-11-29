@@ -10,18 +10,20 @@ let
 
   mkUser = user: path:
   let
+    userModule = import path;
     defaultConfig = {
       home.username = user;
       home.homeDirectory = "/home/${user}";
+
+      xdg.enable = true;
     };
   in
-    {
+  {
     users.users.${user} = {
       isNormalUser = true;
       extraGroups = [ "wheel" ];
     };
-
-    home-manager.users.${user} = defaultConfig // import path;
+    home-manager.users.${user} = userModule // defaultConfig;
   };
 in
 {
