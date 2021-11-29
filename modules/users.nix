@@ -1,3 +1,4 @@
+# This enables home-manager specific configs and an easier modularization for user-specific configurations.
 { inputs, config, options, lib, ... }:
 
 let
@@ -6,7 +7,22 @@ let
 
   users = lib.attrNames userModules;
   nonexistentUsers = lib.filter (name: !lib.elem name users) cfg.users;
-  validUsers = lib.filterAttrs (n: v: lib.elem n users) userModules;
+
+  mkUser = user: path:
+  let
+    defaultConfig = {
+      home.username = user;
+      home.homeDirectory = "/home/${user}";
+    };
+  in
+    {
+    users.users.${user} = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+    };
+
+    home-manager.users.${user} = defaultConfig // import path;
+  };
 in
 {
   options.modules.users = {
@@ -17,7 +33,19 @@ in
     };
   };
 
-  imports = [ inputs.home-manager.nixosModules.home-manager ] ++ (lib.attrValues validUsers);
+  # FIXME: Recursion error when using `lib.getUsers cfg.users`.
+  # Time to study how Nix modules really work.
+  # The assertion is basically enough for this case.
+  imports = [
+    # home-manager to enable user-specific config.
+    inputs.home-manager.nixosModules.home-manager
+
+    # The global configuration for the home-manager module.
+    {
+      home-manager.useUserPackages = true;
+      home-manager.useGlobalPkgs = true;
+    }
+  ] ++ (lib.mapAttrsToList mkUser userModules);
 
   config = {
     assertions = [{

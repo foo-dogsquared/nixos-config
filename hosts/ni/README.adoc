@@ -1,0 +1,34 @@
+= ni, my (only) workstation
+:toc:
+
+My laptop.
+I was about to have two computers but my desktop is broken ever since.
+Whoops!
+
+I try to be minimal with my dependencies unlike last time.
+`direnv`, `lorri`, and Flatpak are mostly enough for desktop needs.
+(Which is Fedora Silverblue is good at! :))
+
+I know partitioning is not your favorite part so here's one way to prepare the laptop with this config.
+
+[source, shell]
+----
+# Preparing the partitions.
+parted /dev/sda -- mklabel gpt
+parted /dev/sda -- mkpart primary 512MiB -4GB
+parted /dev/sda -- mkpart primary linux-swap -4GB 100%
+parted /dev/sda -- mkpart ESP fat32 1MiB 512MiB
+parted /dev/sda -- set 3 esp on
+
+# Setting up the filesystems.
+mkfs.ext4 -L nixos /dev/sda1
+mkswap -L swap /dev/sda2
+mkfs.fat -F 32 -n boot /dev/sda3
+
+# Mount the partitions before installation.
+mount /dev/disk/by-label/nixos /mnt
+mkdir -p /mnt/boot
+mount /dev/disk/by-label/boot /mnt/boot
+swapon /dev/disk/by-label/swap
+----
+

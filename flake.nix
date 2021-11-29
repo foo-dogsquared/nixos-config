@@ -8,11 +8,9 @@
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
-
-    digga.url = "github:divnix/digga";
   };
 
-  outputs = inputs@{ self, nixpkgs, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, ... }:
     let
       libExtended = nixpkgs.lib.extend
         (final: prev: (import ./lib { inherit inputs; lib = final; }));
@@ -33,9 +31,16 @@
         };
       
         # TODO: Remove this after nix-command and flakes has been considered stable.
+        #
+        # Since we're using flakes to make this possible, we need it.
+        # Plus, the UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
         nix.extraOptions = ''
           experimental-features = nix-command flakes
         '';
+      };
+
+      userDefaultConfig = {
+        system = "x86_64-linux";
       };
     in {
       # Exposes only my library with the custom functions to make it easier to include in other flakes.
@@ -50,5 +55,21 @@
       # or not this is a good thing is debatable, I just want to test it.
       nixosModules =
         libExtended.mapAttrs (_: path: import path) (libExtended.filesToAttr ./modules);
+
+      homeConfigurations =
+        let
+          excludedModules = [
+            "config"    # The common user-specific configurations.
+            "modules"   # User-specific Nix modules.
+          ];
+        in
+        libExtended.mapAttrs (user: path:
+          home-manager.lib.homeManagerConfiguration {
+            system = "x86_64-linux";
+            configuration = import path;
+            homeDirectory = "/home/${user}";
+            username = user;
+          })
+          (libExtended.filterAttrs (n: v: !libExtended.elem n excludedModules) (libExtended.filesToAttr ./users));
     };
 }

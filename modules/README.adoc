@@ -1,0 +1,62 @@
+= Modules
+:toc:
+
+These are the modules to be used for the system configuration.
+For easier modularization, any user-specific configurations such as from link:https://github.com/nix-community/home-manager[home-manager] should be placed in link:../users/[`../users/` directory].
+
+The modules are imported usually through `lib.filesToAttr`, allowing for easier structuring without modifying the index file of each module (i.e., `default.nix`).
+(See the implementation for more details.)
+
+For example, take the following module folder structure...
+
+[source, tree]
+----
+modules/
+├── themes/
+│   ├── a-happy-gnome/
+│   │   ├── default.nix
+│   │   └── README.adoc
+│   ├── a-sad-gnome/
+│   │   ├── default.nix
+│   │   └── README.adoc
+│   └── default.nix
+├── specific/
+│   ├── borg.nix
+│   └── prometheus.nix
+├── agenix.nix
+├── archiving.nix
+├── desktop.nix
+├── dev.nix
+├── editors.nix
+└── users.nix
+----
+
+...should have the following attribute set.
+
+[source, nix]
+----
+{
+  agenix = path/to/agenix.nix;
+  archiving = path/to/archiving.nix;
+  desktop = path/to/desktop.nix;
+  dev = path/to/dev.nix;
+  editors = path/to/editors.nix;
+  specific = {
+    borg = path/to/specific/borg.nix
+    prometheus = path/to/specific/prometheus.nix
+  };
+  themes = path/to/themes; # Since it has a 'default.nix' detected, we're using it instead.
+  users = path/to/users.nix;
+}
+----
+
+The resulting attribute set can be easily be used for importing.
+Here's an example of a NixOS system created with the modules which can used for shared configuration between hosts.
+
+[source, nix]
+----
+lib.nixosSystem {
+  system = "x86_64-linux";
+  modules = lib.mapAttrsToList (name: path: import path) (lib.filesToAttr ./modules);
+}
+----

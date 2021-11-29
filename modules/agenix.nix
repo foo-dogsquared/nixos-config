@@ -4,7 +4,7 @@
 let cfg = config.modules.agenix;
 in {
   options.modules.agenix.enable =
-    lib.mkEnableOption "Enable agenix on your system";
+    lib.mkEnableOption "Automate agenix-related config on your system";
 
   imports = [ inputs.agenix.nixosModules.age ];
   config = lib.mkIf cfg.enable {

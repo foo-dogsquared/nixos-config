@@ -1,12 +1,11 @@
 { config, options, lib, pkgs, ... }:
 
 {
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.foo-dogsquared = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+  programs.direnv.enable = true;
+  programs.git = {
+    enable = true;
+    lfs.enable = true;
+    userName = "foo-dogsquared";
+    userEmail = "foo.dogsquared@gmail.com";
   };
-
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
 }

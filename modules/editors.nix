@@ -1,3 +1,4 @@
+# Your text editor war arsenal.
 { config, options, lib, pkgs, ... }:
 
 let cfg = config.modules.editors;

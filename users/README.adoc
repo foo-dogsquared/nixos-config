@@ -1,5 +1,21 @@
-= Users
+= Users configuration
 :toc:
 
 This is where user-specific configurations comes in.
-Ideally,
+Ideally, the configurations are link:https://nix-community.github.io/home-manager/[home-manager config].
+The configs should assume to be used as a configuration as `.config/nixpkgs/home.nix` (i.e., `home-manager.lib.homeManagerConfiguration`, `home-manager.users.${user}`, in your ordinary home-manager setup in a foreign distro).
+
+Here's an example of a sample user config placed in `users/hello.nix`.
+
+[source, nix]
+----
+{ config, options, pkgs, lib, ... }:
+
+{
+  programs.home-manager.enable = true;
+  programs.direnv.enable = true;
+  home.file.".npmrc".source = ./config/npmrc;
+}
+----
+
+This is to be imported to `homeManagerConfiguration` in the flake outputs and when indicated from `config.modules.users.users` (e.g., `modules.users.users = [ "hello" ];`).

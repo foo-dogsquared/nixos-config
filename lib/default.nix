@@ -117,6 +117,24 @@ in rec {
         ++ (lib.mapAttrsToList (n: v: import v) (filesToAttr ../modules));
     };
 
+    /* Return an attribute set of valid users from a given list of users.
+
+      Signature:
+        list -> attrset
+      Where:
+        - `list` is a list of usernames as strings
+        - `attrset` is a set of valid users with the name as the key and the path as the value.
+      Example:
+        # Assuming only 'foo-dogsquared' is the existing user.
+        getUsers [ "foo-dogsquared" "archie" "brad" ]
+        => { foo-dogsquared = /home/foo-dogsquared/projects/nixos-config/users/foo-dogsquared; }
+    */
+    getUsers = users:
+    let
+      userModules = filesToAttr ../users;
+      validUsers = lib.filter (user: lib.elem user (lib.attrNames userModules)) users;
+    in lib.filterAttrs (n: _: lib.elem n validUsers) userModules;
+
   /* Create an attribute set from two lists (or a zip).
 
      Examples:

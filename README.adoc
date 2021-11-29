@@ -18,8 +18,9 @@ This primarily uses Nix flakes so you can have a preview of what's available in 
 nix flake show github:foo-dogsquared/nixos-config
 ----
 
-It should only export my NixOS configurations of my different hosts (of only one so far excluding VMs and VPSs ;p).
-
+It should export my NixOS configurations of my different hosts (of only one so far excluding VMs and VPSs ;p) among other things.
+To install it, run the `nixos-install --flake github:foo-dogsquared/nixos-config#ni`.
+(Please see the respective appropriate host README for more information.)
 
 
 
@@ -28,24 +29,16 @@ It should only export my NixOS configurations of my different hosts (of only one
 
 In order of priority:
 
-* Create custom modules.
-** Create a themes system similar to link:https://github.com/hlissner/dotfiles[this NixOS config].
-
-* Manage secrets with agenix.
-
-* Automate backups with NixOS config.
-
-* Create custom packages and export it to flakes. (Maybe consider making it to upstream)
-
-* Create cluser-wide configs.
-
-* Create host-wide configs.
-
-* Create user-specific configs with home-manager.
-
-* ~Steal~ Get some ideas from link:https://github.com/divnix/devos[this overengineered template].
-
-* Make use of other established utilities such as link:https://github.com/divnix/digga/[digga], link:https://github.com/gytis-ivaskevicius/flake-utils-plus[flake-utils-plus], and link:https://github.com/nix-community/home-manager[home-manager] once I'm familiar to create my own Nix programs.
+* [x] Create custom modules.
+* [x] Create a themes system similar to link:https://github.com/hlissner/dotfiles[this NixOS config].
+* [ ] Manage secrets with agenix.
+* [x] Automate backups with NixOS config.
+* [ ] Create custom packages and export it to flakes. (Maybe consider making it to upstream)
+* [x] Create cluser-wide configs.
+* [x] Create host-wide configs.
+* [ ] Create user-specific configs with home-manager.
+* [ ] ~Steal~ Get some ideas from link:https://github.com/divnix/devos[this overengineered template].
+* [ ] Make use of other established utilities such as link:https://github.com/divnix/digga/[digga], link:https://github.com/gytis-ivaskevicius/flake-utils-plus[flake-utils-plus], and link:https://github.com/nix-community/home-manager[home-manager] once I'm familiar to create my own Nix programs.
 
 Out of scope:
 
@@ -54,4 +47,19 @@ They are often updated. I don't want to rebuild it every time I change it.
 
 * Migration of my link:https://github.com/foo-dogsquared/dotfiles[dotfiles].
 I still use it on other non-NixOS systems.
+
+
+
+
+== Frequently asked questions (FAQ)
+
+[qanda]
+Hello! I'm new to Nix and NixOS, where should I start?::
+Oh no, you've seen the multiple configurations from other systems, didn't you?
+I hope you're ready for some time understanding because the learning curve is steeper than the link:https://en.wikipedia.org/wiki/Troll_Wall[Troll Wall].
+I've written link:https://foo-dogsquared.github.io/blog/posts/moving-into-nixos/[a blog post regarding my experience with Nix] with a bunch of links for getting started.
+(Un)Fortunately, it is mostly the same experience now that I've revisited it.
+
+Any requirements for this setup?::
+You only need Nix 2.4 installed with the experimental features for Nix command and flakes enabled (i.e., `experimental-features = nix-command flakes`).
 

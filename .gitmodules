@@ -1,0 +1,3 @@
+[submodule "users/config"]
+	path = users/config
+	url = https://github.com/foo-dogsquared/dotfiles.git
