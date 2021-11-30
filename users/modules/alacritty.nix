@@ -9,7 +9,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [ alacritty ];
     xdg.configFile."alacritty" = {
-      source = ../config/alacritty/alacritty.yml;
+      source = ../config/alacritty;
       recursive = true;
     };
   };

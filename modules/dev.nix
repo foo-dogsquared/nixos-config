@@ -37,6 +37,7 @@ in {
         cmake # The poster boy for the hated build system.
         direnv # The power of local development environment.
         gnumake # Make your life easier with GNU Make.
+        moreutils # Less is more but more utilities, the merrier.
       ];
     })
 

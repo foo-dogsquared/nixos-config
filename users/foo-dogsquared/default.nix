@@ -13,8 +13,12 @@
 
   # My custom modules.
   modules = {
-    alacritty.enable = true;
     i18n.enable = true;
     dev.enable = true;
+    desktop = {
+      enable = true;
+      graphics.enable = true;
+      audio.enable = true;
+    };
   };
 }

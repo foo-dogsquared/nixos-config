@@ -3,14 +3,18 @@
 
 let
   cfg = config.modules.users;
-  userModules = lib.filesToAttr ../users;
+  invalidUsernames = [ "config" "modules" ];
+  userModules = lib.filterAttrs (n: _: !lib.elem n invalidUsernames)
+    (lib.filesToAttr ../users);
+  homeManagerModules =
+    lib.filterAttrs (n: _: n == "modules") (lib.filesToAttr ../users);
 
   users = lib.attrNames userModules;
   nonexistentUsers = lib.filter (name: !lib.elem name users) cfg.users;
 
-  mkUser = user: path:
+  mkUser = user: modulePath:
     let
-      userModule = import path;
+      userModule = import modulePath;
       defaultConfig = {
         home.username = user;
         home.homeDirectory = "/home/${user}";
@@ -22,7 +26,7 @@ let
         isNormalUser = true;
         extraGroups = [ "wheel" ];
       };
-      home-manager.users.${user} = userModule // defaultConfig;
+      home-manager.users.${user} = import modulePath;
     };
 in {
   options.modules.users = {
@@ -45,6 +49,7 @@ in {
     {
       home-manager.useUserPackages = true;
       home-manager.useGlobalPkgs = true;
+      home-manager.sharedModules = lib.modulesToList homeManagerModules;
     }
   ] ++ (lib.mapAttrsToList mkUser userModules);
 

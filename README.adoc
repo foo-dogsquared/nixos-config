@@ -1,5 +1,5 @@
 = foo-dogsquared's NixOS config
-:todo:
+:toc:
 
 This is my NixOS config as a link:https://www.tweag.io/blog/2020-05-25-flakes/[Nix flake].
 

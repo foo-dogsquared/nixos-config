@@ -76,6 +76,23 @@ in rec {
       };
     in lib.listToAttrs (lib.mapAttrsToList collect files);
 
+  /* Collect all modules (results from `filesToAttr`) into a list.
+
+     Signature:
+       attrs -> [ function ]
+     Where:
+       - `attrs` is the set of modules and their path.
+     Returns:
+       - A list of imported modules.
+
+     Example:
+       modulesToList (filesToAttr ../modules)
+       => [ <lambda> <lambda> <lambda> ]
+  */
+  modulesToList = attrs:
+    let paths = lib.collect builtins.isPath attrs;
+    in builtins.map (path: import path) paths;
+
   /* Create a NixOS system through a given host folder.
      It will automate some of the things such as making the last component
      of the path as the hostname.
@@ -132,9 +149,8 @@ in rec {
   getUsers = users:
     let
       userModules = filesToAttr ../users;
-      validUsers =
-        lib.filter (user: lib.elem user (lib.attrNames userModules)) users;
-    in lib.filterAttrs (n: _: lib.elem n validUsers) userModules;
+      invalidUsernames = [ "config" "modules" ];
+    in lib.filterAttrs (n: _: !lib.elem n invalidUsernames) userModules;
 
   /* Create an attribute set from two lists (or a zip).
 

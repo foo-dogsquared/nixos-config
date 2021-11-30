@@ -20,7 +20,6 @@ in
 
       gnomeExtensions.arcmenu
       gnomeExtensions.x11-gestures
-      gnomeExtensions.gsconnect
     ];
   };
 }
