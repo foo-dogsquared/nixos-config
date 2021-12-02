@@ -16,7 +16,6 @@
       systems = [
         "x86_64-linux"
         "i686-linux"
-        "x86_64-darwin"
         "aarch64-linux"
         "armv6l-linux"
         "armv7l-linux"
@@ -32,6 +31,9 @@
       hostDefaultConfig = {
         # Stallman-senpai will be disappointed.
         nixpkgs.config.allowUnfree = true;
+
+        # Extend nixpkgs with our own package set.
+        nixpkgs.overlays = [ (self: super: import ./pkgs { pkgs = super; }) ];
 
         # We live in a Unicode world and dominantly English in technical fields so we'll
         # have to go with it.
@@ -69,7 +71,7 @@
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
-      nixosModules = libExtended.mapAttrs (_: path: import path)
+      nixosModules = libExtended.mapAttrsRecursive (_: path: import path)
         (libExtended.filesToAttr ./modules);
 
       homeConfigurations = let
