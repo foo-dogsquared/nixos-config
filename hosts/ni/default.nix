@@ -54,6 +54,9 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # More power optimizations!
+  powerManagement.powertop.enable = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   hardware.opentabletdriver.enable = true;
 

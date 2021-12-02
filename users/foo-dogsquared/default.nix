@@ -14,7 +14,10 @@
   # My custom modules.
   modules = {
     i18n.enable = true;
-    dev.enable = true;
+    dev = {
+      enable = true;
+      shell.enable = true;
+    };
     desktop = {
       enable = true;
       graphics.enable = true;

@@ -12,3 +12,6 @@ switch:
 .PHONY: test
 test:
 	nixos-rebuild --flake ".#${HOST}" dry-activate
+
+.PHONY: update
+	nix flake update
