@@ -114,15 +114,15 @@ in rec {
     attrs@{ system ? sys, ... }:
     lib.nixosSystem {
       inherit system;
+
+      # Additional attributes to be referred to our modules.
       specialArgs = { inherit lib system inputs; };
 
       # We also set the following in order for priority.
       # Later modules will override previously imported modules.
       modules = [
         # Set the hostname.
-        {
-          networking.hostName = builtins.baseNameOf file;
-        }
+        { networking.hostName = builtins.baseNameOf file; }
 
         # Put the given attribute set (except for the system).
         (lib.filterAttrs (n: v: !lib.elem n [ "system" ]) attrs)
@@ -131,7 +131,7 @@ in rec {
         file
       ]
       # Append with our custom modules from the modules folder.
-        ++ (lib.mapAttrsToList (n: v: import v) (filesToAttr ../modules));
+        ++ (lib.modulesToList (filesToAttr ../modules));
     };
 
   /* Return an attribute set of valid users from a given list of users.

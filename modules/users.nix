@@ -4,8 +4,7 @@
 let
   cfg = config.modules.users;
   invalidUsernames = [ "config" "modules" ];
-  userModules = lib.filterAttrs (n: _: !lib.elem n invalidUsernames)
-    (lib.filesToAttr ../users);
+  userModules = lib.getUsers cfg.users;
   homeManagerModules =
     lib.filterAttrs (n: _: n == "modules") (lib.filesToAttr ../users);
 
