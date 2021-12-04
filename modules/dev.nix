@@ -20,6 +20,7 @@ in {
         enable = true;
         dev.enable = true;
         nixos.enable = true;
+        man.generateCaches = true;
       };
 
       # Configure all of the development-related configuration in the system.
@@ -36,6 +37,7 @@ in {
         curl # Our favorite network client.
         cmake # The poster boy for the hated build system.
         direnv # The power of local development environment.
+        gcc # The usual toolchain.
         gnumake # Make your life easier with GNU Make.
         moreutils # Less is more but more utilities, the merrier.
       ];

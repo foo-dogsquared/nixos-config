@@ -3,17 +3,14 @@
 
 let
   cfg = config.modules.users;
-  invalidUsernames = [ "config" "modules" ];
   userModules = lib.getUsers cfg.users;
-  homeManagerModules =
-    lib.filterAttrs (n: _: n == "modules") (lib.filesToAttr ../users);
+  homeManagerModules = lib.filesToAttr ../users/modules;
 
   users = lib.attrNames userModules;
   nonexistentUsers = lib.filter (name: !lib.elem name users) cfg.users;
 
   mkUser = user: modulePath:
     let
-      userModule = import modulePath;
       defaultConfig = {
         home.username = user;
         home.homeDirectory = "/home/${user}";

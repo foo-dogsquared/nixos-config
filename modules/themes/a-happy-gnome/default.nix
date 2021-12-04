@@ -1,7 +1,13 @@
 { config, options, lib, pkgs, ... }:
 
 let
+  name = "a-happy-gnome";
   cfg = config.modules.themes.a-happy-gnome;
+  dconf = pkgs.gnome3.dconf;
+  customDconfDb = pkgs.stdenv.mkDerivation {
+    name = "${name}-dconf-db";
+    buildCommand = "${dconf}/bin/dconf compile $out ${./schemas}";
+  };
 in
 {
   options.modules.themes.a-happy-gnome.enable = lib.mkEnableOption "Enables my configuration of GNOME Shell.";
@@ -11,10 +17,36 @@ in
     services.xserver.displayManager.gdm.enable = true;
     services.xserver.desktopManager.gnome.enable = true;
 
-    # Import the configuration with dconf.
-    programs.dconf.enable = true;
-    environment.etc."dconf/profile/gnome".text = "user-db:user";
-    environment.etc."dconf/db/gnome".source = ./schemas;
+    # Don't need most of the GNOME's offering so...
+    environment.gnome.excludePackages = with pkgs.gnome; [
+      gedit
+      eog
+      geary
+      totem
+      epiphany
+      gnome-terminal
+      gnome-music
+      gnome-software
+      yelp
+    ] ++ [
+      gnome-user-docs
+      gnome-tour
+    ];
+
+    programs.dconf = {
+      enable = true;
+
+      # This is an internal function which is subject to change.
+      # However, this seems to be in for some time but still, be wary.
+      # The function is found on `nixos/programs/dconf.nix` from nixpkgs.
+      profiles.customGnomeConfig = pkgs.writeTextFile {
+        name = "${name}-dconf-profile";
+        text = ''
+          user-db:user
+          file-db:${customDconfDb}
+        '';
+      };
+    };
 
     # I'm pretty sure this is already done but just to make sure.
     services.gnome.chrome-gnome-shell.enable = true;
