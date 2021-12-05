@@ -6,7 +6,7 @@ let
   dconf = pkgs.gnome3.dconf;
   customDconfDb = pkgs.stdenv.mkDerivation {
     name = "${name}-dconf-db";
-    buildCommand = "${dconf}/bin/dconf compile $out ${./schemas}";
+    buildCommand = "${dconf}/bin/dconf compile $out ${./config/dconf}";
   };
 in
 {
@@ -28,10 +28,10 @@ in
       gnome-music
       gnome-software
       yelp
-    ] ++ [
+    ] ++ (with pkgs; [
       gnome-user-docs
       gnome-tour
-    ];
+    ]);
 
     programs.dconf = {
       enable = true;
