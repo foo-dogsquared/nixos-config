@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode boldface
-# key: bf
-# --
-*$1* $0

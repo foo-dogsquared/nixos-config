@@ -1,3 +1,0 @@
---output '%(title)s.%(ext)s'
-
---no-overwrite

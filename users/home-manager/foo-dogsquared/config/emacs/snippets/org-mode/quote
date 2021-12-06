@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode source block
-# key: quote
-# --
-#+begin_quote
-$1
-#+end_quote

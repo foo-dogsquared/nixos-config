@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: Create a box
-# key: box
-# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
-# --
-┌${1:$(make-string (+ 2 (string-width yas-text)) ?\-)}┐
-| $1 |
-└${1:$(make-string (+ 2 (string-width yas-text)) ?\-)}┘

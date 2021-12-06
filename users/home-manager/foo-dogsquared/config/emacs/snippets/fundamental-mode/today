@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Print today's date in ISO format.
-# key: today
-# --
-`(format-time-string "%F")` $0

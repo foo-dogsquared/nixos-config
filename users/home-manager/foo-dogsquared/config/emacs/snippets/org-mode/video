@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode video block (on HTML, anyways)
-# key: video
-# --
-#+attr_html: :controls controls
-#+begin_video
-#+html: <source src="${1:<VIDEO URL>}">
-Your browser does not support the video tag.
-#+end_video

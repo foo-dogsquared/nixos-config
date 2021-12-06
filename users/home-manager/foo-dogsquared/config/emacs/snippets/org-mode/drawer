@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode drawer
-# key: drawer
-# --
-:${1:<DRAWERNAME>}:
-$2
-:END:
-

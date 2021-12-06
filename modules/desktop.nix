@@ -24,7 +24,6 @@ in {
         gtkUsePortal = true;
         wlr.enable = true;
       };
-      xdg.sounds.enable = true;
 
       # Enable font-related options for more smoother and consistent experience.
       fonts.enableDefaultFonts = true;

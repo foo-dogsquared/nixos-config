@@ -27,7 +27,7 @@ in
 
     (lib.mkIf cfg.audio.enable {
       home.packages = with pkgs; [
-        ardour # The big boi in Linux music production with FOSS.
+        ardour
         musescore
 
         # Trying to

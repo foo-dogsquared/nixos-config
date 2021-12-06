@@ -3,6 +3,7 @@
 
 This is where user-specific configurations comes in.
 Ideally, the configurations are link:https://nix-community.github.io/home-manager/[home-manager config].
+The configs should assume to be used as a configuration as `.config/nixpkgs/home.nix` (i.e., `home-manager.lib.homeManagerConfiguration`, `home-manager.users.${user}`, in your ordinary home-manager setup in a foreign distro).
 
 Here's an example of a sample user config placed in `users/hello.nix`.
 
@@ -24,7 +25,7 @@ This is to be imported to `homeManagerConfiguration` in the flake outputs and wh
 
 == Modules
 
-There are also user modules (in link:../modules/home-manager/[`../modules/home-manager/`]) that are imported to use with home-manager, allowing you to extend it as you wish.
+There are also user modules (in link:./modules[`./modules`]) that are imported to use with home-manager, allowing you to extend it as you wish.
 It works just like link:https://github.com/nix-community/home-manager/tree/master/modules[home-manager modules].
 
 For easier identification, it should be stored with `modules` as the top-level attribute (e.g., `modules.alacritty`, `modules.i18n`).
@@ -44,7 +45,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [ alacritty ];
     xdg.configFile."alacritty" = {
-      source = ../../config/alacritty
+      source = ../config/alacritty
       recursive = true;
     };
   };

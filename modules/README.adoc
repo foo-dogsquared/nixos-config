@@ -10,7 +10,7 @@ For example, take the following module folder structure...
 
 [source, tree]
 ----
-nixos/
+modules/
 ├── themes/
 │   ├── a-happy-gnome/
 │   │   ├── default.nix
@@ -30,7 +30,7 @@ nixos/
 └── users.nix
 ----
 
-...should have the following attribute set when run with `lib.filesToAttr ./nixos`.
+...should have the following attribute set.
 
 [source, nix]
 ----
@@ -50,13 +50,13 @@ nixos/
 ----
 
 The resulting attribute set can be easily be used for importing.
-Here's an example of a NixOS system created with the custom NixOS modules (i.e., link:./nixos/[`./nixos/`]) which can used for shared configuration between hosts.
+Here's an example of a NixOS system created with the modules which can used for shared configuration between hosts.
 
 [source, nix]
 ----
 lib.nixosSystem {
   system = "x86_64-linux";
-  modules = lib.mapAttrsToList (name: path: import path) (lib.filesToAttr ./modules/nixos);
+  modules = lib.mapAttrsToList (name: path: import path) (lib.filesToAttr ./modules);
 }
 ----
 

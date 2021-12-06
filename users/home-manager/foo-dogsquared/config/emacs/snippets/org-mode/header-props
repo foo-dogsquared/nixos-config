@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode global property
-# key: hprop
-# --
-#+${1:<KEY>}: ${2:<VALUES>}

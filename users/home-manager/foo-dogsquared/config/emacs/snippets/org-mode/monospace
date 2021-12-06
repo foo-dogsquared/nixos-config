@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode monospace
-# key: tt
-# --
-~$1~ $0

@@ -30,7 +30,7 @@
       neovim.enable = true;
     };
     themes.a-happy-gnome.enable = true;
-    users.users.foo-dogsquared.config = {};
+    users.users = [ "foo-dogsquared" ];
   };
 
   # Use the systemd-boot EFI boot loader.

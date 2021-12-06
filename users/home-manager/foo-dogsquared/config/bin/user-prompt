@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-# A simple prompt script.
-# Based from Luke Smith's prompt script.
-# https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/prompt
-
-[ "$(printf "No\\nYes" | rofi -theme themes/dmenu -dmenu -p "$1")" = "Yes" ] && $2

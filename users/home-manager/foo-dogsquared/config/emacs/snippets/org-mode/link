@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode link
-# key: link
-# --
-[[$2][${1:Description}]] $0

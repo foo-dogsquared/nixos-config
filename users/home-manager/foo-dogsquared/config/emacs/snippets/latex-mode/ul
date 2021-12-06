@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: Unordered list
-# key: ul
-# --
-\begin{itemize}
-  $1
-\end{itemize}

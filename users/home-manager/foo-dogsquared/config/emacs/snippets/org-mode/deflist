@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode definition list
-# key: dl
-# --
-- ${1:<TERM>} :: ${2:<DEFINITION>}

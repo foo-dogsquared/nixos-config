@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: \subsection
-# key: subsec
-# uuid: subsec
-# --
-\subsection{$1}
-\label{subsect!$1}

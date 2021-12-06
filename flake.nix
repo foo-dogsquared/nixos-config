@@ -2,6 +2,7 @@
   description = "foo-dogsquared's NixOS config as a flake";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -12,7 +13,7 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
-  outputs = inputs@{ self, nixpkgs,  ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, ... }:
     let
       overlays = [
         # Put my custom packages to be available.
@@ -32,7 +33,6 @@
       ];
 
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
-
       libExtended = nixpkgs.lib.extend (final: prev:
         (import ./lib {
           inherit inputs;

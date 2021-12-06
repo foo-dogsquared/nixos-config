@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org-Mode monospace
-# key: vb
-# --
-=$1= $0
