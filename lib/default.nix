@@ -1,9 +1,10 @@
 { lib, inputs, ... }:
 
 let
-  # Default system for our host configuration.
-  sys = "x86_64-linux";
+  flakeUtils = import ./flake-utils.nix { inherit lib inputs; };
 in rec {
+  inherit flakeUtils;
+
   /* Create an attribute set that represents the structure of the modules
      inside of a directory.  While it can recurse into directories, it will
      stop once it detects `default.nix` inside.

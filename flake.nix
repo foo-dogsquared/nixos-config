@@ -93,7 +93,7 @@
 
       # A list of NixOS configurations from the `./hosts` folder.
       # It also has some sensible default configurations.
-      nixosConfigurations = libExtended.mapAttrs
+      nixosConfigurations = libExtended.mapAttrsRecursive
         (host: path: libExtended.flakeUtils.mkHost path hostDefaultConfig)
         (libExtended.filesToAttr ./hosts);
 
@@ -102,12 +102,15 @@
       nixosModules = libExtended.mapAttrsRecursive (_: path: import path)
         (libExtended.filesToAttr ./modules/nixos);
 
-      # This will make importing user-specific configurations even easier on non-NixOS systems!
+      # I can now install home-manager users in non-NixOS systems.
       # NICE!
-      homeManagerConfigurations = libExtended.mapAttrs (user: path: libExtended.flakeUtils.mkUser path userDefaultConfig) (libExtended.filesToAttr ./users/home-manager);
+      homeManagerConfigurations = libExtended.mapAttrs
+        (_: path: libExtended.flakeUtils.mkUser path userDefaultConfig)
+        (libExtended.filesToAttr ./users/home-manager);
 
-      # In case anybody want my modules for whatever reason, here you go.
-      homeManagerModules = libExtended.mapAttrsRecursive (_: path: import path) (libExtended.filesToAttr ./modules/home-manager);
+      # Extending home-manager with my custom modules, if anyone cares.
+      homeManagerModules = libExtended.mapAttrsRecursive (_: path: import path)
+        (libExtended.filesToAttr ./modules/home-manager);
 
       # My custom packages, available in here as well.
       # Though, I mainly support "x86_64-linux".
