@@ -7,11 +7,22 @@
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Overlays.
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = inputs@{ self, nixpkgs,  ... }:
     let
-      # All the target systems.
+      overlays = [
+        # Put my custom packages to be available.
+        (self: super: import ./pkgs { pkgs = super; })
+
+        # Neovim nightly!
+        inputs.neovim-nightly-overlay.overlay
+      ];
+
+      # All the target systems for my packages.
       systems = [
         "x86_64-linux"
         "i686-linux"
@@ -28,12 +39,20 @@
           lib = final;
         }));
 
+      # The default configuration for our NixOS systems.
       hostDefaultConfig = {
+        # Registering several registries.
+        # I'm narcissistic so I want my config to be one of the flakes in the registry.
+        nix.registry.config.flake = self;
+
+        # This will also prevent the annoying downloads since it always get the latest revision.
+        nix.registry.nixpkgs.flake = nixpkgs;
+
         # Stallman-senpai will be disappointed.
         nixpkgs.config.allowUnfree = true;
 
         # Extend nixpkgs with our own package set.
-        nixpkgs.overlays = [ (self: super: import ./pkgs { pkgs = super; }) ];
+        nixpkgs.overlays = overlays;
 
         # We live in a Unicode world and dominantly English in technical fields so we'll
         # have to go with it.
@@ -55,7 +74,16 @@
         '';
       };
 
-      userDefaultConfig = { system = "x86_64-linux"; };
+      # The default config for our home-manager configurations.
+      userDefaultConfig = {
+        system = "x86_64-linux";
+
+        # To be able to use the most of our config as possible, we want both to use the same overlays.
+        nixpkgs.overlays = overlays;
+
+        # Stallman-senpai will be disappointed. :(
+        nixpkgs.config.allowUnfree = true;
+      };
     in {
       # Exposes only my library with the custom functions to make it easier to include in other flakes.
       lib = import ./lib {
@@ -74,11 +102,16 @@
       nixosModules = libExtended.mapAttrsRecursive (_: path: import path)
         (libExtended.filesToAttr ./modules/nixos);
 
-      homeManagerConfigurations = libExtended.mapAttrs (user: path: libExtended.flakeUtils.mkUser path userDefaultConfig) (libExtended.filesToAttr ./users);
+      # This will make importing user-specific configurations even easier on non-NixOS systems!
+      # NICE!
+      homeManagerConfigurations = libExtended.mapAttrs (user: path: libExtended.flakeUtils.mkUser path userDefaultConfig) (libExtended.filesToAttr ./users/home-manager);
 
       # In case anybody want my modules for whatever reason, here you go.
       homeManagerModules = libExtended.mapAttrsRecursive (_: path: import path) (libExtended.filesToAttr ./modules/home-manager);
 
+      # My custom packages, available in here as well.
+      # Though, I mainly support "x86_64-linux".
+      # I just want to try out supporting other systems.
       packages = forAllSystems
         (system: import ./pkgs { pkgs = import nixpkgs { inherit system; }; });
     };
