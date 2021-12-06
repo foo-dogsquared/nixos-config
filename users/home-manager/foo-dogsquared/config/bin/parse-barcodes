@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Parse various code from image selection with zbarimg and maim.
+
+# Depedencies:
+# * maim v5.6.3
+# * zbarimg v0.23.1
+# * GNU awk v5.1.0
+# * perl v5.30.2
+
+# This is a small script so pipeline fails can be accepted here.
+set -o pipefail
+
+notify-send "Select a region for the barcode (QR codes, ISBN, bar codes)"
+maim --select --hidecursor --quiet | zbarimg - --quiet --oneshot --raw |  xclip -selection clipboard
+

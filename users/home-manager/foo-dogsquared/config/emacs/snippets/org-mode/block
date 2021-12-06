@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Org-Mode dynamic blocks
+# key: block
+# --
+#+begin: ${1:<PARAMETERS>}
+$2
+#+end:

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Org-Mode italics
+# key: it
+# --
+/$1/ $0

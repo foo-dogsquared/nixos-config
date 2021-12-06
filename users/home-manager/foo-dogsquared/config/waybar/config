@@ -1,0 +1,51 @@
+{
+    "position": "top",
+    "modules-left": [ "sway/workspaces" ],
+    "modules-right": ["mpd", "pulseaudio", "cpu", "memory", "battery", "clock", "tray"],
+    "mpd": {
+        "format": "{stateIcon} {title}",
+        "format-disconnected": " Disconnected",
+        "format-stopped": " Stopped",
+        "tooltip-format": "MPD (connected)",
+        "tooltip-format-disconnected": "MPD (disconnected)",
+        "state-icons": {
+            "paused": "",
+            "playing": ""
+        }
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}% {format_source}",
+        "format-bluetooth": "{icon} {volume}%  {format_source}",
+        "format-bluetooth-muted": " {icon} {format_source}",
+        "format-muted": " {format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "nix-shell -p pavucontrol --run pavucontrol"
+    },
+    "cpu": {
+        "format": " {usage}%"
+    },
+    "memory": {
+        "format": " {}%"
+    },
+    "battery": {
+        "format": "{icon} {capacity}%",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "tray": {
+        "spacing": 10
+    },
+    "clock": {
+        "format": " {:%A, %F %T}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    }
+}

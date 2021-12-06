@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Org-Mode local property block
+# key: props
+# --
+:properties:
+$1
+:end:

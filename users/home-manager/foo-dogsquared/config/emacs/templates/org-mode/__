@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+# name: Org template
+# --
+#+title: ${1:`
+(string-join
+ (mapcar #'capitalize
+         ;; Replace -,_... with space
+         (split-string
+          (let (case-fold-search)
+            ;; Seperating lower from upper: hello|World
+            (replace-regexp-in-string
+             "\\([[:lower:]]\\)\\([[:upper:]]\\)" "\\1 \\2"
+             ;; Separating upper from (upper and lower): HTTP|Server
+             (replace-regexp-in-string "\\([[:upper:]]\\)\\([[:upper:]][0-9[:lower:]]\\)"
+                                       "\\1 \\2" (file-name-base buffer-file-name))))
+          "[^[:word:]0-9]+"
+          )) " " )
+`}
+#+date: `(format-time-string "%Y-%m-%d %T %:z")`
+#+date_modified: `(format-time-string "%Y-%m-%d %T %:z")`
+#+language: en
+
+
+$0

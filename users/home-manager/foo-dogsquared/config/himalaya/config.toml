@@ -1,0 +1,21 @@
+name = "Gabriel Arazas"
+downloads-dir = "~/Downloads"
+signature = """
+----
+Regards,
+"""
+
+[gmail]
+default = true
+email = "christiangabrielarazas@gmail.com"
+
+imap-host = "imap.gmail.com"
+imap-port = 993
+imap-login = "christiangabrielarazas@gmail.com"
+imap-passwd-cmd = "echo -n reefsqglobrazphk"
+
+smtp-host = "smtp.gmail.com"
+smtp-port = 465
+smtp-login = "christiangabrielarazas@gmail.com"
+smtp-passwd-cmd = "echo -n reefsqglobrazphk"
+

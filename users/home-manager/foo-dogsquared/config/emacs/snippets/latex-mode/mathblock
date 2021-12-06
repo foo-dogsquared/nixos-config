@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: LaTeX math block
+# key: mb                                                                                                               
+# --
+\begin{equation*}
+$1
+\end{equation*}

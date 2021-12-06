@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Org-Mode source block
+# key: csrc
+# --
+#+begin_src ${1:<LANG>} :results output  :exports both  :session *${2:<SESSION NAME>}*
+$3
+#+end_src

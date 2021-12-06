@@ -1,0 +1,147 @@
+#!/usr/bin/env oil
+
+# A quick script on moving a file with embedded data.
+# It can only detect certain files and write the metadata with a certain program.
+# For the argument, it needs the path of the files to be moved.
+
+# Dependencies:
+# * Oil shell v0.8.8
+# * vorbis-tools v1.4.2
+# * exiftool v12.16
+# * file 5.38
+# * coreutils 8.32
+
+shopt --set strict:all
+
+var help_section = "A script for embedding metadata and renaming them files.
+
+edit-file-metadata [options...] FILE
+
+Options:
+    -h, --help              Show the help section.
+    -a, --author [AUTHOR]   Set the author.
+    -d, --date [DATE]       Set the date.
+    -t, --title [TITLE]     Set the title.
+    --skip                  Skip the prompt for missing metadata
+                            and only change the needed metadata.
+                            This only works if you've set any
+                            of the metadata in the command line.
+    --json                  Return a JSON object on stdout.
+    --move                  Move the filename from the kebab-case
+                            of the title.
+"
+
+var path = ''
+var author = ''
+var title = ''
+var pub_date = ''
+var skip = false
+var json_data = false
+var move = false
+
+while test $len(ARGV) -gt 0 {
+  case $[ARGV[0]] {
+    -h|--help)
+      echo $help_section
+      exit 0
+      ;;
+    -a|--author)
+      setvar author = ARGV[1]
+      shift 2
+      ;;
+    -t|--title)
+      setvar title = ARGV[1]
+      shift 2
+      ;;
+    -d|--date)
+      setvar pub_date = ARGV[1]
+      shift 2
+      ;;
+    --skip)
+      setvar skip = true
+      shift
+      ;;
+    --json)
+      setvar json_data = true
+      shift
+      ;;
+    --move)
+      setvar move = true
+      shift
+      ;;
+    *)
+      setvar path = ARGV[0]
+      shift
+      ;;
+  }
+}
+
+proc kebab-case(word) {
+    # Convert into lower case.
+    setvar word = $(echo $word | tr '[:upper:]' '[:lower:]')
+
+    # What happens to this line:
+    # * Convert all whitespace and dashes into a single dash.
+    # * Remove all invalid characters (all that are not alphanumeric characters and dashes).
+    # * Remove leading and trailing dashes.
+    setvar word = $(echo $word | sed --regexp-extended --expression 's/\s+|-+/-/g' --expression 's/[^.a-z0-9-]//g' --expression 's/^-+|-+\$//g')
+
+    echo $word
+}
+
+proc prompt(string, :out, prefix = ">> ") {
+    >&2 printf "%s\\n%s" $string $prefix
+    read --line
+    setref out = $_line
+}
+
+proc file_parse(path, :out) {
+    var extension_regex = / '.' ![ '.' ]+ %end /
+    var file = {}
+    setvar file['dir'] = $(dirname $path)
+    setvar file['name'] = $(basename $path | sed --regexp-extended "s|(.+)${extension_regex}|\\1|")
+    setvar file['ext'] = $(basename $path | sed --regexp-extended "s|.+(${extension_regex})|\\1|")
+    setvar file['mime_type'] = $(file --mime-type --brief $path)
+
+    setref out = file
+}
+
+test -f $path || {
+    >&2 echo "${path} is not a regular file"
+    exit 1
+}
+
+# Prompt for the missing metadata (if it's configured to not skip, anyways).
+if (not skip) {
+    test $title || prompt "What is the title?" :title
+    test $author || prompt "Who are the authors?" :author
+    test $pub_date || prompt "When this file published?" :pub_date
+}
+
+# Writing up the metadata time!
+# Each file type has a different way of embedding metadata so it needs different tools.
+# We'll use exiftool as a catch-all since it supports the most out of... 15 file types I considered.
+case $(file --mime-type --brief $path) {
+  "audio/ogg")
+    vorbiscomment --write $path --tag "TITLE=${title}" --tag "ARTIST=${author}" --tag "DATE=${pub_date}" ||
+    opustags $path --in-place --delete-all --add "TITLE=${title}" --add "ARTIST=${author}" --add "DATE=${pub_date}"
+    ;;
+  *)
+    exiftool -title="${title}" -author="${author}" -date="${pub_date}" ${path}
+    ;;
+}
+
+file_parse $path :file_info
+
+if (json_data) {
+    var metadata = {}
+    setvar metadata['file'] = file_info
+    setvar metadata['title'] = $title
+    setvar metadata['author'] = $author
+    setvar metadata['date'] = $pub_date
+    json write :metadata
+}
+
+if (move) {
+    mv $path "${file_info['dir']}/$(kebab-case $title)${file_info['ext']}"
+}

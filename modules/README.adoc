@@ -2,7 +2,7 @@
 :toc:
 
 These are the modules to be used for the system configuration.
-For easier modularization, any user-specific configurations such as from link:https://github.com/nix-community/home-manager[home-manager] should be placed in link:../users/[`../users/` directory].
+Multiple types of modules can be found here but the usual types of modules you'll be paying attention is the modules for link:https://nixos.org/manual/nixos/stable/index.html#sec-writing-modules[NixOS modules] and home-manager, both in link:./nixos/[`./nixos/`] and link:./home-manager/[`./home-manager/`], respectively.
 
 The modules are imported usually through `lib.filesToAttr`, allowing for easier structuring without modifying the index file of each module (i.e., `default.nix`).
 (See the implementation for more details.)
@@ -11,7 +11,7 @@ For example, take the following module folder structure...
 
 [source, tree]
 ----
-modules/
+system/
 ├── themes/
 │   ├── a-happy-gnome/
 │   │   ├── default.nix
@@ -31,7 +31,7 @@ modules/
 └── users.nix
 ----
 
-...should have the following attribute set.
+...should have the following attribute set when run with `lib.filesToAttr ./nixos`.
 
 [source, nix]
 ----
@@ -51,12 +51,12 @@ modules/
 ----
 
 The resulting attribute set can be easily be used for importing.
-Here's an example of a NixOS system created with the modules which can used for shared configuration between hosts.
+Here's an example of a NixOS system created with the NixOS modules which can used for shared configuration between hosts.
 
 [source, nix]
 ----
 lib.nixosSystem {
   system = "x86_64-linux";
-  modules = lib.mapAttrsToList (name: path: import path) (lib.filesToAttr ./modules);
+  modules = lib.mapAttrsToList (name: path: import path) (lib.filesToAttr ./modules/nixos);
 }
 ----

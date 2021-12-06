@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor: Gabriel Arazas
+# name: The ending signature useful for email.
+# key: sign
+# uuid: sign
+# --
+${1:Sincerely,}
+${2:`user-full-name`}
+

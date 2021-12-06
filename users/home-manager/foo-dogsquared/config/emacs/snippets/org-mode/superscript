@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Org-Mode superscript
+# key: --
+# --
+^{$1} $0

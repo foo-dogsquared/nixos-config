@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+# This is based from the `mansplain` script by Luke Smith. 
+# Video reference is at https://www.youtube.com/watch?v=8E8sUNHdzG8.
+# There's not much room for customizability so you'll have to edit the script itself if you want something different. 
+
+# Minimum requirements as of writing this script at 2019-12-18:
+# * man - v2.9.0
+# * xargs - v4.7.0
+# * rofi - v1.5.4
+# * awk - v5.0.1
+
+# Optional dependencies:
+# * zathura - v0.4.4
+# * girara - v0.3.3
+# * pdf-mupdf - v0.3.5
+
+set -o pipefail
+
+man -k . | rofi -dmenu -p 'Choose a manual' | awk '{print $1}' | xargs --no-run-if-empty "$TERMINAL" --command man
+
+

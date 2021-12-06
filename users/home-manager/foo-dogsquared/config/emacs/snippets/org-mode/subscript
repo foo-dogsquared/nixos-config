@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Org-Mode subscript
+# key: ==
+# --
+_{$1} $0

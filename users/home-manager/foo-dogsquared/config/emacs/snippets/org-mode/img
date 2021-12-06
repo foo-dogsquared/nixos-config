@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Org-Mode image
+# key: img
+# --
+#+caption: $1
+#+name: $2
+[[${3:<LINK>}]

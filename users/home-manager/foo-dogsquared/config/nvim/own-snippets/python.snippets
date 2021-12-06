@@ -1,0 +1,72 @@
+global !p
+# Smartly automate inserting of certain characters. 
+# Mainly used for smart space insertion. 
+def smart_space(next_str, auto_str=" ", loose=False):
+    next_word = ""
+
+    if next_str:
+        if loose == True:
+            next_word = auto_str
+        elif next_str[0] in [",", ".", "-", "!", "?", " "]:
+            next_word = auto_str
+
+    return next_word
+endglobal
+
+snippet def "Define function with autocompleting docstrings" iw
+def ${1:function_name}($2):
+    """ 
+    ${3:To be defined} 
+`!p
+arguments = [ arg.strip() for arg in t[2].split(',') if arg != "self" or len(arg.strip()) > 0 ]
+
+# Format the string with an indent. 
+snip >> 1
+for arg in arguments:
+    split_arg = arg.split('=')
+
+    param = split_arg[0].strip()
+    if param:
+        snip += f":param: {param} - @TODO"
+`
+    """
+endsnippet
+
+# Quickly create a class definition. 
+# This is inspired from the demo GIF from the official GitHub page at https://github.com/sirver/UltiSnips. 
+snippet class "Class keyword with autocompleting docstrings" iw
+class ${1:PICK_A_NAME_CLASS}`!p snip.rv = smart_space(t[2], '(', loose=True)`$2`!p snip.rv = smart_space(t[2], ')', loose=True)`:
+    """ ${3:Docstring for $1} """
+
+    def __init__(${4:self}):
+        """
+        ${5:Creates an instance of $1}
+`!p
+arguments = [ arg.strip() for arg in t[4].split(',') if arg != "self" or len(arg.strip()) > 0 ]
+
+# Format the string with an indent. 
+snip >> 2
+
+for arg in arguments:
+    split_arg = arg.split('=')
+
+    param = split_arg[0].strip()
+
+    if param:
+        snip += f":param: {param} - @TODO"
+`
+        """
+
+`!p 
+# Shift by two indentation level
+snip >> 2
+snip += "" if not t[2] else f"{t[2]}.__init__(self)"
+`
+        $6
+endsnippet
+
+snippet if_main "If __main__" biw
+if __name__ == "__main__":
+    ${1:print("Hello world!")}
+endsnippet
+

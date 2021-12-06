@@ -1,0 +1,188 @@
+; Main color format is in ARGB.
+; However, formats in RGB is fine.
+; This is where all of the colors should be placed for those who are lazy to scroll down (like me).
+[colors]
+    background = ${xrdb:background:#3B4252}
+    background-light = ${xrdb:color8:#4D4D4D}
+    foreground = ${xrdb:foreground:#D6D6D6}
+    foreground-light = ${xrdb:color15:#eee}
+    accent = ${xrdb:color6:#88C0D0}
+
+
+; The common style between bars.
+[bar-common-style]
+    width = 100%
+    height = 32
+    wm-restack = bspwm
+    fixed-center = false
+
+    line-size = 3
+    line-color = #f00
+
+    padding = 1
+
+    module-margin = 1
+    module-padding = 1
+
+    font-0 = "Iosevka;2"
+    font-1 = "Fira Code;2"
+
+    ; Our fallback fonts are mostly used as icon fonts.
+    ; For future references, the version of Font Awesome used here is at v5.13.0.
+    ; I also installed the font myself that I downloaded from the official website (https://fontawesome.com/).
+    font-2 = "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid;2"
+
+    ; This creates the illusion as if the modules are in the center.
+    __border-size = 5
+    border-top-size = ${self.__border-size}
+    border-top-color = ${colors.background}
+    border-bottom-size = ${self.__border-size}
+    border-bottom-color = ${colors.background}
+
+    tray-position = right
+    tray-padding = 1
+    cursor-click = pointer
+
+
+; Common style between modules.
+[module-common-style]
+    label-padding = 1
+
+
+; The main bar.
+[bar/fds-bar]
+    background = ${colors.background}
+    foreground = ${colors.foreground}
+
+    inherit = bar-common-style
+    enable-ipc = true
+
+    modules-left = bspwm
+    modules-center = date
+    modules-right = pulseaudio eth memory home-fs root-fs
+
+
+[module/home-fs]
+    type = internal/fs
+    mount-0 = /home
+    format-margin = 0
+    format-padding = 0
+    label-margin = 0
+    label-padding = 0
+
+    format-mounted-prefix = ""
+    format-mounted-prefix-margin-right = 1
+    format-unmounted-prefix = ""
+    format-unmounted-prefix-margin-right = 1
+    label-mounted = %free%
+    label-unmounted = N/A
+
+
+[module/root-fs]
+    type = internal/fs
+    mount-0 = /
+    format-mounted-prefix = ""
+    format-mounted-prefix-margin-right = 1
+    format-unmounted-prefix = ""
+    format-unmounted-prefix-margin-right = 1
+    label-mounted = %free%
+    label-unmounted = N/A
+
+
+[module/bspwm]
+    type = internal/bspwm
+    wrapping-scroll = false
+    pin-workspaces = true
+    label-focused = %index%
+    label-focused-background = ${colors.accent}
+    label-focused-foreground = ${colors.background}
+    label-focused-padding = 1
+
+    label-occupied = %index%
+    label-occupied-padding = 1
+
+    label-urgent = %index%!
+    label-urgent-background = ${colors.foreground}
+    label-urgent-padding = 1
+
+    label-empty = %index%
+    label-empty-foreground = ${colors.foreground-light}
+    label-empty-padding = 1
+
+
+[module/memory]
+    inherit = module-common-style
+    type = internal/memory
+    interval = 2
+    format-prefix = ""
+    label = %gb_used%
+
+
+[module/wlan]
+    inherit = module-common-style
+    type = internal/network
+    interface = wlp0s18f2u4
+    interval = 3.0
+
+    format-connected = <label-connected>
+    format-connected-underline = #9f78e1
+    format-prefix = "NET"
+    label-connected = %essid%
+
+    format-disconnected = <label-disconnected>
+    label-disconnected = disconnected
+
+
+[module/eth]
+    type = internal/network
+    interface = enp4s0
+    interval = 3
+
+    format-connected-prefix = ""
+    label-connected = "OK"
+    label-connected-padding = 1
+
+    format-disconnected-prefix = ""
+    label-disconnected-padding = 1
+    label-disconnected = "N/A"
+
+
+[module/date]
+    inherit = module-common-style
+    type = internal/date
+    interval = 5
+
+    ; We've formatted the time string to alter between the time and the date instead.
+    ; Although, I feel it's a hacky workaround, it still is functional as a date module.
+    date = "%A, %F"
+    date-alt = "%B %d, %Y"
+    time = %T
+    time-alt = %F
+
+    format-prefix = ""
+    label = %date% %time%
+
+
+[module/pulseaudio]
+    inherit = module-common-style
+    type = internal/pulseaudio
+
+    format-volume-prefix = ""
+    format-volume = <label-volume>
+    label-volume = %percentage%%
+    label-volume-padding = 1
+
+    format-muted-prefix = ""
+    label-muted = muted
+    label-muted-padding = 1
+
+
+[settings]
+    screenchange-reload = true
+
+
+[global/wm]
+    margin = 1
+    padding = 1
+
+; vim:ft=dosini

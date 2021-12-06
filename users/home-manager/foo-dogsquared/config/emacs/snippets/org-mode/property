@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Org-Mode local property
+# key: lprop
+# --
+:${1:<KEY>}: ${2:<VALUE>}

@@ -1,0 +1,12 @@
+{
+    "bin": "$HOME/.local/bin",
+    "emacs": "$HOME/.config/doom",
+    "mpd": "$HOME/.config/mpd",
+    "nvim": "$HOME/.config/nvim",
+    "nyxt": "$HOME/.config/nyxt",
+    "newsboat": "$HOME/.config/newsboat",
+    "rofi": "$HOME/.config/rofi",
+    "starship": "$HOME/.config",
+    "slop": "$HOME/.config/slop",
+    "youtube-dl": "$HOME/.config/youtube-dl"
+}

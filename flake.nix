@@ -2,7 +2,6 @@
   description = "foo-dogsquared's NixOS config as a flake";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -10,7 +9,7 @@
     agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs,  ... }:
     let
       # All the target systems.
       systems = [
@@ -22,6 +21,7 @@
       ];
 
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
+
       libExtended = nixpkgs.lib.extend (final: prev:
         (import ./lib {
           inherit inputs;
@@ -66,27 +66,18 @@
       # A list of NixOS configurations from the `./hosts` folder.
       # It also has some sensible default configurations.
       nixosConfigurations = libExtended.mapAttrs
-        (host: path: libExtended.mkHost path hostDefaultConfig)
+        (host: path: libExtended.flakeUtils.mkHost path hostDefaultConfig)
         (libExtended.filesToAttr ./hosts);
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
       nixosModules = libExtended.mapAttrsRecursive (_: path: import path)
-        (libExtended.filesToAttr ./modules);
+        (libExtended.filesToAttr ./modules/nixos);
 
-      homeConfigurations = let
-        excludedModules = [
-          "config" # The common user-specific configurations.
-          "modules" # User-specific Nix modules.
-        ];
-      in libExtended.mapAttrs (user: path:
-        home-manager.lib.homeManagerConfiguration {
-          system = "x86_64-linux";
-          configuration = import path;
-          homeDirectory = "/home/${user}";
-          username = user;
-        }) (libExtended.filterAttrs (n: v: !libExtended.elem n excludedModules)
-          (libExtended.filesToAttr ./users));
+      homeManagerConfigurations = libExtended.mapAttrs (user: path: libExtended.flakeUtils.mkUser path userDefaultConfig) (libExtended.filesToAttr ./users);
+
+      # In case anybody want my modules for whatever reason, here you go.
+      homeManagerModules = libExtended.mapAttrsRecursive (_: path: import path) (libExtended.filesToAttr ./modules/home-manager);
 
       packages = forAllSystems
         (system: import ./pkgs { pkgs = import nixpkgs { inherit system; }; });

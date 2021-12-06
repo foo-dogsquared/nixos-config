@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+
+# Dependencies:
+# * echo
+# * kill
+# * pgrep from procps-ng 3.3.15
+
+help_usage="Close if the program is already running. 
+Otherwise, open the specified program. 
+
+Useful for programs that should have one instance running 
+at a time. 
+
+Note that it uses pgrep for searching the existance of 
+the program. 
+
+Usage: $0 <BINARY_NAME>
+"
+
+if [[ $# -lt 1 ]]; then
+    echo "$help_usage"
+    exit 0
+fi
+
+kill $(pgrep $1) 2>/dev/null
+if [[ $? != 0 ]]; then
+    $1 2>/dev/null
+fi
+

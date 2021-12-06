@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: List item for lists
+# key: li
+# --
+\item{$1}

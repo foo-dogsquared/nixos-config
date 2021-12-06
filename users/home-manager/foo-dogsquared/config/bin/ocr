@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# A script that utilizes OCR for a screenshot and copies the text to the clipboard.
+
+# Dependencies:
+# * tesseract 4.1.1
+# * leptonica-1.79.0
+# * The Tesseract English data
+# * Image libraries (e.g., `libgif`, `libwebp`)
+# * xclip - version 0.13
+# * maim - version 5.6.3
+
+# It's a small script anyways so why not.
+# I feel like this is one of the appropriate solutions especially that there is potential for erreneous feedback.
+set -o pipefail
+
+notify-send "Select a region for the OCR"
+maim --select --hidecursor | magick mogrify -modulate 100,0 -resize 400% png:- | tesseract - stdout | xclip -selection clipboard
+

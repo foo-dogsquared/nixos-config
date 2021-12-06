@@ -1,0 +1,278 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i oil -p coreutils moreutils ffmpeg gnused ripgrep file
+
+shopt --set strict:all
+
+const show_help = "A small script for splitting files into tracks, perfect for full album releases and audiobooks.
+Based from Luke Smith's booksplit script
+(https://raw.githubusercontent.com/LukeSmithxyz/voidrice/091d7e54c5c1ed77201ce1254aa2623a2801c9f2/.local/bin/booksplit).
+
+split-album [options...] [\$ALBUM_FILE \$TIMESTAMP_FILE]
+
+Options:
+    -h, --help                      Show the help section.
+    --tutorial                      Show a helpful tutorial-esque description of the program.
+    --audio-file [file]             Set the audio file to be split.
+    --timestamp-file [file]         Set the timestamp file to be used for splitting.
+    -t, --title [title]             Set the title of the album.
+    -d, --date [date]               Set the publication date of the album.
+    -a, --author [author]           Set the author of the album.
+    --json                          Print the JSON data for use with other applications.
+    --skip                          Skip the extraction part, useful for printing data with '--json' or testing the timestamp file.
+    --strict                        Set to be strict, exiting when an invalid timestamp is encountered.
+
+Environment variables:
+    EXTENSION                       The extension to be used. This is used in conjunction with FFmpeg
+                                    where it can detect the codec to be converted automatically with it.
+
+When any of the required metadata is missing (i.e., title, date, author), it will be prompted.
+"
+
+const show_descriptive_help = "This script splits an album with a timestamp file.
+You're always going to see using this script like the following:
+
+split-album \$AUDIO_FILE \$TIMESTAMP_FILE
+
+The timestamp file contains a starting timestamp (in HH:MM:SS[.MS]) and the title of the chapter/track.
+For more information, see https://trac.ffmpeg.org/wiki/Seeking.
+Lines starting with '#' and empty lines will be ignored.
+
+The following is an example of the content of a timestamp file.
+
+\`\`\`
+00:00:00 Introduction
+00:03:54 It's the R-rated scene
+00:25:43 Boring exposition at the cafe
+00:36:54 Expedition time
+00:41:51 Fighting time
+00:42:22 Shower scene
+\`\`\`
+
+You can also create a timestamp file in JSON format.
+It is the equivalent of the 'chapters' key from the JSON output (i.e., '--json').
+The equivalent JSON of the previous example would be this:
+
+\`\`\`
+[
+  {
+    \"timestamp\": \"00:00:00\",
+    \"title\": \"Introduction\"
+  },
+  {
+    \"timestamp\": \"00:03:54\",
+    \"title\": \"It's the R-rated scene\"
+  },
+  {
+    \"timestamp\": \"00:25:43\",
+    \"title\": \"Boring exposition at the cafe\"
+  },
+  {
+    \"timestamp\": \"00:36:54\",
+    \"title\": \"Expedition time\"
+  },
+  {
+    \"timestamp\": \"00:41:51\",
+    \"title\": \"Fighting time\"
+  },
+  {
+    \"timestamp\": \"00:42:22\",
+    \"title\": \"Shower scene\"
+  }
+]
+\`\`\`
+
+There will be a folder created with the safe name of the album (in kebab-case) containing the split tracks.
+The original file will be kept, do what you want with it.
+"
+
+
+proc warnf(msg, @args) {
+    >&2 printf "${msg}\\n" @args
+}
+
+proc errorf(msg, @args) {
+    >&2 printf "${msg}\\n" @args
+    exit 1
+}
+
+proc prompt(msg, :out, prefix = ">> ") {
+    >&2 printf '%s\n%s' $msg $prefix
+    read --line
+    setref out = $_line
+}
+
+proc kebab-case(word) {
+    write -- $word | sed --regexp-extended --expression 's/./\L&/g' --expression 's/\s+/-/g' --expression 's/[^a-z0-9-]//g' --expression 's/^-+|-+$//g' --expression 's/-+/-/g'
+}
+
+proc main {
+  # This could be configured by setting the 'EXTENSION' environment variable.
+  const EXTENSION = ${EXTENSION:-"opus"}
+
+  # Set up the variables.
+  var audio_file = ''
+  var timestamp_file = ''
+
+  var album = ''
+  var author = ''
+  var pub_date = ''
+
+  var prints_json = false
+  var strict_mode = false
+  var skip = false
+
+  # Parse the arguments.
+  while test $len(ARGV) -gt 0 {
+    case $[ARGV[0]] {
+      -h|--help)
+          write -- $show_help
+          exit
+          ;;
+      --tutorial)
+          write -- $show_descriptive_help
+          exit
+          ;;
+      --audio-file)
+          setvar audio_file = ARGV[1]
+          shift 2
+          ;;
+      --timestamp-file)
+          setvar timestamp_file = ARGV[1]
+          shift 2
+          ;;
+      -a|--author)
+          setvar author = ARGV[1]
+          shift 2
+          ;;
+      -d|--date)
+          setvar pub_date = ARGV[1]
+          shift 2
+          ;;
+      -t|--title)
+          setvar album = ARGV[1]
+          shift 2
+          ;;
+      --strict)
+          setvar strict_mode = true
+          shift
+          ;;
+      --skip)
+          setvar skip = true
+          shift
+          ;;
+      --json)
+          setvar prints_json = true
+          shift
+          ;;
+      *)
+          setvar audio_file = ARGV[0]
+          setvar timestamp_file = ARGV[1]
+          shift 2
+          ;;
+      }
+  }
+
+  # Check the files if it is valid.
+  test -f $audio_file || errorf '%s is not a regular file' $audio_file
+  test -f $timestamp_file || errorf '%s is not a regular file' $timestamp_file
+
+  # Prompt for the missing values if not passed from the command line.
+  test $album || prompt "What is the title of the album?" :album
+  test $author || prompt "Who is the author of the album?" :author
+  test $pub_date || prompt "When is the album published?" :pub_date
+
+  # Populate the output data.
+  # This is going to be used throughout the processing.
+  # Additionally, the object will be printed when `--json` flag is passed.
+  const output_data = {}
+  setvar output_data['file'] = $audio_file
+  setvar output_data['chapters'] = []
+  setvar output_data['album'] = $album
+  setvar output_data['author'] = $author
+  setvar output_data['date'] = $pub_date
+  setvar output_data['extension'] = $EXTENSION
+
+  # The following variable stores an eggex, a simplified notation for regular expressions.
+  # Pretty nice to use especially that literals are quoted and classes are not.
+  const timestamp_regex = / %start digit{2,} ':' digit{2} ':' digit{2} <'.' digit+>? %end /
+
+  # We'll keep track whether the pipeline has encountered an error.
+  # If it has, the script will exit throughout various points of the process.
+  var has_error = false
+
+  # Deserialize the given input into the chapters data.
+  # This script accept several formats from a JSON file to a plain-text file derived from Luke Smith's 'booksplit' script.
+  case $(file --mime-type --brief $timestamp_file) {
+    "application/json")
+      json read :chapters < $timestamp_file
+      setvar output_data['chapters'] = chapters
+      ;;
+
+    # The text file is formatted quite similarly to the required format from the booksplit script.
+    # I improved some things in the format such as allowing comments (i.e., lines starting with '#') and empty lines allowing for cleaner input.
+    "text/plain")
+      sed --regexp-extended --expression '/^\s*$/d' --expression '/^#/d' $timestamp_file | while read --line {
+        # We'll build the chapter data to be added later to the output data.
+        var chapter = {}
+        setvar chapter['title'] = $(write -- $_line | cut -d' ' -f2-)
+        setvar chapter['timestamp'] = $(write -- $_line | cut -d' ' -f1)
+
+        # Mark the input to be erreneous if the timestamp format is not valid.
+        # This will cause the script to exit in the next part of the process.
+        # We won't be exiting immediately to give all possible errors.
+        write -- ${chapter['timestamp']} | rg --quiet $timestamp_regex || {
+          warnf "'%s' %s is not a valid timestamp" ${chapter['timestamp']} ${chapter['title']}
+          setvar has_error = true
+          continue
+        }
+
+        _ output_data['chapters'].append(chapter)
+      }
+    ;;
+  }
+
+  # Exit if the script is set as strict and has erreneous input.
+  # If the user cares about the input, they have to set it to strict mode.
+  if (strict_mode and has_error) { exit 1 }
+
+  # Set parts of the output data and prepare for the splitting process.
+  const title_slug = $(kebab-case $album)
+  setvar output_data['directory'] = $(realpath --canonicalize-missing $title_slug)
+  mkdir -p $title_slug
+
+  # Rather than sequentially segmenting the audio, we'll extract the starting and ending timestamps of each segment then feed it to a job queue that can execute jobs in parallel.
+  # Take note we don't have the ending timestamp of each segment so we need a way to look back into items.
+  const chapter_len = len(output_data['chapters'])
+  var job_queue = %()
+
+  # Iterate through the chapters and populate the job queue.
+  # We'll also fill up the rest of the chapter-related data into the output data.
+  for index in @(seq $[chapter_len]) {
+    var index = Int(index)
+    setvar chapter = output_data['chapters'][index - 1]
+    var start = chapter['timestamp']
+    var end = output_data['chapters'][index]['timestamp'] if index !== chapter_len else null
+    var filename = $(printf "%.2d-%s.%s" $index $(kebab-case ${chapter['title']}) $EXTENSION)
+    setvar output_data['chapters'][index - 1]['file'] = filename
+
+    # Check for incorrect timestamp order and set the pipeline as erreneous if it is.
+    # We can't let the splitting process proceed since it will surely make problematic output.
+    if (start > end and end is not null) {
+      warnf '%s (start) is ahead compared to %s (end)' $start $end
+      setvar has_error = true
+    }
+
+    append :job_queue ">&2 printf '[%d/%d] %s\\n' $[index] $[chapter_len] \"$[output_data['chapters'][index - 1]['title']]\"; ffmpeg -loglevel quiet -nostdin -i '${audio_file}' -ss ${start} $['-to ' + end if index !== chapter_len else ''] ${title_slug}/${filename}"
+  }
+
+  # Exit the process if an error detected.
+  if (has_error) { exit 1 }
+
+  # Start the splitting process if the `--skip` is absent.
+  if (not skip) { parallel -- @job_queue }
+
+  # Print the output data as JSON if the `--json` flag is passed.
+  if (prints_json) { json write :output_data }
+}
+
+main @ARGV

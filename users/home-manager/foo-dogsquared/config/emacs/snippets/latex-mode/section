@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: \section
+# key: sec
+# uuid: sec
+# --
+\section{$1}
+\label{sect!$1}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Shorthand for i.e. in parenthesis
+# key: ie
+# --
+(i.e., $1) $0

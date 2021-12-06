@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Ordered list
+# key: ol    
+# --
+\begin{enumerate}
+  $1
+\end{enumerate}

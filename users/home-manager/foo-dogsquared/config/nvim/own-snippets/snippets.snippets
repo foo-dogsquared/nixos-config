@@ -1,0 +1,14 @@
+snippet usnip "A working snippet for creating UltiSnips snippets" ib
+`!p snip.rv = "snippet"` ${1:<word_trigger>} "${2:<description>}" ${3:<flags>}
+$4
+`!p snip.rv = "endsnippet"`
+$0
+endsnippet
+
+snippet uglobal "A working global snippets for UltiSnips" ib
+`!p snip.rv = "global"` ${2:!p}
+$1
+`!p snip.rv = "endglobal"`
+$0
+endsnippet
+

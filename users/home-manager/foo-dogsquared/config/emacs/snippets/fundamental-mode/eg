@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Shorthand for eg
+# key: eg
+# --
+(e.g., $1) $0

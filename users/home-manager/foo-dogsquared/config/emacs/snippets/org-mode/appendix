@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Org-Mode appendix block
+# key: appendix
+# --
+:properties:
+:appendix: t
+:end:

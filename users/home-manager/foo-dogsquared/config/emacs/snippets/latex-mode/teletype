@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Teletype text
+# key: tt
+# --
+\texttt{$1}

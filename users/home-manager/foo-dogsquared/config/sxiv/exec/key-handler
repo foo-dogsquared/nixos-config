@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# The keyboard shortcuts (prepended with <C-x>). 
+
+while read file
+do
+        case "$1" in
+
+        # Prompt and delete the file. 
+        "d")
+            [ "$(printf 'No\nYes' | rofi -dmenu -p 'Delete all of the selected image(s)?')" = "Yes" ] && rm "$file" && notify-send "$file deleted" ;;
+
+        # Rotate 90 degrees. 
+        "r")
+            convert -rotate 90 "$file" "$file" ;;
+
+        # Rotate -90 degrees. 
+        "R")
+            convert -rotate -90 "$file" "$file" ;;
+
+        # Copy the path of the image (relative to the present working directory). 
+        "y")
+            echo -n "$file" | xclip -selection clipboard && notify-send "'$file' name copied to clipboard" ;;
+
+        # Copy the absolute path of the image.
+        "Y")
+            readlink --canonicalize "$file" | xclip -selection clipboard && notify-send "Absolute path of '$file' copied to clipboard" ;;
+
+        "i")
+            feh --bg-fill "$file" ;;
+
+        # Activate Pywal to the selected image. 
+        "w")
+            rofi -dmenu -p "Add some arguments for executing pywal? ('wal -i \$file') " | xargs wal -i "$file" ;;
+
+        # Activate `select-theme` script which is basically pywal with additional things.
+        "C-w")
+            select-theme "$file" ;;
+        esac
+done

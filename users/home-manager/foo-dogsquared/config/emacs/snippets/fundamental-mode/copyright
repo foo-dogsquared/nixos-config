@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Shorthand for e.g.
+# key: copyright
+# --
+${1:Copyright © (format-time-string "%Y")} ${2:(user-full-name)} <`(user-mail-address)`>
