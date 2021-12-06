@@ -93,48 +93,8 @@ in rec {
     let paths = lib.collect builtins.isPath attrs;
     in builtins.map (path: import path) paths;
 
-  /* Create a NixOS system through a given host folder.
-     It will automate some of the things such as making the last component
-     of the path as the hostname.
-
-     Signature:
-       path -> attrset -> NixOS configuration
-     Where:
-       - `path` is a path to a Nix file for the host; the basename of the file
-         is also used as the hostname
-       - `attrset` is the attribute set to be included in the host configuration
-     Returns:
-       An attribute set from the `lib.nixosSystem` from `nixpkgs` flake.
-
-     Example:
-       mkHost ./hosts/june {}
-       => { ... } # NixOS configuration attrset
-  */
-  mkHost = file:
-    attrs@{ system ? sys, ... }:
-    lib.nixosSystem {
-      inherit system;
-
-      # Additional attributes to be referred to our modules.
-      specialArgs = { inherit lib system inputs; };
-
-      # We also set the following in order for priority.
-      # Later modules will override previously imported modules.
-      modules = [
-        # Set the hostname.
-        { networking.hostName = builtins.baseNameOf file; }
-
-        # Put the given attribute set (except for the system).
-        (lib.filterAttrs (n: v: !lib.elem n [ "system" ]) attrs)
-
-        # The entry point of the module.
-        file
-      ]
-      # Append with our custom modules from the modules folder.
-        ++ (lib.modulesToList (filesToAttr ../modules));
-    };
-
   /* Return an attribute set of valid users from a given list of users.
+     This is a convenience function for getting users from the `./users` directory.
 
      Signature:
        list -> attrset
@@ -143,12 +103,13 @@ in rec {
        - `attrset` is a set of valid users with the name as the key and the path as the value.
      Example:
        # Assuming only 'foo-dogsquared' is the existing user.
-       getUsers [ "foo-dogsquared" "archie" "brad" ]
+       # Get valid users from home-manager.
+       getUsers "home-manager" [ "foo-dogsquared" "archie" "brad" ]
        => { foo-dogsquared = /home/foo-dogsquared/projects/nixos-config/users/foo-dogsquared; }
   */
-  getUsers = users:
+  getUsers = type: users:
     let
-      userModules = filesToAttr ../users;
+      userModules = filesToAttr ../users/${type};
       invalidUsernames = [ "config" "modules" ];
     in lib.filterAttrs (n: _: !lib.elem n invalidUsernames) userModules;
 
@@ -169,7 +130,10 @@ in rec {
 
      Examples:
        countAttrs (name: value: value) { d = true; f = true; a = false; }
-     => 2
+       => 2
+
+       countAttrs (name: value: value.enable) { d = { enable = true; }; f = { enable = false; package = [ ]; }; }
+       => 1
   */
   countAttrs = pred: attrs:
     lib.count (attr: pred attr.name attr.value)

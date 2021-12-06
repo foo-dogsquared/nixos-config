@@ -17,6 +17,7 @@
       enable = true;
       audio.enable = true;
       fonts.enable = true;
+      hardware.enable = true;
     };
     dev = {
       enable = true;
@@ -35,6 +36,7 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
   # Set your time zone.
   time.timeZone = "Asia/Manila";
 
@@ -50,15 +52,6 @@
   networking.useDHCP = false;
   networking.interfaces.enp1s0.useDHCP = true;
   networking.interfaces.wlp2s0.useDHCP = true;
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # More power optimizations!
-  powerManagement.powertop.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  hardware.opentabletdriver.enable = true;
 
   environment.systemPackages = with pkgs; [ git wget brave lf fd ripgrep ];
 

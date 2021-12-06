@@ -11,6 +11,8 @@ in {
     audio.enable = lib.mkEnableOption
       "Enables all desktop audio-related services such as Pipewire.";
     fonts.enable = lib.mkEnableOption "Enables font-related config.";
+    hardware.enable = lib.mkEnableOption
+      "Enables the common hardware-related configuration.";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -87,6 +89,17 @@ in {
           xits-math
         ];
       };
+    })
+
+    (lib.mkIf cfg.hardware.enable {
+      # Enable tablet support with OpenTabletDriver.
+      hardware.opentabletdriver.enable = true;
+
+      # More power optimizations!
+      powerManagement.powertop.enable = true;
+
+      # Welp, this is surprising...
+      services.printing.enable = true;
     })
   ]);
 }

@@ -19,6 +19,9 @@ in
         inkscape # Illustration wannabe tool.
         gimp # Photo editing wannabe tool.
         krita # Digital art wannabe tool.
+
+        imagemagick # Ah yes, everyman's image manipulation tool.
+        gmic # Don't let the gimmicks fool you, it's a magical image framework.
       ];
     })
 
