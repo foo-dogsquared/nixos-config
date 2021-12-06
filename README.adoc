@@ -46,9 +46,8 @@ nixos-config
 This usually configures like the hardware setup, timezone, and users.
 Host configurations are also exported in the flakes in `outputs.nixosConfigurations`.
 
-* link:./modules/[`./modules/`] contain my custom modules including for NixOS and home-manager.
+* link:./modules/[`./modules/`] contain my custom modules including NixOS and home-manager modules.
 For more information, see the link:./modules/README.adoc[related documentation].
-It is also exported from the flake in `outputs.nixosModules`.
 
 * link:./pkgs/[`./pkgs/`] contains my custom packages.
 It is exported in the flakes at `outputs.packages` compiled through various systems (but only `x86_64-linux` is mainly tested).
@@ -66,6 +65,7 @@ In order of priority:
 
 * [x] Create custom modules.
 * [x] Create a themes system similar to link:https://github.com/hlissner/dotfiles[this NixOS config].
+* [ ] Create development shells.
 * [x] Manage secrets with agenix.
 * [ ] Create link:https://github.com/numtide/devshell[devshells].
 * [x] Automate backups with NixOS config.
