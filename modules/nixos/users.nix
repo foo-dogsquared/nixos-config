@@ -3,8 +3,8 @@
 
 let
   cfg = config.modules.users;
-  userModules = lib.getUsers cfg.users;
-  homeManagerModules = lib.filesToAttr ../users/modules;
+  userModules = lib.getUsers "home-manager" cfg.users;
+  homeManagerModules = lib.filesToAttr ../home-manager;
 
   users = lib.attrNames userModules;
   nonexistentUsers = lib.filter (name: !lib.elem name users) cfg.users;
