@@ -1,8 +1,5 @@
 { lib, stdenv, fetchFromGitHub, glib, nodePackages }:
 
-let
-  INSTALLBASE = "$out/share/gnome-shell/extensions";
-in
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-pop-shell";
   version = "unstable-2021-11-30";
@@ -17,22 +14,24 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ glib nodePackages.typescript ];
   skipConfigure = true;
 
-  # Rather than patching the installation, we can create our own easily.
-  installPhase = ''
-    mkdir -p ${INSTALLBASE}/${passthru.extensionUuid}
-    cp -r _build/* ${INSTALLBASE}/${passthru.extensionUuid}/
+  makeFlags = [
+    "INSTALLBASE=$(out)/share/gnome-shell/extensions"
+    "PLUGIN_BASE=$(out)/lib/pop-shell/launcher"
+    "SCRIPTS_BASE=$(out)/lib/pop-shell/scripts"
+    "UUID=${passthru.extensionUuid}"
+  ];
 
-    # TODO: Uncomment once custom gsettings works.
-    # Unfortunately custom gsettings seems to be not properly integrated with NixOS yet.
-    #
-    # For more information, please track the following issue:
-    # https://github.com/NixOS/nixpkgs/issues/92265
-    #
-    # It also contains additional links to related issues and whatnot.
-    #install -Dm644 keybindings/*.xml -t $out/share/gnome-control-center/keybindings
+  postInstall = ''
+    install -Dm644 $out/share/gnome-shell/extensions/${passthru.extensionUuid}/schemas/* -t "${glib.makeSchemaPath "$out" "${pname}-${version}"}"
 
-    # Export the custom GSettings schema.
-    install -Dm644 _build/schemas/* -t $out/share/glib-2.0/schemas
+   # TODO: Uncomment once custom gsettings works.
+   # Unfortunately custom gsettings seems to be not properly integrated with NixOS yet.
+   #
+   # For more information, please track the following issue:
+   # https://github.com/NixOS/nixpkgs/issues/92265
+   #
+   # It also contains additional links to related issues and whatnot.
+   #install -Dm644 keybindings/*.xml -t $out/share/gnome-control-center/keybindings
   '';
 
   passthru.extensionUuid = "pop-shell@system76.com";
@@ -41,5 +40,6 @@ stdenv.mkDerivation rec {
     description = "A keyboard-driven layer for GNOME shell";
     license = licenses.gpl3;
     homepage = "https://github.com/pop-os/shell";
+    platforms = platforms.linux;
   };
 }

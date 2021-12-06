@@ -1,9 +1,7 @@
 { lib, fetchFromGitHub, rustPlatform, pkg-config, openssl, gtk3 }:
 
-let
-  distributionPluginPath = "$out/lib/pop-launcher";
-in
-rustPlatform.buildRustPackage rec {
+let distributionPluginPath = "$out/lib/pop-launcher";
+in rustPlatform.buildRustPackage rec {
   pname = "pop-launcher";
   version = "1.1.0";
 

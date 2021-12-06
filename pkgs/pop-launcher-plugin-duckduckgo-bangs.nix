@@ -23,7 +23,8 @@ rustPlatform.buildRustPackage rec {
   cargoSha256 = "sha256-qzlZ0dbdfZwEBuQXIUndVFye6RdX8aI39D/UCagMfZg=";
   meta = with lib; {
     description = "Pop launcher for searching with Duckduckgo bangs";
-    homepage = "https://github.com/foo-dogsquared/pop-launcher-plugin-duckduckgo-bangs";
+    homepage =
+      "https://github.com/foo-dogsquared/pop-launcher-plugin-duckduckgo-bangs";
     license = licenses.gpl3;
   };
 }
