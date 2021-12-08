@@ -37,6 +37,10 @@ in
       ];
 
       services.easyeffects.enable = true;
+      services.fluidsynth = {
+        enable = true;
+        soundServices = "pipewire-pulse";
+      };
     })
   ]);
 }

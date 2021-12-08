@@ -24,11 +24,7 @@
       shell.enable = true;
       virtualization.enable = true;
     };
-    editors = {
-      emacs.enable = true;
-      emacs.doom.enable = true;
-      neovim.enable = true;
-    };
+    editors.neovim.enable = true;
     themes.a-happy-gnome.enable = true;
     users.users = [ "foo-dogsquared" ];
   };
@@ -53,7 +49,7 @@
   networking.interfaces.enp1s0.useDHCP = true;
   networking.interfaces.wlp2s0.useDHCP = true;
 
-  environment.systemPackages = with pkgs; [ git wget brave lf fd ripgrep ];
+  environment.systemPackages = with pkgs; [ git wget lf ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

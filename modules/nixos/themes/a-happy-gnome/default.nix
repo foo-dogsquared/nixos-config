@@ -17,6 +17,12 @@ in
     services.xserver.displayManager.gdm.enable = true;
     services.xserver.desktopManager.gnome.enable = true;
 
+    # Since we're using KDE Connect, we'll have to use gsconnect.
+    programs.kdeconnect = {
+      enable = true;
+      package = pkgs.gnomeExtensions.gsconnect;
+    };
+
     # Don't need most of the GNOME's offering so...
     environment.gnome.excludePackages = with pkgs.gnome; [
       gedit

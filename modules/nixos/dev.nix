@@ -24,7 +24,15 @@ in {
       };
 
       # Configure all of the development-related configuration in the system.
-      programs.git.enable = true;
+
+      # Install Git, our favorite version control system.
+      # In this case, we want ALL OF THE EXTENSIONS!
+      programs.git = {
+        enable = true;
+        lfs.enable = true;
+        package = pkgs.gitFull;
+      };
+
       programs.gnupg = { agent.enable = true; };
 
       # Convenience!
@@ -40,6 +48,9 @@ in {
         gcc # The usual toolchain.
         gnumake # Make your life easier with GNU Make.
         moreutils # Less is more but more utilities, the merrier.
+
+        # I SAID ALL OF THE GIT EXTENSIONS!
+        git-crypt
       ];
     })
 
