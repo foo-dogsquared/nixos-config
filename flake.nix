@@ -33,11 +33,16 @@
       ];
 
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
+
       libExtended = nixpkgs.lib.extend (final: prev:
         (import ./lib {
-          inherit inputs;
           lib = final;
-        }));
+        }) // {
+          flakeUtils = (import ./lib/flake-utils.nix {
+            inherit inputs;
+            lib = final;
+          });
+        });
 
       # The default configuration for our NixOS systems.
       hostDefaultConfig = {

@@ -76,6 +76,6 @@ in rec {
     configuration = import file;
     homeDirectory = "/home/${username}";
     extraModules = hmModules ++ extraModules ++ [ (lib.filterAttrs (n: _: !lib.elem n hmConfigFunctionArgs) attrs) ];
-    extraSpecialArgs = { inherit system; };
+    extraSpecialArgs = { inherit lib system; };
   };
 }
