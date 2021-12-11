@@ -6,13 +6,14 @@
 let cfg = config.modules.desktop;
 in {
   options.modules.desktop = {
-    enable = lib.mkEnableOption
-      "Enables all desktop-related services and default programs.";
-    audio.enable = lib.mkEnableOption
-      "Enables all desktop audio-related services such as Pipewire.";
-    fonts.enable = lib.mkEnableOption "Enables font-related config.";
-    hardware.enable = lib.mkEnableOption
-      "Enables the common hardware-related configuration.";
+    enable =
+      lib.mkEnableOption "all desktop-related services and default programs";
+    audio.enable =
+      lib.mkEnableOption "all desktop audio-related services such as Pipewire";
+    fonts.enable = lib.mkEnableOption "font-related configuration";
+    hardware.enable =
+      lib.mkEnableOption "the common hardware-related configuration";
+    cleanup.enable = lib.mkEnableOption "activation of cleanup services";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -99,6 +100,37 @@ in {
 
       # Welp, this is surprising...
       services.printing.enable = true;
+    })
+
+    (lib.mkIf cfg.cleanup.enable {
+      # Weekly garbage collection of Nix store.
+      nix.gc = {
+        automatic = true;
+        persistent = true;
+        dates = "weekly";
+        options = "--delete-older-than 21d";
+      };
+
+      # Clear logs that are more than a month old weekly.
+      systemd = {
+        services.clean-log = {
+          description = "Weekly log cleanup";
+          documentation = [ "man:journalctl(1)" ];
+          serviceConfig = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.systemd}/bin/journalctl --vacuum-time=30d";
+          };
+        };
+
+        timers.clean-log = {
+          description = "Weekly log cleanup";
+          documentation = [ "man:journalctl(1)" ];
+          timerConfig = {
+            OnCalendar = "weekly";
+            Persistent = true;
+          };
+        };
+      };
     })
   ]);
 }

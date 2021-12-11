@@ -1,14 +1,16 @@
 { config, options, lib, pkgs, ... }:
 
-let
-  cfg = config.modules.research;
+let cfg = config.modules.research;
 in {
-  options.modules.tools.enable = lib.mkEnableOptions "Enable my usual toolbelt for research.";
+  options.modules.research.enable =
+    lib.mkEnableOption "my usual toolbelt for research";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      archivebox # The ultimate archiving solution!
+      archivebox # The ultimate archiving solution created by a pirate!
       curl # The general purpose downloader.
+      fanficfare # It's for the badly written fanfics.
+      internetarchive # All of the potential vintage collection of questionable materials at your fingertips.
       newsboat # Reading news easily on the command line?
       qbittorrent # The pirate's toolkit for downloading Linux ISOs.
       zotero # It's actually good at archiving despite not being a researcher myself.

@@ -4,8 +4,8 @@
 let cfg = config.modules.editors;
 in {
   options.modules.editors = {
-    neovim.enable = lib.mkEnableOption "Enable Neovim and its components";
-    vscode.enable = lib.mkEnableOption "Enable Visual Studio Code";
+    neovim.enable = lib.mkEnableOption "Neovim and its components";
+    vscode.enable = lib.mkEnableOption "Visual Studio Code";
   };
 
   config = lib.mkMerge [
@@ -15,6 +15,9 @@ in {
         defaultEditor = true;
         withNodeJs = true;
         withRuby = true;
+
+        # I want the BLEEDING EDGE!
+        package = pkgs.neovim-nightly;
       };
 
       environment.systemPackages = with pkgs; [ editorconfig-core-c ];

@@ -6,11 +6,11 @@ let cfg = config.modules.dev;
 in {
   options.modules.dev = {
     enable = lib.mkEnableOption
-      "Configures my barebones requirement for a development environment.";
-    shell.enable =
-      lib.mkEnableOption "Installs of the shell utilities I rely on.";
-    virtualization.enable = lib.mkEnableOption
-      "Configures my virtualization-related stuff for my development. (I sometimes have to use these.)";
+      "configurations of foo-dogsquared's barebones requirement for a development environment.";
+    shell.enable = lib.mkEnableOption
+      "installation of the shell utilities foo-dogsquared rely on";
+    virtualization.enable =
+      lib.mkEnableOption "virtualization-related stuff for development";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [

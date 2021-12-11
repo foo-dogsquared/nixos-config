@@ -1,5 +1,7 @@
 { config, options, lib, pkgs, ... }:
 
+# TODO: Custom dconf database which is not yet possible.
+# See https://github.com/NixOS/nixpkgs/issues/54150 for more details.
 let
   name = "a-happy-gnome";
   cfg = config.modules.themes.a-happy-gnome;
@@ -10,7 +12,7 @@ let
   };
 in
 {
-  options.modules.themes.a-happy-gnome.enable = lib.mkEnableOption "Enables my configuration of GNOME Shell.";
+  options.modules.themes.a-happy-gnome.enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
 
   config = lib.mkIf cfg.enable {
     services.xserver.enable = true;

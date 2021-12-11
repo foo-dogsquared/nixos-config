@@ -4,7 +4,7 @@
 let cfg = config.modules.archiving;
 in {
   options.modules.archiving.enable =
-    lib.mkEnableOption "Install and configure archiving tools.";
+    lib.mkEnableOption "installation of various archiving tools";
 
   # This is not going to set BorgBackup NixOS services for you.
   # Please do it for host-specific configs instead.

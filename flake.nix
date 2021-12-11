@@ -64,12 +64,6 @@
         i18n.defaultLocale = "en_US.UTF-8";
 
         # Sane config for the package manager.
-        nix.gc = {
-          automatic = true;
-          dates = "monthly";
-          options = "--delete-older-than 2w";
-        };
-
         # TODO: Remove this after nix-command and flakes has been considered stable.
         #
         # Since we're using flakes to make this possible, we need it.

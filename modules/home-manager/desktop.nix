@@ -1,14 +1,13 @@
 # Enables all of my usual setup for desktop-oriented stuff.
 { config, options, lib, pkgs, ... }:
 
-let
-  cfg = config.modules.desktop;
-in
-{
+let cfg = config.modules.desktop;
+in {
   options.modules.desktop = {
-    enable = lib.mkEnableOption "Enable installations of desktop apps.";
-    graphics.enable = lib.mkEnableOption "Install graphics-related apps.";
-    audio.enable = lib.mkEnableOption "Install audio-related apps.";
+    enable = lib.mkEnableOption "installations of desktop apps";
+    graphics.enable =
+      lib.mkEnableOption "installations of graphics-related apps";
+    audio.enable = lib.mkEnableOption "installations of audio-related apps";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -39,7 +38,7 @@ in
       services.easyeffects.enable = true;
       services.fluidsynth = {
         enable = true;
-        soundServices = "pipewire-pulse";
+        soundService = "pipewire-pulse";
       };
     })
   ]);
