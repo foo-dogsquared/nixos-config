@@ -25,7 +25,7 @@ buildGoModule rec {
   '';
 
   meta = with lib; {
-    description = "HTTP DNS client for humans.";
+    description = "HTTP DNS client for humans";
     homepage = "https://github.com/mr-karan/doggo";
     license = licenses.mit;
   };

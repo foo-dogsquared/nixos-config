@@ -3,9 +3,11 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+    # Managing home configurations.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Managing your secrets.
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -82,6 +84,9 @@
 
         # Stallman-senpai will be disappointed. :(
         nixpkgs.config.allowUnfree = true;
+
+        # Let home-manager to manage itself.
+        programs.home-manager.enable = true;
       };
     in {
       # Exposes only my library with the custom functions to make it easier to include in other flakes.

@@ -50,32 +50,36 @@ in rec {
         ++ (lib.modulesToList (lib.filesToAttr ../modules/nixos));
     };
 
-    /* Create a home-manager configuration for use in flakes.
+  /* Create a home-manager configuration for use in flakes.
 
-    This is a wrapper for `home-manager.lib.homeManagerConfiguration`.
+     This is a wrapper for `home-manager.lib.homeManagerConfiguration`.
 
-    Signature:
-      file -> attrset -> homeManagerConfiguration
-    Where:
-      - `file` is the entry point to the home-manager configuration.
-      - `attrset` is the additional attribute set to be insert as one of the imported modules minus the attributes used for `home-manager.lib.homeManagerConfiguration`.
-    Returns:
-      A home-manager configuration to be exported in flakes.
+     Signature:
+       file -> attrset -> homeManagerConfiguration
+     Where:
+       - `file` is the entry point to the home-manager configuration.
+       - `attrset` is the additional attribute set to be insert as one of the imported modules minus the attributes used for `home-manager.lib.homeManagerConfiguration`.
+     Returns:
+       A home-manager configuration to be exported in flakes.
 
-    Example:
-      mkUser ./users/foo-dogsquared {}
-      => { ... } # A home-manager configuration set.
+     Example:
+       mkUser ./users/foo-dogsquared {}
+       => { ... } # A home-manager configuration set.
   */
-  mkUser = file: attrs@{ username ? (builtins.baseNameOf file), system ? sys, extraModules ? [], ... }:
-  let
-    hmConfigFunctionArgs = builtins.attrNames (builtins.functionArgs inputs.home-manager.lib.homeManagerConfiguration);
-    hmModules = lib.map (path: import path) (lib.modulesToList (lib.filesToAttrRec ../modules/home-manager));
-  in
-  inputs.home-manager.lib.homeManagerConfiguration {
-    inherit system username;
-    configuration = import file;
-    homeDirectory = "/home/${username}";
-    extraModules = hmModules ++ extraModules ++ [ (lib.filterAttrs (n: _: !lib.elem n hmConfigFunctionArgs) attrs) ];
-    extraSpecialArgs = { inherit lib system; };
-  };
+  mkUser = file:
+    attrs@{ username ? (builtins.baseNameOf file), system ? sys
+    , extraModules ? [ ], ... }:
+    let
+      hmConfigFunctionArgs = builtins.attrNames (builtins.functionArgs
+        inputs.home-manager.lib.homeManagerConfiguration);
+      hmModules = lib.map (path: import path)
+        (lib.modulesToList (lib.filesToAttrRec ../modules/home-manager));
+    in inputs.home-manager.lib.homeManagerConfiguration {
+      inherit system username;
+      configuration = import file;
+      homeDirectory = "/home/${username}";
+      extraModules = hmModules ++ extraModules
+        ++ [ (lib.filterAttrs (n: _: !lib.elem n hmConfigFunctionArgs) attrs) ];
+      extraSpecialArgs = { inherit lib system; };
+    };
 }

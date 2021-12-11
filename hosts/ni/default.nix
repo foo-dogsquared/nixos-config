@@ -5,7 +5,8 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ # Include the results of the hardware scan.
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
 
@@ -18,6 +19,7 @@
       audio.enable = true;
       fonts.enable = true;
       hardware.enable = true;
+      cleanup.enable = true;
     };
     dev = {
       enable = true;
@@ -27,6 +29,7 @@
     editors.neovim.enable = true;
     themes.a-happy-gnome.enable = true;
     users.users = [ "foo-dogsquared" ];
+    hardware-setup.backup-archive.enable = true;
   };
 
   # Use the systemd-boot EFI boot loader.
@@ -71,61 +74,5 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "21.11"; # Did you read the comment?
-
-  # This is my external hard disk so it has to be non-blocking.
-  fileSystems."/mnt/external-storage" = {
-    device = "/dev/disk/by-uuid/665A391C5A38EB07";
-    fsType = "ntfs";
-    noCheck = true;
-    options = [
-      "nofail"
-      "noauto"
-      "user"
-
-      # See systemd.mount.5 and systemd.automount.5 manual page for more
-      # details.
-      "x-systemd.automount"
-      "x-systemd.device-timeout=2"
-      "x-systemd.idle-timeout=2"
-    ];
-  };
-
-  # Automated backup for my external storage.
-  services.borgbackup.jobs = {
-    personal_archive = {
-      exclude = [
-        "/home/*/.cache"
-
-        # The usual NodeJS shenanigans.
-        "*/node_modules"
-        "*/.next"
-
-        # Rust-related files.
-        "projects/software/*/result"
-        "projects/software/*/build"
-        "projects/software/*/target"
-      ];
-      doInit = false;
-      removableDevice = true;
-      repo = "/mnt/external-storage/backups";
-      paths = [ "~/dotfiles" "~/library" "~/writings" ];
-      encryption = {
-        mode = "repokey";
-        passCommand = "${pkgs.gopass}/bin/gopass show misc/BorgBackup_pass";
-      };
-      compression = "auto,lzma";
-      startAt = "daily";
-      prune = {
-        prefix = "{hostname}-";
-        keep = {
-          within = "1d";
-          daily = 30;
-          weekly = 4;
-          monthly = 6;
-          yearly = 4;
-        };
-      };
-    };
-  };
 }
 

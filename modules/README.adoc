@@ -1,0 +1,22 @@
+= Modules
+:toc:
+
+This directory contains modules for different components such as link:https://nixos.org/manual/nixos/stable/index.html#sec-writing-modules[NixOS modules] and link:https://github.com/nix-community/home-manager/[home-manager modules].
+
+
+
+
+== Importing the modules
+
+Usually, you'll see no `default.nix` in place since it is imported through other means.
+One of the most common way is through `filesToAttr` defined in link:../lib[my custom library].
+
+For example, to easily get a list of imported custom NixOS modules, here's one way with the custom library.
+
+[source, nix]
+----
+lib.map (path: import path) (lib.modulesToList (lib.filesToAttr ./modules/nixos))
+----
+
+Each modules may have to be imported differently.
+Please see the respective documentation (i.e., `man:configuration.nix(5)`, `man:home-configuration.nix` ) for more details.

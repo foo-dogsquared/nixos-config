@@ -22,16 +22,18 @@ stdenv.mkDerivation rec {
   ];
 
   postInstall = ''
-    install -Dm644 $out/share/gnome-shell/extensions/${passthru.extensionUuid}/schemas/* -t "${glib.makeSchemaPath "$out" "${pname}-${version}"}"
+     install -Dm644 $out/share/gnome-shell/extensions/${passthru.extensionUuid}/schemas/* -t "${
+       glib.makeSchemaPath "$out" "${pname}-${version}"
+     }"
 
-   # TODO: Uncomment once custom gsettings works.
-   # Unfortunately custom gsettings seems to be not properly integrated with NixOS yet.
-   #
-   # For more information, please track the following issue:
-   # https://github.com/NixOS/nixpkgs/issues/92265
-   #
-   # It also contains additional links to related issues and whatnot.
-   #install -Dm644 keybindings/*.xml -t $out/share/gnome-control-center/keybindings
+    # TODO: Uncomment once custom gsettings works.
+    # Unfortunately custom gsettings seems to be not properly integrated with NixOS yet.
+    #
+    # For more information, please track the following issue:
+    # https://github.com/NixOS/nixpkgs/issues/92265
+    #
+    # It also contains additional links to related issues and whatnot.
+    #install -Dm644 keybindings/*.xml -t $out/share/gnome-control-center/keybindings
   '';
 
   passthru.extensionUuid = "pop-shell@system76.com";

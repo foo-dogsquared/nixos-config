@@ -3,11 +3,12 @@
 {
   home.packages = with pkgs; [
     brave
-    mpv
+    emacs
+    github-cli
+    ncmpcpp
   ]
   # Doom Emacs dependencies.
   ++ (with pkgs; [
-    git
     ripgrep
     gnutls
     emacs-all-the-icons-fonts
@@ -46,24 +47,11 @@
     enable = true;
     musicDirectory = "$HOME/library/music";
   };
-  services.mpdris2.enable = true;
-
-  programs.ncmpcpp = {
-    enable = true;
-    package = pkgs.ncmpcpp.override { visualizerSupport = true; };
-    # TODO: Add more vim-related keybindings.
-    bindings = [
-      { key = "j"; command = "scroll_down"; }
-      { key = "k"; command = "scroll_up"; }
-      { key = "J"; command = [ "select_item" "scroll_down" ]; }
-      { key = "K"; command = [ "select_item" "scroll_up" ]; }
-    ];
-  };
 
   # My custom modules.
   modules = {
+    bleachbit.enable = true;
     i18n.enable = true;
-    archiving.enable = true;
     dev = {
       enable = true;
       shell.enable = true;
@@ -73,5 +61,6 @@
       graphics.enable = true;
       audio.enable = true;
     };
+    research.enable = true;
   };
 }
