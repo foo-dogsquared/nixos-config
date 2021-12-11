@@ -36,6 +36,7 @@ nixos-config
 ├── lib/
 ├── modules/
 ├── pkgs/
+├── secrets/
 ├── users/
 ├── flake.lock
 ├── flake.nix
@@ -51,6 +52,8 @@ For more information, see the link:./modules/README.adoc[related documentation].
 
 * link:./pkgs/[`./pkgs/`] contains my custom packages.
 It is exported in the flakes at `outputs.packages` compiled through various systems.
+
+* link:./secrets/[`./secrets/`] contains my secrets managed with link:https://github.com/ryantm/agenix[agenix].
 
 * link:./users/[`./users/`] contains my link:https://github.com/nix-community/home-manager[home-manager] configurations and modules.
 It is exported in the flakes at `outputs.homeConfigurations`.
