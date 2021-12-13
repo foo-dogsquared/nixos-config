@@ -17,6 +17,7 @@ in {
         gopass # An improved version of the password manager for hipsters.
         perl534Packages.vidir # Bulk rename for your organizing needs.
         zellij # A modern tmux?
+        tealdeer # An easy cop-out for basic help.
         lf # File manager in the terminal, really.
 
         # Coreutils replacement.

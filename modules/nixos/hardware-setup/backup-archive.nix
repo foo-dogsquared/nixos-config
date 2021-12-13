@@ -33,7 +33,7 @@ in {
     };
 
     services.borgbackup.jobs.external-storage = {
-      dateFormat = "%F-%H-%M-%S-%z";
+      dateFormat = "+%F-%H-%M-%S-%z";
       doInit = false;
       removableDevice = true;
       paths = [

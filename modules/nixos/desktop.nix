@@ -125,6 +125,7 @@ in {
         timers.clean-log = {
           description = "Weekly log cleanup";
           documentation = [ "man:journalctl(1)" ];
+          wantedBy = [ "multi-user.target" ];
           timerConfig = {
             OnCalendar = "weekly";
             Persistent = true;

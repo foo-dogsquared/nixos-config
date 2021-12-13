@@ -63,10 +63,19 @@ in
       # It is required for custom menus in extensions.
       gnome-menus
 
+      # Good ol' unofficial preferences tool.
+      gnome.gnome-tweaks
+
       # My preferred extensions.
       gnomeExtensions.arcmenu
       gnomeExtensions.gsconnect
       gnomeExtensions.x11-gestures
+      gnomeExtensions.kimpanel
+      gnomeExtensions.runcat
+      gnomeExtensions.just-perfection
+
+      # TODO: Use from nixpkgs once fly-pie is fixed.
+      gnome-shell-extension-fly-pie
 
       # Setting up Pop shell.
       gnome-shell-extension-pop-shell

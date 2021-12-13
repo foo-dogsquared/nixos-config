@@ -13,6 +13,7 @@ in {
       internetarchive # All of the potential vintage collection of questionable materials at your fingertips.
       newsboat # Reading news easily on the command line?
       qbittorrent # The pirate's toolkit for downloading Linux ISOs.
+      yt-dlp # The general purpose video downloader.
       zotero # It's actually good at archiving despite not being a researcher myself.
     ];
   };

@@ -8,6 +8,7 @@ in {
     graphics.enable =
       lib.mkEnableOption "installations of graphics-related apps";
     audio.enable = lib.mkEnableOption "installations of audio-related apps";
+    multimedia.enable = lib.mkEnableOption "installations for opening multimedia files";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -40,6 +41,16 @@ in {
         enable = true;
         soundService = "pipewire-pulse";
       };
+    })
+
+    (lib.mkIf cfg.multimedia.enable {
+      home.packages = with pkgs; [
+        mpv # The modern VLC.
+        brave # The only web browser that gives me money.
+        foliate # The prettier PDF viewer.
+        sioyek # The researcher's PDF viewer.
+        thunderbird # Email checks.
+      ];
     })
   ]);
 }
