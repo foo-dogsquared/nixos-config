@@ -37,6 +37,7 @@ nixos-config
 ├── modules/
 ├── pkgs/
 ├── secrets/
+├── shells/
 ├── users/
 ├── flake.lock
 ├── flake.nix
@@ -55,6 +56,10 @@ It is exported in the flakes at `outputs.packages` compiled through various syst
 
 * link:./secrets/[`./secrets/`] contains my secrets managed with link:https://github.com/ryantm/agenix[agenix].
 
+* link:./shells/[`./shells/`] contains my development shells for interacting with the usual type of projects.
+Setting this up can bring benefits outside of NixOS (unless you're interacting with projects with any OpenGL-related stuff).
+footnote:[Since packages brought from Nix shells can only work with the store, a container might be better at some situations.]
+
 * link:./users/[`./users/`] contains my link:https://github.com/nix-community/home-manager[home-manager] configurations and modules.
 It is exported in the flakes at `outputs.homeConfigurations`.
 For more information, see the link:./users/README.adoc[related documentation].
@@ -68,7 +73,7 @@ In order of priority:
 
 * [x] Create custom modules.
 * [x] Create a themes system similar to link:https://github.com/hlissner/dotfiles[this NixOS config].
-* [ ] Create development shells.
+* [x] Create development shells.
 * [x] Manage secrets with agenix.
 * [x] Automate backups with NixOS config.
 * [x] Create custom packages and export it to flakes. (Maybe consider making it to upstream)

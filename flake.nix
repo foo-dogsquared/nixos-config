@@ -121,5 +121,11 @@
       # I just want to try out supporting other systems.
       packages = forAllSystems
         (system: import ./pkgs { pkgs = import nixpkgs { inherit system; }; });
+
+      # My several development shells for usual type of projects. This is much
+      # more preferable than installing all of the packages at the system
+      # configuration (or even home environment).
+      devShells = forAllSystems
+        (system: import ./shells { pkgs = import nixpkgs { inherit system; }; });
     };
 }
