@@ -55,6 +55,7 @@ For more information, see the link:./modules/README.adoc[related documentation].
 It is exported in the flakes at `outputs.packages` compiled through various systems.
 
 * link:./secrets/[`./secrets/`] contains my secrets managed with link:https://github.com/ryantm/agenix[agenix].
+footnote:[It is advised you should minimize SSH keys with passphrases since it is annoying to reenter passwords every time.]
 
 * link:./shells/[`./shells/`] contains my development shells for interacting with the usual type of projects.
 Setting this up can bring benefits outside of NixOS (unless you're interacting with projects with any OpenGL-related stuff).
@@ -114,5 +115,12 @@ You only need Nix 2.4 installed with the experimental features for Nix command a
 I ~stole~ got the ideas from the following projects:
 
 * link:https://github.com/divnix/devos[devos, an overengineered configuration framework.]
+I'm slowly grokking Nix and its ecosystem so I didn't use this outright.
+Though, this is where my config is heading to be and instead slowly making parts of my config based from this template.
+
 * link:https://github.com/divnix/digga/[digga, an flake utility library for your overengineered config.]
-* link:https://github.com/hlissner/dotfiles/[hlissner's dotfiles, the original inspiration for the structure and whatnot.]
+I also stole parts of it for my custom library.
+I may have to use this at some point.
+
+* link:https://github.com/hlissner/dotfiles/[hlissner's dotfiles, the original inspiration for this functional abomination of a configuration.]
+Very nice.
