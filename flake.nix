@@ -3,6 +3,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+    # We're using this library for other functions, mainly testing.
+    flake-utils.url = "github:numtide/flake-utils";
+
     # Managing home configurations.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -10,6 +13,9 @@
     # Managing your secrets.
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Easy access to development environments.
+    devshell.url = "github:numtide/devshell";
 
     # Overlays.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
@@ -25,21 +31,12 @@
         inputs.neovim-nightly-overlay.overlay
       ];
 
-      # All the target systems for my packages.
-      systems = [
-        "x86_64-linux"
-        "i686-linux"
-        "aarch64-linux"
-        "armv6l-linux"
-        "armv7l-linux"
-      ];
-
-      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
+      forAllSystems = f:
+        nixpkgs.lib.genAttrs inputs.flake-utils.lib.defaultSystems
+        (system: f system);
 
       libExtended = nixpkgs.lib.extend (final: prev:
-        (import ./lib {
-          lib = final;
-        }) // {
+        (import ./lib { lib = final; }) // {
           flakeUtils = (import ./lib/flake-utils.nix {
             inherit inputs;
             lib = final;
@@ -48,18 +45,25 @@
 
       # The default configuration for our NixOS systems.
       hostDefaultConfig = {
-        # Registering several registries.
-        # I'm narcissistic so I want my config to be one of the flakes in the registry.
-        nix.registry.config.flake = self;
+        # I want to capture the usual flakes to its exact version so we're
+        # making them available to our system. This will also prevent the
+        # annoying downloads since it always get the latest revision.
+        nix.registry = {
+          # I'm narcissistic so I want my config to be one of the flakes in the registry.
+          config.flake = self;
 
-        # This will also prevent the annoying downloads since it always get the latest revision.
-        nix.registry.nixpkgs.flake = nixpkgs;
+          nixpkgs.flake = nixpkgs;
+          home-manager.flake = home-manager;
+        };
 
         # Stallman-senpai will be disappointed.
         nixpkgs.config.allowUnfree = true;
 
         # Extend nixpkgs with our own package set.
         nixpkgs.overlays = overlays;
+
+        # Please clean your temporary crap.
+        boot.cleanTmpDir = true;
 
         # We live in a Unicode world and dominantly English in technical fields so we'll
         # have to go with it.
@@ -68,8 +72,8 @@
         # Sane config for the package manager.
         # TODO: Remove this after nix-command and flakes has been considered stable.
         #
-        # Since we're using flakes to make this possible, we need it.
-        # Plus, the UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
+        # Since we're using flakes to make this possible, we need it. Plus, the
+        # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
         nix.extraOptions = ''
           experimental-features = nix-command flakes
         '';
@@ -79,7 +83,8 @@
       userDefaultConfig = {
         system = "x86_64-linux";
 
-        # To be able to use the most of our config as possible, we want both to use the same overlays.
+        # To be able to use the most of our config as possible, we want both to
+        # use the same overlays.
         nixpkgs.overlays = overlays;
 
         # Stallman-senpai will be disappointed. :(
@@ -89,14 +94,15 @@
         programs.home-manager.enable = true;
       };
     in {
-      # Exposes only my library with the custom functions to make it easier to include in other flakes.
+      # Exposes only my library with the custom functions to make it easier to
+      # include in other flakes.
       lib = import ./lib {
         inherit inputs;
         lib = nixpkgs.lib;
       };
 
-      # A list of NixOS configurations from the `./hosts` folder.
-      # It also has some sensible default configurations.
+      # A list of NixOS configurations from the `./hosts` folder. It also has
+      # some sensible default configurations.
       nixosConfigurations = libExtended.mapAttrsRecursive
         (host: path: libExtended.flakeUtils.mkHost path hostDefaultConfig)
         (libExtended.filesToAttr ./hosts);
@@ -116,16 +122,15 @@
       homeManagerModules = libExtended.mapAttrsRecursive (_: path: import path)
         (libExtended.filesToAttr ./modules/home-manager);
 
-      # My custom packages, available in here as well.
-      # Though, I mainly support "x86_64-linux".
-      # I just want to try out supporting other systems.
+      # My custom packages, available in here as well. Though, I mainly support
+      # "x86_64-linux". I just want to try out supporting other systems.
       packages = forAllSystems
         (system: import ./pkgs { pkgs = import nixpkgs { inherit system; }; });
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
       # configuration (or even home environment).
-      devShells = forAllSystems
-        (system: import ./shells { pkgs = import nixpkgs { inherit system; }; });
+      devShells = forAllSystems (system:
+        import ./shells { pkgs = import nixpkgs { inherit system; }; });
     };
 }
