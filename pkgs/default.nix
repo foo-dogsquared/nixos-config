@@ -8,6 +8,7 @@
   pop-launcher = pkgs.callPackage ./pop-launcher.nix { };
   gnome-shell-extension-fly-pie =
     callPackage ./gnome-shell-extension-fly-pie.nix { };
+  neo = callPackage ./neo.nix { };
   pop-launcher-plugin-duckduckgo-bangs =
     pkgs.callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
   tic-80 = pkgs.callPackage ./tic-80.nix { };
