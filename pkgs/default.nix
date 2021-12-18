@@ -11,4 +11,5 @@
   pop-launcher-plugin-duckduckgo-bangs =
     pkgs.callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
   tic-80 = pkgs.callPackage ./tic-80.nix { };
+  sioyek = libsForQt5.callPackage ./sioyek.nix { };
 }
