@@ -58,6 +58,9 @@
   # started in user sessions.
   programs.mtr.enable = true;
 
+  services.auto-cpufreq.enable = true;
+  services.thermald.enable = true;
+
   # The usual doas config.
   security.doas = {
     enable = true;

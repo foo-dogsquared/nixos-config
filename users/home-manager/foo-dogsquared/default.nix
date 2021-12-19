@@ -60,6 +60,7 @@
       enable = true;
       graphics.enable = true;
       audio.enable = true;
+      multimedia.enable = true;
     };
     research.enable = true;
   };

@@ -52,8 +52,10 @@
           # I'm narcissistic so I want my config to be one of the flakes in the registry.
           config.flake = self;
 
+          # All of the important flakes will be included.
           nixpkgs.flake = nixpkgs;
           home-manager.flake = home-manager;
+          agenix.flake = inputs.agenix;
         };
 
         # Stallman-senpai will be disappointed.
