@@ -110,6 +110,9 @@ rec {
       invalidUsernames = [ "config" "modules" ];
     in lib.filterAttrs (n: _: !lib.elem n invalidUsernames) userModules;
 
+  # Return the path of `secrets` from `../secrets`.
+  getSecret = path: ../secrets/${path};
+
   /* Create an attribute set from two lists (or a zip).
 
      Examples:

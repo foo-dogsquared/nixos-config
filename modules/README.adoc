@@ -1,22 +1,71 @@
 = Modules
 :toc:
 
-This directory contains modules for different components such as link:https://nixos.org/manual/nixos/stable/index.html#sec-writing-modules[NixOS modules] and link:https://github.com/nix-community/home-manager/[home-manager modules].
+These are various modules ranging from link:https://nixos.org/manual/nixos/stable/index.html#sec-writing-modules[NixOS modules] and link:https://github.com/nix-community/home-manager[home-manager] modules.
 
+The modules are imported usually through `lib.filesToAttr`, allowing for easier structuring without modifying the index file of each module (i.e., `default.nix`).
+(See the implementation for more details.)
 
+For example, take the following module folder structure...
 
+[source, tree]
+----
+modules/
+├── themes/
+│   ├── a-happy-gnome/
+│   │   ├── default.nix
+│   │   └── README.adoc
+│   ├── a-sad-gnome/
+│   │   ├── default.nix
+│   │   └── README.adoc
+│   └── default.nix
+├── specific/
+│   ├── borg.nix
+│   └── prometheus.nix
+├── agenix.nix
+├── archiving.nix
+├── desktop.nix
+├── dev.nix
+├── editors.nix
+└── users.nix
+----
 
-== Importing the modules
-
-Usually, you'll see no `default.nix` in place since it is imported through other means.
-One of the most common way is through `filesToAttr` defined in link:../lib[my custom library].
-
-For example, to easily get a list of imported custom NixOS modules, here's one way with the custom library.
+...should have the following attribute set.
 
 [source, nix]
 ----
-lib.map (path: import path) (lib.modulesToList (lib.filesToAttr ./modules/nixos))
+{
+  agenix = path/to/agenix.nix;
+  archiving = path/to/archiving.nix;
+  desktop = path/to/desktop.nix;
+  dev = path/to/dev.nix;
+  editors = path/to/editors.nix;
+  specific = {
+    borg = path/to/specific/borg.nix;
+    prometheus = path/to/specific/prometheus.nix;
+  };
+  themes = path/to/themes; # Since it has a 'default.nix' detected, we're using it instead.
+  users = path/to/users.nix;
+}
 ----
 
-Each modules may have to be imported differently.
-Please see the respective documentation (i.e., `man:configuration.nix(5)`, `man:home-configuration.nix` ) for more details.
+The resulting attribute set can be easily be used for importing.
+Here's an example of a NixOS system created with the modules which can used for shared configuration between hosts.
+
+[source, nix]
+----
+lib.nixosSystem {
+  system = "x86_64-linux";
+  modules = lib.mapAttrsToList (name: path: import path) (lib.filesToAttr ./modules);
+}
+----
+
+
+
+
+== Flake outputs
+
+Various modules are then exported to the project flake as the following output:
+
+* `nixosModules` exports modules from link:./nixos/[`./nixos/`].
+* `homeManagerModules` exports modules from link:./home-manager/[`./home-manager/`].

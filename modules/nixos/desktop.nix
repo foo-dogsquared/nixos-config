@@ -95,9 +95,6 @@ in {
       # Enable tablet support with OpenTabletDriver.
       hardware.opentabletdriver.enable = true;
 
-      # More power optimizations!
-      powerManagement.powertop.enable = true;
-
       # Welp, this is surprising...
       services.printing.enable = true;
     })

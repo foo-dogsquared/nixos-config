@@ -80,7 +80,10 @@ in {
           Unit = {
             Description = "Periodic clean with Bleachbit";
             Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
+            PartOf = [ "default.target" ];
           };
+
+          Install.WantedBy = [ "default.target" ];
 
           Timer = {
             OnCalendar = cfg.dates;
