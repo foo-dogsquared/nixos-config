@@ -1,60 +1,89 @@
-# This enables home-manager specific configs and an easier modularization for user-specific configurations.
+# This enables home-manager specific configs and an easier modularization for
+# user-specific configurations. This is specifically for creating a convenient
+# way to create users from `users/home-manager`.
+#
+# If you're looking to create users from `users/nixos`, you can just import
+# them directly.
 { inputs, config, options, lib, ... }:
 
 let
   cfg = config.modules.users;
-  userModules = lib.getUsers "home-manager" cfg.users;
+  users = lib.attrNames cfg.users;
+  homeManagerUserModules = lib.getUsers "home-manager" users;
   homeManagerModules = lib.filesToAttr ../home-manager;
 
-  users = lib.attrNames userModules;
-  nonexistentUsers = lib.filter (name: !lib.elem name users) cfg.users;
+  homeManagerUsers = lib.attrNames homeManagerUserModules;
+  nonexistentUsers = lib.filter (name: !lib.elem name homeManagerUsers) users;
 
-  mkUser = user: modulePath:
-    let
-      defaultConfig = {
-        home.username = user;
-        home.homeDirectory = "/home/${user}";
-
-        xdg.enable = true;
+  userOption = { name, config, ... }: {
+    options = {
+      settings = lib.mkOption {
+        type = lib.types.attrs;
+        description =
+          "Configuration to be merged in <literal>users.users.<name></literal> from NixOS configuration.";
+        default = { };
+        example = {
+          uid = 1234;
+          description = "John Doe";
+          extraGroups = [ "wheel" "adbusers" "audio" ];
+        };
       };
-    in {
-      users.users.${user} = {
-        isNormalUser = true;
-        extraGroups = [ "wheel" ];
-      };
-      home-manager.users.${user} = import modulePath;
-    };
-in {
-  options.modules.users = {
-    users = lib.mkOption {
-      default = [ ];
-      type = with lib.types; listOf str;
-      description =
-        "A list of users from the `./users` directory to be included in the NixOS config.";
     };
   };
 
-  # FIXME: Recursion error when using `lib.getUsers cfg.users`.
-  # Time to study how Nix modules really work.
-  # The assertion is basically enough for this case.
-  imports = [
-    # home-manager to enable user-specific config.
-    inputs.home-manager.nixosModules.home-manager
+  mapUsers = f: lib.mapAttrs f cfg.users;
+in {
+  options.modules.users = {
+    users = lib.mkOption {
+      default = { };
+      description =
+        "A set of users from the `./users/home-manager` directory to be included in the NixOS config.
+        This will also create the appropriate user settings in <literal>users.users</literal> in the NixOS configuration.";
+      example = {
+        foo-dogsquared.settings = {
+          extraGroups = [ "wheel" "audio" "libvirtd" ];
+        };
+        alice = { };
+        bob = { };
+      };
+      type = with lib.types; attrsOf (submodule userOption);
+    };
+  };
 
-    # The global configuration for the home-manager module.
-    {
-      home-manager.useUserPackages = true;
-      home-manager.useGlobalPkgs = true;
-      home-manager.sharedModules = lib.modulesToList homeManagerModules;
-    }
-  ] ++ (lib.mapAttrsToList mkUser userModules);
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
 
   config = {
     assertions = [{
       assertion = (builtins.length nonexistentUsers) < 1;
       message = "${
           lib.concatMapStringsSep ", " (u: "'${u}'") nonexistentUsers
-        } is not found in the `./users` directory.";
+        } is not found in the `./users/home-manager` directory.";
     }];
+
+    # The global configuration for the home-manager module.
+    home-manager.useUserPackages = true;
+    home-manager.useGlobalPkgs = true;
+    home-manager.sharedModules = lib.modulesToList homeManagerModules;
+
+    # Mapping each users to the respective user configuration.
+    # Setting users for home-manager.
+    home-manager.users = mapUsers (user: _:
+      let
+        homeManagerUserModulePath = lib.getAttr user homeManagerUserModules;
+        homeManagerUserConfig = import homeManagerUserModulePath;
+      in homeManagerUserConfig);
+
+    # NixOS users.
+    users.users = mapUsers (user: opts:
+      let
+        defaultUserConfig = {
+          extraGroups = [ "wheel" ];
+          createHome = true;
+          home = "/home/${user}";
+        };
+        # TODO: Effectively override the option.
+        # We assume all users set with this module are normal users.
+        absoluteOverrides = { isNormalUser = true; };
+      in defaultUserConfig // opts.settings // absoluteOverrides);
   };
 }

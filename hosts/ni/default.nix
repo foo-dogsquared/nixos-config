@@ -28,7 +28,7 @@
     };
     editors.neovim.enable = true;
     themes.a-happy-gnome.enable = true;
-    users.users = [ "foo-dogsquared" ];
+    users.users.foo-dogsquared = {};
     hardware-setup.backup-archive.enable = true;
   };
 
