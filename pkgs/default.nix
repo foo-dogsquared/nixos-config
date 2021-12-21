@@ -6,6 +6,8 @@ with pkgs; {
     callPackage ./gnome-shell-extension-pop-shell.nix { };
   gnome-shell-extension-burn-my-windows =
     callPackage ./gnome-shell-extension-burn-my-windows.nix { };
+  gnome-shell-extension-desktop-cube =
+    callPackage ./gnome-shell-extension-desktop-cube.nix { };
   gnome-shell-extension-fly-pie =
     callPackage ./gnome-shell-extension-fly-pie.nix { };
   libcs50 = callPackage ./libcs50.nix { };
