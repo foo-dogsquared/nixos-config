@@ -1,12 +1,41 @@
 = Host-specific configuration
 :toc:
 
-These are configurations that are specific to a machine (e.g., desktop, servers, VM, containers).
+These are NixOS configurations that are specific to a machine (e.g., desktop, servers, VM, containers).
 Ideally, it should be made minimal as much as possible considering you also have to manage your users.
+
+
+
+
+== Integrating with custom modules
+
+The host configurations placed here most likely use the link:../modules/nixos[custom NixOS modules].
+The custom modules shouldn't be imported manually from the host.
+In the case for our link:../flake.nix[flake configuration], the importing of modules are already taken care of — specifically through `mkHost` from link:../lib/flake-utils[`../lib/flake-utils`] (see the linked file for the implementation).
+
+It is best practice to assume the host configurations make use of the link:../modules/nixos[custom NixOS modules], link:../pkgs[custom packages], and the flake inputs.
+In other words, always pay attention to link:../flake.nix[`../flake.nix`].
+
+
+
+
+== User management
 
 For managing users, there are multiple ways to manage them with this config:
 
 * The usual `users.users.${user}` from system configuration (see `man configuration.nix.5`).
 
-* Modularize them (see link:../users/README.adoc[User-specific configuration] for more information).
-If you have user-specific configs in set, you have to manage them with link:../modules/users.nix[`modules.users.users`] which is my implementation of managing users (e.g., `modules.users.users = [ "foo-dogsquared" ]`).
+* If you intend to import users from the link:../users/nixos/[`../users/nixos/`], you can simply import them through `imports` in the system module.
++
+For a convenient option, there is the function `getUsers` defined from the link:../lib[custom library].
+You can use it as follows:
++
+[source, nix]
+----
+imports = [ # Your modules ]
+    # Import the following NixOS users.
+    ++ (lib.attrValues (lib.getUsers "nixos" [ "foo-dogsquared" "polski" ]));
+----
+
+* link:../modules/users.nix[`modules.users.users.${user}`] which is my implementation for managing users from link:../users/home-manager/[`../users/home-manager/`] — e.g., `modules.users.users.foo-dogsquared = {}`.
+This is integrating my home-manager users to map into NixOS users.

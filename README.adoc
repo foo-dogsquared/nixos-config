@@ -3,13 +3,15 @@
 
 This is my NixOS config as a link:https://www.tweag.io/blog/2020-05-25-flakes/[Nix flake].
 
-I finally have some time trying to grok flakes and redo my NixOS config from scratch after leaving NixOs (because I have work and have to quickly set things up without me trying to debug how NixOS works).
+I finally have some time trying to grok flakes and redo my NixOS config from scratch after leaving it for some time (because I have work and have to quickly set things up without me trying to debug how NixOS works).
 Here is the result.
 
 
 
 
 == Installation
+
+Since this uses Nix flakes, you should have Nix v2.4 and above installed.
 
 This primarily uses Nix flakes so you can have a preview of what's available in my config.
 

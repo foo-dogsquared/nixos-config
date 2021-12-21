@@ -6,11 +6,11 @@ These are various modules ranging from link:https://nixos.org/manual/nixos/stabl
 The modules are imported usually through `lib.filesToAttr`, allowing for easier structuring without modifying the index file of each module (i.e., `default.nix`).
 (See the implementation for more details.)
 
-For example, take the following module folder structure...
+For example, take the following module folder structure of the link:./nixos/[custom NixOS modules]...
 
 [source, tree]
 ----
-modules/
+nixos/
 ├── themes/
 │   ├── a-happy-gnome/
 │   │   ├── default.nix
@@ -30,7 +30,7 @@ modules/
 └── users.nix
 ----
 
-...should have the following attribute set.
+...where it should have the equivalent attribute set.
 
 [source, nix]
 ----
