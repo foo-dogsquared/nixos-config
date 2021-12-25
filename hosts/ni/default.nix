@@ -27,8 +27,11 @@
       virtualization.enable = true;
     };
     editors.neovim.enable = true;
-    themes.a-happy-gnome.enable = true;
     users.users.foo-dogsquared = {};
+    themes = {
+      disableLimit = true;
+      themes.a-happy-gnome.enable = true;
+    };
     hardware-setup.backup-archive.enable = true;
   };
 

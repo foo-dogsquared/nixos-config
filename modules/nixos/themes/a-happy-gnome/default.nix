@@ -4,7 +4,7 @@
 # See https://github.com/NixOS/nixpkgs/issues/54150 for more details.
 let
   name = "a-happy-gnome";
-  cfg = config.modules.themes.a-happy-gnome;
+  cfg = config.modules.themes.themes.a-happy-gnome;
   dconf = pkgs.gnome3.dconf;
   customDconfDb = pkgs.stdenv.mkDerivation {
     name = "${name}-dconf-db";
@@ -12,7 +12,7 @@ let
   };
 in
 {
-  options.modules.themes.a-happy-gnome.enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
+  options.modules.themes.themes.a-happy-gnome.enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
 
   config = lib.mkIf cfg.enable {
     services.xserver.enable = true;
@@ -40,21 +40,6 @@ in
       gnome-user-docs
       gnome-tour
     ]);
-
-    programs.dconf = {
-      enable = true;
-
-      # This is an internal function which is subject to change.
-      # However, this seems to be in for some time but still, be wary.
-      # The function is found on `nixos/programs/dconf.nix` from nixpkgs.
-      profiles.customGnomeConfig = pkgs.writeTextFile {
-        name = "${name}-dconf-profile";
-        text = ''
-          user-db:user
-          file-db:${customDconfDb}
-        '';
-      };
-    };
 
     # I'm pretty sure this is already done but just to make sure.
     services.gnome.chrome-gnome-shell.enable = true;
