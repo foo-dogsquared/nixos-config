@@ -11,7 +11,6 @@ in {
   config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
       home.packages = with pkgs; [
-        neovim # My text editor of choice.
         lazygit # Git interface for the lazy.
         fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
         gopass # An improved version of the password manager for hipsters.

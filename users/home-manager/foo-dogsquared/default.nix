@@ -6,30 +6,7 @@
     emacs
     github-cli
     ncmpcpp
-  ]
-  # Doom Emacs dependencies.
-  ++ (with pkgs; [
-    ripgrep
-    gnutls
-    emacs-all-the-icons-fonts
-
-    # Optional dependencies.
-    fd
-    imagemagick
-    zstd
-
-    # Module dependencies
-    # :checkers spell
-    aspell
-    aspellDicts.en
-    aspellDicts.en-computers
-
-    # :tools lookup
-    wordnet
-
-    # :lang org +roam2
-    sqlite
-  ]);
+  ];
 
   fonts.fontconfig.enable = true;
 
@@ -56,6 +33,7 @@
       enable = true;
       shell.enable = true;
     };
+    editors.emacs.enable = true;
     desktop = {
       enable = true;
       graphics.enable = true;
