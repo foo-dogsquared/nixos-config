@@ -14,6 +14,14 @@ in {
     hardware.enable =
       lib.mkEnableOption "the common hardware-related configuration";
     cleanup.enable = lib.mkEnableOption "activation of cleanup services";
+    wine = {
+      enable = lib.mkEnableOption "Wine and Wine-related tools";
+      package = lib.mkOption {
+        type = lib.types.package;
+        description = "The Wine package to be used for related tools.";
+        default = pkgs.wineWowPackages.stable;
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -129,6 +137,16 @@ in {
           };
         };
       };
+    })
+
+    # I try to avoid using Wine on NixOS because most of them uses FHS or something and I just want it to work but here goes.
+    (lib.mkIf cfg.wine.enable {
+      environment.systemPackages = with pkgs;
+        [
+          cfg.wine.package # The star of the show.
+          winetricks # We do a little trickery with missing Windows runtimes.
+          bottles # PlayOnLinux but better. :)
+        ];
     })
   ]);
 }
