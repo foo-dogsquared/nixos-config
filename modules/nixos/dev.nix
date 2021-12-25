@@ -1,5 +1,4 @@
 # The module for anything dev-related.
-# If you want to see editor-specific modules, see `modules/editors.nix`.
 { config, options, lib, pkgs, ... }:
 
 let cfg = config.modules.dev;
@@ -11,6 +10,7 @@ in {
       "installation of the shell utilities foo-dogsquared rely on";
     virtualization.enable =
       lib.mkEnableOption "virtualization-related stuff for development";
+    neovim.enable = lib.mkEnableOption "Neovim";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -81,6 +81,20 @@ in {
         enable = true;
         qemu.ovmf.enable = true;
       };
+    })
+
+    (lib.mkIf cfg.neovim.enable {
+      programs.neovim = {
+        enable = true;
+        defaultEditor = true;
+        withNodeJs = true;
+        withRuby = true;
+
+        # I want the BLEEDING EDGE!
+        package = pkgs.neovim-nightly;
+      };
+
+      environment.systemPackages = with pkgs; [ editorconfig-core-c ];
     })
   ]);
 }

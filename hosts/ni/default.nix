@@ -25,8 +25,8 @@
       enable = true;
       shell.enable = true;
       virtualization.enable = true;
+      neovim.enable = true;
     };
-    editors.neovim.enable = true;
     users.users.foo-dogsquared = {};
     themes = {
       disableLimit = true;
