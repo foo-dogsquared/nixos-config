@@ -1,0 +1,16 @@
+= Themes
+:toc:
+
+These are where my themes are defined and configured.
+Basically, themes are mainly graphical sessions concerned with aesthetics.
+It could also include specific workflows and configurations.
+
+This is where modules will define how you're going to interact with the computer.
+
+The following list is the summary which can also serve as a guideline to developing a theme.
+
+* Due to the bigger scope and importance of this module, there is a limit where you can only enable one theme at a time.
+You can disable this with `config.modules.themes.disableLimit` set to `true`.
+
+* Custom themes should be defined in `config.modules.themes.themes` attribute (e.g., `options.modules.themes.themes.a-happy-gnome`, `options.modules.themes.themes.simple-way`).
+This makes up for a namespace entirely dedicated for setting themes.
