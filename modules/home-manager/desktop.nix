@@ -8,7 +8,8 @@ in {
     graphics.enable =
       lib.mkEnableOption "installations of graphics-related apps";
     audio.enable = lib.mkEnableOption "installations of audio-related apps";
-    multimedia.enable = lib.mkEnableOption "installations for opening multimedia files";
+    multimedia.enable =
+      lib.mkEnableOption "installations for opening multimedia files";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [

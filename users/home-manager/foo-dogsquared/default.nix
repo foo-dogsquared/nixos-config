@@ -2,9 +2,9 @@
 
 {
   home.packages = with pkgs; [
-    brave
-    emacs
-    github-cli
+    neovim
+    borgmatic
+    borgbackup
     ncmpcpp
   ];
 

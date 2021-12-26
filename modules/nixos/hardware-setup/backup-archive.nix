@@ -3,10 +3,10 @@
 
 # TODO: Make this a generic service.
 #       There are multiple external storage drives now.
-let
-  cfg = config.modules.hardware-setup.backup-archive;
+let cfg = config.modules.hardware-setup.backup-archive;
 in {
-  options.modules.hardware-setup.backup-archive.enable = lib.mkEnableOption "external hard drive and automated backup service with BorgBackup";
+  options.modules.hardware-setup.backup-archive.enable = lib.mkEnableOption
+    "external hard drive and automated backup service with BorgBackup";
 
   config = lib.mkIf cfg.enable {
     assertions = [{
@@ -14,7 +14,8 @@ in {
       message = "Agenix module is not enabled.";
     }];
 
-    age.secrets.external-backup-borgmatic-settings.file = lib.getSecret "archive/password";
+    age.secrets.external-backup-borgmatic-settings.file =
+      lib.getSecret "archive/borgmatic.json";
     fileSystems."/mnt/external-storage" = {
       device = "/dev/disk/by-uuid/665A391C5A38EB07";
       fsType = "ntfs";
@@ -37,10 +38,9 @@ in {
         Description = "Backup with Borgmatic";
         Wants = [ "network-online.target" ];
         After = [ "network-online.target" ];
-        ConditionACPower = true;
       };
 
-      startAt = "04/3:00:00";
+      startAt = "04/2:00:00";
       serviceConfig = {
         # Delay start to prevent backups running during boot. Note that systemd-inhibit requires dbus and
         # dbus-user-session to be installed.
@@ -54,7 +54,7 @@ in {
         ProtectSystem = "full";
         MemoryDenyWriteExecute = "no";
         NoNewPrivileges = "yes";
-        PrivateDevices= "yes";
+        PrivateDevices = "yes";
         PrivateTmp = "yes";
         ProtectClock = "yes";
         ProtectControlGroups = "yes";

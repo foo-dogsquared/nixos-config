@@ -26,5 +26,12 @@ in {
         fcitx5-mozc # Japanese input addon.
       ];
     };
+
+    # The i18n module has already set session variables but just to be sure...
+    systemd.user.sessionVariables = {
+      GTK_IM_MODULE = "fcitx";
+      QT_IM_MODULE = "fcitx";
+      XMODIFIERS = "@im=fcitx";
+    };
   };
 }

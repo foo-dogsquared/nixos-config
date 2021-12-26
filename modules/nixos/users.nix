@@ -36,9 +36,9 @@ in {
   options.modules.users = {
     users = lib.mkOption {
       default = { };
-      description =
-        "A set of users from the `./users/home-manager` directory to be included in the NixOS config.
-        This will also create the appropriate user settings in <literal>users.users</literal> in the NixOS configuration.";
+      description = ''
+        A set of users from the `./users/home-manager` directory to be included in the NixOS config.
+                This will also create the appropriate user settings in <literal>users.users</literal> in the NixOS configuration.'';
       example = {
         foo-dogsquared.settings = {
           extraGroups = [ "wheel" "audio" "libvirtd" ];
@@ -68,10 +68,8 @@ in {
     # Mapping each users to the respective user configuration.
     # Setting users for home-manager.
     home-manager.users = mapUsers (user: _:
-      let
-        homeManagerUserModulePath = lib.getAttr user homeManagerUserModules;
-        homeManagerUserConfig = import homeManagerUserModulePath;
-      in homeManagerUserConfig);
+      let homeManagerUserModulePath = lib.getAttr user homeManagerUserModules;
+      in import homeManagerUserModulePath);
 
     # NixOS users.
     users.users = mapUsers (user: opts:

@@ -1,9 +1,12 @@
+# Arsenal for development (which is rare nowadays). ;p
+# If you're looking for text editors, go to `./editors.nix`.
 { config, options, lib, pkgs, ... }:
 
 let cfg = config.modules.dev;
 in {
   options.modules.dev = {
-    enable = lib.mkEnableOption "myy user-specific development setup";
+    enable =
+      lib.mkEnableOption "foo-dogsquared's user-specific development setup";
     shell.enable =
       lib.mkEnableOption "configuration of foo-dogsquared's shell of choice";
   };
@@ -12,6 +15,7 @@ in {
     ({
       home.packages = with pkgs; [
         lazygit # Git interface for the lazy.
+        github-cli # So you don't have to use much of GitHub on the site, I guess.
         fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
         gopass # An improved version of the password manager for hipsters.
         perl534Packages.vidir # Bulk rename for your organizing needs.

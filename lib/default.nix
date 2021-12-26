@@ -99,8 +99,7 @@ rec {
        - `list` is a list of usernames as strings
        - `attrset` is a set of valid users with the name as the key and the path as the value.
      Example:
-       # Assuming only 'foo-dogsquared' is the existing user.
-       # Get valid users from home-manager.
+       # Assuming only 'foo-dogsquared' is the existing user for 'home-manager'.
        getUsers "home-manager" [ "foo-dogsquared" "archie" "brad" ]
        => { foo-dogsquared = /home/foo-dogsquared/projects/nixos-config/users/foo-dogsquared; }
   */
@@ -108,7 +107,7 @@ rec {
     let
       userModules = filesToAttr ../users/${type};
       invalidUsernames = [ "config" "modules" ];
-    in lib.filterAttrs (n: _: !lib.elem n invalidUsernames) userModules;
+    in lib.filterAttrs (n: _: !lib.elem n invalidUsernames && lib.elem n users) userModules;
 
   # Return the path of `secrets` from `../secrets`.
   getSecret = path: ../secrets/${path};
