@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
@@ -28,10 +24,17 @@
       virtualization.enable = true;
       neovim.enable = true;
     };
-    users.users.foo-dogsquared = {};
     themes = {
       disableLimit = true;
       themes.a-happy-gnome.enable = true;
+    };
+    users.users.foo-dogsquared.settings = {
+      extraGroups = [ "wheel" "audio" "docker" "podman" "network-manager" ];
+      hashedPassword =
+        "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
+      isNormalUser = true;
+      createHome = true;
+      home = "/home/foo-dogsquared";
     };
     hardware-setup.backup-archive.enable = true;
   };
@@ -56,14 +59,13 @@
   networking.interfaces.enp1s0.useDHCP = true;
   networking.interfaces.wlp2s0.useDHCP = true;
 
-  environment.systemPackages = with pkgs; [ git wget lf ];
-
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs.mtr.enable = true;
 
   services.auto-cpufreq.enable = true;
   services.thermald.enable = true;
+  services.avahi.enable = true;
 
   # The usual doas config.
   security.doas = {
