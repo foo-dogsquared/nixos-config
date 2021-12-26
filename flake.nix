@@ -19,6 +19,8 @@
 
     # Overlays.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }:
@@ -29,6 +31,9 @@
 
         # Neovim nightly!
         inputs.neovim-nightly-overlay.overlay
+
+        # Rust overlay for them ease of setting up Rust toolchains.
+        inputs.rust-overlay.overlay
       ];
 
       forAllSystems = f:
@@ -133,6 +138,8 @@
       # more preferable than installing all of the packages at the system
       # configuration (or even home environment).
       devShells = forAllSystems (system:
-        import ./shells { pkgs = import nixpkgs { inherit system; }; });
+        import ./shells {
+          pkgs = import nixpkgs { inherit system overlays; };
+        });
     };
 }
