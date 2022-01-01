@@ -3,13 +3,13 @@
 # TODO: Deprecate this package once it is successfully packaged in nixpkgs.
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-burn-my-windows";
-  version = "2";
+  version = "4";
 
   src = fetchFromGitHub {
     owner = "Schneegans";
     repo = "Burn-My-Windows";
     rev = "v${version}";
-    sha256 = "sha256-+8neRxlkNWdLDWAAZWK2iFfuvO0rq05orBTn18tWKf4=";
+    sha256 = "sha256-jp1QJXIXenQRobVNVUZ/Qf+ReS7ptNlW7o8MgotB4b8=";
   };
 
   nativeBuildInputs = [ glib gettext ];
@@ -39,7 +39,8 @@ stdenv.mkDerivation rec {
   passthru.extensionUuid = "burn-my-windows@schneegans.github.com";
 
   meta = with lib; {
-    description = "A GNOME shell extension to disintegrate windows in the old-fashioned way";
+    description =
+      "A GNOME shell extension to disintegrate windows in the old-fashioned way";
     license = licenses.gpl3Plus;
     homepage = "https://github.com/Schneegans/Burn-My-Windows";
     platforms = platforms.linux;
