@@ -134,6 +134,10 @@
       packages = forAllSystems
         (system: import ./pkgs { pkgs = import nixpkgs { inherit system; }; });
 
+      # The development environment for this flake.
+      devShell = forAllSystems (system:
+        import ./shell.nix { pkgs = import nixpkgs { inherit system; }; });
+
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
       # configuration (or even home environment).
