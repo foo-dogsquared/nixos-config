@@ -16,6 +16,7 @@ in {
 
     age.secrets.external-backup-borgmatic-settings.file =
       lib.getSecret "archive/borgmatic.json";
+
     fileSystems."/mnt/external-storage" = {
       device = "/dev/disk/by-uuid/665A391C5A38EB07";
       fsType = "ntfs";
@@ -33,57 +34,9 @@ in {
       ];
     };
 
-    systemd.services.borgmatic-external-archive = {
-      unitConfig = {
-        Description = "Backup with Borgmatic";
-        Wants = [ "network-online.target" ];
-        After = [ "network-online.target" ];
-      };
-
-      startAt = "04/2:00:00";
-      serviceConfig = {
-        # Delay start to prevent backups running during boot. Note that systemd-inhibit requires dbus and
-        # dbus-user-session to be installed.
-        ExecStartPre = "${pkgs.coreutils}/bin/sleep 1m";
-        ExecStart = ''
-          ${pkgs.systemd}/bin/systemd-inhibit --who="borgmatic" --why="Prevent interrupting scheduled backup" ${pkgs.borgmatic}/bin/borgmatic --verbosity -1 --syslog-verbosity 1 --config ${config.age.secrets.external-backup-borgmatic-settings.path}
-        '';
-
-        # Set security-related stuff.
-        LockPersonality = "true";
-        ProtectSystem = "full";
-        MemoryDenyWriteExecute = "no";
-        NoNewPrivileges = "yes";
-        PrivateDevices = "yes";
-        PrivateTmp = "yes";
-        ProtectClock = "yes";
-        ProtectControlGroups = "yes";
-        ProtectHostname = "yes";
-        ProtectKernelLogs = "yes";
-        ProtectKernelModules = "yes";
-        ProtectKernelTunables = "yes";
-        RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_NETLINK";
-        RestrictNamespaces = "yes";
-        RestrictRealtime = "yes";
-        RestrictSUIDSGID = "yes";
-        SystemCallArchitectures = "native";
-        SystemCallFilter = "@system-service";
-        SystemCallErrorNumber = "EPERM";
-        CapabilityBoundingSet = "CAP_DAC_READ_SEARCH CAP_NET_RAW";
-
-        # Lower CPU and I/O priority.
-        Nice = 19;
-        CPUSchedulingPolicy = "batch";
-        IOSchedulingClass = "best-effort";
-        IOSchedulingPriority = 7;
-        IOWeight = 100;
-
-        Restart = "no";
-
-        # Prevent rate limiting of borgmatic log events. If you are using an older version of systemd that
-        # doesn't support this (pre-240 or so), you may have to remove this option.
-        LogRateLimitIntervalSec = "0";
-      };
+    modules.services.borgmatic.jobs.external-storage = {
+      startAt = "04/6:00:00";
+      configPath = config.age.secrets.external-backup-borgmatic-settings.path;
     };
   };
 }
