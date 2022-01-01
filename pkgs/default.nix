@@ -10,6 +10,7 @@ with pkgs; {
     callPackage ./gnome-shell-extension-desktop-cube.nix { };
   gnome-shell-extension-fly-pie =
     callPackage ./gnome-shell-extension-fly-pie.nix { };
+  junction = callPackage ./junction.nix { };
   libcs50 = callPackage ./libcs50.nix { };
   llama = callPackage ./llama.nix { };
   neo = callPackage ./neo.nix { };
