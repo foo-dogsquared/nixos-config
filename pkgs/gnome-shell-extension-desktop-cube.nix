@@ -3,13 +3,13 @@
 # TODO: Deprecate this package once it is successfully packaged in nixpkgs.
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-desktop-cube";
-  version = "5";
+  version = "7";
 
   src = fetchFromGitHub {
     owner = "Schneegans";
     repo = "Desktop-Cube";
     rev = "v${version}";
-    sha256 = "sha256-Z0fjOuy7WnY2JCrG8s6AsvXGrx0tDsbEmHRrtqeR9Rk=";
+    sha256 = "sha256-aelt5HWBzqOBcYFe913StFyhTYBlEhI2ekWpA6jN0fQ=";
   };
 
   nativeBuildInputs = [ glib gettext ];
@@ -39,7 +39,8 @@ stdenv.mkDerivation rec {
   passthru.extensionUuid = "desktop-cube@schneegans.github.com";
 
   meta = with lib; {
-    description = "A GNOME shell to transition between workspaces the old-fashioned way";
+    description =
+      "A GNOME shell to transition between workspaces the old-fashioned way";
     license = licenses.gpl3Plus;
     homepage = "https://github.com/Schneegans/Desktop-Cube";
     platforms = platforms.linux;
