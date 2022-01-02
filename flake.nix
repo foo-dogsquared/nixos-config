@@ -19,6 +19,8 @@
 
     # Overlays.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
+
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -31,6 +33,9 @@
 
         # Neovim nightly!
         inputs.neovim-nightly-overlay.overlay
+
+        # Emacs unstable version!
+        inputs.emacs-overlay.overlay
 
         # Rust overlay for them ease of setting up Rust toolchains.
         inputs.rust-overlay.overlay
