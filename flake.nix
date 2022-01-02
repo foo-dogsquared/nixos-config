@@ -10,6 +10,10 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    # This is what AUR strives to be.
+    nur.url = "github:nix-community/NUR";
+    nur.inputs.nixpkgs.follows = "nixpkgs";
+
     # Managing your secrets.
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
@@ -39,6 +43,9 @@
 
         # Rust overlay for them ease of setting up Rust toolchains.
         inputs.rust-overlay.overlay
+
+        # Access to NUR.
+        inputs.nur.overlay
       ];
 
       forAllSystems = f:
@@ -66,6 +73,15 @@
           nixpkgs.flake = nixpkgs;
           home-manager.flake = home-manager;
           agenix.flake = inputs.agenix;
+          nur.flake = inputs.nur;
+        };
+
+        # Set several binary caches.
+        nix = {
+          binaryCaches = [ "https://nix-community.cachix.org" ];
+          binaryCachePublicKeys = [
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          ];
         };
 
         # Stallman-senpai will be disappointed.
