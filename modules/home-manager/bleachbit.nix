@@ -4,7 +4,7 @@ let cfg = config.modules.bleachbit;
 in {
   options.modules.bleachbit = {
     enable = lib.mkEnableOption "automated cleanup with Bleachbit";
-    dates = lib.mkOption {
+    startAt = lib.mkOption {
       type = lib.types.str;
       description = ''
         How often or when cleanup will occur. For most cases, it should be enough to clean it up once per month.
@@ -28,39 +28,53 @@ in {
       description = "List of cleaners to be used when cleaning.";
       default = [
         "bash.history"
-        "winetricks.temporary-files"
+        "winetricks.temporary_files"
         "wine.tmp"
-        "brave.history"
+        "discord.history"
+        "google_earth.temporary_files"
+        "google_toolbar.search_history"
+        "thumbnails.cache"
+        "zoom.logs"
+      ]
+      ++ lib.optionals cfg.withBrowserCleanup [
+        "brave.cache"
         "brave.form_history"
+        "brave.history"
         "brave.passwords"
+        "chromium.cache"
         "chromium.form_history"
         "chromium.history"
         "chromium.passwords"
-        "discord.history"
+        "epiphany.cache"
         "epiphany.passwords"
+        "firefox.cache"
         "firefox.forms"
         "firefox.passwords"
         "firefox.url_history"
+        "google_chrome.cache"
         "google_chrome.form_history"
         "google_chrome.history"
-        "google_earth.temporary_files"
-        "google_toolbar.search_history"
+        "opera.cache"
+        "opera.form_history"
+        "opera.history"
+        "palemoon.cache"
         "palemoon.forms"
         "palemoon.passwords"
         "palemoon.url_history"
-        "thumbnails.cache"
+        "waterfox.cache"
         "waterfox.forms"
         "waterfox.passwords"
         "waterfox.url_history"
-        "zoom.logs"
       ];
     };
+
+    withBrowserCleanup = lib.mkEnableOption "browser-related cleaners to be included in the list";
   };
 
   config = lib.mkIf cfg.enable {
     systemd.user = {
       services = {
-        hm-bleachbit-cleanup = {
+        bleachbit-cleanup = {
           Unit = {
             Description = "Monthly cleanup with Bleachbit";
             Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
@@ -76,7 +90,7 @@ in {
       };
 
       timers = {
-        hm-bleachbit-cleanup = {
+        bleachbit-cleanup = {
           Unit = {
             Description = "Periodic clean with Bleachbit";
             Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
@@ -86,7 +100,7 @@ in {
           Install.WantedBy = [ "default.target" ];
 
           Timer = {
-            OnCalendar = cfg.dates;
+            OnCalendar = cfg.startAt;
             Persistent = cfg.persistent;
           };
         };
