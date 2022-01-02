@@ -31,6 +31,7 @@
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }:
     let
+      # The order here is important(?).
       overlays = [
         # Put my custom packages to be available.
         (self: super: import ./pkgs { pkgs = super; })
@@ -111,15 +112,17 @@
       userDefaultConfig = {
         system = "x86_64-linux";
 
-        # To be able to use the most of our config as possible, we want both to
-        # use the same overlays.
-        nixpkgs.overlays = overlays;
+        extraModules = [{
+          # To be able to use the most of our config as possible, we want both to
+          # use the same overlays.
+          nixpkgs.overlays = overlays;
 
-        # Stallman-senpai will be disappointed. :(
-        nixpkgs.config.allowUnfree = true;
+          # Stallman-senpai will be disappointed. :(
+          nixpkgs.config.allowUnfree = true;
 
-        # Let home-manager to manage itself.
-        programs.home-manager.enable = true;
+          # Let home-manager to manage itself.
+          programs.home-manager.enable = true;
+        }];
       };
     in {
       # Exposes only my library with the custom functions to make it easier to
@@ -141,7 +144,7 @@
         (libExtended.filesToAttr ./modules/nixos);
 
       # I can now install home-manager users in non-NixOS systems.
-      # NICE!
+      # NICE? (TODO: Please test it in the future before saying these things.)
       homeManagerConfigurations = libExtended.mapAttrs
         (_: path: libExtended.flakeUtils.mkUser path userDefaultConfig)
         (libExtended.filesToAttr ./users/home-manager);
@@ -152,12 +155,12 @@
 
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
-      packages = forAllSystems
-        (system: import ./pkgs { pkgs = import nixpkgs { inherit system; }; });
+      packages = forAllSystems (system:
+        import ./pkgs { pkgs = import nixpkgs { inherit system overlays; }; });
 
       # The development environment for this flake.
       devShell = forAllSystems (system:
-        import ./shell.nix { pkgs = import nixpkgs { inherit system; }; });
+        import ./shell.nix { pkgs = import nixpkgs { inherit system overlays; }; });
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
