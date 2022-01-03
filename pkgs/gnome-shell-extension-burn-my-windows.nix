@@ -3,13 +3,13 @@
 # TODO: Deprecate this package once it is successfully packaged in nixpkgs.
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-burn-my-windows";
-  version = "4";
+  version = "6";
 
   src = fetchFromGitHub {
     owner = "Schneegans";
     repo = "Burn-My-Windows";
     rev = "v${version}";
-    sha256 = "sha256-jp1QJXIXenQRobVNVUZ/Qf+ReS7ptNlW7o8MgotB4b8=";
+    sha256 = "sha256-1U6TAFrwssaDMFAWKyo4YhFthA/z65+f1QpANB8owgo=";
   };
 
   nativeBuildInputs = [ glib gettext ];
