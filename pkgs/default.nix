@@ -17,6 +17,7 @@ with pkgs; {
   pop-launcher = callPackage ./pop-launcher.nix { };
   pop-launcher-plugin-duckduckgo-bangs =
     callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
+  photon-rss = callPackage ./photon-rss.nix { };
   tic-80 = callPackage ./tic-80 { };
   sioyek = libsForQt5.callPackage ./sioyek.nix { };
 }
