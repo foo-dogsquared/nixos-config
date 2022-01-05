@@ -6,7 +6,7 @@ buildGoModule rec {
 
   src = fetchFromSourcehut {
     owner = "~ghost08";
-    repo = pname;
+    repo = "photon";
     rev = "57687766a71add4751f68052666fed638fc45891";
     sha256 = "sha256-Q4WD1s9kvt5khvw9Zg7A688IECponIQ3HTAMoQpeQvY=";
   };
@@ -16,7 +16,7 @@ buildGoModule rec {
 
   postInstall = ''
     # Move the plugins somewhere.
-    install -Dm644 plugins/* -t $out/share/${pname}
+    install -Dm644 plugins/* -t $out/share/photon
   '';
 
   meta = with lib; {
