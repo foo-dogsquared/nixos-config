@@ -29,7 +29,7 @@
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, ... }:
     let
       # The order here is important(?).
       overlays = [
@@ -72,7 +72,7 @@
 
           # All of the important flakes will be included.
           nixpkgs.flake = nixpkgs;
-          home-manager.flake = home-manager;
+          home-manager.flake = inputs.home-manager;
           agenix.flake = inputs.agenix;
           nur.flake = inputs.nur;
         };
