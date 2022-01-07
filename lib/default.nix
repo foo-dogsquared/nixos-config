@@ -1,4 +1,5 @@
-{ lib, ... }:
+# All of the custom functions used for this configuration.
+{ lib }:
 
 rec {
   /* Create an attribute set that represents the structure of the modules
@@ -108,6 +109,11 @@ rec {
       userModules = filesToAttr ../users/${type};
       invalidUsernames = [ "config" "modules" ];
     in lib.filterAttrs (n: _: !lib.elem n invalidUsernames && lib.elem n users) userModules;
+
+
+  # Return the path of `user` from `type`.
+  getUser = type: user:
+    lib.getAttr user (getUsers type [ user ]);
 
   # Return the path of `secrets` from `../secrets`.
   getSecret = path: ../secrets/${path};

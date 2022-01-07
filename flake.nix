@@ -128,10 +128,7 @@
     in {
       # Exposes only my library with the custom functions to make it easier to
       # include in other flakes.
-      lib = import ./lib {
-        inherit inputs;
-        lib = nixpkgs.lib;
-      };
+      lib = import ./lib { lib = nixpkgs.lib; };
 
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.

@@ -1,5 +1,5 @@
 # A list of utilities specifically in my flake output.
-{ lib, inputs, ... }:
+{ lib, inputs }:
 
 let
   # Default system for our host configuration.
