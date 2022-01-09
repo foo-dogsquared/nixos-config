@@ -4,15 +4,15 @@
 # See https://github.com/NixOS/nixpkgs/issues/54150 for more details.
 let
   name = "a-happy-gnome";
-  cfg = config.modules.themes.themes.a-happy-gnome;
   dconf = pkgs.gnome3.dconf;
   customDconfDb = pkgs.stdenv.mkDerivation {
     name = "${name}-dconf-db";
     buildCommand = "${dconf}/bin/dconf compile $out ${./config/dconf}";
   };
+  cfg = config.themes.themes.a-happy-gnome;
 in
 {
-  options.modules.themes.themes.a-happy-gnome.enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
+  options.themes.themes.a-happy-gnome.enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
 
   config = lib.mkIf cfg.enable {
     services.xserver.enable = true;

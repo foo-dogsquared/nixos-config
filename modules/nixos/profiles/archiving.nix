@@ -1,9 +1,9 @@
 # All of your embarrassing moments, marked here forever.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.archiving;
+let cfg = config.profiles.archiving;
 in {
-  options.modules.archiving.enable =
+  options.profiles.archiving.enable =
     lib.mkEnableOption "installation of various archiving tools";
 
   # This is not going to set BorgBackup NixOS services for you.

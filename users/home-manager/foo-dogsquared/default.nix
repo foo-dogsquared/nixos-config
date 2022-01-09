@@ -26,8 +26,7 @@
   };
 
   # My custom modules.
-  modules = {
-    bleachbit.enable = true;
+  profiles = {
     i18n.enable = true;
     dev = {
       enable = true;
@@ -41,5 +40,13 @@
       multimedia.enable = true;
     };
     research.enable = true;
+  };
+
+  services = {
+    archivebox = {
+      enable = true;
+      archivePath = "%h/library/archives";
+    };
+    bleachbit.enable = true;
   };
 }

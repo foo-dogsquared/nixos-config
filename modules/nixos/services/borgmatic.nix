@@ -2,7 +2,7 @@
 { config, options, lib, pkgs, ... }:
 
 let
-  cfg = config.modules.services.borgmatic;
+  cfg = config.services.borgmatic;
 
   jobOption = { name, config, ... }: {
     options = {
@@ -27,7 +27,7 @@ let
     };
   };
 in {
-  options.modules.services.borgmatic = {
+  options.services.borgmatic = {
     jobs = lib.mkOption {
       type = with lib.types; attrsOf (submodule jobOption);
       description = "borgmatic jobs with each bearing a configuration file to be used.";

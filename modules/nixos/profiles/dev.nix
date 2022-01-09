@@ -1,9 +1,9 @@
 # The module for anything dev-related.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.dev;
+let cfg = config.profiles.dev;
 in {
-  options.modules.dev = {
+  options.profiles.dev = {
     enable = lib.mkEnableOption
       "configurations of foo-dogsquared's barebones requirement for a development environment.";
     shell.enable = lib.mkEnableOption

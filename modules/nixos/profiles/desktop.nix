@@ -3,9 +3,9 @@
 # That can be found in the `themes` module.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.desktop;
+let cfg = config.profiles.desktop;
 in {
-  options.modules.desktop = {
+  options.profiles.desktop = {
     enable =
       lib.mkEnableOption "all desktop-related services and default programs";
     audio.enable =
@@ -40,6 +40,7 @@ in {
 
     (lib.mkIf cfg.audio.enable {
       # Enable the preferred audio workflow.
+      sound.enable = false;
       hardware.pulseaudio.enable = false;
       security.rtkit.enable = true;
       services.pipewire = {

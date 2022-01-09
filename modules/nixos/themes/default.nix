@@ -3,9 +3,9 @@
 # You can also show your desktop being modularized like this.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.themes;
+let cfg = config.themes;
 in {
-  options.modules.themes.disableLimit = lib.mkOption {
+  options.themes.disableLimit = lib.mkOption {
     type = lib.types.bool;
     default = false;
     description = ''

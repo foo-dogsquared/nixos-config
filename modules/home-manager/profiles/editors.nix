@@ -7,9 +7,9 @@
 # for me is not worth to maintain.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.editors;
+let cfg = config.profiles.editors;
 in {
-  options.modules.editors = {
+  options.profiles.editors = {
     neovim.enable = lib.mkEnableOption "foo-dogsquared's Neovim setup with Nix";
     emacs.enable = lib.mkEnableOption "foo-dogsquared's (Doom) Emacs setup";
   };
@@ -51,6 +51,7 @@ in {
 
         ## :lang org +roam2
         sqlite
+        anystyle-cli
       ];
     })
   ];

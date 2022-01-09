@@ -3,14 +3,14 @@
 
 # TODO: Make this a generic service.
 #       There are multiple external storage drives now.
-let cfg = config.modules.hardware-setup.backup-archive;
+let cfg = config.hardware-setup.backup-archive;
 in {
-  options.modules.hardware-setup.backup-archive.enable = lib.mkEnableOption
+  options.hardware-setup.backup-archive.enable = lib.mkEnableOption
     "external hard drive and automated backup service with BorgBackup";
 
   config = lib.mkIf cfg.enable {
     assertions = [{
-      assertion = config.modules.agenix.enable;
+      assertion = config.profiles.agenix.enable;
       message = "Agenix module is not enabled.";
     }];
 
@@ -34,7 +34,8 @@ in {
       ];
     };
 
-    modules.services.borgmatic.jobs.external-storage = {
+    # This uses the custom borgmatic NixOS service.
+    services.borgmatic.jobs.external-storage = {
       startAt = "04/6:00:00";
       configPath = config.age.secrets.external-backup-borgmatic-settings.path;
     };

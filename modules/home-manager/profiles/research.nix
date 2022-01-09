@@ -1,8 +1,8 @@
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.research;
+let cfg = config.profiles.research;
 in {
-  options.modules.research.enable =
+  options.profiles.research.enable =
     lib.mkEnableOption "my usual toolbelt for research";
 
   config = lib.mkIf cfg.enable {
@@ -16,5 +16,7 @@ in {
       yt-dlp # The general purpose video downloader.
       zotero # It's actually good at archiving despite not being a researcher myself.
     ];
+
+    services.syncthing.enable = true;
   };
 }

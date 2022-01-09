@@ -7,10 +7,10 @@
 { inputs, config, options, lib, ... }:
 
 let
-  cfg = config.modules.users;
+  cfg = config.profiles.users;
   users = lib.attrNames cfg.users;
   homeManagerUserModules = lib.getUsers "home-manager" users;
-  homeManagerModules = lib.filesToAttr ../home-manager;
+  homeManagerModules = lib.filesToAttr ../../home-manager;
 
   homeManagerUsers = lib.attrNames homeManagerUserModules;
   nonexistentUsers = lib.filter (name: !lib.elem name homeManagerUsers) users;
@@ -33,7 +33,7 @@ let
 
   mapUsers = f: lib.mapAttrs f cfg.users;
 in {
-  options.modules.users = {
+  options.profiles.users = {
     users = lib.mkOption {
       default = { };
       description = ''

@@ -2,9 +2,9 @@
 # If you're looking for text editors, go to `./editors.nix`.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.dev;
+let cfg = config.profiles.dev;
 in {
-  options.modules.dev = {
+  options.profiles.dev = {
     enable =
       lib.mkEnableOption "foo-dogsquared's user-specific development setup";
     shell.enable =

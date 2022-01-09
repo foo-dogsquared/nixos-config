@@ -7,7 +7,7 @@
   ];
 
   # My custom configuration with my custom modules starts here.
-  modules = {
+  profiles = {
     agenix.enable = true;
     archiving.enable = true;
     desktop = {
@@ -24,10 +24,6 @@
       virtualization.enable = true;
       neovim.enable = true;
     };
-    themes = {
-      disableLimit = true;
-      themes.a-happy-gnome.enable = true;
-    };
     users.users.foo-dogsquared.settings = {
       extraGroups = [ "wheel" "audio" "docker" "podman" "network-manager" ];
       hashedPassword =
@@ -36,7 +32,11 @@
       createHome = true;
       home = "/home/foo-dogsquared";
     };
-    hardware-setup.backup-archive.enable = true;
+  };
+  hardware-setup.backup-archive.enable = true;
+  themes = {
+    disableLimit = true;
+    themes.a-happy-gnome.enable = true;
   };
 
   # Use the systemd-boot EFI boot loader.

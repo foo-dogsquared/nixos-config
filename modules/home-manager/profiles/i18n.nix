@@ -1,9 +1,9 @@
 # Instant setup for using internationalized languages.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.i18n;
+let cfg = config.profiles.i18n;
 in {
-  options.modules.i18n.enable =
+  options.profiles.i18n.enable =
     lib.mkEnableOption "fcitx5 as input method engine";
 
   config = lib.mkIf cfg.enable {

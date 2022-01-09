@@ -1,9 +1,9 @@
 # Enables all of my usual setup for desktop-oriented stuff.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.desktop;
+let cfg = config.profiles.desktop;
 in {
-  options.modules.desktop = {
+  options.profiles.desktop = {
     enable = lib.mkEnableOption "installations of desktop apps";
     graphics.enable =
       lib.mkEnableOption "installations of graphics-related apps";

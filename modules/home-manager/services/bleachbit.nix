@@ -1,8 +1,8 @@
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.modules.bleachbit;
+let cfg = config.services.bleachbit;
 in {
-  options.modules.bleachbit = {
+  options.services.bleachbit = {
     enable = lib.mkEnableOption "automated cleanup with Bleachbit";
     startAt = lib.mkOption {
       type = lib.types.str;

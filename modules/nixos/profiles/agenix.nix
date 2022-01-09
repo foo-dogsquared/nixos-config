@@ -1,9 +1,9 @@
 # A module that automates setting up agenix for your system.
 { inputs, lib, options, config, system, ... }:
 
-let cfg = config.modules.agenix;
+let cfg = config.profiles.agenix;
 in {
-  options.modules.agenix.enable =
+  options.profiles.agenix.enable =
     lib.mkEnableOption "agenix-related config on your system";
 
   imports = [ inputs.agenix.nixosModules.age ];
