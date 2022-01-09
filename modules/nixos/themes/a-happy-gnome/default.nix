@@ -4,12 +4,11 @@
 # See https://github.com/NixOS/nixpkgs/issues/54150 for more details.
 let
   name = "a-happy-gnome";
-  dconf = pkgs.gnome3.dconf;
-  customDconfDb = pkgs.stdenv.mkDerivation {
-    name = "${name}-dconf-db";
-    buildCommand = "${dconf}/bin/dconf compile $out ${./config/dconf}";
-  };
   cfg = config.themes.themes.a-happy-gnome;
+  dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" {} ''
+    mkdir -p $out/etc/dconf/db/database.d
+    install -Dm644 ${./config/dconf}/*.conf -t $out/etc/dconf/db/database.d
+  '';
 in
 {
   options.themes.themes.a-happy-gnome.enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
@@ -45,11 +44,16 @@ in
     services.gnome.chrome-gnome-shell.enable = true;
 
     environment.systemPackages = with pkgs; [
+      # My custom configuration!
+      dconfConfig
+
       # It is required for custom menus in extensions.
       gnome-menus
 
       # Good ol' unofficial preferences tool.
       gnome.gnome-tweaks
+
+      gnome.gnome-boxes
 
       # My preferred extensions.
       gnomeExtensions.arcmenu
@@ -58,9 +62,14 @@ in
       gnomeExtensions.kimpanel
       gnomeExtensions.runcat
       gnomeExtensions.just-perfection
+      gnomeExtensions.mpris-indicator-button
 
       # TODO: Use from nixpkgs once fly-pie is fixed.
       gnome-shell-extension-fly-pie
+
+      # TODO: Also these two...
+      gnome-shell-extension-burn-my-windows
+      gnome-shell-extension-desktop-cube
 
       # Setting up Pop shell.
       gnome-shell-extension-pop-shell
