@@ -21,4 +21,5 @@ with pkgs; {
   ratt = callPackage ./ratt.nix { };
   tic-80 = callPackage ./tic-80 { };
   sioyek = libsForQt5.callPackage ./sioyek.nix { };
+  vpaint = libsForQt5.callPackage ./vpaint.nix { };
 }
