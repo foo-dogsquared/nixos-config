@@ -21,7 +21,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.archivebox ];
     systemd.user.services.archivebox-server = {
       Unit = {
         Description = "Archivebox server for ${cfg.archivePath}";

@@ -53,13 +53,6 @@ in {
 
       # Enable running GNOME apps outside GNOME.
       programs.dconf.enable = true;
-
-      # Enable MPD-related services.
-      services.mpd.enable = true;
-      environment.systemPackages = with pkgs;
-        [
-          ncmpcpp # Has the worst name for a music client WTF?
-        ];
     })
 
     (lib.mkIf cfg.fonts.enable {
