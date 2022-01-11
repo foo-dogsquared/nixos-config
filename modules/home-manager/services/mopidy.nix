@@ -26,9 +26,10 @@ in {
     };
 
     extensionPackages = lib.mkOption {
-      default = [];
+      default = [ ];
       type = with lib.types; listOf package;
-      example = lib.literalExpression "with pkgs; [ mopidy-spotify mopidy-mpd mopidy-mpris ]";
+      example = lib.literalExpression
+        "with pkgs; [ mopidy-spotify mopidy-mpd mopidy-mpris ]";
       description = ''
         Mopidy extensions that should be loaded by the service.
       '';
@@ -42,7 +43,7 @@ in {
     };
 
     extraConfigFiles = lib.mkOption {
-      default = [];
+      default = [ ];
       type = with lib.types; listOf str;
       description = ''
         Extra config files to be read to the service.
@@ -53,7 +54,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "services.mopidy" pkgs lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "services.mopidy" pkgs
+        lib.platforms.linux)
     ];
 
     systemd.user.services.mopidy = {
@@ -64,7 +66,9 @@ in {
       };
 
       Service = {
-        ExecStart = "${mopidyEnv}/bin/mopidy --config ${lib.concatStringsSep ":" ([mopidyConf] ++ cfg.extraConfigFiles)}";
+        ExecStart = "${mopidyEnv}/bin/mopidy --config ${
+            lib.concatStringsSep ":" ([ mopidyConf ] ++ cfg.extraConfigFiles)
+          }";
       };
 
       Install.WantedBy = [ "default.target" ];
@@ -78,7 +82,9 @@ in {
       };
 
       Service = {
-        ExecStart = "${mopidyEnv}/bin/mopidy --config ${lib.concatStringsSep ":" ([mopidyConf] ++ cfg.extraConfigFiles)} local scan";
+        ExecStart = "${mopidyEnv}/bin/mopidy --config ${
+            lib.concatStringsSep ":" ([ mopidyConf ] ++ cfg.extraConfigFiles)
+          } local scan";
         Type = "oneshot";
       };
 

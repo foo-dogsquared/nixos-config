@@ -1,7 +1,6 @@
 { config, options, lib, pkgs, ... }:
 
-let
-  cfg = config.services.archivebox;
+let cfg = config.services.archivebox;
 in {
   options.services.archivebox = {
     enable = lib.mkEnableOption "Archivebox service";
@@ -31,7 +30,9 @@ in {
       Install.WantedBy = [ "graphical-session.target" ];
 
       Service = {
-        ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${toString cfg.port}";
+        ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${
+            toString cfg.port
+          }";
         WorkingDirectory = cfg.archivePath;
         Restart = "on-failure";
       };

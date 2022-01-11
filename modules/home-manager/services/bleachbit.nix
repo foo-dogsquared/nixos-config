@@ -35,8 +35,7 @@ in {
         "google_toolbar.search_history"
         "thumbnails.cache"
         "zoom.logs"
-      ]
-      ++ lib.optionals cfg.withBrowserCleanup [
+      ] ++ lib.optionals cfg.withBrowserCleanup [
         "brave.cache"
         "brave.form_history"
         "brave.history"
@@ -68,7 +67,8 @@ in {
       ];
     };
 
-    withBrowserCleanup = lib.mkEnableOption "browser-related cleaners to be included in the list";
+    withBrowserCleanup =
+      lib.mkEnableOption "browser-related cleaners to be included in the list";
   };
 
   config = lib.mkIf cfg.enable {

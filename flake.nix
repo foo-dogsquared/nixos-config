@@ -79,7 +79,10 @@
 
         # Set several binary caches.
         nix = {
-          binaryCaches = [ "https://nix-community.cachix.org" "https://foo-dogsquared.cachix.org" ];
+          binaryCaches = [
+            "https://nix-community.cachix.org"
+            "https://foo-dogsquared.cachix.org"
+          ];
           binaryCachePublicKeys = [
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
             "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
@@ -158,7 +161,9 @@
 
       # The development environment for this flake.
       devShell = forAllSystems (system:
-        import ./shell.nix { pkgs = import nixpkgs { inherit system overlays; }; });
+        import ./shell.nix {
+          pkgs = import nixpkgs { inherit system overlays; };
+        });
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
