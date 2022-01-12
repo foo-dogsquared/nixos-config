@@ -6,6 +6,7 @@
     borgmatic
     borgbackup
     ncmpcpp
+    vscodium-fhs
   ];
 
   fonts.fontconfig.enable = true;
@@ -15,14 +16,18 @@
     enable = true;
     package = pkgs.gitFull;
     lfs.enable = true;
-    userName = "foo-dogsquared";
+    userName = "Gabriel Arazas";
     userEmail = "foo.dogsquared@gmail.com";
   };
 
   # My music player setup, completely configured with Nix!
-  services.mpd = {
+  services.mopidy = {
     enable = true;
-    musicDirectory = "$HOME/library/music";
+    extensionPackages = with pkgs; [
+      mopidy-mpd
+      mopidy-mpris
+      mopidy-local
+    ];
   };
 
   # My custom modules.
@@ -48,5 +53,17 @@
       archivePath = "%h/library/archives";
     };
     bleachbit.enable = true;
+  };
+
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+
+    # The XDG base directories.
+    documents = "$HOME/library/documents";
+    music = "$HOME/library/music";
+    pictures = "$HOME/library/pictures";
+    templates = "$HOME/library/templates";
+    videos = "$HOME/library/videos";
   };
 }

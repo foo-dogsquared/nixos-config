@@ -1,4 +1,5 @@
-# A list of utilities specifically in my flake output.
+# A list of utilities specifically in my flake output. Take note it needs
+# `lib/default.nix` for it to work.
 { lib, inputs }:
 
 let
@@ -26,7 +27,8 @@ in rec {
   */
   mkHost = file:
     attrs@{ system ? sys, ... }:
-    lib.nixosSystem {
+    inputs.nixpkgs.lib.nixosSystem {
+      # The system of the NixOS system.
       inherit system;
 
       # Additional attributes to be referred to our modules.
@@ -58,7 +60,9 @@ in rec {
        file -> attrset -> homeManagerConfiguration
      Where:
        - `file` is the entry point to the home-manager configuration.
-       - `attrset` is the additional attribute set to be insert as one of the imported modules minus the attributes used for `home-manager.lib.homeManagerConfiguration`.
+       - `attrset` is the additional attribute set to be insert as one of the
+         imported modules minus the attributes used for
+         `home-manager.lib.homeManagerConfiguration`.
      Returns:
        A home-manager configuration to be exported in flakes.
 
@@ -80,6 +84,8 @@ in rec {
       homeDirectory = "/home/${username}";
       extraModules = hmModules ++ extraModules
         ++ [ (lib.filterAttrs (n: _: !lib.elem n hmConfigFunctionArgs) attrs) ];
+
+      # Additional attributes to be referred to the modules.
       extraSpecialArgs = { inherit lib system; };
     };
 }

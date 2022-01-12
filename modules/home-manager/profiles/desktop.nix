@@ -28,13 +28,15 @@ in {
 
     (lib.mkIf cfg.audio.enable {
       home.packages = with pkgs; [
-        ardour
-        musescore
+        musescore # The free composition tool.
+        zrythm # The freer FL Studio (if you're sailing by the high seven seas).
 
-        # Trying to
-        yabridge
-        yabridgectl
-        helvum
+        # !!! Be sure to install Wine for this one.
+        yabridge # Building bridges to Windows and Linux audio tools.
+        yabridgectl # The bridge controller.
+
+        helvum # The Pipewire Patchbay.
+        carla # The Carla Carla.
       ];
 
       services.easyeffects.enable = true;

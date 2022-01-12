@@ -144,7 +144,15 @@ Hello! I'm new to Nix and NixOS, where should I start?::
 Oh no, you've seen the multiple configurations from other systems, didn't you?
 I hope you're ready for some time understanding because the learning curve is steeper than the link:https://en.wikipedia.org/wiki/Troll_Wall[Troll Wall].
 I've written link:https://foo-dogsquared.github.io/blog/posts/moving-into-nixos/[a blog post regarding my experience with Nix] with a bunch of links for getting started.
-(Un)Fortunately, it is mostly the same experience now that I've revisited it.
+Fortunately footnote:[Or unfortunately from a different perspective.], it is mostly the same experience now that I've revisited it.
+(That said, Nix Pills is getting better!)
++
+For a more practical start, I recommend to look into several configurations to see the general gist of configuration with Nix.
+Here's a few I personally dug into:
++
+* https://github.com/divnix/devos
+* https://github.com/hlissner/dotfiles
+* https://github.com/thiagokokada/nix-configs
 
 Any requirements for this setup?::
 You only need Nix 2.4 installed with the experimental features for Nix command and flakes enabled (i.e., `experimental-features = nix-command flakes`).
@@ -158,10 +166,19 @@ What is my experience on Nix flakes?::
 link:https://youtu.be/iWJKZK_1l88[I LIKE IT!]
 There are still some hiccups like the strict tie-in to Git which leads to strange experience like having to add untracked files just to be recognized.
 However, this feature is still in the works so no surprise there.
++
+With that said, it is workable to be a daily part of the NixOS experience especially with the benefits of Nix flakes.
++
+* More user-friendly compared to Nix channels.
+* Just one reference file to know what is being exported from a project.
+* Unification with commonly-agreed schemas.
++
+This feature somewhat helped me understand more about the Nix language, oddly.
+I guess those lightbulb moments can come from random places.
 
 Is this based from link:https://github.com/divnix/devos[devos]?::
 Yes but I've created this from scratch.
-One of my goals when creating this config is to use as little dependency as much as possible.
+One of my goals when creating this config is to use as little dependency as much as possible and to understand more what's going under the hood with Nix.
 At the time I've rewritten this configuration, I have little idea about Nix as a language and I find devos to be overwhelming so I doubled down to create from scratch.
 +
 However, I can say that my configuration is moving in a similar direction to devos (which is intended to be modified anyways) as I explore more of Nix.
@@ -173,7 +190,7 @@ It is nice that such a project exists serving as a reference for bigger configur
 
 == Inspirations
 
-I ~stole~ got the ideas from the following projects:
+I ~stole~ got several parts of this configuration from the following projects:
 
 * link:https://github.com/divnix/devos[devos, an overengineered configuration framework.]
 I'm slowly grokking Nix and its ecosystem so I didn't use this outright.

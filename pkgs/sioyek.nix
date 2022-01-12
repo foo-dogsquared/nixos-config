@@ -45,8 +45,7 @@ stdenv.mkDerivation rec {
       --replace "/etc/sioyek" "$out/etc/sioyek"
   '';
 
-  qmakeFlags =
-    if stdenv.isLinux then [ "DEFINES+=LINUX_STANDARD_PATHS" ] else [ ];
+  qmakeFlags = lib.optional stdenv.isLinux "DEFINES+=LINUX_STANDARD_PATHS";
 
   preBuild = ''
     # Remove and replace it with packages from nixpkgs.

@@ -1,6 +1,7 @@
 {
   description = "foo-dogsquared's NixOS config as a flake";
   inputs = {
+    # I know NixOS can be stable but we're going cutting edge, baybee!
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # We're using this library for other functions, mainly testing.
@@ -27,10 +28,11 @@
     # Easy access to development environments.
     devshell.url = "github:numtide/devshell";
 
-    # Overlays.
+    # We're getting more unstable there should be a black hole at my home right now.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
+    # The more recommended Rust overlay so I'm going with it.
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
