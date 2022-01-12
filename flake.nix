@@ -14,6 +14,12 @@
     nur.url = "github:nix-community/NUR";
     nur.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Running unpatched binaries on NixOS! :O
+    nix-ld.url = "github:Mic92/nix-ld";
+    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+    nix-alien.url = "github:thiagokokada/nix-alien";
+    nix-alien.inputs.nixpkgs.follows = "nixpkgs";
+
     # Managing your secrets.
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
@@ -92,8 +98,11 @@
         # Stallman-senpai will be disappointed.
         nixpkgs.config.allowUnfree = true;
 
-        # Extend nixpkgs with our own package set.
-        nixpkgs.overlays = overlays;
+        # Extend nixpkgs with our overlays except for the NixOS-focused modules
+        # here.
+        nixpkgs.overlays = overlays ++ [
+          inputs.nix-alien.overlay
+        ];
 
         # Please clean your temporary crap.
         boot.cleanTmpDir = true;
