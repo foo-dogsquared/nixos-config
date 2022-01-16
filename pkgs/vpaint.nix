@@ -23,6 +23,6 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Experimental vector graphics and 3D animation editor";
     homepage = "https://www.vpaint.org/";
-    license = licenses.apl20;
+    license = licenses.asl20;
   };
 }
