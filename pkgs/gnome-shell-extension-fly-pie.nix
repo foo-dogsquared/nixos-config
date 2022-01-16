@@ -8,7 +8,7 @@
 # Please refer to the `pkgs/desktops/gnome/extensions/{extensions.json,extensionRenames.nix}` in the future to check.
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-fly-pie";
-  version = "12";
+  version = "13";
 
   src = fetchFromGitHub {
     owner = "Schneegans";
