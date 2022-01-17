@@ -11,6 +11,7 @@ with pkgs; {
   gnome-shell-extension-fly-pie =
     callPackage ./gnome-shell-extension-fly-pie.nix { };
   guile-config = callPackage ./guile-config.nix { };
+  guile-hall = callPackage ./guile-hall.nix { };
   junction = callPackage ./junction.nix { };
   libcs50 = callPackage ./libcs50.nix { };
   llama = callPackage ./llama.nix { };
