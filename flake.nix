@@ -32,6 +32,10 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
+    # Guix in NixOS?!
+    guix-overlay.url = "github:foo-dogsquared/nix-overlay-guix";
+    guix-overlay.inputs.nixpkgs.follows = "nixpkgs";
+
     # The more recommended Rust overlay so I'm going with it.
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
@@ -104,6 +108,7 @@
         # here.
         nixpkgs.overlays = overlays ++ [
           inputs.nix-alien.overlay
+          inputs.guix-overlay.overlay
         ];
 
         # Please clean your temporary crap.
