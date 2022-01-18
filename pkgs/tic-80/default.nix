@@ -11,13 +11,13 @@
 # TODO: Wait for SDL v2.0.18 for more Wayland support?
 stdenv.mkDerivation rec {
   pname = "tic-80";
-  version = "unstable-2021-12-18";
+  version = "unstable-2022-01-18";
 
   src = fetchFromGitHub {
     owner = "nesbox";
     repo = "TIC-80";
-    rev = "03d73e8d92b57b7396c3c13bc5fb54d4cbb29ed7";
-    sha256 = "sha256-AFxSpWaPhVFvF9gTx0UZmX8niNEw1VAKJOtx7F5uHhQ=";
+    rev = "06fde1279677273856c1daf9f2fa22e337daba3d";
+    sha256 = "sha256-qFjcxb/umrr6CT7yorWCkoDskmKCsMm9frceyF6lXjE=";
     fetchSubmodules = true;
   };
 
