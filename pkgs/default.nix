@@ -41,13 +41,9 @@ let
     guix-binary = callPackage ./guix-binary.nix { };
     junction = callPackage ./junction.nix { };
     libcs50 = callPackage ./libcs50.nix { };
-    llama = callPackage ./llama.nix { };
-    neo = callPackage ./neo.nix { };
     pop-launcher = callPackage ./pop-launcher.nix { };
     pop-launcher-plugin-duckduckgo-bangs =
       callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
-    photon-rss = callPackage ./photon-rss.nix { };
-    ratt = callPackage ./ratt.nix { };
     rnote = callPackage ./rnote.nix { };
     tic-80 = callPackage ./tic-80 { };
     sioyek = libsForQt5.callPackage ./sioyek.nix { };
