@@ -1,12 +1,12 @@
 { stdenv, lib, fetchurl }:
 
-stdenv.mkDerivation rec
-{
+stdenv.mkDerivation rec {
   name = "guix-binary-${version}";
   version = "1.3.0";
 
   src = fetchurl {
-    url = "https://ftp.gnu.org/gnu/guix/guix-binary-${version}.${stdenv.targetPlatform.system}.tar.xz";
+    url =
+      "https://ftp.gnu.org/gnu/guix/guix-binary-${version}.${stdenv.targetPlatform.system}.tar.xz";
     sha256 = {
       "x86_64-linux" = "sha256-xffvtIlHVF5J0tr0jQ+DLzXSqNGfZdqvYHlCWsMnwFA=";
       "i686-linux" = "sha256-QHOK7hFh8LmRFK+EnNBNqfDNwQ0ia0lqRiHov9uyG2Q=";

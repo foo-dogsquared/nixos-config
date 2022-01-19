@@ -13,16 +13,16 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-lU6dGsX6jYYmwRz0z4V+4xTFAikUYCsszNVoyc7snwM=";
   };
 
-  nativeBuildInputs = [ meson_0_60 ninja wrapGAppsHook4 ];
-
-  buildInputs = [
-    libadwaita
-    gjs
+  nativeBuildInputs = [
+    meson_0_60
+    ninja
+    wrapGAppsHook4
     gobject-introspection
     appstream-glib
     desktop-file-utils
-    gsettings-desktop-schemas
   ];
+
+  buildInputs = [ libadwaita gjs gsettings-desktop-schemas ];
 
   preFixup = ''
     substituteInPlace $out/bin/re.sonny.Junction --replace "#!/usr/bin/env -S gjs" "#!${gjs}/bin/gjs"
@@ -32,5 +32,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/sonnyp/Junction";
     description = "Application chooser";
     license = licenses.gpl3;
+    mainProgram = "re.sonny.Junction";
   };
 }
