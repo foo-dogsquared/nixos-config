@@ -4,7 +4,14 @@
 let
   cfg = config.services.mopidy;
 
-  mopidyConf = pkgs.writeText "mopidy.conf" cfg.configuration;
+  customToINI = with lib; generators.toINI {
+    mkKeyValue = generators.mkKeyValueDefault {
+      mkValueString = v:
+        if isList v then "\n  " + concatStringsSep "\n  " v
+        else generators.mkValueStringDefault {} v;
+    } " = ";
+  };
+
   mopidyEnv = pkgs.buildEnv {
     name = "mopidy-with-extensions-${pkgs.mopidy.version}";
     # TODO: Improve this that doesn't use `lib.misc`.
@@ -19,14 +26,9 @@ in {
   options.services.mopidy = {
     enable = lib.mkEnableOption "Mopidy music player daemon";
 
-    dataDir = lib.mkOption {
-      default = "${config.xdg.dataHome}/mopidy";
-      type = with lib.types; either path str;
-      description = "The directory where Mopidy stores its state.";
-    };
-
     extensionPackages = lib.mkOption {
       default = [ ];
+      defaultText = lib.literalExpression "[ ]";
       type = with lib.types; listOf package;
       example = lib.literalExpression
         "with pkgs; [ mopidy-spotify mopidy-mpd mopidy-mpris ]";
@@ -35,19 +37,34 @@ in {
       '';
     };
 
-    # TODO: Revise the configuration to a proper Nix setting.
     configuration = lib.mkOption {
-      default = "";
-      type = lib.types.lines;
+      default = {};
+      type = lib.types.attrs;
       description = "The configuration Mopidy uses in the service.";
-    };
+      example = lib.literalExpression ''
+        {
+          file = {
+            media_dirs = [
+              "$XDG_MUSIC_DIR|Music"
+              "~/library|Library"
+            ];
+            follow_symlinks = true;
+            excluded_file_extensions = [
+              ".html"
+              ".zip"
+              ".jpg"
+              ".jpeg"
+              ".png"
+            ];
+          };
 
-    extraConfigFiles = lib.mkOption {
-      default = [ ];
-      type = with lib.types; listOf str;
-      description = ''
-        Extra config files to be read to the service.
-        Note that later files overrides earlier configuration.
+          # Please don't put your mopidy-spotify configuration in the public. :)
+          # Think of your Spotify Premium subscription!
+          spotify = {
+            client_id = "CLIENT_ID";
+            client_secret = "CLIENT_SECRET";
+          };
+        }
       '';
     };
   };
@@ -58,6 +75,8 @@ in {
         lib.platforms.linux)
     ];
 
+    xdg.configFile."mopidy/mopidy.conf".text = customToINI cfg.configuration;
+
     systemd.user.services.mopidy = {
       Unit = {
         Description = "mopidy music player daemon";
@@ -66,9 +85,7 @@ in {
       };
 
       Service = {
-        ExecStart = "${mopidyEnv}/bin/mopidy --config ${
-            lib.concatStringsSep ":" ([ mopidyConf ] ++ cfg.extraConfigFiles)
-          }";
+        ExecStart = "${mopidyEnv}/bin/mopidy";
       };
 
       Install.WantedBy = [ "default.target" ];
@@ -82,9 +99,7 @@ in {
       };
 
       Service = {
-        ExecStart = "${mopidyEnv}/bin/mopidy --config ${
-            lib.concatStringsSep ":" ([ mopidyConf ] ++ cfg.extraConfigFiles)
-          } local scan";
+        ExecStart = "${mopidyEnv}/bin/mopidy local scan";
         Type = "oneshot";
       };
 
