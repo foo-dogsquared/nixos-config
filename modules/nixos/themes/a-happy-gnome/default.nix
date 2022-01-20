@@ -1,7 +1,5 @@
 { config, options, lib, pkgs, ... }:
 
-# TODO: Custom dconf database which is not yet possible.
-# See https://github.com/NixOS/nixpkgs/issues/54150 for more details.
 let
   name = "a-happy-gnome";
   cfg = config.themes.themes.a-happy-gnome;
@@ -14,9 +12,12 @@ in
   options.themes.themes.a-happy-gnome.enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
 
   config = lib.mkIf cfg.enable {
-    services.xserver.enable = true;
-    services.xserver.displayManager.gdm.enable = true;
-    services.xserver.desktopManager.gnome.enable = true;
+    # Enable GNOME and GDM.
+    services.xserver = {
+      enable = true;
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+    };
 
     # Since we're using KDE Connect, we'll have to use gsconnect.
     programs.kdeconnect = {
@@ -43,17 +44,18 @@ in
     # I'm pretty sure this is already done but just to make sure.
     services.gnome.chrome-gnome-shell.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      # My custom configuration!
-      dconfConfig
+    # Bring all of the dconf keyfiles in there.
+    programs.dconf = {
+      enable = true;
+      packages = [ dconfConfig ];
+    };
 
+    environment.systemPackages = with pkgs; [
       # It is required for custom menus in extensions.
       gnome-menus
 
       # Good ol' unofficial preferences tool.
       gnome.gnome-tweaks
-
-      gnome.gnome-boxes
 
       # My preferred extensions.
       gnomeExtensions.arcmenu
