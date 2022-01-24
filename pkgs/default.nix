@@ -44,6 +44,7 @@ let
       guix-binary = callPackage ./guix-binary.nix { };
       junction = callPackage ./junction.nix { };
       libcs50 = callPackage ./libcs50.nix { };
+      mopidy-beets = callPackage ./mopidy-beets.nix { };
       mopidy-internetarchive = callPackage ./mopidy-internetarchive.nix { };
       pop-launcher = callPackage ./pop-launcher.nix { };
       pop-launcher-plugin-duckduckgo-bangs =
