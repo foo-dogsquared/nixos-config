@@ -35,7 +35,7 @@ in {
     };
 
     # This uses the custom borgmatic NixOS service.
-    services.borgmatic.jobs.external-storage = {
+    services.borgmatic-fds.jobs.external-storage = {
       startAt = "04/6:00:00";
       configPath = config.age.secrets.external-backup-borgmatic-settings.path;
     };

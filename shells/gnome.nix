@@ -3,7 +3,7 @@
 # projects.
 #
 # These include toolkits for C, Rust, and GNOME JavaScript.
-{ mkShell, meson, ninja, gtk4, libadwaita, gjs, pkg-config, rustPlatform, nodePackages }:
+{ mkShell, cmake, meson, ninja, gtk4, libadwaita, gjs, pkg-config, rustPlatform, nodePackages }:
 
 mkShell {
   packages = [

@@ -2,7 +2,7 @@
 { config, options, lib, pkgs, ... }:
 
 let
-  cfg = config.services.borgmatic;
+  cfg = config.services.borgmatic-fds;
 
   jobOption = { name, config, ... }: {
     options = {
@@ -27,7 +27,7 @@ let
     };
   };
 in {
-  options.services.borgmatic = {
+  options.services.borgmatic-fds = {
     jobs = lib.mkOption {
       type = with lib.types; attrsOf (submodule jobOption);
       description =

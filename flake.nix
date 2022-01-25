@@ -63,7 +63,7 @@
 
       forAllSystems = f:
         nixpkgs.lib.genAttrs inputs.flake-utils.lib.defaultSystems
-        (system: f system);
+          (system: f system);
 
       libExtended = nixpkgs.lib.extend (final: prev:
         (import ./lib { lib = final; }) // {
@@ -142,9 +142,16 @@
 
           # Let home-manager to manage itself.
           programs.home-manager.enable = true;
+
+          manual = {
+            html.enable = true;
+            json.enable = true;
+            manpages.enable = true;
+          };
         }];
       };
-    in {
+    in
+    {
       # Exposes only my library with the custom functions to make it easier to
       # include in other flakes.
       lib = import ./lib { lib = nixpkgs.lib; };
@@ -188,7 +195,6 @@
         import ./shells {
           pkgs = import nixpkgs { inherit system overlays; };
         });
-    };
 
       # It is my go-to so it is the default template.
       defaultTemplate = self.templates.basic-devshell;
@@ -200,4 +206,5 @@
           description = "Basic development shell template";
         };
       };
+    };
 }

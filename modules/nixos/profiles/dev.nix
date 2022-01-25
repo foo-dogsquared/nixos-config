@@ -70,6 +70,9 @@ in {
 
     # !!! Please add your user to the "libvirtd" group.
     (lib.mkIf cfg.virtualization.enable {
+      # virt-manager as my frontend.
+      environment.systemPackages = [ pkgs.virt-manager ];
+
       # Enable podman just as my main container runtime or something.
       virtualisation.podman = {
         enable = true;
@@ -79,6 +82,7 @@ in {
       # Enable libvirt for muh qemu.
       virtualisation.libvirtd = {
         enable = true;
+        qemu.package = pkgs.qemu_full;
         qemu.ovmf.enable = true;
       };
     })

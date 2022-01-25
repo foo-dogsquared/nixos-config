@@ -37,5 +37,5 @@ imports = [ # Your modules ]
     ++ (lib.attrValues (lib.getUsers "nixos" [ "foo-dogsquared" "polski" ]));
 ----
 
-* link:../modules/users.nix[`modules.users.users.${user}`] which is my implementation for managing users from link:../users/home-manager/[`../users/home-manager/`] — e.g., `modules.users.users.foo-dogsquared = {}`.
+* link:../modules/nixos/profiles/users.nix[`modules.users.users.${user}`] which is my implementation for managing users from link:../users/home-manager/[`../users/home-manager/`] — e.g., `modules.users.users.foo-dogsquared = {}`.
 This is integrating my home-manager users to map into NixOS users.
