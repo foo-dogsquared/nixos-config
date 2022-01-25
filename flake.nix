@@ -189,4 +189,15 @@
           pkgs = import nixpkgs { inherit system overlays; };
         });
     };
+
+      # It is my go-to so it is the default template.
+      defaultTemplate = self.templates.basic-devshell;
+
+      # Cookiecutter templates for your mama.
+      templates = {
+        basic-devshell = {
+          path = ./templates/basic-devshell;
+          description = "Basic development shell template";
+        };
+      };
 }

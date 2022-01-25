@@ -53,6 +53,12 @@ footnote:[I don't know why did I put it there but eh...]
 * `homeManagerModules` are where my link:./modules/home-manager[custom home-manager modules] to be exported.
 footnote:[This is more useful than my NixOS modules.]
 
+* `templates` which contains my templates.
+Though, these are just templates mostly for my own purposes so it is not as useful as the other outputs.
+
+* `defaultTemplate` which is my go-to template.
+Ehhh, same comment as `templates`.
+
 * `devShell` is the development shell for this project.
 It's just there for convenience purposes.
 
@@ -75,6 +81,7 @@ nixos-config
 ├── pkgs/
 ├── secrets/
 ├── shells/
+├── templates/
 ├── users/
 ├── flake.lock
 ├── flake.nix
@@ -97,6 +104,8 @@ footnote:[It is advised you should minimize SSH keys with passphrases since it i
 * link:./shells/[`./shells/`] contains my development shells for interacting with the usual type of projects.
 Setting this up can bring benefits outside of NixOS (unless you're interacting with projects with any OpenGL-related stuff).
 footnote:[Since packages brought from Nix shells can only work with the store, a container might be better at some situations.]
+
+* link:./templates/[`./templates/`] contains my custom templates handy for quickly initializing for various types of projects.
 
 * link:./users/[`./users/`] contains my link:https://github.com/nix-community/home-manager[home-manager] configurations.
 It is exported in the flakes at `outputs.homeConfigurations`.
