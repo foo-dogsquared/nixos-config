@@ -15,9 +15,10 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ pkg-config autoreconfHook texinfo ];
   propagatedBuildInputs = [ guile_3_0 ];
 
-  preConfigure = ''
-    sed -i '/guilemoduledir\s*=/s%=.*%=''${out}/share/guile/site%' configure.ac
-    sed -i '/guileobjectdir\s*=/s%=.*%=''${out}/share/guile/ccache%' configure.ac
+  postConfigure = ''
+    sed -i '/moddir\s*=/s%=.*%=''${out}/share/guile/site%' Makefile
+    sed -i '/godir\s*=/s%=.*%=''${out}/share/guile/ccache%' Makefile
+    sed -i '/ccachedir\s*=/s%=.*%=''${out}/share/guile/ccache%' Makefile
   '';
 
   meta = with lib; {
