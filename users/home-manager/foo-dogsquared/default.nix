@@ -28,6 +28,21 @@
       mopidy-mpris
       mopidy-local
     ];
+
+  services.recoll = {
+    enable = true;
+    settings = {
+      topdirs = "~/Downloads ~/Documents ~/library";
+      "skippedNames+" = "node_modules";
+
+      "~/library/projects" = {
+        "skippedNames+" = ".editorconfig .gitignore result flake.lock go.sum";
+      };
+
+      "~/library/projects/software" = {
+        "skippedNames+" = "target result";
+      };
+    };
   };
 
   # My custom modules.
