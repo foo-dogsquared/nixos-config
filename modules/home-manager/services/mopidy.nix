@@ -4,7 +4,10 @@
 let
   cfg = config.services.mopidy;
 
-  customToINI = with lib; generators.toINI {
+  # The configuration format of Mopidy. It seems to use configparser with
+  # some quirky handling of its types. You can see how they're handled in
+  # `mopidy/config/types.py` from the source code.
+  toMopidyConf = with lib; generators.toINI {
     mkKeyValue = generators.mkKeyValueDefault {
       mkValueString = v:
         if isList v then "\n  " + concatStringsSep "\n  " v
@@ -14,7 +17,6 @@ let
 
   mopidyEnv = pkgs.buildEnv {
     name = "mopidy-with-extensions-${pkgs.mopidy.version}";
-    # TODO: Improve this that doesn't use `lib.misc`.
     paths = lib.closePropagation cfg.extensionPackages;
     pathsToLink = [ "/${pkgs.mopidyPackages.python.sitePackages}" ];
     buildInputs = [ pkgs.makeWrapper ];
@@ -22,6 +24,19 @@ let
       makeWrapper ${pkgs.mopidy}/bin/mopidy $out/bin/mopidy --prefix PYTHONPATH : $out/${pkgs.mopidyPackages.python.sitePackages}
     '';
   };
+
+  mopidyConfFormat = {}: {
+    type = with lib.types;
+      let
+        valueType = nullOr (oneOf [ bool int float str (listOf valueType) ]) // {
+          description = "Mopidy config value";
+        };
+      in attrsOf (attrsOf valueType);
+
+    generate = name: value: pkgs.writeText name (toMopidyConf value);
+  };
+
+  settingsFormat = mopidyConfFormat {};
 in {
   options.services.mopidy = {
     enable = lib.mkEnableOption "Mopidy music player daemon";
@@ -39,8 +54,11 @@ in {
 
     configuration = lib.mkOption {
       default = {};
-      type = lib.types.attrs;
-      description = "The configuration Mopidy uses in the service.";
+      type = settingsFormat.type;
+      description = ''
+        The Mopidy configuration to be written in the appropriate file in the
+        home directory.
+      '';
       example = lib.literalExpression ''
         {
           file = {
@@ -75,7 +93,8 @@ in {
         lib.platforms.linux)
     ];
 
-    xdg.configFile."mopidy/mopidy.conf".text = customToINI cfg.configuration;
+    xdg.configFile."mopidy/mopidy.conf".source =
+      settingsFormat.generate "mopidy-conf-${config.home.username}" cfg.configuration;
 
     systemd.user.services.mopidy = {
       Unit = {
