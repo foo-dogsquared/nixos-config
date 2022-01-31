@@ -1,9 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+
+    inputs.guix-overlay.nixosModules.guix-binary
   ];
 
   # My custom configuration with my custom modules starts here.
@@ -38,6 +40,9 @@
     disableLimit = true;
     themes.a-happy-gnome.enable = true;
   };
+
+  # Enable Guix service.
+  services.guix-binary.enable = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

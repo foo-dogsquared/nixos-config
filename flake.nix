@@ -87,6 +87,7 @@
           home-manager.flake = inputs.home-manager;
           agenix.flake = inputs.agenix;
           nur.flake = inputs.nur;
+          guix-overlay.flake = inputs.guix-overlay;
         };
 
         # Set several binary caches.
