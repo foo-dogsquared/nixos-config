@@ -39,6 +39,7 @@ in {
         carla # The Carla Carla.
       ];
 
+      # This is assuming you're using Pipewire, yes?
       services.easyeffects.enable = true;
       services.fluidsynth = {
         enable = true;

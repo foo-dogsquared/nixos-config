@@ -9,6 +9,7 @@ in {
       lib.mkEnableOption "foo-dogsquared's user-specific development setup";
     shell.enable =
       lib.mkEnableOption "configuration of foo-dogsquared's shell of choice";
+    extras.enable = lib.mkEnableOption "additional tools for development stuff";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -37,10 +38,19 @@ in {
         nix-direnv.enable = true;
       };
       programs.zoxide.enable = true;
+
+      # Enable Starship prompt.
       programs.starship = {
         enable = true;
         settings = { add_newline = false; };
       };
+    })
+
+    (lib.mkIf cfg.extras.enable {
+      home.packages = with pkgs; [
+        tree-sitter # The modern way of text highlighting.
+        hyperfine # Command-line profiling.
+      ];
     })
   ]);
 }

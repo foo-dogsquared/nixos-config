@@ -27,7 +27,7 @@
       neovim.enable = true;
     };
     users.users.foo-dogsquared.settings = {
-      extraGroups = [ "wheel" "audio" "docker" "podman" "network-manager" ];
+      extraGroups = [ "wheel" "audio" "docker" "podman" "networkmanager" ];
       hashedPassword =
         "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
       isNormalUser = true;
@@ -40,6 +40,10 @@
     disableLimit = true;
     themes.a-happy-gnome.enable = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    guile_3_0
+  ];
 
   # Enable Guix service.
   services.guix-binary.enable = true;

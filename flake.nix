@@ -63,7 +63,7 @@
 
       forAllSystems = f:
         nixpkgs.lib.genAttrs inputs.flake-utils.lib.defaultSystems
-          (system: f system);
+        (system: f system);
 
       libExtended = nixpkgs.lib.extend (final: prev:
         (import ./lib { lib = final; }) // {
@@ -75,6 +75,9 @@
 
       # The default configuration for our NixOS systems.
       hostDefaultConfig = {
+        # Default architecture.
+        system = "x86_64-linux";
+
         # I want to capture the usual flakes to its exact version so we're
         # making them available to our system. This will also prevent the
         # annoying downloads since it always get the latest revision.
@@ -91,12 +94,12 @@
         };
 
         # Set several binary caches.
-        nix = {
-          binaryCaches = [
+        nix.settings = {
+          substituters = [
             "https://nix-community.cachix.org"
             "https://foo-dogsquared.cachix.org"
           ];
-          binaryCachePublicKeys = [
+          trusted-public-keys = [
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
             "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
           ];
@@ -107,10 +110,8 @@
 
         # Extend nixpkgs with our overlays except for the NixOS-focused modules
         # here.
-        nixpkgs.overlays = overlays ++ [
-          inputs.nix-alien.overlay
-          inputs.guix-overlay.overlay
-        ];
+        nixpkgs.overlays = overlays
+          ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlay ];
 
         # Please clean your temporary crap.
         boot.cleanTmpDir = true;
@@ -151,8 +152,7 @@
           };
         }];
       };
-    in
-    {
+    in {
       # Exposes only my library with the custom functions to make it easier to
       # include in other flakes.
       lib = import ./lib { lib = nixpkgs.lib; };
@@ -181,7 +181,9 @@
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
       packages = forAllSystems (system:
-        import ./pkgs { pkgs = import nixpkgs { inherit system overlays; }; });
+        inputs.flake-utils.lib.flattenTree (import ./pkgs {
+          pkgs = import nixpkgs { inherit system overlays; };
+        }));
 
       # The development environment for this flake.
       devShell = forAllSystems (system:

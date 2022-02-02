@@ -20,6 +20,7 @@ in {
       description =
         "Whether to enable persistence for the cleanup, allowing it to activate the next time it boots when missed.";
       default = true;
+      defaultText = "true";
       example = false;
     };
 
@@ -97,7 +98,7 @@ in {
             PartOf = [ "default.target" ];
           };
 
-          Install.WantedBy = [ "default.target" ];
+          Install.WantedBy = [ "timers.target" ];
 
           Timer = {
             OnCalendar = cfg.startAt;
