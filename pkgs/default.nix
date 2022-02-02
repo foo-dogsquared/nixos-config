@@ -30,6 +30,7 @@ let
             sha256 = "sha256-lgt69FhXANsP3VuENVThHiVk/tngYfWR+uiKe+ZEb6M=";
           };
         });
+      butler = callPackage ./butler.nix { };
       devdocs-desktop = callPackage ./devdocs-desktop.nix { };
       doggo = callPackage ./doggo.nix { };
       gnome-search-provider-browser-tabs = callPackage ./gnome-search-provider-browser-tabs.nix { };
