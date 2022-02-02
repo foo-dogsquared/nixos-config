@@ -4,7 +4,6 @@ let
   name = "a-happy-gnome";
   cfg = config.themes.themes.a-happy-gnome;
   dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" {} ''
-    mkdir -p $out/etc/dconf/db/database.d
     install -Dm644 ${./config/dconf}/*.conf -t $out/etc/dconf/db/database.d
   '';
 in
@@ -59,6 +58,7 @@ in
 
       # My preferred extensions.
       gnomeExtensions.arcmenu
+      gnomeExtensions.appindicator
       gnomeExtensions.gsconnect
       gnomeExtensions.x11-gestures
       gnomeExtensions.kimpanel
@@ -72,6 +72,13 @@ in
       # TODO: Also these two...
       gnome-shell-extension-burn-my-windows
       gnome-shell-extension-desktop-cube
+
+      # GNOME search providers.
+      gnome-search-provider-recoll
+
+      gnome-search-provider-browser-tabs.gnome-shell-extension
+      gnome-search-provider-browser-tabs.web-extension
+      gnome-search-provider-browser-tabs.connector
 
       # Setting up Pop shell.
       gnome-shell-extension-pop-shell
