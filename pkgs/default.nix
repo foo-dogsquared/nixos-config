@@ -30,6 +30,7 @@ let
             sha256 = "sha256-lgt69FhXANsP3VuENVThHiVk/tngYfWR+uiKe+ZEb6M=";
           };
         });
+      blueprint-compiler = callPackage ./blueprint-compiler.nix { };
       butler = callPackage ./butler.nix { };
       devdocs-desktop = callPackage ./devdocs-desktop.nix { };
       doggo = callPackage ./doggo.nix { };
