@@ -1,6 +1,6 @@
 { lib, fetchFromGitHub, rustPlatform, pkg-config, openssl, gtk3 }:
 
-let distributionPluginPath = "$out/lib/pop-launcher";
+let distributionPluginPath = "\${out}/lib/pop-launcher";
 in rustPlatform.buildRustPackage rec {
   pname = "pop-launcher";
   version = "1.1.0";
@@ -31,13 +31,14 @@ in rustPlatform.buildRustPackage rec {
     for plugin in plugins/src/*; do
       plugin_name=$(basename "$plugin")
       plugin_path="${distributionPluginPath}/plugins/$plugin_name"
+      plugin_bin=$(echo "$plugin_name" | sed 's/_/-/g')
 
       # We are only after the plugins which are stored inside subdirectories.
       [ -d $plugin ] || continue
 
       # Configure each built-in plugin with the plugin metadata file and the binary (which is also `pop-launcher`).
       mkdir -p "$plugin_path" && cp "$plugin/plugin.ron" "$plugin_path"
-      ln -sf "$out/bin/pop-launcher" "$plugin_path/$plugin_name"
+      ln -sf "$out/bin/pop-launcher" "$plugin_path/$plugin_bin"
     done
   '';
 
