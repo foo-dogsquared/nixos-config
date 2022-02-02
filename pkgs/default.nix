@@ -31,6 +31,7 @@ let
           };
         });
       doggo = callPackage ./doggo.nix { };
+      gnome-search-provider-browser-tabs = callPackage ./gnome-search-provider-browser-tabs.nix { };
       gnome-shell-extension-burn-my-windows =
         callPackage ./gnome-shell-extension-burn-my-windows.nix { };
       gnome-shell-extension-desktop-cube =
