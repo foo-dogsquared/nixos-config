@@ -55,6 +55,7 @@ let
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
       rnote = callPackage ./rnote.nix { };
       tic-80 = callPackage ./tic-80 { };
+      segno = libsForQt5.callPackage ./segno.nix { };
       sioyek = libsForQt5.callPackage ./sioyek.nix { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
     };
