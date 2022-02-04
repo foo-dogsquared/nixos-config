@@ -121,7 +121,7 @@ In order of priority:
 
 * [x] Create custom modules.
 * [x] Create a themes system similar to link:https://github.com/hlissner/dotfiles[this NixOS config].
-* [ ] Create a good workflow for creating ISOs.
+* [x] Create a good workflow for creating ISOs.
 * [x] Create development shells.
 * [x] Manage secrets with agenix.
 * [ ] Create a good workflow for tests.

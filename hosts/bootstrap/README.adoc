@@ -1,0 +1,16 @@
+= bootstrap, the NixOS installation medium
+
+My personalized NixOS installation medium.
+It is not supposed to be used as a daily system (if you are, you're pretty weird :/).
+
+This is based from how devos link:https://github.com/divnix/digga/blob/760bb9c29063258ba547145de0ab96acd7eba4c0/modules/bootstrap-iso.nix[generates their ISO].
+You can also see link:https://nix.dev/tutorials/building-bootable-iso-image[an example from nix.dev].
+
+To make use of this, you can generate an ISO through link:https://github.com/nix-community/nixos-generators[nixos-generators]. footnote:[You can also try this for other hosts as well for MORE BEEFY OFFLINE INSTALLATION MEDIUM!]
+
+[source, shell]
+----
+nix run github:nix-community/nixos-generators -- --flake .#bootstrap --format iso --out-link result
+----
+
+With the ISO built, you can now use it for yourself for whatever reason.
