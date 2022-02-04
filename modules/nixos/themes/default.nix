@@ -21,7 +21,7 @@ in {
     assertions = [{
       assertion =
         let enabledThemes = lib.countAttrs (_: theme: theme.enable) cfg.themes;
-        in cfg.disableLimit && (enabledThemes < 2);
+        in cfg.disableLimit || (enabledThemes <= 1);
       message = "Can't have more than one theme enabled at any given time.";
     }];
   };
