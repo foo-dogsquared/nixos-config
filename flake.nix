@@ -66,7 +66,7 @@
         (system: f system);
 
       libExtended = nixpkgs.lib.extend (final: prev:
-        (import ./lib { lib = final; }) // {
+        (import ./lib { lib = prev; }) // {
           flakeUtils = (import ./lib/flake-utils.nix {
             inherit inputs;
             lib = final;
@@ -74,9 +74,17 @@
         });
 
       # The default configuration for our NixOS systems.
-      hostDefaultConfig = {
-        # Default architecture.
+      hostDefaultConfig = let
         system = "x86_64-linux";
+      in {
+        inherit system;
+        specialArgs = {
+          inherit system inputs self;
+          lib = nixpkgs.lib.extend (final: prev:
+            import ./lib { lib = prev; });
+        };
+
+        # The default configuration for a NixOS system STARTS HERE.
 
         # I want to capture the usual flakes to its exact version so we're
         # making them available to our system. This will also prevent the
