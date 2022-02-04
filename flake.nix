@@ -1,5 +1,12 @@
 {
   description = "foo-dogsquared's NixOS config as a flake";
+
+  nixConfig = {
+    extra-experimental-features = "nix-command flake";
+    extra-substituters ="https://nix-community.cachix.org https://foo-dogsquared.cachix.org";
+    extra-trusted-public-keys = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E=";
+  };
+
   inputs = {
     # I know NixOS can be stable but we're going cutting edge, baybee!
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -104,6 +111,7 @@
         # Set several binary caches.
         nix.settings = {
           substituters = [
+            "https://cache.nixos.org"
             "https://nix-community.cachix.org"
             "https://foo-dogsquared.cachix.org"
           ];
