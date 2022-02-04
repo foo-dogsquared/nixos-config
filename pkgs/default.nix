@@ -35,6 +35,7 @@ let
       devdocs-desktop = callPackage ./devdocs-desktop.nix { };
       doggo = callPackage ./doggo.nix { };
       gnome-search-provider-browser-tabs = callPackage ./gnome-search-provider-browser-tabs.nix { };
+      gnome-search-provider-recoll = callPackage ./gnome-search-provider-recoll.nix { };
       gnome-shell-extension-burn-my-windows =
         callPackage ./gnome-shell-extension-burn-my-windows.nix { };
       gnome-shell-extension-desktop-cube =

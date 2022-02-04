@@ -4,7 +4,7 @@ let
   name = "a-happy-gnome";
   cfg = config.themes.themes.a-happy-gnome;
   dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" {} ''
-    install -Dm644 ${./config/dconf}/*.conf -t $out/etc/dconf/db/database.d
+    install -Dm644 ${./config/dconf}/*.conf -t $out/etc/dconf/db/${name}-conf.d
   '';
 in
 {
@@ -47,6 +47,15 @@ in
     programs.dconf = {
       enable = true;
       packages = [ dconfConfig ];
+
+      # The `user` profile needed to set custom system-wide settings in GNOME.
+      profiles.user = pkgs.writeTextFile {
+        name = "a-happy-gnome";
+        text = ''
+          user-db:user
+          system-db:${name}-conf
+        '';
+      };
     };
 
     environment.systemPackages = with pkgs; [
