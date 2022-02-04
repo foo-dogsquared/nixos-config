@@ -28,6 +28,10 @@
     nix-alien.url = "github:thiagokokada/nix-alien";
     nix-alien.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Generate your NixOS systems to various formats!
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
+
     # Managing your secrets.
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
@@ -106,6 +110,7 @@
           agenix.flake = inputs.agenix;
           nur.flake = inputs.nur;
           guix-overlay.flake = inputs.guix-overlay;
+          nixos-generators.flake = inputs.nixos-generators;
         };
 
         # Set several binary caches.
