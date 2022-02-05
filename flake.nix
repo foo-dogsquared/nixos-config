@@ -89,6 +89,8 @@
         system = "x86_64-linux";
       in {
         inherit system;
+
+        # Pass these things to our modules.
         specialArgs = {
           inherit system inputs self;
           lib = nixpkgs.lib.extend (final: prev:
@@ -112,6 +114,9 @@
           guix-overlay.flake = inputs.guix-overlay;
           nixos-generators.flake = inputs.nixos-generators;
         };
+
+        # We may as well live on the BLEEDING EDGE!
+        nix.package = nixpkgs.legacyPackages.${system}.nixUnstable;
 
         # Set several binary caches.
         nix.settings = {

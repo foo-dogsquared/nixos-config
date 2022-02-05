@@ -127,6 +127,11 @@ in {
     bleachbit.enable = true;
   };
 
+  home.sessionVariables = {
+    MANPAGER = "nvim +Man!";
+    EDITOR = "nvim";
+  };
+
   # WHOA! Even browsers with extensions can be declarative!
   programs.brave = {
     enable = true;
@@ -138,6 +143,7 @@ in {
       { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; } # Firenvim
       { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
       { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
+      { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
     ];
   };
 
