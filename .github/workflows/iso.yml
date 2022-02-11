@@ -18,13 +18,14 @@ jobs:
         run: |
           nix run github:nix-community/nixos-generators/296067b9c7a172d294831dec89d86847f30a7cfc -- --flake .#bootstrap --format iso --out-link result
       - name: Create release
+        if: ${{ github.ref == "refs/heads/master" }}
         id: create-release
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: latest
           prerelease: true
-          title: Pre-release development
+          title: Latest release
           files:
             result/iso/bootstrap-*.iso
 

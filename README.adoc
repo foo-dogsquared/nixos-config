@@ -9,9 +9,21 @@ Here is the result.
 
 
 
-== Installation
+== Getting started
+
+Hey there, fellow traveler!
+You've fell into the rabbit hole we call Nix where it leads to other rabbit holes such as functional package management, reproducibility, declarative systems, and immutable operating systems.
+
+This is one of the many tickets to that rabbit hole, allow me to be your guide in this mark:[painful] wonderful declarative journey.
+Hope to see you on the other side!
+
+
+=== Installation
 
 Since this uses Nix flakes, you should have Nix v2.4 and above installed.
+
+If you're going to install one of my NixOS configs, be sure to download the unstable versions from link:https://releases.nixos.org/?prefix=nixos/unstable/[their release page].
+As an additional option, you can also use link:https://github.com/foo-dogsquared/nixos-config/releases/tag/latest[my personalized NixOS installers] which is primarily intended for me configs.
 
 This primarily uses Nix flakes so you can have a preview of what's available in my config.
 
@@ -27,9 +39,7 @@ To install it, run the `nixos-install --flake github:foo-dogsquared/nixos-config
 TIP: If you found some error regarding something in restricted mode, you can run the installation with `--impure` flag (i.e., `nixos-install --impure --flake github:foo-dogsquared/nixos-config#ni`).
 
 
-
-
-== What's in my flake?
+=== What's in my flake?
 
 You can see the full details with `nix flake show`.
 As a helpful summary, here's what my flake should contain sorting from the most interesting and helpful outputs to the most boring and unnecessary.
@@ -53,7 +63,6 @@ footnote:[This is more useful than my NixOS modules.]
 It can be used as additional modules for your own NixOS config in case you want to use mine for whatever reason.
 footnote:[I don't know why did I put it there but eh...]
 
-
 * `templates` which contains my templates.
 Though, these are just templates mostly for my own purposes so it is not as useful as the other outputs.
 
@@ -67,9 +76,22 @@ It's just there for convenience purposes.
 It's another unnecessary export but it's there.
 
 
+=== The remote repo
+
+For a complete overkill, we use a CI to further the configuration abomination.
+It uses GitHub workflows to enable things such as...
+
+* Automatically building link:./pkgs[my custom packages] and sending them to my binary cache to easily distribute it for others.
+* Building my personalized NixOS installers and link:https://github.com/foo-dogsquared/nixos-config/releases[making a release out of it].
+* Testing the flake outputs (in progress lel).
 
 
-== Project structure
+=== Project structure
+
+Last and foremost, we have the project directory —  the environment you'll be living in for the next year, tinkering your Nix configs.
+.
+It is required to be familiar with the workspace, after all.
+As previously mentioned, my configuration takes a lot of cues from link:https://github.com/divnix/devos[devos] (which is unfortunately is a lot to take if you're just beginning to grok Nix as a whole).
 
 My NixOS config should look like the following:
 
@@ -88,6 +110,8 @@ nixos-config
 ├── flake.nix
 └── README.adoc
 ----
+
+Most of the said folders are related to a flake output attribute, see <<_whats_in_my_flake>> for more details.
 
 * link:./hosts/[`./hosts/`] contain machine-specific configuration.
 This usually configures like the hardware setup, timezone, and users.

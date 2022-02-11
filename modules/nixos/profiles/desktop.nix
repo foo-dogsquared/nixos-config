@@ -115,7 +115,13 @@ in {
         automatic = true;
         persistent = true;
         dates = "weekly";
-        options = "--delete-older-than 21d";
+        options = "--delete-older-than 7d";
+      };
+
+      # Run the optimizer.
+      nix.optimise = {
+        automatic = true;
+        dates = [ "daily" ];
       };
 
       # Clear logs that are more than a month old weekly.

@@ -11,7 +11,7 @@ Ideally, it should be made minimal as much as possible considering you also have
 
 The host configurations placed here most likely use the link:../modules/nixos[custom NixOS modules].
 The custom modules shouldn't be imported manually from the host.
-In the case for our link:../flake.nix[flake configuration], the importing of modules are already taken care of — specifically through `mkHost` from link:../lib/flake-utils[`../lib/flake-utils`] (see the linked file for the implementation).
+In the case for our link:../flake.nix[flake configuration], the importing of modules are already taken care of — specifically through `mkHost` from link:../lib/flake-utils.nix[`../lib/flake-utils.nix`] (see the linked file for the implementation).
 
 It is best practice to assume the host configurations make use of the link:../modules/nixos[custom NixOS modules], link:../pkgs[custom packages], and the flake inputs.
 In other words, always pay attention to link:../flake.nix[`../flake.nix`].
