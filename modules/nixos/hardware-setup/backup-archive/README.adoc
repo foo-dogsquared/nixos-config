@@ -1,0 +1,5 @@
+= BorgBackup setup for the archive
+
+It's a NixOS configuration that configures my basic BorgBackup backup battlestation for my local archive.
+Not all of the required files are here (i.e., the SSH key used for Borg).
+In other words, if it's not yours, don't attempt to activate this setup.

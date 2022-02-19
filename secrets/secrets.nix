@@ -1,6 +1,9 @@
 let
   system1 =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG42LafAFOeh3oYz/cm6FXes0ss59/EOCXpGsYvhpI21";
+  system2 =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjRjAddjbyoM32tQhCjj8OrnqNBsXj+5D379iryupK+";
+  systems = [ system1 system2 ];
 
   user1 =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMclb6WPpYRoMVqCCzQcG2XQHczB6vaIEDIHqjVsyQJi";
@@ -10,7 +13,10 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIytwsseYS6kV8ldiUV767C2Gy7okxckdDRW4aA3q/Ku";
   user4 =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGtn+t2D7clY1U1rzKcSCBJjNbuJzbRArEiM3soyFcnv";
+  users = [ user1 user2 user3 user4 ];
 in {
-  "archive/password".publicKeys = [ system1 user3 user4 ];
-  "archive/borgmatic.json".publicKeys = [ system1 user3 user4 ];
+  "archive/borg-patterns".publicKeys = users ++ systems;
+  "archive/borg-patterns-local".publicKeys = users ++ systems;
+  "archive/password".publicKeys = users ++ systems;
+  "archive/key".publicKeys = users ++ systems;
 }
