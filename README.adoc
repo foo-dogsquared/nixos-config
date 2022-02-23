@@ -39,6 +39,7 @@ To install it, run the `nixos-install --flake github:foo-dogsquared/nixos-config
 TIP: If you found some error regarding something in restricted mode, you can run the installation with `--impure` flag (i.e., `nixos-install --impure --flake github:foo-dogsquared/nixos-config#ni`).
 
 
+[#whats-in-my-flake]
 === What's in my flake?
 
 You can see the full details with `nix flake show`.
@@ -91,7 +92,7 @@ It uses GitHub workflows to enable things such as...
 Last and foremost, we have the project directory —  the environment you'll be living in for the next year, tinkering your Nix configs.
 .
 It is required to be familiar with the workspace, after all.
-As previously mentioned, my configuration takes a lot of cues from link:https://github.com/divnix/devos[devos] (which is unfortunately is a lot to take if you're just beginning to grok Nix as a whole).
+My configuration takes a lot of cues from link:https://github.com/divnix/devos[devos] (which is unfortunately is a lot to take if you're just beginning to grok Nix as a whole).
 
 My NixOS config should look like the following:
 
@@ -111,7 +112,7 @@ nixos-config
 └── README.adoc
 ----
 
-Most of the said folders are related to a flake output attribute, see <<_whats_in_my_flake>> for more details.
+Most of the said folders are related to a flake output attribute, see <<whats-in-my-flake>> for more details.
 
 * link:./hosts/[`./hosts/`] contain machine-specific configuration.
 This usually configures like the hardware setup, timezone, and users.
@@ -157,13 +158,25 @@ In order of priority:
 * [x] ~Steal~ Get some ideas from link:https://github.com/divnix/devos[this overengineered template].
 * [x] Make use of other established utilities such as link:https://github.com/divnix/digga/[digga], link:https://github.com/gytis-ivaskevicius/flake-utils-plus[flake-utils-plus], and link:https://github.com/nix-community/home-manager[home-manager] once I'm familiar to create my own Nix programs.
 
-Out of scope:
 
-* Text editor configurations.
-They are often updated. I don't want to rebuild it every time I change it.
+=== Out of scope:
+
+* Set most program configurations with Nix.
+This is especially applicable to programs I always use such as my text editor configs.
+
+** The reason: managing them can be chaotic when applied with Nix.
+The potential for it is pretty nice especially when seen with similar implementations such as Guix home environment.
+However, I don't want to rebuild it every time I change it.
+
+** Plus, most of my applications are now installed using link:https://flatpak.org/[Flatpak] anyways.
+It is a tad easier to manage configurations installed this way (e.g., just copy `~/.var` between your systems or make backups with it).
 
 * Migration of my link:https://github.com/foo-dogsquared/dotfiles[dotfiles].
 I still use it on other non-NixOS systems.
+
+* To be a configuration framework.
+This is my personal configuration which means experimentation will always be here.
+Sudden changes can happen at any point.
 
 
 
