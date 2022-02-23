@@ -1,4 +1,4 @@
-{ lib, fetchFromGitHub, python3, mopidy }:
+{ lib, fetchFromGitHub, python3, mopidy, beets }:
 
 python3.pkgs.buildPythonApplication rec {
   pname = "mopidy-beets";
@@ -14,7 +14,7 @@ python3.pkgs.buildPythonApplication rec {
   propagatedBuildInputs = with python3.pkgs; [
     pykka
     requests
-  ] ++ [ mopidy ];
+  ] ++ [ mopidy beets ];
 
   checkInputs = with python3.pkgs; [
     pytest
