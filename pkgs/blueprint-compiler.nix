@@ -2,12 +2,12 @@
 
 python3Packages.buildPythonPackage rec {
   pname = "blueprint-compiler";
-  version = "2022-02-02";
+  version = "2022-02-23";
 
   src = fetchgit {
     url = "https://gitlab.gnome.org/jwestman/blueprint-compiler.git";
-    rev = "bac008296a10b4407ec0a385689f8e11e813d1b7";
-    sha256 = "sha256-EWUAoWZbakOW6cSAKnYiXpTtvW9qRhmPK9bGdGr4JKI=";
+    rev = "4b42016837a6b5bd63f99647423602426168450e";
+    sha256 = "sha256-141+LHZQm3S9GxRrineTHb7UsNBtszGeMTakoRv3CFs=";
   };
 
   format = "other";
