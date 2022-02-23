@@ -17,10 +17,7 @@ let
     license = licenses.mit;
     platforms = platforms.unix;
   };
-in {
-  # This is used for flattenTree from the flake definition.
-  recurseForDerivations = true;
-
+in lib.recurseIntoAttrs {
   gnome-shell-extension = mkYarnPackage rec {
     inherit meta;
     pname = "gnome-search-provider-browser-tabs";
