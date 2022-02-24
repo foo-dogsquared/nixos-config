@@ -33,7 +33,6 @@ in
       epiphany
       gnome-terminal
       gnome-music
-      gnome-software
       yelp
     ] ++ (with pkgs; [
       gnome-user-docs
@@ -59,11 +58,18 @@ in
     };
 
     environment.systemPackages = with pkgs; [
+
+      # The application menu.
+      junction
+
       # It is required for custom menus in extensions.
       gnome-menus
 
       # Good ol' unofficial preferences tool.
       gnome.gnome-tweaks
+
+      # A third-party extension manager.
+      gnome-extension-manager
 
       # My preferred extensions.
       gnomeExtensions.arcmenu
@@ -88,11 +94,6 @@ in
       gnome-search-provider-browser-tabs.gnome-shell-extension
       gnome-search-provider-browser-tabs.web-extension
       gnome-search-provider-browser-tabs.connector
-
-      # Setting up Pop shell.
-      gnome-shell-extension-pop-shell
-      pop-launcher
-      pop-launcher-plugin-duckduckgo-bangs
     ];
   };
 }
