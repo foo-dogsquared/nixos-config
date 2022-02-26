@@ -3,13 +3,13 @@
 
 stdenv.mkDerivation rec {
   pname = "sioyek";
-  version = "1.0.0";
+  version = "1.1.0";
 
   src = fetchFromGitHub {
     owner = "ahrm";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-6eyUwrXeAkWpzwyIhWa/h6YZrSxztWwYBKCSnL2fsjE=";
+    sha256 = "sha256-d9Cm77SjjDnF1C/qT2J3ywUqedpDYnfzKq+ohirn2eM=";
     fetchSubmodules = true;
   };
 
