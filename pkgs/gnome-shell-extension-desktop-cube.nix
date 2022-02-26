@@ -3,13 +3,13 @@
 # TODO: Deprecate this package once it is successfully packaged in nixpkgs.
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-desktop-cube";
-  version = "7";
+  version = "8";
 
   src = fetchFromGitHub {
     owner = "Schneegans";
     repo = "Desktop-Cube";
     rev = "v${version}";
-    sha256 = "sha256-aelt5HWBzqOBcYFe913StFyhTYBlEhI2ekWpA6jN0fQ=";
+    sha256 = "sha256-31p/v8F8FR7Oa8Aiks4dFQp0jjA0o/m8fvnoGUnOTkk=";
   };
 
   nativeBuildInputs = [ glib gettext ];
