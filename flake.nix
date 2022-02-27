@@ -50,6 +50,9 @@
     # The more recommended Rust overlay so I'm going with it.
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Generating an entire flavored themes with Nix?
+    nix-colors.url = "github:misterio77/nix-colors";
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
