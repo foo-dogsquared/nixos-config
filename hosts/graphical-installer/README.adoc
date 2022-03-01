@@ -1,0 +1,15 @@
+= graphical-installer, the personalized graphical installer for NixOS
+
+My other personalized NixOS installation medium.
+Similar to `bootstrap`, it isn't supposed to be used as a daily system (if you are, you're still pretty weird :/).
+This is based from the GNOME graphical installer from nixpkgs.
+Also uses my link:../../modules/nixos/themes/a-happy-gnome[A happy GNOME theme].
+
+To make use of this, you can generate an ISO through link:https://github.com/nix-community/nixos-generators[nixos-generators]. footnote:[You can also try this for other hosts as well for MORE BEEFY OFFLINE INSTALLATION MEDIUM!]
+
+[source, shell]
+----
+nix run github:nix-community/nixos-generators -- --flake .#graphical-installer --format iso --out-link result
+----
+
+With the ISO built, you can now use it for yourself for whatever reason.
