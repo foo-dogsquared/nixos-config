@@ -160,8 +160,16 @@
       };
 
       # The default config for our home-manager configurations.
-      userDefaultConfig = {
+      userDefaultConfig = let
         system = "x86_64-linux";
+      in {
+        inherit system;
+
+        specialArgs = {
+          inherit system self;
+          lib = nixpkgs.lib.extend (final: prev:
+            import ./lib { lib = prev; });
+        };
 
         extraModules = [{
           # To be able to use the most of our config as possible, we want both to

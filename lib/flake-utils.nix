@@ -69,20 +69,17 @@ in rec {
   */
   mkUser = file:
     attrs@{ username ? (builtins.baseNameOf file), system ? sys
-    , extraModules ? [ ], ... }:
+    , extraModules ? [ ], extraSpecialArgs ? { inherit lib system; }, ... }:
     let
       hmConfigFunctionArgs = builtins.attrNames (builtins.functionArgs
         inputs.home-manager.lib.homeManagerConfiguration);
       hmModules = lib.map (path: import path)
         (lib.modulesToList (lib.filesToAttrRec ../modules/home-manager));
     in inputs.home-manager.lib.homeManagerConfiguration {
-      inherit system username;
+      inherit system username extraSpecialArgs;
       configuration = import file;
       homeDirectory = "/home/${username}";
       extraModules = hmModules ++ extraModules
         ++ [ (lib.filterAttrs (n: _: !lib.elem n hmConfigFunctionArgs) attrs) ];
-
-      # Additional attributes to be referred to the modules.
-      extraSpecialArgs = { inherit lib system; };
     };
 }
