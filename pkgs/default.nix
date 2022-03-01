@@ -8,6 +8,7 @@ let
     in {
       blueprint-compiler = callPackage ./blueprint-compiler.nix { };
       butler = callPackage ./butler.nix { };
+      distant = callPackage ./distant.nix { };
       devdocs-desktop = callPackage ./devdocs-desktop.nix { };
       doggo = callPackage ./doggo.nix { };
       emulsion-palette = callPackage ./emulsion-palette.nix { };
