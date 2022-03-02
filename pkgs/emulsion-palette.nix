@@ -7,7 +7,7 @@ stdenv.mkDerivation rec {
 
   src = fetchFromGitHub {
     owner = "lainsce";
-    repo = pname;
+    repo = "emulsion";
     rev = version;
     sha256 = "sha256-gwN+hpK/nZMyO2gqeoKxhsMM3k4sR0NuCkmnagMlpHA=";
   };
