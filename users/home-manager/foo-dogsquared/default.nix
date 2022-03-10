@@ -119,13 +119,42 @@ in {
     research.enable = true;
   };
 
-  services = {
-    archivebox = {
-      enable = true;
-      archivePath = "%h/library/archives";
+  services.archivebox = {
+    enable = true;
+    archivePath = "%h/library/archives";
+    withDependencies = true;
+
+    jobs = {
+      arts = {
+        links = [
+          "https://www.davidrevoy.com/feed/rss"
+          "https://www.youtube.com/c/ronillust"
+        ];
+        startAt = "weekly";
+      };
+
+      computer = {
+        links = [
+          "https://distill.pub/rss.xml"
+          "https://fasterthanli.me/index.xml"
+          "https://arxiv.org/rss/cs"
+          "https://awesomekling.github.io/feed.xml"
+        ];
+        extraOptions = [ "--depth 1" ];
+        startAt = "daily";
+      };
+
+      projects = {
+        links = [
+          "https://veloren.net/rss.xml"
+          "https://guix.gnu.org/feeds/blog.atom"
+        ];
+        startAt = "*-*-1/2";
+      };
     };
-    bleachbit.enable = true;
   };
+
+  services.bleachbit.enable = true;
 
   home.sessionVariables = {
     MANPAGER = "nvim +Man!";
