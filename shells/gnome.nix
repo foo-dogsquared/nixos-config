@@ -3,7 +3,7 @@
 # projects.
 #
 # These include toolkits for C, Rust, and GNOME JavaScript.
-{ mkShell, cmake, meson, ninja, gtk4, libadwaita, gjs, pkg-config, rustPlatform, nodePackages }:
+{ mkShell, cmake, meson, ninja, gtk4, libadwaita, gjs, pkg-config, rustPlatform, nodePackages, blueprint-compiler }:
 
 mkShell {
   packages = [
@@ -21,5 +21,8 @@ mkShell {
     # Creating desktop applications with JavaScript without Electron!
     nodePackages.typescript
     gjs
+
+    # The new Blueprint language.
+    blueprint-compiler
   ];
 }
