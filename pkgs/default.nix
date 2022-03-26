@@ -6,6 +6,7 @@ let
   packages = self:
     let callPackage = newScope self;
     in {
+      auto-editor = callPackage ./auto-editor.nix { };
       blueprint-compiler = callPackage ./blueprint-compiler.nix { };
       butler = callPackage ./butler.nix { };
       clidle = callPackage ./clidle.nix { };
