@@ -66,6 +66,6 @@ stdenv.mkDerivation rec {
     description =
       "PDF viewer designed for reading research papers and technical books";
     homepage = "https://sioyek.info";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
   };
 }

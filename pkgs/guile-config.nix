@@ -24,6 +24,6 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Library for a declarative approach for configuration";
     homepage = "https://gitlab.com/a-sassmannshausen/guile-config";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
   };
 }

@@ -38,7 +38,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     homepage = "https://github.com/sonnyp/Junction";
     description = "Application chooser";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
     mainProgram = "re.sonny.Junction";
   };
 }

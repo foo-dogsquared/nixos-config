@@ -43,5 +43,6 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Desktop app for managing GNOME shell extensions";
     homepage = "https://github.com/mjakeman/extension-manager";
+    license = licenses.gpl3Only;
   };
 }

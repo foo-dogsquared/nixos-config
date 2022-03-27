@@ -16,6 +16,6 @@ python3Packages.buildPythonPackage rec {
   meta = with lib; {
     description = "Compiles Blueprint to GTK XML";
     homepage = "https://gitlab.gnome.org/jwestman/blueprint-compiler";
-    license = licenses.gpl3;
+    license = licenses.lgpl3Only;
   };
 }

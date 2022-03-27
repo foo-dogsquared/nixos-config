@@ -56,7 +56,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Command-line application for managing Guile projects";
     homepage = "https://gitlab.com/a-sassmannshausen/guile-hall";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
     mainProgram = "hall";
   };
 }

@@ -25,6 +25,6 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Store your color palettes in an easy way";
     homepage = "https://github.com/lainsce/emulsion";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
   };
 }

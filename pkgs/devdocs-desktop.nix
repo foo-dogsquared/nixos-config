@@ -44,7 +44,7 @@ python3Packages.buildPythonApplication rec {
   meta = with lib; {
     homepage = "https://github.com/hardpixel/devdocs-desktop";
     description = "Desktop application for browsing Devdocs";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
     platforms = platforms.linux;
   };
 }
