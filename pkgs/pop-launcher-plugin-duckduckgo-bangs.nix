@@ -25,6 +25,6 @@ rustPlatform.buildRustPackage rec {
     description = "Pop launcher for searching with Duckduckgo bangs";
     homepage =
       "https://github.com/foo-dogsquared/pop-launcher-plugin-duckduckgo-bangs";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
   };
 }

@@ -17,6 +17,6 @@ buildGoModule rec {
   meta = with lib; {
     description = "Self-hosted toolkit for archiving webpages to the Internet Archive";
     homepage = "https://wabarc.eu.org/";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
   };
 }

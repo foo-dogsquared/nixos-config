@@ -40,7 +40,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "A keyboard-driven layer for GNOME shell";
-    license = licenses.gpl3;
+    license = licenses.gpl3Only;
     homepage = "https://github.com/pop-os/shell";
     platforms = platforms.linux;
   };
