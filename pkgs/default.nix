@@ -39,6 +39,7 @@ let
       pop-launcher = callPackage ./pop-launcher.nix { };
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
+      text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       segno = libsForQt5.callPackage ./segno.nix { };
       sioyek = libsForQt5.callPackage ./sioyek.nix { };
