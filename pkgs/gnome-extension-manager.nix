@@ -1,16 +1,17 @@
 { stdenv, lib, fetchFromGitHub, wrapGAppsHook4, libadwaita, meson, ninja
 , gettext, gtk4, appstream-glib, desktop-file-utils, gobject-introspection
-, blueprint-compiler, pkg-config, json-glib, libsoup_3, glib, python3 }:
+, blueprint-compiler, pkg-config, json-glib, libsoup_3, glib, python3
+, text-engine }:
 
 stdenv.mkDerivation rec {
   pname = "gnome-extension-manager";
-  version = "0.2.3";
+  version = "0.3.0";
 
   src = fetchFromGitHub {
     owner = "mjakeman";
     repo = "extension-manager";
     rev = "v${version}";
-    sha256 = "sha256-4qfhRzPI9qPqTO5LTPP8PZLAiCmywC8j9L6Mi5sko6U=";
+    sha256 = "sha256-3mhz3MJC3/Gv841vaR7AMlh8WMxuVBQuHqwRMbbRGLo=";
   };
 
   nativeBuildInputs = [
@@ -33,19 +34,11 @@ stdenv.mkDerivation rec {
     libsoup_3
     glib.dev
     glib
+    text-engine
   ];
 
   # See https://github.com/NixOS/nixpkgs/issues/36468.
   mesonFlags = [ "-Dc_args=-I${glib.dev}/include/gio-unix-2.0" ];
-
-  postPatch = ''
-    chmod +x build-aux/meson/postinstall.py
-    patchShebangs build-aux/meson/postinstall.py
-
-    # Just to make sure.
-    substituteInPlace build-aux/meson/postinstall.py \
-      --replace "gtk-update-icon-cache" "gtk4-update-icon-cache"
-  '';
 
   meta = with lib; {
     description = "Desktop app for managing GNOME shell extensions";
