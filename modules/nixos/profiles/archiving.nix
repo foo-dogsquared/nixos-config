@@ -14,6 +14,9 @@ in {
       borgbackup # I'm pretty sure this is named after some thing from a franchise somewhere but I'm not omnipresent.
       borgmatic # For those insisting on configurations for BorgBackup.
       fanficfare # Your fanfics in my hard drive? Pay me rent first.
+      gallery-dl # All image galleries are not safe, too.
+      monolith # Bundling web pages into a cinnamon roll.
+      wget # An WARC creator.
       yt-dlp # More active fork after youtube-dl has been striked.
     ];
   };
