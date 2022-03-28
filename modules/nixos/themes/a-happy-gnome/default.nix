@@ -57,7 +57,24 @@ in
       };
     };
 
+    xdg.mime = {
+      enable = true;
+      defaultApplications = {
+        # Default application for web browser.
+        "text/html" = "re.sonny.Junction.desktop";
+
+        # Default handler for all files. Not all applications will
+        # respect it, though.
+        "x-scheme-handler/file" = "re.sonny.Junction.desktop";
+
+        # Default handler for directories.
+        "inode/directory" = "re.sonny.Junction.desktop";
+      };
+    };
+
     environment.systemPackages = with pkgs; [
+      # The preferred terminal.
+      kitty
 
       # The application menu.
       junction
@@ -90,10 +107,6 @@ in
 
       # GNOME search providers.
       gnome-search-provider-recoll
-
-      gnome-search-provider-browser-tabs.gnome-shell-extension
-      gnome-search-provider-browser-tabs.web-extension
-      gnome-search-provider-browser-tabs.connector
     ];
   };
 }
