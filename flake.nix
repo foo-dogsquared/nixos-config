@@ -2,9 +2,11 @@
   description = "foo-dogsquared's NixOS config as a flake";
 
   nixConfig = {
-    extra-experimental-features = "nix-command flake";
-    extra-substituters ="https://nix-community.cachix.org https://foo-dogsquared.cachix.org";
-    extra-trusted-public-keys = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E=";
+    extra-experimental-features = "nix-command flakes";
+    extra-substituters =
+      "https://nix-community.cachix.org https://foo-dogsquared.cachix.org";
+    extra-trusted-public-keys =
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E=";
   };
 
   inputs = {
@@ -75,9 +77,9 @@
         inputs.nur.overlay
       ];
 
-      forAllSystems = f:
-        nixpkgs.lib.genAttrs inputs.flake-utils.lib.defaultSystems
-        (system: f system);
+      systems = with inputs.flake-utils.lib.system; [ x86_64-linux ];
+
+      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
       libExtended = nixpkgs.lib.extend (final: prev:
         (import ./lib { lib = prev; }) // {
@@ -88,16 +90,14 @@
         });
 
       # The default configuration for our NixOS systems.
-      hostDefaultConfig = let
-        system = "x86_64-linux";
+      hostDefaultConfig = let system = "x86_64-linux";
       in {
         inherit system;
 
         # Pass these things to our modules.
         specialArgs = {
           inherit system inputs self;
-          lib = nixpkgs.lib.extend (final: prev:
-            import ./lib { lib = prev; });
+          lib = nixpkgs.lib.extend (final: prev: import ./lib { lib = prev; });
         };
 
         # The default configuration for a NixOS system STARTS HERE.
@@ -160,15 +160,13 @@
       };
 
       # The default config for our home-manager configurations.
-      userDefaultConfig = let
-        system = "x86_64-linux";
+      userDefaultConfig = let system = "x86_64-linux";
       in {
         inherit system;
 
         specialArgs = {
           inherit system self;
-          lib = nixpkgs.lib.extend (final: prev:
-            import ./lib { lib = prev; });
+          lib = nixpkgs.lib.extend (final: prev: import ./lib { lib = prev; });
         };
 
         extraModules = [{
@@ -206,7 +204,7 @@
         (libExtended.filesToAttr ./modules/nixos);
 
       # I can now install home-manager users in non-NixOS systems.
-      # NICE? (TODO: Please test it in the future before saying these things.)
+      # NICE!
       homeManagerConfigurations = libExtended.mapAttrs
         (_: path: libExtended.flakeUtils.mkUser path userDefaultConfig)
         (libExtended.filesToAttr ./users/home-manager);
@@ -222,25 +220,18 @@
           pkgs = import nixpkgs { inherit system overlays; };
         }));
 
-      # The development environment for this flake.
-      devShell = forAllSystems (system:
-        import ./shell.nix {
-          pkgs = import nixpkgs { inherit system overlays; };
-        });
-
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
       # configuration (or even home environment).
       devShells = forAllSystems (system:
-        import ./shells {
-          pkgs = import nixpkgs { inherit system overlays; };
-        });
-
-      # It is my go-to so it is the default template.
-      defaultTemplate = self.templates.basic-devshell;
+        let pkgs = import nixpkgs { inherit system overlays; };
+        in {
+          default = import ./shell.nix { inherit pkgs; };
+        } // (import ./shells { inherit pkgs; }));
 
       # Cookiecutter templates for your mama.
       templates = {
+        default = self.templates.basic-devshell;
         basic-devshell = {
           path = ./templates/basic-devshell;
           description = "Basic development shell template";
