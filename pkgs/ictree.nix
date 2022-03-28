@@ -12,12 +12,10 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  makeFlags = [
-    "PREFIX=$(out)"
-  ];
+  makeFlags = [ "PREFIX=$(out)" ];
 
   meta = with lib; {
-  	description = "Like 'tree' but interactive";
+    description = "Like 'tree' but interactive";
     homepage = "https://github.com/NikitaIvanovV/ictree";
   };
 }

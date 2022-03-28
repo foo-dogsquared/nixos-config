@@ -19,8 +19,7 @@ let
     };
     buildInputs = super.buildInputs ++ [ python310Packages.cython ];
   });
-in
-python310Packages.buildPythonApplication rec {
+in python310Packages.buildPythonApplication rec {
   pname = "auto-editor";
   version = "22w12a";
   doCheck = false;
@@ -32,13 +31,12 @@ python310Packages.buildPythonApplication rec {
     sha256 = "sha256-mtVL/X6mh+0Paa6yuth9DGbqewsSBopV5/VXoC0DN4M=";
   };
 
-  propagatedBuildInputs = with python310Packages; [
-    numpy
-    yt-dlp
-  ] ++ [ av pillow ];
+  propagatedBuildInputs = with python310Packages;
+    [ numpy yt-dlp ] ++ [ av pillow ];
 
   meta = with lib; {
-    description = "Command-line application for automating video and audio editing with a variety of methods";
+    description =
+      "Command-line application for automating video and audio editing with a variety of methods";
     homepage = "https://auto-editor.com/cli";
     license = licenses.unlicense;
   };

@@ -1,4 +1,3 @@
-
 { lib, fetchgit, python3, mopidy }:
 
 python3.pkgs.buildPythonApplication rec {
@@ -15,12 +14,8 @@ python3.pkgs.buildPythonApplication rec {
     sed -i 's/vext/pykka/' setup.cfg
   '';
 
-  propagatedBuildInputs = with python3.pkgs; [
-    pykka
-    requests
-    requests_oauthlib
-    pygobject3
-  ] ++ [ mopidy ];
+  propagatedBuildInputs = with python3.pkgs;
+    [ pykka requests requests_oauthlib pygobject3 ] ++ [ mopidy ];
 
   checkInputs = with python3.pkgs; [
     pytest
@@ -31,7 +26,8 @@ python3.pkgs.buildPythonApplication rec {
   ];
 
   meta = with lib; {
-    description = "Mopidy extension for streaming music from a Funkwhale server";
+    description =
+      "Mopidy extension for streaming music from a Funkwhale server";
     homepage = "https://funkwhale.audio";
     license = licenses.gpl3Plus;
   };

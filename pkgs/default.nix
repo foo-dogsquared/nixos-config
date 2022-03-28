@@ -15,8 +15,10 @@ let
       doggo = callPackage ./doggo.nix { };
       emulsion-palette = callPackage ./emulsion-palette.nix { };
       gol-c = callPackage ./gol-c.nix { };
-      gnome-search-provider-browser-tabs = callPackage ./gnome-search-provider-browser-tabs.nix { };
-      gnome-search-provider-recoll = callPackage ./gnome-search-provider-recoll.nix { };
+      gnome-search-provider-browser-tabs =
+        callPackage ./gnome-search-provider-browser-tabs.nix { };
+      gnome-search-provider-recoll =
+        callPackage ./gnome-search-provider-recoll.nix { };
       gnome-shell-extension-burn-my-windows =
         callPackage ./gnome-shell-extension-burn-my-windows.nix { };
       gnome-extension-manager = callPackage ./gnome-extension-manager.nix { };
@@ -39,6 +41,7 @@ let
       pop-launcher = callPackage ./pop-launcher.nix { };
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
+      #trex = callPackage ./trex.nix { };
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       segno = libsForQt5.callPackage ./segno.nix { };

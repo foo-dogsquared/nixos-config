@@ -1,4 +1,5 @@
-{ stdenv, lib, fetchFromGitHub, python3Packages, gtk3, glib, gobject-introspection, wrapGAppsHook, webkitgtk }:
+{ stdenv, lib, fetchFromGitHub, python3Packages, gtk3, glib
+, gobject-introspection, wrapGAppsHook, webkitgtk }:
 
 python3Packages.buildPythonApplication rec {
   pname = "devdocs-desktop";
@@ -13,10 +14,7 @@ python3Packages.buildPythonApplication rec {
 
   format = "other";
 
-  propagatedBuildInputs = with python3Packages; [
-    dbus-python
-    pygobject3
-  ];
+  propagatedBuildInputs = with python3Packages; [ dbus-python pygobject3 ];
 
   nativeBuildInputs = [ wrapGAppsHook gobject-introspection ];
   buildInputs = [ glib gtk3 webkitgtk ];

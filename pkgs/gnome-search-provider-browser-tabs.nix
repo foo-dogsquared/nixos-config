@@ -1,5 +1,5 @@
-{ stdenv, lib, fetchFromGitHub, rustPlatform, mkYarnPackage
-, meson, ninja, yarn, zip }:
+{ stdenv, lib, fetchFromGitHub, rustPlatform, mkYarnPackage, meson, ninja, yarn
+, zip }:
 
 let
   version = "0.1.1";
@@ -86,8 +86,6 @@ in lib.recurseIntoAttrs {
       sha256 = "sha256-SULUONFmsnEiWoAWpGOLynSXF032qW+QcYfzxQrAFLQ=";
     };
 
-    mesonFlags = [
-      "-Drelease-bindir=${placeholder "out"}/bin"
-    ];
+    mesonFlags = [ "-Drelease-bindir=${placeholder "out"}/bin" ];
   };
 }

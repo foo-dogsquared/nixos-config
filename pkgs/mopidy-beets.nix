@@ -11,15 +11,10 @@ python3.pkgs.buildPythonApplication rec {
     sha256 = "sha256-HvhYAGtgf2rpzIJwMspGtHcrk4IZxPX1jZbNNwQCJA4=";
   };
 
-  propagatedBuildInputs = with python3.pkgs; [
-    pykka
-    requests
-  ] ++ [ mopidy beets ];
+  propagatedBuildInputs = with python3.pkgs;
+    [ pykka requests ] ++ [ mopidy beets ];
 
-  checkInputs = with python3.pkgs; [
-    pytest
-    pytest-cov
-  ];
+  checkInputs = with python3.pkgs; [ pytest pytest-cov ];
 
   meta = with lib; {
     description = "Mopidy extension for playing music from a Beets collection";
