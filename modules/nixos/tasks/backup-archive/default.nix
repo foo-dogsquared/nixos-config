@@ -2,7 +2,7 @@
 { config, options, lib, pkgs, ... }:
 
 let
-  cfg = config.hardware-setup.backup-archive;
+  cfg = config.tasks.backup-archive;
 
   borgJobCommonSetting = { patterns ? [ ] }: {
     compression = "zstd,9";
@@ -37,7 +37,7 @@ let
   };
 
 in {
-  options.hardware-setup.backup-archive.enable =
+  options.tasks.backup-archive.enable =
     lib.mkEnableOption "backup setup with BorgBackup";
 
   config = lib.mkIf cfg.enable {
@@ -80,7 +80,7 @@ in {
         ];
       } // {
         doInit = true;
-        repo = "/archives/";
+        repo = "/archives/backups";
         startAt = "04/5:00:00";
       };
 
