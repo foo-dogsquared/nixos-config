@@ -140,7 +140,7 @@
         # Extend nixpkgs with our overlays except for the NixOS-focused modules
         # here.
         nixpkgs.overlays = overlays
-          ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlay ];
+          ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlays.default ];
 
         # Please clean your temporary crap.
         boot.cleanTmpDir = true;
