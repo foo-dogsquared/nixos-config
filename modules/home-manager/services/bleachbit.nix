@@ -1,6 +1,52 @@
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.services.bleachbit;
+let
+  cfg = config.services.bleachbit;
+
+  cleaners = cfg.cleaners ++ lib.optionals cfg.withBrowserCleanup [
+    "brave.cache"
+    "brave.form_history"
+    "brave.history"
+    "brave.passwords"
+    "chromium.cache"
+    "chromium.form_history"
+    "chromium.history"
+    "chromium.passwords"
+    "epiphany.cache"
+    "epiphany.passwords"
+    "firefox.cache"
+    "firefox.forms"
+    "firefox.passwords"
+    "firefox.url_history"
+    "google_chrome.cache"
+    "google_chrome.form_history"
+    "google_chrome.history"
+    "opera.cache"
+    "opera.form_history"
+    "opera.history"
+    "palemoon.cache"
+    "palemoon.forms"
+    "palemoon.passwords"
+    "palemoon.url_history"
+    "waterfox.cache"
+    "waterfox.forms"
+    "waterfox.passwords"
+    "waterfox.url_history"
+  ] ++ lib.optionals cfg.withChatCleanup [
+    "discord.cache"
+    "discord.history"
+    "skype.chat_logs"
+    "skype.installers"
+    "slack.cache"
+    "slack.cookies"
+    "slack.history"
+    "slack.vacuum"
+    "thunderbird.cache"
+    "thunderbird.cookies"
+    "thunderbird.index"
+    "thunderbird.passwords"
+    "thunderbird.sessionjson"
+  ];
 in {
   options.services.bleachbit = {
     enable = lib.mkEnableOption "automated cleanup with Bleachbit";
@@ -36,40 +82,14 @@ in {
         "google_toolbar.search_history"
         "thumbnails.cache"
         "zoom.logs"
-      ] ++ lib.optionals cfg.withBrowserCleanup [
-        "brave.cache"
-        "brave.form_history"
-        "brave.history"
-        "brave.passwords"
-        "chromium.cache"
-        "chromium.form_history"
-        "chromium.history"
-        "chromium.passwords"
-        "epiphany.cache"
-        "epiphany.passwords"
-        "firefox.cache"
-        "firefox.forms"
-        "firefox.passwords"
-        "firefox.url_history"
-        "google_chrome.cache"
-        "google_chrome.form_history"
-        "google_chrome.history"
-        "opera.cache"
-        "opera.form_history"
-        "opera.history"
-        "palemoon.cache"
-        "palemoon.forms"
-        "palemoon.passwords"
-        "palemoon.url_history"
-        "waterfox.cache"
-        "waterfox.forms"
-        "waterfox.passwords"
-        "waterfox.url_history"
       ];
     };
 
     withBrowserCleanup =
       lib.mkEnableOption "browser-related cleaners to be included in the list";
+
+    withChatCleanup =
+      lib.mkEnableOption "communication apps-related cleaners to be included";
   };
 
   config = lib.mkIf cfg.enable {
@@ -84,8 +104,8 @@ in {
           Service = {
             Restart = "on-failure";
             ExecStart = "${pkgs.bleachbit}/bin/bleachbit --clean ${
-                lib.concatStringsSep " " cfg.cleaners
-              }";
+                lib.concatStringsSep " " cleaners
+            }";
           };
         };
       };
