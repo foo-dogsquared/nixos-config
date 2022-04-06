@@ -19,8 +19,10 @@ let
     options = {
       settings = lib.mkOption {
         type = lib.types.attrs;
-        description =
-          "Configuration to be merged in <literal>users.users.<name></literal> from NixOS configuration.";
+        description = ''
+          Configuration to be merged in <literal>users.users.<name></literal>
+          from NixOS configuration.
+        '';
         default = { };
         example = {
           uid = 1234;
@@ -37,8 +39,11 @@ in {
     users = lib.mkOption {
       default = { };
       description = ''
-        A set of users from the `./users/home-manager` directory to be included in the NixOS config.
-                This will also create the appropriate user settings in <literal>users.users</literal> in the NixOS configuration.'';
+        A set of users from the <filename>./users/home-manager</filename>
+        directory to be included in the NixOS config. This will also create the
+        appropriate user settings in <literal>users.users</literal> in the
+        NixOS configuration.
+      '';
       example = {
         foo-dogsquared.settings = {
           extraGroups = [ "wheel" "audio" "libvirtd" ];

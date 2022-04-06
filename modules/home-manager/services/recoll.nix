@@ -95,7 +95,7 @@ in {
     configDir = lib.mkOption {
       type = lib.types.str;
       default = "${config.home.homeDirectory}/.recoll";
-      example = "\${xdg.configHome.\"recoll\"}";
+      example = ''''${xdg.configHome."recoll"}'';
       description = "The directory to contain Recoll configuration files.";
     };
   };

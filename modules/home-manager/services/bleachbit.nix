@@ -105,7 +105,7 @@ in {
             Restart = "on-failure";
             ExecStart = "${pkgs.bleachbit}/bin/bleachbit --clean ${
                 lib.concatStringsSep " " cleaners
-            }";
+              }";
           };
         };
       };

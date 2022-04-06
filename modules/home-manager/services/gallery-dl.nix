@@ -5,7 +5,8 @@ let
 
   settingsFormat = pkgs.formats.json { };
   settingsFormatFile =
-    settingsFormat.generate "gallery-dl-service-config-${config.home.username}" cfg.settings;
+    settingsFormat.generate "gallery-dl-service-config-${config.home.username}"
+    cfg.settings;
 
   jobType = { name, config, options, ... }: {
     options = {

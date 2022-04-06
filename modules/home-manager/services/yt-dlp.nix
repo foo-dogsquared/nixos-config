@@ -67,7 +67,10 @@ in {
         to be created at the time of running the service. Must be an absolute
         path.
       '';
-      default = "${lib.replaceStrings ["$HOME"] [config.home.homeDirectory] config.xdg.userDirs.videos}/yt-dlp-service";
+      default = "${
+          lib.replaceStrings [ "$HOME" ] [ config.home.homeDirectory ]
+          config.xdg.userDirs.videos
+        }/yt-dlp-service";
       example = lib.literalExpression
         "\${config.xdg.userDirs.download}/archiving-service/videos";
     };
@@ -126,14 +129,19 @@ in {
         Service = {
           WorkingDirectory = cfg.archivePath;
           ExecStartPre = ''
-            ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg cfg.archivePath}"
+            ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p ${
+              lib.escapeShellArg cfg.archivePath
+            }"
           '';
           ExecStart = let
-            scriptName = "yt-dlp-archive-service-${config.home.username}-${name}";
+            scriptName =
+              "yt-dlp-archive-service-${config.home.username}-${name}";
             archiveScript = pkgs.writeShellScriptBin scriptName ''
-              ${cfg.package}/bin/yt-dlp ${lib.concatStringsSep " " cfg.extraArgs} ${
-                lib.concatStringsSep " " value.extraArgs
-              } ${lib.escapeShellArgs value.urls}
+              ${cfg.package}/bin/yt-dlp ${
+                lib.concatStringsSep " " cfg.extraArgs
+              } ${lib.concatStringsSep " " value.extraArgs} ${
+                lib.escapeShellArgs value.urls
+              }
             '';
           in "${archiveScript}/bin/${scriptName}";
         };

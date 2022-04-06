@@ -9,13 +9,13 @@ let
         description = "List of links to archive.";
         example = lib.literalExpression ''
           [
-          "https://guix.gnu.org/feeds/blog.atom"
-          "https://nixos.org/blog/announcements-rss.xml"
+            "https://guix.gnu.org/feeds/blog.atom"
+            "https://nixos.org/blog/announcements-rss.xml"
           ]
         '';
       };
 
-      extraOptions = lib.mkOption {
+      extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description = ''
           Additional arguments for adding links (i.e., <literal>archivebox add
@@ -69,7 +69,7 @@ in {
               "https://arxiv.org/rss/cs"
               "https://distill.pub/"
             ];
-            extraOptions = [ "--depth 1" ];
+            extraArgs = [ "--depth 1" ];
             startAt = "daily";
           };
         }
@@ -91,34 +91,37 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = let
+    pkgSet = [ pkgs.archivebox ] ++ (lib.optionals cfg.withDependencies
+      (with pkgs; [ chromium nodejs_latest wget curl youtube-dl ]));
+  in lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.archivebox" pkgs
         lib.platforms.linux)
     ];
 
-    home.packages = [ pkgs.archivebox ] ++ (lib.optionals cfg.withDependencies
-      (with pkgs; [ chromium nodejs_latest wget curl youtube-dl ]));
+    home.packages = pkgSet;
 
     systemd.user.services = lib.mkMerge [
       (lib.mapAttrs' (name: value:
         lib.nameValuePair "archivebox-add-${name}" {
           Unit = {
-            Description = "Archivebox archive group '${name}' for ${cfg.archivePath}";
+            Description =
+              "Archivebox archive group '${name}' for ${cfg.archivePath}";
             After = "network.target";
             Documentation = [ "https://docs.archivebox.io/" ];
           };
 
-          Install.WantedBy = [ "default.target" ];
-
           Service = let
             scriptName = "archivebox-job-${config.home.username}-${name}";
-            script = pkgs.writeShellApplication  {
+            script = pkgs.writeShellApplication {
               name = scriptName;
-              runtimeInputs = with pkgs; [ coreutils archivebox ];
+              runtimeInputs = with pkgs;
+                [ ripgrep coreutils ] ++ pkgSet
+                ++ [ config.programs.git.package ];
               text = ''
                 echo "${lib.concatStringsSep "\n" value.links}" \
-                  | archivebox add ${lib.concatStringsSep " " value.extraOptions}
+                  | archivebox add ${lib.concatStringsSep " " value.extraArgs}
               '';
             };
           in {

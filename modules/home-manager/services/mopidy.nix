@@ -7,13 +7,16 @@ let
   # The configuration format of Mopidy. It seems to use configparser with
   # some quirky handling of its types. You can see how they're handled in
   # `mopidy/config/types.py` from the source code.
-  toMopidyConf = with lib; generators.toINI {
-    mkKeyValue = generators.mkKeyValueDefault {
-      mkValueString = v:
-        if isList v then "\n  " + concatStringsSep "\n  " v
-        else generators.mkValueStringDefault {} v;
-    } " = ";
-  };
+  toMopidyConf = with lib;
+    generators.toINI {
+      mkKeyValue = generators.mkKeyValueDefault {
+        mkValueString = v:
+          if isList v then
+            "\n  " + concatStringsSep "\n  " v
+          else
+            generators.mkValueStringDefault { } v;
+      } " = ";
+    };
 
   mopidyEnv = pkgs.buildEnv {
     name = "mopidy-with-extensions-${pkgs.mopidy.version}";
@@ -25,18 +28,19 @@ let
     '';
   };
 
-  mopidyConfFormat = {}: {
+  mopidyConfFormat = { }: {
     type = with lib.types;
       let
-        valueType = nullOr (oneOf [ bool int float str (listOf valueType) ]) // {
-          description = "Mopidy config value";
-        };
+        valueType = nullOr (oneOf [ bool int float str (listOf valueType) ])
+          // {
+            description = "Mopidy config value";
+          };
       in attrsOf (attrsOf valueType);
 
     generate = name: value: pkgs.writeText name (toMopidyConf value);
   };
 
-  settingsFormat = mopidyConfFormat {};
+  settingsFormat = mopidyConfFormat { };
 in {
   options.services.mopidy = {
     enable = lib.mkEnableOption "Mopidy music player daemon";
@@ -53,7 +57,7 @@ in {
     };
 
     configuration = lib.mkOption {
-      default = {};
+      default = { };
       type = settingsFormat.type;
       description = ''
         The Mopidy configuration to be written in the appropriate file in the
@@ -94,7 +98,8 @@ in {
     ];
 
     xdg.configFile."mopidy/mopidy.conf".source =
-      settingsFormat.generate "mopidy-conf-${config.home.username}" cfg.configuration;
+      settingsFormat.generate "mopidy-conf-${config.home.username}"
+      cfg.configuration;
 
     systemd.user.services.mopidy = {
       Unit = {
@@ -103,9 +108,7 @@ in {
         Documentation = [ "https://mopidy.com/" ];
       };
 
-      Service = {
-        ExecStart = "${mopidyEnv}/bin/mopidy";
-      };
+      Service = { ExecStart = "${mopidyEnv}/bin/mopidy"; };
 
       Install.WantedBy = [ "default.target" ];
     };

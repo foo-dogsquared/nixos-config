@@ -140,12 +140,14 @@ in {
         path = [ cfg.package ] ++ (with pkgs; [ coreutils ffmpeg ]);
         script = ''
           mkdir -p ${lib.escapeShellArg cfg.archivePath} \
-          && gallery-dl ${
-            lib.concatStringsSep " " cfg.extraArgs
-          } ${lib.concatStringsSep " " value.extraArgs} ${
+          && gallery-dl ${lib.concatStringsSep " " cfg.extraArgs} ${
+            lib.concatStringsSep " " value.extraArgs
+          } ${
             lib.optionalString (cfg.settings != null)
             "--config ${settingsFormatFile}"
-          } --directory ${lib.escapeShellArg cfg.archivePath} ${lib.escapeShellArgs value.urls}
+          } --directory ${lib.escapeShellArg cfg.archivePath} ${
+            lib.escapeShellArgs value.urls
+          }
         '';
         startAt = value.startAt;
       }) cfg.jobs;

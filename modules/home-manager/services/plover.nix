@@ -80,6 +80,7 @@ in {
       Unit = {
         Description = "Plover stenography engine";
         Documentation = [ "https://github.com/openstenoproject/plover/wiki/" ];
+        PartOf = "default.target";
       };
 
       Service = {

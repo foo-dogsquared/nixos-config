@@ -28,9 +28,7 @@ in {
     (lib.mkIf cfg.emacs.enable {
       # Doom Emacs dependencies.
       home.packages = with pkgs; [
-        ((emacsPackagesFor emacs).emacsWithPackages (epkgs: [
-          epkgs.vterm
-        ]))
+        ((emacsPackagesFor emacs).emacsWithPackages (epkgs: [ epkgs.vterm ]))
 
         # Required dependencies.
         ripgrep
