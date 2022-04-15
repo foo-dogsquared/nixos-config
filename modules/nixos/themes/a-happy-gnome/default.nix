@@ -92,6 +92,7 @@ in
       gnomeExtensions.arcmenu
       gnomeExtensions.appindicator
       gnomeExtensions.burn-my-windows
+      gnomeExtensions.desktop-cube
       gnomeExtensions.gsconnect
       gnomeExtensions.x11-gestures
       gnomeExtensions.kimpanel
@@ -101,9 +102,6 @@ in
 
       # TODO: Use from nixpkgs once fly-pie is fixed.
       gnome-shell-extension-fly-pie
-
-      # TODO: Also these two...
-      gnome-shell-extension-desktop-cube
 
       # GNOME search providers.
       gnome-search-provider-recoll
