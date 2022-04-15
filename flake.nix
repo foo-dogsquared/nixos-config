@@ -81,7 +81,7 @@
 
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
-      libExtended = nixpkgs.lib.extend (final: prev:
+      lib' = nixpkgs.lib.extend (final: prev:
         (import ./lib { lib = prev; }) // {
           flakeUtils = (import ./lib/flake-utils.nix {
             inherit inputs;
@@ -194,24 +194,24 @@
 
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
-      nixosConfigurations = libExtended.mapAttrsRecursive
-        (host: path: libExtended.flakeUtils.mkHost path hostDefaultConfig)
-        (libExtended.filesToAttr ./hosts);
+      nixosConfigurations = lib'.mapAttrsRecursive
+        (host: path: lib'.flakeUtils.mkHost path hostDefaultConfig)
+        (lib'.filesToAttr ./hosts);
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
-      nixosModules = libExtended.mapAttrsRecursive (_: path: import path)
-        (libExtended.filesToAttr ./modules/nixos);
+      nixosModules = lib'.mapAttrsRecursive (_: path: import path)
+        (lib'.filesToAttr ./modules/nixos);
 
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
-      homeManagerConfigurations = libExtended.mapAttrs
-        (_: path: libExtended.flakeUtils.mkUser path userDefaultConfig)
-        (libExtended.filesToAttr ./users/home-manager);
+      homeManagerConfigurations = lib'.mapAttrs
+        (_: path: lib'.flakeUtils.mkUser path userDefaultConfig)
+        (lib'.filesToAttr ./users/home-manager);
 
       # Extending home-manager with my custom modules, if anyone cares.
-      homeManagerModules = libExtended.mapAttrsRecursive (_: path: import path)
-        (libExtended.filesToAttr ./modules/home-manager);
+      homeManagerModules = lib'.mapAttrsRecursive (_: path: import path)
+        (lib'.filesToAttr ./modules/home-manager);
 
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
