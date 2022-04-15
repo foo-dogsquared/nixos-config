@@ -27,7 +27,7 @@ For managing users, there are multiple ways to manage them with this config:
 
 * If you intend to import users from the link:../users/nixos/[`../users/nixos/`], you can simply import them through `imports` in the system module.
 +
-For a convenient option, there is the function `getUsers` defined from the link:../lib[custom library].
+For a convenient option, there is the function `getUsers` defined from the link:../lib/default.nix[custom library].
 You can use it as follows:
 +
 [source, nix]

@@ -67,12 +67,6 @@ footnote:[I don't know why did I put it there but eh...]
 * `templates` which contains my templates.
 Though, these are just templates mostly for my own purposes so it is not as useful as the other outputs.
 
-* `defaultTemplate` which is my go-to template.
-Ehhh, same comment as `templates`.
-
-* `devShell` is the development shell for this project.
-It's just there for convenience purposes.
-
 * `lib` is defined from link:./lib/[my custom library].
 It's another unnecessary export but it's there.
 
