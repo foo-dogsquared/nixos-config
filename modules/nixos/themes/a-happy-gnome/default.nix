@@ -91,6 +91,7 @@ in
       # My preferred extensions.
       gnomeExtensions.arcmenu
       gnomeExtensions.appindicator
+      gnomeExtensions.burn-my-windows
       gnomeExtensions.gsconnect
       gnomeExtensions.x11-gestures
       gnomeExtensions.kimpanel
@@ -102,7 +103,6 @@ in
       gnome-shell-extension-fly-pie
 
       # TODO: Also these two...
-      gnome-shell-extension-burn-my-windows
       gnome-shell-extension-desktop-cube
 
       # GNOME search providers.

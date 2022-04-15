@@ -19,8 +19,6 @@ let
         callPackage ./gnome-search-provider-browser-tabs.nix { };
       gnome-search-provider-recoll =
         callPackage ./gnome-search-provider-recoll.nix { };
-      gnome-shell-extension-burn-my-windows =
-        callPackage ./gnome-shell-extension-burn-my-windows.nix { };
       gnome-extension-manager = callPackage ./gnome-extension-manager.nix { };
       gnome-shell-extension-desktop-cube =
         callPackage ./gnome-shell-extension-desktop-cube.nix { };
