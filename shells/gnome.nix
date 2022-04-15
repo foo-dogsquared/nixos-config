@@ -15,8 +15,8 @@ mkShell {
     libadwaita # The co-star of the show.
 
     # When Rust and GTK go together...
-    rustPlatform.cargo
-    rustPlatform.rustc
+    rustPlatform.rust.cargo
+    rustPlatform.rust.rustc
 
     # Creating desktop applications with JavaScript without Electron!
     nodePackages.typescript
