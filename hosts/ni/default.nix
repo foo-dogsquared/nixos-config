@@ -18,6 +18,7 @@
       fonts.enable = true;
       hardware.enable = true;
       cleanup.enable = true;
+      autoUpgrade.enable = true;
       wine.enable = true;
     };
     dev = {

@@ -1,7 +1,7 @@
 # This is where extra desktop goodies can be found.
 # As a note, this is not where you set the aesthetics of your graphical sessions.
 # That can be found in the `themes` module.
-{ inputs, config, options, lib, pkgs, ... }:
+{ inputs, config, options, lib, pkgs, selfPath, ... }:
 
 let cfg = config.profiles.system;
 in {
@@ -14,6 +14,7 @@ in {
     hardware.enable =
       lib.mkEnableOption "the common hardware-related configuration";
     cleanup.enable = lib.mkEnableOption "activation of cleanup services";
+    autoUpgrade.enable = lib.mkEnableOption "auto-upgrade service with this system";
     wine = {
       enable = lib.mkEnableOption "Wine and Wine-related tools";
       package = lib.mkOption {
@@ -36,7 +37,7 @@ in {
       };
 
       # Enable font-related options for more smoother and consistent experience.
-      fonts.enableDefaultFonts = true;
+      fonts.fontconfig.enable = true;
 
       # Run unpatched binaries with these!
       environment.systemPackages = with pkgs; [
@@ -144,6 +145,21 @@ in {
             Persistent = true;
           };
         };
+      };
+    })
+
+    (lib.mkIf cfg.autoUpgrade.enable {
+      system.autoUpgrade = {
+        enable = true;
+        flake = builtins.toString selfPath;
+        allowReboot = true;
+        rebootWindow = {
+          lower = "22:00";
+          upper = "00:00";
+        };
+        dates = "weekly";
+        flags = [ "--update-input" "nixpkgs" "--commit-lock-file" ];
+        randomizedDelaySec = "30min";
       };
     })
 
