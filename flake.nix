@@ -100,63 +100,63 @@
           lib = nixpkgs.lib.extend (final: prev: import ./lib { lib = prev; });
         };
 
-        # The default configuration for a NixOS system STARTS HERE.
+        config = {
+          # I want to capture the usual flakes to its exact version so we're
+          # making them available to our system. This will also prevent the
+          # annoying downloads since it always get the latest revision.
+          nix.registry = {
+            # I'm narcissistic so I want my config to be one of the flakes in the registry.
+            config.flake = self;
 
-        # I want to capture the usual flakes to its exact version so we're
-        # making them available to our system. This will also prevent the
-        # annoying downloads since it always get the latest revision.
-        nix.registry = {
-          # I'm narcissistic so I want my config to be one of the flakes in the registry.
-          config.flake = self;
+            # All of the important flakes will be included.
+            nixpkgs.flake = nixpkgs;
+            home-manager.flake = inputs.home-manager;
+            agenix.flake = inputs.agenix;
+            nur.flake = inputs.nur;
+            guix-overlay.flake = inputs.guix-overlay;
+            nixos-generators.flake = inputs.nixos-generators;
+          };
 
-          # All of the important flakes will be included.
-          nixpkgs.flake = nixpkgs;
-          home-manager.flake = inputs.home-manager;
-          agenix.flake = inputs.agenix;
-          nur.flake = inputs.nur;
-          guix-overlay.flake = inputs.guix-overlay;
-          nixos-generators.flake = inputs.nixos-generators;
+          # We may as well live on the BLEEDING EDGE!
+          nix.package = nixpkgs.legacyPackages.${system}.nixUnstable;
+
+          # Set several binary caches.
+          nix.settings = {
+            substituters = [
+              "https://cache.nixos.org"
+              "https://nix-community.cachix.org"
+              "https://foo-dogsquared.cachix.org"
+            ];
+            trusted-public-keys = [
+              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+              "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
+            ];
+          };
+
+          # Stallman-senpai will be disappointed.
+          nixpkgs.config.allowUnfree = true;
+
+          # Extend nixpkgs with our overlays except for the NixOS-focused modules
+          # here.
+          nixpkgs.overlays = overlays
+            ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlays.default ];
+
+          # Please clean your temporary crap.
+          boot.cleanTmpDir = true;
+
+          # We live in a Unicode world and dominantly English in technical fields so we'll
+          # have to go with it.
+          i18n.defaultLocale = "en_US.UTF-8";
+
+          # Sane config for the package manager.
+          # TODO: Remove this after nix-command and flakes has been considered stable.
+          #
+          # Since we're using flakes to make this possible, we need it. Plus, the
+          # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
+          nix.extraOptions = ''
+            experimental-features = nix-command flakes
+          '';
         };
-
-        # We may as well live on the BLEEDING EDGE!
-        nix.package = nixpkgs.legacyPackages.${system}.nixUnstable;
-
-        # Set several binary caches.
-        nix.settings = {
-          substituters = [
-            "https://cache.nixos.org"
-            "https://nix-community.cachix.org"
-            "https://foo-dogsquared.cachix.org"
-          ];
-          trusted-public-keys = [
-            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
-          ];
-        };
-
-        # Stallman-senpai will be disappointed.
-        nixpkgs.config.allowUnfree = true;
-
-        # Extend nixpkgs with our overlays except for the NixOS-focused modules
-        # here.
-        nixpkgs.overlays = overlays
-          ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlays.default ];
-
-        # Please clean your temporary crap.
-        boot.cleanTmpDir = true;
-
-        # We live in a Unicode world and dominantly English in technical fields so we'll
-        # have to go with it.
-        i18n.defaultLocale = "en_US.UTF-8";
-
-        # Sane config for the package manager.
-        # TODO: Remove this after nix-command and flakes has been considered stable.
-        #
-        # Since we're using flakes to make this possible, we need it. Plus, the
-        # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
-        nix.extraOptions = ''
-          experimental-features = nix-command flakes
-        '';
       };
 
       # The default config for our home-manager configurations.

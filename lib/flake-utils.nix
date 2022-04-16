@@ -26,7 +26,7 @@ in rec {
        => { ... } # NixOS configuration attrset
   */
   mkHost = file:
-    attrs@{ system ? sys, specialArgs ? { inherit lib system inputs; }, ... }:
+    { system ? sys, specialArgs ? { inherit lib system inputs; }, config ? { } }:
     (lib.makeOverridable inputs.nixpkgs.lib.nixosSystem) {
       # The system of the NixOS system.
       inherit system specialArgs;
@@ -40,7 +40,7 @@ in rec {
         }
 
         # Put the given attribute set (except for the system).
-        (lib.filterAttrs (n: v: !lib.elem n [ "system" "specialArgs" ]) attrs)
+        config
 
         # The entry point of the module.
         file
