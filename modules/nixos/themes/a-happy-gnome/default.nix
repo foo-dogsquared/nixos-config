@@ -82,9 +82,6 @@ in
       # It is required for custom menus in extensions.
       gnome-menus
 
-      # Good ol' unofficial preferences tool.
-      gnome.gnome-tweaks
-
       # A third-party extension manager.
       gnome-extension-manager
 
