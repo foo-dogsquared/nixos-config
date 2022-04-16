@@ -12,7 +12,7 @@
   profiles = {
     agenix.enable = true;
     archiving.enable = true;
-    desktop = {
+    system = {
       enable = true;
       audio.enable = true;
       fonts.enable = true;

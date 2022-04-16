@@ -3,9 +3,9 @@
 # That can be found in the `themes` module.
 { inputs, config, options, lib, pkgs, ... }:
 
-let cfg = config.profiles.desktop;
+let cfg = config.profiles.system;
 in {
-  options.profiles.desktop = {
+  options.profiles.system = {
     enable =
       lib.mkEnableOption "all desktop-related services and default programs";
     audio.enable =
