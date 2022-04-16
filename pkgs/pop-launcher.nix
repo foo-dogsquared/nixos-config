@@ -1,6 +1,6 @@
 { lib, fetchFromGitHub, rustPlatform, pkg-config, openssl, gtk3 }:
 
-let distributionPluginPath = "\${out}/lib/pop-launcher";
+let distributionPluginPath = "${placeholder "out"}/lib/pop-launcher";
 in rustPlatform.buildRustPackage rec {
   pname = "pop-launcher";
   version = "1.1.0";
@@ -46,6 +46,6 @@ in rustPlatform.buildRustPackage rec {
   meta = with lib; {
     description = "Modular IPC-based desktop launcher service";
     homepage = "https://github.com/pop-os/launcher";
-    license = licenses.gpl3;
+    license = licenses.mpl20;
   };
 }

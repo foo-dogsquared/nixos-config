@@ -24,5 +24,6 @@ stdenv.mkDerivation rec {
     description = "Experimental vector graphics and 3D animation editor";
     homepage = "https://www.vpaint.org/";
     license = licenses.asl20;
+    mainProgram = "VPaint";
   };
 }
