@@ -126,6 +126,14 @@ in {
           } ${lib.escapeShellArgs value.urls}
         '';
         startAt = value.startAt;
+        serviceConfig = {
+          NoNewPrivileges = true;
+          PrivateTmp = true;
+          ProtectControlGroup = true;
+          ProtectClock = true;
+          ProtectKernelModule = true;
+          ProtectKernelLogs = true;
+        };
       }) cfg.jobs;
   };
 }
