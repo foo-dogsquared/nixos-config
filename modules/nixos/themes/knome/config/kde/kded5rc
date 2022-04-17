@@ -1,0 +1,5 @@
+[Module-gtkconfig]
+autoload=false
+
+[Module-baloosearchmodule]
+autoload=false

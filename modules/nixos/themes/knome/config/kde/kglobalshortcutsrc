@@ -1,0 +1,56 @@
+[ActivityManager]
+_k_friendly_name=Activity Manager
+switch-to-activity-df51cee4-5dad-43e0-bbd7-c77d4c80fe02=Meta+1,Meta+1,Switch to activity "Default"
+
+[Kitty.desktop]
+New=Meta+Return,none,New Terminal
+
+[kwin]
+Activate Window Demanding Attention=Meta+A,Ctrl+Alt+A,Activate Window Demanding Attention
+Expose=none,,Toggle Present Windows (Current desktop)
+ExposeAll=Meta+Shift+W,Meta+Shift+W,Toggle Present Windows (All desktops)
+ExposeClass=Meta+W,Meta+W,Toggle Present Windows (Window class)
+Kill Window=none,,Kill Window
+MoveMouseToCenter=none,,Move Mouse to Center
+MoveMouseToFocus=none,,Move Mouse to Focus
+Overview=Meta+S,Meta+S,Toggle Overview
+Show Desktop=none,,Show Desktop
+ShowDesktopGrid=none,,Show Desktop Grid
+Switch One Desktop Down=none,,Switch One Desktop Down
+Switch One Desktop Up=none,,Switch One Desktop Up
+Switch One Desktop to the Left=Meta+Ctrl+H\tMeta+Ctrl+Left,Meta+Ctrl+Left,Switch One Desktop to the Left
+Switch One Desktop to the Right=Meta+Ctrl+L\tMeta+Ctrl+Right,Meta+Ctrl+Right,Switch One Desktop to the Right
+Switch Window Down=Meta+Alt+Down,Meta+Alt+Down,Switch to Window Below
+Switch Window Left=Meta+Alt+Left,Meta+Alt+Left,Switch to Window to the Left
+Switch Window Right=Meta+Alt+Right,Meta+Alt+Right,Switch to Window to the Right
+Switch Window Up=Meta+Alt+Up,Meta+Alt+Up,Switch to Window Above
+Switch to Next Desktop=none,,Switch to Next Desktop
+Switch to Next Screen=none,,Switch to Next Screen
+Switch to Previous Desktop=none,,Switch to Previous Desktop
+Switch to Previous Screen=none,,Switch to Previous Screen
+ToggleMouseClick=Meta+*,Meta+*,Toggle Mouse Click Effect
+Walk Through Windows=Meta+Tab,Meta+Tab,Walk Through Windows
+Walk Through Windows (Reverse)=Meta+Shift+Tab,Meta+Shift+Tab,Walk Through Windows (Reverse)
+Walk Through Windows of Current Application=Meta+`,Meta+`,Walk Through Windows of Current Application
+Walk Through Windows of Current Application (Reverse)=Meta+~,Meta+~,Walk Through Windows of Current Application (Reverse)
+Window Close=Meta+Q\tAlt+F4,Meta+Q,Close Window
+Window Fullscreen=Meta+F,Meta+F,Make Window Fullscreen
+Window Maximize=Meta+Shift+F,Meta+Shift+F,Maximize Window
+Window On All Desktops=none,,Keep Window on All Desktops
+Window One Desktop to the Left=Meta+Ctrl+Shift+H\tMeta+Ctrl+Shift+Left,Meta+Ctrl+Shift+Left,Window One Desktop to the Left
+Window One Desktop to the Right=Meta+Ctrl+Shift+Right\tMeta+Ctrl+Shift+L,Meta+Ctrl+Shift+Right,Window One Desktop to the Right
+Window Operations Menu=Alt+F3,Alt+F3,Window Operations Menu
+Window Quick Tile Bottom=Meta+Down,Meta+Down,Quick Tile Window to the Bottom
+Window Quick Tile Bottom Left=none,,Quick Tile Window to the Bottom Left
+Window Quick Tile Bottom Right=none,,Quick Tile Window to the Bottom Right
+Window Quick Tile Left=Meta+Left,Meta+Left,Quick Tile Window to the Left
+Window Quick Tile Right=Meta+Right,Meta+Right,Quick Tile Window to the Right
+Window Quick Tile Top=Meta+Up,Meta+Up,Quick Tile Window to the Top
+Window Quick Tile Top Left=none,,Quick Tile Window to the Top Left
+Window Quick Tile Top Right=none,,Quick Tile Window to the Top Right
+Window to Next Desktop=none,,Window to Next Desktop
+Window to Next Screen=Meta+Shift+Right,Meta+Shift+Right,Window to Next Screen
+Window to Previous Desktop=none,,Window to Previous Desktop
+Window to Previous Screen=Meta+Shift+Left,Meta+Shift+Left,Window to Previous Screen
+view_zoom_in=Meta+=,Meta+=,Zoom In
+view_zoom_out=Meta+-,Meta+-,Zoom Out

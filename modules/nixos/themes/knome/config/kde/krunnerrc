@@ -1,0 +1,9 @@
+[General]
+FreeFloating=true
+
+[Plugins]
+baloosearchEnabled=false
+bookmarksEnabled=false
+katesessionsEnabled=false
+konsoleprofilesEnabled=false
+org.kde.windowedwidgetsEnabled=false

@@ -1,0 +1,19 @@
+= KNOME
+:toc:
+
+image::./assets/knome-dirty.png[]
+
+It's the ultimate theme for the desktop!
+The workflow of GNOME with the flexibility of Plasma: KNOME.
+
+But seriously, this is my attempt at replicating the workflow of GNOME as closely as possible all the while using the features found in KDE Plasma.
+Especially with the link:https://pointieststick.com/2021/11/19/this-week-in-kde-most-of-gnome-shell-in-the-overview-effect/[recent release of the overview effect] taken from GNOME, it's becoming more possible.
+Why?
+Why not.
+Just want to see what's on the other side of things.
+
+For future references, here's what I want to get from this customization:
+
+* Get to GNOME aesthestics as close as possible.
+* Make good use of the launcher (i.e., Krunner) as a replacement for GNOME search providers.
+* Integrate most of the settings in the theme module as much as possible without using third-party plugins and scripts.
