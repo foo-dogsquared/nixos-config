@@ -119,19 +119,21 @@ in {
         documentation = [ "man:yt-dlp(1)" ];
         enable = true;
         path = [ cfg.package pkgs.coreutils ];
+        preStart = ''
+          mkdir -p ${lib.escapeShellArg cfg.archivePath}
+        '';
         script = ''
-          mkdir -p ${lib.escapeShellArg cfg.archivePath} \
-          && yt-dlp ${lib.concatStringsSep " " cfg.extraArgs} ${
+          yt-dlp ${lib.concatStringsSep " " cfg.extraArgs} ${
             lib.concatStringsSep " " value.extraArgs
-          } ${lib.escapeShellArgs value.urls}
+          } ${lib.escapeShellArgs value.urls} --paths ${cfg.archivePath}
         '';
         startAt = value.startAt;
         serviceConfig = {
           NoNewPrivileges = true;
           PrivateTmp = true;
-          ProtectControlGroup = true;
+          ProtectControlGroups = true;
           ProtectClock = true;
-          ProtectKernelModule = true;
+          ProtectKernelModules = true;
           ProtectKernelLogs = true;
         };
       }) cfg.jobs;

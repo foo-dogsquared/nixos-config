@@ -127,7 +127,6 @@ in {
         };
 
         Service = {
-          WorkingDirectory = cfg.archivePath;
           ExecStartPre = ''
             ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p ${
               lib.escapeShellArg cfg.archivePath
@@ -141,7 +140,7 @@ in {
                 lib.concatStringsSep " " cfg.extraArgs
               } ${lib.concatStringsSep " " value.extraArgs} ${
                 lib.escapeShellArgs value.urls
-              }
+              } --paths ${lib.escapeShellArg cfg.archivePath}
             '';
           in "${archiveScript}/bin/${scriptName}";
         };
