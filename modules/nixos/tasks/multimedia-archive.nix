@@ -5,42 +5,55 @@ in {
   options.tasks.multimedia-archive.enable =
     lib.mkEnableOption "multimedia archiving setup";
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf cfg.enable (let
+    yt-dlp-args = [
+      # Make a global list of successfully downloaded videos as a cache for yt-dlp.
+      "--download-archive videos"
+
+      # It gave me problems so no continues.
+      "--no-continue"
+
+      # No overwriting of videos and related files.
+      "--no-force-overwrites"
+
+      # Embed metadata in the file.
+      "--embed-metadata"
+
+      # Embed chapter markers, if possible.
+      "--embed-chapters"
+
+      # Write the subtitle file.
+      "--write-subs"
+
+      # Write the description in a separate file.
+      "--write-description"
+
+      # The global output for all of the jobs.
+      "--output '%(uploader,artist,creator|Unknown)s/%(release_date>%Y,upload_date>%Y|Unknown)s-%(title)s.%(ext)s'"
+
+      # Select only the most optimal format for my usecases.
+      "--format '(webm,mkv,mp4)[height<=?1280]'"
+
+      # Prefer MKV whenever possible for video formats.
+      "--merge-output-format mkv"
+
+      # Prefer Vorbis when audio-only downloads are used.
+      "--audio-format vorbis"
+      "--audio-quality 2"
+    ];
+    yt-dlp-archive-variant = pkgs.writeScriptBin "yt-dlp-archive-variant" ''
+      ${pkgs.yt-dlp}/bin/yt-dlp ${lib.escapeShellArgs yt-dlp-args}
+    '';
+  in {
+    environment.systemPackages = [ yt-dlp-archive-variant ];
+
     services.yt-dlp = {
       enable = true;
       archivePath = "/archives/yt-dlp-service";
 
-      # This is applied on all jobs.
-      # It is best to be minimal as much as possible for this.
-      extraArgs = [
-        # Make a global list of successfully downloaded videos as a cache for yt-dlp.
-        "--download-archive videos"
-
-        # No overwriting of videos and related files.
-        "--no-force-overwrites"
-
-        # Embed metadata in the file.
-        "--embed-metadata"
-
-        # Embed chapter markers, if possible.
-        "--embed-chapters"
-
-        # Write the subtitle file.
-        "--write-subs"
-
-        # Write the description in a separate file.
-        "--write-description"
-
-        # The global output for all of the jobs.
-        "--output '%(artist,creator,uploader|Unknown)s/%(release_date>%F-%H-%M-%S|Unknown)s-%(title)s.%(ext)s'"
-
-        # Prefer MKV whenever possible for video formats.
-        "--merge-output-format mkv"
-
-        # Prefer Vorbis when audio-only downloads are used.
-        "--audio-format vorbis"
-        "--audio-quality 2"
-      ];
+      # This is applied on all jobs. It is best to be minimal as much as
+      # possible for this.
+      extraArgs = yt-dlp-args;
 
       jobs = {
         arts = {
@@ -53,10 +66,9 @@ in {
             "https://www.youtube.com/channel/UCcBnT6LsxANZjUWqpjR8Jpw" # Marcello Barenghi
             "https://www.youtube.com/c/ronillust" # ronillust
           ];
-          startAt = "daily";
+          startAt = "weekly";
           extraArgs = [
-            "--dateafter 'today-2weeks'" # Only get the videos uploaded after 2 weeks.
-            "--playlist-end 50" # Only check the first N videos.
+            "--playlist-end 20" # Only check the first N videos.
           ];
         };
 
@@ -68,10 +80,9 @@ in {
             "https://www.youtube.com/c/K%C3%A1rolyZsolnai" # Two Minute Papers
             "https://www.youtube.com/c/TheCodingTrain" # TheCodingTrain
           ];
-          startAt = "daily";
+          startAt = "weekly";
           extraArgs = [
-            "--dateafter 'today-1month'" # Only get the uploaded videos from a month ago.
-            "--playlist-end 50" # Only check the first N videos.
+            "--playlist-end 20" # Only check the first N videos.
           ];
         };
 
@@ -86,10 +97,9 @@ in {
             "https://www.youtube.com/channel/UCekQr9znsk2vWxBo3YiLq2w" # You Suck at Cooking
             "https://www.youtube.com/channel/UCUAKaXyq2hVBCph1LOUtuqg" # 집밥요리 Home Cooking
           ];
-          startAt = "*-*-1/3"; # Every 3 days starting from the first day of the calendar.
+          startAt = "weekly";
           extraArgs = [
-            "--dateafter 'today-1month'" # Only get the uploaded videos from a month ago.
-            "--playlist-end 35" # Check the first N videos.
+            "--playlist-end 15" # Check the first N videos.
           ];
         };
       };
@@ -116,9 +126,9 @@ in {
             "https://www.artstation.com/bassem_wageeh" # Bassem wageeh
             "https://hyperjerk.newgrounds.com" # HyperJerk
           ];
-          startAt = "daily";
+          startAt = "weekly";
         };
       };
     };
-  };
+  });
 }
