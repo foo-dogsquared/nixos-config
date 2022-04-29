@@ -66,7 +66,7 @@ in {
         The location of the archive to be downloaded. Must be an absolute path.
       '';
       default = "/archives/yt-dlp-service";
-      example = lib.literalExpression "/archiving-service/videos";
+      example = lib.literalExpression "/var/archives/yt-dlp-service";
     };
 
     extraArgs = lib.mkOption {
@@ -129,12 +129,18 @@ in {
         '';
         startAt = value.startAt;
         serviceConfig = {
+          LockPersonality = true;
           NoNewPrivileges = true;
           PrivateTmp = true;
+          PrivateUsers = true;
+          PrivateDevices = true;
           ProtectControlGroups = true;
           ProtectClock = true;
-          ProtectKernelModules = true;
           ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
+          SystemCallFilter = "@system-service";
+          SystemCallErrorNumber = "EPERM";
         };
       }) cfg.jobs;
   };
