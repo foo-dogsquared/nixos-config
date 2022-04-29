@@ -73,7 +73,7 @@ in {
         to be created at the time of running the service.
       '';
       default = "/archives/gallery-dl-service";
-      example = lib.literalExpression "/archiving-service/photos";
+      example = lib.literalExpression "/var/archives/gallery-dl-services";
     };
 
     settings = lib.mkOption {
@@ -153,12 +153,18 @@ in {
         '';
         startAt = value.startAt;
         serviceConfig = {
+          LockPersonality = true;
           NoNewPrivileges = true;
           PrivateTmp = true;
+          PrivateUsers = true;
+          PrivateDevices = true;
           ProtectControlGroups = true;
           ProtectClock = true;
-          ProtectKernelModules = true;
           ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
+          SystemCallFilter = "@system-service";
+          SystemCallErrorNumber = "EPERM";
         };
       }) cfg.jobs;
   };
