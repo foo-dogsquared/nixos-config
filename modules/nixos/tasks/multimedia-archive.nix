@@ -8,16 +8,13 @@ in {
   config = lib.mkIf cfg.enable (let
     yt-dlp-args = [
       # Make a global list of successfully downloaded videos as a cache for yt-dlp.
-      "--download-archive videos"
-
-      # It gave me problems so no continues.
-      "--no-continue"
+      "--download-archive ${config.services.yt-dlp.archivePath}/videos"
 
       # No overwriting of videos and related files.
       "--no-force-overwrites"
 
       # Embed metadata in the file.
-      "--embed-metadata"
+      "--write-info-json"
 
       # Embed chapter markers, if possible.
       "--embed-chapters"
@@ -29,13 +26,16 @@ in {
       "--write-description"
 
       # The global output for all of the jobs.
-      "--output '%(uploader,artist,creator|Unknown)s/%(release_date>%Y,upload_date>%Y|Unknown)s-%(title)s.%(ext)s'"
+      "--output '%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title)s.%(ext)s'"
 
       # Select only the most optimal format for my usecases.
       "--format '(webm,mkv,mp4)[height<=?1280]'"
 
       # Prefer MKV whenever possible for video formats.
       "--merge-output-format mkv"
+
+      # Don't download any videos that are originally live streams.
+      "--match-filters '!was_live'"
 
       # Prefer Vorbis when audio-only downloads are used.
       "--audio-format vorbis"
