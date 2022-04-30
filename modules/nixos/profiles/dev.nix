@@ -51,6 +51,10 @@ in {
 
         # I SAID ALL OF THE GIT EXTENSIONS!
         git-crypt
+
+        github-cli # Client for GitHub.
+        hut # And one for Sourcehut.
+        act # Finally, a local environment for testing GitHub workflows.
       ];
     })
 
@@ -98,7 +102,10 @@ in {
         package = pkgs.neovim-nightly;
       };
 
-      environment.systemPackages = with pkgs; [ editorconfig-core-c ];
+      environment.systemPackages = with pkgs; [
+        editorconfig-core-c
+        tree-sitter
+      ];
     })
   ]);
 }

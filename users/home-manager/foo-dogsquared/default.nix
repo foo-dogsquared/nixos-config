@@ -24,12 +24,8 @@ in {
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    neovim
-    borgmatic
-    borgbackup
     ncmpcpp
     vscodium-fhs
-    tree-sitter
     yt-dlp-for-audio
   ];
 
@@ -108,6 +104,7 @@ in {
     dev = {
       enable = true;
       shell.enable = true;
+      extras.enable = true;
     };
     editors.emacs.enable = true;
     desktop = {
@@ -123,24 +120,30 @@ in {
     enable = true;
     archivePath = "%h/library/archives";
     withDependencies = true;
+    webserver.enable = true;
 
     jobs = {
       arts = {
         links = [
           "https://www.davidrevoy.com/feed/rss"
-          "https://www.youtube.com/c/ronillust"
+          "https://librearts.org/index.xml"
         ];
         startAt = "weekly";
       };
 
       computer = {
         links = [
+          "https://blog.mozilla.org/en/feed/"
           "https://distill.pub/rss.xml"
+          "https://drewdevault.com/blog/index.xml"
           "https://fasterthanli.me/index.xml"
-          "https://arxiv.org/rss/cs"
-          "https://awesomekling.github.io/feed.xml"
+          "https://jvns.ca/atom.xml"
+          "https://www.bytelab.codes/rss/"
+          "https://www.collabora.com/feed"
+          "https://www.jntrnr.com/atom.xml"
+          "https://yosoygames.com.ar/wp/?feed=rss"
+          "https://simblob.blogspot.com/feeds/posts/default"
         ];
-        extraOptions = [ "--depth 1" ];
         startAt = "daily";
       };
 
@@ -148,6 +151,8 @@ in {
         links = [
           "https://veloren.net/rss.xml"
           "https://guix.gnu.org/feeds/blog.atom"
+          "https://fedoramagazine.org/feed/"
+          "https://nixos.org/blog/announcements-rss.xml"
         ];
         startAt = "*-*-1/2";
       };

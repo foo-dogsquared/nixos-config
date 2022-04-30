@@ -16,7 +16,6 @@ in {
     ({
       home.packages = with pkgs; [
         lazygit # Git interface for the lazy.
-        github-cli # So you don't have to use much of GitHub on the site, I guess.
         fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
         gopass # An improved version of the password manager for hipsters.
         perl534Packages.vidir # Bulk rename for your organizing needs.
@@ -50,6 +49,11 @@ in {
       home.packages = with pkgs; [
         tree-sitter # The modern way of text highlighting.
         hyperfine # Command-line profiling.
+        github-cli # So you don't have to use much of GitHub on the site, I guess.
+        hut # Easier interfacing with Sourcehut.
+        act # Test your CI without embarrassing yourself pushing into upstream.
+        irssi # Communicate in the terminal like a normal person.
+        hexchat # Communicate on the desktop like an insane person.
       ];
     })
   ]);

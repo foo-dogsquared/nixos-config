@@ -9,7 +9,7 @@
   outputs = inputs@{ self, nixpkgs, ... }:
     let systems = inputs.flake-utils.lib.defaultSystems;
     in inputs.flake-utils.lib.eachSystem systems (system: {
-      devShell =
+      devShells.default =
         import ./shell.nix { pkgs = import nixpkgs { inherit system; }; };
     });
 }

@@ -14,4 +14,4 @@ test:
 	nixos-rebuild --flake ".#${HOST}" dry-activate
 
 .PHONY: update
-	nix flake update
+	nix flake update --commit-lock-file --commit-lockfile-summary "flake.lock: update inputs"

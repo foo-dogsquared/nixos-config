@@ -134,6 +134,14 @@
             ];
           };
 
+          # Set several paths for the traditional channels.
+          nix.nixPath = [
+            "nixpkgs=${nixpkgs}"
+            "home-manager=${inputs.home-manager}"
+            "nur=${inputs.nur}"
+            "config=${self}"
+          ];
+
           # Stallman-senpai will be disappointed.
           nixpkgs.config.allowUnfree = true;
 

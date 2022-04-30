@@ -66,7 +66,7 @@ in {
             "https://www.youtube.com/channel/UCcBnT6LsxANZjUWqpjR8Jpw" # Marcello Barenghi
             "https://www.youtube.com/c/ronillust" # ronillust
           ];
-          startAt = "weekly";
+          startAt = "Friday";
           extraArgs = [
             "--playlist-end 20" # Only check the first N videos.
           ];
@@ -80,7 +80,7 @@ in {
             "https://www.youtube.com/c/K%C3%A1rolyZsolnai" # Two Minute Papers
             "https://www.youtube.com/c/TheCodingTrain" # TheCodingTrain
           ];
-          startAt = "weekly";
+          startAt = "Thursday";
           extraArgs = [
             "--playlist-end 20" # Only check the first N videos.
           ];
@@ -97,7 +97,7 @@ in {
             "https://www.youtube.com/channel/UCekQr9znsk2vWxBo3YiLq2w" # You Suck at Cooking
             "https://www.youtube.com/channel/UCUAKaXyq2hVBCph1LOUtuqg" # 집밥요리 Home Cooking
           ];
-          startAt = "weekly";
+          startAt = "Sunday";
           extraArgs = [
             "--playlist-end 15" # Check the first N videos.
           ];

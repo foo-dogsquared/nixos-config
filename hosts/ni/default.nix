@@ -36,9 +36,11 @@
       home = "/home/foo-dogsquared";
     };
   };
-  hardware-setup.backup-archive.enable = true;
+  tasks = {
+    backup-archive.enable = true;
+    multimedia-archive.enable = true;
+  };
   themes = {
-    disableLimit = true;
     themes.a-happy-gnome.enable = true;
   };
 
