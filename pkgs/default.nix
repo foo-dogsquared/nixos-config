@@ -38,6 +38,7 @@ let
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
       #trex = callPackage ./trex.nix { };
+      skeuowaita-icon-theme = callPackage ./skeuowaita-icon-theme.nix { };
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       segno = libsForQt5.callPackage ./segno.nix { };
