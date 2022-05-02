@@ -41,7 +41,6 @@ let
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       segno = libsForQt5.callPackage ./segno.nix { };
-      sioyek = libsForQt5.callPackage ./sioyek.nix { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
       wayback = libsForQt5.callPackage ./wayback.nix { };
     };
