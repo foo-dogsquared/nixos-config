@@ -42,6 +42,7 @@ let
       skeuowaita-icon-theme = callPackage ./skeuowaita-icon-theme.nix { };
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
+      thokr = callPackage ./thokr.nix { };
       segno = libsForQt5.callPackage ./segno.nix { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
       wayback = libsForQt5.callPackage ./wayback.nix { };
