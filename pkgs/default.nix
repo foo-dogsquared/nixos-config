@@ -10,6 +10,7 @@ let
       blueprint-compiler = callPackage ./blueprint-compiler.nix { };
       butler = callPackage ./butler.nix { };
       clidle = callPackage ./clidle.nix { };
+      freerct = callPackage ./freerct.nix { };
       distant = callPackage ./distant.nix { };
       devdocs-desktop = callPackage ./devdocs-desktop.nix { };
       doggo = callPackage ./doggo.nix { };
