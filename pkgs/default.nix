@@ -6,6 +6,7 @@ let
   packages = self:
     let callPackage = newScope self;
     in {
+      artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
       blueprint-compiler = callPackage ./blueprint-compiler.nix { };
       butler = callPackage ./butler.nix { };
