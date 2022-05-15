@@ -26,6 +26,7 @@ in {
   home.packages = with pkgs; [
     ncmpcpp
     vscodium-fhs
+    neovim
     yt-dlp-for-audio
   ];
 
