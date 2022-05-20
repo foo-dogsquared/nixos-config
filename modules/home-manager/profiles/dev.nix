@@ -32,6 +32,7 @@ in {
     })
 
     (lib.mkIf cfg.shell.enable {
+      programs.atuin.enable = true;
       programs.direnv = {
         enable = true;
         nix-direnv.enable = true;

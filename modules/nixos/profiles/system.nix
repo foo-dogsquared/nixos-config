@@ -54,6 +54,11 @@ in {
       security.rtkit.enable = true;
       services.pipewire = {
         enable = true;
+
+        # This is enabled by default but I want to explicit since
+        # this is my preferred way of managing anyways.
+        wireplumber.enable = true;
+
         alsa.enable = true;
         alsa.support32Bit = true;
         pulse.enable = true;

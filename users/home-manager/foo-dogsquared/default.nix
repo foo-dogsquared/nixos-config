@@ -33,12 +33,21 @@ in {
   fonts.fontconfig.enable = true;
 
   # My specific usual stuff.
-  programs.git = {
+  programs.git = let email = "foo.dogsquared@gmail.com"; in {
     enable = true;
     package = pkgs.gitFull;
     lfs.enable = true;
     userName = "Gabriel Arazas";
-    userEmail = "foo.dogsquared@gmail.com";
+    userEmail = email;
+    extraConfig = {
+      # This is taken from the official Git book, for future references.
+      sendemail = {
+        smtpserver = "smtp.gmail.com";
+        smtpencryption = "tls";
+        smtpserverport = 587;
+        smtpuser = email;
+      };
+    };
   };
 
   # My music player setup, completely configured with Nix!
@@ -56,7 +65,7 @@ in {
       mopidy-youtube
     ];
 
-    configuration = {
+    settings = {
       http = {
         hostname = "0.0.0.0";
       };
@@ -180,6 +189,21 @@ in {
       { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
       { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
     ];
+  };
+
+  programs.irssi = {
+    enable = true;
+    networks.liberachat = {
+      nick = "foo-dogsquared";
+      server = {
+        address = "irc.libera.chat";
+        port = 6697;
+      };
+      channels = {
+        nixos = { };
+        guix = { };
+      };
+    };
   };
 
   xdg.userDirs = {

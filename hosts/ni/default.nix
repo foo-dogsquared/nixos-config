@@ -8,6 +8,11 @@
     inputs.guix-overlay.nixosModules.guix-binary
   ];
 
+  boot.binfmt.emulatedSystems = [
+    "aarch64-linux"
+    "riscv64-linux"
+  ];
+
   # My custom configuration with my custom modules starts here.
   profiles = {
     agenix.enable = true;
@@ -19,7 +24,6 @@
       hardware.enable = true;
       cleanup.enable = true;
       autoUpgrade.enable = true;
-      wine.enable = true;
     };
     dev = {
       enable = true;
