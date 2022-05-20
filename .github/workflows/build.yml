@@ -16,3 +16,5 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build custom packages
         run: nix shell nixpkgs#nix-build-uncached --command nix-build-uncached ./pkgs
+      - name: Build NixOS configurations
+        run: nix build .#nixosConfigurations.ni
