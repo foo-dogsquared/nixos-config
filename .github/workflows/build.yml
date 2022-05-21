@@ -17,4 +17,4 @@ jobs:
       - name: Build custom packages
         run: nix shell nixpkgs#nix-build-uncached --command nix-build-uncached ./pkgs
       - name: Build NixOS configurations
-        run: nix build .#nixosConfigurations.ni
+        run: nix build .#nixosConfigurations.ni.config.system.build.toplevel
