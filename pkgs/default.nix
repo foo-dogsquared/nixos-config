@@ -38,11 +38,11 @@ let
       mopidy-beets = callPackage ./mopidy-beets.nix { };
       mopidy-funkwhale = callPackage ./mopidy-funkwhale.nix { };
       mopidy-internetarchive = callPackage ./mopidy-internetarchive.nix { };
+      neuwaita-icon-theme = callPackage ./neuwaita-icon-theme { };
       pop-launcher = callPackage ./pop-launcher.nix { };
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
       #trex = callPackage ./trex.nix { };
-      skeuowaita-icon-theme = callPackage ./skeuowaita-icon-theme.nix { };
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       thokr = callPackage ./thokr.nix { };
