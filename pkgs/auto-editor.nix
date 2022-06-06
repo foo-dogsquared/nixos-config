@@ -1,33 +1,23 @@
 { stdenv, lib, fetchFromGitHub, python310Packages }:
 
-let
-  av = python310Packages.av.overrideAttrs (super: rec {
-    version = "9.2.0";
-    src = python310Packages.fetchPypi {
-      inherit version;
-      pname = super.pname;
-      sha256 = "sha256-8qfCJnJNf3dFs3a0WcUA2dF72NBHO36mv43bT3lXxp0=";
-    };
-    buildInputs = super.buildInputs ++ [ python310Packages.cython ];
-    pytestFlagsArray = super.pytestFlagsArray ++ [
-      "--deselect=tests/test_python_io.py::TestPythonIO::test_writing_to_custom_io_dash"
-      "--deselect=tests/test_python_io.py::TestPythonIO::test_writing_to_custom_io_image2"
-    ];
-  });
-in python310Packages.buildPythonApplication rec {
+python310Packages.buildPythonApplication rec {
   pname = "auto-editor";
-  version = "22w17a";
+  version = "22w22a";
   doCheck = false;
 
   src = fetchFromGitHub {
     owner = "WyattBlue";
     repo = pname;
     rev = version;
-    sha256 = "sha256-zXKmmJk7QDeHFJemhabTNhcMfP+FdOvfqEkh7+Hs2z8=";
+    sha256 = "sha256-SSdiBLyijed4bRqI4Y4vJ4HetNTGQgDMnXmbLRNspL0=";
   };
 
+  postPatch = ''
+    substituteInPlace ./setup.py --replace "pillow==9.1.1" "pillow==9.1.0"
+  '';
+
   propagatedBuildInputs = with python310Packages;
-    [ numpy yt-dlp pillow ] ++ [ av ];
+    [ numpy yt-dlp av pillow ];
 
   meta = with lib; {
     description =
