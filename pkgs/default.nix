@@ -49,5 +49,6 @@ let
       segno = libsForQt5.callPackage ./segno.nix { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
       wayback = libsForQt5.callPackage ./wayback.nix { };
+      wzmach = libsForQt5.callPackage ./wzmach { };
     };
 in lib.fix (lib.extends overrides packages)
