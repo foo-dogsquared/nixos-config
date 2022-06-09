@@ -45,6 +45,9 @@ in {
         nix-index
         nix-index-update
       ];
+
+      # Enable running GNOME apps outside GNOME.
+      programs.dconf.enable = true;
     })
 
     (lib.mkIf cfg.audio.enable {
@@ -64,9 +67,6 @@ in {
         pulse.enable = true;
         jack.enable = true;
       };
-
-      # Enable running GNOME apps outside GNOME.
-      programs.dconf.enable = true;
     })
 
     (lib.mkIf cfg.fonts.enable {

@@ -42,7 +42,13 @@ in {
       # Enable Starship prompt.
       programs.starship = {
         enable = true;
-        settings = { add_newline = false; };
+        settings = {
+          add_newline = false;
+          hostname = {
+            ssh_only = false;
+            trim_at = "";
+          };
+        };
       };
     })
 

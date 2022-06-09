@@ -75,7 +75,10 @@ in {
     # !!! Please add your user to the "libvirtd" group.
     (lib.mkIf cfg.virtualization.enable {
       # virt-manager as my frontend.
-      environment.systemPackages = [ pkgs.virt-manager ];
+      environment.systemPackages = with pkgs; [
+        distrobox
+        virt-manager
+      ];
 
       # Enable podman just as my main container runtime or something.
       virtualisation.podman = {
