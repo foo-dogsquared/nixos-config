@@ -53,6 +53,7 @@ in
         appindicator
         alphabetical-app-grid
         burn-my-windows
+        caffeine
         desktop-cube
         gsconnect
         x11-gestures
@@ -70,6 +71,18 @@ in
           runcat
           just-perfection
         ];
+      '';
+      internal = true;
+    };
+
+    extraApps = lib.mkOption {
+      type = with lib.types; listOf package;
+      description = "A list of applications to be included in the theme.";
+      default = with pkgs; [
+        gnome.polari
+      ];
+      example = lib.literalExpression ''
+        with pkgs; [ gnome.polari ];
       '';
       internal = true;
     };
@@ -109,12 +122,8 @@ in
       totem
       epiphany
       gnome-terminal
-      gnome-music
       yelp
-    ] ++ (with pkgs; [
-      gnome-user-docs
-      gnome-tour
-    ]);
+    ];
 
     # I'm pretty sure this is already done but just to make sure.
     services.gnome.chrome-gnome-shell.enable = true;
@@ -165,6 +174,6 @@ in
 
       # GNOME search providers.
       gnome-search-provider-recoll
-    ] ++ cfg.shellExtensions;
+    ] ++ cfg.shellExtensions ++ cfg.extraApps;
   };
 }
