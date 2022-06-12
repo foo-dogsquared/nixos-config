@@ -60,7 +60,7 @@ in {
         hut # Easier interfacing with Sourcehut.
         act # Test your CI without embarrassing yourself pushing into upstream.
         irssi # Communicate in the terminal like a normal person.
-        hexchat # Communicate on the desktop like an insane person.
+        treefmt # I like the tagline of this tool: "One CLI for formatting your code tree." (It rhymes somewhat.)
       ];
     })
   ]);
