@@ -61,7 +61,6 @@ in {
       mopidy-local
       mopidy-mpd
       mopidy-mpris
-      mopidy-spotify
       mopidy-youtube
     ];
 
