@@ -40,15 +40,12 @@
       home = "/home/foo-dogsquared";
     };
   };
-  tasks = {
-    backup-archive.enable = true;
-    multimedia-archive.enable = true;
-  };
-  themes = {
-    themes.a-happy-gnome.enable = true;
-  };
+
+  tasks.multimedia-archive.enable = true;
+  themes.themes.a-happy-gnome.enable = true;
 
   environment.systemPackages = with pkgs; [
+    # This is installed just to get Geiser to properly work.
     guile_3_0
   ];
 
@@ -98,6 +95,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.11"; # Did you read the comment?
+  system.stateVersion = "22.05"; # Did you read the comment?
 }
 
