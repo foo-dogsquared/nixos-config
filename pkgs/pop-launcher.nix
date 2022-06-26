@@ -1,48 +1,29 @@
-{ lib, fetchFromGitHub, rustPlatform, pkg-config, openssl, gtk3 }:
+{ lib, fetchFromGitHub, rustPlatform, just, runtimeShell }:
 
-let distributionPluginPath = "${placeholder "out"}/lib/pop-launcher";
-in rustPlatform.buildRustPackage rec {
+rustPlatform.buildRustPackage rec {
   pname = "pop-launcher";
-  version = "1.1.0";
+  version = "1.2.1";
 
   src = fetchFromGitHub {
     owner = "pop-os";
     repo = "launcher";
     rev = version;
-    sha256 = "sha256-I713Er96ONt7L0LLzemNtc/qpy+RBaAuNF7SU+FG8LA=";
+    sha256 = "sha256-BQAO9IodZxGgV8iBmUaOF0yDbAMVDFslKCqlh3pBnb0=";
   };
 
-  cargoBuildFlags = [ "-p" "pop-launcher-bin" ];
-  nativeBuildInputs = [ pkg-config ];
-  buildInputs = [ openssl gtk3 ];
+  cargoSha256 = "sha256-cTvrq0fH057UIx/O9u8zHMsg+psMGg1q9klV5OMxtok=";
 
   # Replace the distribution plugins path since it is only usable with traditional Linux distros.
-  prePatchPhase = ''
-    substituteInPlace src/lib.rs --replace "/usr/lib/pop-launcher" "${distributionPluginPath}"
-    substituteInPlace plugins/src/scripts/mod.rs --replace "/usr/lib/pop-launcher/scripts" "${distributionPluginPath}/scripts"
+  postPatch = ''
+    substituteInPlace justfile --replace "#!/usr/bin/env sh" "#!${runtimeShell}"
+    substituteInPlace src/lib.rs --replace "/usr/lib/pop-launcher" "$out/share/pop-launcher"
+    substituteInPlace plugins/src/scripts/mod.rs --replace "/usr/lib/pop-launcher" "$out/share/pop-launcher"
   '';
 
-  # Installing and configuring the built-in plugins.
-  postInstall = ''
-    # Clean up the name.
-    mv $out/bin/pop-launcher{-bin,}
+  nativeBuildInputs = [ just ];
+  buildPhase = "just";
+  installPhase = "just base_dir=$out/ install";
 
-    # Configure the built-in plugins properly.
-    for plugin in plugins/src/*; do
-      plugin_name=$(basename "$plugin")
-      plugin_path="${distributionPluginPath}/plugins/$plugin_name"
-      plugin_bin=$(echo "$plugin_name" | sed 's/_/-/g')
-
-      # We are only after the plugins which are stored inside subdirectories.
-      [ -d $plugin ] || continue
-
-      # Configure each built-in plugin with the plugin metadata file and the binary (which is also `pop-launcher`).
-      mkdir -p "$plugin_path" && cp "$plugin/plugin.ron" "$plugin_path"
-      ln -sf "$out/bin/pop-launcher" "$plugin_path/$plugin_bin"
-    done
-  '';
-
-  cargoSha256 = "sha256-swkQAja+t/yz5TFq5omskP7e/OVaHK7/a6TFuP+T/VY=";
   meta = with lib; {
     description = "Modular IPC-based desktop launcher service";
     homepage = "https://github.com/pop-os/launcher";
