@@ -50,5 +50,6 @@ let
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
       wayback = libsForQt5.callPackage ./wayback.nix { };
       wzmach = libsForQt5.callPackage ./wzmach { };
+      watc = callPackage ./watc { };
     };
 in lib.fix (lib.extends overrides packages)
