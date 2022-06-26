@@ -2,7 +2,7 @@ name: "Automated flake inputs update"
 on:
   schedule:
     # Every week on Friday.
-    - cron: '0 * * * 5'
+    - cron: '0 0 * * 5'
 jobs:
   build:
     runs-on: ubuntu-latest
