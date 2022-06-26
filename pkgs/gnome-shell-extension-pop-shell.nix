@@ -1,31 +1,33 @@
-{ lib, stdenv, fetchFromGitHub, glib, nodePackages }:
+{ lib, stdenv, fetchFromGitHub, glib, nodePackages, gjs }:
 
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-pop-shell";
-  version = "unstable-2022-01-19";
+  version = "unstable-2022-06-25";
 
   src = fetchFromGitHub {
     owner = "pop-os";
     repo = "shell";
-    rev = "21745c4a8076ad52c9ccc77ca5726f5c7b83de6c";
-    sha256 = "sha256-d6NRNbTimwtGVLhcpdFD1AuignVii/xi3YtMWzkS/v0=";
+    rev = "811201b37a6dafa51539f26cf7da029d4ccdbafb";
+    sha256 = "sha256-PUreQ+eNqZfAWb100M9psG5Wo9b7CRx2uO7XEGma6kE=";
   };
 
-  nativeBuildInputs = [ glib nodePackages.typescript ];
-  skipConfigure = true;
+  nativeBuildInputs = [ glib nodePackages.typescript gjs ];
 
   makeFlags = [
-    "INSTALLBASE=$(out)/share/gnome-shell/extensions"
-    "PLUGIN_BASE=$(out)/lib/pop-shell/launcher"
-    "SCRIPTS_BASE=$(out)/lib/pop-shell/scripts"
+    "XDG_DATA_HOME=$(out)/share"
     "UUID=${passthru.extensionUuid}"
   ];
 
-  postInstall = ''
-     install -Dm644 $out/share/gnome-shell/extensions/${passthru.extensionUuid}/schemas/* -t "${
-       glib.makeSchemaPath "$out" "${pname}-${version}"
-     }"
+  preFixup = ''
+    shellExtension="$out/share/gnome-shell/extensions/${passthru.extensionUuid}"
+    chmod +x $shellExtension/*/main.js
 
+    for file in $shellExtension/*/main.js; do
+      substituteInPlace "$file" --replace "#!/usr/bin/gjs" "#!${gjs}/bin/gjs"
+    done
+  '';
+
+  postInstall = ''
     # TODO: Uncomment once custom gsettings works.
     # Unfortunately custom gsettings seems to be not properly integrated with NixOS yet.
     #
