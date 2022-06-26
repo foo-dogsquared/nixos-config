@@ -1,7 +1,7 @@
 # This is where extra desktop goodies can be found.
 # As a note, this is not where you set the aesthetics of your graphical sessions.
 # That can be found in the `themes` module.
-{ inputs, config, options, lib, pkgs, selfPath, ... }:
+{ inputs, config, options, lib, pkgs, ... }:
 
 let cfg = config.profiles.system;
 in {
@@ -84,7 +84,7 @@ in {
         };
 
         fonts = with pkgs; [
-          iosevka
+          #iosevka
 
           # Noto font family
           noto-fonts
@@ -156,7 +156,7 @@ in {
     (lib.mkIf cfg.autoUpgrade.enable {
       system.autoUpgrade = {
         enable = true;
-        flake = builtins.toString selfPath;
+        flake = "github:foo-dogsquared/nixos-config";
         allowReboot = true;
         rebootWindow = {
           lower = "22:00";
@@ -164,7 +164,7 @@ in {
         };
         dates = "weekly";
         flags = [ "--update-input" "nixpkgs" "--commit-lock-file" ];
-        randomizedDelaySec = "30min";
+        randomizedDelaySec = "1min";
       };
     })
 

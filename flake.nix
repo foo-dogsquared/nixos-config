@@ -98,7 +98,6 @@
         specialArgs = {
           inherit system inputs self;
           lib = nixpkgs.lib.extend (final: prev: import ./lib { lib = prev; });
-          selfPath = ./.;
         };
 
         config = {
