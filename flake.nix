@@ -133,6 +133,10 @@
             ];
           };
 
+          nixpkgs.config.permittedInsecurePackages = [
+            "python3.10-django-3.1.14"
+          ];
+
           # Set several paths for the traditional channels.
           nix.nixPath = [
             "nixpkgs=${nixpkgs}"
