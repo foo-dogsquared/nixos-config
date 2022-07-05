@@ -111,6 +111,8 @@ in {
     };
   };
 
+  # There's no need to go to the working directory since yt-dlp has the
+  # `--paths` flag.
   config = lib.mkIf cfg.enable {
     systemd.services = lib.mapAttrs' (name: value:
       lib.nameValuePair "yt-dlp-archive-service-${name}" {
@@ -141,6 +143,10 @@ in {
           ProtectKernelTunables = true;
           SystemCallFilter = "@system-service";
           SystemCallErrorNumber = "EPERM";
+        };
+        unitConfig = {
+          AssertPathIsReadWrite = cfg.archivePath;
+          AssertPathIsDirectory = cfg.archivePath;
         };
       }) cfg.jobs;
   };

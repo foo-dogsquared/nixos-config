@@ -166,6 +166,10 @@ in {
           SystemCallFilter = "@system-service";
           SystemCallErrorNumber = "EPERM";
         };
+        unitConfig = {
+          AssertPathIsReadWrite = cfg.archivePath;
+          AssertPathIsDirectory = cfg.archivePath;
+        };
       }) cfg.jobs;
   };
 }
