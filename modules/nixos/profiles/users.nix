@@ -69,6 +69,7 @@ in {
     home-manager.useUserPackages = true;
     home-manager.useGlobalPkgs = true;
     home-manager.sharedModules = lib.modulesToList homeManagerModules;
+    home-manager.extraSpecialArgs = { inherit inputs; };
 
     # Mapping each users to the respective user configuration.
     # Setting users for home-manager.

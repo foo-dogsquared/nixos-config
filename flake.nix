@@ -16,6 +16,10 @@
     # We're using this library for other functions, mainly testing.
     flake-utils.url = "github:numtide/flake-utils";
 
+    # My personal dotfiles.
+    dotfiles.url = "github:foo-dogsquared/dotfiles";
+    dotfiles.flake = false;
+
     # Managing home configurations.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";

@@ -55,6 +55,22 @@
         "type": "github"
       }
     },
+    "dotfiles": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1656980299,
+        "narHash": "sha256-utciO8yuzIeUB0R8thZ8xx1wEtIvmL7iYlriK8nq2Rc=",
+        "owner": "foo-dogsquared",
+        "repo": "dotfiles",
+        "rev": "2312e925f2ee558658fd888332245e8b8e79c8b4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "foo-dogsquared",
+        "repo": "dotfiles",
+        "type": "github"
+      }
+    },
     "emacs-overlay": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -466,6 +482,7 @@
       "inputs": {
         "agenix": "agenix",
         "devshell": "devshell",
+        "dotfiles": "dotfiles",
         "emacs-overlay": "emacs-overlay",
         "flake-utils": "flake-utils_3",
         "guix-overlay": "guix-overlay",
