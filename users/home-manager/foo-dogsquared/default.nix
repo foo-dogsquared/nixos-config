@@ -129,49 +129,6 @@ in {
     research.enable = true;
   };
 
-  services.archivebox = {
-    enable = true;
-    archivePath = "%h/library/archives";
-    withDependencies = true;
-    webserver.enable = true;
-
-    jobs = {
-      arts = {
-        links = [
-          "https://www.davidrevoy.com/feed/rss"
-          "https://librearts.org/index.xml"
-        ];
-        startAt = "weekly";
-      };
-
-      computer = {
-        links = [
-          "https://blog.mozilla.org/en/feed/"
-          "https://distill.pub/rss.xml"
-          "https://drewdevault.com/blog/index.xml"
-          "https://fasterthanli.me/index.xml"
-          "https://jvns.ca/atom.xml"
-          "https://www.bytelab.codes/rss/"
-          "https://www.collabora.com/feed"
-          "https://www.jntrnr.com/atom.xml"
-          "https://yosoygames.com.ar/wp/?feed=rss"
-          "https://simblob.blogspot.com/feeds/posts/default"
-        ];
-        startAt = "daily";
-      };
-
-      projects = {
-        links = [
-          "https://veloren.net/rss.xml"
-          "https://guix.gnu.org/feeds/blog.atom"
-          "https://fedoramagazine.org/feed/"
-          "https://nixos.org/blog/announcements-rss.xml"
-        ];
-        startAt = "*-*-1/2";
-      };
-    };
-  };
-
   services.bleachbit.enable = true;
 
   home.sessionVariables = {
@@ -194,20 +151,7 @@ in {
     ];
   };
 
-  programs.irssi = {
-    enable = true;
-    networks.liberachat = {
-      nick = "foo-dogsquared";
-      server = {
-        address = "irc.libera.chat";
-        port = 6697;
-      };
-      channels = {
-        nixos = { };
-        guix = { };
-      };
-    };
-  };
+  home.stateVersion = "22.11";
 
   xdg.userDirs = {
     enable = true;
