@@ -11,6 +11,14 @@ Here is the result.
 
 == Getting started
 
+[CAUTION]
+====
+Despite being a NixOS system, it isn't entirely reproducible to the point of installing this config will work out-of-the-box.
+It has some things needed in the first place to work like my external backup setup where it needs my SSH private keys to work in the first place.
+Nonetheless, the parts is it isn't reproducible is only about 10% of this config.
+Everything else is fine and dandy.
+====
+
 Hey there, fellow traveler!
 You've fell into the rabbit hole we call Nix where it leads to other rabbit holes such as functional package management, reproducibility, declarative systems, and immutable operating systems.
 
