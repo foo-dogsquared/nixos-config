@@ -1,6 +1,8 @@
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.tasks.multimedia-archive;
+let
+  cfg = config.tasks.multimedia-archive;
+  mountName = "/mnt/archives";
 in {
   options.tasks.multimedia-archive.enable =
     lib.mkEnableOption "multimedia archiving setup";
@@ -46,10 +48,34 @@ in {
     '';
   in {
     environment.systemPackages = [ yt-dlp-archive-variant ];
+    fileSystems."${mountName}" = {
+      device = "/dev/disk/by-partuuid/____CHANGE_THIS_PLEASE____";
+      fsType = "btrfs";
+      noCheck = true;
+      options = [
+        # These are btrfs-specific mount options which can found in btrfs.5
+        # manual page.
+        "subvol=@"
+        "noatime"
+        "compress=zstd:4"
+        "space_cache=v2"
+
+        # General mount options from mount.5 manual page.
+        "noauto"
+        "nofail"
+        "user"
+
+        # See systemd.mount.5 and systemd.automount.5 manual page for more
+        # details.
+        "x-systemd.automount"
+        "x-systemd.idle-timeout=2"
+        "x-systemd.device-timeout=2"
+      ];
+    };
 
     services.yt-dlp = {
       enable = true;
-      archivePath = "/archives/yt-dlp-service";
+      archivePath = "${mountName}/yt-dlp-service";
 
       # This is applied on all jobs. It is best to be minimal as much as
       # possible for this.
@@ -60,6 +86,7 @@ in {
           urls = [
             "https://www.youtube.com/channel/UCjdHbo8_vh3rxQ-875XGkvw" # 3DSage
             "https://www.youtube.com/channel/UCHv_hNLkxqlcY20MwVyayfw" # Ali Bahabadi
+            "https://www.youtube.com/c/boroCG" # BoroCG
             "https://www.youtube.com/c/DavidRevoy" # David Revoy
             "https://www.youtube.com/channel/UCGMyyn2FdEFcDfP1wQRh5lQ" # Erindale
             "https://www.youtube.com/c/Jazza" # Jazza
@@ -105,15 +132,60 @@ in {
       };
     };
 
+    services.archivebox = {
+      enable = true;
+      archivePath = "${mountName}/archivebox-service";
+      withDependencies = true;
+      webserver.enable = true;
+
+      jobs = {
+        arts = {
+          links = [
+            "https://www.davidrevoy.com/feed/rss"
+            "https://librearts.org/index.xml"
+          ];
+          startAt = "monthly";
+        };
+
+        computer = {
+          links = [
+            "https://blog.mozilla.org/en/feed/"
+            "https://distill.pub/rss.xml"
+            "https://drewdevault.com/blog/index.xml"
+            "https://fasterthanli.me/index.xml"
+            "https://jvns.ca/atom.xml"
+            "https://www.bytelab.codes/rss/"
+            "https://www.collabora.com/feed"
+            "https://www.jntrnr.com/atom.xml"
+            "https://yosoygames.com.ar/wp/?feed=rss"
+            "https://simblob.blogspot.com/feeds/posts/default"
+          ];
+          startAt = "weekly";
+        };
+
+        projects = {
+          links = [
+            "https://veloren.net/rss.xml"
+            "https://guix.gnu.org/feeds/blog.atom"
+            "https://fedoramagazine.org/feed/"
+            "https://nixos.org/blog/announcements-rss.xml"
+          ];
+          # Practically every 14 days.
+          startAt = "Mon *-*-1/14";
+        };
+      };
+    };
+
     services.gallery-dl = {
       enable = true;
-      archivePath = "/archives/gallery-dl-service";
+      archivePath = "${mountName}/gallery-dl-service";
+
       extraArgs = [
         # Record all downloaded files in an archive file.
         "--download-archive ${config.services.gallery-dl.archivePath}/photos"
 
-        # Write metdata to info.json file.
-        "--write-info-json"
+        # Write metadata to separate JSON files.
+        "--write-metadata"
       ];
 
       jobs = {
