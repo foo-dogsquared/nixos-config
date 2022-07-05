@@ -1,3 +1,0 @@
-[submodule "users/home-manager/foo-dogsquared/config"]
-	path = users/home-manager/foo-dogsquared/config
-	url = https://github.com/foo-dogsquared/dotfiles.git
