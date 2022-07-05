@@ -32,6 +32,47 @@ in {
     })
 
     (lib.mkIf cfg.shell.enable {
+      programs.bash = {
+        enable = true;
+        historyControl = [ "ignoredups" "ignorespace" ];
+        historyIgnore = [
+          "cd"
+          "exit"
+          "lf"
+          "ls"
+          "nvim"
+        ];
+        bashrcExtra = ''
+        function f() {
+          dir=''${1:-$PWD}
+          dest=$(${pkgs.fd}/bin/fd --type directory --hidden --ignore-vcs --base-directory "$dir" \
+            | ${pkgs.fzf}/bin/fzf --prompt "Go to directory ")
+          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dir/$dest")
+
+          cd "$destPrime"
+        }
+
+        function ff() {
+          dir=''${1:-$PWD}
+          dest=$(${pkgs.fd}/bin/fd --hidden --ignore-vcs --base-directory "$dir" \
+            | ${pkgs.fzf}/bin/fzf --prompt "Open file ")
+          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dir/$dest")
+
+          if [ -d "$destPrime" ]; then
+            cd "$destPrime";
+          else
+            ${pkgs.xdg-utils}/bin/xdg-open "$destPrime";
+          fi
+        }
+
+        function fm() {
+          ${pkgs.man}/bin/man -k . \
+            | ${pkgs.fzf}/bin/fzf --multi --prompt "Open manpage(s) " \
+            | ${pkgs.gawk}/bin/awk '{ print $1 "." gensub(/[()]/, "", "g", $2) }' \
+            | ${pkgs.findutils}/bin/xargs man
+        }
+        '';
+      };
       programs.atuin.enable = true;
       programs.direnv = {
         enable = true;
