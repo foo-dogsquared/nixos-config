@@ -1,4 +1,4 @@
-# This is my external hard drive with the backup setup with borg.
+# It's a setup for my backup.
 { config, options, lib, pkgs, ... }:
 
 let
@@ -44,7 +44,7 @@ in {
     assertions = [{
       assertion = config.profiles.agenix.enable;
       message = ''
-        Agenix module is not enabled. This is for the borgmatic configuration
+        Agenix module is not enabled. This is needed for the borg configuration
         we're using.
       '';
     }];
@@ -79,7 +79,6 @@ in {
           config.age.secrets.borg-patterns.path
         ];
       } // {
-        doInit = true;
         repo = "/archives/backups";
         startAt = "04/5:00:00";
       };
@@ -99,8 +98,7 @@ in {
       remote-borgbase = borgJobCommonSetting {
         patterns = [ config.age.secrets.borg-patterns.path ];
       } // {
-        doInit = false;
-        repo = "m9s7d92s@m9s7d92s.repo.borgbase.com:repo";
+        repo = "r6o30viv@r6o30viv.repo.borgbase.com:repo";
         startAt = "daily";
         environment.BORG_RSH = "ssh -i ${config.age.secrets.borg-ssh-key.path}";
       };
