@@ -83,14 +83,17 @@ in {
           includeUserConf = true;
 
           defaultFonts = {
-            monospace = [ "Iosevka" "Source Code Pro" ];
+            monospace = [ "Iosevka" "Jetbrains Mono" "Source Code Pro" ];
             sansSerif = [ "Source Sans Pro" "Noto Sans" ];
             serif = [ "Source Serif Pro" "Noto Serif" ];
+            emoji = [ "Noto Color Emoji" ];
           };
         };
 
         fonts = with pkgs; [
-          #iosevka
+          # Some monospace fonts.
+          iosevka
+          jetbrains-mono
 
           # Noto font family
           noto-fonts
