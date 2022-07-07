@@ -2,19 +2,15 @@
 
 python310Packages.buildPythonApplication rec {
   pname = "auto-editor";
-  version = "22w22a";
+  version = "22w25a";
   doCheck = false;
 
   src = fetchFromGitHub {
     owner = "WyattBlue";
     repo = pname;
     rev = version;
-    sha256 = "sha256-SSdiBLyijed4bRqI4Y4vJ4HetNTGQgDMnXmbLRNspL0=";
+    sha256 = "sha256-SKlAgGqowFvvenhbFiTWbVLYAB5CChQ+EdPXxsWxNgE=";
   };
-
-  postPatch = ''
-    substituteInPlace ./setup.py --replace "pillow==9.1.1" "pillow==9.1.0"
-  '';
 
   propagatedBuildInputs = with python310Packages;
     [ numpy yt-dlp av pillow ];
