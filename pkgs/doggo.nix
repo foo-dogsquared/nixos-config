@@ -2,7 +2,7 @@
 
 buildGoModule rec {
   pname = "doggo";
-  version = "0.5.2";
+  version = "0.5.3";
 
   subPackages = [ "cmd/doggo" "cmd/api" ];
 
@@ -10,7 +10,7 @@ buildGoModule rec {
     owner = "mr-karan";
     repo = "doggo";
     rev = "v${version}";
-    sha256 = "sha256-yoA3ViHRB5zVZhq+WADp1R5aSuQxU9SS1WmEAMUNQ28=";
+    sha256 = "sha256-K9UtHppqo+QzNTxTd9C7B97N8Nd79lR9ytj17M3QLaM=";
   };
 
   ldflags = [ "-X main.buildVersion=v${version}" ];
