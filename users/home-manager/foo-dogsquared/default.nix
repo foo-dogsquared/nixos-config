@@ -20,10 +20,7 @@ let
   yt-dlp-for-audio = pkgs.writeScriptBin "yt-dlp-audio" ''
     ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${yt-dlp-for-audio-config}" $@
   '';
-  getDotfiles = path: {
-    source = "${inputs.dotfiles}/${path}";
-    recursive = true;
-  };
+  getDotfiles = path: "${inputs.dotfiles}/${path}";
 in {
   programs.home-manager.enable = true;
 
@@ -168,11 +165,10 @@ in {
 
   # All of the personal configurations.
   xdg.configFile = {
-    "doom" = getDotfiles "emacs";
-    "kitty" = getDotfiles "kitty";
-    "lazygit" = getDotfiles "lazygit";
-    "lf" = getDotfiles "lf";
-    "nvim" = getDotfiles "nvim";
-    "wezterm" = getDotfiles "wezterm";
+    "doom".source = getDotfiles "emacs";
+    "kitty".source = getDotfiles "kitty";
+    "lf".source = getDotfiles "lf";
+    "nvim".source = getDotfiles "nvim";
+    "wezterm".source = getDotfiles "wezterm";
   };
 }
