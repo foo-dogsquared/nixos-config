@@ -30,10 +30,16 @@ in {
     ({
       # Enable Flatpak for additional options for installing desktop applications.
       services.flatpak.enable = true;
-      xdg.portal = {
-        enable = true;
-        gtkUsePortal = true;
-        wlr.enable = true;
+      xdg.portal.enable = true;
+
+      # Install the usual Flatpak remotes.
+      system.activationScripts = {
+        flatpak-remote.text = ''
+          ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+          ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists gnome-nightly https://nightly.gnome.org/gnome-nightly.flatpakrepo
+          ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists kdeapps https://distribute.kde.org/kdeapps.flatpakrepo
+        '';
       };
 
       # Enable font-related options for more smoother and consistent experience.
