@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "ictree";
-  version = "0.2.2";
+  version = "1.0.1";
 
   src = fetchFromGitHub {
     owner = "NikitaIvanovV";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-QDvAdNnc9+5GU6Rch/TDLs11O4dJrjDGskLzpTw7rbk=";
+    sha256 = "sha256-77Wo6jN8VUGTXBuGL0a9kvSIixdyEQoxqqNsHq9jcWw=";
     fetchSubmodules = true;
   };
 
