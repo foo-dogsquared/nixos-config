@@ -14,13 +14,13 @@ enableQt ? true, enableJava ? false }:
 # * Wait until gdk-pixbuf is >=3.0.
 stdenv.mkDerivation rec {
   pname = "domterm";
-  version = "unstable-2022-05-13";
+  version = "unstable-2022-07-08";
 
   src = fetchFromGitHub {
     owner = "PerBothner";
     repo = "DomTerm";
-    rev = "b78f55a595b82a28042ac5297a1c1b0cce30cdc3";
-    sha256 = "sha256-U0w9i3Eb/tAUTRWuIjhO4xfOgR0Xa4I4hSpkHuVeG9c=";
+    rev = "b063ddcf9acc6dbeaaca42bc2caa1c86d2e11805";
+    sha256 = "sha256-bXxV6uG61ZX8Tgm2KrXooblLX/4TNPXJd06bnvpWU50=";
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ]
