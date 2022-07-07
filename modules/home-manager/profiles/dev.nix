@@ -47,21 +47,21 @@ in {
           dir=''${1:-$PWD}
           dest=$(${pkgs.fd}/bin/fd --type directory --hidden --ignore-vcs --base-directory "$dir" \
             | ${pkgs.fzf}/bin/fzf --prompt "Go to directory ")
-          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dir/$dest")
+          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dest")
 
-          cd "$destPrime"
+          [ "$dest" ] && cd "$destPrime"
         }
 
         function ff() {
           dir=''${1:-$PWD}
           dest=$(${pkgs.fd}/bin/fd --hidden --ignore-vcs --base-directory "$dir" \
             | ${pkgs.fzf}/bin/fzf --prompt "Open file ")
-          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dir/$dest")
+          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dest")
 
           if [ -d "$destPrime" ]; then
-            cd "$destPrime";
+            [ "$dest" ] && cd "$destPrime";
           else
-            ${pkgs.xdg-utils}/bin/xdg-open "$destPrime";
+            [ "$dest" ] && ${pkgs.xdg-utils}/bin/xdg-open "$destPrime";
           fi
         }
 
