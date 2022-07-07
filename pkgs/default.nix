@@ -46,10 +46,10 @@ let
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       thokr = callPackage ./thokr.nix { };
-      segno = libsForQt5.callPackage ./segno.nix { };
+      segno = callPackage ./segno.nix { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
-      wayback = libsForQt5.callPackage ./wayback.nix { };
-      wzmach = libsForQt5.callPackage ./wzmach { };
       watc = callPackage ./watc { };
+      wayback = callPackage ./wayback.nix { };
+      wzmach = callPackage ./wzmach { };
     };
 in lib.fix (lib.extends overrides packages)
