@@ -10,6 +10,7 @@ let
       auto-editor = callPackage ./auto-editor.nix { };
       blueprint-compiler = callPackage ./blueprint-compiler.nix { };
       butler = callPackage ./butler.nix { };
+      cursedgl = callPackage ./cursedgl { };
       clidle = callPackage ./clidle.nix { };
       domterm = callPackage ./domterm { };
       freerct = callPackage ./freerct.nix { };
@@ -42,7 +43,6 @@ let
       pop-launcher = callPackage ./pop-launcher.nix { };
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
-      #trex = callPackage ./trex.nix { };
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       thokr = callPackage ./thokr.nix { };

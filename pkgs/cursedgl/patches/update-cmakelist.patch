@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7910d72..1775b43 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,54 +63,16 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
+ include_directories (
+     "${CMAKE_SOURCE_DIR}/include"
+ )
++install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+ # build library
+ set(LIBS ${LIBS} notcurses-core m pthread)
+ add_library(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
++install(TARGETS ${PROJECT_NAME})
+ 
+ # build examples
+-
+-# colored_cube
+-set(EXAMPLE colored_cube)
+-add_executable(${EXAMPLE} examples/colored_cube.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-
+-# interpolation
+-set(EXAMPLE interpolation)
+-add_executable(${EXAMPLE} examples/interpolation.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-
+-# hello_triangle
+-set(EXAMPLE hello_triangle)
+-add_executable(${EXAMPLE} examples/hello_triangle.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-
+-# teapot
+-set(EXAMPLE teapot)
++foreach(EXAMPLE colored_cube interpolation hello_triangle teapot montecarlo hello_cube first_person_demo)
+ add_executable(${EXAMPLE} examples/teapot.c)
+ target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-
+-# montecarlo
+-set(EXAMPLE montecarlo)
+-add_executable(${EXAMPLE} examples/montecarlo.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-
+-# hello_cube
+-set(EXAMPLE hello_cube)
+-add_executable(${EXAMPLE} examples/hello_cube.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-
+-# first_person_demo
+-set(EXAMPLE first_person_demo)
+-add_executable(${EXAMPLE} examples/first_person_demo.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-
+-# hello_lines
+-set(EXAMPLE hello_lines)
+-add_executable(${EXAMPLE} examples/hello_lines.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-
+-# usage
+-set(EXAMPLE usage)
+-add_executable(${EXAMPLE} examples/usage.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
++install(TARGETS ${EXAMPLE} DESTINATION "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/examples")
++endforeach()
