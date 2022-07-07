@@ -1,52 +1,25 @@
 { stdenv, lib, rustPlatform, fetchFromGitHub, perl, pkg-config, openssl }:
 
-let
-  version = "unstable-2022-03-01";
-  homepage = "https://github.com/chipsenkbeil/distant";
-  license = lib.licenses.mit;
+rustPlatform.buildRustPackage rec {
+  version = "0.16.4";
+  pname = "distant";
 
-  repo = fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "chipsenkbeil";
     repo = "distant";
-    rev = "f46eeea8d54c6527e590a8da279a6fb4783bfd9f";
-    sha256 = "sha256-AVhOs7qqtqz3TOsJiE6mUzMz2zR3qGBYnW9Lwm/JStk=";
+    rev = "v${version}";
+    sha256 = "sha256-lCiTlyzp+q3NnwrILQZYM60fmbjfWFWYAy1rn7HqP54=";
   };
-in lib.recurseIntoAttrs {
-  distant = rustPlatform.buildRustPackage rec {
-    inherit version;
-    pname = "distant";
+  cargoSha256 = "sha256-0oCSHstuZ/K+cerOa8xEHett8diVmDTjzvo+uLuRtWo=";
 
-    src = repo;
-    cargoSha256 = "sha256-KCw0rujcQq3VAWMt54aoa/B61rcSKn2D1gwROAfAckE=";
+  # We'll just tell to use the system's openssl to build openssl-sys.
+  OPENSSL_NO_VENDOR = 1;
+  nativeBuildInputs = [ pkg-config ];
+  buildInputs = [ perl openssl ];
 
-    # We'll just tell to use the system's openssl to build openssl-sys.
-    OPENSSL_NO_VENDOR = 1;
-    nativeBuildInputs = [ pkg-config ];
-    buildInputs = [ perl openssl ];
-
-    meta = with lib; {
-      inherit homepage license;
-      description = "Remotely edit files and run programs";
-    };
-  };
-
-  distant-lua = rustPlatform.buildRustPackage rec {
-    inherit version;
-    pname = "distant-lua";
-
-    src = repo;
-    cargoSha256 = "sha256-Cv2obK4m8eCXxpoX0zb1mb9lOdRJzMKRUNPr4dopeFw=";
-
-    OPENSSL_NO_VENDOR = 1;
-    nativeBuildInputs = [ pkg-config ];
-    buildInputs = [ perl openssl ];
-
-    preBuild = "cd distant-lua";
-    postBuild = "cd ..";
-
-    meta = with lib; {
-      inherit homepage license;
-      description = "Lua bindings for Distant";
-    };
+  meta = with lib; {
+    description = "Remotely edit files and run programs";
+    homepage = "https://github.com/chipsenkbeil/distant";
+    license = lib.licenses.mit;
   };
 }
