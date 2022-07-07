@@ -2,16 +2,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "thokr";
-  version = "0.3.0";
+  version = "0.4.1";
 
   src = fetchFromGitHub {
     owner = "coloradocolby";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-iIa8hALRTEHQe/OKTR1a6yvEw+2o8aQX95l43k2LbXo=";
+    sha256 = "sha256-OY7tSi9QoYXIQ+WvuuJ2akInEBsCNYHjwE1ailN3Pis=";
   };
 
-  cargoSha256 = "sha256-3oeQeJn7KHytDg1y2X6L5NCZdCLmgEjL3u2UC3Q4fZ8=";
+  cargoSha256 = "sha256-gEpmXyLmw6bX3enA3gNVtXNMlkQl6J/8AwJQSY0RtFw=";
 
   meta = with lib; {
     homepage = "https://github.com/coloradocolby/thokr";
