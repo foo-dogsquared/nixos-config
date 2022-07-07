@@ -16,7 +16,7 @@ jobs:
         id: build-iso
         # TODO: Use the registry.
         run: |
-          nix run github:nix-community/nixos-generators/296067b9c7a172d294831dec89d86847f30a7cfc -- --flake .#bootstrap --format iso --out-link result
+          nix run github:nix-community/nixos-generators/898edde476232843da50c9a855efaf5dd8caadaa -- --flake .#bootstrap --format iso --out-link result
       - name: Create release
         if: github.ref == 'refs/heads/master'
         id: create-release
