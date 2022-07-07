@@ -2,17 +2,17 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "hush";
-  version = "0.1.3-alpha";
+  version = "0.1.4-alpha";
 
   src = fetchFromGitHub {
     owner = "hush-shell";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-7u7vl4kDRA6/ZaouDNZb6CQQsMJoJmPAaoBcnmpenRk";
+    sha256 = "sha256-35iaJTA9GZLiJ8KerwzG0d5CGYo8yhBkrjPp7pDAJpc=";
   };
 
   checkInputs = [ util-linux ];
-  cargoSha256 = "sha256-PGNEqGh0+/U4o84U7H59vxGPqQHYMskUAtNsKS+4xv8=";
+  cargoSha256 = "sha256-PW+T9mu6VGyCRwZSuphQfbsKeX6L2RzCrg5gt+9AeHY=";
 
   postPatch = ''
     patchShebangs ./src/runtime/tests/data/stdout-stderr.sh
