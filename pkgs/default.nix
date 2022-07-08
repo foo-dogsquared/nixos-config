@@ -8,6 +8,7 @@ let
     in {
       artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
+      awesome-cli = callPackage ./awesome-cli { };
       blueprint-compiler = callPackage ./blueprint-compiler.nix { };
       butler = callPackage ./butler.nix { };
       cursedgl = callPackage ./cursedgl { };
