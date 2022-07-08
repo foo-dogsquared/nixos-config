@@ -43,37 +43,6 @@ rec {
     in lib.filterAttrs (name: value: value != { })
     (lib.mapAttrs' collect files);
 
-  /* Like `filesToAttr` but does it recursively.  Those modules with
-     `default.nix` are ignored and gives the full module directory this time.
-     This is only suitable if you intend to use all of the modules in a given
-     directory.
-
-     Signature:
-       path -> attrset
-     Where:
-       - `path` is the starting point of the scan.
-     Returns:
-       An attribute set. The keys are the basename for each Nix file/directory
-       and the values are the path to the file.
-
-     Examples:
-       filesToAttrRec ./modules
-       => { agenix = /home/foo-dogsquared/nixos-config/modules/agenix.nix; archiving = /home/foo-dogsquared/nixos-config/modules/archiving.nix; desktop = /home/foo-dogsquared/nixos-config/modules/desktop.nix; dev = /home/foo-dogsquared/nixos-config/modules/dev.nix; editors = /home/foo-dogsquared/nixos-config/modules/editors.nix; themes = { a-happy-gnome = /home/foo-dogsquared/nixos-config/modules/themes/a-happy-gnome; default = /home/foo-dogsquared/nixos-config/modules/themes/default.nix; }; }
-  */
-  filesToAttrRec = dir:
-    let
-      files = lib.filterAttrs (n: v: n != "default") (filesToAttr dir);
-
-      collect = name: file: {
-        inherit name;
-
-        # Since `filesToAttr` has already filtered the files, we can be assured
-        # it is only either a Nix file or a directory containing a
-        # `default.nix`.
-        value = if (lib.pathIsDirectory file) then filesToAttr file else file;
-      };
-    in lib.listToAttrs (lib.mapAttrsToList collect files);
-
   /* Collect all modules (results from `filesToAttr`) into a list.
 
      Signature:
@@ -117,19 +86,6 @@ rec {
 
   # Return the path of `secrets` from `../secrets`.
   getSecret = path: ../secrets/${path};
-
-  /* Create an attribute set from two lists (or a zip).
-
-     Examples:
-       zipToAttrs [ "tails" "breed" ] [ 1 "Doggo" ]
-       => { tails = 1; breed = "Doggo" }
-
-       zipToAttrs [ "hello" "d" ] [ { r = 5; f = "dogs"; } { r = 532; f = "dogsso"; } ]
-       => { d = { ... }; hello = { ... }; }
-  */
-  zipToAttrs = keys: values:
-    lib.listToAttrs
-    (lib.zipListsWith (name: value: { inherit name value; }) keys values);
 
   /* Count the attributes with the given predicate.
 
