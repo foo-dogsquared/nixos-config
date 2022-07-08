@@ -81,126 +81,133 @@
         inputs.nur.overlay
       ];
 
+      defaultSystem = inputs.flake-utils.lib.system.x86_64-linux;
       systems = with inputs.flake-utils.lib.system; [ x86_64-linux ];
-
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
-      lib' = nixpkgs.lib.extend (final: prev:
-        (import ./lib { lib = prev; }) // {
-          flakeUtils = (import ./lib/flake-utils.nix {
-            inherit inputs;
-            lib = final;
-          });
-        });
+      # We're considering this as the variant since we'll export the custom
+      # library as `lib` in the output attribute.
+      lib' =
+        nixpkgs.lib.extend (final: prev: import ./lib { lib = nixpkgs.lib; });
+
+      mkHost = { system ? defaultSystem, extraModules ? [ ] }:
+        (lib'.makeOverridable inputs.nixpkgs.lib.nixosSystem) {
+          # The system of the NixOS system.
+          inherit system;
+          specialArgs = {
+            lib = lib';
+            inherit system inputs self;
+          };
+          modules =
+            # Append with our custom NixOS modules from the modules folder.
+            (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
+
+            # Our own modules.
+            ++ extraModules;
+        };
 
       # The default configuration for our NixOS systems.
-      hostDefaultConfig = let system = "x86_64-linux";
-      in {
-        inherit system;
+      hostDefaultConfig = { pkgs, system, ... }: {
+        # Bleeding edge, baybee!
+        nix.package = pkgs.nixUnstable;
 
-        # Pass these things to our modules.
-        specialArgs = {
-          inherit system inputs self;
-          lib = nixpkgs.lib.extend (final: prev: import ./lib { lib = prev; });
+        # I want to capture the usual flakes to its exact version so we're
+        # making them available to our system. This will also prevent the
+        # annoying downloads since it always get the latest revision.
+        nix.registry = {
+          # I'm narcissistic so I want my config to be one of the flakes in the registry.
+          config.flake = self;
+
+          # All of the important flakes will be included.
+          nixpkgs.flake = nixpkgs;
+          home-manager.flake = inputs.home-manager;
+          agenix.flake = inputs.agenix;
+          nur.flake = inputs.nur;
+          guix-overlay.flake = inputs.guix-overlay;
+          nixos-generators.flake = inputs.nixos-generators;
         };
 
-        config = {
-          # I want to capture the usual flakes to its exact version so we're
-          # making them available to our system. This will also prevent the
-          # annoying downloads since it always get the latest revision.
-          nix.registry = {
-            # I'm narcissistic so I want my config to be one of the flakes in the registry.
-            config.flake = self;
-
-            # All of the important flakes will be included.
-            nixpkgs.flake = nixpkgs;
-            home-manager.flake = inputs.home-manager;
-            agenix.flake = inputs.agenix;
-            nur.flake = inputs.nur;
-            guix-overlay.flake = inputs.guix-overlay;
-            nixos-generators.flake = inputs.nixos-generators;
-          };
-
-          # We may as well live on the BLEEDING EDGE!
-          nix.package = nixpkgs.legacyPackages.${system}.nixUnstable;
-
-          # Set several binary caches.
-          nix.settings = {
-            substituters = [
-              "https://cache.nixos.org"
-              "https://nix-community.cachix.org"
-              "https://foo-dogsquared.cachix.org"
-            ];
-            trusted-public-keys = [
-              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-              "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
-            ];
-          };
-
-          nixpkgs.config.permittedInsecurePackages = [
-            "python3.10-django-3.1.14"
+        # Set several binary caches.
+        nix.settings = {
+          substituters = [
+            "https://cache.nixos.org"
+            "https://nix-community.cachix.org"
+            "https://foo-dogsquared.cachix.org"
           ];
-
-          # Set several paths for the traditional channels.
-          nix.nixPath = [
-            "nixpkgs=${nixpkgs}"
-            "home-manager=${inputs.home-manager}"
-            "nur=${inputs.nur}"
-            "config=${self}"
+          trusted-public-keys = [
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+            "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
           ];
-
-          # Stallman-senpai will be disappointed.
-          nixpkgs.config.allowUnfree = true;
-
-          # Extend nixpkgs with our overlays except for the NixOS-focused modules
-          # here.
-          nixpkgs.overlays = overlays
-            ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlays.default ];
-
-          # Please clean your temporary crap.
-          boot.cleanTmpDir = true;
-
-          # We live in a Unicode world and dominantly English in technical fields so we'll
-          # have to go with it.
-          i18n.defaultLocale = "en_US.UTF-8";
-
-          # Sane config for the package manager.
-          # TODO: Remove this after nix-command and flakes has been considered stable.
-          #
-          # Since we're using flakes to make this possible, we need it. Plus, the
-          # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
-          nix.extraOptions = ''
-            experimental-features = nix-command flakes
-          '';
         };
+
+        nixpkgs.config.permittedInsecurePackages =
+          [ "python3.10-django-3.1.14" ];
+
+        # Set several paths for the traditional channels.
+        nix.nixPath = [
+          "nixpkgs=${nixpkgs}"
+          "home-manager=${inputs.home-manager}"
+          "nur=${inputs.nur}"
+          "config=${self}"
+        ];
+
+        # Stallman-senpai will be disappointed.
+        nixpkgs.config.allowUnfree = true;
+
+        # Extend nixpkgs with our overlays except for the NixOS-focused modules
+        # here.
+        nixpkgs.overlays = overlays
+          ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlays.default ];
+
+        # Please clean your temporary crap.
+        boot.cleanTmpDir = true;
+
+        # We live in a Unicode world and dominantly English in technical fields so we'll
+        # have to go with it.
+        i18n.defaultLocale = "en_US.UTF-8";
+
+        # Sane config for the package manager.
+        # TODO: Remove this after nix-command and flakes has been considered stable.
+        #
+        # Since we're using flakes to make this possible, we need it. Plus, the
+        # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
+        nix.extraOptions = ''
+          experimental-features = nix-command flakes
+        '';
       };
 
-      # The default config for our home-manager configurations.
-      userDefaultConfig = let system = "x86_64-linux";
-      in {
-        inherit system;
+      mkUser = { system ? defaultSystem, extraModules ? [ ] }:
+        inputs.home-manager.lib.homeManagerConfiguration {
+          inherit system;
+          extraSpecialArgs = {
+            lib = lib';
+            inherit system self inputs;
+          };
+          modules =
+            # Importing our custom home-manager modules.
+            (lib'.modulesToList (lib'.filesToAttr ./modules/home-manager))
 
-        extraSpecialArgs = {
-          inherit system self;
+            # Plus our own.
+            ++ extraModules;
         };
 
-        extraModules = [{
-          # To be able to use the most of our config as possible, we want both to
-          # use the same overlays.
-          nixpkgs.overlays = overlays;
+      # The default config for our home-manager configurations.
+      userDefaultConfig = { pkgs, ... }: {
+        # To be able to use the most of our config as possible, we want both to
+        # use the same overlays.
+        nixpkgs.overlays = overlays;
 
-          # Stallman-senpai will be disappointed. :(
-          nixpkgs.config.allowUnfree = true;
+        # Stallman-senpai will be disappointed. :(
+        nixpkgs.config.allowUnfree = true;
 
-          # Let home-manager to manage itself.
-          programs.home-manager.enable = true;
+        # Let home-manager to manage itself.
+        programs.home-manager.enable = true;
 
-          manual = {
-            html.enable = true;
-            json.enable = true;
-            manpages.enable = true;
-          };
-        }];
+        manual = {
+          html.enable = true;
+          json.enable = true;
+          manpages.enable = true;
+        };
       };
     in {
       # Exposes only my library with the custom functions to make it easier to
@@ -209,9 +216,14 @@
 
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
-      nixosConfigurations = lib'.mapAttrsRecursive
-        (host: path: lib'.flakeUtils.mkHost path hostDefaultConfig)
-        (lib'.filesToAttr ./hosts);
+      nixosConfigurations = lib'.mapAttrsRecursive (host: path:
+        let
+          extraModules = [
+            { networking.hostName = builtins.baseNameOf path; }
+            path
+            hostDefaultConfig
+          ];
+        in mkHost { inherit extraModules; }) (lib'.filesToAttr ./hosts);
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
@@ -220,8 +232,17 @@
 
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
-      homeManagerConfigurations = lib'.mapAttrs
-        (_: path: lib'.flakeUtils.mkUser path userDefaultConfig)
+      homeManagerConfigurations = lib'.mapAttrs (_: path:
+        let
+          extraModules = [
+            ({ pkgs, config, ... }: {
+              home.username = builtins.baseNameOf path;
+              home.homeDirectory = "/home/${config.home.username}";
+            })
+            path
+            userDefaultConfig
+          ];
+        in mkUser { inherit extraModules; })
         (lib'.filesToAttr ./users/home-manager);
 
       # Extending home-manager with my custom modules, if anyone cares.
