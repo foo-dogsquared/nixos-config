@@ -65,12 +65,6 @@ in {
         } is not found in the `./users/home-manager` directory.";
     }];
 
-    # The global configuration for the home-manager module.
-    home-manager.useUserPackages = true;
-    home-manager.useGlobalPkgs = true;
-    home-manager.sharedModules = lib.modulesToList homeManagerModules;
-    home-manager.extraSpecialArgs = { inherit inputs; };
-
     # Mapping each users to the respective user configuration.
     # Setting users for home-manager.
     home-manager.users = mapUsers (user: _:

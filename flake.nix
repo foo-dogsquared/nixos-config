@@ -174,6 +174,16 @@
         nix.extraOptions = ''
           experimental-features = nix-command flakes
         '';
+
+        # The global configuration for the home-manager module.
+        home-manager.useUserPackages = true;
+        home-manager.useGlobalPkgs = true;
+        home-manager.sharedModules =
+          lib'.modulesToList (lib'.filesToAttr ./modules/home-manager);
+        home-manager.extraSpecialArgs = {
+          lib = lib';
+          inherit inputs system self;
+        };
       };
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:
