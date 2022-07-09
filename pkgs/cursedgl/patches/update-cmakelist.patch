@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7910d72..1775b43 100644
+index 7910d72..d3a942d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -63,54 +63,16 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
+@@ -63,54 +63,14 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
  include_directories (
      "${CMAKE_SOURCE_DIR}/include"
  )
@@ -32,9 +32,8 @@ index 7910d72..1775b43 100644
 -
 -# teapot
 -set(EXAMPLE teapot)
-+foreach(EXAMPLE colored_cube interpolation hello_triangle teapot montecarlo hello_cube first_person_demo)
- add_executable(${EXAMPLE} examples/teapot.c)
- target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+-add_executable(${EXAMPLE} examples/teapot.c)
+-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 -
 -# montecarlo
 -set(EXAMPLE montecarlo)
@@ -60,5 +59,6 @@ index 7910d72..1775b43 100644
 -set(EXAMPLE usage)
 -add_executable(${EXAMPLE} examples/usage.c)
 -target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
-+install(TARGETS ${EXAMPLE} DESTINATION "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/examples")
++foreach(EXAMPLE colored_cube interpolation hello_triangle teapot montecarlo hello_cube first_person_demo)
++install(FILES examples/${EXAMPLE}.c DESTINATION "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/examples")
 +endforeach()
