@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports = [
@@ -6,6 +6,15 @@
     ./hardware-configuration.nix
 
     inputs.guix-overlay.nixosModules.guix-binary
+
+    (lib.mapHomeManagerUser "foo-dogsquared" {
+      extraGroups = [ "wheel" "audio" "docker" "podman" "networkmanager" ];
+      hashedPassword =
+        "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
+      isNormalUser = true;
+      createHome = true;
+      home = "/home/foo-dogsquared";
+    })
   ];
 
   boot.binfmt.emulatedSystems = [
@@ -30,14 +39,6 @@
       shell.enable = true;
       virtualization.enable = true;
       neovim.enable = true;
-    };
-    users.users.foo-dogsquared.settings = {
-      extraGroups = [ "wheel" "audio" "docker" "podman" "networkmanager" ];
-      hashedPassword =
-        "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
-      isNormalUser = true;
-      createHome = true;
-      home = "/home/foo-dogsquared";
     };
   };
 

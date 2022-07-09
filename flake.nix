@@ -107,6 +107,12 @@
 
       # The default configuration for our NixOS systems.
       hostDefaultConfig = { pkgs, system, ... }: {
+        # Only use imports as minimally as possible with the absolute
+        # requirements of a host.
+        imports = [
+          inputs.home-manager.nixosModules.home-manager
+        ];
+
         # Bleeding edge, baybee!
         nix.package = pkgs.nixUnstable;
 
