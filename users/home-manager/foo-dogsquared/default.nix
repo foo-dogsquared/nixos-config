@@ -74,6 +74,7 @@ in {
         enabled = true;
         media_dirs = [
           "$XDG_MUSIC_DIR|Music"
+          "~/library/music|Library"
         ];
       };
 
@@ -153,14 +154,6 @@ in {
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
-
-    # The XDG base directories. Most of my setup with this user will be my
-    # personal computer so I'll set them like so...
-    documents = "$HOME/library/documents";
-    music = "$HOME/library/music";
-    pictures = "$HOME/library/pictures";
-    templates = "$HOME/library/templates";
-    videos = "$HOME/library/videos";
   };
 
   # All of the personal configurations.
