@@ -64,18 +64,45 @@ in {
       ];
     };
 
+    fileSystems."/mnt/archives" = {
+      device = "/dev/disk/by-partuuid/____CHANGE_THIS_PLEASE____";
+      fsType = "btrfs";
+      noCheck = true;
+      options = [
+        # These are btrfs-specific mount options which can found in btrfs.5
+        # manual page.
+        "subvol=@"
+        "noatime"
+        "compress=zstd:4"
+        "space_cache=v2"
+
+        # General mount options from mount.5 manual page.
+        "noauto"
+        "nofail"
+        "user"
+
+        # See systemd.mount.5 and systemd.automount.5 manual page for more
+        # details.
+        "x-systemd.automount"
+        "x-systemd.idle-timeout=2"
+        "x-systemd.device-timeout=2"
+      ];
+    };
+
     services.borgbackup.jobs = {
-      local = borgJobCommonSetting {
+      local-archive = borgJobCommonSetting {
         patterns = [
           config.age.secrets.borg-patterns-local.path
           config.age.secrets.borg-patterns.path
         ];
       } // {
-        repo = "/archives/backups";
-        startAt = "04/5:00:00";
+        doInit = false;
+        removableDevice = true;
+        repo = "/mnt/archives/backups";
+        startAt = "daily";
       };
 
-      local-archive = borgJobCommonSetting {
+      local-external-drive = borgJobCommonSetting {
         patterns = [
           config.age.secrets.borg-patterns-local.path
           config.age.secrets.borg-patterns.path
