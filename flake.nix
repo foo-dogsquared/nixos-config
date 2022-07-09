@@ -94,10 +94,8 @@
         (lib'.makeOverridable inputs.nixpkgs.lib.nixosSystem) {
           # The system of the NixOS system.
           inherit system;
-          specialArgs = {
-            lib = lib';
-            inherit system inputs self;
-          };
+          lib = lib';
+          specialArgs = { inherit system inputs self; };
           modules =
             # Append with our custom NixOS modules from the modules folder.
             (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
@@ -115,7 +113,8 @@
         # making them available to our system. This will also prevent the
         # annoying downloads since it always get the latest revision.
         nix.registry = {
-          # I'm narcissistic so I want my config to be one of the flakes in the registry.
+          # I'm narcissistic so I want my config to be one of the flakes in the
+          # registry.
           config.flake = self;
 
           # All of the important flakes will be included.
@@ -180,19 +179,14 @@
         home-manager.useGlobalPkgs = true;
         home-manager.sharedModules =
           lib'.modulesToList (lib'.filesToAttr ./modules/home-manager);
-        home-manager.extraSpecialArgs = {
-          lib = lib';
-          inherit inputs system self;
-        };
+        home-manager.extraSpecialArgs = { inherit inputs system self; };
       };
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:
         inputs.home-manager.lib.homeManagerConfiguration {
           inherit system;
-          extraSpecialArgs = {
-            lib = lib';
-            inherit system self inputs;
-          };
+          extraSpecialArgs = { inherit system self inputs; };
+          lib = lib';
           modules =
             # Importing our custom home-manager modules.
             (lib'.modulesToList (lib'.filesToAttr ./modules/home-manager))
