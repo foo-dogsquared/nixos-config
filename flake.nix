@@ -47,7 +47,10 @@
 
     # We're getting more unstable there should be a black hole at my home right now.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
+
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
     # Guix in NixOS?!
     guix-overlay.url = "github:foo-dogsquared/nix-overlay-guix";
