@@ -87,8 +87,9 @@
 
       # We're considering this as the variant since we'll export the custom
       # library as `lib` in the output attribute.
-      lib' =
-        nixpkgs.lib.extend (final: prev: import ./lib { lib = nixpkgs.lib; });
+      lib' = nixpkgs.lib.extend (final: prev:
+        import ./lib { lib = prev; }
+        // import ./lib/private.nix { lib = final; });
 
       mkHost = { system ? defaultSystem, extraModules ? [ ] }:
         (lib'.makeOverridable inputs.nixpkgs.lib.nixosSystem) {

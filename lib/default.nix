@@ -60,33 +60,6 @@ rec {
     let paths = lib.collect builtins.isPath attrs;
     in builtins.map (path: import path) paths;
 
-  /* Return an attribute set of valid users from a given list of users.
-     This is a convenience function for getting users from the `./users` directory.
-
-     Signature:
-       list -> attrset
-     Where:
-       - `list` is a list of usernames as strings
-       - `attrset` is a set of valid users with the name as the key and the path as the value.
-     Example:
-       # Assuming only 'foo-dogsquared' is the existing user for 'home-manager'.
-       getUsers "home-manager" [ "foo-dogsquared" "archie" "brad" ]
-       => { foo-dogsquared = /home/foo-dogsquared/projects/nixos-config/users/foo-dogsquared; }
-  */
-  getUsers = type: users:
-    let
-      userModules = filesToAttr ../users/${type};
-      invalidUsernames = [ "config" "modules" ];
-    in lib.filterAttrs (n: _: !lib.elem n invalidUsernames && lib.elem n users) userModules;
-
-
-  # Return the path of `user` from `type`.
-  getUser = type: user:
-    lib.getAttr user (getUsers type [ user ]);
-
-  # Return the path of `secrets` from `../secrets`.
-  getSecret = path: ../secrets/${path};
-
   /* Count the attributes with the given predicate.
 
      Examples:
