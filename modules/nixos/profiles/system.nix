@@ -136,7 +136,7 @@ in {
       # Run the optimizer.
       nix.optimise = {
         automatic = true;
-        dates = [ "daily" ];
+        dates = [ "weekly" ];
       };
 
       # Clear logs that are more than a month old weekly.
