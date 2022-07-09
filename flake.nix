@@ -75,7 +75,7 @@
         inputs.emacs-overlay.overlay
 
         # Rust overlay for them ease of setting up Rust toolchains.
-        inputs.rust-overlay.overlay
+        inputs.rust-overlay.overlays.default
 
         # Access to NUR.
         inputs.nur.overlay
