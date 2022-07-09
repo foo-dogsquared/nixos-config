@@ -110,6 +110,7 @@
         # Only use imports as minimally as possible with the absolute
         # requirements of a host.
         imports = [
+          inputs.agenix.nixosModules.age
           inputs.home-manager.nixosModules.home-manager
         ];
 
@@ -187,6 +188,14 @@
         home-manager.sharedModules =
           lib'.modulesToList (lib'.filesToAttr ./modules/home-manager);
         home-manager.extraSpecialArgs = { inherit inputs system self; };
+
+        # Enabling some things for agenix.
+        programs.gnupg.agent = {
+          enable = true;
+          enableSSHSupport = true;
+        };
+        services.sshd.enable = true;
+        services.openssh.enable = true;
       };
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:

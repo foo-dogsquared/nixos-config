@@ -41,14 +41,6 @@ in {
     lib.mkEnableOption "backup setup with BorgBackup";
 
   config = lib.mkIf cfg.enable {
-    assertions = [{
-      assertion = config.profiles.agenix.enable;
-      message = ''
-        Agenix module is not enabled. This is needed for the borg configuration
-        we're using.
-      '';
-    }];
-
     age.secrets.borg-password.file = lib.getSecret "archive/password";
     age.secrets.borg-patterns.file = lib.getSecret "archive/borg-patterns";
     age.secrets.borg-patterns-local.file =

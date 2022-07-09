@@ -24,7 +24,6 @@
 
   # My custom configuration with my custom modules starts here.
   profiles = {
-    agenix.enable = true;
     archiving.enable = true;
     system = {
       enable = true;
