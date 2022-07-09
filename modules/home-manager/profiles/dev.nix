@@ -47,7 +47,7 @@ in {
           dir=''${1:-$PWD}
           dest=$(${pkgs.fd}/bin/fd --type directory --hidden --ignore-vcs --base-directory "$dir" \
             | ${pkgs.fzf}/bin/fzf --prompt "Go to directory ")
-          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dest")
+          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dir/$dest")
 
           [ "$dest" ] && cd "$destPrime"
         }
@@ -56,7 +56,7 @@ in {
           dir=''${1:-$PWD}
           dest=$(${pkgs.fd}/bin/fd --hidden --ignore-vcs --base-directory "$dir" \
             | ${pkgs.fzf}/bin/fzf --prompt "Open file ")
-          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dest")
+          destPrime=$(${pkgs.coreutils}/bin/realpath --canonicalize-existing --logical "$dir/$dest")
 
           if [ -d "$destPrime" ]; then
             [ "$dest" ] && cd "$destPrime";
