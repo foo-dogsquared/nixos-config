@@ -3,9 +3,9 @@
 
 These are where my themes are defined and configured.
 Basically, themes are mainly graphical sessions concerned with aesthetics.
-It could also include specific workflows and configurations.
+It could also include system-wide workflows and configurations.
 
-This is where modules will define how you're going to interact with the computer.
+This is where modules will define how you're going to interact with the computer whether you should use something ranging from a full-fledged desktop environment with bells and whistles to a minimalist desktop environment only composing of a window manager, a terminal, and a bar.
 
 The following list is the summary which can also serve as a guideline to developing a theme.
 

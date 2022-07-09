@@ -1,5 +1,6 @@
 = foo-dogsquared's NixOS config
 :toc:
+:devos_link: https://github.com/divnix/digga/tree/580fc57ffaaf9cf3a582372235759dccfe44ac92/examples/devos
 
 This is my NixOS config as a link:https://www.tweag.io/blog/2020-05-25-flakes/[Nix flake].
 
@@ -17,6 +18,9 @@ Despite being a NixOS system, it isn't entirely reproducible to the point of ins
 It has some things needed in the first place to work like my external backup setup where it needs my SSH private keys to work in the first place.
 Nonetheless, the parts is it isn't reproducible is only about 10% of this config.
 Everything else is fine and dandy.
+
+Oh right...
+Don't expect everything is working in each commit but I'm doing my best to make them build successfully in each, yeah?
 ====
 
 Hey there, fellow traveler!
@@ -94,7 +98,7 @@ It uses GitHub workflows to enable things such as...
 Last and foremost, we have the project directory —  the environment you'll be living in for the next year, tinkering your Nix configs.
 .
 It is required to be familiar with the workspace, after all.
-My configuration takes a lot of cues from link:https://github.com/divnix/devos[devos] (which is unfortunately is a lot to take if you're just beginning to grok Nix as a whole).
+My configuration takes a lot of cues from link:{devos_link}[devos] (which is unfortunately is a lot to take if you're just beginning to grok Nix as a whole).
 
 My NixOS config should look like the following:
 
@@ -157,7 +161,7 @@ In order of priority:
 * [x] Create cluser-wide configs.
 * [x] Create host-wide configs.
 * [x] Create user-specific configs with home-manager.
-* [x] ~Steal~ Get some ideas from link:https://github.com/divnix/devos[this overengineered template].
+* [x] ~Steal~ Get some ideas from link:{devos_link}[this overengineered template].
 * [x] Make use of other established utilities such as link:https://github.com/divnix/digga/[digga], link:https://github.com/gytis-ivaskevicius/flake-utils-plus[flake-utils-plus], and link:https://github.com/nix-community/home-manager[home-manager] once I'm familiar to create my own Nix programs.
 
 
@@ -199,7 +203,7 @@ Fortunately footnote:[Or unfortunately from a different perspective.], it is mos
 For a more practical start, I recommend to look into several configurations to see the general gist of configuration with Nix.
 Here's a few I personally dug into:
 +
-* https://github.com/divnix/devos
+* {devos_link}
 * https://github.com/hlissner/dotfiles
 * https://github.com/thiagokokada/nix-configs
 
@@ -225,7 +229,7 @@ With that said, it is workable to be a daily part of the NixOS experience especi
 This feature somewhat helped me understand more about the Nix language, oddly.
 I guess those lightbulb moments can come from random places.
 
-Is this based from link:https://github.com/divnix/devos[devos]?::
+Is this based from link:{devos_link}[devos]?::
 Yes but I've created this from scratch.
 One of my goals when creating this config is to use as little dependency as much as possible and to understand more what's going under the hood with Nix.
 At the time I've rewritten this configuration, I have little idea about Nix as a language and I find devos to be overwhelming so I doubled down to create from scratch.
@@ -241,7 +245,7 @@ It is nice that such a project exists serving as a reference for bigger configur
 
 I ~stole~ got several parts of this configuration from the following projects:
 
-* link:https://github.com/divnix/devos[devos, an overengineered configuration framework.]
+* link:{devos_link}[devos, an overengineered configuration framework.]
 I'm slowly grokking Nix and its ecosystem so I didn't use this outright.
 Though, this is where my config is heading to be and instead slowly making parts of my config based from this template.
 

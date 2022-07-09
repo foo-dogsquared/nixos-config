@@ -231,7 +231,7 @@
       };
     in {
       # Exposes only my library with the custom functions to make it easier to
-      # include in other flakes.
+      # include in other flakes for whatever reason may be.
       lib = import ./lib { lib = nixpkgs.lib; };
 
       # A list of NixOS configurations from the `./hosts` folder. It also has

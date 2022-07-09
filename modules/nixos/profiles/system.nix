@@ -177,7 +177,8 @@ in {
       };
     })
 
-    # I try to avoid using Wine on NixOS because most of them uses FHS or something and I just want it to work but here goes.
+    # I try to avoid using Wine on NixOS because most of them uses FHS or
+    # something and I just want it to work but here goes.
     (lib.mkIf cfg.wine.enable {
       environment.systemPackages = with pkgs; [
         cfg.wine.package # The star of the show.
