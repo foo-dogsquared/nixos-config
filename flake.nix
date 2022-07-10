@@ -203,9 +203,9 @@
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:
         inputs.home-manager.lib.homeManagerConfiguration {
-          inherit system;
           extraSpecialArgs = { inherit system self inputs; };
           lib = lib';
+          pkgs = nixpkgs.legacyPackages.${system};
           modules =
             # Importing our custom home-manager modules.
             (lib'.modulesToList (lib'.filesToAttr ./modules/home-manager))
