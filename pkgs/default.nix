@@ -20,6 +20,7 @@ let
       doggo = callPackage ./doggo.nix { };
       emulsion-palette = callPackage ./emulsion-palette.nix { };
       gol-c = callPackage ./gol-c.nix { };
+      gnome-dialect = callPackage ./dialect { };
       gnome-search-provider-browser-tabs =
         callPackage ./gnome-search-provider-browser-tabs.nix { };
       gnome-search-provider-recoll =
