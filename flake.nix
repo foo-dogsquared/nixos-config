@@ -233,6 +233,17 @@
           manpages.enable = true;
         };
       };
+
+      # A list of module namespaces that will not be imported into the output.
+      # It could be blocked for whatever reason or as indicated.
+      blocklist = [
+        # The modules under this attribute are often incomplete and needing
+        # very specific requirements that is 99% going to be absent from the
+        # outside so we're not going to export it.
+        "tasks"
+      ];
+      importModules = attrs:
+        lib'.filterAttrs (n: v: !lib'.elem n blocklist) (lib'.mapAttrsRecursive (_: path: import path) attrs);
     in {
       # Exposes only my library with the custom functions to make it easier to
       # include in other flakes for whatever reason may be.
@@ -251,8 +262,7 @@
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
-      nixosModules = lib'.mapAttrsRecursive (_: path: import path)
-        (lib'.filesToAttr ./modules/nixos);
+      nixosModules = importModules (lib'.filesToAttr ./modules/nixos);
 
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
@@ -270,8 +280,7 @@
         (lib'.filesToAttr ./users/home-manager);
 
       # Extending home-manager with my custom modules, if anyone cares.
-      homeManagerModules = lib'.mapAttrsRecursive (_: path: import path)
-        (lib'.filesToAttr ./modules/home-manager);
+      homeManagerModules = importModules (lib'.filesToAttr ./modules/home-manager);
 
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
