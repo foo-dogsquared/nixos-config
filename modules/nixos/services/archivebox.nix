@@ -104,6 +104,9 @@ in {
           documentation = [ "https://docs.archivebox.io/" ];
           path = with pkgs;
             [ ripgrep coreutils ] ++ pkgSet ++ [ config.programs.git.package ];
+          preStart = ''
+            mkdir -p ${lib.escapeShellArg cfg.archivePath}
+          '';
           script = ''
             echo "${lib.concatStringsSep "\n" value.links}" \
               | archivebox add ${lib.concatStringsSep " " value.extraArgs}
@@ -123,10 +126,6 @@ in {
             SystemCallErrorNumber = "EPERM";
             WorkingDirectory = cfg.archivePath;
           };
-          unitConfig = {
-            AssertPathIsReadWrite = cfg.archivePath;
-            AssertPathIsDirectory = cfg.archivePath;
-          };
         }) cfg.jobs)
 
       (lib.mkIf cfg.webserver.enable {
@@ -135,6 +134,9 @@ in {
           after = [ "network.target" ];
           documentation = [ "https://docs.archivebox.io/" ];
           wantedBy = [ "graphical-session.target" ];
+          preStart = ''
+            mkdir -p ${lib.escapeShellArg cfg.archivePath}
+          '';
           serviceConfig = {
             ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${
                 toString cfg.webserver.port
@@ -153,10 +155,6 @@ in {
             SystemCallFilter = "@system-service";
             SystemCallErrorNumber = "EPERM";
             WorkingDirectory = cfg.archivePath;
-          };
-          unitConfig = {
-            AssertPathIsReadWrite = cfg.archivePath;
-            AssertPathIsDirectory = cfg.archivePath;
           };
         };
       })
