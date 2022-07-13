@@ -65,7 +65,7 @@ in {
     };
 
     fileSystems."/mnt/archives" = {
-      device = "/dev/disk/by-partuuid/____CHANGE_THIS_PLEASE____";
+      device = "/dev/disk/by-uuid/6ba86a30-5fa4-41d9-8354-fa8af0f57f49";
       fsType = "btrfs";
       noCheck = true;
       options = [
@@ -73,7 +73,7 @@ in {
         # manual page.
         "subvol=@"
         "noatime"
-        "compress=zstd:4"
+        "compress=zstd:9"
         "space_cache=v2"
 
         # General mount options from mount.5 manual page.
