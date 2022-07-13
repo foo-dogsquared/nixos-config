@@ -41,6 +41,7 @@ let
       mopidy-beets = callPackage ./mopidy-beets.nix { };
       mopidy-funkwhale = callPackage ./mopidy-funkwhale.nix { };
       mopidy-internetarchive = callPackage ./mopidy-internetarchive.nix { };
+      nautilus-annotations = callPackage ./nautilus-annotations { };
       neuwaita-icon-theme = callPackage ./neuwaita-icon-theme { };
       pop-launcher = callPackage ./pop-launcher.nix { };
       pop-launcher-plugin-duckduckgo-bangs =
