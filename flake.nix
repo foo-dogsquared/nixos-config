@@ -115,6 +115,7 @@
         imports = [
           inputs.agenix.nixosModules.age
           inputs.home-manager.nixosModules.home-manager
+          inputs.nix-ld.nixosModules.nix-ld
         ];
 
         # Bleeding edge, baybee!

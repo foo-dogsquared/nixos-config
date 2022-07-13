@@ -1,7 +1,7 @@
 # This is where extra desktop goodies can be found.
 # As a note, this is not where you set the aesthetics of your graphical sessions.
 # That can be found in the `themes` module.
-{ inputs, config, options, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 let cfg = config.profiles.system;
 in {
@@ -25,7 +25,6 @@ in {
     };
   };
 
-  imports = [ inputs.nix-ld.nixosModules.nix-ld ];
   config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
       # Enable Flatpak for additional options for installing desktop applications.
@@ -46,6 +45,7 @@ in {
       fonts.fontconfig.enable = true;
 
       # Run unpatched binaries with these!
+      programs.nix-ld.enable = true;
       environment.systemPackages = with pkgs; [
         nix-alien
         nix-index
