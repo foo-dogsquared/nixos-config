@@ -9,7 +9,7 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Check flake outputs
-        run: NIXPKGS_ALLOW_INSECURE=1 nix --impure flake check
+        run: NIXPKGS_ALLOW_INSECURE=1 nix flake check --impure
 
   build-custom-packages:
     runs-on: ubuntu-latest
