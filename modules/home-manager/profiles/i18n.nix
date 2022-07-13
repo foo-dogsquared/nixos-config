@@ -12,6 +12,8 @@ in {
     home.packages = with pkgs; [
       noto-fonts
       noto-fonts-cjk
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
       noto-fonts-extra
       noto-fonts-emoji
     ];
@@ -24,6 +26,8 @@ in {
         fcitx5-lua # Add Lua support.
         fcitx5-rime # Chinese input addon.
         fcitx5-mozc # Japanese input addon.
+        fcitx5-table-extra
+        fcitx5-table-other
       ];
     };
 
