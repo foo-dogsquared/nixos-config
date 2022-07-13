@@ -78,6 +78,7 @@ in {
     (lib.mkIf cfg.fonts.enable {
       fonts = {
         enableDefaultFonts = true;
+        fontDir.enable = true;
         fontconfig = {
           enable = true;
           includeUserConf = true;
@@ -98,8 +99,11 @@ in {
           # Noto font family
           noto-fonts
           noto-fonts-cjk
+          noto-fonts-cjk-sans
+          noto-fonts-cjk-serif
           noto-fonts-extra
           noto-fonts-emoji
+          noto-fonts-emoji-blob-bin
 
           # Adobe Source font family
           source-code-pro
@@ -119,6 +123,12 @@ in {
     (lib.mkIf cfg.hardware.enable {
       # Enable tablet support with OpenTabletDriver.
       hardware.opentabletdriver.enable = true;
+
+      # Enable support for Bluetooth.
+      hardware.bluetooth = {
+        enable = true;
+        package = pkgs.bluezFull;
+      };
 
       # Welp, this is surprising...
       services.printing.enable = true;
@@ -172,7 +182,11 @@ in {
           upper = "00:00";
         };
         dates = "weekly";
-        flags = [ "--update-input" "nixpkgs" "--commit-lock-file" ];
+        flags = [
+          "--update-input" "nixpkgs"
+          "--commit-lock-file"
+          "--no-write-lock-file"
+        ];
         randomizedDelaySec = "1min";
       };
     })
