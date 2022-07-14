@@ -119,6 +119,13 @@ in
       desktopManager.gnome.enable = true;
     };
 
+    # All GNOME-related additional options.
+    services.gnome = {
+      core-os-services.enable = true;
+      core-shell.enable = true;
+      core-utilities.enable = true;
+    };
+
     i18n.inputMethod = {
       enabled = "ibus";
       ibus.engines = with pkgs.ibus-engines; [
@@ -136,20 +143,6 @@ in
       enable = true;
       package = pkgs.gnomeExtensions.gsconnect;
     };
-
-    # Don't need most of the GNOME's offering so...
-    environment.gnome.excludePackages = with pkgs.gnome; [
-      gedit
-      eog
-      geary
-      totem
-      epiphany
-      gnome-terminal
-      yelp
-    ];
-
-    # I'm pretty sure this is already done but just to make sure.
-    services.gnome.chrome-gnome-shell.enable = true;
 
     # Bring all of the dconf keyfiles in there.
     programs.dconf = {
