@@ -111,7 +111,6 @@ in {
 
   # My custom modules.
   profiles = {
-    i18n.enable = true;
     dev = {
       enable = true;
       shell.enable = true;
@@ -129,7 +128,7 @@ in {
 
   services.bleachbit.enable = true;
 
-  home.sessionVariables = {
+  systemd.user.sessionVariables = {
     MANPAGER = "nvim +Man!";
     EDITOR = "nvim";
   };
