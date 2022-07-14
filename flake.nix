@@ -270,6 +270,9 @@
       # Extending home-manager with my custom modules, if anyone cares.
       homeManagerModules = lib'.importModules (lib'.filesToAttr ./modules/home-manager);
 
+      # In case somebody wants to use my stuff to be included in nixpkgs.
+      overlays.default = final: prev: import ./pkgs { pkgs = prev; };
+
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
       packages = forAllSystems (system:

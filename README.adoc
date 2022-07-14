@@ -60,6 +60,9 @@ As a helpful summary, here's what my flake should contain sorting from the most 
 * `packages` contains link:./pkgs[my custom packages].
 It supports the default list of systems as defined from link:https://github.com/numtide/flake-utils[`flake-utils`].
 
+* `overlays` contains the overlay for extending nixpkgs with my packages.
+If you want to use my packages alongside the nixpkgs attribute then this is what you're looking for.
+
 * `devShells` from link:./shells/[my custom environments].
 Similar to `homeManagerConfigurations`, you can easily use it outside of NixOS.
 
