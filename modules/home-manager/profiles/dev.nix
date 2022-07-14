@@ -73,7 +73,13 @@ in {
         }
         '';
       };
-      programs.atuin.enable = true;
+      programs.atuin = {
+        enable = true;
+        settings = {
+          search_mode = "fuzzy";
+          filter_mode = "global";
+        };
+      };
       programs.direnv = {
         enable = true;
         nix-direnv.enable = true;
