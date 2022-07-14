@@ -63,6 +63,7 @@ in
         mpris-indicator-button
       ] ++ [
         pkgs.gnome-shell-extension-fly-pie
+        pkgs.gnome-shell-extension-pop-shell
       ];
       example = lib.literalExpression ''
         with pkgs.gnomeExtensions; [
@@ -79,7 +80,17 @@ in
       type = with lib.types; listOf package;
       description = "A list of applications to be included in the theme.";
       default = with pkgs; [
-        gnome.polari
+        amberol # An unambitious music player.
+        authenticator # 2-factor codes for 2-factor storages.
+        blanket # Zen...
+        gnome.dconf-editor # A saner version of Windows registry.
+        gnome-dialect # Your gateway to polyglotting.
+        gnome-solanum # Cute little matodor timers.
+        shortwave # Yer' humble internet radio.
+
+        # Nautilus extensions.
+        nautilus-annotations
+        nautilus-open-any-terminal
       ];
       example = lib.literalExpression ''
         with pkgs; [ gnome.polari ];
@@ -106,6 +117,18 @@ in
       enable = true;
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
+    };
+
+    i18n.inputMethod = {
+      enabled = "ibus";
+      ibus.engines = with pkgs.ibus-engines; [
+        mozc
+        rime
+        hangul
+        table
+        table-others
+        typing-booster
+      ];
     };
 
     # Since we're using KDE Connect, we'll have to use gsconnect.
