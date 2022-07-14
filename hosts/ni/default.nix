@@ -22,8 +22,19 @@
     "riscv64-linux"
   ];
 
+  boot.initrd.supportedFilesystems = [ "btrfs" ];
+  boot.supportedFilesystems = [ "btrfs" ];
+
+  services.btrfs.autoScrub = {
+    enable = true;
+    fileSystems = [
+      "/mnt/archives"
+    ];
+  };
+
   # My custom configuration with my custom modules starts here.
   profiles = {
+    i18n.enable = true;
     archiving.enable = true;
     system = {
       enable = true;
