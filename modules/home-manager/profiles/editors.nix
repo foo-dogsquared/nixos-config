@@ -26,10 +26,22 @@ in {
     })
 
     (lib.mkIf cfg.emacs.enable {
+      programs.emacs = {
+        enable = true;
+        package = pkgs.emacsNativeComp;
+        extraPackages = epkgs: with epkgs; [
+          vterm
+          pdf-tools
+          org-pdftools
+          org-roam
+          org-roam-ui
+          org-roam-bibtex
+          org-noter-pdftools
+        ];
+      };
+
       # Doom Emacs dependencies.
       home.packages = with pkgs; [
-        ((emacsPackagesFor emacs).emacsWithPackages (epkgs: [ epkgs.vterm ]))
-
         # Required dependencies.
         ripgrep
         gnutls
