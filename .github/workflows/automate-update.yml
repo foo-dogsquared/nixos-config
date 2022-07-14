@@ -20,7 +20,7 @@ jobs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
           nix flake update --commit-lock-file \
-            --commit-lockfile-summary 'flake.lock: update-inputs'
+            --commit-lockfile-summary 'flake.lock: update inputs'
       - name: Build custom packages
         run: nix shell nixpkgs#nix-build-uncached --command nix-build-uncached ./pkgs
       - name: Build NixOS configurations
