@@ -116,6 +116,7 @@
           inputs.agenix.nixosModules.age
           inputs.home-manager.nixosModules.home-manager
           inputs.nix-ld.nixosModules.nix-ld
+          inputs.nur.nixosModules.nur
         ];
 
         # Bleeding edge, baybee!
