@@ -35,4 +35,15 @@ rec {
 
   getUser = type: user:
     lib.getAttr user (getUsers type [ user ]);
+
+  # Import modules with a set blocklist.
+  importModules = let
+    blocklist = [
+      # The modules under this attribute are often incomplete and needing
+      # very specific requirements that is 99% going to be absent from the
+      # outside so we're not going to export it.
+      "tasks"
+    ];
+  in attrs:
+  lib.filterAttrs (n: v: !lib.elem n blocklist) (lib.mapAttrsRecursive (_: path: import path) attrs);
 }
