@@ -160,6 +160,7 @@
           "home-manager=${inputs.home-manager}"
           "nur=${inputs.nur}"
           "config=${self}"
+          "/nix/var/nix/profiles/per-user/root/channels"
         ];
 
         # Stallman-senpai will be disappointed.
@@ -224,9 +225,6 @@
         # Stallman-senpai will be disappointed. :(
         nixpkgs.config.allowUnfree = true;
 
-        # Let home-manager to manage itself.
-        programs.home-manager.enable = true;
-
         manual = {
           html.enable = true;
           json.enable = true;
@@ -255,8 +253,8 @@
         let
           extraModules = [
             { networking.hostName = builtins.baseNameOf path; }
-            path
             hostDefaultConfig
+            path
           ];
         in mkHost { inherit extraModules; }) (lib'.filesToAttr ./hosts);
 
@@ -273,8 +271,8 @@
               home.username = builtins.baseNameOf path;
               home.homeDirectory = "/home/${config.home.username}";
             })
-            path
             userDefaultConfig
+            path
           ];
         in mkUser { inherit extraModules; })
         (lib'.filesToAttr ./users/home-manager);
