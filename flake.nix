@@ -23,6 +23,7 @@
     # Managing home configurations.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.inputs.utils.follows = "flake-utils";
 
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
@@ -33,6 +34,7 @@
     nix-ld.inputs.nixpkgs.follows = "nixpkgs";
     nix-alien.url = "github:thiagokokada/nix-alien";
     nix-alien.inputs.nixpkgs.follows = "nixpkgs";
+    nix-alien.inputs.flake-utils.follows = "flake-utils";
 
     # Generate your NixOS systems to various formats!
     nixos-generators.url = "github:nix-community/nixos-generators";
@@ -44,6 +46,8 @@
 
     # Easy access to development environments.
     devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
+    devshell.inputs.flake-utils.follows = "flake-utils";
 
     # We're getting more unstable there should be a black hole at my home right now.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
@@ -51,6 +55,7 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    emacs-overlay.inputs.flake-utils.follows = "flake-utils";
 
     # Guix in NixOS?!
     guix-overlay.url = "github:foo-dogsquared/nix-overlay-guix";
@@ -59,6 +64,7 @@
     # The more recommended Rust overlay so I'm going with it.
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    rust-overlay.inputs.flake-utils.follows = "flake-utils";
 
     # Generating an entire flavored themes with Nix?
     nix-colors.url = "github:misterio77/nix-colors";
