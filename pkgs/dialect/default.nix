@@ -2,14 +2,14 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "gnome-dialect";
-  version = "unstable-2022-07-11";
+  version = "2.0.1";
 
   src = fetchFromGitHub {
     owner = "dialect-app";
     repo = "dialect";
-    rev = "9dc46a6a52a2b10ce2956e6b48987ca55fa77033";
+    rev = version;
     fetchSubmodules = true;
-    sha256 = "sha256-z/KVGdICwR/kuKjy2eEPS5XEwFsUc7jSHS7RLn87EhQ=";
+    sha256 = "sha256-Ke23QnvKpmyuaqkiBQL1cUa0T7lSfYPLFi6wa9G8LYk=";
   };
 
   nativeBuildInputs = [
