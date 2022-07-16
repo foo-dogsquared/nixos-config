@@ -41,6 +41,11 @@ python3Packages.buildPythonApplication rec {
     rm -rf subprojects
   '';
 
+  dontWrapGApps = true;
+  preFixup = ''
+    makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  '';
+
   format = "other";
   meta = with lib; {
     homepage = "https://github.com/dialect-app/dialect";
