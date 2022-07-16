@@ -61,7 +61,13 @@
   environment.systemPackages = with pkgs; [
     # This is installed just to get Geiser to properly work.
     guile_3_0
+
+    # The preferred terminal emulator.
+    wezterm
   ];
+
+  # This is needed for shell integration and applying semantic zones.
+  environment.profiles = [ pkgs.wezterm ];
 
   # Enable Guix service.
   services.guix-binary.enable = true;
