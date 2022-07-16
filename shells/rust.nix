@@ -1,6 +1,15 @@
 # This is just for a quick development setup. Otherwise, I recommend
 # to use the `rust` template from `nixpkgs` or whatever you prefer.
-{ mkShell, openssl, pkgconfig, cargo, rustc, rustfmt, rust-analyzer, rustPackages, rustPlatform }:
+{ mkShell
+, openssl
+, pkgconfig
+, cargo
+, rustc
+, rustfmt
+, rust-analyzer
+, rustPackages
+, rustPlatform
+}:
 
 mkShell {
   buildInputs = [
