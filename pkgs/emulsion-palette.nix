@@ -3,13 +3,13 @@
 
 stdenv.mkDerivation rec {
   pname = "emulsion-palette";
-  version = "3.2.0";
+  version = "3.3.9";
 
   src = fetchFromGitHub {
     owner = "lainsce";
     repo = "emulsion";
     rev = version;
-    sha256 = "sha256-gwN+hpK/nZMyO2gqeoKxhsMM3k4sR0NuCkmnagMlpHA=";
+    sha256 = "sha256-xG7yZKbbNao/pzFhdTMof/lw9K12NKZi47YRaEd65ok=";
   };
 
   nativeBuildInputs = [ meson ninja pkg-config vala wrapGAppsHook4 ];
