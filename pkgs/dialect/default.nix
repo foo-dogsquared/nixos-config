@@ -1,4 +1,21 @@
-{ stdenv, lib, fetchFromGitHub, python3Packages, wrapGAppsHook4, gtk4, gettext, libadwaita, gst_all_1, meson, pkg-config, ninja, gobject-introspection, glib, libsoup_3, blueprint-compiler, desktop-file-utils }:
+{ stdenv
+, lib
+, fetchFromGitHub
+, python3Packages
+, wrapGAppsHook4
+, gtk4
+, gettext
+, libadwaita
+, gst_all_1
+, meson
+, pkg-config
+, ninja
+, gobject-introspection
+, glib
+, libsoup_3
+, blueprint-compiler
+, desktop-file-utils
+}:
 
 python3Packages.buildPythonApplication rec {
   pname = "gnome-dialect";
@@ -23,19 +40,10 @@ python3Packages.buildPythonApplication rec {
     wrapGAppsHook4
   ];
 
-  buildInputs = [
-    gobject-introspection
-    gst_all_1.gstreamer
-    gtk4
-    libadwaita
-    libsoup_3
-  ];
+  buildInputs =
+    [ gobject-introspection gst_all_1.gstreamer gtk4 libadwaita libsoup_3 ];
 
-  propagatedBuildInputs = with python3Packages; [
-    pygobject3
-    gtts
-    dbus-python
-  ];
+  propagatedBuildInputs = with python3Packages; [ pygobject3 gtts dbus-python ];
 
   postPatch = ''
     rm -rf subprojects
