@@ -1,4 +1,10 @@
-{ stdenv, lib, guile_3_0, fetchFromGitLab, autoreconfHook, pkg-config, texinfo
+{ stdenv
+, lib
+, guile_3_0
+, fetchFromGitLab
+, autoreconfHook
+, pkg-config
+, texinfo
 }:
 
 stdenv.mkDerivation rec {

@@ -1,5 +1,13 @@
-{ stdenv, lib, fetchFromGitHub, python3Packages, gtk3, glib
-, gobject-introspection, wrapGAppsHook, webkitgtk }:
+{ stdenv
+, lib
+, fetchFromGitHub
+, python3Packages
+, gtk3
+, glib
+, gobject-introspection
+, wrapGAppsHook
+, webkitgtk
+}:
 
 python3Packages.buildPythonApplication rec {
   pname = "devdocs-desktop";

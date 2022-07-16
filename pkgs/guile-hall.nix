@@ -1,5 +1,13 @@
-{ stdenv, lib, guile_3_0, guile-config, fetchFromGitLab, autoreconfHook
-, pkg-config, texinfo, makeWrapper }:
+{ stdenv
+, lib
+, guile_3_0
+, guile-config
+, fetchFromGitLab
+, autoreconfHook
+, pkg-config
+, texinfo
+, makeWrapper
+}:
 
 let modules = [ guile-config ];
 in stdenv.mkDerivation rec {
@@ -23,23 +31,31 @@ in stdenv.mkDerivation rec {
     sed -i '/ccachedir\s*=/s%=.*%=''${out}/share/guile/site%' Makefile
   '';
 
-  GUILE_LOAD_PATH = let
-    guilePath = [ "\${out}/share/guile/site" ] ++ (lib.concatMap (module: [
-      "${module}/share/guile/site"
-      "${module}/share/guile"
-      "${module}/share"
-    ]) modules);
-  in lib.concatStringsSep ":" guilePath;
+  GUILE_LOAD_PATH =
+    let
+      guilePath = [ "\${out}/share/guile/site" ] ++ (lib.concatMap
+        (module: [
+          "${module}/share/guile/site"
+          "${module}/share/guile"
+          "${module}/share"
+        ])
+        modules);
+    in
+    lib.concatStringsSep ":" guilePath;
 
-  GUILE_LOAD_COMPILED_PATH = let
-    guilePath = [ "\${out}/share/guile/ccache" "\${out}/share/guile/site" ]
-      ++ (lib.concatMap (module: [
-        "${module}/share/guile/ccache"
-        "${module}/share/guile/site"
-        "${module}/share/guile"
-        "${module}/share"
-      ]) modules);
-  in lib.concatStringsSep ":" guilePath;
+  GUILE_LOAD_COMPILED_PATH =
+    let
+      guilePath = [ "\${out}/share/guile/ccache" "\${out}/share/guile/site" ]
+        ++ (lib.concatMap
+        (module: [
+          "${module}/share/guile/ccache"
+          "${module}/share/guile/site"
+          "${module}/share/guile"
+          "${module}/share"
+        ])
+        modules);
+    in
+    lib.concatStringsSep ":" guilePath;
 
   postInstall = ''
     wrapProgram $out/bin/hall \

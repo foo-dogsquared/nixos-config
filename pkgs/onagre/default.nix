@@ -1,4 +1,14 @@
-{ stdenv, lib, rustPlatform, fetchFromGitHub, cmake, pkg-config, freetype, expat, wayland, libX11 }:
+{ stdenv
+, lib
+, rustPlatform
+, fetchFromGitHub
+, cmake
+, pkg-config
+, freetype
+, expat
+, wayland
+, libX11
+}:
 
 rustPlatform.buildRustPackage rec {
   pname = "onagre";
@@ -13,20 +23,11 @@ rustPlatform.buildRustPackage rec {
 
   cargoSha256 = "sha256-IOhAGrAiT2mnScNP7k7XK9CETUr6BjGdQVdEUvTYQT4=";
 
-  nativeBuildInputs = [
-    cmake
-    pkg-config
-  ];
+  nativeBuildInputs = [ cmake pkg-config ];
 
-  buildInputs = [
-    freetype
-    expat
-  ];
+  buildInputs = [ freetype expat ];
 
-  propagatedBuildInputs = [
-    wayland
-    libX11
-  ];
+  propagatedBuildInputs = [ wayland libX11 ];
 
   meta = with lib; {
     homepage = "https://github.com/oknozor/onagre";

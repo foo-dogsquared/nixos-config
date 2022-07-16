@@ -1,5 +1,15 @@
-{ stdenv, lib, fetchFromGitHub, meson, ninja, json-glib, gtk4, libxml2
-, gobject-introspection, pkg-config, libadwaita }:
+{ stdenv
+, lib
+, fetchFromGitHub
+, meson
+, ninja
+, json-glib
+, gtk4
+, libxml2
+, gobject-introspection
+, pkg-config
+, libadwaita
+}:
 
 stdenv.mkDerivation rec {
   pname = "text-engine";

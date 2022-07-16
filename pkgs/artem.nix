@@ -15,7 +15,8 @@ rustPlatform.buildRustPackage rec {
 
   meta = with lib; {
     homepage = "https://github.com/FineFindus/artem";
-    description = "Command-line application for converting images to ASCII art.";
+    description =
+      "Command-line application for converting images to ASCII art.";
     license = licenses.mpl20;
   };
 }

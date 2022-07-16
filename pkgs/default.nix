@@ -53,4 +53,5 @@ let
       wayback = callPackage ./wayback.nix { };
       wzmach = callPackage ./wzmach { };
     };
-in lib.fix (lib.extends overrides packages)
+in
+lib.fix (lib.extends overrides packages)

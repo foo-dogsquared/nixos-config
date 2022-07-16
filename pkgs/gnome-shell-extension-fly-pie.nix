@@ -27,19 +27,21 @@ stdenv.mkDerivation rec {
     make SHELL=${bash}/bin/bash ${passthru.extensionUuid}.zip
   '';
 
-  installPhase = let
-    extensionDir =
-      "$out/share/gnome-shell/extensions/${passthru.extensionUuid}";
-  in ''
-    # Install the required extensions file.
-    mkdir -p ${extensionDir}
-    ${unzip}/bin/unzip ${passthru.extensionUuid}.zip -d ${extensionDir}
+  installPhase =
+    let
+      extensionDir =
+        "$out/share/gnome-shell/extensions/${passthru.extensionUuid}";
+    in
+    ''
+      # Install the required extensions file.
+      mkdir -p ${extensionDir}
+      ${unzip}/bin/unzip ${passthru.extensionUuid}.zip -d ${extensionDir}
 
-    # Install the GSchema.
-    install -Dm644 schemas/* -t "${
-      glib.makeSchemaPath "$out" "${pname}-${version}"
-    }"
-  '';
+      # Install the GSchema.
+      install -Dm644 schemas/* -t "${
+        glib.makeSchemaPath "$out" "${pname}-${version}"
+      }"
+    '';
 
   passthru.extensionUuid = "flypie@schneegans.github.com";
 

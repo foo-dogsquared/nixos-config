@@ -1,4 +1,13 @@
-{ stdenv, lib, fetchgit, glib, gnome, gtksourceview4, autoreconfHook, wrapGAppsHook, pkg-config }:
+{ stdenv
+, lib
+, fetchgit
+, glib
+, gnome
+, gtksourceview4
+, autoreconfHook
+, wrapGAppsHook
+, pkg-config
+}:
 
 stdenv.mkDerivation rec {
   pname = "nautilus-annotations";
@@ -10,17 +19,10 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-wHM+ny4vhrV1Jyk9L6Qb8D556jntYAPG+ynGZLqpe6Q=";
   };
 
-  nativeBuildInputs = [
-    autoreconfHook
-    glib
-    gnome.nautilus
-    pkg-config
-    wrapGAppsHook
-  ];
+  nativeBuildInputs =
+    [ autoreconfHook glib gnome.nautilus pkg-config wrapGAppsHook ];
 
-  buildInputs = [
-    gtksourceview4
-  ];
+  buildInputs = [ gtksourceview4 ];
 
   preConfigure = ''
     ./bootstrap

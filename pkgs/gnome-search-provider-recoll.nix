@@ -1,5 +1,14 @@
-{ stdenv, lib, fetchurl, autoreconfHook, recoll, python3Packages, glib
-, gobject-introspection, wrapGAppsHook, gnome }:
+{ stdenv
+, lib
+, fetchurl
+, autoreconfHook
+, recoll
+, python3Packages
+, glib
+, gobject-introspection
+, wrapGAppsHook
+, gnome
+}:
 
 python3Packages.buildPythonPackage rec {
   pname = "gnome-search-provider-recoll";

@@ -12,8 +12,7 @@ python310Packages.buildPythonApplication rec {
     sha256 = "sha256-SKlAgGqowFvvenhbFiTWbVLYAB5CChQ+EdPXxsWxNgE=";
   };
 
-  propagatedBuildInputs = with python310Packages;
-    [ numpy yt-dlp av pillow ];
+  propagatedBuildInputs = with python310Packages; [ numpy yt-dlp av pillow ];
 
   meta = with lib; {
     description =

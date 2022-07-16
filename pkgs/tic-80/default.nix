@@ -1,10 +1,35 @@
 # Build the TIC-80 virtual computer console with the PRO version. The
 # developers are kind enough to make it easy to compile it if you know
 # how.
-{ stdenv, lib, alsaLib, cmake, fetchFromGitHub, freeglut, gtk3, libGLU, git
-, libglvnd, mesa, rake, mruby, SDL2, pkgconfig, valgrind, sndio, libsamplerate
-, zlib, pulseaudioSupport ? stdenv.isLinux, libpulseaudio, waylandSupport ? true
-, wayland, libxkbcommon, esoundSupport ? true, espeak, jackSupport ? true, jack2
+{ stdenv
+, lib
+, alsaLib
+, cmake
+, fetchFromGitHub
+, freeglut
+, gtk3
+, libGLU
+, git
+, libglvnd
+, mesa
+, SDL2
+, pkgconfig
+, valgrind
+, sndio
+, libsamplerate
+, zlib
+, pulseaudioSupport ? stdenv.isLinux
+, libpulseaudio
+, waylandSupport ? true
+, wayland
+, libxkbcommon
+, esoundSupport ? true
+, espeak
+, jackSupport ? true
+, jack2
+, rubySupport ? false
+, mruby
+, rake
 }:
 
 # TODO: Fix the timestamp in the help section.

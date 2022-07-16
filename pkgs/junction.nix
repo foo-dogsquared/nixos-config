@@ -1,6 +1,18 @@
-{ lib, stdenv, fetchFromGitHub, desktop-file-utils, gjs, appstream-glib
-, gobject-introspection, gsettings-desktop-schemas, libadwaita, meson, ninja
-, wrapGAppsHook4, glib, libportal }:
+{ lib
+, stdenv
+, fetchFromGitHub
+, desktop-file-utils
+, gjs
+, appstream-glib
+, gobject-introspection
+, gsettings-desktop-schemas
+, libadwaita
+, meson
+, ninja
+, wrapGAppsHook4
+, glib
+, libportal
+}:
 
 stdenv.mkDerivation rec {
   pname = "junction";
