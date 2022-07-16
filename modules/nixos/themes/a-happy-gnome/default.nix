@@ -3,7 +3,6 @@
 let
   name = "a-happy-gnome";
   cfg = config.themes.themes.a-happy-gnome;
-  terminalCommand = "${cfg.terminal}/bin/${cfg.terminal.meta.mainProgram or cfg.terminal.pname}";
 
   enabledExtensions = pkgs.writeTextFile {
     name = "a-happy-gnome-extensions";
@@ -13,28 +12,10 @@ let
     '';
   };
 
-  miscConfig = pkgs.writeTextFile {
-    name = "a-happy-gnome-misc-config";
-    text = ''
-      # Bringing my old habits back when I use standalone window managers.
-      [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
-      binding='<Super>Return'
-      command='${terminalCommand}'
-      name='Terminal'
-
-      # The equivalent to the newspaper in the morning.
-      [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
-      binding='<Shift><Super>r'
-      command='${terminalCommand} -e nix run nixpkgs#newsboat'
-      name='News aggregator'
-    '';
-  };
-
   # We're combining all of the custom dconf database into a package to be installed.
   dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" {} ''
     install -Dm644 ${./config/dconf}/*.conf -t $out/etc/dconf/db/${name}-conf.d
     install -Dm644 ${enabledExtensions} $out/etc/dconf/db/${name}-conf.d/enabled-extensions.conf
-    install -Dm644 ${miscConfig} $out/etc/dconf/db/${name}-conf.d/misc.conf
   '';
 in
 {
@@ -95,18 +76,6 @@ in
       example = lib.literalExpression ''
         with pkgs; [ gnome.polari ];
       '';
-      internal = true;
-    };
-
-    terminal = lib.mkOption {
-      type = lib.types.package;
-      description = ''
-        The preferred terminal application. This will be used for several
-        keybindings that involves the terminal.
-      '';
-      default = pkgs.wezterm;
-      defaultText = "pkgs.wezterm";
-      example = lib.literalExpression "pkgs.kitty";
       internal = true;
     };
   };
@@ -176,9 +145,6 @@ in
     };
 
     environment.systemPackages = with pkgs; [
-      # The preferred terminal.
-      cfg.terminal
-
       # The application menu.
       junction
 
