@@ -66,8 +66,12 @@ in
         blanket # Zen...
         gnome.dconf-editor # A saner version of Windows registry.
         gnome-dialect # Your gateway to polyglotting.
+        gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         shortwave # Yer' humble internet radio.
+        gnome-menus # It is required for custom menus in extensions.
+        gnome-extension-manager # The cooler GNOME extensions app.
+        gnome-search-provider-recoll # This is here for some reason.
 
         # Nautilus extensions.
         nautilus-annotations
@@ -147,15 +151,6 @@ in
     environment.systemPackages = with pkgs; [
       # The application menu.
       junction
-
-      # It is required for custom menus in extensions.
-      gnome-menus
-
-      # A third-party extension manager.
-      gnome-extension-manager
-
-      # GNOME search providers.
-      gnome-search-provider-recoll
     ] ++ cfg.shellExtensions ++ cfg.extraApps;
   };
 }
