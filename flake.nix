@@ -41,8 +41,8 @@
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
 
     # Managing your secrets.
-    agenix.url = "github:ryantm/agenix";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     # Easy access to development environments.
     devshell.url = "github:numtide/devshell";
@@ -119,10 +119,10 @@
         # Only use imports as minimally as possible with the absolute
         # requirements of a host.
         imports = [
-          inputs.agenix.nixosModules.age
           inputs.home-manager.nixosModules.home-manager
           inputs.nix-ld.nixosModules.nix-ld
           inputs.nur.nixosModules.nur
+          inputs.sops-nix.nixosModules.sops
         ];
 
         # Bleeding edge, baybee!
@@ -139,7 +139,6 @@
           # All of the important flakes will be included.
           nixpkgs.flake = nixpkgs;
           home-manager.flake = inputs.home-manager;
-          agenix.flake = inputs.agenix;
           nur.flake = inputs.nur;
           guix-overlay.flake = inputs.guix-overlay;
           nixos-generators.flake = inputs.nixos-generators;
@@ -201,7 +200,7 @@
           lib'.modulesToList (lib'.filesToAttr ./modules/home-manager);
         home-manager.extraSpecialArgs = { inherit inputs system self; };
 
-        # Enabling some things for agenix.
+        # Enabling some things for sops.
         programs.gnupg.agent = {
           enable = true;
           enableSSHSupport = true;
