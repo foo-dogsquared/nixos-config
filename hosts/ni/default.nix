@@ -17,6 +17,13 @@
     })
   ];
 
+  services.openssh.hostKeys = [{
+    path = config.sops.secrets.ssh-key.path;
+    type = "ed25519";
+  }];
+  sops.secrets.ssh-key.sopsFile = ./secrets/secrets.yaml;
+  sops.age.keyFile = "/var/lib/sops-nix/key.txt";
+
   boot.binfmt.emulatedSystems = [
     "aarch64-linux"
     "riscv64-linux"
@@ -67,7 +74,9 @@
   ];
 
   # This is needed for shell integration and applying semantic zones.
-  environment.profiles = [ pkgs.wezterm ];
+  environment.extraInit = ''
+    source ${pkgs.wezterm}/etc/profiles.d/wezterm.sh
+  '';
 
   # Enable Guix service.
   services.guix-binary.enable = true;
@@ -84,13 +93,6 @@
     latitude = 15.0;
     longitude = 121.0;
   };
-
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour.
-  networking.useDHCP = false;
-  networking.interfaces.enp1s0.useDHCP = true;
-  networking.interfaces.wlp2s0.useDHCP = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -109,12 +111,6 @@
     }];
   };
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.11"; # Did you read the comment?
+  system.stateVersion = "22.11"; # Yes! I read the comment!
 }
 
