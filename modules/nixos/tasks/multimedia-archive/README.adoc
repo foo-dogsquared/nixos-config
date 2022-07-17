@@ -1,0 +1,40 @@
+= Multimedia archiving
+:toc:
+
+More like offline delivery, really.
+Just wait for the task to complete and you have your videos, pictures, music, and whatever questionable files you want to download.
+It's a nice offline repository for it especially that internet usually randomly disconnects so that's nice while I still have something working, yeah?
+
+
+
+
+== Integrating with Newpipe subscriptions
+
+In this task, I usually just download videos from YouTube.
+While I could note every preferred creator manually, I could automate them by getting a list of subscriptions from my Newpipe config which I use surprisingly more often than I thought.
+This is done by running the link:./convert-newpipe-db-to-json[`./convert-newpipe-db-to-json`] script and specifying the exported Newpipe database (as a ZIP file).
+
+[CAUTION]
+====
+Please don't run the task with all of the subscriptions.
+You should select only a few categories and clean them up.
+====
+
+[source, sh]
+----
+./convert-newpipe-db-to-json ~/Downloads/NewPipeData-20220714_185126.zip
+----
+
+You can run the script with the `-h` flag for more information.
+There are nifty things you can do with the script.
+Such as the following code block which you can interactively select which folders to export.
+
+[source, sh]
+----
+./convert-newpipe-db-to-json ~/Downloads/NewPipeData-20220714_185126.zip --list-categories \
+  | fzf --multi --prompt "Choose which categories to export " \
+  | ./convert-newpipe-db-to-json ~/Downloads/NewPipeData-20220714_185126.zip -o ./newpipe-db.json
+----
+
+Remember the larger the list, the larger the chances for a throttling.
+Thus, it is heavily encouraged that you clean up your list (and/or get good at organizing your categories) before activating the updated version.
