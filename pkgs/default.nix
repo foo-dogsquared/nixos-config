@@ -53,6 +53,7 @@ let
       watc = callPackage ./watc { };
       wayback = callPackage ./wayback.nix { };
       wzmach = callPackage ./wzmach { };
+      ymuse = callPackage ./ymuse { };
     };
 in
 lib.fix (lib.extends overrides packages)
