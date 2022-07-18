@@ -32,6 +32,9 @@ in {
   ];
 
   fonts.fontconfig.enable = true;
+  programs.bash.bashrcExtra = ''
+    source ${pkgs.wezterm}/etc/profile.d/wezterm.sh
+  '';
 
   # My specific usual stuff.
   programs.git = let email = "foo.dogsquared@gmail.com"; in {
@@ -40,6 +43,7 @@ in {
     lfs.enable = true;
     userName = "Gabriel Arazas";
     userEmail = email;
+    signing.key = "129AFC6B4ABD6B61";
     extraConfig = {
       # This is taken from the official Git book, for future references.
       sendemail = {

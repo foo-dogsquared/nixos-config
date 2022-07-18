@@ -15,6 +15,14 @@ in {
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
+      systemd.coredump = {
+        enable = true;
+        extraConfig = ''
+          ProcessSizeMax=10G
+          ExternalSizeMax=10G
+        '';
+      };
+
       # I want to include documentations for my own sanity, OK?
       documentation = {
         enable = true;
@@ -22,8 +30,6 @@ in {
         nixos.enable = true;
         man.generateCaches = true;
       };
-
-      # Configure all of the development-related configuration in the system.
 
       # Install Git, our favorite version control system.
       # In this case, we want ALL OF THE EXTENSIONS!

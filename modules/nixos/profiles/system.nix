@@ -32,12 +32,17 @@ in {
       xdg.portal.enable = true;
 
       # Install the usual Flatpak remotes.
-      system.activationScripts.flatpak-remote.text = lib.mkAfter ''
-        ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-        ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
-        ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists gnome-nightly https://nightly.gnome.org/gnome-nightly.flatpakrepo
-        ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists kdeapps https://distribute.kde.org/kdeapps.flatpakrepo
-      '';
+      systemd.services.install-flatpak-remotes = {
+        after = [ "network.target" ];
+        path = [ pkgs.flatpak ];
+        script = ''
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+          flatpak remote-add --if-not-exists gnome-nightly https://nightly.gnome.org/gnome-nightly.flatpakrepo
+          flatpak remote-add --if-not-exists kdeapps https://distribute.kde.org/kdeapps.flatpakrepo
+        '';
+        serviceConfig.Type = "oneshot";
+      };
 
       # Enable font-related options for more smoother and consistent experience.
       fonts.fontconfig.enable = true;

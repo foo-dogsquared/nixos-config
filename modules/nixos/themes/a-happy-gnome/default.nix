@@ -69,6 +69,8 @@ in
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         shortwave # Yer' humble internet radio.
+        ymuse # Simple MPD client.
+
         gnome-menus # It is required for custom menus in extensions.
         gnome-extension-manager # The cooler GNOME extensions app.
         gnome-search-provider-recoll # This is here for some reason.

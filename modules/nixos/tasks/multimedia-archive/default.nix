@@ -12,7 +12,7 @@ in
     let
       yt-dlp-args = [
         # Make a global list of successfully downloaded videos as a cache for yt-dlp.
-        "--download-archive ${config.services.yt-dlp.archivePath}/videos"
+        "--download-archive '${config.services.yt-dlp.archivePath}/videos'"
 
         # No overwriting of videos and related files.
         "--no-force-overwrites"
