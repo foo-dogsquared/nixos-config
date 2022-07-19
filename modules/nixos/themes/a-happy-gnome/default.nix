@@ -65,7 +65,7 @@ in
         authenticator # 2-factor codes for 2-factor storages.
         blanket # Zen...
         gnome.dconf-editor # A saner version of Windows registry.
-        gnome-dialect # Your gateway to polyglotting.
+        dialect # Your gateway to polyglotting.
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         shortwave # Yer' humble internet radio.
