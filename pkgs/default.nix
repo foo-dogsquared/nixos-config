@@ -33,7 +33,6 @@ let
       hoppscotch-cli = callPackage ./hoppscotch-cli.nix { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
-      junction = callPackage ./junction.nix { };
       libcs50 = callPackage ./libcs50.nix { };
       moac = callPackage ./moac.nix { };
       mopidy-beets = callPackage ./mopidy-beets.nix { };
