@@ -6,6 +6,7 @@ let
   packages = self:
     let callPackage = newScope self;
     in {
+      adwcustomizer = callPackage ./adwcustomizer { };
       artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
       awesome-cli = callPackage ./awesome-cli { };

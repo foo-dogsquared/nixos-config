@@ -1,0 +1,15 @@
+diff --git a/src/main.py b/src/main.py
+index b73c749..97e2b24 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -295,5 +295,10 @@ class AdwcustomizerApplication(Adw.Application):
+ 
+ def main(version):
+     """The application's entry point."""
++    if not os.getenv("XDG_CONFIG_HOME"):
++        os.environ["XDG_CONFIG_HOME"] = os.path.expanduser("~/.config")
++        app_config = os.path.join(os.environ["XDG_CONFIG_HOME"], "adwcustomizer")
++        os.makedirs(app_config, exist_ok=True)
++
+     app = AdwcustomizerApplication()
+     return app.run(sys.argv)
