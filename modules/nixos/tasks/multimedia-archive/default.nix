@@ -160,7 +160,7 @@ in
 
         extraArgs = [
           # Record all downloaded files in an archive file.
-          "--download-archive ${config.services.gallery-dl.archivePath}/photos"
+          "--download-archive" "${config.services.gallery-dl.archivePath}/photos"
 
           # Write metadata to separate JSON files.
           "--write-metadata"

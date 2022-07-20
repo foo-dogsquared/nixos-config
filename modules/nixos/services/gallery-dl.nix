@@ -52,6 +52,19 @@ let
           ]
         '';
       };
+
+      settings = lib.mkOption {
+        type = settingsFormat.type;
+        description = ''
+          Job-specific settings to be overridden to the service-wide settings.
+        '';
+        default = { };
+        example = lib.literalExpression ''
+          {
+            extractor.directory = [ "{category}" "{user|artist|uploader}" ];
+          }
+        '';
+      };
     };
   };
 in {
@@ -137,17 +150,32 @@ in {
         description = "gallery-dl archive job for group '${name}'";
         documentation = [ "man:gallery-dl(1)" ];
         enable = true;
-        path = [ cfg.package ] ++ (with pkgs; [ coreutils ffmpeg ]);
+        path = [ cfg.package ] ++ (with pkgs; [ brotli coreutils ffmpeg ]);
         preStart = ''
           mkdir -p ${lib.escapeShellArg cfg.archivePath}
         '';
-        script = ''
-          gallery-dl ${lib.concatStringsSep " " cfg.extraArgs} ${
-            lib.concatStringsSep " " value.extraArgs
-          } ${
+
+        # Order matters here. We're letting service-level arguments and
+        # settings to be overridden with job-specific things as much as
+        # possible especially with the settings.
+        #
+        # Regarding to settings (`settings`) and extra arguments
+        # (`extraArgs`), the settings is the last applied argument with
+        # `--config` option. This means that it will cascade resultings
+        # settings from `extraArgs` if there's any related option that is
+        # given like another `--config` for example.
+        script = let
+          jobLevelSettingsFile =
+            settingsFormat.generate "gallery-dl-job-${name}-settings"
+            value.settings;
+        in ''
+          gallery-dl ${lib.escapeShellArgs cfg.extraArgs} ${
             lib.optionalString (cfg.settings != null)
             "--config ${settingsFormatFile}"
-          } --directory ${lib.escapeShellArg cfg.archivePath} ${
+          } ${lib.escapeShellArgs value.extraArgs} ${
+            lib.optionalString (value.settings != null)
+            "--config ${jobLevelSettingsFile}"
+          } --destination ${lib.escapeShellArg cfg.archivePath} ${
             lib.escapeShellArgs value.urls
           }
         '';

@@ -53,6 +53,19 @@ let
           ]
         '';
       };
+
+      settings = lib.mkOption {
+        type = settingsFormat.type;
+        description = ''
+          Job-specific settings to be overridden to the service-wide settings.
+        '';
+        default = { };
+        example = lib.literalExpression ''
+          {
+            extractor.directory = [ "{category}" "{user|artist|uploader}" ];
+          }
+        '';
+      };
     };
   };
 in {
@@ -146,13 +159,19 @@ in {
 
         Service.ExecStart = let
           scriptName = "gallery-dl-service-${config.home.username}-${name}";
+          jobSpecificSettingsFile =
+            settingsFormat.generate "gallery-dl-service-job-${name}-settings"
+            value.settings;
           archiveScript = pkgs.writeShellScriptBin scriptName ''
             ${cfg.package}/bin/gallery-dl ${
-              lib.concatStringsSep " " cfg.extraArgs
-            } ${lib.concatStringsSep " " value.extraArgs} ${
+              lib.escapeShellArgs cfg.extraArgs
+            } ${
               lib.optionalString (cfg.settings != null)
               "--config ${settingsFormatFile}"
-            } --directory ${cfg.archivePath} ${lib.escapeShellArgs value.urls}
+            } ${lib.escapeShellArgs value.extraArgs} ${
+              lib.optionalString (value.settings != null)
+              "--config ${jobSpecificSettingsFile}"
+            } --destination ${cfg.archivePath} ${lib.escapeShellArgs value.urls}
           '';
         in "${archiveScript}/bin/${scriptName}";
       }) cfg.jobs;
