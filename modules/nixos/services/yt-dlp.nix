@@ -125,8 +125,8 @@ in {
           mkdir -p ${lib.escapeShellArg cfg.archivePath}
         '';
         script = ''
-          yt-dlp ${lib.concatStringsSep " " cfg.extraArgs} ${
-            lib.concatStringsSep " " value.extraArgs
+          yt-dlp ${lib.escapeShellArgs cfg.extraArgs} ${
+            lib.escapeShellArgs value.extraArgs
           } ${lib.escapeShellArgs value.urls} --paths ${cfg.archivePath}
         '';
         startAt = value.startAt;

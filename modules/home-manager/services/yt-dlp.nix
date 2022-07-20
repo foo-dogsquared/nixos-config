@@ -136,11 +136,11 @@ in {
             scriptName =
               "yt-dlp-archive-service-${config.home.username}-${name}";
             archiveScript = pkgs.writeShellScriptBin scriptName ''
-              ${cfg.package}/bin/yt-dlp ${
-                lib.concatStringsSep " " cfg.extraArgs
-              } ${lib.concatStringsSep " " value.extraArgs} ${
-                lib.escapeShellArgs value.urls
-              } --paths ${lib.escapeShellArg cfg.archivePath}
+              ${cfg.package}/bin/yt-dlp ${lib.escapeShellArgs cfg.extraArgs} ${
+                lib.escapeShellArgs value.extraArgs
+              } ${lib.escapeShellArgs value.urls} --paths ${
+                lib.escapeShellArg cfg.archivePath
+              }
             '';
           in "${archiveScript}/bin/${scriptName}";
         };
