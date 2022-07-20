@@ -12,7 +12,7 @@ in
     let
       yt-dlp-args = [
         # Make a global list of successfully downloaded videos as a cache for yt-dlp.
-        "--download-archive '${config.services.yt-dlp.archivePath}/videos'"
+        "--download-archive" "${config.services.yt-dlp.archivePath}/videos"
 
         # No overwriting of videos and related files.
         "--no-force-overwrites"
@@ -23,27 +23,28 @@ in
         # Embed chapter markers, if possible.
         "--embed-chapters"
 
-        # Write the subtitle file.
+        # Write the subtitle file with the preferred languages.
         "--write-subs"
+        "--sub-langs" "en.*,ja,ko,zh.*,fr,pt.*"
 
         # Write the description in a separate file.
         "--write-description"
 
         # The global output for all of the jobs.
-        "--output '%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title)s.%(ext)s'"
+        "--output" "%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title)s.%(ext)s"
 
         # Select only the most optimal format for my usecases.
-        "--format '(webm,mkv,mp4)[height<=?1280]'"
+        "--format" "(webm,mkv,mp4)[height<=?1280]"
 
         # Prefer MKV whenever possible for video formats.
-        "--merge-output-format mkv"
+        "--merge-output-format" "mkv"
 
         # Don't download any videos that are originally live streams.
-        "--match-filters '!was_live'"
+        "--match-filters" "!was_live"
 
         # Prefer Vorbis when audio-only downloads are used.
-        "--audio-format vorbis"
-        "--audio-quality 2"
+        "--audio-format" "vorbis"
+        "--audio-quality" "2"
       ];
       yt-dlp-archive-variant = pkgs.writeScriptBin "yt-dlp-archive-variant" ''
         ${pkgs.yt-dlp}/bin/yt-dlp ${lib.escapeShellArgs yt-dlp-args}
@@ -74,6 +75,18 @@ in
     in
     {
       environment.systemPackages = [ yt-dlp-archive-variant ];
+
+      sops.secrets =
+        let
+          getKey = key: {
+            inherit key;
+            sopsFile = lib.getSecret "multimedia-archive.yaml";
+          };
+        in
+        {
+          "multimedia-archive/secrets-config" = getKey "secrets-config";
+        };
+
       fileSystems."${mountName}" = {
         device = "/dev/disk/by-uuid/6ba86a30-5fa4-41d9-8354-fa8af0f57f49";
         fsType = "btrfs";
@@ -164,7 +177,17 @@ in
 
           # Write metadata to separate JSON files.
           "--write-metadata"
+
+          # The config file that contains the secrets for various services.
+          # We're putting as a separate config file instead of configuring it
+          # in the service properly since secrets decrypted by sops-nix cannot
+          # be read in Nix.
+          "--config" "${config.sops.secrets."multimedia-archive/secrets-config".path}"
         ];
+
+        settings.extractor = {
+          filename = "{date:%F}-{title}.{extension}";
+        };
 
         jobs = {
           arts = {
