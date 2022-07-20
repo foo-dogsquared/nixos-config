@@ -32,8 +32,17 @@ in {
   ];
 
   fonts.fontconfig.enable = true;
+
+  # We're disabling it since the default Atuin integration is
+  # blocking the Wezterm's shell integration by fetching another
+  # instance of bash-preexec.
+  programs.atuin.enableBashIntegration = false;
   programs.bash.bashrcExtra = ''
     source ${pkgs.wezterm}/etc/profile.d/wezterm.sh
+
+    if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+      eval "$(${config.programs.atuin.package}/bin/atuin init bash)"
+    fi
   '';
 
   # My specific usual stuff.
