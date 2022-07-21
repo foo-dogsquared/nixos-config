@@ -23,7 +23,8 @@ let
       startAt = lib.mkOption {
         type = with lib.types; str;
         description = ''
-          Indicates how frequent the download will occur. The given schedule should follow the format as described from
+          Indicates how frequent the download will occur. The given schedule
+          should follow the format as described from
           <citerefentry>
             <refentrytitle>systemd.time</refentrytitle>
             <manvolnum>5</manvolnum>
@@ -31,6 +32,17 @@ let
         '';
         default = "daily";
         example = "*-*-3/4";
+      };
+
+      persistent = lib.mkOption {
+        type = lib.types.bool;
+        description = ''
+          Indicates whether the job should be persistent, starting the service
+          if missed.
+        '';
+        default = false;
+        defaultText = "false";
+        example = "true";
       };
 
       extraArgs = lib.mkOption {
@@ -143,6 +155,14 @@ in {
           ProtectKernelTunables = true;
           SystemCallFilter = "@system-service";
           SystemCallErrorNumber = "EPERM";
+        };
+      }) cfg.jobs;
+
+    systemd.timers = lib.mapAttrs' (name: value:
+      lib.nameValuePair "yt-dlp-archive-service-${name}" {
+        timerConfig = {
+          Persistent = value.persistent;
+          RandomizedDelaySec = "2min";
         };
       }) cfg.jobs;
   };

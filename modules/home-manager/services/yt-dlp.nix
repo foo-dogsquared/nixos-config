@@ -23,7 +23,8 @@ let
       startAt = lib.mkOption {
         type = with lib.types; str;
         description = ''
-          Indicates how frequent the download will occur. The given schedule should follow the format as described from
+          Indicates how frequent the download will occur. The given schedule
+          should follow the format as described from
           <citerefentry>
             <refentrytitle>systemd.time</refentrytitle>
             <manvolnum>5</manvolnum>
@@ -31,6 +32,18 @@ let
         '';
         default = "daily";
         example = "*-*-3/4";
+      };
+
+      persistent = lib.mkOption {
+        type = lib.types.bool;
+        description = ''
+          Indicates whether the service will start if timer has missed.
+          Defaults to <literal>true</literal> since this module mainly assumes
+          it is used on the desktop.
+        '';
+        default = true;
+        defaultText = "true";
+        example = "false";
       };
 
       extraArgs = lib.mkOption {
@@ -155,7 +168,8 @@ in {
 
         Timer = {
           OnCalendar = value.startAt;
-          Persistent = true;
+          RandomizedDelaySec = "2min";
+          Persistent = value.persistent;
         };
 
         Install.WantedBy = [ "timers.target" ];
