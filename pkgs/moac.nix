@@ -13,6 +13,8 @@ buildGoModule rec {
 
   vendorSha256 = "sha256-5clp7s6xVUmniN5b9lFu/LW3CjDtgMMRzWIH+o7DnJQ=";
 
+  doCheck = false;
+
   meta = with lib; {
     description = "Generic password generator and analyzer";
     homepage = "https://github.com/Seirdy/moac";
