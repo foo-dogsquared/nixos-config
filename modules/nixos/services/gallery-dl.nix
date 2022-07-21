@@ -38,6 +38,17 @@ let
         example = "*-*-3/4";
       };
 
+      persistent = lib.mkOption {
+        type = lib.types.bool;
+        description = ''
+          Indicates whether job is persistent, starting the service despite the
+          timer missed.
+        '';
+        default = false;
+        defaultText = "false";
+        example = "true";
+      };
+
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description = ''
@@ -193,6 +204,14 @@ in {
           ProtectKernelTunables = true;
           SystemCallFilter = "@system-service";
           SystemCallErrorNumber = "EPERM";
+        };
+      }) cfg.jobs;
+
+    systemd.timers = lib.mapAttrs' (name: value:
+      lib.nameValuePair "gallery-dl-archive-service-${name}" {
+        timerConfig = {
+          Persistent = value.persistent;
+          RandomizedDelaySec = "2min";
         };
       }) cfg.jobs;
   };

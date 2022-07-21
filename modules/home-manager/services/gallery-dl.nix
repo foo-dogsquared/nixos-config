@@ -39,6 +39,18 @@ let
         example = "*-*-3/4";
       };
 
+      persistent = lib.mkOption {
+        type = lib.types.bool;
+        description = ''
+          Indicates whether job is persistent, starting the service despite the
+          timer missed. Defaults to <literal>true</literal> assuming it is used
+          on the desktop.
+        '';
+        default = true;
+        defaultText = "true";
+        example = "false";
+      };
+
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description = ''
@@ -185,7 +197,8 @@ in {
 
         Timer = {
           OnCalendar = value.startAt;
-          Persistent = true;
+          Persistent = value.persistent;
+          RandomizedDelaySec = "2min";
         };
 
         Install.WantedBy = [ "timers.target" ];
