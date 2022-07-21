@@ -34,6 +34,7 @@ let
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
       libcs50 = callPackage ./libcs50.nix { };
+      license-cli = callPackage ./license-cli { };
       moac = callPackage ./moac.nix { };
       mopidy-beets = callPackage ./mopidy-beets.nix { };
       mopidy-funkwhale = callPackage ./mopidy-funkwhale.nix { };
