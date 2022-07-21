@@ -10,7 +10,6 @@ let
       artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
       awesome-cli = callPackage ./awesome-cli { };
-      butler = callPackage ./butler.nix { };
       cursedgl = callPackage ./cursedgl { };
       clidle = callPackage ./clidle.nix { };
       domterm = callPackage ./domterm { };
