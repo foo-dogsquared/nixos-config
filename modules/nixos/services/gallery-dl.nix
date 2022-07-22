@@ -157,7 +157,7 @@ in {
   config = lib.mkIf cfg.enable {
     systemd.services = lib.mapAttrs' (name: value:
       lib.nameValuePair "gallery-dl-archive-service-${name}" {
-        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
         description = "gallery-dl archive job for group '${name}'";
         documentation = [ "man:gallery-dl(1)" ];
         enable = true;

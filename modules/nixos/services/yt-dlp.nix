@@ -128,7 +128,7 @@ in {
   config = lib.mkIf cfg.enable {
     systemd.services = lib.mapAttrs' (name: value:
       lib.nameValuePair "yt-dlp-archive-service-${name}" {
-        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
         description = "yt-dlp archive job for group '${name}'";
         documentation = [ "man:yt-dlp(1)" ];
         enable = true;
