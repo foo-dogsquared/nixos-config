@@ -23,13 +23,13 @@
 # * Wait until gdk-pixbuf is >=3.0.
 stdenv.mkDerivation rec {
   pname = "domterm";
-  version = "unstable-2022-07-08";
+  version = "unstable-2022-07-22";
 
   src = fetchFromGitHub {
     owner = "PerBothner";
     repo = "DomTerm";
-    rev = "b063ddcf9acc6dbeaaca42bc2caa1c86d2e11805";
-    sha256 = "sha256-bXxV6uG61ZX8Tgm2KrXooblLX/4TNPXJd06bnvpWU50=";
+    rev = "ae3e4a0037f3ead62a8db0f93e25ec529e3b4756";
+    sha256 = "sha256-0RrmKm3YqypWBpsE2rfKAGcTJdItvS+K5HTZeq77Pks=";
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ]
