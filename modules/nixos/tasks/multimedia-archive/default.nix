@@ -65,8 +65,9 @@ in
                 urls = builtins.map (subscription: subscription.url) category.data.subscriptions;
                 startAt = lib.elemAt days (lib.mod category.index (lib.length days));
                 extraArgs = [
-                  "--playlist-end 20" # Only check the last 20 videos.
+                  "--playlist-end" "20" # Only check the last 20 videos.
                 ];
+                persistent = true;
               };
             })
             categories;
@@ -200,6 +201,7 @@ in
               "https://hyperjerk.newgrounds.com" # HyperJerk
             ];
             startAt = "weekly";
+            persistent = true;
           };
         };
       };
