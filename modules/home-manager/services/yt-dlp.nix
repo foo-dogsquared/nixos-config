@@ -135,7 +135,7 @@ in {
       lib.nameValuePair "yt-dlp-archive-service-${name}" {
         Unit = {
           Description = "yt-dlp archive job for group '${name}'";
-          After = "default.target";
+          After = [ "default.target" ];
           Documentation = "man:yt-dlp(1)";
         };
 

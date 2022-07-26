@@ -165,7 +165,7 @@ in {
       lib.nameValuePair "gallery-dl-archive-service-${name}" {
         Unit = {
           Description = "gallery-dl archive job for group '${name}'";
-          After = "default.target";
+          After = [ "default.target" ];
           Documentation = "man:gallery-dl(1)";
         };
 
