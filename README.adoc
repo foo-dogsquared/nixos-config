@@ -147,6 +147,17 @@ It is exported in the flakes at `outputs.homeConfigurations`.
 For more information, see the link:./users/README.adoc[related documentation].
 
 
+=== Secrets management
+
+This repo uses link:https://github.com/mozilla/sops[sops] as the main secret management tool.
+For integrating this into NixOS, I use link:https://github.com/Mic92/sops-nix[sops-nix].
+
+To get started using sops, I recommend to take a look at `.sops.yaml` file which secrets belong to whom.
+Then edit a secrets with `sops PATH_TO_SECRET`.
+Take note, you need to respective keys to edit the secret in the first place.
+If you edit `./secrets/backup-archive.yaml` for example, it needs one of the keys (either my age and GPG key or the age key from host `ni`).
+
+
 
 
 == TODO
