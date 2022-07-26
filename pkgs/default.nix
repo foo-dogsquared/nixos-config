@@ -27,7 +27,6 @@ let
         callPackage ./gnome-shell-extension-pop-shell.nix { };
       guile-config = callPackage ./guile-config.nix { };
       guile-hall = callPackage ./guile-hall.nix { };
-      hoppscotch-cli = callPackage ./hoppscotch-cli.nix { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
       libcs50 = callPackage ./libcs50.nix { };
