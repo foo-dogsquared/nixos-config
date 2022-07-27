@@ -6,7 +6,7 @@ let
   packages = self:
     let callPackage = newScope self;
     in {
-      adwcustomizer = callPackage ./adwcustomizer { };
+      adwcustomizer = callPackage ./adwcustomizer { libadwaita = libadwaita-latest; };
       artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
       awesome-cli = callPackage ./awesome-cli { };
@@ -29,6 +29,16 @@ let
       guile-hall = callPackage ./guile-hall.nix { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
+      libadwaita-latest = libadwaita.overrideAttrs (super: self: {
+        version = "2022-07-27";
+        src = fetchFromGitLab {
+          domain = "gitlab.gnome.org";
+          owner = "GNOME";
+          repo = "libadwaita";
+          rev = "68bf0fbcfb9134bbc13345d16243ff15b1989693";
+          hash = "sha256-HWtDpOsHMR2kG5nr6pfznhDoyRpGihLCA7hsT99QqdA=";
+        };
+      });
       libcs50 = callPackage ./libcs50.nix { };
       license-cli = callPackage ./license-cli { };
       moac = callPackage ./moac.nix { };

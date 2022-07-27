@@ -1,4 +1,4 @@
-{ stdenv, lib, fetchFromGitHub, wrapGAppsHook4, meson, ninja, pkg-config, glib, desktop-file-utils, gettext, blueprint-compiler, python3Packages, appstream-glib, gtk4, libadwaita }:
+{ stdenv, lib, fetchFromGitHub, wrapGAppsHook4, meson, ninja, pkg-config, glib, desktop-file-utils, gettext, blueprint-compiler, python3Packages, appstream-glib, gtk4, libadwaita, libportal, libportal-gtk4 }:
 
 # Not all parts of the application works with the current nixpkgs version of
 # libadwaita.
@@ -9,8 +9,8 @@ python3Packages.buildPythonApplication rec {
   src = fetchFromGitHub {
     owner = "ArtyIF";
     repo = "AdwCustomizer";
-    rev = "718f2490c95de60e8571b1a9d92af78919c14de1";
-    sha256 = "sha256-rMaWIJBQ+HC1Gs5xCRyuOCvB2XcTFB2q194bfK5Q48Q=";
+    rev = "5a6fa1b2ba63a5a8ac3861f28882c4e62f62b10b";
+    sha256 = "sha256-KwvAlcRfilu/rC6e145xMC/6I7OXsZYWlYd0GNZoYDs";
   };
 
   patches = [
@@ -32,10 +32,13 @@ python3Packages.buildPythonApplication rec {
     blueprint-compiler
     gtk4
     libadwaita
+    libportal
+    libportal-gtk4
   ];
 
   propagatedBuildInputs = with python3Packages; [
     pygobject3
+    anyascii
   ];
 
   preFixup = ''
