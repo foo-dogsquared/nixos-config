@@ -123,6 +123,7 @@
           inputs.nix-ld.nixosModules.nix-ld
           inputs.nur.nixosModules.nur
           inputs.sops-nix.nixosModules.sops
+          inputs.guix-overlay.nixosModules.guix-binary
         ];
 
         # Bleeding edge, baybee!

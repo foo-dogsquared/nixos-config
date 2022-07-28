@@ -1,11 +1,9 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-
-    inputs.guix-overlay.nixosModules.guix-binary
 
     (lib.mapHomeManagerUser "foo-dogsquared" {
       extraGroups = [ "wheel" "audio" "docker" "podman" "networkmanager" ];
