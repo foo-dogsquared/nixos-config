@@ -53,7 +53,7 @@ let
         default = [ ];
         example = lib.literalExpression ''
           [
-            "--date 'today'"
+            "--date" "today"
           ]
         '';
       };
@@ -95,9 +95,9 @@ in {
       default = [ "--download-archive '${cfg.archivePath}/download-list" ];
       example = lib.literalExpression ''
         [
-          "--download-archive ''${cfg.archivePath}/download-list"
-          "--concurrent-fragments 2"
-          "--retries 20"
+          "--download-archive" "''${cfg.archivePath}/download-list"
+          "--concurrent-fragments" "2"
+          "--retries" "20"
         ]
       '';
     };
@@ -115,7 +115,7 @@ in {
               "https://www.youtube.com/c/Jazza"
             ];
             startAt = "weekly";
-            extraArgs = [ "--date 'today'" ];
+            extraArgs = [ "--date" "today" ];
           };
 
           compsci = {

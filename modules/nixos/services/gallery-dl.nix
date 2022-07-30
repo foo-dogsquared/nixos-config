@@ -58,8 +58,8 @@ let
         default = [ ];
         example = lib.literalExpression ''
           [
-            "--date 'today-1week'" # get only videos from a week ago
-            "--output '%(uploader)s/%(title)s.%(ext)s'" # download them in the respective directory
+            "--date" "today-1week" # get only videos from a week ago
+            "--output" "%(uploader)s/%(title)s.%(ext)s" # download them in the respective directory
           ]
         '';
       };
@@ -94,10 +94,10 @@ in {
       type = lib.types.str;
       description = ''
         The location of the archive to be downloaded. Take note it is assumed
-        to be created at the time of running the service.
+        to be created at the time of running the service. Should be an absolute
+        path.
       '';
-      default = "/archives/gallery-dl-service";
-      example = lib.literalExpression "/var/archives/gallery-dl-services";
+      example = "/var/archives/gallery-dl-service";
     };
 
     settings = lib.mkOption {

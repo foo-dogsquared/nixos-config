@@ -52,7 +52,7 @@ let
         default = [ ];
         example = lib.literalExpression ''
           [
-            "--date 'today'"
+            "--date" "today"
           ]
         '';
       };
@@ -77,8 +77,7 @@ in {
       description = ''
         The location of the archive to be downloaded. Must be an absolute path.
       '';
-      default = "/archives/yt-dlp-service";
-      example = lib.literalExpression "/var/archives/yt-dlp-service";
+      example = "/var/archives/yt-dlp-service";
     };
 
     extraArgs = lib.mkOption {
@@ -88,9 +87,9 @@ in {
       default = [ "--download-archive videos" ];
       example = lib.literalExpression ''
         [
-          "--download-archive ''${cfg.archivePath}/download-list"
-          "--concurrent-fragments 2"
-          "--retries 20"
+          "--download-archive" "''${cfg.archivePath}/download-list"
+          "--concurrent-fragments" "2"
+          "--retries" "20"
         ]
       '';
     };
@@ -108,7 +107,7 @@ in {
               "https://www.youtube.com/c/Jazza"
             ];
             startAt = "weekly";
-            extraArgs = [ "--date 'today'" ];
+            extraArgs = [ "--date" "today" ];
           };
 
           compsci = {

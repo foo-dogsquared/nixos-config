@@ -45,8 +45,10 @@ in {
 
     archivePath = lib.mkOption {
       type = with lib.types; either path str;
-      description = "The path of the Archivebox archive.";
-      example = "\${config.xdg.dataHome}/archivebox";
+      description = ''
+        The path of the Archivebox archive. Must be an absolute path.
+      '';
+      example = "/var/archives/archivebox-service";
     };
 
     jobs = lib.mkOption {

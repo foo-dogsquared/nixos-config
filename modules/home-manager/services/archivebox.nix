@@ -23,7 +23,7 @@ let
         '';
         default = [ ];
         example = lib.literalExpression ''
-          [ "--depth 1" ]
+          [ "--depth" "1" ]
         '';
       };
 
@@ -69,7 +69,7 @@ in {
               "https://arxiv.org/rss/cs"
               "https://distill.pub/"
             ];
-            extraArgs = [ "--depth 1" ];
+            extraArgs = [ "--depth" "1" ];
             startAt = "daily";
           };
         }

@@ -60,8 +60,8 @@ let
         default = [ ];
         example = lib.literalExpression ''
           [
-            "--date 'today-1week'" # get only videos from a week ago
-            "--output '%(uploader)s/%(title)s.%(ext)s'" # download them in the respective directory
+            "--date" "today-1week" # get only videos from a week ago
+            "--output" "%(uploader)s/%(title)s.%(ext)s" # download them in the respective directory
           ]
         '';
       };
