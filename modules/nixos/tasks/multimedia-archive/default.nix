@@ -10,7 +10,7 @@ in
 
   config = lib.mkIf cfg.enable (
     let
-      yt-dlp-args = [
+      ytdlpArgs = [
         # Make a global list of successfully downloaded videos as a cache for yt-dlp.
         "--download-archive" "${config.services.yt-dlp.archivePath}/videos"
 
@@ -46,36 +46,39 @@ in
         "--audio-format" "vorbis"
         "--audio-quality" "2"
       ];
-      yt-dlp-archive-variant = pkgs.writeScriptBin "yt-dlp-archive-variant" ''
-        ${pkgs.yt-dlp}/bin/yt-dlp ${lib.escapeShellArgs yt-dlp-args}
+      ytdlpArchiveVariant = pkgs.writeScriptBin "yt-dlp-archive-variant" ''
+        ${pkgs.yt-dlp}/bin/yt-dlp ${lib.escapeShellArgs ytdlpArgs}
       '';
 
-      # Given an attribute set of URLs, create a yt-dlp service config that does the following.
-      create-yt-dlp-service-config = newpipe-db:
+      # Given an attribute set of jobs that contains a list of objects with
+      # their names and URL, create an attrset suitable for declaring the
+      # archiving jobs of several services for `services.yt-dlp`,
+      # `services.gallery-dl`, and `services.archivebox`.
+      mkJobs = { extraArgs ? [], db }:
         let
           days = [ "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" ];
           categories = lib.zipListsWith
             (index: category: { inherit index; data = category; })
-            (lib.lists.range 1 (lib.length (lib.attrValues newpipe-db)))
-            (lib.mapAttrsToList (name: value: { inherit name; subscriptions = value; }) newpipe-db);
+            (lib.lists.range 1 (lib.length (lib.attrValues db)))
+            (lib.mapAttrsToList (name: value: { inherit name; subscriptions = value; }) db);
           jobsList = builtins.map
             (category: {
               name = category.data.name;
               value = {
+                inherit extraArgs;
                 urls = builtins.map (subscription: subscription.url) category.data.subscriptions;
                 startAt = lib.elemAt days (lib.mod category.index (lib.length days));
-                extraArgs = [
-                  "--playlist-end" "20" # Only check the last 20 videos.
-                ];
                 persistent = true;
               };
             })
             categories;
         in
         lib.listToAttrs jobsList;
+
+      readJSON = jsonFile: builtins.fromJSON (builtins.readFile jsonFile);
     in
     {
-      environment.systemPackages = [ yt-dlp-archive-variant ];
+      environment.systemPackages = [ ytdlpArchiveVariant ];
 
       sops.secrets =
         let
@@ -119,9 +122,12 @@ in
 
         # This is applied on all jobs. It is best to be minimal as much as
         # possible for this.
-        extraArgs = yt-dlp-args;
+        extraArgs = ytdlpArgs;
 
-        jobs = create-yt-dlp-service-config (builtins.fromJSON (builtins.readFile ./newpipe-db.json));
+        jobs = mkJobs {
+          extraArgs = [ "--playlist-end" "20" ];
+          attrs = readJSON ./newpipe-db.json;
+        };
       };
 
       services.archivebox = {
@@ -132,15 +138,16 @@ in
 
         jobs = {
           arts = {
-            links = [
+            urls = [
               "https://www.davidrevoy.com/feed/rss"
               "https://librearts.org/index.xml"
             ];
             startAt = "monthly";
+            persistent = true;
           };
 
           computer = {
-            links = [
+            urls = [
               "https://blog.mozilla.org/en/feed/"
               "https://distill.pub/rss.xml"
               "https://drewdevault.com/blog/index.xml"
@@ -153,10 +160,11 @@ in
               "https://simblob.blogspot.com/feeds/posts/default"
             ];
             startAt = "weekly";
+            persistent = true;
           };
 
           projects = {
-            links = [
+            urls = [
               "https://veloren.net/rss.xml"
               "https://guix.gnu.org/feeds/blog.atom"
               "https://fedoramagazine.org/feed/"
