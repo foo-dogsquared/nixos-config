@@ -4,7 +4,7 @@ let
   cfg = config.services.archivebox;
   jobType = { name, options, ... }: {
     options = {
-      links = lib.mkOption {
+      urls = lib.mkOption {
         type = with lib.types; listOf str;
         description = "List of links to archive.";
         example = lib.literalExpression ''
@@ -23,7 +23,7 @@ let
         '';
         default = [ ];
         example = lib.literalExpression ''
-          [ "--depth 1" ]
+          [ "--depth" "1" ]
         '';
       };
 
@@ -59,7 +59,7 @@ in {
       example = lib.literalExpression ''
         {
           illustration = {
-            links = [
+            urls = [
               "https://www.davidrevoy.com/"
               "https://www.youtube.com/c/ronillust"
             ];
@@ -67,7 +67,7 @@ in {
           };
 
           research = {
-            links = [
+            urls = [
               "https://arxiv.org/rss/cs"
               "https://distill.pub/"
             ];
@@ -110,7 +110,7 @@ in {
             mkdir -p ${lib.escapeShellArg cfg.archivePath}
           '';
           script = ''
-            echo "${lib.concatStringsSep "\n" value.links}" \
+            echo "${lib.concatStringsSep "\n" value.urls}" \
               | archivebox add ${lib.concatStringsSep " " value.extraArgs}
           '';
           serviceConfig = {
