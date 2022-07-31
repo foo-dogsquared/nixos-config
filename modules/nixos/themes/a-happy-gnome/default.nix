@@ -21,6 +21,13 @@ in
 {
   options.themes.themes.a-happy-gnome = {
     enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
+    xdg.portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gtk
+      ];
+    };
 
     shellExtensions = lib.mkOption {
       type = with lib.types; listOf package;
@@ -68,6 +75,7 @@ in
         dialect # Your gateway to polyglotting.
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
+        gnome.gnome-boxes # Virtual machines, son.
         shortwave # Yer' humble internet radio.
         ymuse # Simple MPD client.
 
@@ -100,6 +108,8 @@ in
       core-shell.enable = true;
       core-utilities.enable = true;
     };
+
+    services.packagekit.enable = false;
 
     i18n.inputMethod = {
       enabled = "ibus";
