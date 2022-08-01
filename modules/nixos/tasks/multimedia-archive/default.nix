@@ -126,7 +126,7 @@ in
 
         jobs = mkJobs {
           extraArgs = [ "--playlist-end" "20" ];
-          attrs = readJSON ./newpipe-db.json;
+          db = readJSON ./newpipe-db.json;
         };
       };
 
