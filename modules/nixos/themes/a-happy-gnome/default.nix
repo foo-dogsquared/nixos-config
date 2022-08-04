@@ -120,6 +120,7 @@ in
         table
         table-others
         typing-booster
+        uniemoji
       ];
     };
 
