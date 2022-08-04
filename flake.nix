@@ -50,12 +50,16 @@
     devshell.inputs.flake-utils.follows = "flake-utils";
 
     # We're getting more unstable there should be a black hole at my home right now.
+    # Also, we're seem to be collecting text editors like it is Pokemon.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.inputs.flake-utils.follows = "flake-utils";
+
+    helix-editor.url = "github:helix-editor/helix";
+    helix-editor.inputs.nixpkgs.follows = "nixpkgs";
 
     # Guix in NixOS?!
     guix-overlay.url = "github:foo-dogsquared/nix-overlay-guix";
@@ -75,7 +79,12 @@
       # The order here is important(?).
       overlays = [
         # Put my custom packages to be available.
-        (self: super: import ./pkgs { pkgs = super; })
+        (final: prev: import ./pkgs { pkgs = prev; })
+
+        # Putting a list for inputs without overlays.
+        (final: prev: {
+          helix-unstable = inputs.helix-editor.packages.${builtins.currentSystem}.default;
+        })
 
         # Neovim nightly!
         inputs.neovim-nightly-overlay.overlay
@@ -151,10 +160,12 @@
             "https://cache.nixos.org"
             "https://nix-community.cachix.org"
             "https://foo-dogsquared.cachix.org"
+            "https://helix.cachix.org"
           ];
           trusted-public-keys = [
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
             "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
+            "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
           ];
         };
 
