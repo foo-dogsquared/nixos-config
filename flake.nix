@@ -209,7 +209,8 @@
         home-manager.useUserPackages = true;
         home-manager.useGlobalPkgs = true;
         home-manager.sharedModules =
-          lib'.modulesToList (lib'.filesToAttr ./modules/home-manager);
+          lib'.modulesToList (lib'.filesToAttr ./modules/home-manager)
+          ++ [ userDefaultConfig ];
         home-manager.extraSpecialArgs = { inherit inputs system self; };
 
         # Enabling some things for sops.
@@ -225,7 +226,7 @@
         inputs.home-manager.lib.homeManagerConfiguration {
           extraSpecialArgs = { inherit system self inputs; };
           lib = lib';
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = nixpkgs.legacyPackages.${builtins.currentSystem};
           modules =
             # Importing our custom home-manager modules.
             (lib'.modulesToList (lib'.filesToAttr ./modules/home-manager))
@@ -234,14 +235,26 @@
             ++ extraModules;
         };
 
-      # The default config for our home-manager configurations.
-      userDefaultConfig = { pkgs, ... }: {
-        # To be able to use the most of our config as possible, we want both to
-        # use the same overlays.
-        nixpkgs.overlays = overlays;
-
-        # Stallman-senpai will be disappointed. :(
-        nixpkgs.config.allowUnfree = true;
+      # The default config for our home-manager configurations. This is also to
+      # be used for sharing modules among home-manager users from NixOS
+      # configurations with `nixpkgs.useGlobalPkgs` set to `true` so avoid
+      # setting nixpkgs-related options here.
+      userDefaultConfig = { pkgs, config, ... }: {
+        # Hardcoding this is not really great especially if you consider using
+        # other locales but its default values are already hardcoded so what
+        # the hell. For other users, they would have to do set these manually.
+        xdg.userDirs = let
+          appendToHomeDir = path: "${config.home.homeDirectory}/${path}";
+        in {
+          desktop = appendToHomeDir "Desktop";
+          documents = appendToHomeDir "Documents";
+          download = appendToHomeDir "Downloads";
+          music = appendToHomeDir "Music";
+          pictures = appendToHomeDir "Pictures";
+          publicShare = appendToHomeDir "Public";
+          templates = appendToHomeDir "Templates";
+          videos = appendToHomeDir "Videos";
+        };
 
         manual = {
           html.enable = true;
@@ -272,21 +285,32 @@
 
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
-      homeManagerConfigurations = lib'.mapAttrs (_: path:
-        let
-          extraModules = [
-            ({ pkgs, config, ... }: {
-              home.username = builtins.baseNameOf path;
-              home.homeDirectory = "/home/${config.home.username}";
-            })
-            userDefaultConfig
-            path
-          ];
-        in mkUser { inherit extraModules; })
+      homeManagerConfigurations = lib'.mapAttrs
+        (_: path:
+          let
+            extraModules = [
+              ({ pkgs, config, ... }: {
+                # To be able to use the most of our config as possible, we want both to
+                # use the same overlays.
+                nixpkgs.overlays = overlays;
+
+                # Stallman-senpai will be disappointed. :(
+                nixpkgs.config.allowUnfree = true;
+
+                # Setting the homely options.
+                home.username = builtins.baseNameOf path;
+                home.homeDirectory = "/home/${config.home.username}";
+              })
+              userDefaultConfig
+              path
+            ];
+          in
+          mkUser { inherit extraModules; })
         (lib'.filesToAttr ./users/home-manager);
 
       # Extending home-manager with my custom modules, if anyone cares.
-      homeManagerModules = lib'.importModules (lib'.filesToAttr ./modules/home-manager);
+      homeManagerModules =
+        lib'.importModules (lib'.filesToAttr ./modules/home-manager);
 
       # In case somebody wants to use my stuff to be included in nixpkgs.
       overlays.default = final: prev: import ./pkgs { pkgs = prev; };

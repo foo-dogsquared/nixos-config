@@ -5,16 +5,26 @@
 rec {
   mapHomeManagerUser = user: settings:
     let
+      homeDirectory = "/home/${user}";
       defaultUserConfig = {
         extraGroups = [ "wheel" ];
         createHome = true;
-        home = "/home/${user}";
+        home = homeDirectory;
       };
       # TODO: Effectively override the option.
       # We assume all users set with this module are normal users.
       absoluteOverrides = { isNormalUser = true; };
     in {
-    home-manager.users."${user}" = import (lib.getUser "home-manager" user);
+      home-manager.users."${user}" = { ... }: {
+        imports = [
+          {
+            home.username = user;
+            home.homeDirectory = homeDirectory;
+          }
+
+          (lib.getUser "home-manager" user)
+        ];
+      };
     users.users."${user}" = defaultUserConfig // settings // absoluteOverrides;
   };
 
