@@ -8,6 +8,10 @@
 , expat
 , wayland
 , libX11
+, libGL
+, libxkbcommon
+, vulkan-loader
+, pop-launcher
 }:
 
 rustPlatform.buildRustPackage rec {
@@ -25,9 +29,11 @@ rustPlatform.buildRustPackage rec {
 
   nativeBuildInputs = [ cmake pkg-config ];
 
-  buildInputs = [ freetype expat ];
+  buildInputs = [ freetype expat wayland libX11 libGL libxkbcommon vulkan-loader ];
 
-  propagatedBuildInputs = [ wayland libX11 ];
+  postFixup = ''
+    patchelf --set-rpath ${lib.makeLibraryPath buildInputs} $out/bin/onagre
+  '';
 
   meta = with lib; {
     homepage = "https://github.com/oknozor/onagre";
