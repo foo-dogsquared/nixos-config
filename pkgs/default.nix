@@ -16,7 +16,6 @@ let
       freerct = callPackage ./freerct.nix { };
       distant = callPackage ./distant.nix { };
       doggo = callPackage ./doggo.nix { };
-      emulsion-palette = callPackage ./emulsion-palette.nix { };
       gol-c = callPackage ./gol-c.nix { };
       gnome-search-provider-recoll =
         callPackage ./gnome-search-provider-recoll.nix { };
