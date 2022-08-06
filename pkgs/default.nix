@@ -54,6 +54,7 @@ let
       thokr = callPackage ./thokr.nix { };
       segno = callPackage ./segno.nix { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
+      vgc = libsForQt5.callPackage ./vgc { };
       watc = callPackage ./watc { };
       wayback = callPackage ./wayback.nix { };
       wzmach = callPackage ./wzmach { };
