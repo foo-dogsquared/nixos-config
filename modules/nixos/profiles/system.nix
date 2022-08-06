@@ -132,9 +132,6 @@ in {
         enable = true;
         package = pkgs.bluezFull;
       };
-
-      # Welp, this is surprising...
-      services.printing.enable = true;
     })
 
     (lib.mkIf cfg.cleanup.enable {
