@@ -2,7 +2,6 @@
   description = "foo-dogsquared's NixOS config as a flake";
 
   nixConfig = {
-    extra-experimental-features = "nix-command flakes";
     extra-substituters =
       "https://nix-community.cachix.org https://foo-dogsquared.cachix.org";
     extra-trusted-public-keys =
@@ -173,13 +172,13 @@
           [ "python3.10-django-3.1.14" ];
 
         # Set several paths for the traditional channels.
-        nix.nixPath = [
-          "nixpkgs=${nixpkgs}"
-          "home-manager=${inputs.home-manager}"
-          "nur=${inputs.nur}"
-          "config=${self}"
-          "/nix/var/nix/profiles/per-user/root/channels"
-        ];
+        nix.nixPath =
+          lib'.mapAttrsToList (name: value: "${name}=${value}") inputs
+          ++ [
+            "nixpkgs=${nixpkgs}"
+            "config=${self}"
+            "/nix/var/nix/profiles/per-user/root/channels"
+          ];
 
         # Stallman-senpai will be disappointed.
         nixpkgs.config.allowUnfree = true;
@@ -262,22 +261,25 @@
           manpages.enable = true;
         };
       };
-
-    in {
+    in
+    {
       # Exposes only my library with the custom functions to make it easier to
       # include in other flakes for whatever reason may be.
       lib = import ./lib { lib = nixpkgs.lib; };
 
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
-      nixosConfigurations = lib'.mapAttrsRecursive (host: path:
-        let
-          extraModules = [
-            { networking.hostName = builtins.baseNameOf path; }
-            hostDefaultConfig
-            path
-          ];
-        in mkHost { inherit extraModules; }) (lib'.filesToAttr ./hosts);
+      nixosConfigurations = lib'.mapAttrsRecursive
+        (host: path:
+          let
+            extraModules = [
+              { networking.hostName = builtins.baseNameOf path; }
+              hostDefaultConfig
+              path
+            ];
+          in
+          mkHost { inherit extraModules; })
+        (lib'.filesToAttr ./hosts);
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
