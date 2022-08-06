@@ -37,6 +37,8 @@ let
         defaultText = "weekly";
         example = "*-*-01/2";
       };
+
+      persistent = lib.mkEnableOption "service persistence for this job";
     };
   };
 in {
@@ -169,7 +171,7 @@ in {
         after = [ "network.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
         timerConfig = {
-          Persistent = true;
+          Persistent = value.persistent;
           OnCalendar = value.startAt;
           RandomizedDelaySec = 120;
         };
