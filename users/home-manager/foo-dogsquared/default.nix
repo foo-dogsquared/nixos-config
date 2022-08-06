@@ -21,6 +21,9 @@ let
     ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${yt-dlp-for-audio-config}" $@
   '';
   getDotfiles = path: "${inputs.dotfiles}/${path}";
+
+  musicDir = config.xdg.userDirs.music;
+  playlistsDir = "${musicDir}/playlists";
 in {
   programs.home-manager.enable = true;
 
@@ -45,7 +48,7 @@ in {
     fi
   '';
 
-  # My specific usual stuff.
+  # My Git credentials.
   programs.git = let email = "foo.dogsquared@gmail.com"; in {
     enable = true;
     package = pkgs.gitFull;
@@ -65,6 +68,55 @@ in {
   };
 
   # My music player setup, completely configured with Nix!
+  programs.beets = {
+    enable = true;
+    settings = {
+      library = "${musicDir}/library.db";
+      plugins = [
+        "acousticbrainz"
+        "chroma"
+        "deezer"
+        "edit"
+        "export"
+        "fuzzy"
+        "playlist"
+        "scrub"
+        "smartplaylist"
+        "spotify"
+      ];
+      ignore_hidden = "yes";
+      directory = musicDir;
+      ui.colors = "yes";
+
+      import = {
+        link = "no";
+        resume = "yes";
+        incremental = "yes";
+        group_albums = "yes";
+        log = "beets.log";
+      };
+
+      match = {
+        required = "year label";
+        ignore_video_tracks = "yes";
+      };
+
+      # Plugins configuration.
+      fuzzy.prefix = "-";
+      scrub.auto = "yes";
+      smartplaylist = {
+        relative_to = musicDir;
+        playlist_dir = playlistsDir;
+        playlists = [
+          {
+            name = "all.m3u8";
+            query = "";
+          }
+        ];
+      };
+    };
+  };
+
   services.mopidy = {
     enable = true;
     extensionPackages = with pkgs; [
@@ -103,11 +155,21 @@ in {
           "audio_foreign"
         ];
       };
+
+      m3u = {
+        enabled = true;
+        base_dir = musicDir;
+        playlists_dir = playlistsDir;
+        default_encoding = "utf-8";
+        default_extension = ".m3u8";
+      };
     };
   };
 
+  # My preferred file indexing service.
   services.recoll = {
     enable = true;
+    startAt = "daily";
     settings = {
       topdirs = "~/Downloads ~/Documents ~/library";
       "skippedNames+" = "node_modules";
@@ -139,7 +201,10 @@ in {
     research.enable = true;
   };
 
-  services.bleachbit.enable = true;
+  services.bleachbit = {
+    enable = true;
+    withChatCleanup = true;
+  };
 
   systemd.user.sessionVariables = {
     MANPAGER = "nvim +Man!";
