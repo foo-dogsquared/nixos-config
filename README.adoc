@@ -85,6 +85,9 @@ Though, these are just templates mostly for my own purposes so it is not as usef
 * `lib` is defined from link:./lib/[my custom library].
 It's another unnecessary export but it's there.
 
+* `formatter` is the preferred formatter to be used for my Nix files.
+Nothing special here.
+
 
 === The remote repo
 

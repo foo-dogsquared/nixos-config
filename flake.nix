@@ -341,5 +341,10 @@
           description = "Basic development shell template";
         };
       };
+
+      # No amount of formatters will make this codebase nicer but it sure does
+      # feel like it does.
+      formatter =
+        forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
     };
 }
