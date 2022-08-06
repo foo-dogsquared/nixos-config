@@ -46,6 +46,7 @@ let
       mopidy-internetarchive = callPackage ./mopidy-internetarchive.nix { };
       nautilus-annotations = callPackage ./nautilus-annotations { };
       neuwaita-icon-theme = callPackage ./neuwaita-icon-theme { };
+      onagre = callPackage ./onagre { };
       pop-launcher = callPackage ./pop-launcher.nix { };
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
