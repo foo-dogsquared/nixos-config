@@ -15,9 +15,8 @@ rustPlatform.buildRustPackage rec {
 
   # Configuring the plugin.
   postInstall = ''
-    mkdir -p $out/etc/pop-launcher/plugins/bangs
-    mv $out/bin/* $out/etc/pop-launcher/plugins/bangs
-    cp src/plugin.ron $out/etc/pop-launcher/plugins/bangs
+    install -Dm644 src/plugin.ron -t $out/share/pop-launcher/plugins/bangs
+    mv $out/bin/* $out/share/pop-launcher/plugins/bangs
   '';
 
   cargoSha256 = "sha256-qzlZ0dbdfZwEBuQXIUndVFye6RdX8aI39D/UCagMfZg=";
