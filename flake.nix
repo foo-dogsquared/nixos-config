@@ -140,18 +140,23 @@
         # I want to capture the usual flakes to its exact version so we're
         # making them available to our system. This will also prevent the
         # annoying downloads since it always get the latest revision.
-        nix.registry = {
-          # I'm narcissistic so I want my config to be one of the flakes in the
-          # registry.
-          config.flake = self;
+        nix.registry =
+          (lib'.mapAttrs' (name: flake:
+            lib'.nameValuePair name { inherit flake; })
+            inputs)
+          // {
+            # I'm narcissistic so I want my config to be one of the flakes in the
+            # registry.
+            config.flake = self;
+          };
 
-          # All of the important flakes will be included.
-          nixpkgs.flake = nixpkgs;
-          home-manager.flake = inputs.home-manager;
-          nur.flake = inputs.nur;
-          guix-overlay.flake = inputs.guix-overlay;
-          nixos-generators.flake = inputs.nixos-generators;
-        };
+        # Set several paths for the traditional channels.
+        nix.nixPath =
+          lib'.mapAttrsToList (name: source: "${name}=${source}") inputs
+          ++ [
+            "config=${self}"
+            "/nix/var/nix/profiles/per-user/root/channels"
+          ];
 
         # Set several binary caches.
         nix.settings = {
@@ -170,15 +175,6 @@
 
         nixpkgs.config.permittedInsecurePackages =
           [ "python3.10-django-3.1.14" ];
-
-        # Set several paths for the traditional channels.
-        nix.nixPath =
-          lib'.mapAttrsToList (name: value: "${name}=${value}") inputs
-          ++ [
-            "nixpkgs=${nixpkgs}"
-            "config=${self}"
-            "/nix/var/nix/profiles/per-user/root/channels"
-          ];
 
         # Stallman-senpai will be disappointed.
         nixpkgs.config.allowUnfree = true;
