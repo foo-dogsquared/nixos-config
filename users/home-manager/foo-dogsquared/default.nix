@@ -84,26 +84,27 @@ in {
         "smartplaylist"
         "spotify"
       ];
-      ignore_hidden = "yes";
+      ignore_hidden = true;
       directory = musicDir;
-      ui.colors = "yes";
+      ui.color = true;
 
       import = {
-        link = "no";
-        resume = "yes";
-        incremental = "yes";
-        group_albums = "yes";
+        move = true;
+        link = false;
+        resume = true;
+        incremental = true;
+        group_albums = true;
         log = "beets.log";
       };
 
       match = {
         required = "year label";
-        ignore_video_tracks = "yes";
+        ignore_video_tracks = true;
       };
 
       # Plugins configuration.
       fuzzy.prefix = "-";
-      scrub.auto = "yes";
+      scrub.auto = true;
       smartplaylist = {
         relative_to = musicDir;
         playlist_dir = playlistsDir;
