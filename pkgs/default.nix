@@ -48,6 +48,7 @@ let
       neuwaita-icon-theme = callPackage ./neuwaita-icon-theme { };
       onagre = callPackage ./onagre { };
       pop-launcher = callPackage ./pop-launcher.nix { };
+      pop-launcher-plugin-brightness = callPackage ./pop-launcher-plugin-brightness { };
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
       pop-launcher-plugin-jetbrains = callPackage ./pop-launcher-plugin-jetbrains { };
