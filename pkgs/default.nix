@@ -50,6 +50,7 @@ let
       pop-launcher = callPackage ./pop-launcher.nix { };
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
+      pop-launcher-plugin-jetbrains = callPackage ./pop-launcher-plugin-jetbrains { };
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       thokr = callPackage ./thokr.nix { };
