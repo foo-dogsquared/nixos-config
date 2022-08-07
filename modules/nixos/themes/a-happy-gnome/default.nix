@@ -21,13 +21,6 @@ in
 {
   options.themes.themes.a-happy-gnome = {
     enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
-    xdg.portal = {
-      enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
-        xdg-desktop-portal-gtk
-      ];
-    };
 
     shellExtensions = lib.mkOption {
       type = with lib.types; listOf package;
@@ -100,6 +93,13 @@ in
       enable = true;
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
+    };
+
+    xdg.portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+      ];
     };
 
     # All GNOME-related additional options.
