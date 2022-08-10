@@ -6,7 +6,14 @@
     ./hardware-configuration.nix
 
     (lib.mapHomeManagerUser "foo-dogsquared" {
-      extraGroups = [ "wheel" "audio" "docker" "podman" "networkmanager" ];
+      extraGroups = [
+        "adbusers"
+        "wheel"
+        "audio"
+        "docker"
+        "podman"
+        "networkmanager"
+      ];
       hashedPassword =
         "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
       isNormalUser = true;
@@ -63,18 +70,14 @@
   };
   themes.themes.a-happy-gnome.enable = true;
 
+
+  programs.wezterm.enable = true;
+  programs.adb.enable = true;
+
   environment.systemPackages = with pkgs; [
     # This is installed just to get Geiser to properly work.
     guile_3_0
-
-    # The preferred terminal emulator.
-    wezterm
   ];
-
-  # This is needed for shell integration and applying semantic zones.
-  environment.extraInit = ''
-    source ${pkgs.wezterm}/etc/profiles.d/wezterm.sh
-  '';
 
   # Enable Guix service.
   services.guix-binary.enable = true;
@@ -103,10 +106,19 @@
   # The usual doas config.
   security.doas = {
     enable = true;
-    extraRules = [{
-      groups = [ "wheel" ];
-      persist = true;
-    }];
+    extraRules = [
+      {
+        groups = [ "wheel" ];
+        persist = true;
+      }
+
+      # It is the primary user so we may as well just make this easier to run.
+      {
+        users = [ "foo-dogsquared" ];
+        cmd = "nixos-rebuild";
+        noPass = true;
+      }
+    ];
   };
 
   system.stateVersion = "22.11"; # Yes! I read the comment!
