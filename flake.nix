@@ -141,27 +141,30 @@
         # making them available to our system. This will also prevent the
         # annoying downloads since it always get the latest revision.
         nix.registry =
-          (lib'.mapAttrs' (name: flake:
-            lib'.nameValuePair name { inherit flake; })
-            inputs)
-          // {
-            # I'm narcissistic so I want my config to be one of the flakes in the
-            # registry.
-            config.flake = self;
-          };
+          lib'.mapAttrs'
+            (name: flake:
+              let
+                name' = if (name == "self") then "config" else name;
+              in
+              lib'.nameValuePair name' { inherit flake; })
+            inputs;
 
         # Set several paths for the traditional channels.
         nix.nixPath =
-          lib'.mapAttrsToList (name: source: "${name}=${source}") inputs
+          lib'.mapAttrsToList
+            (name: source:
+              let
+                name' = if (name == "self") then "config" else name;
+              in
+              "${name'}=${source}")
+            inputs
           ++ [
-            "config=${self}"
             "/nix/var/nix/profiles/per-user/root/channels"
           ];
 
-        # Set several binary caches.
         nix.settings = {
+          # Set several binary caches.
           substituters = [
-            "https://cache.nixos.org"
             "https://nix-community.cachix.org"
             "https://foo-dogsquared.cachix.org"
             "https://helix.cachix.org"
@@ -171,6 +174,14 @@
             "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
             "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
           ];
+
+          # Sane config for the package manager.
+          # TODO: Remove this after nix-command and flakes has been considered stable.
+          #
+          # Since we're using flakes to make this possible, we need it. Plus, the
+          # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
+          experimental-features = [ "nix-command" "flakes" ];
+          auto-optimise-store = true;
         };
 
         nixpkgs.config.permittedInsecurePackages =
@@ -190,15 +201,6 @@
         # We live in a Unicode world and dominantly English in technical fields so we'll
         # have to go with it.
         i18n.defaultLocale = "en_US.UTF-8";
-
-        # Sane config for the package manager.
-        # TODO: Remove this after nix-command and flakes has been considered stable.
-        #
-        # Since we're using flakes to make this possible, we need it. Plus, the
-        # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
-        nix.extraOptions = ''
-          experimental-features = nix-command flakes
-        '';
 
         # The global configuration for the home-manager module.
         home-manager.useUserPackages = true;
@@ -238,18 +240,20 @@
         # Hardcoding this is not really great especially if you consider using
         # other locales but its default values are already hardcoded so what
         # the hell. For other users, they would have to do set these manually.
-        xdg.userDirs = let
-          appendToHomeDir = path: "${config.home.homeDirectory}/${path}";
-        in {
-          desktop = appendToHomeDir "Desktop";
-          documents = appendToHomeDir "Documents";
-          download = appendToHomeDir "Downloads";
-          music = appendToHomeDir "Music";
-          pictures = appendToHomeDir "Pictures";
-          publicShare = appendToHomeDir "Public";
-          templates = appendToHomeDir "Templates";
-          videos = appendToHomeDir "Videos";
-        };
+        xdg.userDirs =
+          let
+            appendToHomeDir = path: "${config.home.homeDirectory}/${path}";
+          in
+          {
+            desktop = appendToHomeDir "Desktop";
+            documents = appendToHomeDir "Documents";
+            download = appendToHomeDir "Downloads";
+            music = appendToHomeDir "Music";
+            pictures = appendToHomeDir "Pictures";
+            publicShare = appendToHomeDir "Public";
+            templates = appendToHomeDir "Templates";
+            videos = appendToHomeDir "Videos";
+          };
 
         manual = {
           html.enable = true;
