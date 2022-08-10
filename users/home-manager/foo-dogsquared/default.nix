@@ -64,6 +64,16 @@ in {
         smtpserverport = 587;
         smtpuser = email;
       };
+
+      init.defaultBranch = "main";
+
+      # Shorthand for popular forges ala-Nix flake URL inputs. It's just a fun
+      # little part of the config.
+      url = {
+        "https://github.com".insteadOf = [ "gh:" "github:" ];
+        "https://gitlab.com".insteadOf = [ "gl:" "gitlab:" ];
+        "https://git.sr.ht".insteadOf = [ "sourcehut:" ];
+      };
     };
   };
 
