@@ -12,11 +12,17 @@ let
     dontRewriteSymlinks = true;
   });
 
+  # Some plugins may be packaged busybox-style with multiple plugins in one
+  # binary.
+  plugins = lib.lists.map (p: p.overrideAttrs (prev: {
+    dontRewriteSymlinks = true;
+  })) cfg.plugins;
+
   # Plugins and scripts are assumed to be packaged at
   # `$out/share/pop-launcher`.
   pluginsDir = pkgs.symlinkJoin {
     name = "pop-launcher-plugins-system";
-    paths = builtins.map (p: "${p}/share/pop-launcher") (cfg.plugins ++ [ package ]);
+    paths = builtins.map (p: "${p}/share/pop-launcher") (plugins ++ [ package ]);
   };
 in
 {
@@ -64,9 +70,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.etc.pop-launcher = lib.mkIf (cfg.plugins != []) {
-      source = pluginsDir;
-    };
+    environment.etc.pop-launcher.source = pluginsDir;
 
     environment.systemPackages = with pkgs; [
       pop-launcher
