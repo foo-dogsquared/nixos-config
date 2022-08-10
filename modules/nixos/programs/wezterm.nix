@@ -17,7 +17,7 @@ in {
 
     # This is needed for shell integration and applying semantic zones.
     environment.interactiveShellInit = ''
-      . ${cfg.package}/etc/profiles.d/wezterm.sh
+      . ${cfg.package}/etc/profile.d/wezterm.sh
     '';
   };
 }
