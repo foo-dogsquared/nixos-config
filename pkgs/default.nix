@@ -14,6 +14,7 @@ let
       clidle = callPackage ./clidle.nix { };
       domterm = callPackage ./domterm { };
       freerct = callPackage ./freerct.nix { };
+      furtherance = callPackage ./furtherance { };
       distant = callPackage ./distant.nix { };
       doggo = callPackage ./doggo.nix { };
       gol-c = callPackage ./gol-c.nix { };
