@@ -11,9 +11,6 @@ in
   config = lib.mkIf cfg.enable (
     let
       ytdlpArgs = [
-        # Make a global list of successfully downloaded videos as a cache for yt-dlp.
-        "--download-archive" "${config.services.yt-dlp.archivePath}/videos"
-
         # No overwriting of videos and related files.
         "--no-force-overwrites"
 
@@ -45,9 +42,15 @@ in
         # Prefer Vorbis when audio-only downloads are used.
         "--audio-format" "vorbis"
         "--audio-quality" "2"
+
+        # Not much error since it will always fail.
+        "--no-abort-on-error"
+        "--ignore-errors"
+        "--ignore-no-formats-error"
       ];
+
       ytdlpArchiveVariant = pkgs.writeScriptBin "yt-dlp-archive-variant" ''
-        ${pkgs.yt-dlp}/bin/yt-dlp ${lib.escapeShellArgs ytdlpArgs}
+        ${pkgs.yt-dlp}/bin/yt-dlp ${lib.escapeShellArgs ytdlpArgs} $@
       '';
 
       # Given an attribute set of jobs that contains a list of objects with
@@ -122,7 +125,10 @@ in
 
         # This is applied on all jobs. It is best to be minimal as much as
         # possible for this.
-        extraArgs = ytdlpArgs;
+        extraArgs = ytdlpArgs ++ [
+          # Make a global list of successfully downloaded videos as a cache for yt-dlp.
+          "--download-archive" "${config.services.yt-dlp.archivePath}/videos"
+        ];
 
         jobs = mkJobs {
           extraArgs = [ "--playlist-end" "20" ];
