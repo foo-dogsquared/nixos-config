@@ -70,9 +70,11 @@ in {
       # Shorthand for popular forges ala-Nix flake URL inputs. It's just a fun
       # little part of the config.
       url = {
-        "https://github.com".insteadOf = [ "gh:" "github:" ];
-        "https://gitlab.com".insteadOf = [ "gl:" "gitlab:" ];
-        "https://git.sr.ht".insteadOf = [ "sourcehut:" ];
+        "https://github.com/".insteadOf = [ "gh:" "github:" ];
+        "https://gitlab.com/".insteadOf = [ "gl:" "gitlab:" ];
+        "https://gitlab.gnome.org/".insteadOf = [ "gnome:" ];
+        "https://invent.kde.org/".insteadOf = [ "kde:" ];
+        "https://git.sr.ht/".insteadOf = [ "sourcehut:" ];
       };
     };
   };
