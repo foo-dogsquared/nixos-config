@@ -70,6 +70,14 @@
   };
   themes.themes.a-happy-gnome.enable = true;
 
+  programs.pop-launcher = {
+    enable = true;
+    plugins = with pkgs; [
+      pop-launcher-plugin-duckduckgo-bangs
+      pop-launcher-plugin-jetbrains
+      pop-launcher-plugin-brightness
+    ];
+  };
 
   programs.wezterm.enable = true;
   programs.adb.enable = true;
@@ -77,6 +85,15 @@
   environment.systemPackages = with pkgs; [
     # This is installed just to get Geiser to properly work.
     guile_3_0
+
+    (swh.swh-core.overrideAttrs (super: self: {
+      pythonPath = with swh; [
+        swh-fuse
+        swh-web-client
+        swh-model
+        swh-auth
+      ];
+    }))
   ];
 
   # Enable Guix service.
