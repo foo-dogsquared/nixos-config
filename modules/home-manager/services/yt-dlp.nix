@@ -3,6 +3,8 @@
 let
   cfg = config.services.yt-dlp;
 
+  serviceLevelArgs = lib.escapeShellArgs cfg.extraArgs;
+
   jobType = { name, config, options, ... }: {
     options = {
       urls = lib.mkOption {
@@ -148,12 +150,11 @@ in {
           ExecStart = let
             scriptName =
               "yt-dlp-archive-service-${config.home.username}-${name}";
+            jobLevelArgs = lib.escapeShellArgs value.extraArgs;
+            urls = lib.escapeShellArgs urls;
             archiveScript = pkgs.writeShellScriptBin scriptName ''
-              ${cfg.package}/bin/yt-dlp ${lib.escapeShellArgs cfg.extraArgs} ${
-                lib.escapeShellArgs value.extraArgs
-              } ${lib.escapeShellArgs value.urls} --paths ${
-                lib.escapeShellArg cfg.archivePath
-              }
+              ${cfg.package}/bin/yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
+                                        ${urls} --paths ${lib.escapeShellArg cfg.archivePath}
             '';
           in "${archiveScript}/bin/${scriptName}";
         };

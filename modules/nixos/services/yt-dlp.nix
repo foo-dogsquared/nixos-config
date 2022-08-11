@@ -3,6 +3,8 @@
 let
   cfg = config.services.yt-dlp;
 
+  serviceLevelArgs = lib.escapeShellArgs cfg.extraArgs;
+
   jobType = { name, config, options, ... }: {
     options = {
       urls = lib.mkOption {
@@ -125,7 +127,9 @@ in {
   # There's no need to go to the working directory since yt-dlp has the
   # `--paths` flag.
   config = lib.mkIf cfg.enable {
-    systemd.services = lib.mapAttrs' (name: value:
+    systemd.services = lib.mapAttrs' (name: value: let
+      jobLevelArgs = lib.escapeShellArgs value.extraArgs;
+    in
       lib.nameValuePair "yt-dlp-archive-service-${name}" {
         wantedBy = [ "multi-user.target" ];
         description = "yt-dlp archive job for group '${name}'";
@@ -136,9 +140,8 @@ in {
           mkdir -p ${lib.escapeShellArg cfg.archivePath}
         '';
         script = ''
-          yt-dlp ${lib.escapeShellArgs cfg.extraArgs} ${
-            lib.escapeShellArgs value.extraArgs
-          } ${lib.escapeShellArgs value.urls} --paths ${cfg.archivePath}
+          yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
+                 ${lib.escapeShellArgs value.urls} --paths ${lib.escapeShellArg cfg.archivePath}
         '';
         startAt = value.startAt;
         serviceConfig = {
