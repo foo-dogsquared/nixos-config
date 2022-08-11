@@ -58,6 +58,7 @@ let
       tic-80 = callPackage ./tic-80 { };
       thokr = callPackage ./thokr.nix { };
       segno = callPackage ./segno.nix { };
+      smile = callPackage ./smile { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
       vgc = libsForQt5.callPackage ./vgc { };
       watc = callPackage ./watc { };
