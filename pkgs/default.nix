@@ -5,7 +5,7 @@ with pkgs;
 let
   packages = self:
     let callPackage = newScope self;
-    in {
+    in rec {
       adwcustomizer = callPackage ./adwcustomizer { libadwaita = libadwaita-latest; };
       artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
@@ -68,4 +68,4 @@ let
       ymuse = callPackage ./ymuse { };
     };
 in
-lib.fix (lib.extends overrides packages)
+lib.fix' (lib.extends overrides packages)
