@@ -10,6 +10,7 @@ let
       artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
       awesome-cli = callPackage ./awesome-cli { };
+      cosmic-launcher = callPackage ./cosmic-launcher { };
       cursedgl = callPackage ./cursedgl { };
       clidle = callPackage ./clidle.nix { };
       domterm = callPackage ./domterm { };
