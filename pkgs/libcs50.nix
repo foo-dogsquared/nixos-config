@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "libcs50";
-  version = "10.1.1";
+  version = "11.0.1";
 
   src = fetchFromGitHub {
     owner = "cs50";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256:0ckbhm3287yva94zqls8wi06bwk5f5386h5g1wz8jrlzwxw1s4ib";
+    sha256 = "sha256-/CLPhZecjbJMFcR5HM+Z7XSzpyEyjAN1zjgaXXmGKVc=";
   };
 
   makeFlags = [ "DESTDIR=$(out)" ];
