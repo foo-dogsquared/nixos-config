@@ -86,11 +86,8 @@ in {
         virt-manager
       ];
 
-      # Enable podman just as my main container runtime or something.
-      virtualisation.podman = {
-        enable = true;
-        dockerCompat = true;
-      };
+      # Enable Docker just as my main container runtime or something.
+      virtualisation.docker.enable = true;
 
       # Enable libvirt for muh qemu.
       virtualisation.libvirtd = {

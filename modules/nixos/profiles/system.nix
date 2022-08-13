@@ -44,6 +44,8 @@ in {
         serviceConfig.Type = "oneshot";
       };
 
+      programs.extra-container.enable = true;
+
       # Enable font-related options for more smoother and consistent experience.
       fonts.fontconfig.enable = true;
 

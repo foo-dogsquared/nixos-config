@@ -17,6 +17,7 @@ in {
       home.packages = with pkgs; [
         aseprite # Pixel art wannabe tool.
         blender # 3D modelling wannabe tool.
+        emulsion-palette # Manage your color palettes.
         inkscape # Illustration wannabe tool.
         gimp # Photo editing wannabe tool.
         krita # Digital art wannabe tool.

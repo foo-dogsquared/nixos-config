@@ -22,10 +22,10 @@ rec {
             home.homeDirectory = homeDirectory;
           }
 
-          (lib.getUser "home-manager" user)
+          (getUser "home-manager" user)
         ];
       };
-    users.users."${user}" = defaultUserConfig // settings // absoluteOverrides;
+      users.users."${user}" = defaultUserConfig // settings // absoluteOverrides;
   };
 
   getSecret = path: ../secrets/${path};

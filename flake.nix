@@ -78,7 +78,7 @@
       # The order here is important(?).
       overlays = [
         # Put my custom packages to be available.
-        (final: prev: import ./pkgs { pkgs = prev; })
+        self.overlays.default
 
         # Putting a list for inputs without overlays.
         (final: prev: {
@@ -133,6 +133,8 @@
           inputs.sops-nix.nixosModules.sops
           inputs.guix-overlay.nixosModules.guix-binary
         ];
+
+        environment.extraOutputsToInstall = [ "doc" "devdoc" "info" ];
 
         # Bleeding edge, baybee!
         nix.package = pkgs.nixUnstable;
