@@ -22,13 +22,13 @@
 # libadwaita.
 python3Packages.buildPythonApplication rec {
   pname = "adwcustomizer";
-  version = "2022-08-07";
+  version = "0.1.0";
 
   src = fetchFromGitHub {
-    owner = "ArtyIF";
+    owner = "AdwCustomizerTeam";
     repo = "AdwCustomizer";
-    rev = "d20bf680672b53f8be0c046b99e704fad29e7b2d";
-    sha256 = "sha256-Js6YXPcMOaEOnfAlQ01WKDdOBCcnLOHnznEN8WxIu0s=";
+    rev = version;
+    sha256 = "sha256-3VHGk27MIgu+15OQeEmX8zfTCj/TtFtVv3Cf/iXxb/c=";
   };
 
   patches = [
@@ -37,6 +37,10 @@ python3Packages.buildPythonApplication rec {
 
   format = "other";
   dontWrapGApps = true;
+
+  postInstall = ''
+    python -m pip install $src/monet/*.whl --no-cache --no-index --no-warn-script-location --prefix="$out" $pipInstallFlags
+  '';
 
   nativeBuildInputs = [
     wrapGAppsHook4
@@ -49,16 +53,22 @@ python3Packages.buildPythonApplication rec {
     gtk4
   ];
 
-  propagatedBuildInputs = [
+  propagatedNativeBuildInputs = [
     gobject-introspection
     appstream-glib
     glib
+  ];
+
+  propagatedBuildInputs = [
     libadwaita
     libportal
     libportal-gtk4
   ] ++ (with python3Packages; [
     pygobject3
     anyascii
+    pillow
+    pip
+    regex
   ]);
 
   preFixup = ''
@@ -66,7 +76,7 @@ python3Packages.buildPythonApplication rec {
   '';
 
   meta = with lib; {
-    homepage = "https://github.com/ArtyIF/AdwCustomizer";
+    homepage = "https://github.com/AdwCustomizerTeam/AdwCustomizer";
     description = "Customize libadwaita and GTK3 apps (with adw-gtk3)";
     license = licenses.mit;
   };
