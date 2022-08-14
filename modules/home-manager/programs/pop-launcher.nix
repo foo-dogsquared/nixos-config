@@ -12,11 +12,18 @@ let
     dontRewriteSymlinks = true;
   });
 
+  # Some plugins may be packaged ala-busybox with multiple plugins coming from
+  # the same binary. Similar reasons as to why we don't want to rewrite
+  # symlinks with the main package.
+  plugins = lib.map (p: p.overrideAttrs (prev: {
+    dontRewriteSymlinks = true;
+  })) cfg.plugins;
+
   # Plugins and scripts are assumed to be packaged at
   # `$out/share/pop-launcher`.
   pluginsDir = pkgs.symlinkJoin {
     name = "pop-launcher-plugins-system";
-    paths = builtins.map (p: "${p}/share/pop-launcher") (cfg.plugins ++ [ package ]);
+    paths = builtins.map (p: "${p}/share/pop-launcher") (plugins ++ [ package ]);
   };
 in
 {
@@ -64,12 +71,8 @@ in
   config = lib.mkIf cfg.enable {
     # The local plugin path is hardcoded so we'll also do that instead of
     # properly setting in `xdg.dataFile`.
-    home.file.".local/share/pop-launcher" = lib.mkIf (cfg.plugins != []) {
-      source = pluginsDir;
-    };
+    home.file.".local/share/pop-launcher".source = pluginsDir;
 
-    home.packages = with pkgs; [
-      pop-launcher
-    ];
+    home.packages = [ package ];
   };
 }

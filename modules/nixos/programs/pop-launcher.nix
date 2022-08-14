@@ -72,8 +72,6 @@ in
   config = lib.mkIf cfg.enable {
     environment.etc.pop-launcher.source = pluginsDir;
 
-    environment.systemPackages = with pkgs; [
-      pop-launcher
-    ];
+    environment.systemPackages = [ package ];
   };
 }
