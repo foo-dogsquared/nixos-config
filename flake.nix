@@ -108,12 +108,14 @@
         import ./lib { lib = prev; }
         // import ./lib/private.nix { lib = final; });
 
+      withExtraArgs = system: { inherit inputs self system; };
+
       mkHost = { system ? defaultSystem, extraModules ? [ ] }:
         (lib'.makeOverridable inputs.nixpkgs.lib.nixosSystem) {
           # The system of the NixOS system.
           inherit system;
           lib = lib';
-          specialArgs = { inherit system inputs self; };
+          specialArgs = withExtraArgs system;
           modules =
             # Append with our custom NixOS modules from the modules folder.
             (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
@@ -210,7 +212,7 @@
         home-manager.sharedModules =
           lib'.modulesToList (lib'.filesToAttr ./modules/home-manager)
           ++ [ userDefaultConfig ];
-        home-manager.extraSpecialArgs = { inherit inputs system self; };
+        home-manager.extraSpecialArgs = withExtraArgs system;
 
         # Enabling some things for sops.
         programs.gnupg.agent = {
@@ -223,7 +225,7 @@
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:
         inputs.home-manager.lib.homeManagerConfiguration {
-          extraSpecialArgs = { inherit system self inputs; };
+          extraSpecialArgs = withExtraArgs system;
           lib = lib';
           pkgs = nixpkgs.legacyPackages.${builtins.currentSystem};
           modules =
