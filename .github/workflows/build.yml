@@ -1,5 +1,8 @@
 name: "Building derivations"
 on: [pull_request, push]
+env:
+  NIXPKGS_ALLOW_INSECURE: "1"
+  NIXPKGS_ALLOW_BROKEN: "1"
 jobs:
   check-outputs:
     runs-on: ubuntu-latest
@@ -8,8 +11,10 @@ jobs:
       - uses: cachix/install-nix-action@v16
         with:
           nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            keep-going = true
       - name: Check flake outputs
-        run: NIXPKGS_ALLOW_INSECURE=1 nix flake check --impure
+        run: nix flake check --impure
 
   build-custom-packages:
     runs-on: ubuntu-latest
@@ -25,7 +30,7 @@ jobs:
           name: foo-dogsquared
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build custom packages
-        run: nix shell nixpkgs#nix-build-uncached --command nix-build-uncached ./pkgs
+        run: nix shell nixpkgs#nix-build-uncached --command nix-build-uncached ./pkgs --impure
 
   build-hosts:
     runs-on: ubuntu-latest
@@ -36,4 +41,4 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Build NixOS configurations
         run: |
-          nix build .#nixosConfigurations.ni.config.system.build.toplevel
+          nix build .#nixosConfigurations.ni.config.system.build.toplevel --impure
