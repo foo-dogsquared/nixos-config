@@ -46,14 +46,17 @@ in {
         inherit key;
         sopsFile = lib.getSecret "backup-archive.yaml";
         name = "borg-backup/${key}";
-      }; in {
-      "borg-backup/patterns/home" = getKey "borg-patterns/home";
-      "borg-backup/patterns/etc" = getKey "borg-patterns/etc";
-      "borg-backup/patterns/keys" = getKey "borg-patterns/keys";
-      "borg-backup/patterns/remote-backup" = getKey "borg-patterns/remote-backup";
-      "borg-backup/ssh-key" = getKey "ssh-key";
-      "borg-backup/password" = getKey "password";
-    };
+      };
+      getSecrets = keys:
+        lib.listToAttrs (lib.lists.map (key: lib.nameValuePair key (getKey key)) keys);
+    in getSecrets [
+      "borg-patterns/home"
+      "borg-patterns/etc"
+      "borg-patterns/keys"
+      "borg-patterns/remote-backup"
+      "ssh-key"
+      "password"
+    ];
 
     fileSystems."/mnt/external-storage" = {
       device = "/dev/disk/by-uuid/665A391C5A38EB07";
@@ -100,9 +103,9 @@ in {
     services.borgbackup.jobs = {
       local-archive = borgJobCommonSetting {
         patterns = with config.sops; [
-          secrets."borg-backup/patterns/home".path
-          secrets."borg-backup/patterns/etc".path
-          secrets."borg-backup/patterns/keys".path
+          secrets."borg-backup/borg-patterns/home".path
+          secrets."borg-backup/borg-patterns/etc".path
+          secrets."borg-backup/borg-patterns/keys".path
         ];
       } // {
         doInit = false;
@@ -113,9 +116,9 @@ in {
 
       local-external-drive = borgJobCommonSetting {
         patterns = with config.sops; [
-          secrets."borg-backup/patterns/home".path
-          secrets."borg-backup/patterns/etc".path
-          secrets."borg-backup/patterns/keys".path
+          secrets."borg-backup/borg-patterns/home".path
+          secrets."borg-backup/borg-patterns/etc".path
+          secrets."borg-backup/borg-patterns/keys".path
         ];
       } // {
         doInit = false;
@@ -126,7 +129,7 @@ in {
 
       remote-borgbase = borgJobCommonSetting {
         patterns = with config.sops; [
-          secrets."borg-backup/patterns/remote-backup".path
+          secrets."borg-backup/borg-patterns/remote-backup".path
         ];
       } // {
         repo = "r6o30viv@r6o30viv.repo.borgbase.com:repo";
