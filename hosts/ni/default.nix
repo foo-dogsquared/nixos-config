@@ -19,6 +19,9 @@
       isNormalUser = true;
       createHome = true;
       home = "/home/foo-dogsquared";
+      openssh.authorizedKeys.keyFiles = [
+        ../../users/home-manager/foo-dogsquared/user-key.pub
+      ];
     })
   ];
 
@@ -140,4 +143,3 @@
 
   system.stateVersion = "22.11"; # Yes! I read the comment!
 }
-
