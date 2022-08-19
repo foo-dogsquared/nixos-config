@@ -3,6 +3,13 @@ on:
   schedule:
     # Every week on Friday.
     - cron: '0 0 * * 5'
+env:
+  NIXPKGS_ALLOW_INSECURE: "1"
+  NIXPKGS_ALLOW_BROKEN: "1"
+
+  # GitHub bot
+  GIT_AUTHOR_NAME: "github-actions[bot]"
+  GIT_AUTHOR_EMAIL: "github-actions[bot]@users.noreply.github.com"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,21 +17,18 @@ jobs:
       - uses: actions/checkout@v3
       - uses: cachix/install-nix-action@v16
         with:
+          # TODO: This is a terrible idea, pls switch to stable channel at some point.
           nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            keep-going = true
       - name: Update flake inputs
         run: |
-          nix shell nixpkgs#git
-
-          # This is set by the GitHub Actions bot just to make identifying which commits are automated.
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-
           nix flake update --commit-lock-file \
             --commit-lockfile-summary 'flake.lock: update inputs'
       - name: Build custom packages
-        run: nix shell nixpkgs#nix-build-uncached --command nix-build-uncached ./pkgs
+        run: nix build --impure --file ./pkgs
       - name: Build NixOS configurations
-        run: nix build .#nixosConfigurations.ni.config.system.build.toplevel
+        run: nix build --impure .#nixosConfigurations.ni.config.system.build.toplevel
       - name: Push updates to remote
         run: |
           git remote remove origin

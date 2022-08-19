@@ -30,7 +30,7 @@ jobs:
           name: foo-dogsquared
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build custom packages
-        run: nix shell nixpkgs#nix-build-uncached --command nix-build-uncached ./pkgs --impure
+        run: nix build -f ./pkgs --impure
 
   build-hosts:
     runs-on: ubuntu-latest
