@@ -99,7 +99,7 @@
       ];
 
       defaultSystem = inputs.flake-utils.lib.system.x86_64-linux;
-      systems = with inputs.flake-utils.lib.system; [ x86_64-linux ];
+      systems = with inputs.flake-utils.lib.system; [ defaultSystem ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
       # We're considering this as the variant since we'll export the custom
@@ -108,14 +108,14 @@
         import ./lib { lib = prev; }
         // import ./lib/private.nix { lib = final; });
 
-      withExtraArgs = system: { inherit inputs self system; };
+      extraArgs = { inherit inputs self; };
 
       mkHost = { system ? defaultSystem, extraModules ? [ ] }:
         (lib'.makeOverridable inputs.nixpkgs.lib.nixosSystem) {
           # The system of the NixOS system.
           inherit system;
           lib = lib';
-          specialArgs = withExtraArgs system;
+          specialArgs = extraArgs;
           modules =
             # Append with our custom NixOS modules from the modules folder.
             (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
@@ -212,7 +212,7 @@
         home-manager.sharedModules =
           lib'.modulesToList (lib'.filesToAttr ./modules/home-manager)
           ++ [ userDefaultConfig ];
-        home-manager.extraSpecialArgs = withExtraArgs system;
+        home-manager.extraSpecialArgs = extraArgs;
 
         # Enabling some things for sops.
         programs.gnupg.agent = {
@@ -225,7 +225,7 @@
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:
         inputs.home-manager.lib.homeManagerConfiguration {
-          extraSpecialArgs = withExtraArgs system;
+          extraSpecialArgs = extraArgs;
           lib = lib';
           pkgs = nixpkgs.legacyPackages.${builtins.currentSystem};
           modules =
