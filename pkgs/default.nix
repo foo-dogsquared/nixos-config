@@ -54,6 +54,7 @@ let
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
       pop-launcher-plugin-jetbrains = callPackage ./pop-launcher-plugin-jetbrains { };
+      python-material-color-utilities = callPackage ./python-material-color-utilities { };
       swh = callPackage ./software-heritage { python3Packages = python310Packages; };
       text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
