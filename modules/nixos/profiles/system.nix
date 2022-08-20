@@ -31,18 +31,32 @@ in {
       services.flatpak.enable = true;
       xdg.portal.enable = true;
 
-      # Install the usual Flatpak remotes.
-      systemd.services.install-flatpak-remotes = {
-        after = [ "network.target" ];
-        path = [ pkgs.flatpak ];
-        script = ''
-          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
-          flatpak remote-add --if-not-exists gnome-nightly https://nightly.gnome.org/gnome-nightly.flatpakrepo
-          flatpak remote-add --if-not-exists kdeapps https://distribute.kde.org/kdeapps.flatpakrepo
-        '';
-        serviceConfig.Type = "oneshot";
-      };
+      environment.etc =
+        let
+          urls = {
+            "flathub" = {
+              url = "https://flathub.org/repo/flathub.flatpakrepo";
+              sha256 = "sha256:0fm0zvlf4fipqfhazx3jdx1d8g0mvbpky1rh6riy3nb11qjxsw9k";
+            };
+            "flathub-beta" = {
+              url = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
+              sha256 = "sha256:01kj1yza51dd4vcr04j49lx0mnivldpzxyny4zq3jilxkwyawb2q";
+            };
+            "gnome-nightly" = {
+              url = "https://nightly.gnome.org/gnome-nightly.flatpakrepo";
+              sha256 = "sha256:10y9a50m2jz8p3avd8kqw5i7lyl71xwmc2mnrdicv0mgj1b6wndc";
+            };
+            "kdeapps" = {
+              url = "https://distribute.kde.org/kdeapps.flatpakrepo";
+              sha256 = "sha256:18kscw44ff6bjx1abvffzk0js01w51vgh4h0rwpa76hc0r0ps8bl";
+            };
+          };
+        in
+        lib.mapAttrs'
+          (name: remote: lib.nameValuePair "flatpak/remotes.d/${name}.flatpakrepo" {
+            source = pkgs.fetchurl remote;
+          })
+          urls;
 
       programs.extra-container.enable = true;
 
@@ -73,6 +87,7 @@ in {
         # this is my preferred way of managing anyways.
         wireplumber.enable = true;
 
+        # Enable all the bi-...bridges.
         alsa.enable = true;
         alsa.support32Bit = true;
         pulse.enable = true;
@@ -156,10 +171,7 @@ in {
         services.clean-log = {
           description = "Weekly log cleanup";
           documentation = [ "man:journalctl(1)" ];
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/bin/journalctl --vacuum-time=30d";
-          };
+          script = "${pkgs.systemd}/bin/journalctl --vacuum-time=30d";
         };
 
         timers.clean-log = {
@@ -179,6 +191,7 @@ in {
         enable = true;
         flake = "github:foo-dogsquared/nixos-config";
         allowReboot = true;
+        persistent = true;
         rebootWindow = {
           lower = "22:00";
           upper = "00:00";
