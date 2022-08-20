@@ -5,9 +5,19 @@ let
 in {
   options.profiles.filesystem = {
     archive.enable = lib.mkOption {
+      type = lib.types.bool;
+      description = ''
+        Add the archive storage to the list of filesystems.
+      '';
+      default = false;
     };
 
     external-hdd.enable = lib.mkOption {
+      type = lib.types.bool;
+      description = ''
+        Add the external hard drive to the list of filesystems.
+      '';
+      default = false;
     };
   };
 
