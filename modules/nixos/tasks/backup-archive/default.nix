@@ -42,13 +42,14 @@ in {
 
   config = lib.mkIf cfg.enable {
     sops.secrets = let
+      borgSecretsPath = key: "borg-backup/${key}";
       getKey = key: {
         inherit key;
         sopsFile = lib.getSecret "backup-archive.yaml";
-        name = "borg-backup/${key}";
+        name = borgSecretsPath key;
       };
       getSecrets = keys:
-        lib.listToAttrs (lib.lists.map (key: lib.nameValuePair key (getKey key)) keys);
+        lib.listToAttrs (lib.lists.map (key: lib.nameValuePair (borgSecretsPath key) (getKey key)) keys);
     in getSecrets [
       "borg-patterns/home"
       "borg-patterns/etc"
