@@ -6,7 +6,6 @@ let
   packages = self:
     let callPackage = newScope self;
     in rec {
-      adwcustomizer = callPackage ./adwcustomizer { libadwaita = libadwaita-latest; };
       artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
       awesome-cli = callPackage ./awesome-cli { };
@@ -26,6 +25,7 @@ let
         callPackage ./gnome-shell-extension-fly-pie.nix { };
       gnome-shell-extension-pop-shell =
         callPackage ./gnome-shell-extension-pop-shell.nix { };
+      gradience = callPackage ./gradience { libadwaita = libadwaita-latest; };
       guile-config = callPackage ./guile-config.nix { };
       guile-hall = callPackage ./guile-hall.nix { };
       hush-shell = callPackage ./hush-shell.nix { };

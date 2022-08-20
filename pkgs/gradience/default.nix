@@ -8,6 +8,7 @@
 , glib
 , desktop-file-utils
 , gettext
+, librsvg
 , blueprint-compiler
 , python3Packages
 , appstream-glib
@@ -16,60 +17,53 @@
 , libportal
 , libportal-gtk4
 , gobject-introspection
+, python-material-color-utilities
 }:
 
 # Not all parts of the application works with the current nixpkgs version of
 # libadwaita.
 python3Packages.buildPythonApplication rec {
   pname = "adwcustomizer";
-  version = "0.1.0";
+  version = "unstable-2022-08-20";
 
   src = fetchFromGitHub {
     owner = "AdwCustomizerTeam";
     repo = "AdwCustomizer";
-    rev = version;
-    sha256 = "sha256-3VHGk27MIgu+15OQeEmX8zfTCj/TtFtVv3Cf/iXxb/c=";
+    rev = "4ad3759a3cd7e034cd6c23fd5bfd2c2e1f3623ef";
+    sha256 = "sha256-Z6fYAXr5HEoLxmlGfLToF7WXPoJGaQmLQHH7oG333Wo=";
   };
-
-  patches = [
-    ./patches/update-non-flatpak-env.patch
-  ];
 
   format = "other";
   dontWrapGApps = true;
 
-  postInstall = ''
-    python -m pip install $src/monet/*.whl --no-cache --no-index --no-warn-script-location --prefix="$out" $pipInstallFlags
-  '';
-
   nativeBuildInputs = [
-    wrapGAppsHook4
+    appstream-glib
+    blueprint-compiler
+    desktop-file-utils
+    gettext
+    glib
+    gobject-introspection
     meson
     ninja
     pkg-config
-    desktop-file-utils
-    gettext
-    blueprint-compiler
+    wrapGAppsHook4
+  ];
+
+  buildInputs = [
     gtk4
-  ];
-
-  propagatedNativeBuildInputs = [
-    gobject-introspection
-    appstream-glib
-    glib
-  ];
-
-  propagatedBuildInputs = [
     libadwaita
     libportal
     libportal-gtk4
-  ] ++ (with python3Packages; [
+    librsvg
+  ];
+
+  propagatedBuildInputs = with python3Packages; [
     pygobject3
     anyascii
-    pillow
     pip
-    regex
-  ]);
+  ] ++ [
+    python-material-color-utilities
+  ];
 
   preFixup = ''
     makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
