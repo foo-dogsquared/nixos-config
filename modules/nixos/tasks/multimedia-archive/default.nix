@@ -94,30 +94,7 @@ in
           "multimedia-archive/secrets-config" = getKey "secrets-config";
         };
 
-      fileSystems."${mountName}" = {
-        device = "/dev/disk/by-uuid/6ba86a30-5fa4-41d9-8354-fa8af0f57f49";
-        fsType = "btrfs";
-        noCheck = true;
-        options = [
-          # These are btrfs-specific mount options which can found in btrfs.5
-          # manual page.
-          "subvol=@"
-          "noatime"
-          "compress=zstd:9"
-          "space_cache=v2"
-
-          # General mount options from mount.5 manual page.
-          "noauto"
-          "nofail"
-          "user"
-
-          # See systemd.mount.5 and systemd.automount.5 manual page for more
-          # details.
-          "x-systemd.automount"
-          "x-systemd.idle-timeout=2"
-          "x-systemd.device-timeout=2"
-        ];
-      };
+      profiles.filesystem.archive.enable = true;
 
       services.yt-dlp = {
         enable = true;
