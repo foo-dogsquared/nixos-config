@@ -61,6 +61,7 @@ let
       thokr = callPackage ./thokr.nix { };
       segno = callPackage ./segno.nix { };
       smile = callPackage ./smile { };
+      vipsdisp = callPackage ./vipsdisp { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
       vgc = libsForQt5.callPackage ./vgc { };
       watc = callPackage ./watc { };
