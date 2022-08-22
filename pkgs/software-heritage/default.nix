@@ -2,8 +2,7 @@
 
 lib.fix' (self: let
   callPackage = newScope self;
-in {
-  recurseForDerivations = true;
+in lib.recurseIntoAttrs {
   attrs-strict = callPackage ./attrs-strict.nix { inherit python3Packages; };
   aiohttp-utils = callPackage ./aiohttp-utils.nix { inherit python3Packages; };
 
