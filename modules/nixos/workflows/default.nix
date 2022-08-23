@@ -3,14 +3,15 @@
 # You can also show your desktop being modularized like this.
 { config, options, lib, pkgs, ... }:
 
-let cfg = config.themes;
+let cfg = config.workflows;
 in {
-  options.themes.disableLimit = lib.mkOption {
+  options.workflows.disableLimit = lib.mkOption {
     type = lib.types.bool;
     default = false;
     description = ''
-      Whether to unlock the limit for themes. Since themes may overlap with
-      packages and configurations, this should be enabled at your own risk.
+      Whether to unlock the limit for workflows. Since workflows may overlap
+      with packages and configurations, this should be enabled at your own
+      risk.
     '';
   };
 
@@ -20,7 +21,7 @@ in {
   config = {
     assertions = [{
       assertion =
-        let enabledThemes = lib.countAttrs (_: theme: theme.enable) cfg.themes;
+        let enabledThemes = lib.countAttrs (_: theme: theme.enable) cfg.workflows;
         in cfg.disableLimit || (enabledThemes <= 1);
       message = "Can't have more than one theme enabled at any given time.";
     }];

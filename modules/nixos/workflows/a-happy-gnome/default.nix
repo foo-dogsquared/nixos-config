@@ -2,7 +2,7 @@
 
 let
   name = "a-happy-gnome";
-  cfg = config.themes.themes.a-happy-gnome;
+  cfg = config.workflows.workflows.a-happy-gnome;
 
   enabledExtensions = pkgs.writeTextFile {
     name = "a-happy-gnome-extensions";
@@ -19,7 +19,7 @@ let
   '';
 in
 {
-  options.themes.themes.a-happy-gnome = {
+  options.workflows.workflows.a-happy-gnome = {
     enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
 
     shellExtensions = lib.mkOption {

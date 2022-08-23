@@ -71,7 +71,7 @@
     multimedia-archive.enable = true;
     backup-archive.enable = true;
   };
-  themes.themes.a-happy-gnome.enable = true;
+  workflows.workflows.a-happy-gnome.enable = true;
 
   programs.pop-launcher = {
     enable = true;

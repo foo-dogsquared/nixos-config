@@ -1,9 +1,9 @@
 { config, options, lib, pkgs, ... }:
 
 let
-  cfg = config.themes.themes.knome;
+  cfg = config.workflows.workflows.knome;
 in {
-  options.themes.themes.knome.enable = lib.mkEnableOption "KNOME, an attempt to bring as much GNOME to KDE Plasma";
+  options.workflows.workflows.knome.enable = lib.mkEnableOption "KNOME, an attempt to bring as much GNOME to KDE Plasma";
 
   config = lib.mkIf cfg.enable {
     services.xserver = {
