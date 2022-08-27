@@ -3,6 +3,7 @@
 { mkShell
 , lib
 , diffoscope
+, desktop-file-utils
 , flatpak-builder
 , editorconfig-checker
 , editorconfig-core-c
@@ -13,6 +14,7 @@
 mkShell {
   packages = [
     dasel # For converting various data into something.
+    desktop-file-utils # Interacting with the desktop entry files are a must.
     diffoscope # `diff(1)` on steroids.
     flatpak-builder # A required tool.
     editorconfig-checker # We're most likely writing manifests in YAML so I need them consistent spaces.
