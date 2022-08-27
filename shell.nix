@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> { } }:
 
 pkgs.mkShell {
-  packages = with pkgs; [ asciidoctor age git nixpkgs-fmt rnix-lsp sops ];
+  packages = with pkgs; [ asciidoctor age git jq nixpkgs-fmt rnix-lsp sops ];
 }

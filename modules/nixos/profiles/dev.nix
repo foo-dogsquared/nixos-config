@@ -62,11 +62,19 @@ in {
         hut # And one for Sourcehut.
         act # Finally, a local environment for testing GitHub workflows.
       ];
+
+      systemd.user.services.upgrade-nix-profile = {
+        description = ''
+          Update packages installed through `nix profile`.
+        '';
+        enable = false;
+        script = "nix profile upgrade '.*'";
+      };
     })
 
     (lib.mkIf cfg.shell.enable {
       environment.systemPackages = with pkgs; [
-        alacritty # The terminal emu that can run fast.
+        bandwhich # Sniffing your packets.
         lazygit # Git interface for the lazy.
         fd # Oh nice, a more reliable `find`.
         ripgrep # On nice, a more reliable `grep`.

@@ -75,6 +75,7 @@ in {
         "https://gitlab.gnome.org/".insteadOf = [ "gnome:" ];
         "https://invent.kde.org/".insteadOf = [ "kde:" ];
         "https://git.sr.ht/".insteadOf = [ "sh:" "sourcehut:" ];
+        "https://git.savannah.nongnu.org/git/".insteadOf = [ "sv:" "savannah:" ];
       };
     };
   };
