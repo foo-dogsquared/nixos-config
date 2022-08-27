@@ -14,13 +14,13 @@
 # reproducible.
 stdenv.mkDerivation rec {
   pname = "vgc";
-  version = "2022-08-06";
+  version = "unstable-2022-08-27";
 
   src = fetchFromGitHub {
     owner = "vgc";
     repo = "vgc";
-    rev = "f0d99b02b6bb63cebee3de8f40dab72732da3271";
-    sha256 = "sha256-LZG73LSM+q1TFFs+UkGB8S4eWPJu8VvRJsaGcqyTnu0=";
+    rev = "e7db360f27b059c3dfd0e002c6b29f6a558edd47";
+    sha256 = "sha256-yHQKOMBfMVS9+mwulgTEFOl9bE5CA+psJUaE432YTmo=";
     fetchSubmodules = true;
   };
 
