@@ -14,6 +14,10 @@
 
   fileSystems."/" = {
     label = "root";
+    options = [
+      "defaults"
+      "noatime"
+    ];
     fsType = "ext4";
   };
 

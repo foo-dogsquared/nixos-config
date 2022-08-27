@@ -9,8 +9,10 @@
   };
 
   inputs = {
-    # I know NixOS can be stable but we're going cutting edge, baybee!
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # I know NixOS can be stable but we're going cutting edge, baybee! While
+    # `nixpkgs-unstable` branch could be faster delivering updates, it is
+    # looser when it comes to stability for the entirety of this configuration.
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # We're using this library for other functions, mainly testing.
     flake-utils.url = "github:numtide/flake-utils";
@@ -127,13 +129,14 @@
       # The default configuration for our NixOS systems.
       hostDefaultConfig = { pkgs, system, ... }: {
         # Only use imports as minimally as possible with the absolute
-        # requirements of a host.
+        # requirements of a host. On second thought, only on flakes with
+        # optional NixOS modules.
         imports = [
           inputs.home-manager.nixosModules.home-manager
           inputs.nix-ld.nixosModules.nix-ld
           inputs.nur.nixosModules.nur
           inputs.sops-nix.nixosModules.sops
-          inputs.guix-overlay.nixosModules.guix-binary
+          inputs.guix-overlay.nixosModules.guix
         ];
 
         environment.extraOutputsToInstall = [ "doc" "devdoc" "info" ];

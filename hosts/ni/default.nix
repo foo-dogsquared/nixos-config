@@ -100,7 +100,7 @@
   ];
 
   # Enable Guix service.
-  services.guix-binary.enable = true;
+  services.guix.enable = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
