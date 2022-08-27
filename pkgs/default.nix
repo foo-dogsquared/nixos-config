@@ -28,6 +28,7 @@ let
       gradience = callPackage ./gradience { libadwaita = libadwaita-latest; };
       guile-config = callPackage ./guile-config.nix { };
       guile-hall = callPackage ./guile-hall.nix { };
+      gnome-info-collect = callPackage ./gnome-info-collect { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
       libadwaita-latest = libadwaita.overrideAttrs (super: self: {
