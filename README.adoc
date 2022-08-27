@@ -21,6 +21,8 @@ Everything else is fine and dandy.
 
 Oh right...
 Don't expect everything is working in each commit but I'm doing my best to make them build successfully in each, yeah?
+
+Also, this configuration is expected to use under non-restricted evaluation mode.
 ====
 
 Hey there, fellow traveler!
@@ -32,7 +34,7 @@ Hope to see you on the other side!
 
 === Installation
 
-Since this uses Nix flakes, you should have Nix v2.4 and above installed.
+Since this uses Nix flakes, you should have Nix v2.8 and above installed.
 
 If you're going to install one of my NixOS configs, be sure to download the unstable versions from link:https://releases.nixos.org/?prefix=nixos/unstable/[their release page].
 As an additional option, you can also use link:https://github.com/foo-dogsquared/nixos-config/releases/tag/latest[my personalized NixOS installers] which is primarily intended for me configs.
@@ -51,6 +53,30 @@ To install it, run the `nixos-install --flake github:foo-dogsquared/nixos-config
 TIP: If you found some error regarding something in restricted mode, you can run the installation with `--impure` flag (i.e., `nixos-install --impure --flake github:foo-dogsquared/nixos-config#ni`).
 
 
+=== Channels support
+
+While this primarily uses flakes as its main form of distribution, this project does keep some use cases for traditional channels.
+The entry point is found at link:./default.nix[`./default.nix`]
+However, you have to keep some limitations and guidelines in mind.
+
+* It exports an attribute based from the link:https://github.com/nix-community/NUR/[NUR template].
++
+--
+Several exports includes...
+
+* My custom library at `lib`.
+* Custom NixOS modules at `modules`.
+* Custom home-manager modules at `hmModules`.
+* An overlay of my custom packages at `overlays.foo-dogsquared-pkgs`.
+* My packages as the rest of the top-level attributes from the attrset.
+--
+
+* Keep in mind it doesn't export the NixOS hosts and home-manager user configurations.
+It would be pointless as it is duplicating effort plus I __really like managing my NixOS config more with the flakes way__ compared to setting up channels.
+It has a lot of advantages such as the ease of provisioning and updating your setups along with its dependencies, enforcing certain values in a certain attribute that can be seen in the revised Nix CLI, and nicer interface overall.
+While possible with channels, this is just better experience overall and I have no interest in maintaining setups in both ways.
+
+
 [#whats-in-my-flake]
 === What's in my flake?
 
@@ -63,6 +89,21 @@ It supports the default list of systems as defined from link:https://github.com/
 * `overlays` contains the overlay for extending nixpkgs with my packages.
 If you want to use my packages alongside the nixpkgs attribute then this is what you're looking for.
 
+* `homeManagerModules` are where my link:./modules/home-manager[custom home-manager modules] to be exported.
+footnote:[This is more useful than my NixOS modules.]
+
+* `nixosModules` are composed from NixOS modules defined in link:./modules/nixos[`./modules/nixos`].
+It can be used as additional modules for your own NixOS config in case you want to use mine for whatever reason.
+There are some niceties in there.
++
+--
+A few examples include:
+
+* A NixOS module for Pop launcher plugins and scripts.
+* Several service modules for archiving with link:https://github.com/yt-dlp/yt-dlp[yt-dlp], link:https://github.com/mikf/gallery-dl/[gallery-dl], and link:https://archivebox.io/[ArchiveBox].
+* My themes which contain full desktop environments which is nice for quickly initializing a NixOS configuration.
+--
+
 * `devShells` from link:./shells/[my custom environments].
 Similar to `homeManagerConfigurations`, you can easily use it outside of NixOS.
 
@@ -72,17 +113,11 @@ The neat thing about it is you can easily install it in a non-NixOS Linux distro
 * `nixosConfigurations` which is where you can install my various NixOS configurations directly (e.g., `nixos-install --flake MY_FLAKE_URL#HOST`).
 This mainly uses the link:./hosts/[hosts configuration].
 
-* `homeManagerModules` are where my link:./modules/home-manager[custom home-manager modules] to be exported.
-footnote:[This is more useful than my NixOS modules.]
-
-* `nixosModules` are composed from NixOS modules defined in link:./modules/nixos[`./modules/nixos`].
-It can be used as additional modules for your own NixOS config in case you want to use mine for whatever reason.
-footnote:[I don't know why did I put it there but eh...]
-
 * `templates` which contains my templates.
 Though, these are just templates mostly for my own purposes so it is not as useful as the other outputs.
 
 * `lib` is defined from link:./lib/[my custom library].
+It mainly assumes it is to be included in nixpkgs standard library (i.e., `import ./lib { lib = inputs.nixpkgs.lib; }`).
 It's another unnecessary export but it's there.
 
 * `formatter` is the preferred formatter to be used for my Nix files.
@@ -210,7 +245,7 @@ More like "Most anticipated questions (MAQ)" since almost no one asked me about 
 However, it doesn't roll off the tongue.
 
 [qanda]
-Hello! I'm new to Nix and NixOS, where should I start?::
+I'm new to Nix and NixOS, where should I start?::
 Oh no, you've seen the multiple configurations from other systems, didn't you?
 +
 --

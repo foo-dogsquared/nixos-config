@@ -1,0 +1,10 @@
+= Profiles
+:toc:
+
+
+These are simple configuration that are typically composed of setting common NixOS options such as enabling NixOS services or installing system packages.
+They are not going to be exported to the flakes since they are quite specific and practically, no one is going to use them with each user having different requirements even with a cluster of systems.
+
+Each profile should have an interface to be enabled first (e.g., `options.profiles.${profile}`) since it will be included as part of the included modules for our NixOS configurations.
+
+So yeah... have at it.
