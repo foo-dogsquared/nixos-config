@@ -23,13 +23,13 @@
 # libadwaita.
 python3Packages.buildPythonApplication rec {
   pname = "gradience";
-  version = "unstable-2022-08-20";
+  version = "0.2.0";
 
   src = fetchFromGitHub {
     owner = "GradienceTeam";
     repo = "Gradience";
-    rev = "4ad3759a3cd7e034cd6c23fd5bfd2c2e1f3623ef";
-    sha256 = "sha256-Z6fYAXr5HEoLxmlGfLToF7WXPoJGaQmLQHH7oG333Wo=";
+    rev = version;
+    sha256 = "sha256-3Ay69TWgY9HLiD/XHDvDTobMGkIJq+IvTSfw/KxcB0I=";
   };
 
   format = "other";
@@ -59,6 +59,9 @@ python3Packages.buildPythonApplication rec {
     pygobject3
     anyascii
     pip
+    urllib3
+    svglib
+    requests
   ] ++ [
     python-material-color-utilities
   ];
