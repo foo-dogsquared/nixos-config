@@ -28,7 +28,7 @@ in
         "--write-description"
 
         # The global output for all of the jobs.
-        "--output" "%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title)s.%(ext)s"
+        "--output" "%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title)156s.%(ext)s"
 
         # Select only the most optimal format for my usecases.
         "--format" "(webm,mkv,mp4)[height<=?1280]"
@@ -39,9 +39,7 @@ in
         # Don't download any videos that are originally live streams.
         "--match-filters" "!was_live"
 
-        # Prefer Vorbis when audio-only downloads are used.
-        "--audio-format" "vorbis"
-        "--audio-quality" "2"
+        "--audio-quality" "1"
 
         # Not much error since it will always fail.
         "--no-abort-on-error"
