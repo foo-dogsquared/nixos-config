@@ -157,6 +157,8 @@ in {
                                         ${urls} --paths ${lib.escapeShellArg cfg.archivePath}
             '';
           in "${archiveScript}/bin/${scriptName}";
+          StandardOutput = "journal";
+          StandardError = "journal";
         };
       }) cfg.jobs;
 

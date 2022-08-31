@@ -155,6 +155,8 @@ in {
           ProtectKernelLogs = true;
           ProtectKernelModules = true;
           ProtectKernelTunables = true;
+          StandardOutput = "journal";
+          StandardError = "journal";
           SystemCallFilter = "@system-service";
           SystemCallErrorNumber = "EPERM";
         };
