@@ -36,28 +36,34 @@ let
     };
   };
 
-in {
+in
+{
   options.tasks.backup-archive.enable =
     lib.mkEnableOption "backup setup with BorgBackup";
 
   config = lib.mkIf cfg.enable {
-    sops.secrets = let
-      borgSecretsPath = key: "borg-backup/${key}";
-      getKey = key: {
-        inherit key;
-        sopsFile = lib.getSecret "backup-archive.yaml";
-        name = borgSecretsPath key;
-      };
-      getSecrets = keys:
-        lib.listToAttrs (lib.lists.map (key: lib.nameValuePair (borgSecretsPath key) (getKey key)) keys);
-    in getSecrets [
-      "borg-patterns/home"
-      "borg-patterns/etc"
-      "borg-patterns/keys"
-      "borg-patterns/remote-backup"
-      "ssh-key"
-      "password"
-    ];
+    sops.secrets =
+      let
+        getKey = key: {
+          inherit key;
+          sopsFile = lib.getSecret "backup-archive.yaml";
+        };
+        getSecrets = keys:
+          lib.listToAttrs (lib.lists.map
+            (key:
+              lib.nameValuePair
+                "borg-backup/${key}"
+                (getKey key))
+            keys);
+      in
+      getSecrets [
+        "borg-patterns/home"
+        "borg-patterns/etc"
+        "borg-patterns/keys"
+        "borg-patterns/remote-backup"
+        "ssh-key"
+        "password"
+      ];
 
     profiles.filesystem = {
       archive.enable = true;
@@ -65,37 +71,40 @@ in {
     };
 
     services.borgbackup.jobs = {
-      local-archive = borgJobCommonSetting {
-        patterns = with config.sops; [
-          secrets."borg-backup/borg-patterns/home".path
-          secrets."borg-backup/borg-patterns/etc".path
-          secrets."borg-backup/borg-patterns/keys".path
-        ];
-      } // {
+      local-archive = borgJobCommonSetting
+        {
+          patterns = with config.sops; [
+            secrets."borg-backup/borg-patterns/home".path
+            secrets."borg-backup/borg-patterns/etc".path
+            secrets."borg-backup/borg-patterns/keys".path
+          ];
+        } // {
         doInit = false;
         removableDevice = true;
         repo = "/mnt/archives/backups";
         startAt = "daily";
       };
 
-      local-external-drive = borgJobCommonSetting {
-        patterns = with config.sops; [
-          secrets."borg-backup/borg-patterns/home".path
-          secrets."borg-backup/borg-patterns/etc".path
-          secrets."borg-backup/borg-patterns/keys".path
-        ];
-      } // {
+      local-external-drive = borgJobCommonSetting
+        {
+          patterns = with config.sops; [
+            secrets."borg-backup/borg-patterns/home".path
+            secrets."borg-backup/borg-patterns/etc".path
+            secrets."borg-backup/borg-patterns/keys".path
+          ];
+        } // {
         doInit = false;
         removableDevice = true;
         repo = "/mnt/external-storage/backups";
         startAt = "daily";
       };
 
-      remote-borgbase = borgJobCommonSetting {
-        patterns = with config.sops; [
-          secrets."borg-backup/borg-patterns/remote-backup".path
-        ];
-      } // {
+      remote-borgbase = borgJobCommonSetting
+        {
+          patterns = with config.sops; [
+            secrets."borg-backup/borg-patterns/remote-backup".path
+          ];
+        } // {
         repo = "r6o30viv@r6o30viv.repo.borgbase.com:repo";
         startAt = "daily";
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."borg-backup/ssh-key".path}";
