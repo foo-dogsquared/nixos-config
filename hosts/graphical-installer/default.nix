@@ -35,7 +35,7 @@
     };
   };
 
-  themes.themes.a-happy-gnome.enable = true;
+  workflows.workflows.a-happy-gnome.enable = true;
   services.xserver.displayManager = {
     gdm = {
       enable = true;
