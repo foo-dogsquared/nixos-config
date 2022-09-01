@@ -347,6 +347,10 @@
           path = ./templates/basic-devshell;
           description = "Basic development shell template";
         };
+        basic-overlay-flake = {
+          path = ./templates/basic-overlay-flake;
+          description = "Basic overlay as a flake";
+        };
       };
 
       # No amount of formatters will make this codebase nicer but it sure does

@@ -1,0 +1,5 @@
+= Modules
+:toc:
+
+This is where various modules will go.
+Preferably, it should have a hierarchy that denotes where it belongs to (e.g., `./modules/nixos/MODULE.nix`, `./modules/home-manager/MODULE2.nix`).
