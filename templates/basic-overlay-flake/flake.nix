@@ -1,6 +1,6 @@
 {
   description = ''
-    Basic flake template for an overlay with flake and traditional channels.
+    Basic flake template for an overlay with flake.
   '';
 
   inputs = {
@@ -9,9 +9,24 @@
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
-    let systems = inputs.flake-utils.lib.defaultSystems;
-    in inputs.flake-utils.lib.eachSystem systems (system: {
-      devShells.default =
-        import ./shell.nix { pkgs = import nixpkgs { inherit system; }; };
-    });
+    let
+      inherit (inputs.flake-utils.lib) defaultSystems eachSystem flattenTree;
+    in
+    eachSystem defaultSystems
+      (system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        {
+          devShells.default =
+            import ./shell.nix { inherit pkgs; };
+
+          formatter = pkgs.nixpkgs-fmt;
+
+          packages = flattenTree (self.overlays.default pkgs pkgs);
+        }) // {
+      overlays.default = final: prev: import ./pkgs { pkgs = prev; };
+
+      nixosModules = {};
+    };
 }
