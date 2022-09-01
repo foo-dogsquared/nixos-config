@@ -127,7 +127,7 @@
         };
 
       # The default configuration for our NixOS systems.
-      hostDefaultConfig = { pkgs, system, ... }: {
+      hostDefaultConfig = { lib, pkgs, system, ... }: {
         # Only use imports as minimally as possible with the absolute
         # requirements of a host. On second thought, only on flakes with
         # optional NixOS modules.
@@ -142,23 +142,23 @@
         environment.extraOutputsToInstall = [ "doc" "devdoc" "info" ];
 
         # Bleeding edge, baybee!
-        nix.package = pkgs.nixUnstable;
+        nix.package = lib.mkDefault pkgs.nixUnstable;
 
         # I want to capture the usual flakes to its exact version so we're
         # making them available to our system. This will also prevent the
         # annoying downloads since it always get the latest revision.
         nix.registry =
-          lib'.mapAttrs'
+          lib.mapAttrs'
             (name: flake:
               let
                 name' = if (name == "self") then "config" else name;
               in
-              lib'.nameValuePair name' { inherit flake; })
+              lib.nameValuePair name' { inherit flake; })
             inputs;
 
         # Set several paths for the traditional channels.
         nix.nixPath =
-          lib'.mapAttrsToList
+          lib.mapAttrsToList
             (name: source:
               let
                 name' = if (name == "self") then "config" else name;
@@ -188,14 +188,14 @@
           # Since we're using flakes to make this possible, we need it. Plus, the
           # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
           experimental-features = [ "nix-command" "flakes" ];
-          auto-optimise-store = true;
+          auto-optimise-store = lib.mkDefault true;
         };
 
         nixpkgs.config.permittedInsecurePackages =
           [ "python3.10-django-3.1.14" ];
 
         # Stallman-senpai will be disappointed.
-        nixpkgs.config.allowUnfree = true;
+        nixpkgs.config.allowUnfree = lib.mkDefault true;
 
         # Extend nixpkgs with our overlays except for the NixOS-focused modules
         # here.
@@ -207,13 +207,13 @@
 
         # We live in a Unicode world and dominantly English in technical fields so we'll
         # have to go with it.
-        i18n.defaultLocale = "en_US.UTF-8";
+        i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
         # The global configuration for the home-manager module.
         home-manager.useUserPackages = true;
         home-manager.useGlobalPkgs = true;
         home-manager.sharedModules =
-          lib'.modulesToList (lib'.filesToAttr ./modules/home-manager)
+          lib.modulesToList (lib.filesToAttr ./modules/home-manager)
           ++ [ userDefaultConfig ];
         home-manager.extraSpecialArgs = extraArgs;
 
@@ -280,7 +280,9 @@
         (host: path:
           let
             extraModules = [
-              { networking.hostName = builtins.baseNameOf path; }
+              ({ lib, ... }: {
+                networking.hostName = lib.mkDefault (builtins.baseNameOf path);
+              })
               hostDefaultConfig
               path
             ];
