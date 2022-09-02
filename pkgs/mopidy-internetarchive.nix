@@ -2,13 +2,13 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "mopidy-internetarchive";
-  version = "3.0.0";
+  version = "3.0.1";
 
   src = fetchFromGitHub {
     owner = "tkem";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-kFkqqI9E6cKrRtSO433EpFPy/QYuqaorCEplBCwuXhU=";
+    sha256 = "sha256-whlJJJR4wgeAIStQRwI44oz0sBqiDAh+F157Y9RUzY0=";
   };
 
   propagatedBuildInputs = with python3.pkgs;
