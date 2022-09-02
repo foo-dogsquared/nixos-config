@@ -28,7 +28,7 @@ in {
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    ncmpcpp
+    songrec
     vscodium-fhs
     neovim
     yt-dlp-for-audio
@@ -178,6 +178,11 @@ in {
         default_extension = ".m3u8";
       };
     };
+  };
+
+  programs.ncmpcpp = {
+    enable = true;
+    mpdMusicDir = musicDir;
   };
 
   # My preferred file indexing service.
