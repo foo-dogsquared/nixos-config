@@ -49,12 +49,12 @@ in {
   '';
 
   # My Git credentials.
-  programs.git = let email = "foo.dogsquared@gmail.com"; in {
+  programs.git = {
     enable = true;
     package = pkgs.gitFull;
     lfs.enable = true;
     userName = "Gabriel Arazas";
-    userEmail = email;
+    userEmail = "foo.dogsquared@gmail.com";
     signing.key = "129AFC6B4ABD6B61";
     extraConfig = {
       # This is taken from the official Git book, for future references.
@@ -62,7 +62,7 @@ in {
         smtpserver = "smtp.gmail.com";
         smtpencryption = "tls";
         smtpserverport = 587;
-        smtpuser = email;
+        smtpuser = config.programs.git.userEmail;
       };
 
       init.defaultBranch = "main";
@@ -87,15 +87,17 @@ in {
       library = "${musicDir}/library.db";
       plugins = [
         "acousticbrainz"
+        "fetchart"
+        "fromfilename"
         "chroma"
         "deezer"
         "edit"
         "export"
         "fuzzy"
+        "mbsync"
         "playlist"
         "scrub"
         "smartplaylist"
-        "spotify"
       ];
       ignore_hidden = true;
       directory = musicDir;
