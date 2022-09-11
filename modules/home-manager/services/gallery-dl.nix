@@ -3,6 +3,8 @@
 let
   cfg = config.services.gallery-dl;
 
+  jobUnitName = name: "gallery-dl-service-job-${name}";
+
   settingsFormat = pkgs.formats.json { };
   settingsFormatFile =
     settingsFormat.generate "gallery-dl-service-config-${config.home.username}"
@@ -162,7 +164,7 @@ in {
     home.packages = [ cfg.package ];
 
     systemd.user.services = lib.mapAttrs' (name: value:
-      lib.nameValuePair "gallery-dl-archive-service-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         Unit = {
           Description = "gallery-dl archive job for group '${name}'";
           After = [ "default.target" ];
@@ -189,7 +191,7 @@ in {
       }) cfg.jobs;
 
     systemd.user.timers = lib.mapAttrs' (name: value:
-      lib.nameValuePair "gallery-dl-archive-service-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         Unit = {
           Description = "gallery-dl archive job for group '${name}'";
           Documentation = "man:gallery-dl(1)";

@@ -3,6 +3,8 @@
 let
   cfg = config.services.gallery-dl;
 
+  jobUnitName = name: "gallery-dl-archive-job-${name}";
+
   settingsFormat = pkgs.formats.json { };
   settingsFormatFile =
     settingsFormat.generate "gallery-dl-service-config" cfg.settings;
@@ -156,7 +158,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     systemd.services = lib.mapAttrs' (name: value:
-      lib.nameValuePair "gallery-dl-archive-service-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         wantedBy = [ "multi-user.target" ];
         description = "gallery-dl archive job for group '${name}'";
         documentation = [ "man:gallery-dl(1)" ];
@@ -208,7 +210,7 @@ in {
       }) cfg.jobs;
 
     systemd.timers = lib.mapAttrs' (name: value:
-      lib.nameValuePair "gallery-dl-archive-service-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         timerConfig = {
           Persistent = value.persistent;
           RandomizedDelaySec = "2min";

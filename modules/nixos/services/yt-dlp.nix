@@ -5,6 +5,8 @@ let
 
   serviceLevelArgs = lib.escapeShellArgs cfg.extraArgs;
 
+  jobUnitName = name: "yt-dlp-archive-service-${name}";
+
   jobType = { name, config, options, ... }: {
     options = {
       urls = lib.mkOption {
@@ -89,6 +91,7 @@ in {
       default = [ "--download-archive videos" ];
       example = lib.literalExpression ''
         [
+          "--verbose"
           "--download-archive" "''${cfg.archivePath}/download-list"
           "--concurrent-fragments" "2"
           "--retries" "20"
@@ -130,7 +133,7 @@ in {
     systemd.services = lib.mapAttrs' (name: value: let
       jobLevelArgs = lib.escapeShellArgs value.extraArgs;
     in
-      lib.nameValuePair "yt-dlp-archive-service-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         wantedBy = [ "multi-user.target" ];
         description = "yt-dlp archive job for group '${name}'";
         documentation = [ "man:yt-dlp(1)" ];
@@ -163,7 +166,7 @@ in {
       }) cfg.jobs;
 
     systemd.timers = lib.mapAttrs' (name: value:
-      lib.nameValuePair "yt-dlp-archive-service-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         timerConfig = {
           Persistent = value.persistent;
           RandomizedDelaySec = "2min";

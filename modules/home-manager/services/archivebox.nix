@@ -2,6 +2,7 @@
 
 let
   cfg = config.services.archivebox;
+  jobUnitName = name: "archivebox-job-${name}";
   jobType = { name, options, ... }: {
     options = {
       links = lib.mkOption {
@@ -104,7 +105,7 @@ in {
 
     systemd.user.services = lib.mkMerge [
       (lib.mapAttrs' (name: value:
-        lib.nameValuePair "archivebox-add-${name}" {
+        lib.nameValuePair (jobUnitName name) {
           Unit = {
             Description =
               "Archivebox archive group '${name}' for ${cfg.archivePath}";
@@ -152,7 +153,7 @@ in {
     ];
 
     systemd.user.timers = lib.mapAttrs' (name: value:
-      lib.nameValuePair "archivebox-add-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         Unit = {
           Description = "Archivebox additions for ${cfg.archivePath}";
           After = "network.target";

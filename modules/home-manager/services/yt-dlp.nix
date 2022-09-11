@@ -3,6 +3,8 @@
 let
   cfg = config.services.yt-dlp;
 
+  jobUnitName = name: "yt-dlp-archive-service-${name}";
+
   serviceLevelArgs = lib.escapeShellArgs cfg.extraArgs;
 
   jobType = { name, config, options, ... }: {
@@ -134,7 +136,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     systemd.user.services = lib.mapAttrs' (name: value:
-      lib.nameValuePair "yt-dlp-archive-service-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         Unit = {
           Description = "yt-dlp archive job for group '${name}'";
           After = [ "default.target" ];
@@ -163,7 +165,7 @@ in {
       }) cfg.jobs;
 
     systemd.user.timers = lib.mapAttrs' (name: value:
-      lib.nameValuePair "yt-dlp-archive-service-${name}" {
+      lib.nameValuePair (jobUnitName name) {
         Unit = {
           Description = "yt-dlp archive job for group '${name}'";
           Documentation = "man:yt-dlp(1)";
