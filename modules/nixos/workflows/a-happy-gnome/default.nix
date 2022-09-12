@@ -110,18 +110,9 @@ in
     };
 
     services.packagekit.enable = false;
-
-    i18n.inputMethod = {
-      enabled = "ibus";
-      ibus.engines = with pkgs.ibus-engines; [
-        mozc
-        rime
-        hangul
-        table
-        table-others
-        typing-booster
-        uniemoji
-      ];
+    profiles.i18n = {
+      enable = true;
+      ibus.enable = true;
     };
 
     # Since we're using KDE Connect, we'll have to use gsconnect.
