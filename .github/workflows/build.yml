@@ -33,6 +33,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build custom packages
         run: nix build -f ./pkgs --impure
+        continue-on-error: true
 
   build-hosts:
     runs-on: ubuntu-latest
@@ -46,3 +47,4 @@ jobs:
       - name: Build NixOS configurations
         run: |
           nix build .#nixosConfigurations.ni.config.system.build.toplevel --impure
+        continue-on-error: true
