@@ -2,19 +2,19 @@
 
 python310Packages.buildPythonApplication rec {
   pname = "auto-editor";
-  version = "22w32a";
+  version = "22w35c";
   doCheck = false;
 
   src = fetchFromGitHub {
     owner = "WyattBlue";
     repo = pname;
     rev = version;
-    sha256 = "sha256-VbEr3/8PmV9mShoyv2hsc0rX8RUM39lgVk5HGe5DKYY=";
+    sha256 = "sha256-Vgia61kswKJhqd906Y3x+ddxvM1BZDdKdG9VBiUaafg=";
   };
 
   postPatch = ''
     sed ./setup.py -i -E \
-      -e "/ae-ffmpeg==1.0.0/d"
+      -e "/ae-ffmpeg/d"
   '';
 
   propagatedBuildInputs = with python310Packages; [ numpy yt-dlp av pillow ];
