@@ -26,6 +26,15 @@ let
         callPackage ./gnome-shell-extension-fly-pie.nix { };
       gnome-shell-extension-pop-shell =
         callPackage ./gnome-shell-extension-pop-shell.nix { };
+      gnome-shell-extension-paperwm-latest = gnomeExtensions.paperwm.overrideAttrs (prev: {
+        rev = "unstable-2022-09-20";
+        src = fetchFromGitHub {
+          owner = "paperwm";
+          repo = "PaperWM";
+          rev = "e89430cf0e62abc85a10140e4fbb265e8503e747";
+          sha256 = "sha256-kXz+J3aRdGhHL+4tzXMq9JqVHeczEU8QCAO4a7Ul3OU=";
+        };
+      });
       gradience = callPackage ./gradience { libadwaita = libadwaita-latest; };
       guile-config = callPackage ./guile-config.nix { };
       guile-hall = callPackage ./guile-hall.nix { };
