@@ -128,6 +128,9 @@
 
       # The default configuration for our NixOS systems.
       hostDefaultConfig = { lib, pkgs, system, ... }: {
+        # Some defaults for evaluating modules.
+        _module.check = true;
+
         # Only use imports as minimally as possible with the absolute
         # requirements of a host. On second thought, only on flakes with
         # optional NixOS modules.
@@ -139,7 +142,7 @@
           inputs.guix-overlay.nixosModules.guix
         ];
 
-        environment.extraOutputsToInstall = [ "doc" "devdoc" "info" ];
+        environment.extraOutputsToInstall = lib.mkDefault [ "doc" "devdoc" "info" ];
 
         # Bleeding edge, baybee!
         nix.package = lib.mkDefault pkgs.nixUnstable;
@@ -203,34 +206,34 @@
           ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlays.default ];
 
         # Please clean your temporary crap.
-        boot.cleanTmpDir = true;
+        boot.cleanTmpDir = lib.mkDefault true;
 
         # We live in a Unicode world and dominantly English in technical fields so we'll
         # have to go with it.
         i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
         # The global configuration for the home-manager module.
-        home-manager.useUserPackages = true;
-        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = lib.mkDefault true;
+        home-manager.useGlobalPkgs = lib.mkDefault true;
         home-manager.sharedModules =
           lib.modulesToList (lib.filesToAttr ./modules/home-manager)
           ++ [ userDefaultConfig ];
         home-manager.extraSpecialArgs = extraArgs;
 
         # Enabling some things for sops.
-        programs.gnupg.agent = {
+        programs.gnupg.agent = lib.mkDefault {
           enable = true;
           enableSSHSupport = true;
         };
-        services.sshd.enable = true;
-        services.openssh.enable = true;
+        services.sshd.enable = lib.mkDefault true;
+        services.openssh.enable = lib.mkDefault true;
       };
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:
         inputs.home-manager.lib.homeManagerConfiguration {
           extraSpecialArgs = extraArgs;
           lib = lib';
-          pkgs = nixpkgs.legacyPackages.${builtins.currentSystem};
+          pkgs = import nixpkgs { inherit system overlays; };
           modules =
             # Importing our custom home-manager modules.
             (lib'.modulesToList (lib'.filesToAttr ./modules/home-manager))
@@ -249,6 +252,16 @@
         # the hell. For other users, they would have to do set these manually.
         xdg.userDirs =
           let
+            # The home directory-related options should be already taken care
+            # of at this point. It is an ABSOLUTE MUST that it is set properly
+            # since other parts of the home-manager config relies on it being
+            # set properly.
+            #
+            # Here are some of the common cases for setting the home directory options.
+            #
+            # * For exporting home-manager configurations, this is done in this flake definition.
+            # * For NixOS configs, this is set in `mapHomeManagerUser` from the private library.
+            # * Otherwise, you'll have to manually set them.
             appendToHomeDir = path: "${config.home.homeDirectory}/${path}";
           in
           {
