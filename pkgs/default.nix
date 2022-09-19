@@ -21,6 +21,7 @@ let
       gnome-search-provider-recoll =
         callPackage ./gnome-search-provider-recoll.nix { };
       gnome-extension-manager = callPackage ./gnome-extension-manager.nix { };
+      gnome-shell-extension-burn-my-windows = callPackage ./gnome-shell-extension-burn-my-windows { };
       gnome-shell-extension-fly-pie =
         callPackage ./gnome-shell-extension-fly-pie.nix { };
       gnome-shell-extension-pop-shell =
