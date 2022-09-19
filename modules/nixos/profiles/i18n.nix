@@ -15,7 +15,7 @@ in
     {
       assertions = let enabledi18nConfigs = lib.countAttrs (_: setup: lib.isAttrs setup && setup.enable) cfg; in
         [{
-          assertion = enabledi18nConfigs < 1;
+          assertion = enabledi18nConfigs <= 1;
           message = ''
             Only one i18n setup should be enabled at any given time.
           '';
