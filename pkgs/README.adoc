@@ -5,9 +5,12 @@ My custom packages live here.
 It is setup similar to link:https://github.com/NixOS/nixpkgs/[nixpkgs] and link:https://github.com/foo-dogsquared/nur[my previous NUR].
 Thus, the conventions are similar to the package definitions in the mentioned repositories.
 
+It should be composed of a single entry point describing the entirety of the package repository similar to the link:https://github.com/NixOS/nixpkgs/blob/767542707d394ff15ac1981e903e005ba69528b5/pkgs/top-level/all-packages.nix[`pkgs/top-level/all-packages.nix` for nixpkgs].
+This is to easily import the package repository in a neat way.
+
 To build the packages...
 
 * With Nix pre-v2.3, `nix-build ./pkgs -A ${pkg}`.
 
-* Nix v2.4 and enabled Nix flakes experimental feature and new CLi (e.g., `experimental-features = nix-command flakes`), `nix build .#${pkg}`.
+* Nix v2.4 and enabled Nix flakes experimental feature and new CLi (e.g., `experimental-features = nix-command flakes`), `nix build --file ./pkgs`.
 

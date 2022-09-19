@@ -26,12 +26,30 @@ For managing users, there are multiple ways to manage them with this config:
 
 * If you intend to import users from the link:../users/nixos/[`../users/nixos/`], you can simply import them through `imports` in the system module.
 +
+--
 For a convenient option, there is the function `getUsers` defined from the link:../lib/private.nix[private custom library].
 You can use it as follows:
-+
+
 [source, nix]
 ----
 imports = [ # Your modules ]
     # Import the following NixOS users.
     ++ (lib.attrValues (lib.getUsers "nixos" [ "foo-dogsquared" "polski" ]));
 ----
+--
+
+* You could also easily map link:../users/home-manager[one of my home-manager configurations] into one of the users for a NixOS system with `lib.mapHomeManagerUser` which accepts two arguments: a name from of the home-manager user folder and the user config as if configuration with `users.users.<name>`.
++
+--
+Here's an example to easily get my main home-manager config to be one of the users of the system.
+
+[source, nix]
+----
+lib.mapHomeManagerUser "foo-dogsquared" {
+  extraGroups = [ "audio" "docker" ];
+  password = "what";
+  createHome = true;
+  home = "/home/foo-dogsquared";
+}
+----
+--
