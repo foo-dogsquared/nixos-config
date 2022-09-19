@@ -8,13 +8,13 @@
 # Please refer to the `pkgs/desktops/gnome/extensions/{extensions.json,extensionRenames.nix}` in the future to check.
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-fly-pie";
-  version = "16";
+  version = "17";
 
   src = fetchFromGitHub {
     owner = "Schneegans";
     repo = "Fly-Pie";
     rev = "v${version}";
-    sha256 = "sha256-B/LoTmNrCz3UygB8FWjYm5fVqeirSitHlyAkYZKVPZY=";
+    sha256 = "sha256-fHMC3aj2TrNEET5dSd1/wKuJ/9jwTbWU+FvcJR7F00U=";
   };
 
   nativeBuildInputs = [ glib gettext ];
