@@ -2,11 +2,11 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "material-color-utilities-python";
-  version = "0.1.3";
+  version = "0.1.5";
 
   src = python3Packages.fetchPypi {
     inherit pname version;
-    sha256 = "sha256-3AWZICW0Cr/hCjjBpW/ZCyASG+sRR9eK3mwEa1JeZRY=";
+    sha256 = "sha256-PG8C585wWViFRHve83z3b9NijHyV+iGY2BdMJpyVH64=";
   };
 
   propagatedBuildInputs = with python3Packages; [
