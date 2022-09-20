@@ -45,6 +45,7 @@ in
       ] ++ [
         pkgs.gnome-shell-extension-fly-pie
         pkgs.gnome-shell-extension-pop-shell
+        pkgs.gnome-shell-extension-paperwm-latest
       ];
       example = lib.literalExpression ''
         with pkgs.gnomeExtensions; [
