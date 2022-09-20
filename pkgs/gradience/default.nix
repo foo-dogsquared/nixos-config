@@ -17,19 +17,20 @@
 , libportal-gtk4
 , gobject-introspection
 , python-material-color-utilities
+, sassc
 }:
 
 # Not all parts of the application works with the current nixpkgs version of
 # libadwaita.
 python3Packages.buildPythonApplication rec {
   pname = "gradience";
-  version = "0.2.2";
+  version = "unstable-2022-09-20";
 
   src = fetchFromGitHub {
     owner = "GradienceTeam";
     repo = "Gradience";
-    rev = version;
-    sha256 = "sha256-0LIkYgNSgB91ihIw96ss4dgvQZ1z17iU8oyvJpBMCQQ=";
+    rev = "8f11b8178bbc2bfb0b1fd6bc19f44add1fbddc9b";
+    sha256 = "sha256-SdAOI+LfBqz1fZNthb/JNxXSikemFpC7a4WYr/Xr6I4=";
   };
 
   format = "other";
@@ -46,6 +47,7 @@ python3Packages.buildPythonApplication rec {
     ninja
     pkg-config
     wrapGAppsHook4
+    sassc
   ];
 
   buildInputs = [
@@ -57,11 +59,12 @@ python3Packages.buildPythonApplication rec {
 
   propagatedBuildInputs = with python3Packages; [
     anyascii
-    pluggy
+    aiohttp
+    cssutils
+    jinja2
     pygobject3
-    requests
     svglib
-    urllib3
+    Yapsy
   ] ++ [
     python-material-color-utilities
   ];
