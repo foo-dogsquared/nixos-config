@@ -236,17 +236,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1662779383,
-        "narHash": "sha256-pW1UCFyi5/yY+xrjtUKark7uv4Xapec+4n/TWVNI9mg=",
+        "lastModified": 1663723874,
+        "narHash": "sha256-VpfyyL07oTN6He/mveqM/KAaDHKiRcid5G0EcUsaJk4=",
         "owner": "foo-dogsquared",
         "repo": "nix-overlay-guix",
-        "rev": "dd9ff0a902fbc7b927a5e7c4a575e635120b9189",
+        "rev": "9d4034d863bae902bfbdf47dfaf528b536794701",
         "type": "github"
       },
       "original": {
-        "owner": "foo-dogsquared",
-        "repo": "nix-overlay-guix",
-        "type": "github"
+        "type": "git",
+        "url": "file:///home/foo-dogsquared/library/projects/software/nix-overlay-guix"
       }
     },
     "helix-editor": {
