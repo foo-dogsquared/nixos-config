@@ -36,19 +36,19 @@ in {
           urls = {
             "flathub" = {
               url = "https://flathub.org/repo/flathub.flatpakrepo";
-              sha256 = "sha256:0fm0zvlf4fipqfhazx3jdx1d8g0mvbpky1rh6riy3nb11qjxsw9k";
+              sha256 = "sha256-M3HdJQ5h2eFjNjAHP+/aFTzUQm9y9K+gwzc64uj+oDo=";
             };
             "flathub-beta" = {
               url = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
-              sha256 = "sha256:01kj1yza51dd4vcr04j49lx0mnivldpzxyny4zq3jilxkwyawb2q";
+              sha256 = "sha256-WCyuPJ+dRjnwJ976/m+jO9oKOk1EEpDZJq2For4PcgY=";
             };
             "gnome-nightly" = {
               url = "https://nightly.gnome.org/gnome-nightly.flatpakrepo";
-              sha256 = "sha256:10y9a50m2jz8p3avd8kqw5i7lyl71xwmc2mnrdicv0mgj1b6wndc";
+              sha256 = "sha256-rFluVpCvgs1iy7YKVnkPh3p6YuF4orbVuOhLUUFRyYM=";
             };
             "kdeapps" = {
               url = "https://distribute.kde.org/kdeapps.flatpakrepo";
-              sha256 = "sha256:18kscw44ff6bjx1abvffzk0js01w51vgh4h0rwpa76hc0r0ps8bl";
+              sha256 = "sha256-dCF9QQYMmqMuzwAS+HYoPAAtwfzO7aVCl8s4RwhneqI=";
             };
           };
         in
