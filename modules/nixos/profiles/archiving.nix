@@ -10,7 +10,7 @@ in {
   # Please do it for host-specific configs instead.
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      archivebox # Create by ye' old pirate.
+      #archivebox # Create by ye' old pirate.
       archiver # Extract and create all of the archives.
       borgbackup # I'm pretty sure this is named after some thing from a franchise somewhere but I'm not omnipresent.
       borgmatic # For those insisting on configurations for BorgBackup.
