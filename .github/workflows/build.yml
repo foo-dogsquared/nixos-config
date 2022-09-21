@@ -33,9 +33,8 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build custom packages
         run: nix build -f ./pkgs --impure
-        continue-on-error: true
 
-  build-hosts:
+  build-profiles:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -44,7 +43,12 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
           extra_nix_config: |
             keep-going = true
-      - name: Build NixOS configurations
+      - name: Build Nix profiles
         run: |
-          nix build .#nixosConfigurations.ni.config.system.build.toplevel --impure
-        continue-on-error: true
+          for nixosHost in ni graphical-installer bootstrap; do
+            nix build ".#nixosConfigurations.${nixosHost}.config.system.build.toplevel" --impure
+          done
+
+          for homeManagerConfig in foo-dogsquared; do
+            nix build ".#homeManagerConfigurations.${homeManagerConfig}.activationPackage" --impure
+          done
