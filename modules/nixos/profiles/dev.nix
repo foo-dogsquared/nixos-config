@@ -65,10 +65,11 @@ in {
 
       systemd.user.services.upgrade-nix-profile = {
         description = ''
-          Update packages installed through `nix profile`.
+          Update packages installed through 'nix profile'.
         '';
-        enable = false;
         script = "nix profile upgrade '.*'";
+        path = [ config.nix.package ];
+        startAt = "weekly";
       };
     })
 
