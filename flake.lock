@@ -244,8 +244,9 @@
         "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/foo-dogsquared/library/projects/software/nix-overlay-guix"
+        "owner": "foo-dogsquared",
+        "repo": "nix-overlay-guix",
+        "type": "github"
       }
     },
     "helix-editor": {
