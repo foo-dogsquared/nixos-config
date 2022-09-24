@@ -24,13 +24,13 @@
 # libadwaita.
 python3Packages.buildPythonApplication rec {
   pname = "gradience";
-  version = "unstable-2022-09-20";
+  version = "0.3.0";
 
   src = fetchFromGitHub {
     owner = "GradienceTeam";
     repo = "Gradience";
-    rev = "8f11b8178bbc2bfb0b1fd6bc19f44add1fbddc9b";
-    sha256 = "sha256-SdAOI+LfBqz1fZNthb/JNxXSikemFpC7a4WYr/Xr6I4=";
+    rev = version;
+    sha256 = "sha256-mTRkuKqeHrLiohp4l8izaZhixIRei0peKQZOiXxna2Y=";
   };
 
   format = "other";
