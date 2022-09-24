@@ -93,6 +93,22 @@ in {
         pulse.enable = true;
         jack.enable = true;
       };
+
+      # This is based from https://jackaudio.org/faq/linux_rt_config.html.
+      security.pam.loginLimits = [
+        {
+          domain = "@audio";
+          type = "-";
+          item = "rtprio";
+          value = "95";
+        }
+        {
+          domain = "@audio";
+          type = "-";
+          item = "memlock";
+          value = "unlimited";
+        }
+      ];
     })
 
     (lib.mkIf cfg.fonts.enable {
