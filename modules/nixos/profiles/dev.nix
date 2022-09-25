@@ -23,6 +23,9 @@ in {
         '';
       };
 
+      # Debugging time!
+      environment.enableDebugInfo = true;
+
       # I want to include documentations for my own sanity, OK?
       documentation = {
         enable = true;
@@ -40,6 +43,8 @@ in {
       };
 
       programs.gnupg = { agent.enable = true; };
+      programs.systemtap.enable = true;
+      services.sysprof.enable = true;
 
       # Convenience!
       environment.localBinInPath = true;
@@ -52,8 +57,10 @@ in {
         cmake # The poster boy for the hated build system.
         direnv # The power of local development environment.
         gcc # The usual toolchain.
+        gdb # The usual debugger.
         gnumake # Make your life easier with GNU Make.
         moreutils # Less is more but more utilities, the merrier.
+        valgrind # Memory leaks.
 
         # I SAID ALL OF THE GIT EXTENSIONS!
         git-crypt
