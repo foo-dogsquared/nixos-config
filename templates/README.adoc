@@ -1,0 +1,14 @@
+= Templates
+:toc:
+
+These are my templates similarly structured to link:https://github.com/NixOS/templates[official Nix templates].
+The templates will then be exported as part of `templates` attribute to the flake output.
+
+You can then use it for whatever you want to start with.
+
+[source, shell]
+----
+nix flake init $FLAKE#$TEMPLATE
+----
+
+While the folder structure can be a free-for-all, it is much more preferable to have a top-level list of directories with each containing one template.

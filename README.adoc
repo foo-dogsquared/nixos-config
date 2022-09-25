@@ -84,7 +84,6 @@ You can see the full details with `nix flake show`.
 As a helpful summary, here's what my flake should contain sorting from the most interesting and helpful outputs to the most boring and unnecessary.
 
 * `packages` contains link:./pkgs[my custom packages].
-It supports the default list of systems as defined from link:https://github.com/numtide/flake-utils[`flake-utils`].
 
 * `overlays` contains the overlay for extending nixpkgs with my packages.
 If you want to use my packages alongside the nixpkgs attribute then this is what you're looking for.

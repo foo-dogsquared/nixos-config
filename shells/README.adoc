@@ -1,0 +1,16 @@
+= Development shells
+:toc:
+
+My development shells for usual type of projects to quickly spawn one when spelunking other peoples' projects.
+This can be easily spawned from the `devShells` attribute from the flake output (i.e., `nix develop $FLAKE#$DEVENV`).
+
+CAUTION: This is not supposed to be a list of development environment encompassing all type of projects but rather it is just for quickly spawning one for spelunking.
+
+This is a personal preference to creating a specific link:../modules/nixos/profiles/[NixOS]/link:../modules/home-manager/profiles/[home-manager] profile module for setting up those type of environments considering that...
+
+* You don't need a profile to spawn the environment with `devShells`.
+By setting it as a profile to either NixOS or home-manager (or any other similar profiles), you're basically locking yourself in that environment.
+
+* It is cleaner. :)
+
+* Creating project-specific development environments is a thing.
