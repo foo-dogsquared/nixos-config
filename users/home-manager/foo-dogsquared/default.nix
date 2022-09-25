@@ -1,4 +1,4 @@
-{ inputs, config, options, lib, pkgs, ... }:
+{ dotfiles, config, options, lib, pkgs, ... }:
 
 let
   yt-dlp-for-audio-config = pkgs.writeText "yt-dlp-for-audio-config" ''
@@ -20,7 +20,7 @@ let
   yt-dlp-for-audio = pkgs.writeScriptBin "yt-dlp-audio" ''
     ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${yt-dlp-for-audio-config}" $@
   '';
-  getDotfiles = path: "${inputs.dotfiles}/${path}";
+  getDotfiles = path: "${dotfiles}/${path}";
 
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";

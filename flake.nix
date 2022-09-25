@@ -110,7 +110,10 @@
         import ./lib { lib = prev; }
         // import ./lib/private.nix { lib = final; });
 
-      extraArgs = { inherit inputs self; };
+      extraArgs = {
+        inherit (inputs) nix-colors dotfiles;
+        inherit inputs self;
+      };
 
       mkHost = { system ? defaultSystem, extraModules ? [ ] }:
         (lib'.makeOverridable inputs.nixpkgs.lib.nixosSystem) {
