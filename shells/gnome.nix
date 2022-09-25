@@ -14,6 +14,18 @@
 , rustPlatform
 , nodePackages
 , blueprint-compiler
+, desktop-file-utils
+, librsvg
+, gdk-pixbuf
+, gst_all_1
+, gettext
+, glib
+, appstream-glib
+, json-glib
+, gobject-introspection
+, glib-networking
+, glib-testing
+, libsoup_3
 }:
 
 mkShell {
@@ -24,6 +36,26 @@ mkShell {
     pkg-config # That librarian in the background.
     gtk4 # The star of the show.
     libadwaita # The co-star of the show.
+
+    # Common development inputs.
+    desktop-file-utils
+    librsvg
+    gdk-pixbuf
+    gst_all_1.gst-devtools
+    gst_all_1.gst-libav
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-ugly
+    gst_all_1.gstreamer
+    gettext
+    glib
+    appstream-glib
+    json-glib
+    gobject-introspection
+    glib-networking
+    glib-testing
+    libsoup_3
 
     # When Rust and GTK go together...
     rustPlatform.rust.cargo
