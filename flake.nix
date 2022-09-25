@@ -28,7 +28,6 @@
 
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
-    nur.inputs.nixpkgs.follows = "nixpkgs";
 
     # Running unpatched binaries on NixOS! :O
     nix-ld.url = "github:Mic92/nix-ld";
@@ -144,8 +143,6 @@
           inputs.sops-nix.nixosModules.sops
           inputs.guix-overlay.nixosModules.guix
         ];
-
-        environment.extraOutputsToInstall = lib.mkDefault [ "doc" "devdoc" "info" ];
 
         # Bleeding edge, baybee!
         nix.package = lib.mkDefault pkgs.nixUnstable;
@@ -277,6 +274,8 @@
             templates = appendToHomeDir "Templates";
             videos = appendToHomeDir "Videos";
           };
+
+        programs.home-manager.enable = true;
 
         manual = {
           html.enable = true;
