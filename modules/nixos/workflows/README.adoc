@@ -12,3 +12,8 @@ You can disable this with `config.workflows.disableLimit` set to `true`.
 
 * Custom themes should be defined in `config.workflows.workflows` attribute (e.g., `options.workflows.workflows.a-happy-gnome`, `options.workflows.workflows.simple-way`).
 This makes up for a namespace entirely dedicated for setting themes.
+
+* Using link:../profiles[profiles] are heavily discouraged and it is better assumed to design and create workflows as if profiles are not imported.
+This is because profiles are not exported in the flake output.
+Thus, any part of the workflow configuration using profiles will not be properly used due to the missing modules.
+If it's something you have to use (e.g., setting up i18n configuration), you have to explicitly import them through the `imports` attribute to make it work.

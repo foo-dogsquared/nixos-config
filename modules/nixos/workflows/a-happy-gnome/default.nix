@@ -19,6 +19,10 @@ let
   '';
 in
 {
+  imports = [
+    ../../profiles/i18n.nix
+  ];
+
   options.workflows.workflows.a-happy-gnome = {
     enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
 
