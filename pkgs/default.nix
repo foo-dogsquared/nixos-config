@@ -41,6 +41,7 @@ let
       gnome-info-collect = callPackage ./gnome-info-collect { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
+      kiwmi = callPackage ./kiwmi { };
       libadwaita-latest = libadwaita.overrideAttrs (super: self: {
         version = "1.2.0";
         src = fetchFromGitLab {
