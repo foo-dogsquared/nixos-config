@@ -2,9 +2,30 @@
 :toc:
 
 
-These are simple configuration that are typically composed of setting common NixOS options such as enabling NixOS services or installing system packages.
-They are not going to be exported to the flakes since they are quite specific and practically, no one is going to use them with each user having different requirements even with a cluster of systems.
+We're defining profiles after how link:https://digga.divnix.com/concepts/profiles.html[digga library from divnix defines it].
+That is...
 
+[quote, digga library]
+____
+Profiles are a convenient shorthand for the definition of options in contrast to their declaration.
+They're built into the NixOS module system for a reason: to elegantly provide a clear separation of concerns.
+____
+
+In other words, these are simple configuration that are typically composed of setting common NixOS options such as enabling NixOS services or installing system packages.
+
+However, unlike digga profiles, we do implement an interface (or a declaration) on top of the definition of options.
 Each profile should have an interface to be enabled first (e.g., `options.profiles.${profile}`) since it will be included as part of the included modules for our NixOS configurations.
+
+Furthermore, they are not going to be exported to the flakes since they are quite specific and practically, no one is going to use them with each user having different requirements even with a cluster of systems.
+Thus, you should be mindful to use profiles whenever you write or update NixOS modules.
+As future reference, here's an exhaustive list of namespaces you should avoid using them as much as possible:
+
+* `services` and `programs` shouldn't use any profiles at all since they are small in scope that they are more likely to be combined with other modules.
+
+* Any modules under `workflows` are not exactly prohibited to use profiles since they are all-encompassing modules that creates a desktop that may be composed of multiple modules.
+However, it is heavily discouraged.
+If you have to use profiles, be sure to import them explicitly in the module (i.e., `imports` attribute).
+
+* Really, anything that is being exported in the flake outputs (i.e., look for the attributes in `nix flake show`).
 
 So yeah... have at it.
