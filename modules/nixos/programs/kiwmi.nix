@@ -3,7 +3,7 @@
 let
   cfg = config.programs.kiwmi;
 
-  package = cfg.package.override { inherit extraOptions; };
+  package = cfg.package.override { extraOptions = cfg.extraOptions; };
 in {
   options.programs.kiwmi = {
     enable = lib.mkEnableOption "Kiwmi, a fully programmable Wayland compositor";
