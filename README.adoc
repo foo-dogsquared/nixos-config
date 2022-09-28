@@ -1,6 +1,9 @@
 = foo-dogsquared's NixOS config
 :toc:
 :devos_link: https://github.com/divnix/digga/tree/580fc57ffaaf9cf3a582372235759dccfe44ac92/examples/devos
+:canonical_flake_url: github:foo-dogsquared/nixos-config
+:canonical_flake_url_tarball_master: https://github.com/foo-dogsquared/nixos-config/archive/master.tar.gz
+:canonical_flake_url_tarball_specific: https://github.com/foo-dogsquared/nixos-config/archive/35c27749c55077727529f412dade862e4deb2ae8.tar.gz
 
 This is my NixOS config as a link:https://www.tweag.io/blog/2020-05-25-flakes/[Nix flake].
 
@@ -41,22 +44,25 @@ As an additional option, you can also use link:https://github.com/foo-dogsquared
 
 This primarily uses Nix flakes so you can have a preview of what's available in my config.
 
-[source, shell]
+[subs=attributes, source, shell]
 ----
-nix flake show github:foo-dogsquared/nixos-config
+nix flake show {canonical_flake_url}
 ----
 
 It should export my NixOS configurations of my different hosts (of only one so far excluding VMs and VPSs ;p) among other things.
-To install it, run the `nixos-install --flake github:foo-dogsquared/nixos-config#ni`.
+To install it, run the `nixos-install --flake {canonical_flake_url}#ni`.
 (Please see the respective appropriate host README for more information.)
 
-TIP: If you found some error regarding something in restricted mode, you can run the installation with `--impure` flag (i.e., `nixos-install --impure --flake github:foo-dogsquared/nixos-config#ni`).
+TIP: If you found some error regarding something in restricted mode, you can run the installation with `--impure` flag (i.e., `nixos-install --impure --flake {canonical_flake_url}#ni`).
 
 
+[#channels-support]
 === Channels support
 
 While this primarily uses flakes as its main form of distribution, this project does keep some use cases for traditional channels.
-The entry point is found at link:./default.nix[`./default.nix`]
+It's not guaranteed to be good as using it <<using-my-config-with-flakes>> but it's an option.
+
+The entry point is found at link:./default.nix[`./default.nix`].
 However, you have to keep some limitations and guidelines in mind.
 
 * It exports an attribute based from the link:https://github.com/nix-community/NUR/[NUR template].
@@ -109,7 +115,7 @@ Similar to `homeManagerConfigurations`, you can easily use it outside of NixOS.
 * `homeManagerConfigurations` contains my various link:https://github.com/nix-community/home-manager[home-manager] configurations from link:./users/home-manager/[`./users/home-manager/`].
 The neat thing about it is you can easily install it in a non-NixOS Linux distro.
 
-* `nixosConfigurations` which is where you can install my various NixOS configurations directly (e.g., `nixos-install --flake MY_FLAKE_URL#HOST`).
+* `nixosConfigurations` which is where you can install my various NixOS configurations directly (e.g., `nixos-install --flake {canonical_flake_url}#HOST`).
 This mainly uses the link:./hosts/[hosts configuration].
 
 * `templates` which contains my templates.
@@ -197,6 +203,142 @@ If you edit `./secrets/backup-archive.yaml` for example, it needs one of the key
 
 
 
+== Using parts of my configuration
+
+Hey there, stranger.
+Wanted to try parts of my configuration but don't want to copy it outright since you're feeling lazy or what-have-you?
+I made my configuration to be easy to use and integrate into your system.
+
+Here's how...
+
+
+[#using-my-config-with-flakes]
+=== With flakes
+
+This is the recommended method since I primarily use flakes for this project.
+Not to mention that with flakes, this is easier than ever to make use parts of my configuration.
+
+To start, you can simply add my flake to your list of flake inputs.
+
+[subs=attributes, source, nix]
+----
+inputs.foo-dogsquared-nixos-config.url = "{canonical_flake_url}";
+----
+
+Then, you could use parts of the config as exported from my flake which you can refer back to <<whats-in-my-flake>>.
+
+For example, you could make use of my packages by adding them as an overlay which is recommended if you're going to use my NixOS modules anyways.
+Here's one way to put as part of your NixOS configuration...
+
+[source, nix]
+----
+{
+  nixpkgs.overlays = [
+    inputs.foo-dogsquared-nixos-config.overlays.default
+  ];
+}
+----
+
+...or import them as part of nixpkgs.
+
+[source, nix]
+----
+import nixpkgs {
+  system = "x86_64-linux";
+  overlays = [
+    inputs.foo-dogsquared-nixos-config.overlays.default
+  ];
+}
+----
+
+If you're going to use my stuff, why don't take a gander and try my non-personal parts of the configuration such as my link:./modules/nixos/[NixOS modules] and link:./modules/home-manager[home-manager modules]?
+In that case, you can simply plop them into your list of imports for your NixOS configuration like so.
+
+[source, nix]
+----
+{
+  imports = [
+    inputs.foo-dogsquared-nixos-config.nixosModules.programs
+    inputs.foo-dogsquared-nixos-config.nixosModules.services
+    inputs.foo-dogsquared-nixos-config.nixosModules.workflows
+  ];
+
+  # Use my GNOME desktop configuration for some reason.
+  workflows.workflows.a-happy-gnome.enable = true;
+}
+----
+
+
+[#using-my-config-with-channels]
+=== With channels
+
+The traditional way of managing stuff with link:https://nixos.org/manual/nix/stable/package-management/channels.html[channels].
+Though, I have made some efforts to make it easy to use without flakes, I cannot guarantee it's good compared to using it with flakes.
+
+WARNING: You cannot install my NixOS configurations at all with channels so there's another reason why (whether is valid or not is completely up to you).
+
+To start, as root, you have to add my project into the channels list...
+
+[subs=attributes, source, shell]
+----
+nix-channel --add "{canonical_flake_url_tarball_master}" foo-dogsquared-nixos-config
+nix-channel --update
+----
+
+...then import my config as part of your configuration.
+
+[source, nix]
+----
+import <foo-dogsquared-nixos-config> { inherit pkgs; }
+----
+
+You can see link:./default.nix[`./default.nix`] to see more details but there are general guidelines to the attributes that is contained in this file which is outlined in <<channels-support>> section.
+
+Here's an example snippet in a NixOS config making use of my configuration without flakes:
+
+[source, nix]
+----
+let
+  foo-dogsquared-nixos-config = import <foo-dogsquared-nixos-config> { inherit pkgs; }
+in {
+  imports = [
+    foo-dogsquared-nixos-config.modules.programs
+    foo-dogsquared-nixos-config.modules.services
+    foo-dogsquared-nixos-config.modules.workflows
+  ];
+
+  # Still using my GNOME desktop configuration for some reason.
+  workflows.workflows.a-happy-gnome.enable = true;
+}
+----
+
+
+=== With manual fetching
+
+If you really don't want to manage stuff with channels or with flakes for some reason, I suppose you can just use something like link:https://github.com/nmattia/niv/[niv].
+You could also pin my config similarly to link:https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs[how you can pin nixpkgs] then use it as if you manage it as described from <<using-my-config-with-channels>>.
+
+Here's a snippet of using it as part of a NixOS configuration.
+
+[subs=attributes, source, nix]
+----
+let
+  foo-dogsquared-nixos-config = import (fetchTarball "{canonical_flake_url_tarball_specific}");
+in {
+  imports = [
+    foo-dogsquared-nixos-config.modules.programs
+    foo-dogsquared-nixos-config.modules.services
+    foo-dogsquared-nixos-config.modules.workflows
+  ];
+
+  # Still using my GNOME desktop configuration for some reason.
+  workflows.workflows.a-happy-gnome.enable = true;
+}
+----
+
+
+
+
 == TODO
 
 In order of priority:
@@ -276,9 +418,15 @@ Entering the Nix ecosystem at the beginning requires high level of engagement to
 
 There's nothing better with NixOS than the (un)official NixOS experience™.
 
-Once you passed the initial curve and the difficulties that come with NixOS, the benefits are immense.
+Once you passed the initial curve and the difficulties that come with Nix, the benefits are immense.
 
-* You can make use of Nix's large ecosystem of packages from nixpkgs, which contains not only a large number of applications, but also decent support as a universal build system for projects made with different tools (i.e., programming languages, even other more popular build systems).
+* Using Nix beyond package management.
+** As a universal build system due to its ability to install and integrate multiple versions of the same program without problems and decent support for different projects use cases (i.e., programming languages, build systems).
+** As a link:https://virtualenv.pypa.io/[virtualenv]-like environment useful for managing development environments.
+** As a way to manage clusters and infrastructure (i.e., link:https://nixos.org/[NixOS] for your installations, link:https://github.com/NixOS/nixops[nixops] for deployment, link:https://github.com/NixOS/hydra[Hydra] for continuous integration).
+
+* You can make use of Nix's large ecosystem of packages and tools from nixpkgs and beyond.
+
 * It is easier to distribute and verify your builds as Nix also has toolings available for those purposes. footnote:[Though, other packaging formats also has those but for Nix, reproducibility is one of the focus.]
 
 If you intend to use NixOS, I recommend to start small and install Nix on a non-NixOS distro and use it as a way to create reproducible development environment, be familiar to its build process (I recommend reading link:https://nixos.org/guides/nix-pills[Nix Pills] to get started), get intimate with systemd, and then test NixOS in a virtual machine.
@@ -320,7 +468,7 @@ It is nice that such a project exists serving as a reference for bigger configur
 
 
 
-== Inspirations
+== Inspirations and acknowledgment
 
 I ~stole~ got several parts of this configuration from the following projects:
 
@@ -334,3 +482,10 @@ I may have to use this at some point.
 
 * link:https://github.com/hlissner/dotfiles/[hlissner's dotfiles, the original inspiration for this functional abomination of a configuration.]
 Very nice.
+
+
+== Copyright
+
+This project is licensed under MIT license.
+I just chose it to make it easier to upstream parts of this project to nixpkgs and to make it easier to copy it without much problems (just don't forget to add attribution as indicated from the license).
+Please see link:./LICENSE[`./LICENSE`] for the full text.

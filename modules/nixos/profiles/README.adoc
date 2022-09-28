@@ -15,6 +15,8 @@ In other words, these are simple configuration that are typically composed of se
 
 However, unlike digga profiles, we do implement an interface (or a declaration) on top of the definition of options.
 Each profile should have an interface to be enabled first (e.g., `options.profiles.${profile}`) since it will be included as part of the included modules for our NixOS configurations.
+This basically makes it easier to create a centralized and one consistent version of a part of a configuration which we can just enable it anywhere multiple times.
+This also prevents potential problems that comes with importing a (digga) profile multiple times such as unintended merged values (i.e., duplicated items in a list).
 
 Furthermore, they are not going to be exported to the flakes since they are quite specific and practically, no one is going to use them with each user having different requirements even with a cluster of systems.
 Thus, you should be mindful to use profiles whenever you write or update NixOS modules.
@@ -23,9 +25,11 @@ As future reference, here's an exhaustive list of namespaces you should avoid us
 * `services` and `programs` shouldn't use any profiles at all since they are small in scope that they are more likely to be combined with other modules.
 
 * Any modules under `workflows` are not exactly prohibited to use profiles since they are all-encompassing modules that creates a desktop that may be composed of multiple modules.
-However, it is heavily discouraged.
-If you have to use profiles, be sure to import them explicitly in the module (i.e., `imports` attribute).
+However, it is heavily discouraged and sparingly used if at all.
+Since profiles are meant for specific setups, this could work nicely to be used for others except those with configurations with similarly set profiles such as mine (which would be nice or not depending on your intention).
+Take note that workflows are also exported in the flake output.
+footnote:[Overall, I don't think it's not much of a threat to set profiles in the workflow unless users that is not me have conspicuously similar setup to mine. It's just discouraged to minimize stepping on as less as configurations as possible.]
 
-* Really, anything that is being exported in the flake outputs (i.e., look for the attributes in `nix flake show`).
+* Really, anything that is being exported in the flake outputs (i.e., look for the attributes in `nix flake show`) unless explicitly stated like the case for `workflows`.
 
 So yeah... have at it.
