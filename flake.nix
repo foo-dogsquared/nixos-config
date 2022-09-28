@@ -112,6 +112,13 @@
       extraArgs = {
         inherit (inputs) nix-colors dotfiles;
         inherit inputs self;
+
+        # This is a variable that is used to check whether the module is
+        # exported or not. Useful for configuring parts of the configuration
+        # that is otherwise that cannot be exported for others' use.
+        #
+        # "Fds" stands for foo-dogsquared just because. :p
+        _isInsideFds = true;
       };
 
       mkHost = { system ? defaultSystem, extraModules ? [ ] }:

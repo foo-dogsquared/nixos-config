@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }@attrs:
 
 let
   name = "a-happy-gnome";
@@ -19,10 +19,6 @@ let
   '';
 in
 {
-  imports = [
-    ../../profiles/i18n.nix
-  ];
-
   options.workflows.workflows.a-happy-gnome = {
     enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
 
@@ -92,74 +88,83 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    # Enable GNOME and GDM.
-    services.xserver = {
-      enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-    };
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
+      # Enable GNOME and GDM.
+      services.xserver = {
+        enable = true;
+        displayManager.gdm.enable = true;
+        desktopManager.gnome.enable = true;
+      };
 
-    xdg.portal = {
-      enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
-      ];
-    };
+      xdg.portal = {
+        enable = true;
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-wlr
+        ];
+      };
 
-    # All GNOME-related additional options.
-    services.gnome = {
-      core-os-services.enable = true;
-      core-shell.enable = true;
-      core-utilities.enable = true;
-    };
+      # All GNOME-related additional options.
+      services.gnome = {
+        core-os-services.enable = true;
+        core-shell.enable = true;
+        core-utilities.enable = true;
 
-    services.packagekit.enable = false;
-    profiles.i18n = {
-      enable = true;
-      ibus.enable = true;
-    };
+        # It doesn't need to since we're not first-timers, yeah?
+        gnome-initial-setup.enable = false;
+      };
 
-    # Since we're using KDE Connect, we'll have to use gsconnect.
-    programs.kdeconnect = {
-      enable = true;
-      package = pkgs.gnomeExtensions.gsconnect;
-    };
+      services.packagekit.enable = false;
 
-    # Bring all of the dconf keyfiles in there.
-    programs.dconf = {
-      enable = true;
-      packages = [ dconfConfig ];
+      # Since we're using KDE Connect, we'll have to use gsconnect.
+      programs.kdeconnect = {
+        enable = true;
+        package = pkgs.gnomeExtensions.gsconnect;
+      };
 
-      # The `user` profile needed to set custom system-wide settings in GNOME.
-      # Also, this is a private option so take precautions with this.
-      profiles.user = pkgs.writeTextFile {
-        name = "a-happy-gnome";
-        text = ''
+      # Bring all of the dconf keyfiles in there.
+      programs.dconf = {
+        enable = true;
+        packages = [ dconfConfig ];
+
+        # The `user` profile needed to set custom system-wide settings in GNOME.
+        # Also, this is a private option so take precautions with this.
+        profiles.user = pkgs.writeTextFile {
+          name = "a-happy-gnome";
+          text = ''
           user-db:user
           system-db:${name}-conf
-        '';
+          '';
+        };
       };
-    };
 
-    xdg.mime = {
-      enable = true;
-      defaultApplications = {
-        # Default application for web browser.
-        "text/html" = "re.sonny.Junction.desktop";
+      xdg.mime = {
+        enable = true;
+        defaultApplications = {
+          # Default application for web browser.
+          "text/html" = "re.sonny.Junction.desktop";
 
-        # Default handler for all files. Not all applications will
-        # respect it, though.
-        "x-scheme-handler/file" = "re.sonny.Junction.desktop";
+          # Default handler for all files. Not all applications will
+          # respect it, though.
+          "x-scheme-handler/file" = "re.sonny.Junction.desktop";
 
-        # Default handler for directories.
-        "inode/directory" = "re.sonny.Junction.desktop";
+          # Default handler for directories.
+          "inode/directory" = "re.sonny.Junction.desktop";
+        };
       };
-    };
 
-    environment.systemPackages = with pkgs; [
-      # The application menu.
-      junction
-    ] ++ cfg.shellExtensions ++ cfg.extraApps;
-  };
+      environment.systemPackages = with pkgs; [
+        # The application menu.
+        junction
+      ] ++ cfg.shellExtensions ++ cfg.extraApps;
+    }
+
+    # Check whether this is inside of my personal configuration or nah.
+    (lib.mkIf (attrs ? _isInsideFds && attrs._isInsideFds) {
+      profiles.i18n = lib.mkDefault {
+        enable = true;
+        ibus.enable = true;
+      };
+    })
+  ]);
 }

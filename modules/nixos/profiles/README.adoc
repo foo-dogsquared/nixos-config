@@ -1,5 +1,6 @@
 = Profiles
 :toc:
+:check_variable: _isInsideFds
 
 
 We're defining profiles after how link:https://digga.divnix.com/concepts/profiles.html[digga library from divnix defines it].
@@ -13,6 +14,11 @@ ____
 
 In other words, these are simple configuration that are typically composed of setting common NixOS options such as enabling NixOS services or installing system packages.
 
+
+
+
+== What are profiles, really?
+
 However, unlike digga profiles, we do implement an interface (or a declaration) on top of the definition of options.
 Each profile should have an interface to be enabled first (e.g., `options.profiles.${profile}`) since it will be included as part of the included modules for our NixOS configurations.
 This basically makes it easier to create a centralized and one consistent version of a part of a configuration which we can just enable it anywhere multiple times.
@@ -25,11 +31,38 @@ As future reference, here's an exhaustive list of namespaces you should avoid us
 * `services` and `programs` shouldn't use any profiles at all since they are small in scope that they are more likely to be combined with other modules.
 
 * Any modules under `workflows` are not exactly prohibited to use profiles since they are all-encompassing modules that creates a desktop that may be composed of multiple modules.
-However, it is heavily discouraged and sparingly used if at all.
-Since profiles are meant for specific setups, this could work nicely to be used for others except those with configurations with similarly set profiles such as mine (which would be nice or not depending on your intention).
+However, it is heavily discouraged.
+If used, be sure to put it under a check with `{check_variable}` which is an extra argument passed to various profiles (e.g., NixOS, home-manager) as an optional part of the configuration.
 Take note that workflows are also exported in the flake output.
 footnote:[Overall, I don't think it's not much of a threat to set profiles in the workflow unless users that is not me have conspicuously similar setup to mine. It's just discouraged to minimize stepping on as less as configurations as possible.]
 
 * Really, anything that is being exported in the flake outputs (i.e., look for the attributes in `nix flake show`) unless explicitly stated like the case for `workflows`.
 
+
+
+
+== Setting profiles conditionally
+
+The following snippet of a NixOS module with an optional part check with the simple boolean variable.
+
+[subs=attributes, source, nix]
+----
+{ config, options, pkgs, lib, ... }@attrs:
+
+{
+  # ...
+
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
+      # Some required parts here.
+    }
+
+    (lib.mkIf (attrs ? {check_variable} && attrs.{check_variable}) {
+      # Set profiles here.
+    })
+  ];
+}
+----
+
 So yeah... have at it.
+This is useful for setting profiles inside of modules that are otherwise not possible to easily export for others' use (e.g., `workflows`).
