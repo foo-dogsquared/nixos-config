@@ -5,6 +5,7 @@ with pkgs; {
   gnu = callPackage ./gnu.nix { };
   gnome = callPackage ./gnome.nix { };
   nix = callPackage ./nix.nix { };
+  go = callPackage ./go.nix { };
   guile = callPackage ./guile.nix { };
   guile3 = callPackage ./guile.nix { guile = guile_3_0; };
   gtk3 = callPackage ./gtk.nix { gtk = gtk3; libportal-gtk = libportal-gtk3; };
