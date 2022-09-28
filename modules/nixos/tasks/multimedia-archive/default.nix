@@ -187,6 +187,12 @@ in
               "https://www.artstation.com/kuvshinov_ilya" # Ilya Kuvshinov
               "https://www.artstation.com/meiipng" # Meiiart
               "https://www.artstation.com/bassem_wageeh" # Bassem wageeh
+              "https://www.artstation.com/ocellusart" # Ocellus
+              "https://www.artstation.com/jordanparrin" # Jordan Parrin
+              "https://www.artstation.com/blazporenta" # Blaz Porenta
+              "https://www.artstation.com/an_na" # Anya Mozharovska
+              "https://www.artstation.com/dllxtt" # Mykhail Klymenko
+              "https://www.artstation.com/nicwilliams" # Nic Williams
               "https://hyperjerk.newgrounds.com" # HyperJerk
             ];
             startAt = "weekly";
