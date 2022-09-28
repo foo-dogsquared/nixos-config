@@ -16,14 +16,7 @@ rec {
       absoluteOverrides = { isNormalUser = true; };
     in {
       home-manager.users."${user}" = { ... }: {
-        imports = [
-          {
-            home.username = user;
-            home.homeDirectory = homeDirectory;
-          }
-
-          (getUser "home-manager" user)
-        ];
+        imports = [ (getUser "home-manager" user) ];
       };
       users.users."${user}" = defaultUserConfig // settings // absoluteOverrides;
   };
