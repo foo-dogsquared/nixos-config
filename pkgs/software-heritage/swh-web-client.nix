@@ -13,7 +13,7 @@ buildPythonPackage rec {
 
   doCheck = false;
   propagatedBuildInputs = [
-    dateutil
+    python-dateutil
     click
     requests
 

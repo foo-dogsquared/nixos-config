@@ -13,7 +13,7 @@
 , libglvnd
 , mesa
 , SDL2
-, pkgconfig
+, pkg-config
 , valgrind
 , sndio
 , libsamplerate
@@ -54,7 +54,7 @@ stdenv.mkDerivation rec {
     substituteInPlace CMakeLists.txt --replace '@mruby@' "${mruby}"
   '';
 
-  nativeBuildInputs = [ cmake pkgconfig ];
+  nativeBuildInputs = [ cmake pkg-config ];
   buildInputs = [
     alsaLib
     freeglut

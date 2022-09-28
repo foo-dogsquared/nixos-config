@@ -161,10 +161,7 @@ in {
       hardware.opentabletdriver.enable = true;
 
       # Enable support for Bluetooth.
-      hardware.bluetooth = {
-        enable = true;
-        package = pkgs.bluezFull;
-      };
+      hardware.bluetooth.enable = true;
     })
 
     (lib.mkIf cfg.cleanup.enable {

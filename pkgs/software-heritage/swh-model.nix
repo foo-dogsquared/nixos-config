@@ -19,7 +19,7 @@ buildPythonPackage rec {
     typing-extensions
     hypothesis
     iso8601
-    dateutil
+    python-dateutil
     attrs
     attrs-strict
 

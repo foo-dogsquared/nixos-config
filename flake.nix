@@ -144,9 +144,6 @@
           inputs.guix-overlay.nixosModules.guix
         ];
 
-        # Bleeding edge, baybee!
-        nix.package = lib.mkDefault pkgs.nixUnstable;
-
         # I want to capture the usual flakes to its exact version so we're
         # making them available to our system. This will also prevent the
         # annoying downloads since it always get the latest revision.

@@ -2,7 +2,7 @@
 # to use the `rust` template from `nixpkgs` or whatever you prefer.
 { mkShell
 , openssl
-, pkgconfig
+, pkg-config
 , cargo
 , rustc
 , rustfmt
@@ -14,7 +14,7 @@
 mkShell {
   buildInputs = [
     openssl # In case some package needs it.
-    pkgconfig # In case some other package needs it.
+    pkg-config # In case some other package needs it.
 
     # Rust platform.
     cargo
