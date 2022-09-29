@@ -135,8 +135,7 @@
             ++ extraModules;
         };
 
-      # The default configuration for our NixOS systems.
-      hostDefaultConfig = { lib, pkgs, system, ... }: {
+      hostSharedConfig = { lib, pkgs, system, ... }: {
         # Some defaults for evaluating modules.
         _module.check = true;
 
@@ -221,7 +220,7 @@
         home-manager.useGlobalPkgs = lib.mkDefault true;
         home-manager.sharedModules =
           lib.modulesToList (lib.filesToAttr ./modules/home-manager)
-          ++ [ userDefaultConfig ];
+          ++ [ userSharedConfig ];
         home-manager.extraSpecialArgs = extraArgs;
 
         # Enabling some things for sops.
@@ -250,7 +249,7 @@
       # be used for sharing modules among home-manager users from NixOS
       # configurations with `nixpkgs.useGlobalPkgs` set to `true` so avoid
       # setting nixpkgs-related options here.
-      userDefaultConfig = { pkgs, config, ... }: {
+      userSharedConfig = { pkgs, config, ... }: {
         # Hardcoding this is not really great especially if you consider using
         # other locales but its default values are already hardcoded so what
         # the hell. For other users, they would have to do set these manually.
@@ -264,7 +263,7 @@
             # Here are some of the common cases for setting the home directory options.
             #
             # * For exporting home-manager configurations, this is done in this flake definition.
-            # * For NixOS configs, this is set in `mapHomeManagerUser` from the private library.
+            # * For NixOS configs, this is done automatically by the home-manager NixOS module.
             # * Otherwise, you'll have to manually set them.
             appendToHomeDir = path: "${config.home.homeDirectory}/${path}";
           in
@@ -302,7 +301,7 @@
               ({ lib, ... }: {
                 networking.hostName = lib.mkDefault (builtins.baseNameOf path);
               })
-              hostDefaultConfig
+              hostSharedConfig
               path
             ];
           in
@@ -324,14 +323,14 @@
                 # use the same overlays.
                 nixpkgs.overlays = overlays;
 
-                # Stallman-senpai will be disappointed. :(
+                # Stallman-senpai will be disappointed. :/
                 nixpkgs.config.allowUnfree = true;
 
                 # Setting the homely options.
                 home.username = builtins.baseNameOf path;
                 home.homeDirectory = "/home/${config.home.username}";
               })
-              userDefaultConfig
+              userSharedConfig
               path
             ];
           in
