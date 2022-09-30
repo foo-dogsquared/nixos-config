@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#",
+  "title": "Multimedia archive jobs",
+  "description": "A database of jobs for multimedia archiving in foo-dogsquared's NixOS config",
+  "patternProperties": {
+    "^[A-Za-z0-9-]+$": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "extraArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "subscriptions": {
+          "$comment": "While it is easy to think this could be an object, some exports and applications allow the data to have the same name but points to different URLs. For example, NewPipe has support for multiple services other than YouTube which the same creator could have accounts on multiple platforms. Overriding it would be troublesome in case I want to follow the same creator on multiple platforms.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "required": [ "name", "url" ]
+          }
+        }
+      },
+      "required": [ "subscriptions" ]
+    }
+  }
+}
