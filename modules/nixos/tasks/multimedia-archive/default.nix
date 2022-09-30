@@ -22,24 +22,30 @@ in
 
         # Write the subtitle file with the preferred languages.
         "--write-subs"
-        "--sub-langs" "en.*,ja,ko,zh.*,fr,pt.*"
+        "--sub-langs"
+        "en.*,ja,ko,zh.*,fr,pt.*"
 
         # Write the description in a separate file.
         "--write-description"
 
         # The global output for all of the jobs.
-        "--output" "%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title)156s.%(ext)s"
+        "--output"
+        "%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title).%(ext)s"
 
         # Select only the most optimal format for my usecases.
-        "--format" "(webm,mkv,mp4)[height<=?1280]"
+        "--format"
+        "(webm,mkv,mp4)[height<=?1280]"
 
         # Prefer MKV whenever possible for video formats.
-        "--merge-output-format" "mkv"
+        "--merge-output-format"
+        "mkv"
 
         # Don't download any videos that are originally live streams.
-        "--match-filters" "!was_live"
+        "--match-filters"
+        "!was_live"
 
-        "--audio-quality" "1"
+        "--audio-quality"
+        "1"
 
         # Not much error since it will always fail.
         "--no-abort-on-error"
@@ -55,7 +61,7 @@ in
       # their names and URL, create an attrset suitable for declaring the
       # archiving jobs of several services for `services.yt-dlp`,
       # `services.gallery-dl`, and `services.archivebox`.
-      mkJobs = { extraArgs ? [], db }:
+      mkJobs = { extraArgs ? [ ], db }:
         let
           days = [ "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" ];
           categories = lib.zipListsWith
@@ -79,8 +85,6 @@ in
             categories;
         in
         lib.listToAttrs jobsList;
-
-      readJSON = jsonFile: builtins.fromJSON (builtins.readFile jsonFile);
     in
     {
       environment.systemPackages = [ ytdlpArchiveVariant ];
@@ -106,7 +110,8 @@ in
         # possible for this.
         extraArgs = ytdlpArgs ++ [
           # Make a global list of successfully downloaded videos as a cache for yt-dlp.
-          "--download-archive" "${config.services.yt-dlp.archivePath}/videos"
+          "--download-archive"
+          "${config.services.yt-dlp.archivePath}/videos"
         ];
 
         jobs = mkJobs {
@@ -167,7 +172,8 @@ in
 
         extraArgs = [
           # Record all downloaded files in an archive file.
-          "--download-archive" "${config.services.gallery-dl.archivePath}/photos"
+          "--download-archive"
+          "${config.services.gallery-dl.archivePath}/photos"
 
           # Write metadata to separate JSON files.
           "--write-metadata"
@@ -176,7 +182,8 @@ in
           # We're putting as a separate config file instead of configuring it
           # in the service properly since secrets decrypted by sops-nix cannot
           # be read in Nix.
-          "--config" "${config.sops.secrets."multimedia-archive/secrets-config".path}"
+          "--config"
+          "${config.sops.secrets."multimedia-archive/secrets-config".path}"
         ];
 
         settings.extractor = {
