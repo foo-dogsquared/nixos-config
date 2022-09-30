@@ -1,0 +1,576 @@
+{
+  "3d-modelling": {
+    "extraArgs": [],
+    "subscriptions": [
+      {
+        "name": "3DSage",
+        "url": "https://www.youtube.com/channel/UCjdHbo8_vh3rxQ-875XGkvw"
+      },
+      {
+        "name": "Andy Front",
+        "url": "https://www.youtube.com/channel/UCmNewVWrKOn667okSlM0OlA"
+      },
+      {
+        "name": "Blender Secrets",
+        "url": "https://www.youtube.com/channel/UCp7EwodJcppc6GqiRcnCpOw"
+      },
+      {
+        "name": "BoroCG",
+        "url": "https://www.youtube.com/channel/UCGgpthBWDbFX2GSljMw-MdQ"
+      },
+      {
+        "name": "CG Boost",
+        "url": "https://www.youtube.com/channel/UCWWybvw9jnpOdJq_6wTHryA"
+      },
+      {
+        "name": "CG Fast Track",
+        "url": "https://www.youtube.com/channel/UCsvgY1GWmJwvk3o6UeXVxAg"
+      },
+      {
+        "name": "CGMatter",
+        "url": "https://www.youtube.com/channel/UCy1f4m64dwCwk8CBZ_vHfPg"
+      },
+      {
+        "name": "CrossMind Studio",
+        "url": "https://www.youtube.com/channel/UCHihootMqyGz175gqOPahtw"
+      },
+      {
+        "name": "Derek Elliott",
+        "url": "https://www.youtube.com/channel/UCk7IufzS4r8v76NeWR6A3dg"
+      },
+      {
+        "name": "Ducky 3D",
+        "url": "https://www.youtube.com/channel/UCuNhGhbemBkdflZ1FGJ0lUQ"
+      },
+      {
+        "name": "Erindale",
+        "url": "https://www.youtube.com/channel/UCGMyyn2FdEFcDfP1wQRh5lQ"
+      },
+      {
+        "name": "Grant Abbitt",
+        "url": "https://www.youtube.com/channel/UCZFUrFoqvqlN8seaAeEwjlw"
+      },
+      {
+        "name": "henning",
+        "url": "https://www.youtube.com/channel/UCidwqcHWZf1qBnqoUx9N6rA"
+      },
+      {
+        "name": "Hoolopee",
+        "url": "https://www.youtube.com/channel/UCE_gw5ybJdGAcyZFy6TfScw"
+      },
+      {
+        "name": "IanHubert",
+        "url": "https://www.youtube.com/channel/UCbmxZRQk-X0p-TOxd6PEYJA"
+      },
+      {
+        "name": "Jhanrell 3D",
+        "url": "https://www.youtube.com/channel/UCsl5Po2vPkFOmi27EL8qFGg"
+      },
+      {
+        "name": "Markom3D",
+        "url": "https://www.youtube.com/channel/UCdlNVsQys37ETeTDqQqiHFQ"
+      },
+      {
+        "name": "Polyfjord",
+        "url": "https://www.youtube.com/channel/UC1MmrnDaPnNa55twYBiH4NA"
+      },
+      {
+        "name": "Shonzo",
+        "url": "https://www.youtube.com/channel/UCVwc3XV94ifVOonbFP6-7tw"
+      },
+      {
+        "name": "t3ssel8r",
+        "url": "https://www.youtube.com/channel/UCIjUIjWig0r5DIixQrt6A3A"
+      },
+      {
+        "name": "William Landgren",
+        "url": "https://www.youtube.com/channel/UC_v-Rg-FYBUfkF4GLcMDEcg"
+      },
+      {
+        "name": "YanSculpts",
+        "url": "https://www.youtube.com/channel/UCfjswDVU0XHyBN7UFG0Mi5Q"
+      }
+    ]
+  },
+  "art": {
+    "extraArgs": [],
+    "subscriptions": [
+      {
+        "name": "3DSage",
+        "url": "https://www.youtube.com/channel/UCjdHbo8_vh3rxQ-875XGkvw"
+      },
+      {
+        "name": "Aki-Anyway",
+        "url": "https://www.youtube.com/channel/UCldLZEAgmkEO0vep4OvabPQ"
+      },
+      {
+        "name": "Ali Bahabadi",
+        "url": "https://www.youtube.com/channel/UCHv_hNLkxqlcY20MwVyayfw"
+      },
+      {
+        "name": "Blackthornprod",
+        "url": "https://www.youtube.com/channel/UC9Z1XWw1kmnvOOFsj6Bzy2g"
+      },
+      {
+        "name": "Bobby Duke Arts",
+        "url": "https://www.youtube.com/channel/UCSC1HqVmTaE4Shn32ihbC7w"
+      },
+      {
+        "name": "Brandon James Greer",
+        "url": "https://www.youtube.com/channel/UCC26K7LTSrJK0BPAUyyvtQg"
+      },
+      {
+        "name": "Challenge Clay Craft",
+        "url": "https://www.youtube.com/channel/UCkKyQpfQCClQLJreqiORliw"
+      },
+      {
+        "name": "Corridor Crew",
+        "url": "https://www.youtube.com/channel/UCSpFnDQr88xCZ80N-X7t0nQ"
+      },
+      {
+        "name": "creosfera",
+        "url": "https://www.youtube.com/channel/UCAHVy9XS5Fz1WMRHIzAodUQ"
+      },
+      {
+        "name": "D_NOT_So_Good_Artist",
+        "url": "https://www.youtube.com/channel/UC505T67IfBzIQRyDOen3seg"
+      },
+      {
+        "name": "Danny Casale",
+        "url": "https://www.youtube.com/channel/UClNHWmlNIgEXLotLtlY2mLw"
+      },
+      {
+        "name": "David Revoy",
+        "url": "https://www.youtube.com/channel/UCnAbNwJjusY7zQ__sQyJlSA"
+      },
+      {
+        "name": "Denis Godyna",
+        "url": "https://www.youtube.com/channel/UCTJiWCp2fhugnic2tCTqsLg"
+      },
+      {
+        "name": "Design Theory",
+        "url": "https://www.youtube.com/channel/UCdgUN8rX3SEb9L7FDub3I6A"
+      },
+      {
+        "name": "dillongoo",
+        "url": "https://www.youtube.com/channel/UC-B06UJxJ20HYv15lzrm9mA"
+      },
+      {
+        "name": "Dollarwang",
+        "url": "https://www.youtube.com/channel/UCQf7HdP7F_UoA8TfjEfzr4Q"
+      },
+      {
+        "name": "Emanuele Colombo",
+        "url": "https://www.youtube.com/channel/UCSvf1bh9DEL7glMzX1aYQUA"
+      },
+      {
+        "name": "Erindale",
+        "url": "https://www.youtube.com/channel/UCGMyyn2FdEFcDfP1wQRh5lQ"
+      },
+      {
+        "name": "Henry Segerman",
+        "url": "https://www.youtube.com/channel/UC4zzTEL5tuIgGMvzjk1Ozbg"
+      },
+      {
+        "name": "Jazza",
+        "url": "https://www.youtube.com/channel/UCHu2KNu6TtJ0p4hpSW7Yv7Q"
+      },
+      {
+        "name": "JujuArts",
+        "url": "https://www.youtube.com/channel/UCuTcJu9dZM8ZdgCKOxQLXuw"
+      },
+      {
+        "name": "Logos By Nick",
+        "url": "https://www.youtube.com/channel/UCEQXp_fcqwPcqrzNtWJ1w9w"
+      },
+      {
+        "name": "Lucifer King",
+        "url": "https://www.youtube.com/channel/UCIu9_S0kuKXgA2h5_egIx-A"
+      },
+      {
+        "name": "Marcello Barenghi",
+        "url": "https://www.youtube.com/channel/UCcBnT6LsxANZjUWqpjR8Jpw"
+      },
+      {
+        "name": "Marco Bucci",
+        "url": "https://www.youtube.com/channel/UCsDxB-CSMQ0Vu_hTag7-2UQ"
+      },
+      {
+        "name": "ronillust",
+        "url": "https://www.youtube.com/channel/UCAaXLLoXnRF8EPUy5b5b6Vw"
+      },
+      {
+        "name": "Sinix Design",
+        "url": "https://www.youtube.com/channel/UCUQTqWAaSzhAKRanOpes1nA"
+      },
+      {
+        "name": "t3ssel8r",
+        "url": "https://www.youtube.com/channel/UCIjUIjWig0r5DIixQrt6A3A"
+      },
+      {
+        "name": "Wakuneco.わくねこ羊毛フェルト",
+        "url": "https://www.youtube.com/channel/UCUJDEalwbECquaZoSQIYZHA"
+      }
+    ]
+  },
+  "comsci": {
+    "extraArgs": [],
+    "subscriptions": [
+      {
+        "name": "Andreas Kling",
+        "url": "https://www.youtube.com/channel/UC3ts8coMP645hZw9JSD3pqQ"
+      },
+      {
+        "name": "Bisqwit",
+        "url": "https://www.youtube.com/channel/UCKTehwyGCKF-b2wo0RKwrcg"
+      },
+      {
+        "name": "Bits inside by René Rebe",
+        "url": "https://www.youtube.com/channel/UCJLLl6AraX1POemgLfhirwg"
+      },
+      {
+        "name": "carykh",
+        "url": "https://www.youtube.com/channel/UC9z7EZAbkphEMg0SP7rw44A"
+      },
+      {
+        "name": "CodeParade",
+        "url": "https://www.youtube.com/channel/UCrv269YwJzuZL3dH5PCgxUw"
+      },
+      {
+        "name": "Computerphile",
+        "url": "https://www.youtube.com/channel/UC9-y-6csu5WGm29I7JiwpnA"
+      },
+      {
+        "name": "Creel",
+        "url": "https://www.youtube.com/channel/UCq7dxy_qYNEBcHqQVCbc20w"
+      },
+      {
+        "name": "CS Honors @ Illinois",
+        "url": "https://www.youtube.com/channel/UCRA18QWPzB7FYVyg0WFKC6g"
+      },
+      {
+        "name": "CS50",
+        "url": "https://www.youtube.com/channel/UCcabW7890RKJzL968QWEykA"
+      },
+      {
+        "name": "Easy Theory",
+        "url": "https://www.youtube.com/channel/UC3VY6RTXegnoSD_q446oBdg"
+      },
+      {
+        "name": "Junferno",
+        "url": "https://www.youtube.com/channel/UCRb6Mw3fJ6OFzp-cB9X29aA"
+      },
+      {
+        "name": "NeetCode",
+        "url": "https://www.youtube.com/channel/UC_mYaQAE6-71rjSN6CeCA-g"
+      },
+      {
+        "name": "The Coding Train",
+        "url": "https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw"
+      },
+      {
+        "name": "ThePrimeagen",
+        "url": "https://www.youtube.com/channel/UC8ENHE5xdFSwx71u3fDH5Xw"
+      },
+      {
+        "name": "TimKrief IndieDev",
+        "url": "https://www.youtube.com/channel/UCm9faLh4Rrmlp8FR9MPsJxg"
+      },
+      {
+        "name": "Two Minute Papers",
+        "url": "https://www.youtube.com/channel/UCbfYPyITQ-7l4upoX8nvctg"
+      }
+    ]
+  },
+  "food": {
+    "extraArgs": [],
+    "subscriptions": [
+      {
+        "name": "Adam Ragusea",
+        "url": "https://www.youtube.com/channel/UC9_p50tH3WmMslWRWKnM7dQ"
+      },
+      {
+        "name": "Apron",
+        "url": "https://www.youtube.com/channel/UCgzJrXg7oh7lj-bMC-pzkgw"
+      },
+      {
+        "name": "Babish Culinary Universe",
+        "url": "https://www.youtube.com/channel/UCJHA_jMfCvEnv-3kRjTCQXw"
+      },
+      {
+        "name": "BORED",
+        "url": "https://www.youtube.com/channel/UCb5QRUn5w8_g0j8QVaWzcjQ"
+      },
+      {
+        "name": "Cookrate - Cakes",
+        "url": "https://www.youtube.com/channel/UCy3QtOQ7NiSEOs7JO-7vq7A"
+      },
+      {
+        "name": "Emma's Goodies",
+        "url": "https://www.youtube.com/channel/UCgmOd6sRQRK7QoSazOfaIjQ"
+      },
+      {
+        "name": "emmymade",
+        "url": "https://www.youtube.com/channel/UCzqbfYjQmf9nLQPMxVgPhiA"
+      },
+      {
+        "name": "Ethan Chlebowski",
+        "url": "https://www.youtube.com/channel/UCDq5v10l4wkV5-ZBIJJFbzQ"
+      },
+      {
+        "name": "HidaMari Cooking",
+        "url": "https://www.youtube.com/channel/UCcp9uRaBwInxl_SZqGRksDA"
+      },
+      {
+        "name": "Judy Ann's Kitchen",
+        "url": "https://www.youtube.com/channel/UC5xdS3lFApjvOs9zdys3eOw"
+      },
+      {
+        "name": "Kirbyyy",
+        "url": "https://www.youtube.com/channel/UCyC964gYH7eV4_icDGg8qVw"
+      },
+      {
+        "name": "Made With Lau",
+        "url": "https://www.youtube.com/channel/UCsIF9vk-I_PV1P-ShDFA84A"
+      },
+      {
+        "name": "Nino's Home",
+        "url": "https://www.youtube.com/channel/UCKetFmtqdh-kn915crdf72A"
+      },
+      {
+        "name": "Ninong Ry",
+        "url": "https://www.youtube.com/channel/UCvQrjgLj841wiQAKDgtKFOw"
+      },
+      {
+        "name": "Pinoy Easy Recipes",
+        "url": "https://www.youtube.com/channel/UCk5KE4BdmU32sdV4kvkAv5w"
+      },
+      {
+        "name": "You Suck At Cooking",
+        "url": "https://www.youtube.com/channel/UCekQr9znsk2vWxBo3YiLq2w"
+      },
+      {
+        "name": "집밥요리 Home Cooking",
+        "url": "https://www.youtube.com/channel/UCUAKaXyq2hVBCph1LOUtuqg"
+      },
+      {
+        "name": "푸드킹덤 Food Kingdom",
+        "url": "https://www.youtube.com/channel/UC4BfinFCS1o6t1tAsl0RVWQ"
+      }
+    ]
+  },
+  "music": {
+    "extraArgs": [ "--extract-audio" ],
+    "subscriptions": [
+      {
+        "name": "500L/g",
+        "url": "https://www.youtube.com/channel/UCjZjUymRDAhp9c1rb0X6aww"
+      },
+      {
+        "name": "acrouzet",
+        "url": "https://www.youtube.com/channel/UClv1kZDpIA9LcXPYY4KTU-w"
+      },
+      {
+        "name": "AJR",
+        "url": "https://www.youtube.com/channel/UCQ5w3fSomzziZfO7neK7eAg"
+      },
+      {
+        "name": "ALAMAT",
+        "url": "https://www.youtube.com/channel/UCOnUfJpp-Fg8X2TnuH_JD7w"
+      },
+      {
+        "name": "ALFA MUSIC YouTube Channel",
+        "url": "https://www.youtube.com/channel/UCED_jMuUdSWi1KRY_6n3hHQ"
+      },
+      {
+        "name": "Andre Antunes",
+        "url": "https://www.youtube.com/channel/UC8zTlrhQ0w1-TZjc2-jdcag"
+      },
+      {
+        "name": "Asian Shoegaze",
+        "url": "https://www.youtube.com/channel/UCWubfmD-UY92kgCct3PXvZQ"
+      },
+      {
+        "name": "Ayase / YOASOBI",
+        "url": "https://www.youtube.com/channel/UCvpredjG93ifbCP1Y77JyFA"
+      },
+      {
+        "name": "Beyond The Guitar",
+        "url": "https://www.youtube.com/channel/UC8LgDpDsFXiwYupTihnTF5g"
+      },
+      {
+        "name": "Boid",
+        "url": "https://www.youtube.com/channel/UCp8BU3mHY3Vw9WBPLjAJVcQ"
+      },
+      {
+        "name": "BOZESTYLE",
+        "url": "https://www.youtube.com/channel/UCm5j5Ls1w4EQsZ_9GUT7mXg"
+      },
+      {
+        "name": "Bulby",
+        "url": "https://www.youtube.com/channel/UCz6zvgkf6eKpgqlUZQstOtQ"
+      },
+      {
+        "name": "CAP'STONE",
+        "url": "https://soundcloud.com/capcom-sound"
+      },
+      {
+        "name": "Chip Jockey",
+        "url": "https://chipjockey.bandcamp.com"
+      },
+      {
+        "name": "Chip Jockey",
+        "url": "https://www.youtube.com/channel/UCfbi12o4I5f27w13Mkqv7Sg"
+      },
+      {
+        "name": "Chip Tanaka",
+        "url": "https://www.youtube.com/channel/UCDBK1BTOf7GXl0KJ1uePnzQ"
+      },
+      {
+        "name": "Dylan Tallchief",
+        "url": "https://www.youtube.com/channel/UCIu2Fj4x_VMn2dgSB1bFyQA"
+      },
+      {
+        "name": "FalKKonE",
+        "url": "https://www.youtube.com/channel/UChAHYPBvyaQIpjyTSdQhOMQ"
+      },
+      {
+        "name": "Forrest Brazeal",
+        "url": "https://www.youtube.com/channel/UCt5LsaDWTEBY7FThtp37LfQ"
+      },
+      {
+        "name": "GaMetal",
+        "url": "https://www.youtube.com/channel/UCK9Hl6LXPaooxMTvsOutw3A"
+      },
+      {
+        "name": "George Collier",
+        "url": "https://www.youtube.com/channel/UCigygyPkHm07o-wQvkET7Og"
+      },
+      {
+        "name": "HALIDONMUSIC",
+        "url": "https://www.youtube.com/channel/UCyOfqgtsQaM3S-VZnsYnHjQ"
+      },
+      {
+        "name": "insaneintherainmusic",
+        "url": "https://www.youtube.com/channel/UC_OtnV-9QZmBj6oWBelMoZw"
+      },
+      {
+        "name": "John Tay",
+        "url": "https://www.youtube.com/channel/UCbaO2SkJlbWwQyFCEPgLLow"
+      },
+      {
+        "name": "Kiichi Kobayashi",
+        "url": "https://www.youtube.com/channel/UCQMNXjJN-LdNSkUblrxPpCg"
+      },
+      {
+        "name": "King Gnu official YouTube channel",
+        "url": "https://www.youtube.com/channel/UCkB8HnJSDSJ2hkLQFUc-YrQ"
+      },
+      {
+        "name": "losprimerosVIIVI",
+        "url": "https://www.youtube.com/channel/UCMSVWxNp1lkEGpDClzm8Qvw"
+      },
+      {
+        "name": "Maximix",
+        "url": "https://www.youtube.com/channel/UCnvKCS1NzLmzOd4-LynA_jw"
+      },
+      {
+        "name": "MayTree",
+        "url": "https://www.youtube.com/channel/UC3mY2SKYhPjqImtBBXsR6_Q"
+      },
+      {
+        "name": "Pan Piano",
+        "url": "https://www.youtube.com/channel/UCI7ktPB6toqucpkkCiolwLg"
+      },
+      {
+        "name": "RichaadEB",
+        "url": "https://www.youtube.com/channel/UCPM1bCbT-dVAHAEIpUUpVLQ"
+      },
+      {
+        "name": "Ruscel Torres",
+        "url": "https://www.youtube.com/channel/UCjo880FeW792wHeNlaUXMjQ"
+      },
+      {
+        "name": "Shady Cicada",
+        "url": "https://www.youtube.com/channel/UC-90KuSWRVLImW4xHWFYMnQ"
+      },
+      {
+        "name": "SID",
+        "url": "https://www.youtube.com/channel/UC7jHTm2dDkhckKyOWUavuXg"
+      },
+      {
+        "name": "SQUARE ENIX MUSIC Channel",
+        "url": "https://www.youtube.com/channel/UCMx60HYcw1ieiPlZZagfqXQ"
+      },
+      {
+        "name": "Tee Lopes",
+        "url": "https://www.youtube.com/channel/UC3Va-8NnzTuV-Yv-JlyuQsQ"
+      },
+      {
+        "name": "The8BitDrummer",
+        "url": "https://www.youtube.com/channel/UCEHXNknwbsRu73QsakWIdzQ"
+      },
+      {
+        "name": "ゲスの極み乙女 Official YouTube Channel",
+        "url": "https://www.youtube.com/channel/UC0pHUMEOtul5NlaT-Rt-34w"
+      },
+      {
+        "name": "和ぬか",
+        "url": "https://www.youtube.com/channel/UCm7rYZ6xOw3m5GaTMuUJjVw"
+      }
+    ]
+  },
+  "random-stuff": {
+    "extraArgs": [],
+    "subscriptions": [
+      {
+        "name": "Atomic Shrimp",
+        "url": "https://www.youtube.com/channel/UCSl5Uxu2LyaoAoMMGp6oTJA"
+      },
+      {
+        "name": "Cody'sLab",
+        "url": "https://www.youtube.com/channel/UCu6mSoMNzHQiBIOCkHUa2Aw"
+      },
+      {
+        "name": "JK Brickworks",
+        "url": "https://www.youtube.com/channel/UCUaiGrBfRCaC6pL7ZnZjWbg"
+      },
+      {
+        "name": "JonTronShow",
+        "url": "https://www.youtube.com/channel/UCdJdEguB1F1CiYe7OEi3SBg"
+      },
+      {
+        "name": "Junferno",
+        "url": "https://www.youtube.com/channel/UCRb6Mw3fJ6OFzp-cB9X29aA"
+      },
+      {
+        "name": "LockPickingLawyer",
+        "url": "https://www.youtube.com/channel/UCm9K6rby98W8JigLoZOh6FQ"
+      },
+      {
+        "name": "Nick Zammeti",
+        "url": "https://www.youtube.com/channel/UC3-0S7vXfwYY2jj5EkMpymA"
+      },
+      {
+        "name": "Origami with Jo Nakashima",
+        "url": "https://www.youtube.com/channel/UC3ICcukYYeSn26KlCRnhOhA"
+      },
+      {
+        "name": "Peter Knetter",
+        "url": "https://www.youtube.com/channel/UCNMyoMaXJZITZaRKCz7G23Q"
+      },
+      {
+        "name": "Sabaton History",
+        "url": "https://www.youtube.com/channel/UCaG4CBbZih6nLzD08bTBGfw"
+      },
+      {
+        "name": "Steve1989MREInfo",
+        "url": "https://www.youtube.com/channel/UC2I6Et1JkidnnbWgJFiMeHA"
+      },
+      {
+        "name": "WAY OUT WEST with Sandra and Tim",
+        "url": "https://www.youtube.com/channel/UCSViWfOV4pEcYnzpV6w548Q"
+      }
+    ]
+  }
+}

@@ -19,7 +19,7 @@ from pathlib import Path
 
 def kebab_case(string):
     string = string.lower()
-    string = re.sub("\s+", "-", string)
+    string = re.sub(r"\s+", "-", string)
     string = re.sub("[^a-zA-Z0-9-]", "", string)
     string = re.sub("-+", "-", string)
     string = re.sub("^-|-$", "", string)
@@ -38,12 +38,15 @@ def extract_categories_from_db(db_file, categories):
             ORDER BY name COLLATE NOCASE;
         '''
 
-        data = { kebab_case(category) : [] for category in categories }
+        data = { kebab_case(category): {
+            "subscriptions" : [],
+            "extraArgs" : []
+        } for category in categories }
 
         for row in db.execute(query):
-            tag = row["tag"]
-            if tag in categories:
-                data[kebab_case(tag)].append({ "url": row["url"], "name": row["name"] })
+            category = row["tag"]
+            if category in categories:
+                data[kebab_case(category)]["subscriptions"].append({ "url": row["url"], "name": row["name"] })
 
         return data
 

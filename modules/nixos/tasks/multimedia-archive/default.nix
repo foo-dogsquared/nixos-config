@@ -61,17 +61,21 @@ in
           categories = lib.zipListsWith
             (index: category: { inherit index; data = category; })
             (lib.lists.range 1 (lib.length (lib.attrValues db)))
-            (lib.mapAttrsToList (name: value: { inherit name; subscriptions = value; }) db);
+            (lib.mapAttrsToList (name: value: { inherit name; inherit (value) subscriptions extraArgs; }) db);
           jobsList = builtins.map
-            (category: {
-              name = category.data.name;
-              value = {
-                inherit extraArgs;
-                urls = builtins.map (subscription: subscription.url) category.data.subscriptions;
-                startAt = lib.elemAt days (lib.mod category.index (lib.length days));
-                persistent = true;
-              };
-            })
+            (category:
+              let
+                jobExtraArgs = lib.attrByPath [ "data" "extraArgs" ] [ ] category;
+              in
+              {
+                name = category.data.name;
+                value = {
+                  extraArgs = extraArgs ++ jobExtraArgs;
+                  urls = builtins.map (subscription: subscription.url) category.data.subscriptions;
+                  startAt = lib.elemAt days (lib.mod category.index (lib.length days));
+                  persistent = true;
+                };
+              })
             categories;
         in
         lib.listToAttrs jobsList;
@@ -107,7 +111,7 @@ in
 
         jobs = mkJobs {
           extraArgs = [ "--playlist-end" "20" ];
-          db = readJSON ./newpipe-db.json;
+          db = lib.importJSON ./data/jobs.yt-dlp.json;
         };
       };
 
