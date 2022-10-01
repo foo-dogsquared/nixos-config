@@ -44,7 +44,7 @@ As an additional option, you can also use link:https://github.com/foo-dogsquared
 
 This primarily uses Nix flakes so you can have a preview of what's available in my config.
 
-[subs=attributes, source, shell]
+[source, shell, subs=attributes]
 ----
 nix flake show {canonical_flake_url}
 ----
@@ -52,8 +52,6 @@ nix flake show {canonical_flake_url}
 It should export my NixOS configurations of my different hosts (of only one so far excluding VMs and VPSs ;p) among other things.
 To install it, run the `nixos-install --flake {canonical_flake_url}#ni`.
 (Please see the respective appropriate host README for more information.)
-
-TIP: If you found some error regarding something in restricted mode, you can run the installation with `--impure` flag (i.e., `nixos-install --impure --flake {canonical_flake_url}#ni`).
 
 
 [#channels-support]
@@ -220,7 +218,7 @@ Not to mention that with flakes, this is easier than ever to make use parts of m
 
 To start, you can simply add my flake to your list of flake inputs.
 
-[subs=attributes, source, nix]
+[source, nix, subs=attributes]
 ----
 inputs.foo-dogsquared-nixos-config.url = "{canonical_flake_url}";
 ----
@@ -279,7 +277,7 @@ WARNING: You cannot install my NixOS configurations at all with channels so ther
 
 To start, as root, you have to add my project into the channels list...
 
-[subs=attributes, source, shell]
+[source, shell, subs=attributes]
 ----
 nix-channel --add "{canonical_flake_url_tarball_master}" foo-dogsquared-nixos-config
 nix-channel --update
@@ -299,7 +297,7 @@ Here's an example snippet in a NixOS config making use of my configuration witho
 [source, nix]
 ----
 let
-  foo-dogsquared-nixos-config = import <foo-dogsquared-nixos-config> { inherit pkgs; }
+  foo-dogsquared-nixos-config = import <foo-dogsquared-nixos-config> { inherit pkgs; };
 in {
   imports = [
     foo-dogsquared-nixos-config.modules.programs
@@ -320,10 +318,10 @@ You could also pin my config similarly to link:https://nix.dev/tutorials/towards
 
 Here's a snippet of using it as part of a NixOS configuration.
 
-[subs=attributes, source, nix]
+[source, nix, subs=attributes]
 ----
 let
-  foo-dogsquared-nixos-config = import (fetchTarball "{canonical_flake_url_tarball_specific}");
+  foo-dogsquared-nixos-config = import (fetchTarball "{canonical_flake_url_tarball_specific}") { inherit pkgs; };
 in {
   imports = [
     foo-dogsquared-nixos-config.modules.programs
@@ -464,6 +462,9 @@ At the time I've rewritten this configuration, I have little idea about Nix as a
 However, I can say that my configuration is moving in a similar direction to devos (which is intended to be modified anyways) as I explore more of Nix.
 In fact, I've based much of my config from it and may even be ended up as one.
 It is nice that such a project exists serving as a reference for bigger configurations.
+
+What's up with some error regarding something in restricted mode?::
+If you found some error regarding something in restricted mode, you can run the installation with `--impure` flag (i.e., `nixos-install --impure --flake {canonical_flake_url}#ni`).
 
 
 
