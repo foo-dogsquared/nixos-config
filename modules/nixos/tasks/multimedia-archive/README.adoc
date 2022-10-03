@@ -28,7 +28,7 @@ This is used to easily import them from a process that is used to externally gen
 Some of the data may have a schema available (e.g., link:./data/jobs.schema.json[`./data/jobs.schema.json`] for the jobs database).
 
 * link:./scripts/[`./scripts/`] contains a bunch of scripts specific for this tasks.
-Mainly, it contains scripts to generate data found in `./data/` such as link:./scripts/convert-newpipe-db-to-json[a script that is used to generate a jobs database suitable for this task from a NewPipe database].
+Mainly, it contains scripts to generate data found in `./data/` such as link:./scripts/create-jobs-from-newpipe-db[a script that is used to generate a jobs database suitable for this task from a NewPipe database].
 
 * link:./default.nix[`./default.nix`], the entry point for this module.
 
@@ -39,7 +39,7 @@ Mainly, it contains scripts to generate data found in `./data/` such as link:./s
 
 In this task, I usually just download videos from YouTube.
 While I could note every preferred creator manually, I could automate them by getting a list of subscriptions from my Newpipe config which I use surprisingly more often than I thought.
-This is done by running the link:./convert-newpipe-db-to-json[`./convert-newpipe-db-to-json`] script and specifying the exported Newpipe database (as a ZIP file).
+This is done by running the link:./scripts/create-jobs-from-newpipe-db[`./scripts/create-jobs-from-newpipe-db`] script and specifying the exported Newpipe database (as a ZIP file).
 
 [CAUTION]
 ====

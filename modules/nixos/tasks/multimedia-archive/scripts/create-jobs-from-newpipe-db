@@ -10,10 +10,8 @@ import sys
 import sqlite3
 import json
 import re
-import os
 import shutil
 import tempfile
-import fileinput
 from pathlib import Path
 
 

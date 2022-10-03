@@ -30,7 +30,7 @@ in
 
         # The global output for all of the jobs.
         "--output"
-        "%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title).%(ext)s"
+        "%(uploader,artist,creator|Unknown)s/%(release_date>%F,upload_date>%F|Unknown)s-%(title)s.%(ext)s"
 
         # Select only the most optimal format for my usecases.
         "--format"
