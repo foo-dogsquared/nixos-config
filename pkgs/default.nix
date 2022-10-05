@@ -80,6 +80,7 @@ let
       watc = callPackage ./watc { };
       wayback = callPackage ./wayback.nix { };
       wzmach = callPackage ./wzmach { };
+      xs = callPackage ./xs { };
     };
 in
 lib.fix' (lib.extends overrides packages)

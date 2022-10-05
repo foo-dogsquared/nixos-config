@@ -1,0 +1,69 @@
+diff --git a/meson.build b/meson.build
+index f20a8a2..1c09882 100644
+--- a/meson.build
++++ b/meson.build
+@@ -16,31 +16,26 @@ project('xs', ['cpp'])
+   if not readline_lib.found()
+     readline_lib = compiler.find_library('readline')
+   endif
+-  custom_target('.stamp',
+-	build_always_stale: true,
+-	build_by_default: true,
+-	output: '.stamp',
+-	command: ['touch', '@OUTPUT@'])
+   custom_target('buildinfo.hxx',
+ 	build_always_stale: true,
+ 	build_by_default: true,
+ 	output: 'buildinfo.hxx',
+-	command: ['../generators/buildinfo.sh'])
++	command: ['./generators/buildinfo.sh'])
+   custom_target('git_date.hxx',
+ 	build_always_stale: true,
+ 	build_by_default: true,
+ 	output: 'git_date.hxx',
+-	command: ['../generators/git_date.sh'])
++	command: ['./generators/git_date.sh'])
+   custom_target('git_hash.hxx',
+ 	build_always_stale: true,
+ 	build_by_default: true,
+ 	output: 'git_hash.hxx',
+-	command: ['../generators/git_hash.sh'])
++	command: ['./generators/git_hash.sh'])
+   custom_target('git_url.hxx',
+ 	build_always_stale: true,
+ 	build_by_default: true,
+ 	output: 'git_url.hxx',
+-	command: ['../generators/git_url.sh'])
++	command: ['./generators/git_url.sh'])
+   parse_cxx = custom_target('parse.cxx',
+ 	depend_files: 'src/parse.yxx',
+ 	input: ['src/parse.yxx'],
+@@ -48,7 +43,7 @@ project('xs', ['cpp'])
+ 	command: ['bison', '-d', '@INPUT@'])
+   sigmsgs_cxx = custom_target('sigmsgs.cxx',
+ 	output: 'sigmsgs.cxx',
+-	command: ['../generators/mksignal.sh', '@OUTPUT@'])
++	command: ['./generators/mksignal.sh', '@OUTPUT@'])
+   common_sources = ['src/access.cxx', 'src/closure.cxx', 'src/conv.cxx',
+ 		'src/eval.cxx', 'src/fd.cxx', 'src/glob.cxx', 'src/glom.cxx',
+ 		'src/heredoc.cxx', 'src/input.cxx', 'src/list.cxx',
+@@ -68,7 +63,7 @@ project('xs', ['cpp'])
+ 	input: 'src/initial.xs',
+ 	output: 'initial.cxx',
+ 	depends: xsdump,
+-	command: ['../generators/initial.sh', '@INPUT@', '@OUTPUT@'])
++	command: ['./generators/initial.sh', '@INPUT@', '@OUTPUT@'])
+   xs = executable('xs', [initial_cxx, common_sources],
+ 	cpp_args: compile_flags,
+ 	link_args: link_flags,
+@@ -81,10 +76,3 @@ project('xs', ['cpp'])
+ 		'doc/XS-FOR-LISPERS.md', 'xs.lang'],
+ 	install_dir: 'share/doc/xs')
+ 
+-run_target('check',
+-	command: ['./build/xs', '-c', './tests/xs_tests.xs'],
+-	depends: xs)
+-
+-run_target('fuzz',
+-	command: ['./build/xs', '-c', './tests/fuzz.xs'],
+-	depends: xs)
