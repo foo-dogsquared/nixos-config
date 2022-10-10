@@ -67,19 +67,17 @@ in
         blanket # Zen...
         gnome.dconf-editor # A saner version of Windows registry.
         dialect # Your gateway to polyglotting.
+        fractal # Your gateway to the matrix.
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         gnome.gnome-boxes # Virtual machines, son.
+        gnome.polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
         shortwave # Yer' humble internet radio.
         ymuse # Simple MPD client.
 
         gnome-menus # It is required for custom menus in extensions.
         gnome-extension-manager # The cooler GNOME extensions app.
         gnome-search-provider-recoll # This is here for some reason.
-
-        # Nautilus extensions.
-        nautilus-annotations
-        nautilus-open-any-terminal
       ];
       example = lib.literalExpression ''
         with pkgs; [ gnome.polari ];
