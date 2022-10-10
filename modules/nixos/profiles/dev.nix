@@ -40,6 +40,18 @@ in {
         enable = true;
         lfs.enable = true;
         package = pkgs.gitFull;
+        config.difftool.prompt = false;
+
+        # Yeah, let's use this oversized diff tool, shall we?
+        # Also, this config is based from this tip.
+        # https://lists.reproducible-builds.org/pipermail/diffoscope/2016-April/000193.html
+        config.difftool."diffoscope".cmd = ''
+            "if [ $LOCAL = /dev/null ]; then diffoscope --new-file $REMOTE; else diffoscope $LOCAL $REMOTE; fi"
+        '';
+
+        config.difftool."diffoscope-html".cmd = ''
+          "if [ $LOCAL = /dev/null ]; then diffoscope --new-file $REMOTE --html - | cat; else diffoscope $LOCAL $REMOTE --html - | cat; fi"
+        '';
       };
 
       programs.gnupg = { agent.enable = true; };
@@ -55,6 +67,7 @@ in {
         cachix # Compile no more by using someone's binary cache!
         curl # Our favorite network client.
         cmake # The poster boy for the hated build system.
+        diffoscope # Oversized caffeine grinder.
         direnv # The power of local development environment.
         gcc # The usual toolchain.
         gdb # The usual debugger.
