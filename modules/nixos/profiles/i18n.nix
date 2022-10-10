@@ -6,7 +6,7 @@ let
 in
 {
   options.profiles.i18n = {
-    enable = lib.mkEnableOption "i18n-related options";
+    enable = lib.mkEnableOption "main i18n config";
     ibus.enable = lib.mkEnableOption "i18n config with ibus";
     fcitx5.enable = lib.mkEnableOption "i18n config with fcitx5";
   };

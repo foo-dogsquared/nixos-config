@@ -163,7 +163,7 @@ in {
         description = "gallery-dl archive job for group '${name}'";
         documentation = [ "man:gallery-dl(1)" ];
         enable = true;
-        path = [ cfg.package ] ++ (with pkgs; [ brotli coreutils ffmpeg ]);
+        path = with pkgs; [ brotli coreutils ffmpeg cfg.package ];
         preStart = ''
           mkdir -p ${lib.escapeShellArg cfg.archivePath}
         '';

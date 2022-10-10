@@ -124,7 +124,7 @@ in {
     (lib.mkIf cfg.extras.enable {
       home.packages = with pkgs; [
         tree-sitter # The modern way of text highlighting.
-        hyperfine # Command-line profiling.
+        hyperfine # Command-line profiling making sure your programs runs FIIIIINE.
         github-cli # So you don't have to use much of GitHub on the site, I guess.
         hut # Easier interfacing with Sourcehut.
         act # Test your CI without embarrassing yourself pushing into upstream.
