@@ -83,13 +83,25 @@ in {
         act # Finally, a local environment for testing GitHub workflows.
       ];
 
-      systemd.user.services.upgrade-nix-profile = {
+      systemd.user.services.nix-upgrade-profile = {
         description = ''
-          Update packages installed through 'nix profile'.
+          Update service for user-specific Nix profile
         '';
+        documentation = [ "man:nix3-profile(1)" ];
         script = "nix profile upgrade '.*'";
         path = [ config.nix.package ];
         startAt = "weekly";
+      };
+
+      systemd.user.timers.nix-upgrade-profile = {
+        description = ''
+          Update service for user-specific Nix profile
+        '';
+        wantedBy = [ "default.target" ];
+        timerConfig = {
+          Persistent = true;
+          RandomizedDelaySec = 50;
+        };
       };
     })
 
