@@ -1,1 +1,3 @@
 *.yaml diff=sopsfilter
+*.adoc linguist-detectable
+*.org linguist-detectable
