@@ -74,14 +74,16 @@ in {
         gnumake # Make your life easier with GNU Make.
         moreutils # Less is more but more utilities, the merrier.
         valgrind # Memory leaks.
+      ]
+        # Finally, a local environment for testing out GitHub workflows without
+        # embarassing yourself pushing a bunch of commits.
+        ++ (lib.optional config.virtualisation.docker.enable pkgs.act)
 
-        # I SAID ALL OF THE GIT EXTENSIONS!
-        git-crypt
-
-        github-cli # Client for GitHub.
-        hut # And one for Sourcehut.
-        act # Finally, a local environment for testing GitHub workflows.
-      ];
+        # Enable all of the git things.
+        ++ (lib.optionals config.programs.git.enable [
+          github-cli # Client for GitHub.
+          hut # And one for Sourcehut.
+        ]);
 
       systemd.user.services.nix-upgrade-profile = {
         description = ''
