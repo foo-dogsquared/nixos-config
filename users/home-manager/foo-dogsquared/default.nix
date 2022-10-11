@@ -222,6 +222,16 @@ in {
 
   services.bleachbit = {
     enable = true;
+    cleaners = [
+      "bash.history"
+      "winetricks.temporary_files"
+      "wine.tmp"
+      "discord.history"
+      "google_earth.temporary_files"
+      "google_toolbar.search_history"
+      "thumbnails.cache"
+      "zoom.logs"
+    ];
     withChatCleanup = true;
   };
 
@@ -242,6 +252,8 @@ in {
       { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
       { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
       { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
+
+      { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
     ];
   };
 

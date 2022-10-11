@@ -73,16 +73,19 @@ in {
     cleaners = lib.mkOption {
       type = with lib.types; listOf str;
       description = "List of cleaners to be used when cleaning.";
-      default = [
-        "bash.history"
-        "winetricks.temporary_files"
-        "wine.tmp"
-        "discord.history"
-        "google_earth.temporary_files"
-        "google_toolbar.search_history"
-        "thumbnails.cache"
-        "zoom.logs"
-      ];
+      default = [];
+      example = lib.literalExpression ''
+        [
+          "bash.history"
+          "winetricks.temporary_files"
+          "wine.tmp"
+          "discord.history"
+          "google_earth.temporary_files"
+          "google_toolbar.search_history"
+          "thumbnails.cache"
+          "zoom.logs"
+        ]
+      '';
     };
 
     withBrowserCleanup =
