@@ -100,23 +100,20 @@ in {
       services = {
         bleachbit-cleanup = {
           Unit = {
-            Description = "Monthly cleanup with Bleachbit";
+            Description = "Periodic cleaning with Bleachbit";
             Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
           };
 
-          Service = {
-            Restart = "on-failure";
-            ExecStart = "${pkgs.bleachbit}/bin/bleachbit --clean ${
-                lib.escapeShellArgs cleaners
-              }";
-          };
+          Service.ExecStart = ''
+            ${pkgs.bleachbit}/bin/bleachbit --clean ${lib.escapeShellArgs cleaners}
+          '';
         };
       };
 
       timers = {
         bleachbit-cleanup = {
           Unit = {
-            Description = "Periodic clean with Bleachbit";
+            Description = "Periodic cleaning with Bleachbit";
             Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
             PartOf = [ "default.target" ];
           };
