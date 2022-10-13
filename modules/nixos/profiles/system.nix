@@ -66,9 +66,9 @@ in {
       # Run unpatched binaries with these!
       programs.nix-ld.enable = true;
       environment.systemPackages = with pkgs; [
-        nix-alien
-        nix-index
-        nix-index-update
+        nix-alien # Ambassador for the pre-compiled binaries.
+        nix-index # locate but for the entire store directory.
+        nix-index-update # Still locate but for the entire store directory.
       ];
 
       # Enable running GNOME apps outside GNOME.
@@ -150,8 +150,8 @@ in {
           source-han-mono
 
           # Math fonts
-          stix-two
-          xits-math
+          stix-two # Didn't know rivers can have sequels.
+          xits-math # NOTE TO SELF: I wouldn't consider to name the fork with its original project's name backwards.
         ];
       };
     })

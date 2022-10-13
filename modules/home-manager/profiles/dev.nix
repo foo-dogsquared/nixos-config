@@ -15,11 +15,11 @@ in {
   config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
       home.packages = with pkgs; [
-        lazygit # Git interface for the lazy.
+        lazygit # Git interface for the lazy who cannot be asked to add hunks properly.
         fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
         gopass # An improved version of the password manager for hipsters.
-        perl534Packages.vidir # Bulk rename for your organizing needs.
-        zellij # A modern tmux?
+        perl534Packages.vidir # Bulk rename for your organizing needs in the terminal.
+        zellij # A modern tmux? Yeah, modern tmux.
         tealdeer # An easy cop-out for basic help.
         lf # File manager in the terminal, really.
 
@@ -95,6 +95,7 @@ in {
           }
         '';
       };
+
       programs.atuin = {
         enable = true;
         settings = {
@@ -102,13 +103,13 @@ in {
           filter_mode = "global";
         };
       };
+
       programs.direnv = {
         enable = true;
         nix-direnv.enable = true;
       };
-      programs.zoxide.enable = true;
 
-      # Enable Starship prompt.
+      programs.zoxide.enable = true;
       programs.starship = {
         enable = true;
         settings = {
@@ -124,10 +125,10 @@ in {
     (lib.mkIf cfg.extras.enable {
       home.packages = with pkgs; [
         tree-sitter # The modern way of text highlighting.
-        hyperfine # Command-line profiling making sure your programs runs FIIIIINE.
+        hyperfine # Making sure your apps are not just fine but REEEEEEAAAAALY fine.
         github-cli # So you don't have to use much of GitHub on the site, I guess.
-        hut # Easier interfacing with Sourcehut.
-        act # Test your CI without embarrassing yourself pushing into upstream.
+        hut # So you don't have to see much of Sourcehut's brutalist design, I guess.
+        act # Test your CI without embarrassing yourself repeatedly pushing into GitHub repos.
         irssi # Communicate in the terminal like a normal person.
         treefmt # I like the tagline of this tool: "One CLI for formatting your code tree." (It rhymes somewhat.)
       ];

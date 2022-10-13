@@ -10,11 +10,12 @@ in {
       "installation of the shell utilities foo-dogsquared rely on";
     virtualization.enable =
       lib.mkEnableOption "virtualization-related stuff for development";
-    neovim.enable = lib.mkEnableOption "Neovim";
+    neovim.enable = lib.mkEnableOption "Neovim setup";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
+      # Hey! Wanna see some of <INSERT APPLICATION'S NAME> big dark dump?
       systemd.coredump = {
         enable = true;
         extraConfig = ''
@@ -54,8 +55,13 @@ in {
         '';
       };
 
-      programs.gnupg = { agent.enable = true; };
+      # It's a given at life to have a GPG key.
+      programs.gnupg.agent.enable = true;
+
+      # Instrumentate your instrument.
       programs.systemtap.enable = true;
+
+      # Profile your whole system.
       services.sysprof.enable = true;
 
       # Convenience!
@@ -71,15 +77,15 @@ in {
         direnv # The power of local development environment.
         gcc # The usual toolchain.
         gdb # The usual debugger.
-        gnumake # Make your life easier with GNU Make.
+        gnumake # The other poster boy for the hated build system.
         moreutils # Less is more but more utilities, the merrier.
-        valgrind # Memory leaks.
+        valgrind # Making sure your applications don't pee as much.
       ]
         # Finally, a local environment for testing out GitHub workflows without
         # embarassing yourself pushing a bunch of commits.
         ++ (lib.optional config.virtualisation.docker.enable pkgs.act)
 
-        # Enable all of the git things.
+        # Enable all of the gud things.
         ++ (lib.optionals config.programs.git.enable [
           github-cli # Client for GitHub.
           hut # And one for Sourcehut.
@@ -123,16 +129,16 @@ in {
 
     # !!! Please add your user to the "libvirtd" group.
     (lib.mkIf cfg.virtualization.enable {
-      # virt-manager as my frontend.
       environment.systemPackages = with pkgs; [
-        distrobox
-        virt-manager
+        distrobox # I heard you like Linux...
+        virt-manager # An interface for those who are lazy to read a reference manual and create a 1000-line configuration per machine.
       ];
 
       # Enable Docker just as my main container runtime or something.
       virtualisation.docker.enable = true;
 
-      # Enable libvirt for muh qemu.
+      # Virtual machines, son. They open in response to physical needs to
+      # foreign environments.
       virtualisation.libvirtd = {
         enable = true;
         qemu.package = pkgs.qemu_full;
@@ -141,6 +147,7 @@ in {
     })
 
     (lib.mkIf cfg.neovim.enable {
+      # Easier, better, faster, stronger.
       programs.neovim = {
         enable = true;
         defaultEditor = true;
@@ -152,8 +159,8 @@ in {
       };
 
       environment.systemPackages = with pkgs; [
-        editorconfig-core-c
-        tree-sitter
+        editorconfig-core-c # Consistent canonical coding conventions.
+        tree-sitter # It surely doesn't have a partner to kiss.
       ];
     })
   ]);

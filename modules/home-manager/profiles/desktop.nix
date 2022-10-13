@@ -29,8 +29,10 @@ in {
 
     (lib.mkIf cfg.audio.enable {
       home.packages = with pkgs; [
-        musescore # The free composition tool.
+        musescore # You won't find muses to score, only music: a common misconception.
         zrythm # The freer FL Studio (if you're sailing by the high seven seas).
+        supercollider # Not to be confused with the other Super Collider.
+        sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
 
         # !!! Be sure to install Wine for this one.
         yabridge # Building bridges to Windows and Linux audio tools.
@@ -50,7 +52,7 @@ in {
 
     (lib.mkIf cfg.multimedia.enable {
       home.packages = with pkgs; [
-        mpv # The modern VLC.
+        mpv # The modern VLC if you have little sense of design.
         brave # The only web browser that gives me money.
         foliate # The prettier PDF viewer.
         thunderbird # Email checks.

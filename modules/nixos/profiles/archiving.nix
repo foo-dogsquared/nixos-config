@@ -13,7 +13,7 @@ in {
       #archivebox # Create by ye' old pirate.
       archiver # Extract and create all of the archives.
       borgbackup # I'm pretty sure this is named after some thing from a franchise somewhere but I'm not omnipresent.
-      borgmatic # For those insisting on configurations for BorgBackup.
+      borgmatic # BorgBackup but for those who can't script.
       fanficfare # Your fanfics in my hard drive? Pay me rent first.
       gallery-dl # All image galleries are not safe, too.
       monolith # Bundling web pages into a cinnamon roll.
