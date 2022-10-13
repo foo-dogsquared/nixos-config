@@ -53,9 +53,36 @@ in {
         mpv # The modern VLC.
         brave # The only web browser that gives me money.
         foliate # The prettier PDF viewer.
-        sioyek # The researcher's PDF viewer.
         thunderbird # Email checks.
       ];
+
+      programs.sioyek = {
+        enable = true;
+
+        # All of my keybindings based from my Neovim workflow.
+        bindings = {
+          "move_up" = [ "k" "<up>" ];
+          "move_down" = [ "j" "<down>" ];
+          "move_left" = [ "h" "<left>" ];
+          "move_right" = [ "l" "<right>" ];
+          "next_page" = [ "<C-f>" "<S-<down>>" ];
+          "previous_page" = [ "<C-b>" "<S-<up>>" ];
+          "screen_down" = [ "<C-d>" "d" ];
+          "screen_up" = [ "<C-u>" "u" ];
+          "fit_to_page_width_smart" = "<C-S-f>";
+          "copy" = "y";
+          "goto_toc" = [ "t" "g<S-o>" ];
+          "open_prev_doc" = [ "<S-o>" "fbb" ];
+          "open_last_document" = [ "^" "<C-S-6>" ];
+        };
+
+        config = {
+          "search_url_b" = "https://search.brave.com/search?q=";
+          "shift_middle_click_engine" = "b";
+          "ui_font" = "sans-serif";
+          "font_size" = "24";
+        };
+      };
     })
   ]);
 }
