@@ -52,11 +52,37 @@ in {
 
     (lib.mkIf cfg.multimedia.enable {
       home.packages = with pkgs; [
-        mpv # The modern VLC if you have little sense of design.
         brave # The only web browser that gives me money.
         foliate # The prettier PDF viewer.
         thunderbird # Email checks.
       ];
+
+      # The modern VLC if you have little sense of design.
+      programs.mpv = {
+        enable = true;
+        config = {
+          ytdl-format = "(webm,mkv,mp4)[height<=?1280]";
+          ordered-chapters = true;
+          ab-loop-count = "inf";
+          chapter-seek-threshold = 15.0;
+          no-osc = true;
+        };
+
+        profiles = {
+          cjk = rec {
+            vlang = "zho,zh,kor,ko,jpn,ja,eng,en";
+            alang = vlang;
+            slang = with lib; concatStringsSep "," (reverseList (splitString "," vlang));
+          };
+        };
+
+        scripts = with pkgs.mpvScripts; [
+          mpris
+          mpvacious
+          thumbnail
+          youtube-quality
+        ];
+      };
 
       programs.sioyek = {
         enable = true;
