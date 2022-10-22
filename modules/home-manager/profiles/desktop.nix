@@ -68,6 +68,25 @@ in {
           no-osc = true;
         };
 
+        bindings = {
+          "Alt+h" = "seek -5";
+          "Alt+l" = "seek 5";
+          "Alt+H" = "add chapter -1";
+          "Alt+L" = "add chapter 1";
+
+          "S" = "screenshot each-frame";
+
+          "!" = "show-text \${playlist}";
+          "@" = "show-text \${track-list}";
+          "SHARP" = "show-text \${chapter-list}";
+
+          # Ehhh, they're more getting in the way than just existing...
+          "f" = "ignore";
+          "T" = "ignore";
+          "Ctrl+s" = "ignore";
+          "Alt+s" = "ignore";
+        };
+
         profiles = {
           cjk = rec {
             vlang = "zho,zh,kor,ko,jpn,ja,eng,en";
