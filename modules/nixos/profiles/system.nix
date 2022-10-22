@@ -71,6 +71,12 @@ in {
         nix-index-update # Still locate but for the entire store directory.
       ];
 
+      # command-not-found except better integrated since we're already using
+      # nix-index.
+      environment.interactiveShellInit = ''
+        . ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
+      '';
+
       # Enable running GNOME apps outside GNOME.
       programs.dconf.enable = true;
     })
