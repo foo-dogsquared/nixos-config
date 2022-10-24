@@ -2,14 +2,14 @@
 
 python310Packages.buildPythonApplication rec {
   pname = "auto-editor";
-  version = "22w35c";
+  version = "22w39a";
   doCheck = false;
 
   src = fetchFromGitHub {
     owner = "WyattBlue";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Vgia61kswKJhqd906Y3x+ddxvM1BZDdKdG9VBiUaafg=";
+    sha256 = "sha256-qtdk1Rr0EhG8LqY5cBxsH6VKXT/f9SV6a1X2R3HZOzI=";
   };
 
   postPatch = ''
@@ -23,7 +23,7 @@ python310Packages.buildPythonApplication rec {
   meta = with lib; {
     description =
       "Command-line application for automating video and audio editing with a variety of methods";
-    homepage = "https://auto-editor.com/cli";
+    homepage = "https://auto-editor.com";
     license = licenses.unlicense;
   };
 }
