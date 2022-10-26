@@ -3,20 +3,23 @@
 # how.
 { stdenv
 , lib
+, SDL2
 , alsaLib
 , cmake
 , fetchFromGitHub
 , freeglut
-, gtk3
-, libGLU
 , git
+, gtk3
+, dbus
+, libGLU
+, libX11
+, libstdcxx5
 , libglvnd
-, mesa
-, SDL2
-, pkg-config
-, valgrind
-, sndio
 , libsamplerate
+, mesa
+, pkg-config
+, sndio
+, valgrind
 , zlib
 , pulseaudioSupport ? stdenv.isLinux
 , libpulseaudio
@@ -33,16 +36,15 @@
 }:
 
 # TODO: Fix the timestamp in the help section.
-# TODO: Wait for SDL v2.0.18 for more Wayland support?
 stdenv.mkDerivation rec {
   pname = "tic-80";
-  version = "unstable-2022-01-18";
+  version = "unstable-2022-10-26";
 
   src = fetchFromGitHub {
     owner = "nesbox";
     repo = "TIC-80";
-    rev = "06fde1279677273856c1daf9f2fa22e337daba3d";
-    sha256 = "sha256-qFjcxb/umrr6CT7yorWCkoDskmKCsMm9frceyF6lXjE=";
+    rev = "7f4ad780d75d2cd8446f856f85ba293af70530eb";
+    sha256 = "sha256-8ciBya9ismBQ27JFQr3Qsk72UvHA1vMEExSwGNk3iOk=";
     fetchSubmodules = true;
   };
 
@@ -78,7 +80,7 @@ stdenv.mkDerivation rec {
     ];
 
   # TODO: Replace SOKOL-built version with SDL.
-  cmakeFlags = [ "-DBUILD_PRO=ON" "-DBUILD_SDL=OFF" "-DBUILD_SOKOL=ON" ];
+  cmakeFlags = [ "-DBUILD_PRO=ON" ];
 
   # Export all of the TIC-80-related utilities.
   outputs = [ "out" "dev" ];
@@ -89,7 +91,7 @@ stdenv.mkDerivation rec {
 
     mkdir -p $out/share/tic80
     cp -r ../demos $out/share/tic80/
-    mv $out/bin/tic80{-sokol,}
+    patchelf --set-rpath ${lib.makeLibraryPath [ libstdcxx5 libX11 dbus ]} $out/bin/tic80
   '';
 
   meta = with lib; {
