@@ -150,6 +150,9 @@
           inputs.guix-overlay.nixosModules.guix
         ];
 
+        # BOOOOOOOOOOOOO! Somebody give me a tomato!
+        services.xserver.excludePackages = with pkgs; [ xterm ];
+
         # I want to capture the usual flakes to its exact version so we're
         # making them available to our system. This will also prevent the
         # annoying downloads since it always get the latest revision.
