@@ -17,7 +17,9 @@ in {
       type = with lib.types; listOf str;
       default = [ ];
       defaultText = "[ ]";
-      example = [ "-c" "./config/kiwmi/init.lua" ];
+      example = lib.literalExpression ''
+        [ "-c" "./config/kiwmi/init.lua" ]
+      '';
     };
   };
 
