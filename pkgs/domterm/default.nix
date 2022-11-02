@@ -10,32 +10,30 @@
 , asciidoctor
 , unixtools
 , zlib
-, # For including Java classes. Take note it doesn't compile them properly and it
-  # still builds successfully so including them is disabled by default.
-  openjdk
-, # For Qt backend which is included by default.
-  qt5
-, enableQt ? true
-, enableJava ? false
+, rustPlatform
+, qt5
 }:
 
-# TODO: Compile with the experimental wry backend.
-# * Wait until gdk-pixbuf is >=3.0.
 stdenv.mkDerivation rec {
   pname = "domterm";
-  version = "unstable-2022-07-22";
+  version = "unstable-2022-11-02";
 
   src = fetchFromGitHub {
     owner = "PerBothner";
     repo = "DomTerm";
-    rev = "ae3e4a0037f3ead62a8db0f93e25ec529e3b4756";
-    sha256 = "sha256-0RrmKm3YqypWBpsE2rfKAGcTJdItvS+K5HTZeq77Pks=";
+    rev = "71f726c387c708fd4c3a4363771afdcd1993b9eb";
+    sha256 = "sha256-De3AnruWFK73TgGFWzOC0GaHjIW52pEqPwhRj9/RQx4=";
   };
 
-  nativeBuildInputs = [ autoreconfHook pkg-config ]
-    ++ lib.optional enableQt qt5.wrapQtAppsHook;
+  nativeBuildInputs = with qt5; [
+    autoreconfHook pkg-config
+    wrapQtAppsHook
+    qtbase
+    qtwebchannel
+    qtwebengine
+  ];
 
-  buildInputs = [
+  buildInputs = with qt5; [
     asciidoctor
     desktop-file-utils
     json_c
@@ -43,21 +41,15 @@ stdenv.mkDerivation rec {
     openssl
     unixtools.xxd
     zlib
-  ] ++ lib.optionals enableQt (with qt5; [ qtbase qtwebengine qtwebchannel ])
-  ++ lib.optional enableJava openjdk;
+  ];
 
   configureFlags = [
-    "--disable-java-pty"
     "--with-libwebsockets"
-
-    # Until the dependencies are updated (e.g., `gdk-pixbuf >= 3.0`), this is
-    # going to be painful to build.
-    "--without-wry"
-  ] ++ lib.optional enableJava "--with-java"
-  ++ lib.optional enableQt "--with-qt";
-
-  # Force Java to take input as UTF-8 instead of ASCII.
-  JAVA_TOOL_OPTIONS = "-Dfile.encoding=UTF8";
+    "--with-asciidoctor"
+    "--enable-compiled-in-resources"
+    "--enable-debug"
+    "--with-qt"
+  ];
 
   meta = with lib; {
     homepage = "https://domterm.org/";
