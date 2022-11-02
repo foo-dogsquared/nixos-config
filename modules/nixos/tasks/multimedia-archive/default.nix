@@ -204,6 +204,9 @@ in
               "https://www.artstation.com/an_na" # Anya Mozharovska
               "https://www.artstation.com/dllxtt" # Mykhail Klymenko
               "https://www.artstation.com/nicwilliams" # Nic Williams
+              "https://www.artstation.com/aaconcept" # Andrew An
+              "https://www.artstation.com/aliena85" # Mandy Jurgens
+              "https://www.artstation.com/666kart" # Kan Liu
               "https://hyperjerk.newgrounds.com" # HyperJerk
             ];
             startAt = "weekly";
