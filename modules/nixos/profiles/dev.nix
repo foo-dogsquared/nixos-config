@@ -135,7 +135,23 @@ in {
       ];
 
       # Enable Docker just as my main container runtime or something.
-      virtualisation.docker.enable = true;
+      virtualisation.docker = {
+        enable = true;
+        autoPrune = {
+          enable = true;
+          dates = "weekly";
+        };
+      };
+
+      # Enable usual containers configuration.
+      virtualisation.containers = {
+        enable = true;
+        registries.search = [
+          "docker.io"
+          "quay.io"
+          "registry.opensuse.org"
+        ];
+      };
 
       # Virtual machines, son. They open in response to physical needs to
       # foreign environments.
