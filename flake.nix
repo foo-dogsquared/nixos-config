@@ -63,7 +63,6 @@
 
     # Guix in NixOS?!
     guix-overlay.url = "github:foo-dogsquared/nix-overlay-guix";
-    guix-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
     # The more recommended Rust overlay so I'm going with it.
     rust-overlay.url = "github:oxalica/rust-overlay";
@@ -126,7 +125,7 @@
           # The system of the NixOS system.
           inherit system;
           lib = lib';
-          specialArgs = extraArgs;
+          specialArgs = extraArgs // { inherit system; };
           modules =
             # Append with our custom NixOS modules from the modules folder.
             (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
@@ -209,7 +208,7 @@
         # Extend nixpkgs with our overlays except for the NixOS-focused modules
         # here.
         nixpkgs.overlays = overlays
-          ++ [ inputs.nix-alien.overlay inputs.guix-overlay.overlays.default ];
+          ++ [ inputs.nix-alien.overlay ];
 
         # Please clean your temporary crap.
         boot.cleanTmpDir = lib.mkDefault true;
@@ -233,6 +232,8 @@
         };
         services.sshd.enable = lib.mkDefault true;
         services.openssh.enable = lib.mkDefault true;
+
+        services.guix.package = inputs.guix-overlay.packages.${system}.guix;
       };
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:
