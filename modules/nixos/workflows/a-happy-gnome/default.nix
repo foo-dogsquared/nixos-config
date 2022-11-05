@@ -15,7 +15,7 @@ let
   # We're combining all of the custom dconf database into a package to be installed.
   dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" {} ''
     install -Dm644 ${./config/dconf}/*.conf -t $out/etc/dconf/db/${name}-conf.d
-    install -Dm644 ${enabledExtensions} $out/etc/dconf/db/${name}-conf.d/enabled-extensions.conf
+    install -Dm644 ${enabledExtensions} $out/etc/dconf/db/${name}-conf.d/90-enabled-extensions.conf
   '';
 in
 {
@@ -74,6 +74,8 @@ in
         gnome.polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
         shortwave # Yer' humble internet radio.
         ymuse # Simple MPD client.
+
+        gnome.gnome-backgrounds # Default backgrounds.
 
         gnome-menus # It is required for custom menus in extensions.
         gnome-extension-manager # The cooler GNOME extensions app.
