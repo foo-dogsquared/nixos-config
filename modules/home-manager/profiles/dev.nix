@@ -96,6 +96,8 @@ in {
         '';
       };
 
+      # Supercharging your shell history. Just don't forget to flush them out
+      # before doing questionable things.
       programs.atuin = {
         enable = true;
         settings = {
@@ -104,6 +106,7 @@ in {
         };
       };
 
+      # virtualenv but for anything else.
       programs.direnv = {
         enable = true;
         config.global = {
@@ -113,7 +116,10 @@ in {
         nix-direnv.enable = true;
       };
 
+      # Learn teleportation in the filesystem.
       programs.zoxide.enable = true;
+
+      # Some lazy bastard's shell prompt configuration.
       programs.starship = {
         enable = true;
         settings = {

@@ -233,6 +233,9 @@
         services.sshd.enable = lib.mkDefault true;
         services.openssh.enable = lib.mkDefault true;
 
+        # We're setting Guix service package with the flake-provided package.
+        # This is to prevent problems setting with overlays as much as I like
+        # using them.
         services.guix.package = inputs.guix-overlay.packages.${system}.guix;
       };
 

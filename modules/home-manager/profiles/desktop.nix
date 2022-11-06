@@ -103,6 +103,7 @@ in {
         ];
       };
 
+      # Some PDF viewer with a penchant for research.
       programs.sioyek = {
         enable = true;
 
