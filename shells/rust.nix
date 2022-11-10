@@ -24,4 +24,6 @@ mkShell {
   ];
 
   RUST_SRC_PATH = rustPlatform.rustLibSrc;
+
+  inputsFrom = [ cargo rustc ];
 }

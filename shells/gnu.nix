@@ -30,4 +30,6 @@ mkShell {
     texinfo
     pkg-config
   ];
+
+  inputsFrom = [ gcc ];
 }

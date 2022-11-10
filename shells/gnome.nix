@@ -68,4 +68,6 @@ mkShell {
     # The new Blueprint language.
     blueprint-compiler
   ];
+
+  inputsFrom = [ gjs gtk4 gobject-introspection ];
 }

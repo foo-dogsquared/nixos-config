@@ -10,4 +10,6 @@ mkShell {
     gofumpt
     gopls
   ];
+
+  inputsFrom = [ go ];
 }
