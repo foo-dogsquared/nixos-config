@@ -1,6 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
 
 with pkgs; {
+  cloud = callPackage ./cloud.nix { };
   flatpak = callPackage ./flatpak.nix { };
   gnu = callPackage ./gnu.nix { };
   gnome = callPackage ./gnome.nix { };
