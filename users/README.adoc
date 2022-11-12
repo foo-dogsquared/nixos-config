@@ -35,4 +35,4 @@ This includes user-specific packages, home-manager-specific configuration footno
 If you want to set users from the host, see link:../hosts/README.adoc[Host-specific configurations] for more details.
 
 * home-manager users are just home-manager configurations (i.e., `$XDG_CONFIG_HOME/nix/home.nix`).
-That's pretty much it.
+Take note that it is assumed that my link:../modules/home-manager/[own home-manager modules] are imported.

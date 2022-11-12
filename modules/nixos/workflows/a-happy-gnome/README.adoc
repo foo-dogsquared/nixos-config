@@ -5,7 +5,4 @@
 image::./assets/a-happy-gnome-dirty.png[GNOME Shell with the Settings application, width=100%,height=100%]
 
 Yes, it's a theme that configures GNOME.
-I mostly want a usable GNOME environment out-of-the-box (with my modifications and whatnot).
-
-Among others, it has `chrome-gnome-shell` out of convenience provided you have a browser installed.
-A couple of extensions such as ArcMenu and what not.
+I mostly want a usable GNOME environment out-of-the-box (with my modifications and whatnot) including a bunch of applications, GNOME extensions, and other core services.

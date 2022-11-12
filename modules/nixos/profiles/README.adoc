@@ -43,9 +43,14 @@ footnote:[Overall, I don't think it's not much of a threat to set profiles in th
 
 == Setting profiles conditionally
 
-The following snippet of a NixOS module with an optional part check with the simple boolean variable.
+Because the way how profiles are exported in the flakes (which is not at all), we cannot easily export modules that make use of them.
+For this, we have the `{check_variable}` attribute passed as part of `specialArgs` (or something similar) to the NixOS configuration.
+The attribute is a boolean value and only used for checking if it's going to be included as part of the holistic system.
+Take note it should be only enabled in this flake, outsiders shouldn't set this variable in any way.
 
-[subs=attributes, source, nix]
+Here's one way how to do it as shown in the following snippet of a NixOS module.
+
+[source, nix, subs=attributes]
 ----
 { config, options, pkgs, lib, ... }@attrs:
 
@@ -63,6 +68,3 @@ The following snippet of a NixOS module with an optional part check with the sim
   ];
 }
 ----
-
-So yeah... have at it.
-This is useful for setting profiles inside of modules that are otherwise not possible to easily export for others' use (e.g., `workflows`).

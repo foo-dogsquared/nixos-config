@@ -2,7 +2,7 @@
 :toc:
 
 These are where my workflows are defined and configured.
-Basically, workflows are mainly graphical sessions concerned with aesthetics, this may include Unix rices and good 'ol reliable desktop configurations like my link:./a-happy-gnome[GNOME config].
+Basically, workflows are mainly graphical sessions concerned with aesthetics and impose a structured way of using things, this may include Unix rices and good 'ol reliable desktop configurations like my link:./a-happy-gnome[GNOME config].
 This is where modules will define how you're going to interact with the computer whether you should use something ranging from a full-fledged desktop environment with bells and whistles to a minimalist desktop environment only composing of a window manager, a terminal, and a bar.
 
 The following list is the summary which can also serve as a guideline to developing a workflow module.
@@ -15,5 +15,4 @@ This makes up for a namespace entirely dedicated for setting themes.
 
 * Using link:../profiles[profiles] are heavily discouraged and it is better assumed to design and create workflows as if profiles are not imported.
 This is because profiles are not exported in the flake output.
-Thus, any part of the workflow configuration using profiles will not be properly used due to the missing modules.
-If it's something you have to use (e.g., setting up i18n configuration), you have to explicitly import them through the `imports` attribute to make it work.
+If it's something you have to use (e.g., setting up i18n configuration), you have to conditionally set a profile as seen from link:../profiles/README.adoc[../profiles/README.adoc].
