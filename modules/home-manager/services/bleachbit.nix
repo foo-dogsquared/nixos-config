@@ -61,6 +61,14 @@ in {
       example = "Fri 10:00:00";
     };
 
+    package = lib.mkOption {
+      type = lib.types.package;
+      description = ''
+        The derivation containing <literal>bleachbit</literal> executable.
+      '';
+      default = pkgs.bleachbit;
+    };
+
     persistent = lib.mkOption {
       type = lib.types.bool;
       description =
@@ -105,7 +113,7 @@ in {
           };
 
           Service.ExecStart = ''
-            ${pkgs.bleachbit}/bin/bleachbit --clean ${lib.escapeShellArgs cleaners}
+            ${cfg.package}/bin/bleachbit --clean ${lib.escapeShellArgs cleaners}
           '';
         };
       };
