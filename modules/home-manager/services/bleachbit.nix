@@ -104,35 +104,29 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.user = {
-      services = {
-        bleachbit-cleanup = {
-          Unit = {
-            Description = "Periodic cleaning with Bleachbit";
-            Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
-          };
-
-          Service.ExecStart = ''
-            ${cfg.package}/bin/bleachbit --clean ${lib.escapeShellArgs cleaners}
-          '';
-        };
+    systemd.user.services.bleachbit-cleanup = {
+      Unit = {
+        Description = "Periodic cleaning with Bleachbit";
+        Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
       };
 
-      timers = {
-        bleachbit-cleanup = {
-          Unit = {
-            Description = "Periodic cleaning with Bleachbit";
-            Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
-            PartOf = [ "default.target" ];
-          };
+      Service.ExecStart = ''
+      ${cfg.package}/bin/bleachbit --clean ${lib.escapeShellArgs cleaners}
+      '';
+    };
 
-          Install.WantedBy = [ "timers.target" ];
+    systemd.user.timers.bleachbit-cleanup = {
+      Unit = {
+        Description = "Periodic cleaning with Bleachbit";
+        Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
+        PartOf = [ "default.target" ];
+      };
 
-          Timer = {
-            OnCalendar = cfg.startAt;
-            Persistent = cfg.persistent;
-          };
-        };
+      Install.WantedBy = [ "timers.target" ];
+
+      Timer = {
+        OnCalendar = cfg.startAt;
+        Persistent = cfg.persistent;
       };
     };
   };
