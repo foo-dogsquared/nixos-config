@@ -71,6 +71,11 @@
 
     # Generating an entire flavored themes with Nix?
     nix-colors.url = "github:misterio77/nix-colors";
+
+    # Deploying stuff with Nix. This is becoming a monorepo for everything I
+    # need and I'm liking it.
+    deploy.url = "github:serokell/deploy-rs";
+    deploy.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
@@ -384,5 +389,26 @@
       # feel like it does.
       formatter =
         forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
+
+      # nixops-lite... in here!?! We got it all, son!
+      #
+      # Take note for automatically imported nodes, various options should be
+      # overridden in the deploy utility considering that most have only
+      # certain values and likely not work if run with the intended value.
+      deploy.nodes = (lib'.mapAttrs' (name: value:
+        lib'.nameValuePair name {
+          hostname = name;
+          profiles.system = {
+            sshUser = "admin";
+            user = "root";
+            path = inputs.deploy.lib.${defaultSystem}.activate.nixos value;
+          };
+        }) self.nixosConfigurations);
+
+      # How to make yourself slightly saner than before. So far the main checks
+      # are for deploy nodes.
+      checks = lib'.mapAttrs
+        (system: deployLib: deployLib.deployChecks self.deploy)
+        inputs.deploy.lib;
     };
 }
