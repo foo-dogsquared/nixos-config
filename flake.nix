@@ -130,7 +130,7 @@
           # The system of the NixOS system.
           inherit system;
           lib = lib';
-          specialArgs = extraArgs // { inherit system; };
+          specialArgs = extraArgs;
           modules =
             # Append with our custom NixOS modules from the modules folder.
             (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
@@ -139,7 +139,7 @@
             ++ extraModules;
         };
 
-      hostSharedConfig = { lib, pkgs, system, ... }: {
+      hostSharedConfig = { config, lib, pkgs, ... }: {
         # Some defaults for evaluating modules.
         _module.check = true;
 
@@ -241,7 +241,7 @@
         # We're setting Guix service package with the flake-provided package.
         # This is to prevent problems setting with overlays as much as I like
         # using them.
-        services.guix.package = inputs.guix-overlay.packages.${system}.guix;
+        services.guix.package = inputs.guix-overlay.packages.${config.nixpkgs.system}.guix;
       };
 
       mkUser = { system ? defaultSystem, extraModules ? [ ] }:
