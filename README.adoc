@@ -113,6 +113,9 @@ Similar to `homeManagerConfigurations`, you can easily use it outside of NixOS.
 * `homeManagerConfigurations` contains my various link:https://github.com/nix-community/home-manager[home-manager] configurations from link:./users/home-manager/[`./users/home-manager/`].
 The neat thing about it is you can easily install it in a non-NixOS Linux distro.
 
+* `deploy` are nodes to be deployed by link:https://github.com/serokell/deploy-rs[deploy-rs].
+It's nice and currently not all of the nodes are publicly committed which is less useful but it'll be someday.
+
 * `nixosConfigurations` which is where you can install my various NixOS configurations directly (e.g., `nixos-install --flake {canonical_flake_url}#HOST`).
 This mainly uses the link:./hosts/[hosts configuration].
 
@@ -125,6 +128,9 @@ It's another unnecessary export but it's there.
 
 * `formatter` is the preferred formatter to be used for my Nix files.
 Nothing special here.
+
+* `checks` contains checks for several outputs and are mainly for internal purposes.
+There's no use for anyone else, really. :(
 
 
 === The remote repo
