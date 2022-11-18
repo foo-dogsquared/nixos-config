@@ -1,0 +1,113 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i python3 -p python3
+
+# It creates a jobs database suitable for this task from a given OPML file
+# typically exported through Thunderbird and newsboat. This script considers
+# the outline hierarchy as part of tag hierarchy similar to Newsboat import
+# script. Additionally, `categories` attribute in the element are also
+# considered.
+#
+# Anywho, the following document URL at <http://opml.org/spec2.opml> is used as
+# the basis for how OPML subscription lists work.
+#
+# Additionally, this script just assumes a subscription list is just a flat
+# list of 'rss' nodes and no assumption for arbitrary structure of
+# ``<outline>`` elements is created. This means if you're using Thunderbird
+# with a structured folder of subscriptions, it's only going to consider the
+# 'rss' nodes and ignore the structure.
+#
+# Most applications I've used don't easily export categories into the
+# 'category' attribute which is unfortunate. There seems to be little respect
+# for the attribute. Not to mention, there could be many assumptions for the
+# structure for these various applications so I'm taking the simplest way.
+#
+# Welp, the disadvantage of OPML being a very flexible format it seems. :(
+
+import argparse
+import json
+import re
+from xml.etree import ElementTree
+
+FALLBACK_CATEGORY = "Uncategorized"
+
+
+def kebab_case(string: str):
+    s = re.sub("[^a-zA-Z0-9]+", "-", string)
+    s = re.sub("-+", "-", s)
+    s = re.sub("^-|-$", "", s)
+    s = string.lower()
+    return s
+
+
+def list_categories_from_opml(tree: ElementTree.ElementTree):
+    categories = [ outline.get("category", None) for outline in tree.findall("body//outline[@type='rss']") ]
+    data = set()
+    for category_string in categories:
+        if category_string is None:
+            continue
+
+        categories_list = category_string.split(",")
+        for category in categories_list:
+            data.add(category.strip().lstrip("/"))
+
+    return data
+
+
+def create_db_from_opml(tree: ElementTree.ElementTree, categories):
+    data = { kebab_case(category): {
+        "extraArgs": [],
+        "subscriptions": []
+        } for category in categories }
+
+    for outline in tree.findall("body//outline[@type='rss']"):
+        outline_data = { "name": outline.get("title"),
+                        "url": outline.get("xmlUrl") }
+
+        description = outline.get("description", None)
+        if description is not None:
+            outline_data["description"] = description
+
+        for outline_category in outline.get("category", FALLBACK_CATEGORY).split(","):
+            outline_category = kebab_case(outline_category).strip().lstrip("/")
+            if outline_category in data:
+                data[outline_category]["subscriptions"].append(outline_data)
+
+    return data
+
+
+if __name__ == "__main__":
+    # Accept a filename.
+    # > $SCRIPT OPML_FILE [CATEGORIES...]
+    # Print the output as JSON for the jobs database.
+    #
+    # * Make it accept categories from stdin.
+    parser = argparse.ArgumentParser(description="Create a job database from an OPML file.")
+    parser.add_argument("file", metavar="OPML_FILE", help="The OPML file.")
+    parser.add_argument("categories", nargs="*", metavar="CATEGORY", help="A list of categories to be extracted. If no categories are given, assumes that all categories are to be extracted.")
+    parser.add_argument("--list", "-l", action="store_true", help="List all categories from the given file.")
+    parser.add_argument("--output", "-o", action="store", metavar="FILE", help="The file where the output will be written.")
+    parser.add_argument("--with-others", action="store_true", help=f"List all uncategorized feeds into '{FALLBACK_CATEGORY}'.")
+
+    args = parser.parse_args()
+
+    with open(args.file, mode='r') as f:
+        opml_xml = ElementTree.parse(f)
+        if args.list:
+            for category in list_categories_from_opml(opml_xml):
+                print(category)
+        else:
+            categories = args.categories if args.categories else list_categories_from_opml(opml_xml)
+
+            if args.with_others:
+                categories.add(FALLBACK_CATEGORY)
+
+            data = create_db_from_opml(opml_xml, categories)
+
+            if "output_file" in args:
+                with open(args.file, mode='r') as output_file:
+                    json.dump(data, output_file)
+            else:
+                print(json.dumps(data, sort_keys=True, indent=2))
+    pass
+
+# vi:ft=python:ts=4
