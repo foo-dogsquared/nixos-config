@@ -27,33 +27,35 @@ def kebab_case(string):
 def extract_categories_from_db(db_file, categories):
     with sqlite3.connect(db_file) as db:
         db.row_factory = sqlite3.Row
-        query = '''
+        query = """
             SELECT subscriptions.name AS name, subscriptions.url AS url, feed_group.name AS tag
             FROM subscriptions
             INNER JOIN feed_group_subscription_join AS subs_join
             INNER JOIN feed_group
             ON subs_join.subscription_id = subscriptions.uid AND feed_group.uid = subs_join.group_id
             ORDER BY name COLLATE NOCASE;
-        '''
+        """
 
-        data = { kebab_case(category): {
-            "subscriptions" : [],
-            "extraArgs" : []
-        } for category in categories }
+        data = {
+            kebab_case(category): {"subscriptions": [], "extraArgs": []}
+            for category in categories
+        }
 
         for row in db.execute(query):
             category = row["tag"]
             if category in categories:
-                data[kebab_case(category)]["subscriptions"].append({ "url": row["url"], "name": row["name"] })
+                data[kebab_case(category)]["subscriptions"].append(
+                    {"url": row["url"], "name": row["name"]}
+                )
 
         return data
 
 
 def list_categories(db_file):
     with sqlite3.connect(db_file) as db:
-        query = '''
+        query = """
             SELECT name FROM feed_group ORDER BY name;
-        '''
+        """
         data = []
         for row in db.execute(query):
             data.append(row[0])
@@ -69,10 +71,30 @@ def extract_db(newpipe_archive):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("newpipe_db", metavar="NEWPIPE_DB", help="Newpipe database file (as a zip file) exported straight from the app.")
-    parser.add_argument("categories", metavar="CATEGORIES", nargs="*", help="A list of categories to be extracted. If absent, it will extract with all categories.")
-    parser.add_argument("--list-categories", "-l", action="store_true", help="List all categories from the database.")
-    parser.add_argument("--output", "-o", action="store", metavar="FILE", help="If present, store the output in the given file")
+    parser.add_argument(
+        "newpipe_db",
+        metavar="NEWPIPE_DB",
+        help="Newpipe database file (as a zip file) exported straight from the app.",
+    )
+    parser.add_argument(
+        "categories",
+        metavar="CATEGORIES",
+        nargs="*",
+        help="A list of categories to be extracted. If absent, it will extract with all categories.",
+    )
+    parser.add_argument(
+        "--list-categories",
+        "-l",
+        action="store_true",
+        help="List all categories from the database.",
+    )
+    parser.add_argument(
+        "--output",
+        "-o",
+        action="store",
+        metavar="FILE",
+        help="If present, store the output in the given file",
+    )
 
     args = parser.parse_args()
     newpipe_archive = args.newpipe_db

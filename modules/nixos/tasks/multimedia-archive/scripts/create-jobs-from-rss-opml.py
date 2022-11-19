@@ -270,7 +270,7 @@ if __name__ == "__main__":
             for key in keys:
                 data[kebab_case(key)] = data.pop(key)
 
-            json_dump_kwargs = { "default": vars }
+            json_dump_kwargs = {"default": vars}
 
             if "output_file" in args:
                 with open(args.file, mode="r") as output_file:
