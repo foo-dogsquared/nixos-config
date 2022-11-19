@@ -67,6 +67,12 @@ in {
       # Convenience!
       environment.localBinInPath = true;
 
+      # Additional settings for developing with nix.
+      nix.settings = {
+        keep-outputs = true;
+        keep-derivations = true;
+      };
+
       # This is set as our system packages for the sake of convenience.
       services.lorri.enable = true;
       environment.systemPackages = with pkgs; [
