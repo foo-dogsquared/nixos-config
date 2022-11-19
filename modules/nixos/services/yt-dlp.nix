@@ -62,7 +62,8 @@ let
       };
     };
   };
-in {
+in
+{
   options.services.yt-dlp = {
     enable = lib.mkEnableOption "archiving service with yt-dlp";
 
@@ -130,47 +131,52 @@ in {
   # There's no need to go to the working directory since yt-dlp has the
   # `--paths` flag.
   config = lib.mkIf cfg.enable {
-    systemd.services = lib.mapAttrs' (name: value: let
-      jobLevelArgs = lib.escapeShellArgs value.extraArgs;
-    in
-      lib.nameValuePair (jobUnitName name) {
-        wantedBy = [ "multi-user.target" ];
-        description = "yt-dlp archive job for group '${name}'";
-        documentation = [ "man:yt-dlp(1)" ];
-        enable = true;
-        path = [ cfg.package pkgs.coreutils ];
-        preStart = ''
-          mkdir -p ${lib.escapeShellArg cfg.archivePath}
-        '';
-        script = ''
-          yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
-                 ${lib.escapeShellArgs value.urls} --paths ${lib.escapeShellArg cfg.archivePath}
-        '';
-        startAt = value.startAt;
-        serviceConfig = {
-          LockPersonality = true;
-          NoNewPrivileges = true;
-          PrivateTmp = true;
-          PrivateUsers = true;
-          PrivateDevices = true;
-          ProtectControlGroups = true;
-          ProtectClock = true;
-          ProtectKernelLogs = true;
-          ProtectKernelModules = true;
-          ProtectKernelTunables = true;
-          StandardOutput = "journal";
-          StandardError = "journal";
-          SystemCallFilter = "@system-service";
-          SystemCallErrorNumber = "EPERM";
-        };
-      }) cfg.jobs;
+    systemd.services = lib.mapAttrs'
+      (name: value:
+        let
+          jobLevelArgs = lib.escapeShellArgs value.extraArgs;
+        in
+        lib.nameValuePair (jobUnitName name) {
+          wantedBy = [ "multi-user.target" ];
+          description = "yt-dlp archive job for group '${name}'";
+          documentation = [ "man:yt-dlp(1)" ];
+          enable = true;
+          path = [ cfg.package pkgs.coreutils ];
+          preStart = ''
+            mkdir -p ${lib.escapeShellArg cfg.archivePath}
+          '';
+          script = ''
+            yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
+                   ${lib.escapeShellArgs value.urls} --paths ${lib.escapeShellArg cfg.archivePath}
+          '';
+          startAt = value.startAt;
+          serviceConfig = {
+            LockPersonality = true;
+            NoNewPrivileges = true;
+            PrivateTmp = true;
+            PrivateUsers = true;
+            PrivateDevices = true;
+            ProtectControlGroups = true;
+            ProtectClock = true;
+            ProtectKernelLogs = true;
+            ProtectKernelModules = true;
+            ProtectKernelTunables = true;
+            StandardOutput = "journal";
+            StandardError = "journal";
+            SystemCallFilter = "@system-service";
+            SystemCallErrorNumber = "EPERM";
+          };
+        })
+      cfg.jobs;
 
-    systemd.timers = lib.mapAttrs' (name: value:
-      lib.nameValuePair (jobUnitName name) {
-        timerConfig = {
-          Persistent = value.persistent;
-          RandomizedDelaySec = "2min";
-        };
-      }) cfg.jobs;
+    systemd.timers = lib.mapAttrs'
+      (name: value:
+        lib.nameValuePair (jobUnitName name) {
+          timerConfig = {
+            Persistent = value.persistent;
+            RandomizedDelaySec = "2min";
+          };
+        })
+      cfg.jobs;
   };
 }

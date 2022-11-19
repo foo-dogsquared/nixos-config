@@ -6,7 +6,8 @@ let
   cardboardPackage = cfg.package.overrideAttrs (super: rec {
     passthru.providedSessions = [ "cardboard" ];
   });
-in {
+in
+{
   options.programs.cardboard-wm = {
     enable =
       lib.mkEnableOption "Cardboard, a scrollable tiling Wayland compositor";
@@ -23,13 +24,13 @@ in {
 
     extraOptions = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [];
+      default = [ ];
       description = "Command-line arguments to be passed to Cardboard.";
     };
 
     extraPackages = lib.mkOption {
       type = with lib.types; listOf package;
-      default = [];
+      default = [ ];
       description = ''
         Extra packages to be installed with this program.
       '';

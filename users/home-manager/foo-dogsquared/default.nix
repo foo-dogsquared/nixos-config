@@ -24,7 +24,8 @@ let
 
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";
-in {
+in
+{
   home.packages = with pkgs; [
     songrec
     vscodium-fhs

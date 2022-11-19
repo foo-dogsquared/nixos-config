@@ -8,7 +8,7 @@ let
   settingsFormat = pkgs.formats.json { };
   settingsFormatFile =
     settingsFormat.generate "gallery-dl-service-config-${config.home.username}"
-    cfg.settings;
+      cfg.settings;
 
   jobType = { name, config, options, ... }: {
     options = {
@@ -82,7 +82,8 @@ let
       };
     };
   };
-in {
+in
+{
   options.services.gallery-dl = {
     enable = lib.mkEnableOption "archiving services with gallery-dl";
 
@@ -163,47 +164,53 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    systemd.user.services = lib.mapAttrs' (name: value:
-      lib.nameValuePair (jobUnitName name) {
-        Unit = {
-          Description = "gallery-dl archive job for group '${name}'";
-          After = [ "default.target" ];
-          Documentation = "man:gallery-dl(1)";
-        };
+    systemd.user.services = lib.mapAttrs'
+      (name: value:
+        lib.nameValuePair (jobUnitName name) {
+          Unit = {
+            Description = "gallery-dl archive job for group '${name}'";
+            After = [ "default.target" ];
+            Documentation = "man:gallery-dl(1)";
+          };
 
-        Service.ExecStart = let
-          scriptName = "gallery-dl-service-${config.home.username}-${name}";
-          jobSpecificSettingsFile =
-            settingsFormat.generate "gallery-dl-service-job-${name}-settings"
-            value.settings;
-          archiveScript = pkgs.writeShellScriptBin scriptName ''
-            ${cfg.package}/bin/gallery-dl ${
-              lib.escapeShellArgs cfg.extraArgs
-            } ${
-              lib.optionalString (cfg.settings != null)
-              "--config ${settingsFormatFile}"
-            } ${lib.escapeShellArgs value.extraArgs} ${
-              lib.optionalString (value.settings != null)
-              "--config ${jobSpecificSettingsFile}"
-            } --destination ${cfg.archivePath} ${lib.escapeShellArgs value.urls}
-          '';
-        in "${archiveScript}/bin/${scriptName}";
-      }) cfg.jobs;
+          Service.ExecStart =
+            let
+              scriptName = "gallery-dl-service-${config.home.username}-${name}";
+              jobSpecificSettingsFile =
+                settingsFormat.generate "gallery-dl-service-job-${name}-settings"
+                  value.settings;
+              archiveScript = pkgs.writeShellScriptBin scriptName ''
+                ${cfg.package}/bin/gallery-dl ${
+                  lib.escapeShellArgs cfg.extraArgs
+                } ${
+                  lib.optionalString (cfg.settings != null)
+                  "--config ${settingsFormatFile}"
+                } ${lib.escapeShellArgs value.extraArgs} ${
+                  lib.optionalString (value.settings != null)
+                  "--config ${jobSpecificSettingsFile}"
+                } --destination ${cfg.archivePath} ${lib.escapeShellArgs value.urls}
+              '';
+            in
+            "${archiveScript}/bin/${scriptName}";
+        })
+      cfg.jobs;
 
-    systemd.user.timers = lib.mapAttrs' (name: value:
-      lib.nameValuePair (jobUnitName name) {
-        Unit = {
-          Description = "gallery-dl archive job for group '${name}'";
-          Documentation = "man:gallery-dl(1)";
-        };
+    systemd.user.timers = lib.mapAttrs'
+      (name: value:
+        lib.nameValuePair (jobUnitName name) {
+          Unit = {
+            Description = "gallery-dl archive job for group '${name}'";
+            Documentation = "man:gallery-dl(1)";
+          };
 
-        Timer = {
-          OnCalendar = value.startAt;
-          Persistent = value.persistent;
-          RandomizedDelaySec = "2min";
-        };
+          Timer = {
+            OnCalendar = value.startAt;
+            Persistent = value.persistent;
+            RandomizedDelaySec = "2min";
+          };
 
-        Install.WantedBy = [ "timers.target" ];
-      }) cfg.jobs;
+          Install.WantedBy = [ "timers.target" ];
+        })
+      cfg.jobs;
   };
 }

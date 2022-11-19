@@ -73,11 +73,11 @@ stdenv.mkDerivation rec {
     valgrind
     sndio
   ] ++ lib.optional pulseaudioSupport libpulseaudio
-    ++ lib.optional jackSupport jack2 ++ lib.optional esoundSupport espeak
-    ++ lib.optionals (stdenv.isLinux && waylandSupport) [
-      wayland
-      libxkbcommon
-    ];
+  ++ lib.optional jackSupport jack2 ++ lib.optional esoundSupport espeak
+  ++ lib.optionals (stdenv.isLinux && waylandSupport) [
+    wayland
+    libxkbcommon
+  ];
 
   # TODO: Replace SOKOL-built version with SDL.
   cmakeFlags = [ "-DBUILD_PRO=ON" ];

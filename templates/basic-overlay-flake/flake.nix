@@ -27,6 +27,6 @@
         }) // {
       overlays.default = final: prev: import ./pkgs { pkgs = prev; };
 
-      nixosModules = {};
+      nixosModules = { };
     };
 }

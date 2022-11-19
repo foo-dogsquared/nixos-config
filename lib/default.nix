@@ -31,17 +31,19 @@ rec {
 
       collect = file: type: {
         name = lib.removeSuffix ".nix" file;
-        value = let path = dirPath + "/${file}";
-        in if (type == "regular")
-        || (type == "directory" && lib.pathExists (path + "/default.nix")) then
-          path
-        else
-          filesToAttr path;
+        value =
+          let path = dirPath + "/${file}";
+          in if (type == "regular")
+            || (type == "directory" && lib.pathExists (path + "/default.nix")) then
+            path
+          else
+            filesToAttr path;
       };
 
       files = lib.filterAttrs isModule (builtins.readDir dirPath);
-    in lib.filterAttrs (name: value: value != { })
-    (lib.mapAttrs' collect files);
+    in
+    lib.filterAttrs (name: value: value != { })
+      (lib.mapAttrs' collect files);
 
   /* Collect all modules (results from `filesToAttr`) into a list.
 
@@ -71,5 +73,5 @@ rec {
   */
   countAttrs = pred: attrs:
     lib.count (attr: pred attr.name attr.value)
-    (lib.mapAttrsToList lib.nameValuePair attrs);
+      (lib.mapAttrsToList lib.nameValuePair attrs);
 }

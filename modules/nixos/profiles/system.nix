@@ -217,7 +217,8 @@ in {
         };
         dates = "weekly";
         flags = [
-          "--update-input" "nixpkgs"
+          "--update-input"
+          "nixpkgs"
           "--commit-lock-file"
           "--no-write-lock-file"
         ];

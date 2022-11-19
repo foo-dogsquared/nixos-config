@@ -1,8 +1,10 @@
 { lib, callPackage, newScope, python3Packages, ... }:
 
-lib.fix' (self: let
+lib.fix' (self:
+let
   callPackage = newScope self;
-in lib.recurseIntoAttrs {
+in
+lib.recurseIntoAttrs {
   attrs-strict = callPackage ./attrs-strict.nix { inherit python3Packages; };
   aiohttp-utils = callPackage ./aiohttp-utils.nix { inherit python3Packages; };
 

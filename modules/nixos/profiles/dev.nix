@@ -47,7 +47,7 @@ in {
         # Also, this config is based from this tip.
         # https://lists.reproducible-builds.org/pipermail/diffoscope/2016-April/000193.html
         config.difftool."diffoscope".cmd = ''
-            "if [ $LOCAL = /dev/null ]; then diffoscope --new-file $REMOTE; else diffoscope $LOCAL $REMOTE; fi"
+          "if [ $LOCAL = /dev/null ]; then diffoscope --new-file $REMOTE; else diffoscope $LOCAL $REMOTE; fi"
         '';
 
         config.difftool."diffoscope-html".cmd = ''
@@ -87,15 +87,15 @@ in {
         moreutils # Less is more but more utilities, the merrier.
         valgrind # Making sure your applications don't pee as much.
       ]
-        # Finally, a local environment for testing out GitHub workflows without
-        # embarassing yourself pushing a bunch of commits.
-        ++ (lib.optional config.virtualisation.docker.enable pkgs.act)
+      # Finally, a local environment for testing out GitHub workflows without
+      # embarassing yourself pushing a bunch of commits.
+      ++ (lib.optional config.virtualisation.docker.enable pkgs.act)
 
-        # Enable all of the gud things.
-        ++ (lib.optionals config.programs.git.enable [
-          github-cli # Client for GitHub.
-          hut # And one for Sourcehut.
-        ]);
+      # Enable all of the gud things.
+      ++ (lib.optionals config.programs.git.enable [
+        github-cli # Client for GitHub.
+        hut # And one for Sourcehut.
+      ]);
 
       systemd.user.services.nix-upgrade-profile = {
         description = ''

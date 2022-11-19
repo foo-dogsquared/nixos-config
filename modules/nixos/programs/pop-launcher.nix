@@ -14,9 +14,11 @@ let
 
   # Some plugins may be packaged busybox-style with multiple plugins in one
   # binary.
-  plugins = lib.lists.map (p: p.overrideAttrs (prev: {
-    dontRewriteSymlinks = true;
-  })) cfg.plugins;
+  plugins = lib.lists.map
+    (p: p.overrideAttrs (prev: {
+      dontRewriteSymlinks = true;
+    }))
+    cfg.plugins;
 
   # Plugins and scripts are assumed to be packaged at
   # `$out/share/pop-launcher`.
@@ -58,7 +60,7 @@ in
         List of packages containing Pop launcher plugins and scripts to be
         installed as system-wide plugins.
       '';
-      default = [];
+      default = [ ];
       defaultText = "[]";
       example = lib.literalExpression ''
         with pkgs; [

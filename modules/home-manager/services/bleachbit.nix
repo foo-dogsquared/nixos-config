@@ -47,7 +47,8 @@ let
     "thunderbird.passwords"
     "thunderbird.sessionjson"
   ];
-in {
+in
+{
   options.services.bleachbit = {
     enable = lib.mkEnableOption "automated cleanup with Bleachbit";
     startAt = lib.mkOption {
@@ -81,7 +82,7 @@ in {
     cleaners = lib.mkOption {
       type = with lib.types; listOf str;
       description = "List of cleaners to be used when cleaning.";
-      default = [];
+      default = [ ];
       example = lib.literalExpression ''
         [
           "bash.history"
@@ -111,7 +112,7 @@ in {
       };
 
       Service.ExecStart = ''
-      ${cfg.package}/bin/bleachbit --clean ${lib.escapeShellArgs cleaners}
+        ${cfg.package}/bin/bleachbit --clean ${lib.escapeShellArgs cleaners}
       '';
     };
 

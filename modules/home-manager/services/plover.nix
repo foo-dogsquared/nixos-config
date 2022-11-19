@@ -5,24 +5,26 @@ let
 
   toPloverINI = with lib;
     generators.toINI {
-      mkKeyValue = generators.mkKeyValueDefault {
-        mkValueString = v:
-          if v == true then
-            "True"
-          else if v == false then
-            "False"
-          else
-            generators.mkValueStringDefault { } v;
-      } " = ";
+      mkKeyValue = generators.mkKeyValueDefault
+        {
+          mkValueString = v:
+            if v == true then
+              "True"
+            else if v == false then
+              "False"
+            else
+              generators.mkValueStringDefault { } v;
+        } " = ";
     };
 
-  ploverIniFormat = { }: {
+  ploverIniFormat = {}: {
     type = (pkgs.formats.ini { }).type;
     generate = name: value: pkgs.writeText name (toPloverINI value);
   };
 
   settingsFormat = ploverIniFormat { };
-in {
+in
+{
   options.services.plover = {
     enable = lib.mkEnableOption "Plover stenography engine service";
 
@@ -74,7 +76,7 @@ in {
 
     xdg.configFile."plover/plover.cfg".source =
       settingsFormat.generate "plover-config-${config.home.username}"
-      cfg.settings;
+        cfg.settings;
 
     systemd.user.services.plover = {
       Unit = {

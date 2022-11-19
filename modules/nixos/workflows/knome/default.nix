@@ -2,7 +2,8 @@
 
 let
   cfg = config.workflows.workflows.knome;
-in {
+in
+{
   options.workflows.workflows.knome.enable = lib.mkEnableOption "KNOME, an attempt to bring as much GNOME to KDE Plasma";
 
   config = lib.mkIf cfg.enable {

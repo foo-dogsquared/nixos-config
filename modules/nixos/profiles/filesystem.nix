@@ -2,7 +2,8 @@
 
 let
   cfg = config.profiles.filesystem;
-in {
+in
+{
   options.profiles.filesystem = {
     archive.enable = lib.mkOption {
       type = lib.types.bool;

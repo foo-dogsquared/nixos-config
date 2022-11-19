@@ -15,9 +15,11 @@ let
   # Some plugins may be packaged ala-busybox with multiple plugins coming from
   # the same binary. Similar reasons as to why we don't want to rewrite
   # symlinks with the main package.
-  plugins = lib.map (p: p.overrideAttrs (prev: {
-    dontRewriteSymlinks = true;
-  })) cfg.plugins;
+  plugins = lib.map
+    (p: p.overrideAttrs (prev: {
+      dontRewriteSymlinks = true;
+    }))
+    cfg.plugins;
 
   # Plugins and scripts are assumed to be packaged at
   # `$out/share/pop-launcher`.
@@ -57,7 +59,7 @@ in
         List of packages containing Pop launcher plugins and scripts to be
         installed as system-wide plugins.
       '';
-      default = [];
+      default = [ ];
       defaultText = "[]";
       example = lib.literalExpression ''
         with pkgs; [

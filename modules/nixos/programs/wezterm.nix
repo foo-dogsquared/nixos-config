@@ -2,7 +2,8 @@
 
 let
   cfg = config.programs.wezterm;
-in {
+in
+{
   options.programs.wezterm = {
     enable = lib.mkEnableOption "Wezterm terminal emulator";
     package = lib.mkOption {

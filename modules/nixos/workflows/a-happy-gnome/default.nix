@@ -13,7 +13,7 @@ let
   };
 
   # We're combining all of the custom dconf database into a package to be installed.
-  dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" {} ''
+  dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" { } ''
     install -Dm644 ${./config/dconf}/*.conf -t $out/etc/dconf/db/${name}-conf.d
     install -Dm644 ${enabledExtensions} $out/etc/dconf/db/${name}-conf.d/90-enabled-extensions.conf
   '';
@@ -132,8 +132,8 @@ in
         profiles.user = pkgs.writeTextFile {
           name = "a-happy-gnome";
           text = ''
-          user-db:user
-          system-db:${name}-conf
+            user-db:user
+            system-db:${name}-conf
           '';
         };
       };

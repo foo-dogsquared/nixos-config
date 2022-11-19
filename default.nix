@@ -3,7 +3,8 @@
 let
   lib' = pkgs.lib.extend (final: prev:
     import ./lib { lib = prev; } // import ./lib/private.nix { lib = final; });
-in {
+in
+{
   lib = import ./lib { lib = pkgs.lib; };
   modules = lib'.importModules (lib'.filesToAttr ./modules/nixos);
   overlays.foo-dogsquared-pkgs = final: prev: import ./pkgs { pkgs = prev; };
