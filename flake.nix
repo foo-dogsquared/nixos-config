@@ -388,7 +388,7 @@
       # No amount of formatters will make this codebase nicer but it sure does
       # feel like it does.
       formatter =
-        forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
+        forAllSystems (system: nixpkgs.legacyPackages.${system}.treefmt);
 
       # nixops-lite... in here!?! We got it all, son!
       #

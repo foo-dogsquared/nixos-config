@@ -8,10 +8,16 @@ pkgs.mkShell {
     jq
     nixpkgs-fmt
     sops
+    treefmt
 
     # Language servers for various parts of the config that uses a language.
     sumneko-lua-language-server
     pyright
     rnix-lsp
+
+    # Formatters...
+    stylua # ...for Lua.
+    black # ...for Python.
+    nixpkgs-fmt # ...for Nix.
   ];
 }
