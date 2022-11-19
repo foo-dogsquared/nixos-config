@@ -270,12 +270,17 @@ if __name__ == "__main__":
             for key in keys:
                 data[kebab_case(key)] = data.pop(key)
 
-            json_dump_kwargs = {"default": vars}
+            json_dump_kwargs = {
+                "default": vars,
+                "ensure_ascii": False,
+                "indent": 2,
+                "sort_keys": True,
+            }
 
-            if "output_file" in args:
-                with open(args.file, mode="r") as output_file:
+            if "output" in args:
+                with open(args.output, mode="w") as output_file:
                     json.dump(data, output_file, **json_dump_kwargs)
             else:
-                print(json.dumps(data, sort_keys=True, indent=2, **json_dump_kwargs))
+                print(json.dumps(data, **json_dump_kwargs))
 
 # vi:ft=python:ts=4
