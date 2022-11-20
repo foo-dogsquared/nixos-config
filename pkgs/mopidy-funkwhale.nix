@@ -2,12 +2,12 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "mopidy-funkwhale";
-  version = "1.0";
+  version = "1.1.0";
 
   src = fetchgit {
     url = "https://dev.funkwhale.audio/funkwhale/mopidy.git";
     rev = "v${version}";
-    sha256 = "sha256-Sr6isp3Eh+XbTXh2zSiB0/UoAShQX6ZWgLQoRMvsung=";
+    sha256 = "sha256-vSjUWXUFGGAlFLYSdODUxd+SnK+HBCLOAhEySQBXk4A=";
   };
 
   postPatch = ''
