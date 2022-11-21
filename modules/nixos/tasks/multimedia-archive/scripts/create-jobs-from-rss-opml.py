@@ -28,13 +28,17 @@
 # for the structure for these various applications so I'm taking the simplest
 # way.
 #
+# For now, this scripts extracts categories based from the structure of the
+# outline and the `category` attribute of each RSS node.
+#
 # Welp, the disadvantage of OPML being a very flexible format it seems. :(
 
 import argparse
+import copy
 import json
 import re
 import sys
-from typing import Dict
+from typing import Dict, Set
 from xml.etree import ElementTree
 
 FALLBACK_CATEGORY = "Uncategorized"
@@ -63,6 +67,7 @@ class Subscription(object):
         self.name = name
         self.url = url
         self.description = description
+        self.categories = []
 
 
 class Outline(object):
@@ -156,6 +161,22 @@ class Outline(object):
                     if description is not None:
                         subscription.description = description
 
+                    # Only get the first category hierarchy from the attribute.
+                    # Similar behavior to how categories are extracted from the
+                    # outline elements. Consistency!
+                    for category in outline.get("category", "").strip().split(","):
+                        # If empty string or whatever falsey value this will have.
+                        category = category.strip()
+                        if not category:
+                            continue
+
+                        category_hierarchy = filter(lambda split: split.strip(), category.split("/"))
+                        first_category_split = first(None, category_hierarchy)
+                        if first_category_split is None:
+                            continue
+
+                        subscription.categories.append(first_category_split)
+
                     inner_outline.add_subscription(subscription)
 
                 root_outline.add_child(
@@ -173,11 +194,28 @@ def list_categories_from_outline(root_outline: Outline):
     for child in root_outline.children:
         title = FALLBACK_CATEGORY if child.title is None else child.title
         data.add(title)
-    return list(data)
+
+    def recurse(root_outline: Outline, data: Set = set()):
+        for subscription in root_outline.subscriptions:
+            for category in subscription.categories:
+                data.add(category)
+
+        for child in root_outline.children:
+            recurse(child, data)
+
+        return data
+
+    data = recurse(root_outline, data)
+    return sorted(data)
 
 
 def create_jobs_from_outline(root_outline: Outline, categories=[]):
     data = {}
+
+    DATA_TEMPLATE = {
+        "extraArgs": [],
+        "subscriptions": [],
+    }
 
     def recurse(outline: Outline, category=None, data={}, depth=1):
         # We're only using the top-level outline titles as the category.
@@ -188,14 +226,24 @@ def create_jobs_from_outline(root_outline: Outline, categories=[]):
         if depth == 1 or category is None:
             category = FALLBACK_CATEGORY
 
-        if category not in data:
-            data[category] = {
-                "extraArgs": [],
-                "subscriptions": [],
-            }
+        data.setdefault(category, copy.deepcopy(DATA_TEMPLATE))
 
         for subscription in outline.subscriptions:
-            data[category]["subscriptions"].append(subscription)
+            # There are some things that are meant not to be shown (i.e.,
+            # `categories`) so we're putting it in a data template.
+            subscription_data = {
+                "name": subscription.name,
+                "url": subscription.url
+            }
+
+            if subscription.description:
+                subscription_data["description"] = subscription.description
+
+            data[category]["subscriptions"].append(subscription_data)
+
+            for sub_category in subscription.categories:
+                data.setdefault(sub_category, copy.deepcopy(DATA_TEMPLATE))
+                data[sub_category]["subscriptions"].append(subscription_data)
 
         for child in outline.children:
             recurse(child, category, data, depth + 1)
@@ -277,7 +325,7 @@ if __name__ == "__main__":
                 "sort_keys": True,
             }
 
-            if "output" in args:
+            if args.output:
                 with open(args.output, mode="w") as output_file:
                     json.dump(data, output_file, **json_dump_kwargs)
             else:
