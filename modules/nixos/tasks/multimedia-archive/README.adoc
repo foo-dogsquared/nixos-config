@@ -35,6 +35,7 @@ Mainly, it contains scripts to generate data found in `./data/` such as link:./s
 
 
 
+[#integrating-with-newpipe-subscriptions]
 == Integrating with Newpipe subscriptions
 
 In this task, I usually just download videos from YouTube.
@@ -49,7 +50,7 @@ You should select only a few categories and clean them up.
 
 [source, sh]
 ----
-./convert-newpipe-db-to-json ~/Downloads/NewPipeData-20220714_185126.zip
+./scripts/create-jobs-from-newpipe-db.py ~/Downloads/NewPipeData-20220714_185126.zip
 ----
 
 You can run the script with the `-h` flag for more information.
@@ -58,10 +59,48 @@ Such as the following code block which you can interactively select which folder
 
 [source, sh]
 ----
-./convert-newpipe-db-to-json ~/Downloads/NewPipeData-20220714_185126.zip --list-categories \
+./scripts/create-jobs-from-newpipe-db.py ~/Downloads/NewPipeData-20220714_185126.zip --list-categories \
   | fzf --multi --prompt "Choose which categories to export " \
-  | ./convert-newpipe-db-to-json ~/Downloads/NewPipeData-20220714_185126.zip -o ./newpipe-db.json
+  | ./scripts/create-jobs-from-newpipe-db.py ~/Downloads/NewPipeData-20220714_185126.zip -o ./newpipe-db.json
 ----
 
 Remember the larger the list, the larger the chances for a throttling.
 Thus, it is heavily encouraged that you clean up your list (and/or get good at organizing your categories) before activating the updated version.
+
+
+
+
+== Exporting a jobset with OPML
+
+There is also an easy way to export a jobset from OPML with link:./scripts/create-jobs-from-rss-opml.py[`./scripts/create-jobs-from-rss-opml.py`].
+The script should have similar interface with the featured script from <<integrating-with-newpipe-subscriptions>>.
+
+Here's an basic example of using the script.
+
+[source, sh]
+----
+./scripts/create-jobs-from-rss-opml.py ~/Downloads/MyThunderbirdFeeds-Blogs\ &\ News Feeds.opml
+----
+
+Take note there are assumptions to the exported subscription list.
+
+- The folder structure is assumed from the outline.
+
+- Any `<outline>` element with the `title`/`text` attribute is considered valid and as part of the hierarchy.
+Otherwise, it is assumed they'll be in a fallback category within the outline.
+
+- The category list is also assumed from the outline, only with the direct children of valid `<outline>` elements. footnote:[The `category` attribute from the RSS nodes is barely taken care of by most of the applications I use. WHY!?!]
+
+- Categories are also extracted from the `category` attribute of each RSS node.
+Similarly, it only extracts the head of each category hierarchy (e.g., `Computers` for `/Computers/Science`, `World` for `/World/Countries/Philippines`).
+
+Similar to the Newpipe database script, you can do some nifty things with the script.
+Here's the same example from the previous featured script.
+
+[source, sh]
+----
+./scripts/create-jobs-from-rss-opml.py ~/Downloads/MyThunderbirdFeeds-Blogs\ &\ News Feeds.opml -l \
+    | fzf --multi --prompt "Choose which categories to export " \
+    | ./scripts/create-jobs-from-rss-opml.py ~/Downloads/MyThunderbirdFeeds-Blogs\ &\ News Feeds.opml
+----
+
