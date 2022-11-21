@@ -1,0 +1,213 @@
+{
+  "articles": {
+    "extraArgs": [],
+    "subscriptions": [
+      {
+        "name": "The Autodidacts",
+        "url": "https://www.autodidacts.io/rss"
+      },
+      {
+        "name": "Blender Secrets",
+        "url": "https://www.blendersecrets.org/secrets?format=rss"
+      },
+      {
+        "name": "web.dev",
+        "url": "https://web.dev/feed.xml"
+      },
+      {
+        "name": "Hackaday",
+        "url": "https://hackaday.com/feed/"
+      },
+      {
+        "name": "Engineering at Meta",
+        "url": "https://engineering.fb.com/feed/"
+      },
+      {
+        "name": "Boing Boing",
+        "url": "https://boingboing.net/feed"
+      },
+      {
+        "name": "Ink & Switch",
+        "url": "https://www.inkandswitch.com/index.xml"
+      },
+      {
+        "name": "LWN.net",
+        "url": "https://lwn.net/headlines/newrss"
+      },
+      {
+        "name": "Collabora Newsroom RSS Feed",
+        "url": "https://www.collabora.com/feed"
+      },
+      {
+        "name": "Fedora Magazine",
+        "url": "https://fedoramagazine.org/feed/"
+      },
+      {
+        "name": "Console",
+        "url": "https://console.substack.com/feed"
+      },
+      {
+        "name": "Enable Sysadmin",
+        "url": "https://www.redhat.com/sysadmin/rss.xml"
+      },
+      {
+        "name": "Bootlin",
+        "url": "https://bootlin.com/feed/"
+      },
+      {
+        "name": "Bekk Christmas",
+        "url": "https://www.bekk.christmas/rss.xml"
+      },
+      {
+        "name": "Home on Libre Arts",
+        "url": "https://librearts.org/index.xml"
+      },
+      {
+        "name": "Distill",
+        "url": "http://distill.pub/rss.xml"
+      },
+      {
+        "name": "Opensource.com",
+        "url": "https://opensource.com/feed"
+      }
+    ]
+  },
+  "games": {
+    "extraArgs": [],
+    "subscriptions": [
+      {
+        "name": "Dwarf Fortress Development Log",
+        "url": "https://www.bay12games.com/dwarves/dev_now.rss"
+      },
+      {
+        "name": "Dwarf Fortress Release Log",
+        "url": "https://www.bay12games.com/dwarves/dev_release.rss"
+      },
+      {
+        "name": "Articles RSS feed - 0 A.D. Empires Ascendant - Mod DB",
+        "url": "https://rss.moddb.com/games/0-ad/articles/feed/rss.xml"
+      },
+      {
+        "name": "Veloren",
+        "url": "https://veloren.net/rss.xml"
+      },
+      {
+        "name": "Space Station 14: Multiplayer Disaster Simulator on Space Station 14",
+        "url": "https://spacestation14.io/index.xml"
+      }
+    ]
+  },
+  "projects": {
+    "extraArgs": [],
+    "subscriptions": [
+      {
+        "name": "FSF News",
+        "url": "https://static.fsf.org/fsforg/rss/news.xml"
+      },
+      {
+        "name": "Krita",
+        "url": "https://krita.org/en/feed/"
+      },
+      {
+        "name": "Replit Blog",
+        "url": "https://blog.replit.com/feed.xml"
+      },
+      {
+        "name": "Software Freedom Conservancy News",
+        "url": "https://sfconservancy.org/feeds/news/"
+      },
+      {
+        "name": "News feed",
+        "url": "https://inkscape.org/news/feed/"
+      },
+      {
+        "name": "Planet KDE | English",
+        "url": "https://planet.kde.org/atom.xml"
+      },
+      {
+        "name": "matrix.org",
+        "url": "https://matrix.org/blog/feed"
+      },
+      {
+        "name": "This Week in Rust",
+        "url": "https://this-week-in-rust.org/atom.xml"
+      },
+      {
+        "name": "GIMP",
+        "url": "https://www.gimp.org/feeds/atom.xml"
+      },
+      {
+        "name": "Planet GNOME",
+        "url": "https://planet.gnome.org/atom.xml"
+      },
+      {
+        "name": "Arch Linux Monthly Reports",
+        "url": "https://monthly-reports.archlinux.page/index.xml"
+      },
+      {
+        "name": "NLnet news",
+        "url": "https://nlnet.nl/feed.atom"
+      },
+      {
+        "name": "Oil Shell",
+        "url": "https://www.reddit.com/r/oilshell/.rss"
+      },
+      {
+        "name": "GNU Guix — Blog",
+        "url": "https://guix.gnu.org/feeds/blog.atom"
+      },
+      {
+        "name": "Gamozo Labs Blog",
+        "url": "https://gamozolabs.github.io/feed.xml"
+      },
+      {
+        "name": "NixOS News",
+        "url": "https://nixos.org/blog/announcements-rss.xml"
+      },
+      {
+        "name": "Nim Programming Language",
+        "url": "https://nim-lang.org/feed.xml"
+      },
+      {
+        "name": "The LaTeX Project",
+        "url": "https://www.latex-project.org/feed.xml"
+      },
+      {
+        "name": "reproducible-builds.org",
+        "url": "https://reproducible-builds.org/blog/index.rss"
+      },
+      {
+        "name": "Nyxt Browser",
+        "url": "https://nyxt.atlas.engineer/feed"
+      },
+      {
+        "name": "Bottles",
+        "url": "https://usebottles.com/feed"
+      },
+      {
+        "name": "The Mozilla Blog",
+        "url": "https://blog.mozilla.org/en/feed/"
+      },
+      {
+        "name": "OpenBSD Webzine",
+        "url": "https://webzine.puffy.cafe/atom.xml"
+      },
+      {
+        "name": "OpenBSD Journal",
+        "url": "https://undeadly.org/cgi?action=rss"
+      },
+      {
+        "name": "This Week In Neovim",
+        "url": "https://this-week-in-neovim.org/rss"
+      },
+      {
+        "name": "TVL blog",
+        "url": "https://tvl.fyi/feed.atom"
+      },
+      {
+        "name": "The Thunderbird Blog",
+        "url": "https://blog.thunderbird.net/feed/"
+      }
+    ]
+  }
+}
