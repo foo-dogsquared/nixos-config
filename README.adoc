@@ -122,6 +122,8 @@ This mainly uses the link:./hosts/[hosts configuration].
 * `templates` which contains my templates.
 Though, these are just templates mostly for my own purposes so it is not as useful as the other outputs.
 
+* `hydraJobs` contains link:https://github.com/NixOS/hydra[Hydra] build jobs where it is primarily used for my test Hydra instance.
+
 * `lib` is defined from link:./lib/[my custom library].
 It mainly assumes it is to be included in nixpkgs standard library (i.e., `import ./lib { lib = inputs.nixpkgs.lib; }`).
 It's another unnecessary export but it's there.
