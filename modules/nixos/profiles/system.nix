@@ -23,6 +23,7 @@ in {
         default = pkgs.wineWowPackages.stable;
       };
     };
+    hardened-config.enable = lib.mkEnableOption "hardened configuration primarily intended for servers";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -234,6 +235,32 @@ in {
         winetricks # We do a little trickery with missing Windows runtimes.
         bottles # PlayOnLinux but better. :>
       ];
+    })
+
+    # The profile intended to be used for servers.
+    # Most of the things here are based from the Securing Debian document.
+    (lib.mkIf cfg.hardened-config.enable {
+      # Don't replace it mid-way! DON'T TURN LEFT!!!!
+      security.protectKernelImage = true;
+
+      # Hardened config equals hardened kernel.
+      boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_0_hardened;
+
+      # Be STRICT! MUAHAHAHAHA!!!!
+      services.fail2ban = {
+        enable = true;
+        bantime-increment = {
+          enable = true;
+          factor = "4";
+          maxtime = "24h";
+        };
+        ignoreIP = [ "127.0.0.1/16" ];
+      };
+
+      boot.kernel.sysctl = {
+        # Disable system console entirely. We don't need it so get rid of it.
+        "kernel.sysrq" = 0;
+      };
     })
   ]);
 }
