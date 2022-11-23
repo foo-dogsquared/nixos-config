@@ -1,0 +1,18 @@
+= Plover, the general-purpose server
+
+This is Plover, a configuration meant to be used in a low-powered general-purpose machine.
+It isn't much of an instance to be seriously used yet but hopefully it is getting there.
+
+This configuration is expected to be deployed in a Google Compute instance.
+
+It has a reasonable set of assumptions to keep in mind when modifying this configuration:
+
+- Most of the defaults are left to the link:https://github.com/NixOS/nixpkgs/tree/f92201f46109aabbbf41b8dc24bb9d342eb93a35/nixos/modules/virtualisation[image profiles from nixpkgs] including networking options and filesystems.
+- No additional storage drives.
+- At least 32 GB of space is assumed.
+
+Some of the self-hosted services from this server:
+
+* An nginx server which will make tie all of the self-hosted services together.
+* A link:https://github.com/dani-garcia/vaultwarden[Vaultwarden] instance for a little password management.
+* A link:https://gitea.io/[Gitea] instance for my personal projects.
