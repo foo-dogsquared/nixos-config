@@ -77,7 +77,6 @@
     enable = true;
     plugins = with pkgs; [
       pop-launcher-plugin-duckduckgo-bangs
-      pop-launcher-plugin-jetbrains
       pop-launcher-plugin-brightness
     ];
   };
