@@ -7,7 +7,7 @@
   ];
 
   isoImage = {
-    isoBaseName = "bootstrap-${config.networking.hostName}";
+    isoBaseName = "bootstrap";
     contents = [{
       source = self;
       target = "/bootstrap/";
