@@ -1,5 +1,5 @@
 {
-  description = "foo-dogsquared's NixOS config as a flake";
+  description = "foo-dogsquared's abomination of a NixOS configuration";
 
   nixConfig = {
     extra-substituters =
@@ -14,7 +14,7 @@
     # looser when it comes to stability for the entirety of this configuration.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # We're using this library for other functions, mainly testing.
+    # We're using these libraries for other functions.
     flake-utils.url = "github:numtide/flake-utils";
 
     # My personal dotfiles.
@@ -49,8 +49,8 @@
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     devshell.inputs.flake-utils.follows = "flake-utils";
 
-    # We're getting more unstable there should be a black hole at my home right now.
-    # Also, we're seem to be collecting text editors like it is Pokemon.
+    # We're getting more unstable there should be a black hole at my home right
+    # now. Also, we're seem to be collecting text editors like it is Pokemon.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -104,6 +104,8 @@
       ];
 
       defaultSystem = inputs.flake-utils.lib.system.x86_64-linux;
+
+      # Just add systems here and it should add systems to the outputs.
       systems = with inputs.flake-utils.lib.system; [ defaultSystem ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
@@ -208,7 +210,7 @@
           [ "python3.10-django-3.1.14" ];
 
         # Stallman-senpai will be disappointed.
-        nixpkgs.config.allowUnfree = lib.mkDefault true;
+        nixpkgs.config.allowUnfree = true;
 
         # Extend nixpkgs with our overlays except for the NixOS-focused modules
         # here.
@@ -272,10 +274,13 @@
             # since other parts of the home-manager config relies on it being
             # set properly.
             #
-            # Here are some of the common cases for setting the home directory options.
+            # Here are some of the common cases for setting the home directory
+            # options.
             #
-            # * For exporting home-manager configurations, this is done in this flake definition.
-            # * For NixOS configs, this is done automatically by the home-manager NixOS module.
+            # * For exporting home-manager configurations, this is done in this
+            #   flake definition.
+            # * For NixOS configs, this is done automatically by the
+            #   home-manager NixOS module.
             # * Otherwise, you'll have to manually set them.
             appendToHomeDir = path: "${config.home.homeDirectory}/${path}";
           in
@@ -345,8 +350,8 @@
           let
             extraModules = [
               ({ pkgs, config, ... }: {
-                # To be able to use the most of our config as possible, we want both to
-                # use the same overlays.
+                # To be able to use the most of our config as possible, we want
+                # both to use the same overlays.
                 nixpkgs.overlays = overlays;
 
                 # Stallman-senpai will be disappointed. :/
@@ -375,7 +380,8 @@
       packages = forAllSystems (system: let
         pkgs = import nixpkgs { inherit system overlays; };
 
-        # An attrset of images with their metadata that is usually built.
+        # A set of images with their metadata that is usually built for usual
+        # purposes.
         images = {
           bootstrap.format = "install-iso";
           plover.format = "gce";
