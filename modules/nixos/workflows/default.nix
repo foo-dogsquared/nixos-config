@@ -15,8 +15,10 @@ in {
     '';
   };
 
-  imports = lib.mapAttrsToList (n: v: import v)
-    (lib.filterAttrs (n: v: n != "default") (lib.filesToAttr ./.));
+  imports = [
+    ./a-happy-gnome
+    ./knome
+  ];
 
   config = {
     assertions = [{
