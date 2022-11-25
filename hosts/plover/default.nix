@@ -1,13 +1,17 @@
 { config, options, lib, pkgs, ... }:
 
 let
+  inherit (builtins) toString;
   domain = "foodogsquared.one";
+  wikiDomain = "wiki.${domain}";
   passwordManagerDomain = "vault.${domain}";
   codeForgeDomain = "forge.${domain}";
 in
 {
   imports = [
+    ./hardware-configuration.nix
     (lib.getUser "nixos" "plover")
+    (lib.getUser "nixos" "admin")
   ];
 
   sops.secrets =
@@ -43,26 +47,27 @@ in
     recommendedTlsSettings = true;
 
     virtualHosts = {
-      # These are just websites that are already deployed.
-      "www.${domain}" = {
+      # Personal website.
+      "${domain}" = {
+        forceSSL = false;
+        enableACME = true;
+        serverAliases = [ "www.${domain}" ];
         locations."/" = {
           proxyPass = "https://foodogsquared.netlify.app";
         };
       };
-      "wiki.${domain}" = {
+
+      # My digital notebook.
+      "${wikiDomain}" = {
+        forceSSL = false;
+        enableACME = true;
         locations."/" = {
           proxyPass = "https://foodogsquared-wiki.netlify.app";
-        };
-      };
-      "search.${domain}" = {
-        locations."/" = {
-          proxyPass = "https://search.brave.com";
         };
       };
 
       # Vaultwarden instance.
       "${passwordManagerDomain}" = {
-        http2 = true;
         forceSSL = true;
         enableACME = true;
         locations = let
@@ -86,11 +91,12 @@ in
         };
       };
 
+      # Gitea instance.
       "${codeForgeDomain}" = {
-        http2 = true;
+        forceSSL = true;
         enableACME = true;
         locations."/" = {
-          proxyPass = "http://localhost:${config.services.gitea.httpPort}";
+          proxyPass = "http://localhost:${toString config.services.gitea.httpPort}";
         };
       };
     };
@@ -102,11 +108,6 @@ in
   security.acme = {
     acceptTerms = true;
     defaults.email = "admin@foodogsquared.one";
-
-    certs = {
-      "${passwordManagerDomain}".keyType = "rs2048";
-      "${codeForgeDomain}" = {};
-    };
   };
 
   # Some additional dependencies for this system.
