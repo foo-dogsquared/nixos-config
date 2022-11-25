@@ -16,7 +16,7 @@ jobs:
         id: build-iso
         # TODO: Use the registry.
         run: |
-          nix run nixos-generators --inputs-from . -- --flake .#bootstrap --format iso --out-link result
+          nix build .#bootstrap-install-iso --out-link build-iso-result
       - name: Create release
         if: github.ref == 'refs/heads/master'
         id: create-release
@@ -27,5 +27,5 @@ jobs:
           prerelease: true
           title: Latest release
           files:
-            result/iso/bootstrap-*.iso
+            build-iso-result/iso/bootstrap-*.iso
 
