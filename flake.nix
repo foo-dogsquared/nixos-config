@@ -328,13 +328,18 @@
       nixosConfigurations = lib'.mapAttrsRecursive
         (host: path:
           let
+            host' = lib'.last host;
             extraModules = [
               ({ lib, ... }: {
-                networking.hostName = lib.mkDefault (builtins.baseNameOf path);
+                # We're very lax with setting the default since there's a lot
+                # of modules that may set this especially with image media
+                # modules.
+                networking.hostName = lib.mkOverride 2000 host';
               })
               hostSharedConfig
               path
-            ];
+            ]
+              ++ lib'.optional (host' == "plover") inputs.nixos-generators.nixosModules.gce;
           in
           mkHost { inherit extraModules; })
         (lib'.filesToAttr ./hosts);
@@ -394,7 +399,9 @@
                 inherit system pkgs extraArgs;
                 inherit (value) format;
                 extraModules = [
-                  { networking.hostName = name; }
+                  ({ lib, ... }: {
+                    networking.hostName = lib.mkOverride 2000 name;
+                  })
                   hostSharedConfig
                   ./hosts/${name}
                 ];
