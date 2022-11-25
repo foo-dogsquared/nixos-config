@@ -298,6 +298,20 @@
           manpages.enable = true;
         };
       };
+
+      # A wrapper around the nixos-generators `nixosGenerate` function.
+      mkImage = { system ? null, pkgs ? null, extraModules ? [ ], extraArgs ? { }, format ? "iso" }:
+        inputs.nixos-generators.nixosGenerate {
+          inherit pkgs system format;
+          lib = lib';
+          specialArgs = extraArgs;
+          modules =
+            # Import all of the NixOS modules.
+            (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
+
+            # Our own modules.
+            ++ extraModules;
+        };
     in
     {
       # Exposes only my library with the custom functions to make it easier to
@@ -358,10 +372,28 @@
 
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
-      packages = forAllSystems (system:
-        inputs.flake-utils.lib.flattenTree (import ./pkgs {
-          pkgs = import nixpkgs { inherit system overlays; };
-        }));
+      packages = forAllSystems (system: let
+        pkgs = import nixpkgs { inherit system overlays; };
+
+        # An attrset of images with their metadata that is usually built.
+        images = {
+          bootstrap.format = "install-iso";
+          plover.format = "gce";
+        };
+      in
+        inputs.flake-utils.lib.flattenTree (import ./pkgs { inherit pkgs; })
+        // lib'.mapAttrs'
+            (name: value:
+              lib'.nameValuePair "${name}-${value.format}" (mkImage {
+                inherit system pkgs extraArgs;
+                inherit (value) format;
+                extraModules = [
+                  { networking.hostName = name; }
+                  hostSharedConfig
+                  ./hosts/${name}
+                ];
+              }))
+            images);
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
