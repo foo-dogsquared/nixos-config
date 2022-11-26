@@ -9,6 +9,7 @@ pkgs.mkShell {
     nixpkgs-fmt
     sops
     treefmt
+    deploy-rs
 
     # Language servers for various parts of the config that uses a language.
     sumneko-lua-language-server
