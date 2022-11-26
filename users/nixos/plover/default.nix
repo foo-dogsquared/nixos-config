@@ -8,14 +8,5 @@
     useDefaultShell = true;
     isNormalUser = true;
     description = "The go-to user for server systems.";
-
-    packages = with pkgs; [
-      wireshark-cli
-      bind.dnsutils
-      nettools
-      bat
-      fd
-      jq
-    ];
   };
 }
