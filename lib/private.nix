@@ -7,19 +7,21 @@ rec {
     let
       homeDirectory = "/home/${user}";
       defaultUserConfig = {
-        extraGroups = [ "wheel" ];
-        createHome = true;
-        home = homeDirectory;
+        extraGroups = lib.mkDefault [ "wheel" ];
+        createHome = lib.mkDefault true;
+        home = lib.mkDefault homeDirectory;
+        isNormalUser = lib.mkForce true;
       };
-      # TODO: Effectively override the option.
-      # We assume all users set with this module are normal users.
-      absoluteOverrides = { isNormalUser = true; };
     in
     {
+      imports = [
+        { users.users."${user}" = defaultUserConfig; }
+      ];
+
       home-manager.users."${user}" = { ... }: {
         imports = [ (getUser "home-manager" user) ];
       };
-      users.users."${user}" = defaultUserConfig // settings // absoluteOverrides;
+      users.users."${user}" = settings;
     };
 
   getSecret = path: ../secrets/${path};
