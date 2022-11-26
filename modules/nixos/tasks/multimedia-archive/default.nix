@@ -126,16 +126,9 @@ in
         withDependencies = true;
         webserver.enable = true;
 
-        jobs = {
-          arts = {
-            urls = [
-              "https://www.davidrevoy.com/feed/rss"
-              "https://librearts.org/index.xml"
-            ];
-            startAt = "monthly";
-            persistent = true;
-          };
-
+        jobs = mkJobs {
+          db = lib.importJSON ./data/jobs.archivebox.json;
+        } // {
           computer = {
             urls = [
               "https://blog.mozilla.org/en/feed/"
@@ -151,17 +144,6 @@ in
             ];
             startAt = "weekly";
             persistent = true;
-          };
-
-          projects = {
-            urls = [
-              "https://veloren.net/rss.xml"
-              "https://guix.gnu.org/feeds/blog.atom"
-              "https://fedoramagazine.org/feed/"
-              "https://nixos.org/blog/announcements-rss.xml"
-            ];
-            # Practically every 14 days.
-            startAt = "Mon *-*-1/14";
           };
         };
       };
