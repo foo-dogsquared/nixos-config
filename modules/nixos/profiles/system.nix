@@ -237,8 +237,8 @@ in {
       ];
     })
 
-    # The profile intended to be used for servers.
-    # Most of the things here are based from the Securing Debian document.
+    # The profile intended to be used for servers. Most of the things here are
+    # based from the Securing Debian document.
     (lib.mkIf cfg.hardened-config.enable {
       # Don't replace it mid-way! DON'T TURN LEFT!!!!
       security.protectKernelImage = true;
@@ -254,7 +254,6 @@ in {
           factor = "4";
           maxtime = "24h";
         };
-        ignoreIP = [ "127.0.0.1/16" ];
       };
 
       boot.kernel.sysctl = {

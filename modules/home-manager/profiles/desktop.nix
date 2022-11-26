@@ -89,6 +89,7 @@ in {
 
         profiles = {
           cjk = rec {
+            profile-desc = "CJK prioritization";
             vlang = "zho,zh,kor,ko,jpn,ja,eng,en";
             alang = vlang;
             slang = with lib; concatStringsSep "," (reverseList (splitString "," vlang));

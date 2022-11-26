@@ -22,9 +22,17 @@ in {
         withPython3 = true;
         withRuby = true;
         withNodeJs = true;
+
+        plugins = with pkgs.vimPlugins; [
+          parinfer-rust
+        ];
       };
     })
 
+    # I only use Emacs for org-roam (seriously... I only learned Emacs for
+    # that). Take note this profile doesn't setup Emacs-as-a-development-tool
+    # thing, rather Emacs-as-a-note-taking tool thing with the complete
+    # package.
     (lib.mkIf cfg.emacs.enable {
       programs.emacs = {
         enable = true;

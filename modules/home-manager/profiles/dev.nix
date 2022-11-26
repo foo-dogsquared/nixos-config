@@ -34,7 +34,7 @@ in {
     (lib.mkIf cfg.shell.enable {
       programs.bash = {
         enable = true;
-        historyControl = [ "ignoredups" "ignorespace" ];
+        historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
         historyIgnore = [
           "cd"
           "exit"
