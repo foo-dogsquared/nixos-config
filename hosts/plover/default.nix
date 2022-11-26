@@ -10,8 +10,10 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    (lib.getUser "nixos" "plover")
     (lib.getUser "nixos" "admin")
+
+    (lib.mapHomeManagerUser "plover" {})
+    (lib.getUser "nixos" "plover")
   ];
 
   sops.secrets =
@@ -46,6 +48,8 @@ in
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
+    # Server blocks with no forcing of SSL are static sites so it is pretty
+    # much OK.
     virtualHosts = {
       # Personal website.
       "${domain}" = {
