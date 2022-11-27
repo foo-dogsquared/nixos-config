@@ -2,10 +2,14 @@
 
 let
   inherit (builtins) toString;
-  domain = "foodogsquared.one";
-  wikiDomain = "wiki.${domain}";
-  passwordManagerDomain = "vault.${domain}";
-  codeForgeDomain = "forge.${domain}";
+  domain = config.networking.domain;
+  passwordManagerDomain = "pass.${domain}";
+
+  # This should be set from service module from nixpkgs.
+  vaultwardenUser = config.users.users.vaultwarden.name;
+
+  # However, this is set on our own.
+  vaultwardenDbName = "vaultwarden";
 in
 {
   imports = [
@@ -15,6 +19,8 @@ in
     (lib.mapHomeManagerUser "plover" {})
     (lib.getUser "nixos" "plover")
   ];
+
+  networking.domain = "foodogsquared.one";
 
   sops.secrets =
     let
@@ -35,9 +41,14 @@ in
       "gitea/db/password"
     ];
 
-  # Be sure to upload this manually. (It's this really a good idea?)
+  # All of the keys required to deploy the secrets. Don't know how to make the
+  # GCP KMS key work though without manually going into the instance and
+  # configure it there.
+  sops.environment.SOPS_GCP_KMS_IDS = "projects/pivotal-sprite-295112/locations/global/keyRings/sops/cryptoKeys/plover-key";
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
+  # The main server where it will tie all of the services in one neat little
+  # place.
   services.nginx = {
     enable = true;
     enableReload = true;
@@ -51,52 +62,34 @@ in
     # Server blocks with no forcing of SSL are static sites so it is pretty
     # much OK.
     virtualHosts = {
-      # Personal website.
-      "${domain}" = {
-        forceSSL = false;
-        enableACME = true;
-        serverAliases = [ "www.${domain}" ];
-        locations."/" = {
-          proxyPass = "https://foodogsquared.netlify.app";
-        };
-      };
-
-      # My digital notebook.
-      "${wikiDomain}" = {
-        forceSSL = false;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "https://foodogsquared-wiki.netlify.app";
-        };
-      };
-
       # Vaultwarden instance.
       "${passwordManagerDomain}" = {
         forceSSL = true;
         enableACME = true;
         locations = let
+          address = config.services.vaultwarden.config.ROCKET_ADDRESS;
           port = config.services.vaultwarden.config.ROCKET_PORT;
           websocketPort = config.services.vaultwarden.config.WEBSOCKET_PORT;
         in {
           "/" = {
-            proxyPass = "http://localhost:${toString port}";
+            proxyPass = "http://${address}:${toString port}";
             proxyWebsockets = true;
           };
 
           "/notifications/hub" = {
-            proxyPass = "http://localhost:${toString websocketPort}";
+            proxyPass = "http://${address}:${toString websocketPort}";
             proxyWebsockets = true;
           };
 
           "/notifications/hub/negotiate" = {
-            proxyPass = "http://localhost:${toString port}";
+            proxyPass = "http://${address}:${toString port}";
             proxyWebsockets = true;
           };
         };
       };
 
       # Gitea instance.
-      "${codeForgeDomain}" = {
+      "code.${config.networking.domain}" = {
         forceSSL = true;
         enableACME = true;
         locations."/" = {
@@ -106,9 +99,30 @@ in
     };
   };
 
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;
+  };
+
+  # Enable database services that is used in all of the services here so far.
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_15;
+
+    # There's no database and user checks for Vaultwarden service.
+    ensureDatabases = [ vaultwardenDbName ];
+    ensureUsers = [
+      {
+        name = vaultwardenUser;
+        ensurePermissions = { "DATABASE ${vaultwardenDbName}" = "ALL PRIVILEGES"; };
+      }
+    ];
+  };
+
   # Time to harden...
   profiles.system.hardened-config.enable = true;
 
+  # Generate them certificates.
   security.acme = {
     acceptTerms = true;
     defaults.email = "admin@foodogsquared.one";
@@ -121,17 +135,14 @@ in
 
   # My code forge.
   services.gitea = {
-    inherit domain;
     enable = true;
     appName = "foodogsquared's code forge";
-    # TODO: Use postgresql later
     database = {
       passwordFile = config.sops.secrets."plover/gitea/db/password".path;
-      #type = "postgres";
+      type = "postgres";
     };
     lfs.enable = true;
     #mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
-    rootUrl = "http://${codeForgeDomain}";
 
     settings = {
       "repository.pull_request" = {
@@ -188,6 +199,7 @@ in
   # being written in Rust is a insta-self-hosting material right there.
   services.vaultwarden = {
     enable = true;
+    dbBackend = "postgresql";
     config = {
       DOMAIN = "https://${passwordManagerDomain}";
 
@@ -214,7 +226,10 @@ in
 
       # Enabling web vault with whatever nixpkgs comes in.
       WEB_VAULT_ENABLED = true;
-      WEB_VAULT_FOLDER = "${pkgs.vaultwarden-vault}/share/vaultwarden";
+      WEB_VAULT_FOLDER = "${pkgs.vaultwarden-vault}/share/vaultwarden/vault";
+
+      # Configuring the database.
+      DATABASE_URL = "postgresql://${vaultwardenUser}:thisismadnessbutsomeonewilljustseethisanyways32342whaaaaaatthebloooooodyhell49@localhost/${vaultwardenDbName}";
     };
   };
 
