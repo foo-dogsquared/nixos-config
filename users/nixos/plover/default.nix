@@ -8,5 +8,10 @@
     useDefaultShell = true;
     isNormalUser = true;
     description = "The go-to user for server systems.";
+
+    openssh.authorizedKeys.keyFiles = [
+      ../../home-manager/foo-dogsquared/user-key.pub
+      ../../../hosts/ni/host-key.pub
+    ];
   };
 }

@@ -9,9 +9,9 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     useDefaultShell = true;
-    openssh.authorizedKeys.keys = [
-      (lib.readFile ../../home-manager/foo-dogsquared/user-key.pub)
-      (lib.readFile ../../../hosts/ni/host-key.pub)
+    openssh.authorizedKeys.keyFiles = [
+      ../../home-manager/foo-dogsquared/user-key.pub
+      ../../../hosts/ni/host-key.pub
     ];
   };
 
