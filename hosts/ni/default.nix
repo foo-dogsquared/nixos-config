@@ -85,9 +85,6 @@
   programs.adb.enable = true;
 
   environment.systemPackages = with pkgs; [
-    # This is installed just to get Geiser to properly work.
-    guile_3_0
-
     (swh.swh-core.overrideAttrs (super: self: {
       pythonPath = with swh; [
         swh-fuse

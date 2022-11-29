@@ -50,6 +50,9 @@ in {
 
       # Doom Emacs dependencies.
       home.packages = with pkgs; [
+        # This is installed just to get Geiser to properly work.
+        guile_3_0
+
         # Required dependencies.
         ripgrep
         gnutls
