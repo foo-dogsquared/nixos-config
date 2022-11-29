@@ -18,7 +18,7 @@
   };
 
   profiles = {
-    system = {
+    desktop = {
       enable = true;
       fonts.enable = true;
     };

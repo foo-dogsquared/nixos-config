@@ -120,7 +120,7 @@ in
   };
 
   # Time to harden...
-  profiles.system.hardened-config.enable = true;
+  profiles.desktop.hardened-config.enable = true;
 
   # Generate them certificates.
   security.acme = {

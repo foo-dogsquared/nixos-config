@@ -51,7 +51,7 @@
   profiles = {
     i18n.enable = true;
     archiving.enable = true;
-    system = {
+    desktop = {
       enable = true;
       audio.enable = true;
       fonts.enable = true;
