@@ -6,12 +6,6 @@
     (lib.getUser "nixos" "nixos")
   ];
 
-  networking.hostName = "graphical-installer";
-
-  boot.loader.systemd-boot.enable = true;
-  boot.supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
-  users.users.root.password = "";
-
   isoImage = {
     isoBaseName = config.networking.hostName;
     contents = [{
@@ -46,4 +40,15 @@
       user = "nixos";
     };
   };
+
+  networking.hostName = "graphical-installer";
+
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+    loader.systemd-boot.enable = true;
+    supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
+  };
+
+  users.users.root.password = "";
+
 }
