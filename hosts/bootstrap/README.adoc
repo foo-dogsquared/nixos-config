@@ -13,4 +13,11 @@ To make use of this, you can generate an ISO through link:https://github.com/nix
 nix run github:nix-community/nixos-generators -- --flake .#bootstrap --format iso --out-link result
 ----
 
+Though, you could also easily build one with `packages.bootstrap-install-iso` from the flake output.
+
+[source, shell]
+----
+nix build $FLAKE#bootstrap-install-iso
+----
+
 With the ISO built, you can now use it for yourself for whatever reason.

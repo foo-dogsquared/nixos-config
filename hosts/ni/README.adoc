@@ -2,12 +2,7 @@
 :toc:
 
 My desktop workstation.
-I was about to have two computers but my desktop is broken ever since.
-Whoops!
-
-I try to be minimal with my dependencies unlike last time.
-`direnv`, `lorri`, and Flatpak are mostly enough for desktop needs.
-(Which is Fedora Silverblue is good at! :))
+Pretty nice, pretty handy, it is your basic desktop NixOS installation.
 
 I know partitioning is not your favorite part so here's one way to prepare the laptop with this config.
 

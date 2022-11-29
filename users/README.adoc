@@ -2,7 +2,7 @@
 :toc:
 
 This is where user-specific configurations comes in.
-Similar to modules, the top-level of this directory contains users for various config types (e.g., home-manager, NixOS).
+Similar to modules, the top-level of this directory contains users for various profiles (e.g., home-manager, NixOS).
 
 As such, files put in here are only a part of the total sum of configuration (whether it is a home-manager configuration or a NixOS system).
 It shouldn't fully configure their respective system and should be put as a host configuration otherwise.

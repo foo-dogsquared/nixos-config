@@ -12,4 +12,11 @@ To make use of this, you can generate an ISO through link:https://github.com/nix
 nix run github:nix-community/nixos-generators -- --flake .#graphical-installer --format iso --out-link result
 ----
 
+You could also get the ISO by getting the `packages.graphical-installer-install-iso` from the flake output.
+
+[source, shell]
+----
+nix build $FLAKE#graphical-installer-install-iso
+----
+
 With the ISO built, you can now use it for yourself for whatever reason.

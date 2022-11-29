@@ -16,3 +16,39 @@ Some of the self-hosted services from this server:
 * An nginx server which will make tie all of the self-hosted services together.
 * A link:https://github.com/dani-garcia/vaultwarden[Vaultwarden] instance for a little password management.
 * A link:https://gitea.io/[Gitea] instance for my personal projects.
+
+
+
+
+== Deploying it as a Google Compute instance
+
+Some documented guidelines to deploy this instance in Google Cloud Platform (GCP) so you won't have to re-read those documentation like a stuck rat the next time you visit them.
+
+* A GCP Compute Instance image of the configuration is available to be stored at your storage buckets.
+You can simply build it at `packages.plover-gce` and store it there.
++
+You can take it further automating it by running link:../../scripts/generate-and-upload-gce-image[`../../scripts/generate-and-upload-gce-image`] which is just a modified version of the link:https://github.com/NixOS/nixpkgs/blob/ebdafd7244832f1f52cacd3eda39f2156988957e/nixos/maintainers/scripts/gce/create-gce.sh[`create-gce.sh` script from nixpkgs].
+
+* If you already have access to at least one GCP KMS key, then skip this part.
+Add a key to be used for deployment to wherever relevant file in the link:./secrets[secrets directory]. footnote:[Of course, you need previous keys which you're likely using the private age key for this system.]
+For this, you'll have to create a GCP keyring on their key management system (KMS) and generate a key there.
+
+* Enable link:https://cloud.google.com/compute/docs/oslogin/set-up-oslogin[OS Login] for your Compute Engine instance.
+
+* Don't forget to set the appropriate scopes for the instance.
+For example, since we're using a GCP KMS key, we may want to set the scope only to KMS API like in the following command.
++
+--
+[source, shell]
+----
+gcloud compute instances create "instance-1" \
+    --zone "us-east1-b" \
+    --scopes "https://www.googleapis.com/auth/cloudkms"
+----
+--
+
+* Reserve a static IP address, pls.
+Just don't forget to immediately assign it to the instance since it will charge higher if you just leave it alone.
+
+* Creating a dedicated link:https://cloud.google.com/iam/docs/service-accounts[service account] for the VM is recommended.
+Just make sure to set the least amount of privileges for that account.
