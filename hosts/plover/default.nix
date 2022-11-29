@@ -99,11 +99,6 @@ in
     };
   };
 
-  services.openssh = {
-    enable = true;
-    passwordAuthentication = false;
-  };
-
   # Enable database services that is used in all of the services here so far.
   services.postgresql = {
     enable = true;
@@ -119,13 +114,11 @@ in
     ];
   };
 
-  # Time to harden...
-  profiles.desktop.hardened-config.enable = true;
-
-  # Generate them certificates.
-  security.acme = {
-    acceptTerms = true;
-    defaults.email = "admin@foodogsquared.one";
+  profiles.server = {
+    enable = true;
+    headless.enable = true;
+    hardened-config.enable = true;
+    cleanup.enable = true;
   };
 
   # Some additional dependencies for this system.
