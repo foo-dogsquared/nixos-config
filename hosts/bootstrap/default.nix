@@ -17,10 +17,13 @@
     ] ++ builtins.attrValues inputs;
   };
 
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+    loader.systemd-boot.enable = true;
+    supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
+  };
+
   networking.hostName = "bootstrap";
-  boot.supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
 
   users.users.root.password = "";
-
-  boot.loader.systemd-boot.enable = true;
 }
