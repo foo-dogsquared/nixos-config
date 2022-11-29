@@ -21,19 +21,9 @@ in
           '';
         }];
 
-      # I don't speak all of the listed languages. It's just nice to have some
+      # I don't speak all of the languages. It's just nice to have some
       # additional language packs for it. ;p
-      i18n.supportedLocales = lib.mkBefore [
-        "en_US.UTF-8/UTF-8"
-        "ja_JP.UTF-8/UTF-8"
-        "ko_KR.UTF-8/UTF-8"
-        "zh_CN.UTF-8/UTF-8"
-        "zh_HK.UTF-8/UTF-8"
-        "zh_SG.UTF-8/UTF-8"
-        "tl_PH.UTF-8/UTF-8"
-        "fr_FR.UTF-8/UTF-8"
-        "it_IT.UTF-8/UTF-8"
-      ];
+      i18n.supportedLocales = lib.mkForce [ "all" ];
 
       environment.systemPackages = with pkgs; [
         goldendict
