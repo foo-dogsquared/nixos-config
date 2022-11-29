@@ -339,7 +339,10 @@
               hostSharedConfig
               path
             ]
-              ++ lib'.optional (host' == "plover") inputs.nixos-generators.nixosModules.gce;
+              ++ lib'.optional (host' == "bootstrap") inputs.nixos-generators.nixosModules.install-iso
+              ++ lib'.optional (host' == "graphical-installer") inputs.nixos-generators.nixosModules.install-iso
+              ++ lib'.optional (host' == "plover") inputs.nixos-generators.nixosModules.gce
+              ++ lib'.optional (host' == "void") inputs.nixos-generators.nixosModules.vm;
           in
           mkHost { inherit extraModules; })
         (lib'.filesToAttr ./hosts);
@@ -389,7 +392,9 @@
         # purposes.
         images = {
           bootstrap.format = "install-iso";
+          graphical-installer.format = "install-iso";
           plover.format = "gce";
+          void.format = "vm";
         };
       in
         inputs.flake-utils.lib.flattenTree (import ./pkgs { inherit pkgs; })
