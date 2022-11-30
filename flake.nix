@@ -434,11 +434,17 @@
       formatter =
         forAllSystems (system: nixpkgs.legacyPackages.${system}.treefmt);
 
-      # nixops-lite... in here!?! We got it all, son!
+      # nixops-lite (that is much more powerful than nixops itself)... in
+      # here!?! We got it all, son!
       #
       # Take note for automatically imported nodes, various options should be
       # overridden in the deploy utility considering that most have only
       # certain values and likely not work if run with the intended value.
+      #
+      # Also, don't forget to always clean your shell history when overriding
+      # sensitive info such as the hostname and such. A helpful tip would be
+      # ignoring the shell entry by simply prefixing it with a space which most
+      # command-line shells have support for (e.g., Bash, zsh, fish).
       deploy.nodes = let
         importNodes = prefix: systems:
           lib'.mapAttrs'

@@ -7,13 +7,13 @@ let cfg = config.profiles.desktop;
 in {
   options.profiles.desktop = {
     enable =
-      lib.mkEnableOption "all desktop-related services and default programs";
+      lib.mkEnableOption "basic desktop-related services and default programs";
     audio.enable =
-      lib.mkEnableOption "all desktop audio-related services such as Pipewire";
+      lib.mkEnableOption "desktop audio-related configurations";
     fonts.enable = lib.mkEnableOption "font-related configuration";
     hardware.enable =
       lib.mkEnableOption "the common hardware-related configuration";
-    cleanup.enable = lib.mkEnableOption "activation of cleanup services";
+    cleanup.enable = lib.mkEnableOption "activation of various cleanup services";
     autoUpgrade.enable = lib.mkEnableOption "auto-upgrade service with this system";
     wine = {
       enable = lib.mkEnableOption "Wine and Wine-related tools";

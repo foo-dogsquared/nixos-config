@@ -221,7 +221,8 @@ in
       WEB_VAULT_ENABLED = true;
       WEB_VAULT_FOLDER = "${pkgs.vaultwarden-vault}/share/vaultwarden/vault";
 
-      # Configuring the database.
+      # Configuring the database. Take note it is required to create a password
+      # for the user.
       DATABASE_URL = "postgresql://${vaultwardenUser}:thisismadnessbutsomeonewilljustseethisanyways32342whaaaaaatthebloooooodyhell49@localhost/${vaultwardenDbName}";
     };
   };
