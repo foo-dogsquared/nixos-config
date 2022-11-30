@@ -439,17 +439,21 @@
       # Take note for automatically imported nodes, various options should be
       # overridden in the deploy utility considering that most have only
       # certain values and likely not work if run with the intended value.
-      deploy.nodes = (lib'.mapAttrs'
-        (name: value:
-          lib'.nameValuePair name {
-            hostname = name;
-            profiles.system = {
-              sshUser = "admin";
-              user = "root";
-              path = inputs.deploy.lib.${defaultSystem}.activate.nixos value;
-            };
-          })
-        self.nixosConfigurations);
+      deploy.nodes = let
+        importNodes = prefix: systems:
+          lib'.mapAttrs'
+            (name: value:
+              lib'.nameValuePair "${prefix}-name" {
+                hostname = name;
+                profiles.system = {
+                  sshUser = "admin";
+                  user = "root";
+                  path = inputs.deploy.lib.${defaultSystem}.activate.nixos value;
+                };
+            })
+            systems;
+      in (importNodes "nixos" self.nixosConfigurations)
+         // (importNodes "home-manager" self.homeManagerConfigurations);
 
       # How to make yourself slightly saner than before. So far the main checks
       # are for deploy nodes.
