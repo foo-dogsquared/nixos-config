@@ -85,11 +85,6 @@
         # Put my custom packages to be available.
         self.overlays.default
 
-        # Putting a list for inputs without overlays.
-        (final: prev: {
-          helix-unstable = inputs.helix-editor.packages.${builtins.currentSystem}.default;
-        })
-
         # Neovim nightly!
         inputs.neovim-nightly-overlay.overlay
 
@@ -101,6 +96,8 @@
 
         # Access to NUR.
         inputs.nur.overlay
+
+        inputs.nix-alien.overlays.default
       ];
 
       defaultSystem = inputs.flake-utils.lib.system.x86_64-linux;
@@ -214,8 +211,7 @@
 
         # Extend nixpkgs with our overlays except for the NixOS-focused modules
         # here.
-        nixpkgs.overlays = overlays
-          ++ [ inputs.nix-alien.overlay ];
+        nixpkgs.overlays = overlays;
 
         # Please clean your temporary crap.
         boot.cleanTmpDir = lib.mkDefault true;
