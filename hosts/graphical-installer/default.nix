@@ -13,7 +13,7 @@
       target = "/bootstrap/";
     }];
     storeContents = [
-      self.devShell.${config.nixpkgs.system}
+      self.devShells.${config.nixpkgs.system}.default
     ] ++ builtins.attrValues inputs;
   };
 
