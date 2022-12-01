@@ -103,13 +103,14 @@ in
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_15;
+    enableTCPIP = true;
 
     # There's no database and user checks for Vaultwarden service.
     ensureDatabases = [ vaultwardenDbName ];
     ensureUsers = [
       {
         name = vaultwardenUser;
-        ensurePermissions = { "DATABASE ${vaultwardenDbName}" = "ALL PRIVILEGES"; };
+        ensurePermissions."DATABASE ${vaultwardenDbName}" = "ALL PRIVILEGES";
       }
     ];
   };
@@ -223,7 +224,7 @@ in
 
       # Configuring the database. Take note it is required to create a password
       # for the user.
-      DATABASE_URL = "postgresql://${vaultwardenUser}:thisismadnessbutsomeonewilljustseethisanyways32342whaaaaaatthebloooooodyhell49@localhost/${vaultwardenDbName}";
+      DATABASE_URL = "postgresql://${vaultwardenUser}@/${vaultwardenDbName}";
     };
   };
 
