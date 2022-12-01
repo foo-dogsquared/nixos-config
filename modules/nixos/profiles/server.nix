@@ -44,7 +44,7 @@ in
 
       # We're only going to deal with servers in English.
       i18n.defaultLocale = "en_US.UTF-8";
-      i18n.supportedLocales = [ config.i18n.defaultLocale ];
+      i18n.supportedLocales = [ "en_US.UTF-8/UTF-8" ];
     })
 
     # We're only covering the most basic settings here.
