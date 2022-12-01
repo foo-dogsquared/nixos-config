@@ -342,7 +342,10 @@
                 # modules.
                 networking.hostName = lib.mkOverride 2000 host';
               })
-              (lib'.optionalAttrs (images ? host') inputs.nixos-generators.nixosModules.${images.${host'}.format})
+              (lib'.optionalAttrs (lib'.hasAttr host' images)
+                (let
+                  imageFormat = images.${host'}.format;
+                  in inputs.nixos-generators.nixosModules.${imageFormat}))
               hostSharedConfig
               path
             ];
