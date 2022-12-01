@@ -204,7 +204,7 @@
         };
 
         nixpkgs.config.permittedInsecurePackages =
-          [ "python3.10-django-3.1.14" ];
+          [ "python3.10-django-3.1.14" "qtwebkit-5.212.0-alpha4" ];
 
         # Stallman-senpai will be disappointed.
         nixpkgs.config.allowUnfree = true;
