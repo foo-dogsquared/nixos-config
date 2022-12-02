@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p google-cloud-sdk
+#! nix-shell --pure -i bash -p nix git coreutils google-cloud-sdk
 #
 # This is a modified script `nixos/maintainers/scripts/gce/create-gce.sh' from
 # `nixpkgs'.
@@ -32,6 +32,7 @@ BUCKET_NAME="${BUCKET_NAME:-foodogsquared-operating-system-images-dumping-ground
 TIMESTAMP="$(date +%Y%m%d%H%M)"
 PACKAGE=plover-gce
 DIRECTORY=gce-image
+FORCE=0
 export TIMESTAMP
 
 nix build ".#$PACKAGE" -o "$DIRECTORY"
@@ -41,16 +42,17 @@ img_name=${IMAGE_NAME:-$(basename "$img_path")}
 img_id=$(echo "$img_name" | sed 's|.raw.tar.gz$||;s|\.|-|g;s|_|-|g')
 img_family=$(echo "$img_id" | cut -d - -f1-4)
 
-if ! gsutil ls "gs://${BUCKET_NAME}/$img_name"; then
+if [ $FORCE -eq 1 ] || ! gsutil ls "gs://${BUCKET_NAME}/$img_name"; then
+  [ $FORCE -eq 1 ] && FORCE_ARG="--force"
+
   gsutil cp "$img_path" "gs://${BUCKET_NAME}/$img_name"
 
   gcloud compute images create \
     "$img_id" \
     --source-uri "gs://${BUCKET_NAME}/$img_name" \
-    --family="$img_family"
+    --family="$img_family" "$FORCE_ARG"
 
-  gcloud compute images add-iam-policy-binding \
-    "$img_id" \
+  gcloud compute images add-iam-policy-binding "$img_id" \
     --member='allAuthenticatedUsers' \
     --role='roles/compute.imageUser'
 fi
