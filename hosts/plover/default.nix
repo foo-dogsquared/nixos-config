@@ -46,6 +46,8 @@ in
       "gitea/db/password".owner = giteaUserGroup;
       "gitea/smtp/password".owner = giteaUserGroup;
       "vaultwarden/env".owner = vaultwardenUserGroup;
+      "borg/patterns/keys" = {};
+      "borg/password" = {};
     });
 
   # All of the keys required to deploy the secrets. Don't know how to make the
@@ -253,6 +255,47 @@ in
       DATABASE_URL = "postgresql://${vaultwardenUser}@/${vaultwardenDbName}";
     };
   };
+
+  # Of course, what is a server without a backup? A professionally-handled
+  # production system so we can act like one.
+  services.borgbackup.jobs.host-backup = let
+    patterns = [
+      config.sops.secrets."plover/borg/patterns/keys".path
+    ];
+  in {
+    compression = "zstd,11";
+    dateFormat = "+%F-%H-%M-%S-%z";
+    doInit = true;
+    encryption = {
+      mode = "repokey-blake2";
+      passCommand = "cat ${config.sops.secrets."plover/borg/password".path}";
+    };
+    extraCreateArgs = lib.concatStringsSep " "
+      (builtins.map (patternFile: "--patterns-from ${patternFile}") patterns);
+    extraInitArgs = "--make-parent-dirs";
+    # We're setting it since it is required plus we're replacing all of them
+    # with patterns anyways.
+    paths = [];
+    persistentTimer = true;
+    preHook = ''
+      extraCreateArgs="$extraCreateArgs --stats"
+    '';
+    prune = {
+      keep = {
+        weekly = 4;
+        monthly = 12;
+        yearly = 6;
+      };
+    };
+    repo = "cr6pf13r@cr6pf13r.repo.borgbase.com:repo";
+    startAt = "monthly";
+    environment.BORG_RSH = "ssh -i ${config.sops.secrets."plover/ssh-key".path}";
+  };
+
+  programs.ssh.extraConfig = ''
+    Host *.repo.borgbase.com
+     IdentityFile ${config.sops.secrets."plover/ssh-key".path}
+  '';
 
   system.stateVersion = "22.11";
 }
