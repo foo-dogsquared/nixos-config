@@ -28,24 +28,47 @@ in
         inherit key;
         sopsFile = ./secrets/secrets.yaml;
       };
-      getSecrets = keys:
-        lib.listToAttrs (lib.lists.map
-          (secret:
+      getSecrets = secrets:
+        lib.mapAttrs'
+          (secret: config:
             lib.nameValuePair
               "plover/${secret}"
-              (getKey secret))
-          keys);
+              ((getKey secret) // config))
+          secrets;
     in
-    getSecrets [
-      "ssh-key"
-      "gitea/db/password"
-    ];
+    getSecrets (let
+      giteaUserGroup = config.users.users."${config.services.gitea.user}".group;
+
+      # It is hardcoded but as long as the module is stable that way.
+      vaultwardenUserGroup = config.users.groups.vaultwarden.name;
+    in {
+      "ssh-key" = {};
+      "gitea/db/password".owner = giteaUserGroup;
+      "gitea/smtp/password".owner = giteaUserGroup;
+      "vaultwarden/env".owner = vaultwardenUserGroup;
+    });
 
   # All of the keys required to deploy the secrets. Don't know how to make the
   # GCP KMS key work though without manually going into the instance and
   # configure it there.
-  sops.environment.SOPS_GCP_KMS_IDS = "projects/pivotal-sprite-295112/locations/global/keyRings/sops/cryptoKeys/plover-key";
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
+
+  profiles.server = {
+    enable = true;
+    headless.enable = true;
+    hardened-config.enable = true;
+    cleanup.enable = true;
+  };
+
+  services.openssh.hostKeys = [{
+    path = config.sops.secrets."plover/ssh-key".path;
+    type = "ed25519";
+  }];
+
+  # Some additional dependencies for this system.
+  environment.systemPackages = with pkgs; [
+    asciidoctor # This is needed for additional markup for Gitea.
+  ];
 
   # The main server where it will tie all of the services in one neat little
   # place.
@@ -110,33 +133,24 @@ in
     ensureUsers = [
       {
         name = vaultwardenUser;
-        ensurePermissions."DATABASE ${vaultwardenDbName}" = "ALL PRIVILEGES";
+        ensurePermissions = {
+          "DATABASE ${vaultwardenDbName}" = "ALL PRIVILEGES";
+          "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
+        };
       }
     ];
   };
-
-  profiles.server = {
-    enable = true;
-    headless.enable = true;
-    hardened-config.enable = true;
-    cleanup.enable = true;
-  };
-
-  # Some additional dependencies for this system.
-  environment.systemPackages = with pkgs; [
-    asciidoctor
-  ];
 
   # My code forge.
   services.gitea = {
     enable = true;
     appName = "foodogsquared's code forge";
     database = {
-      passwordFile = config.sops.secrets."plover/gitea/db/password".path;
       type = "postgres";
+      passwordFile = config.sops.secrets."plover/gitea/db/password".path;
     };
     lfs.enable = true;
-    #mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
+    mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
 
     settings = {
       "repository.pull_request" = {
@@ -175,6 +189,18 @@ in
         IS_INPUT_FILE = false;
       };
 
+      # Mailer service.
+      mailer = {
+        ENABLED = true;
+        PROTOCOL = "smtp";
+        SMTP_ADDRESS = "smtp.sendgrid.net";
+        SMTP_PORT = 587;
+        USER = "apikey";
+        FROM = "Gitea";
+        ENVELOPE_FROM = "gitea@foodogsquared.one";
+        SEND_AS_PLAIN_TEXT = true;
+      };
+
       # Well, collaboration between forges is nice...
       federation.ENABLED = true;
 
@@ -194,6 +220,7 @@ in
   services.vaultwarden = {
     enable = true;
     dbBackend = "postgresql";
+    environmentFile = config.sops.secrets."plover/vaultwarden/env".path;
     config = {
       DOMAIN = "https://${passwordManagerDomain}";
 
@@ -220,7 +247,6 @@ in
 
       # Enabling web vault with whatever nixpkgs comes in.
       WEB_VAULT_ENABLED = true;
-      WEB_VAULT_FOLDER = "${pkgs.vaultwarden-vault}/share/vaultwarden/vault";
 
       # Configuring the database. Take note it is required to create a password
       # for the user.
