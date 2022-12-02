@@ -26,12 +26,12 @@ let
       gnome-shell-extension-pop-shell =
         callPackage ./gnome-shell-extension-pop-shell.nix { };
       gnome-shell-extension-paperwm-latest = gnomeExtensions.paperwm.overrideAttrs (prev: {
-        rev = "unstable-2022-10-24";
+        rev = "unstable-2022-11-13";
         src = fetchFromGitHub {
           owner = "paperwm";
           repo = "PaperWM";
-          rev = "13ccdfa64d56da2e20f4adda2c0166109aa54397";
-          sha256 = "sha256-wUYXyv+UMWKb9IB+poZWeXadQpdrOsbv9qcPAsH++xU=";
+          rev = "db9d63302b593c7a663791b577a306d3f432e18a";
+          sha256 = "sha256-yPyomT+OmOe4mFJMNCq2FBgNHzuAvZ70itFA0s5BwV8=";
         };
       });
       gradience = callPackage ./gradience { libadwaita = libadwaita-latest; };
