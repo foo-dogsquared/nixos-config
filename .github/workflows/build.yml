@@ -3,6 +3,7 @@ on: [pull_request, push]
 env:
   NIXPKGS_ALLOW_INSECURE: "1"
   NIXPKGS_ALLOW_BROKEN: "1"
+  NIXPKGS_ALLOW_UNFREE: "1"
 jobs:
   check-outputs:
     runs-on: ubuntu-latest

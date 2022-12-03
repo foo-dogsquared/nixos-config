@@ -6,6 +6,7 @@ on:
 env:
   NIXPKGS_ALLOW_INSECURE: "1"
   NIXPKGS_ALLOW_BROKEN: "1"
+  NIXPKGS_ALLOW_UNFREE: "1"
 
   # GitHub bot
   GIT_AUTHOR_NAME: "github-actions[bot]"
