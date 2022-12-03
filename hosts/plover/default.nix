@@ -62,6 +62,13 @@ in
     cleanup.enable = true;
   };
 
+  # DNS-related settings. This is nice for automating them putting DNS records
+  # and other types of stuff.
+  security.acme.defaults = {
+    dnsProvider = "porkbun";
+    credentialsFile = config.sops.secrets."plover/lego/env".path;
+  };
+
   services.openssh.hostKeys = [{
     path = config.sops.secrets."plover/ssh-key".path;
     type = "ed25519";
