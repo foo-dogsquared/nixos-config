@@ -9,7 +9,6 @@ creation_rules:
     age: *ni
   - path_regex: hosts/plover/secrets/[^/]+\.(yaml|json)$
     age: *plover
-    gcp-kms: *gcp-sops
   - path_regex: secrets/[^/]+\.(yaml|json)$
     key_groups:
       - age:
