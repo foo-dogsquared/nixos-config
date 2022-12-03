@@ -19,9 +19,6 @@
       isNormalUser = true;
       createHome = true;
       home = "/home/foo-dogsquared";
-      openssh.authorizedKeys.keyFiles = [
-        ../../users/home-manager/foo-dogsquared/user-key.pub
-      ];
     })
   ];
 

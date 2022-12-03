@@ -10,8 +10,8 @@
     description = "The go-to user for server systems.";
 
     openssh.authorizedKeys.keyFiles = [
-      ../../home-manager/foo-dogsquared/user-key.pub
-      ../../../hosts/ni/host-key.pub
+      ../../home-manager/foo-dogsquared/files/ssh-key.pub
+      ../../../hosts/ni/files/ssh-key.pub
     ];
   };
 }
