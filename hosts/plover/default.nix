@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, ... }:
+{ config, options, lib, pkgs, modulesPath, ... }:
 
 let
   inherit (builtins) toString;
@@ -18,6 +18,9 @@ in
 
     (lib.mapHomeManagerUser "plover" {})
     (lib.getUser "nixos" "plover")
+
+    # Hardened profile from nixpkgs.
+    "${modulesPath}/profiles/hardened.nix"
   ];
 
   networking.domain = "foodogsquared.one";
