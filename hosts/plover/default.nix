@@ -14,9 +14,9 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    (lib.getUser "nixos" "admin")
 
-    (lib.mapHomeManagerUser "plover" {})
+    # The users for this host.
+    (lib.getUser "nixos" "admin")
     (lib.getUser "nixos" "plover")
 
     # Hardened profile from nixpkgs.
