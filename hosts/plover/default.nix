@@ -19,8 +19,7 @@ in
     (lib.getUser "nixos" "admin")
     (lib.getUser "nixos" "plover")
 
-    # Several profile from nixpkgs.
-    "${modulesPath}/profiles/headless.nix"
+    # Hardened profile from nixpkgs.
     "${modulesPath}/profiles/hardened.nix"
   ];
 
