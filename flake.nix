@@ -449,21 +449,30 @@
       # ignoring the shell entry by simply prefixing it with a space which most
       # command-line shells have support for (e.g., Bash, zsh, fish).
       deploy.nodes = let
-        importNodes = { prefix, activation ? prefix, environments, system ? defaultSystem }:
-          lib'.mapAttrs'
-            (name: value:
-              lib'.nameValuePair "${prefix}-${name}" {
-                hostname = name;
-                profiles.system = {
-                  sshUser = "admin";
-                  user = "root";
-                  path = inputs.deploy.lib.${defaultSystem}.activate."${activation}" value;
-                  remoteBuild = true;
-                };
+        nixosConfigurations = lib'.mapAttrs'
+          (name: value:
+            lib'.nameValuePair "nixos-${name}" {
+              hostname = name;
+              fastConnection = true;
+              profiles.system = {
+                sshUser = "admin";
+                user = "root";
+                path = inputs.deploy.lib.${defaultSystem}.activate.nixos value;
+              };
             })
-            environments;
-      in (importNodes { prefix = "nixos"; environments = self.nixosConfigurations; })
-         // (importNodes { prefix = "home-manager"; environments = self.homeManagerConfigurations; });
+          self.nixosConfigurations;
+        homeManagerConfigurations = lib'.mapAttrs'
+          (name: value:
+            lib'.nameValuePair "home-manager-${name}" {
+              hostname = name;
+              fastConnection = true;
+              profiles.home = {
+                sshUser = name;
+                path = inputs.deploy.lib.${defaultSystem}.activate.home-manager value;
+              };
+            })
+          self.homeManagerConfigurations;
+      in nixosConfigurations // homeManagerConfigurations;
 
       # How to make yourself slightly saner than before. So far the main checks
       # are for deploy nodes.
