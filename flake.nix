@@ -474,18 +474,6 @@
       # I'm cut off from the rest of my setup with no Hydra instance yet but
       # I'm sure it will grow some of them as long as you didn't put it under a
       # rock.
-      hydraJobs =
-        lib'.mapAttrs'
-          (name: config:
-            lib'.nameValuePair "nixos-${name}" config.config.system.build.toplevel)
-          self.nixosConfigurations
-        // lib'.mapAttrs'
-          (name: config:
-            lib'.nameValuePair "home-manager-${name}" config.activationPackage)
-          self.homeManagerConfigurations
-        // {
-          build-packages = forAllSystems (system:
-            self.packages.${system});
-        };
+      hydraJobs.build-packages = forAllSystems (system: self.packages.${system});
     };
 }
