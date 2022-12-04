@@ -40,12 +40,13 @@ in
           secrets;
     in
     getSecrets (let
-      giteaUserGroup = config.users.users."${config.services.gitea.user}".group;
+      giteaUserGroup = config.users.users."${config.services.gitea.user}".name;
 
       # It is hardcoded but as long as the module is stable that way.
       vaultwardenUserGroup = config.users.groups.vaultwarden.name;
     in {
       "ssh-key" = {};
+      "lego/env" = {};
       "gitea/db/password".owner = giteaUserGroup;
       "gitea/smtp/password".owner = giteaUserGroup;
       "vaultwarden/env".owner = vaultwardenUserGroup;
@@ -76,11 +77,6 @@ in
     path = config.sops.secrets."plover/ssh-key".path;
     type = "ed25519";
   }];
-
-  # Some additional dependencies for this system.
-  environment.systemPackages = with pkgs; [
-    asciidoctor # This is needed for additional markup for Gitea.
-  ];
 
   # The main server where it will tie all of the services in one neat little
   # place.
@@ -140,6 +136,30 @@ in
     package = pkgs.postgresql_15;
     enableTCPIP = true;
 
+    # Create per-user schema as documented from Usage Patterns. This is to make
+    # use of the secure schema usage pattern they encouraged to do.
+    #
+    # Now, you just have to keep in mind about applications making use of them.
+    # Most of them should have the setting to set the schema to be used. If
+    # not, then screw them (or just file an issue and politely ask for the
+    # feature).
+    initialScript = let
+      perUserSchemas = lib.lists.map
+        (user: "CREATE SCHEMA ${user.name};")
+        config.services.postgresql.ensureUsers;
+      script = pkgs.writeText "plover-initial-postgresql-script" ''
+        ${lib.concatStringsSep "\n" perUserSchemas}
+      '';
+    in script;
+
+    settings = {
+      log_connections = true;
+      log_disconnections = true;
+
+      # Still doing the secure schema usage pattern.
+      search_path = "\"$user\"";
+    };
+
     # There's no database and user checks for Vaultwarden service.
     ensureDatabases = [ vaultwardenDbName ];
     ensureUsers = [
@@ -147,7 +167,7 @@ in
         name = vaultwardenUser;
         ensurePermissions = {
           "DATABASE ${vaultwardenDbName}" = "ALL PRIVILEGES";
-          "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
+          "SCHEMA ${vaultwardenDbName}" = "ALL PRIVILEGES";
         };
       }
     ];
@@ -177,10 +197,7 @@ in
 
       "ui.meta" = {
         AUTHOR = "foodogsquared's code forge";
-        DESCRIPTION = ''
-          foodogsquared's personal Git forge.
-          Mainly personal projects and some archived and mirrored codebases.
-        '';
+        DESCRIPTION = "foodogsquared's personal projects and some archived and mirrored codebases.";
         KEYWORDS = "foodogsquared,gitea,self-hosted";
       };
 
@@ -197,7 +214,7 @@ in
         ENABLED = true;
         NEED_POSTPROCESS = true;
         FILE_EXTENSIONS = ".adoc,.asciidoc";
-        RENDER_COMMANDS = "asciidoc --out-file=- -";
+        RENDER_COMMAND = "${pkgs.asciidoctor}/bin/asciidoctor --out-file=- -";
         IS_INPUT_FILE = false;
       };
 
@@ -218,6 +235,12 @@ in
 
       # Enable mirroring feature...
       mirror.ENABLED = true;
+
+      # Session configuration.
+      session.COOKIE_SECURE = true;
+
+      # Some more database configuration.
+      database.SCHEMA = config.services.gitea.user;
 
       other = {
         SHOW_FOOTER_VERSION = true;
@@ -262,7 +285,7 @@ in
 
       # Configuring the database. Take note it is required to create a password
       # for the user.
-      DATABASE_URL = "postgresql://${vaultwardenUser}@/${vaultwardenDbName}";
+      DATABASE_URL = "postgresql://${vaultwardenUser}@/${vaultwardenDbName}?application_name=vaultwarden&options=-c%20search_path%3D${vaultwardenUser}";
     };
   };
 
