@@ -5,9 +5,9 @@ let
   cfg = config.tasks.backup-archive;
 
   borgJobCommonSetting = { patterns ? [ ] }: {
-    compression = "zstd,9";
+    compression = "zstd,12";
     dateFormat = "+%F-%H-%M-%S-%z";
-    doInit = true;
+    doInit = false;
     encryption = {
       mode = "repokey-blake2";
       passCommand = "cat ${config.sops.secrets."borg-backup/password".path}";
@@ -79,7 +79,6 @@ in
             secrets."borg-backup/borg-patterns/keys".path
           ];
         } // {
-        doInit = false;
         removableDevice = true;
         repo = "/mnt/archives/backups";
         startAt = "daily";
@@ -93,7 +92,6 @@ in
             secrets."borg-backup/borg-patterns/keys".path
           ];
         } // {
-        doInit = false;
         removableDevice = true;
         repo = "/mnt/external-storage/backups";
         startAt = "daily";
@@ -105,6 +103,7 @@ in
             secrets."borg-backup/borg-patterns/remote-backup".path
           ];
         } // {
+        doInit = true;
         repo = "r6o30viv@r6o30viv.repo.borgbase.com:repo";
         startAt = "daily";
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."borg-backup/ssh-key".path}";
