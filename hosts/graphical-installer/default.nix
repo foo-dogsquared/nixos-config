@@ -2,7 +2,6 @@
 
 {
   imports = [
-    "${modulesPath}/installer/cd-dvd/installation-cd-graphical-base.nix"
     (lib.getUser "nixos" "nixos")
   ];
 
