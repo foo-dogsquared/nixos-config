@@ -1,4 +1,5 @@
-# All of the settings related to server systems.
+# All of the settings related to server systems. Take note they cannot be used
+# alongside the desktop profile.
 { config, options, lib, pkgs, ... }:
 
 let
@@ -37,6 +38,9 @@ in
       # Most of the servers will be deployed with outside access in mind so
       # generate them certificates. Anything with a private network, ehh... so
       # just set it off.
+      #
+      # Don't forget to set your certificates or set DNS-related options for
+      # this.
       security.acme = {
         acceptTerms = true;
         defaults.email = "admin@foodogsquared.one";
