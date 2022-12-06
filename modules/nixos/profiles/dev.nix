@@ -93,8 +93,9 @@ in {
 
       # Enable all of the gud things.
       ++ (lib.optionals config.programs.git.enable [
-        github-cli # Client for GitHub.
-        hut # And one for Sourcehut.
+        tea # Make some Tea...
+        hut # ...in the Hut...
+        github-cli # ...in the GitHub CLI.
       ]);
 
       systemd.user.services.nix-upgrade-profile = {
@@ -126,7 +127,7 @@ in {
         fd # Oh nice, a more reliable `find`.
         ripgrep # On nice, a more reliable `grep`.
         exa # Oh nice, a shinier `ls`.
-        bat # dog > bat > cat
+        bat # dog > sky dog > cat
         fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
         gopass # An improved version of the password manager for hipsters.
         zoxide # Gain teleportation abilities!
