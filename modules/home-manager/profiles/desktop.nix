@@ -29,6 +29,7 @@ in {
 
     (lib.mkIf cfg.audio.enable {
       home.packages = with pkgs; [
+        audacity # EGADS!!!
         musescore # You won't find muses to score, only music: a common misconception.
         zrythm # The freer FL Studio (if you're sailing by the high seven seas).
         supercollider # Not to be confused with the other Super Collider.
