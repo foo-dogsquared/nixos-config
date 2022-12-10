@@ -4,6 +4,7 @@ let
   inherit (builtins) toString;
   domain = config.networking.domain;
   passwordManagerDomain = "pass.${domain}";
+  codeForgeDomain = "code.${domain}";
 
   # This should be set from service module from nixpkgs.
   vaultwardenUser = config.users.users.vaultwarden.name;
@@ -23,7 +24,17 @@ in
     "${modulesPath}/profiles/hardened.nix"
   ];
 
-  networking.domain = "foodogsquared.one";
+  networking = {
+    domain = "foodogsquared.one";
+    allowedTCPPorts = [
+      22 # Secure Shells.
+      80 # HTTP servers.
+      433 # HTTPS servers.
+
+      config.services.gitea.httpPort
+      config.services.vaultwarden.config.ROCKET_PORT
+    ];
+  };
 
   sops.secrets =
     let
@@ -120,7 +131,7 @@ in
       };
 
       # Gitea instance.
-      "code.${config.networking.domain}" = {
+      "${codeForgeDomain}" = {
         forceSSL = true;
         enableACME = true;
         locations."/" = {
@@ -170,6 +181,12 @@ in
           "SCHEMA ${vaultwardenDbName}" = "ALL PRIVILEGES";
         };
       }
+      {
+        name = config.services.gitea.user;
+        ensurePermissions = {
+          "SCHEMA ${config.services.gitea.user}" = "ALL PRIVILEGES";
+        };
+      }
     ];
   };
 
@@ -181,6 +198,9 @@ in
       type = "postgres";
       passwordFile = config.sops.secrets."plover/gitea/db/password".path;
     };
+    domain = codeForgeDomain;
+    rootUrl = "https://${codeForgeDomain}";
+    httpPort = 8432;
     lfs.enable = true;
     mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
 
@@ -226,7 +246,7 @@ in
         SMTP_PORT = 587;
         USER = "apikey";
         FROM = "Gitea";
-        ENVELOPE_FROM = "gitea@foodogsquared.one";
+        ENVELOPE_FROM = "bot+gitea@foodogsquared.one";
         SEND_AS_PLAIN_TEXT = true;
       };
 
@@ -285,7 +305,13 @@ in
 
       # Configuring the database. Take note it is required to create a password
       # for the user.
-      DATABASE_URL = "postgresql://${vaultwardenUser}@/${vaultwardenDbName}?application_name=vaultwarden&options=-c%20search_path%3D${vaultwardenUser}";
+      DATABASE_URL = "postgresql://${vaultwardenUser}@/${vaultwardenDbName}";
+
+      # Mailer service configuration (except the user and password).
+      SMTP_HOST = "smtp.sendgrid.net";
+      SMTP_PORT = 587;
+      SMTP_FROM_NAME = "Vaultwarden";
+      SMTP_FROM = "bot+vaultwarden@foodogsquared.one";
     };
   };
 
