@@ -16,6 +16,8 @@
     ] ++ builtins.attrValues inputs;
   };
 
+  networking.wireless.enable = lib.mkForce false;
+
   profiles = {
     desktop = {
       enable = true;
