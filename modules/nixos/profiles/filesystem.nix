@@ -1,3 +1,7 @@
+# A bunch of predefined filesystem configurations for several devices. This is
+# nice for setting up shop for certain tasks with the flick of the switch to ON
+# (e.g., `config.profiles.filesystem.archive.enable = true`) and not have
+# conflicting settings all throughout the configuration.
 { config, options, lib, pkgs, ... }:
 
 let

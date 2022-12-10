@@ -3,6 +3,7 @@
 { lib }:
 
 rec {
+  # This is only used for home-manager users without a NixOS user counterpart.
   mapHomeManagerUser = user: settings:
     let
       homeDirectory = "/home/${user}";

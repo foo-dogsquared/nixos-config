@@ -97,6 +97,7 @@
         # Access to NUR.
         inputs.nur.overlay
 
+        # Running unpatched binaries in NixOS?!!
         inputs.nix-alien.overlays.default
       ];
 
