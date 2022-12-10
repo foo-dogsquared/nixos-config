@@ -248,12 +248,13 @@ in
       { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
       { id = "ekhagklcjbdpajgpjgmbionohlpdbjgc"; } # Zotero connector
       { id = "jfnifeihccihocjbfcfhicmmgpjicaec"; } # GSConnect
-      { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # Google Translate (yes, I'm disappointed in myself)
+      { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # Google Translate
       { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; } # Firenvim
       { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
       { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
       { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
-
+      { id = "haebnnbpedcbhciplfhjjkbafijpncjl"; } # TinEye Reverse Image Search
+      { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; } # Tampermonkey
       { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
     ];
   };
