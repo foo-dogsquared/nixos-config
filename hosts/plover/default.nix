@@ -200,8 +200,17 @@ in
     };
     domain = codeForgeDomain;
     rootUrl = "https://${codeForgeDomain}";
+
+    # Allow Gitea to take a dump.
+    dump = {
+      enable = true;
+      interval = "Sunday";
+    };
+
+    # There are a lot of services in port 3000 so we'll change it.
     httpPort = 8432;
     lfs.enable = true;
+
     mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
 
     settings = {
@@ -211,6 +220,7 @@ in
       };
 
       ui = {
+        DEFAULT_THEME = "auto";
         EXPLORE_PAGING_SUM = 15;
         GRAPH_MAX_COMMIT_NUM = 200;
       };
@@ -241,13 +251,13 @@ in
       # Mailer service.
       mailer = {
         ENABLED = true;
-        PROTOCOL = "smtp";
+        PROTOCOL = "smtp+starttls";
         SMTP_ADDRESS = "smtp.sendgrid.net";
         SMTP_PORT = 587;
         USER = "apikey";
-        FROM = "Gitea";
-        ENVELOPE_FROM = "bot+gitea@foodogsquared.one";
+        FROM = "bot+gitea@foodogsquared.one";
         SEND_AS_PLAIN_TEXT = true;
+        SENDMAIL_PATH = "${pkgs.system-sendmail}/bin/sendmail";
       };
 
       # Well, collaboration between forges is nice...
@@ -261,6 +271,9 @@ in
 
       # Some more database configuration.
       database.SCHEMA = config.services.gitea.user;
+
+      # Run various periodic services.
+      "cron.update_mirrors".SCHEDULE = "@every 12h";
 
       other = {
         SHOW_FOOTER_VERSION = true;
@@ -293,7 +306,10 @@ in
       # nonexistent because this is just intended for me (at least right now).
       SIGNUPS_ALLOWED = false;
       SIGNUPS_VERIFY = true;
+
+      # Invitations...
       INVITATIONS_ALLOWED = true;
+      INVITATION_ORG_NAME = "foodogsquared's Vaultwarden";
 
       # Notifications...
       WEBSOCKET_ENABLED = true;
@@ -355,6 +371,15 @@ in
     Host *.repo.borgbase.com
      IdentityFile ${config.sops.secrets."plover/ssh-key".path}
   '';
+
+  systemd.tmpfiles.rules = let
+    # To be used similarly to $GITEA_CUSTOM variable.
+    giteaCustomDir = "${config.services.gitea.stateDir}/custom";
+  in [
+    "L+ ${giteaCustomDir}/templates/home.tmpl - - - - ${./files/gitea/home.tmpl}"
+    "L+ ${giteaCustomDir}/public/img/logo.svg - - - - ${./files/gitea/logo.svg}"
+    "L+ ${giteaCustomDir}/public/img/logo.png - - - - ${./files/gitea/logo.png}"
+  ];
 
   system.stateVersion = "22.11";
 }

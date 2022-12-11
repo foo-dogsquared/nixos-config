@@ -1,0 +1,30 @@
+{{template "base/head" .}}
+<div class="page-content home">
+	<div class="ui stackable middle very relaxed page grid">
+		<div class="sixteen wide center aligned centered column">
+            <div class="hero">
+                <div class="hero ui icon header">
+                    <h1>
+                        <a href="https://foodogsquared.one">foodogsquared</a>'s personal forge
+                    </h1>
+                </div>
+                <div>
+                    <img class="logo" width="220" height="220" src="{{AssetUrlPrefix}}/img/logo.svg" alt="{{.locale.Tr "logo"}}"/>
+                </div>
+            </div>
+            <div class="ui stackable center">
+                <p class="large">
+                    A single-user instance for the purpose of showing my personal projects without a bunch of scattered projects I forgot to remove in my other code repositories (e.g., GitHub, GitLab).
+                    Includes my personal projects (of course) and a bunch of mirrored repositories I'm mainly interested in archiving.
+                </p>
+                <p class="large">
+                    Though this is a single-user instance, I'm also interested in collaboration in this instance.
+                    Feel free to send some patches in email at <code>$FOODOGSQUARED_GITEA_USER@$FOODOGSQUARED_DOMAIN</code> and I'll consider it to be merged.
+                    If the time comes, the need for email patches is reduced once <a href="https://forgefed.org/" target="_blank" rel="noreferrer noopener nofollow">ForgeFed protocol</a> has been implemented.
+                    Once that happens, that would be the preferred way of collaborating.
+                </p>
+            </div>
+        </div>
+	</div>
+</div>
+{{template "base/footer" .}}
