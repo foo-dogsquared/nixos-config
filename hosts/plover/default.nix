@@ -343,39 +343,68 @@ in
 
   # Of course, what is a server without a backup? A professionally-handled
   # production system so we can act like one.
-  services.borgbackup.jobs.host-backup = let
-    patterns = [
-      config.sops.secrets."plover/borg/patterns/keys".path
-    ];
-  in {
-    compression = "zstd,11";
-    dateFormat = "+%F-%H-%M-%S-%z";
-    doInit = true;
-    encryption = {
-      mode = "repokey-blake2";
-      passCommand = "cat ${config.sops.secrets."plover/borg/password".path}";
-    };
-    extraCreateArgs = lib.concatStringsSep " "
-      (builtins.map (patternFile: "--patterns-from ${patternFile}") patterns);
-    extraInitArgs = "--make-parent-dirs";
-    # We're setting it since it is required plus we're replacing all of them
-    # with patterns anyways.
-    paths = [];
-    persistentTimer = true;
-    preHook = ''
-      extraCreateArgs="$extraCreateArgs --stats"
-    '';
-    prune = {
-      keep = {
-        weekly = 4;
-        monthly = 12;
-        yearly = 6;
+  services.borgbackup.jobs =
+    let
+      jobCommonSettings = { patternFiles ? [ ], patterns ? [ ], paths ? [ ] }: {
+        inherit paths;
+        compression = "zstd,11";
+        dateFormat = "+%F-%H-%M-%S-%z";
+        doInit = true;
+        encryption = {
+          mode = "repokey-blake2";
+          passCommand = "cat ${config.sops.secrets."plover/borg/password".path}";
+        };
+        extraCreateArgs =
+          let
+            args = [
+              (lib.concatStringsSep " "
+                (builtins.map (patternFile: "--patterns-from ${lib.escapeShellArg patternFile}") patternFiles))
+              (lib.concatStringsSep " "
+                (builtins.map (pattern: "--pattern ${lib.escapeShellArg pattern}") patterns))
+            ];
+          in
+          lib.concatStringsSep " " args;
+        extraInitArgs = "--make-parent-dirs";
+        # We're setting it since it is required plus we're replacing all of them
+        # with patterns anyways.
+        persistentTimer = true;
+        preHook = ''
+          extraCreateArgs="$extraCreateArgs --stats"
+        '';
+        prune.keep = {
+          weekly = 4;
+          monthly = 12;
+          yearly = 6;
+        };
+        repo = "cr6pf13r@cr6pf13r.repo.borgbase.com:repo";
+        startAt = "monthly";
+        environment.BORG_RSH = "ssh -i ${config.sops.secrets."plover/ssh-key".path}";
       };
+    in
+    {
+      # Backup for host-specific files. They don't change much so it is
+      # acceptable for it to be backed up monthly.
+      host-backup = jobCommonSettings {
+        patternFiles = [
+          config.sops.secrets."plover/borg/patterns/keys".path
+        ];
+      };
+
+      # Backups for various services.
+      services-backup = jobCommonSettings
+        {
+          paths = [
+            # Vaultwarden
+            "/var/lib/bitwarden_rs"
+
+            # Gitea
+            config.services.gitea.dump.backupDir
+
+            # PostgreSQL database dumps
+            config.services.postgresqlBackup.location
+          ];
+        } // { startAt = "weekly"; };
     };
-    repo = "cr6pf13r@cr6pf13r.repo.borgbase.com:repo";
-    startAt = "monthly";
-    environment.BORG_RSH = "ssh -i ${config.sops.secrets."plover/ssh-key".path}";
-  };
 
   programs.ssh.extraConfig = ''
     Host *.repo.borgbase.com
