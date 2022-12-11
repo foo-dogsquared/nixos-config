@@ -190,6 +190,16 @@ in
     ];
   };
 
+  # With a database comes a dumping.
+  services.postgresqlBackup = {
+    enable = true;
+    compression = "zstd";
+    compressionLevel = 11;
+
+    # Start at every 3 days starting from the first day of the month.
+    startAt = "*-*-1/3";
+  };
+
   # My code forge.
   services.gitea = {
     enable = true;
