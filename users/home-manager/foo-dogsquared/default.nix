@@ -256,6 +256,7 @@ in
       { id = "haebnnbpedcbhciplfhjjkbafijpncjl"; } # TinEye Reverse Image Search
       { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; } # Tampermonkey
       { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
+      { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
     ];
   };
 
