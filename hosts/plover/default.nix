@@ -50,20 +50,23 @@ in
               ((getKey secret) // config))
           secrets;
     in
-    getSecrets (let
-      giteaUserGroup = config.users.users."${config.services.gitea.user}".name;
+    getSecrets (
+      let
+        giteaUserGroup = config.users.users."${config.services.gitea.user}".name;
 
-      # It is hardcoded but as long as the module is stable that way.
-      vaultwardenUserGroup = config.users.groups.vaultwarden.name;
-    in {
-      "ssh-key" = {};
-      "lego/env" = {};
-      "gitea/db/password".owner = giteaUserGroup;
-      "gitea/smtp/password".owner = giteaUserGroup;
-      "vaultwarden/env".owner = vaultwardenUserGroup;
-      "borg/patterns/keys" = {};
-      "borg/password" = {};
-    });
+        # It is hardcoded but as long as the module is stable that way.
+        vaultwardenUserGroup = config.users.groups.vaultwarden.name;
+      in
+      {
+        "ssh-key" = { };
+        "lego/env" = { };
+        "gitea/db/password".owner = giteaUserGroup;
+        "gitea/smtp/password".owner = giteaUserGroup;
+        "vaultwarden/env".owner = vaultwardenUserGroup;
+        "borg/patterns/keys" = { };
+        "borg/password" = { };
+      }
+    );
 
   # All of the keys required to deploy the secrets. Don't know how to make the
   # GCP KMS key work though without manually going into the instance and
@@ -108,26 +111,28 @@ in
       "${passwordManagerDomain}" = {
         forceSSL = true;
         enableACME = true;
-        locations = let
-          address = config.services.vaultwarden.config.ROCKET_ADDRESS;
-          port = config.services.vaultwarden.config.ROCKET_PORT;
-          websocketPort = config.services.vaultwarden.config.WEBSOCKET_PORT;
-        in {
-          "/" = {
-            proxyPass = "http://${address}:${toString port}";
-            proxyWebsockets = true;
-          };
+        locations =
+          let
+            address = config.services.vaultwarden.config.ROCKET_ADDRESS;
+            port = config.services.vaultwarden.config.ROCKET_PORT;
+            websocketPort = config.services.vaultwarden.config.WEBSOCKET_PORT;
+          in
+          {
+            "/" = {
+              proxyPass = "http://${address}:${toString port}";
+              proxyWebsockets = true;
+            };
 
-          "/notifications/hub" = {
-            proxyPass = "http://${address}:${toString websocketPort}";
-            proxyWebsockets = true;
-          };
+            "/notifications/hub" = {
+              proxyPass = "http://${address}:${toString websocketPort}";
+              proxyWebsockets = true;
+            };
 
-          "/notifications/hub/negotiate" = {
-            proxyPass = "http://${address}:${toString port}";
-            proxyWebsockets = true;
+            "/notifications/hub/negotiate" = {
+              proxyPass = "http://${address}:${toString port}";
+              proxyWebsockets = true;
+            };
           };
-        };
       };
 
       # Gitea instance.
@@ -154,14 +159,16 @@ in
     # Most of them should have the setting to set the schema to be used. If
     # not, then screw them (or just file an issue and politely ask for the
     # feature).
-    initialScript = let
-      perUserSchemas = lib.lists.map
-        (user: "CREATE SCHEMA ${user.name};")
-        config.services.postgresql.ensureUsers;
-      script = pkgs.writeText "plover-initial-postgresql-script" ''
-        ${lib.concatStringsSep "\n" perUserSchemas}
-      '';
-    in script;
+    initialScript =
+      let
+        perUserSchemas = lib.lists.map
+          (user: "CREATE SCHEMA ${user.name};")
+          config.services.postgresql.ensureUsers;
+        script = pkgs.writeText "plover-initial-postgresql-script" ''
+          ${lib.concatStringsSep "\n" perUserSchemas}
+        '';
+      in
+      script;
 
     settings = {
       log_connections = true;
