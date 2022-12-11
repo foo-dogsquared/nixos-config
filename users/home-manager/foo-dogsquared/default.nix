@@ -53,15 +53,15 @@ in
     package = pkgs.gitFull;
     lfs.enable = true;
     userName = "Gabriel Arazas";
-    userEmail = "foo.dogsquared@gmail.com";
+    userEmail = "foodogsquared@foodogsquared.one";
     signing.key = "129AFC6B4ABD6B61";
     extraConfig = {
       # This is taken from the official Git book, for future references.
       sendemail = {
-        smtpserver = "smtp.gmail.com";
+        smtpserver = "smtp.mailbox.org";
         smtpencryption = "tls";
         smtpserverport = 587;
-        smtpuser = config.programs.git.userEmail;
+        smtpuser = "foodogsquared@mailbox.org";
       };
 
       init.defaultBranch = "main";
