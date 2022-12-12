@@ -366,11 +366,13 @@ in
         };
         extraCreateArgs =
           let
-            args = [
-              (lib.concatStringsSep " "
-                (builtins.map (patternFile: "--patterns-from ${lib.escapeShellArg patternFile}") patternFiles))
-              (lib.concatStringsSep " "
-                (builtins.map (pattern: "--pattern ${lib.escapeShellArg pattern}") patterns))
+            args = lib.flatten [
+              (builtins.map
+                (patternFile: "--patterns-from ${lib.escapeShellArg patternFile}")
+                patternFiles)
+              (builtins.map
+                (pattern: "--pattern ${lib.escapeShellArg pattern}")
+                patterns)
             ];
           in
           lib.concatStringsSep " " args;
