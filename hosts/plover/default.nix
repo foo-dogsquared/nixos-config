@@ -2,6 +2,7 @@
 
 let
   inherit (builtins) toString;
+
   domain = config.networking.domain;
   passwordManagerDomain = "pass.${domain}";
   codeForgeDomain = "code.${domain}";
@@ -33,8 +34,6 @@ in
       80 # HTTP servers.
       433 # HTTPS servers.
 
-      config.services.gitea.httpPort
-      config.services.vaultwarden.config.ROCKET_PORT
     ];
   };
 
@@ -54,7 +53,7 @@ in
     in
     getSecrets (
       let
-        giteaUserGroup = config.users.users."${config.services.gitea.user}".name;
+        giteaUserGroup = config.users.users."${config.services.gitea.user}".group;
 
         # It is hardcoded but as long as the module is stable that way.
         vaultwardenUserGroup = config.users.groups.vaultwarden.name;
