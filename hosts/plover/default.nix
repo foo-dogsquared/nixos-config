@@ -5,6 +5,7 @@ let
   domain = config.networking.domain;
   passwordManagerDomain = "pass.${domain}";
   codeForgeDomain = "code.${domain}";
+  dbDomain = "db.${domain}";
 
   # This should be set from service module from nixpkgs.
   vaultwardenUser = config.users.users.vaultwarden.name;
@@ -82,9 +83,15 @@ in
 
   # DNS-related settings. This is nice for automating them putting DNS records
   # and other types of stuff.
-  security.acme.defaults = {
-    dnsProvider = "porkbun";
-    credentialsFile = config.sops.secrets."plover/lego/env".path;
+  security.acme = {
+    defaults = {
+      dnsProvider = "porkbun";
+      credentialsFile = config.sops.secrets."plover/lego/env".path;
+    };
+
+    certs = {
+      "${dbDomain}" = { };
+    };
   };
 
   services.openssh.hostKeys = [{
@@ -144,6 +151,17 @@ in
         };
       };
     };
+
+    streamConfig = ''
+      server {
+        listen ${toString config.services.postgresql.port} ssl so_keepalive=on;
+        proxy_pass localhost:${toString config.services.postgresql.port};
+
+        ssl_certificate ${config.security.acme.certs."${dbDomain}".directory}/fullchain.pem;
+        ssl_certificate_key ${config.security.acme.certs."${dbDomain}".directory}/key.pem;
+        ssl_trusted_certificate ${config.security.acme.certs."${dbDomain}".directory}/chain.pem;
+      }
+    '';
   };
 
   # Enable database services that is used in all of the services here so far.
@@ -151,6 +169,14 @@ in
     enable = true;
     package = pkgs.postgresql_15;
     enableTCPIP = true;
+
+    authentication = ''
+      # Enable SSL connections.
+      hostssl all         all ::1/128 trust
+      hostssl all         all 127.0.0.1/32 trust
+      hostssl replication all ::1/128 trust
+      hostssl replication all 127.0.0.1/32 trust
+    '';
 
     # Create per-user schema as documented from Usage Patterns. This is to make
     # use of the secure schema usage pattern they encouraged to do.
@@ -174,6 +200,10 @@ in
       '';
 
     settings = {
+      ssl = true;
+      ssl_cert_file = "${config.security.acme.certs."${dbDomain}".directory}/fullchain.pem";
+      ssl_key_file = "${config.security.acme.certs."${dbDomain}".directory}/key.pem";
+
       log_connections = true;
       log_disconnections = true;
 
