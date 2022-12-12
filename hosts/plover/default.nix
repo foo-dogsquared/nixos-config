@@ -161,14 +161,17 @@ in
     # feature).
     initialScript =
       let
+        # This will be run once anyways so it is acceptable to create users
+        # "forcibly".
         perUserSchemas = lib.lists.map
-          (user: "CREATE SCHEMA ${user.name};")
+          (user: ''
+            CREATE USER ${user.name};
+            CREATE SCHEMA ${user.name} AUTHORIZATION ${user.name};
+          '')
           config.services.postgresql.ensureUsers;
-        script = pkgs.writeText "plover-initial-postgresql-script" ''
-          ${lib.concatStringsSep "\n" perUserSchemas}
-        '';
-      in
-      script;
+      in pkgs.writeText "plover-initial-postgresql-script" ''
+        ${lib.concatStringsSep "\n" perUserSchemas}
+      '';
 
     settings = {
       log_connections = true;
