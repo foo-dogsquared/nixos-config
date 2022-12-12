@@ -5,6 +5,7 @@ let
   domain = config.networking.domain;
   passwordManagerDomain = "pass.${domain}";
   codeForgeDomain = "code.${domain}";
+  identityDomain = "identity.${domain}";
   dbDomain = "db.${domain}";
 
   # This should be set from service module from nixpkgs.
@@ -66,6 +67,7 @@ in
         "vaultwarden/env".owner = vaultwardenUserGroup;
         "borg/patterns/keys" = { };
         "borg/password" = { };
+        "keycloak/db/password" = { };
       }
     );
 
@@ -150,6 +152,15 @@ in
           proxyPass = "http://localhost:${toString config.services.gitea.httpPort}";
         };
       };
+
+      # Keycloak instance.
+      "${identityDomain}" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:${toString config.services.keycloak.settings.https-port}";
+        };
+      };
     };
 
     streamConfig = ''
@@ -228,6 +239,30 @@ in
         };
       }
     ];
+  };
+
+  # Hey, the hub for your application sign-in.
+  services.keycloak = {
+    enable = true;
+
+    # Pls change at first login.
+    initialAdminPassword = "wow what is this thing";
+
+    database = {
+      type = "postgresql";
+      createLocally = true;
+      passwordFile = config.sops.secrets."plover/keycloak/db/password".path;
+      caCert = "${config.security.acme.certs."${dbDomain}".directory}/chain.pem";
+    };
+
+    settings = {
+      hostname = identityDomain;
+      hostname-strict-backchannel = true;
+      proxy = "reencrypt";
+    };
+
+    sslCertificate = "${config.security.acme.certs."${identityDomain}".directory}/fullchain.pem";
+    sslCertificateKey = "${config.security.acme.certs."${identityDomain}".directory}/key.pem";
   };
 
   # With a database comes a dumping.
