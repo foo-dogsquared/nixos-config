@@ -19,7 +19,10 @@ in
   # We're going passwordless, baybee!
   security.sudo.extraRules = [{
     users = [ name ];
-    options = [ "NOPASSWD" ];
+    commands = [{
+      command = "ALL";
+      options = [ "NOPASSWD" ];
+    }];
   }];
 
   security.doas.extraRules = [{
