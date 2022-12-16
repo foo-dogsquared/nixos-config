@@ -9,6 +9,8 @@ let
   identityDomain = "identity.${domain}";
   dbDomain = "db.${domain}";
 
+  certs = config.security.acme.certs;
+
   # This should be set from service module from nixpkgs.
   vaultwardenUser = config.users.users.vaultwarden.name;
 
@@ -167,9 +169,9 @@ in
         listen ${toString config.services.postgresql.port} ssl so_keepalive=on;
         proxy_pass localhost:${toString config.services.postgresql.port};
 
-        ssl_certificate ${config.security.acme.certs."${dbDomain}".directory}/fullchain.pem;
-        ssl_certificate_key ${config.security.acme.certs."${dbDomain}".directory}/key.pem;
-        ssl_trusted_certificate ${config.security.acme.certs."${dbDomain}".directory}/chain.pem;
+        ssl_certificate ${certs."${dbDomain}".directory}/fullchain.pem;
+        ssl_certificate_key ${certs."${dbDomain}".directory}/key.pem;
+        ssl_trusted_certificate ${certs."${dbDomain}".directory}/chain.pem;
       }
     '';
   };
@@ -211,8 +213,8 @@ in
 
     settings = {
       ssl = true;
-      ssl_cert_file = "${config.security.acme.certs."${dbDomain}".directory}/fullchain.pem";
-      ssl_key_file = "${config.security.acme.certs."${dbDomain}".directory}/key.pem";
+      ssl_cert_file = "${certs."${dbDomain}".directory}/fullchain.pem";
+      ssl_key_file = "${certs."${dbDomain}".directory}/key.pem";
 
       log_connections = true;
       log_disconnections = true;
@@ -251,7 +253,7 @@ in
       type = "postgresql";
       createLocally = true;
       passwordFile = config.sops.secrets."plover/keycloak/db/password".path;
-      caCert = "${config.security.acme.certs."${dbDomain}".directory}/chain.pem";
+      caCert = "${certs."${dbDomain}".directory}/chain.pem";
     };
 
     settings = {
@@ -260,8 +262,8 @@ in
       proxy = "reencrypt";
     };
 
-    sslCertificate = "${config.security.acme.certs."${identityDomain}".directory}/fullchain.pem";
-    sslCertificateKey = "${config.security.acme.certs."${identityDomain}".directory}/key.pem";
+    sslCertificate = "${certs."${identityDomain}".directory}/fullchain.pem";
+    sslCertificateKey = "${certs."${identityDomain}".directory}/key.pem";
   };
 
   # With a database comes a dumping.
