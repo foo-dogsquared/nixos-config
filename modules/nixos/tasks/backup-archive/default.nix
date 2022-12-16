@@ -36,6 +36,8 @@ let
     };
   };
 
+  # The head of the Borgbase hostname.
+  borgbase-remote = "r6o30viv";
 in
 {
   options.tasks.backup-archive.enable =
@@ -104,14 +106,14 @@ in
           ];
         } // {
         doInit = true;
-        repo = "r6o30viv@r6o30viv.repo.borgbase.com:repo";
+        repo = "${borgbase-remote}@${borgbase-remote}.repo.borgbase.com:repo";
         startAt = "daily";
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."borg-backup/ssh-key".path}";
       };
     };
 
     programs.ssh.extraConfig = ''
-      Host *.repo.borgbase.com
+      Host ${borgbase-remote}.repo.borgbase.com
        IdentityFile ${config.sops.secrets."borg-backup/ssh-key".path}
     '';
   };

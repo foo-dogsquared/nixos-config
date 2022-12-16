@@ -16,6 +16,9 @@ let
 
   # However, this is set on our own.
   vaultwardenDbName = "vaultwarden";
+
+  # The head of the Borgbase hostname.
+  borgbase-remote = "cr6pf13r";
 in
 {
   imports = [
@@ -418,7 +421,7 @@ in
   };
 
   # Of course, what is a server without a backup? A professionally-handled
-  # production system so we can act like one.
+  # production system. However, we're not professionals so we do have backups.
   services.borgbackup.jobs =
     let
       jobCommonSettings = { patternFiles ? [ ], patterns ? [ ], paths ? [ ] }: {
@@ -443,8 +446,6 @@ in
           in
           lib.concatStringsSep " " args;
         extraInitArgs = "--make-parent-dirs";
-        # We're setting it since it is required plus we're replacing all of them
-        # with patterns anyways.
         persistentTimer = true;
         preHook = ''
           extraCreateArgs="$extraCreateArgs --stats"
@@ -454,7 +455,7 @@ in
           monthly = 12;
           yearly = 6;
         };
-        repo = "cr6pf13r@cr6pf13r.repo.borgbase.com:repo";
+        repo = "${borgbase-remote}@${borgbase-remote}.repo.borgbase.com:repo";
         startAt = "monthly";
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."plover/ssh-key".path}";
       };
@@ -485,7 +486,7 @@ in
     };
 
   programs.ssh.extraConfig = ''
-    Host *.repo.borgbase.com
+    Host ${borgbase-remote}.repo.borgbase.com
      IdentityFile ${config.sops.secrets."plover/ssh-key".path}
   '';
 
