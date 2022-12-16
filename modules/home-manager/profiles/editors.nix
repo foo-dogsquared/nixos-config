@@ -36,7 +36,7 @@ in {
     (lib.mkIf cfg.emacs.enable {
       programs.emacs = {
         enable = true;
-        package = pkgs.emacsNativeComp;
+        package = pkgs.emacsUnstable;
         extraPackages = epkgs: with epkgs; [
           vterm
           pdf-tools
