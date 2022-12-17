@@ -17,6 +17,10 @@ let
   # However, this is set on our own.
   vaultwardenDbName = "vaultwarden";
 
+  # This is also set on our own.
+  keycloakUser = config.services.keycloak.database.username;
+  keycloakDbName = if config.services.keycloak.database.createLocally then keycloakUser else config.services.keycloak.database.username;
+
   # The head of the Borgbase hostname.
   borgbase-remote = "cr6pf13r";
 in
@@ -198,7 +202,7 @@ in
     };
 
     # There's no database and user checks for Vaultwarden service.
-    ensureDatabases = [ vaultwardenDbName ];
+    ensureDatabases = [ vaultwardenDbName keycloakDbName ];
     ensureUsers = [
       {
         name = vaultwardenUser;
@@ -211,6 +215,13 @@ in
         name = config.services.gitea.user;
         ensurePermissions = {
           "SCHEMA ${config.services.gitea.user}" = "ALL PRIVILEGES";
+        };
+      }
+      {
+        name = keycloakUser;
+        ensurePermissions = {
+          "DATABASE ${keycloakDbName}" = "ALL PRIVILEGES";
+          "SCHEMA ${keycloakDbName}" = "ALL PRIVILEGES";
         };
       }
     ];
