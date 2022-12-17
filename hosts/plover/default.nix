@@ -89,15 +89,9 @@ in
 
   # DNS-related settings. This is nice for automating them putting DNS records
   # and other types of stuff.
-  security.acme = {
-    defaults = {
-      dnsProvider = "porkbun";
-      credentialsFile = config.sops.secrets."plover/lego/env".path;
-    };
-
-    certs = {
-      "${dbDomain}" = { };
-    };
+  security.acme.defaults = {
+    dnsProvider = "porkbun";
+    credentialsFile = config.sops.secrets."plover/lego/env".path;
   };
 
   services.openssh.hostKeys = [{
@@ -166,20 +160,6 @@ in
         };
       };
     };
-
-    streamConfig = ''
-      server {
-        listen ${toString config.services.postgresql.port} ssl so_keepalive=on;
-        proxy_pass localhost:${toString config.services.postgresql.port};
-
-        ssl_certificate ${certs."${dbDomain}".directory}/fullchain.pem;
-        ssl_certificate_key ${certs."${dbDomain}".directory}/key.pem;
-        ssl_trusted_certificate ${certs."${dbDomain}".directory}/chain.pem;
-
-        ssl_session_timeout 15m;
-        ssl_session_cache shared:SSL:10m;
-      }
-    '';
   };
 
   # Enable database services that is used in all of the services here so far.
@@ -187,14 +167,6 @@ in
     enable = true;
     package = pkgs.postgresql_15;
     enableTCPIP = true;
-
-    authentication = ''
-      # Enable SSL connections.
-      hostssl all         all ::1/128      trust
-      hostssl all         all 127.0.0.1/32 trust
-      hostssl replication all ::1/128      trust
-      hostssl replication all 127.0.0.1/32 trust
-    '';
 
     # Create per-user schema as documented from Usage Patterns. This is to make
     # use of the secure schema usage pattern they encouraged to do.
@@ -218,10 +190,6 @@ in
       '';
 
     settings = {
-      ssl = true;
-      ssl_cert_file = "${certs."${dbDomain}".directory}/fullchain.pem";
-      ssl_key_file = "${certs."${dbDomain}".directory}/key.pem";
-
       log_connections = true;
       log_disconnections = true;
 
@@ -259,7 +227,6 @@ in
       type = "postgresql";
       createLocally = true;
       passwordFile = config.sops.secrets."plover/keycloak/db/password".path;
-      caCert = "${certs."${dbDomain}".directory}/chain.pem";
     };
 
     settings = {
@@ -267,9 +234,6 @@ in
       hostname-strict-backchannel = true;
       proxy = "reencrypt";
     };
-
-    sslCertificate = "${certs."${identityDomain}".directory}/fullchain.pem";
-    sslCertificateKey = "${certs."${identityDomain}".directory}/key.pem";
   };
 
   # With a database comes a dumping.
