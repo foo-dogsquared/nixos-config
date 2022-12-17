@@ -175,6 +175,9 @@ in
         ssl_certificate ${certs."${dbDomain}".directory}/fullchain.pem;
         ssl_certificate_key ${certs."${dbDomain}".directory}/key.pem;
         ssl_trusted_certificate ${certs."${dbDomain}".directory}/chain.pem;
+
+        ssl_session_timeout 15m;
+        ssl_session_cache shared:SSL:10m;
       }
     '';
   };
@@ -187,9 +190,9 @@ in
 
     authentication = ''
       # Enable SSL connections.
-      hostssl all         all ::1/128 trust
+      hostssl all         all ::1/128      trust
       hostssl all         all 127.0.0.1/32 trust
-      hostssl replication all ::1/128 trust
+      hostssl replication all ::1/128      trust
       hostssl replication all 127.0.0.1/32 trust
     '';
 
