@@ -161,7 +161,7 @@ in
         forceSSL = true;
         enableACME = true;
         locations."/" = {
-          proxyPass = "http://localhost:${toString config.services.keycloak.settings.https-port}";
+          proxyPass = "http://localhost:${toString config.services.keycloak.settings.http-port}";
         };
       };
     };
@@ -242,10 +242,19 @@ in
     };
 
     settings = {
+      host = "127.0.0.1";
+
+      http-enabled = true;
+      http-port = 8759;
+      https-port = 8760;
+
       hostname = authDomain;
       hostname-strict-backchannel = true;
-      proxy = "reencrypt";
+      proxy = "passthrough";
     };
+
+    sslCertificate = "${certs."${authDomain}".directory}/fullchain.pem";
+    sslCertificateKey = "${certs."${authDomain}".directory}/key.pem";
   };
 
   # With a database comes a dumping.
