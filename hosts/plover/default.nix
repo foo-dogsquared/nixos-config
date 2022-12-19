@@ -4,10 +4,11 @@ let
   inherit (builtins) toString;
 
   domain = config.networking.domain;
-  passwordManagerDomain = "pass.${domain}";
-  codeForgeDomain = "code.${domain}";
-  identityDomain = "identity.${domain}";
-  dbDomain = "db.${domain}";
+  subdomain = prefix: "${prefix}.${domain}";
+
+  passwordManagerDomain = subdomain "pass";
+  codeForgeDomain = subdomain "code";
+  authDomain = subdomain "auth";
 
   certs = config.security.acme.certs;
 
@@ -156,7 +157,7 @@ in
       };
 
       # Keycloak instance.
-      "${identityDomain}" = {
+      "${authDomain}" = {
         forceSSL = true;
         enableACME = true;
         locations."/" = {
@@ -241,7 +242,7 @@ in
     };
 
     settings = {
-      hostname = identityDomain;
+      hostname = authDomain;
       hostname-strict-backchannel = true;
       proxy = "reencrypt";
     };
