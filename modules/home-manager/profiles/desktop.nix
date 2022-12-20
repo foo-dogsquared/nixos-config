@@ -56,6 +56,8 @@ in {
         brave # The only web browser that gives me money.
         foliate # The prettier PDF viewer.
         thunderbird # Email checks.
+        languagetool # You're personal assistant for proper grammar,
+        vale # Elevate your fanfics to an arguably higher caliber!
       ];
 
       # The modern VLC if you have little sense of design.
