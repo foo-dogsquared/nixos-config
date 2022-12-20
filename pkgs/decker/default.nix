@@ -9,13 +9,13 @@
 
 stdenv.mkDerivation rec {
   pname = "decker";
-  version = "1.4";
+  version = "1.7";
 
   src = fetchFromGitHub {
     owner = "JohnEarnest";
     repo = "Decker";
     rev = "v${version}";
-    sha256 = "sha256-4QChiQcETofVoe/oPR5Xh9h99SHETUTQvdCHkEpDAZs=";
+    sha256 = "sha256-yfUD+qvINx0QLvXwuc4MTEK/Z1tcHpy0ZK4peCfkozk=";
   };
 
   buildInputs = [
@@ -49,11 +49,10 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     patchShebangs ./scripts/*
-    substituteInPlace ./scripts/install.sh --replace "sudo " ""
   '';
 
   meta = with lib; {
-    homepage = "https://beyondloom.com/decker/index.html";
+    homepage = "https://beyondloom.com/decker";
     description = "Multimedia platform for creating and sharing interactive documents";
     license = licenses.mit;
     platforms = platforms.all;
