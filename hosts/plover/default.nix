@@ -67,6 +67,7 @@ in
 
         # It is hardcoded but as long as the module is stable that way.
         vaultwardenUserGroup = config.users.groups.vaultwarden.name;
+        postgresUserGroup = config.users.groups.postgres.name;
       in
       {
         "ssh-key" = { };
@@ -76,7 +77,7 @@ in
         "vaultwarden/env".owner = vaultwardenUserGroup;
         "borg/patterns/keys" = { };
         "borg/password" = { };
-        "keycloak/db/password" = { };
+        "keycloak/db/password".owner = postgresUserGroup;
       }
     );
 
@@ -187,7 +188,7 @@ in
         perUserSchemas = lib.lists.map
           (user: ''
             CREATE USER ${user.name};
-            CREATE SCHEMA ${user.name} AUTHORIZATION ${user.name};
+            CREATE SCHEMA AUTHORIZATION ${user.name};
           '')
           config.services.postgresql.ensureUsers;
       in pkgs.writeText "plover-initial-postgresql-script" ''
@@ -195,9 +196,6 @@ in
       '';
 
     settings = {
-      log_connections = true;
-      log_disconnections = true;
-
       # Still doing the secure schema usage pattern.
       search_path = "\"$user\"";
     };
@@ -244,6 +242,8 @@ in
     settings = {
       host = "127.0.0.1";
 
+      db-schema = keycloakDbName;
+
       http-enabled = true;
       http-port = 8759;
       https-port = 8760;
@@ -255,6 +255,15 @@ in
 
     sslCertificate = "${certs."${authDomain}".directory}/fullchain.pem";
     sslCertificateKey = "${certs."${authDomain}".directory}/key.pem";
+  };
+
+  # Modifying it a little bit for per-user schema.
+  systemd.services.keycloak = {
+    path = [ config.services.postgresql.package ];
+    preStart = ''
+      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${keycloakDbName}';" \
+        grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS keycloak;"
+    '';
   };
 
   # With a database comes a dumping.
