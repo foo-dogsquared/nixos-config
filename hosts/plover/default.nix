@@ -63,26 +63,23 @@ in
               "plover/${secret}"
               ((getKey secret) // config))
           secrets;
-    in
-    getSecrets (
-      let
-        giteaUserGroup = config.users.users."${config.services.gitea.user}".group;
 
-        # It is hardcoded but as long as the module is stable that way.
-        vaultwardenUserGroup = config.users.groups.vaultwarden.name;
-        postgresUserGroup = config.users.groups.postgres.name;
-      in
-      {
-        "ssh-key" = { };
-        "lego/env" = { };
-        "gitea/db/password".owner = giteaUserGroup;
-        "gitea/smtp/password".owner = giteaUserGroup;
-        "vaultwarden/env".owner = vaultwardenUserGroup;
-        "borg/patterns/keys" = { };
-        "borg/password" = { };
-        "keycloak/db/password".owner = postgresUserGroup;
-      }
-    );
+      giteaUserGroup = config.users.users."${config.services.gitea.user}".group;
+
+      # It is hardcoded but as long as the module is stable that way.
+      vaultwardenUserGroup = config.users.groups.vaultwarden.name;
+      postgresUserGroup = config.users.groups.postgres.name;
+    in
+    getSecrets {
+      "ssh-key" = { };
+      "lego/env" = { };
+      "gitea/db/password".owner = giteaUserGroup;
+      "gitea/smtp/password".owner = giteaUserGroup;
+      "vaultwarden/env".owner = vaultwardenUserGroup;
+      "borg/patterns/keys" = { };
+      "borg/password" = { };
+      "keycloak/db/password".owner = postgresUserGroup;
+    };
 
   # All of the keys required to deploy the secrets. Don't know how to make the
   # GCP KMS key work though without manually going into the instance and
