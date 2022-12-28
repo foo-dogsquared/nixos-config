@@ -36,6 +36,10 @@ in
         permitRootLogin = "no";
       };
 
+      # It is expected that server configurations should be complete
+      # service-wise so we're not allowing user database to be mutable.
+      users.mutableUsers = false;
+
       # Most of the servers will be deployed with outside access in mind so
       # generate them certificates. Anything with a private network, ehh... so
       # just set it off.
