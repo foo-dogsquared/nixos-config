@@ -431,6 +431,13 @@ in
     };
   };
 
+  # Disk space is always assumed to be limited so we're really only limited with 2 dumps.
+  systemd.services.gitea-dump.serviceConfig = {
+    ExecStartPre = pkgs.writeShellScript "gitea-dump-limit" ''
+      find ${config.services.gitea.dump.backupDir} -mtime 14 -maxdepth 1 -type f -delete
+    '';
+  };
+
   # An alternative implementation of Bitwarden written in Rust. The project
   # being written in Rust is a insta-self-hosting material right there.
   services.vaultwarden = {
