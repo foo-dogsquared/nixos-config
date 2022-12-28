@@ -1,4 +1,5 @@
 = Plover, the general-purpose server
+:toc:
 
 This is Plover, a configuration meant to be used in a low-powered general-purpose machine.
 It isn't much of an instance to be seriously used yet but hopefully it is getting there.
@@ -16,6 +17,8 @@ Some of the self-hosted services from this server:
 * An nginx server which will make tie all of the self-hosted services together.
 * A link:https://github.com/dani-garcia/vaultwarden[Vaultwarden] instance for a little password management.
 * A link:https://gitea.io/[Gitea] instance for my personal projects.
+* A link:https://www.keycloak.org/[Keycloak] instance for identity management.
+* An LDAP server with link:https://www.openldap.org/[OpenLDAP].
 
 
 
@@ -29,6 +32,13 @@ It mainly use the private key to the link:./files/age-key.pub[`./files/age-key.p
 
 * Be sure to set the appropriate firewalls either in the NixOS configuration or in the VPS provider firewall settings.
 Take note some formats such as Google Compute image disable them entirely so it's safer to leave the firewall service and just configure the allowed ports and other settings.
+
+* There are some things that are manually configured such as additional setup for the database.
+Mostly related to setting up the proper roles which should be set up with the initial script at this point but there are some still left.
+
+* If needed, restoring the application data from the backup into the services (e.g., Gitea, Keycloak, Vaultwarden).
+
+* Configuring the remaining parts for the services (which unfortunately involves manually going into each application).
 
 
 
