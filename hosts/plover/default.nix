@@ -42,6 +42,7 @@ in
     domain = "foodogsquared.one";
     firewall.allowedTCPPorts = [
       22 # Secure Shells.
+
       80 # HTTP servers.
       433 # HTTPS servers.
 
@@ -116,6 +117,7 @@ in
   services.nginx = {
     enable = true;
     enableReload = true;
+
     package = pkgs.nginxMainline;
 
     recommendedGzipSettings = true;
@@ -356,7 +358,7 @@ in
     # Allow Gitea to take a dump.
     dump = {
       enable = true;
-      interval = "Sunday";
+      interval = "weekly";
     };
 
     # There are a lot of services in port 3000 so we'll change it.
@@ -478,8 +480,7 @@ in
       # Enabling web vault with whatever nixpkgs comes in.
       WEB_VAULT_ENABLED = true;
 
-      # Configuring the database. Take note it is required to create a password
-      # for the user.
+      # Databasifications...
       DATABASE_URL = "postgresql://${vaultwardenUser}@/${vaultwardenDbName}";
 
       # Mailer service configuration (except the user and password).
