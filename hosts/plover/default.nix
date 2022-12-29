@@ -96,15 +96,9 @@ in
 
   # DNS-related settings. This is nice for automating them putting DNS records
   # and other types of stuff.
-  security.acme = {
-    defaults = {
-      dnsProvider = "porkbun";
-      credentialsFile = config.sops.secrets."plover/lego/env".path;
-    };
-
-    certs = {
-      "${ldapDomain}".group = config.services.openldap.group;
-    };
+  security.acme.defaults = {
+    dnsProvider = "porkbun";
+    credentialsFile = config.sops.secrets."plover/lego/env".path;
   };
 
   services.openssh.hostKeys = [{
@@ -179,12 +173,12 @@ in
         };
       };
 
-      # Keycloak instance.
-      "${authDomain}" = {
+      # OpenLDAP server.
+      "${ldapDomain}" = {
         forceSSL = true;
         enableACME = true;
         locations."/" = {
-          proxyPass = "http://localhost:${toString config.services.keycloak.settings.http-port}";
+          proxyPass = "http://localhost:389";
         };
       };
     };
