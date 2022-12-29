@@ -287,6 +287,7 @@ in
           olcSuffix = "dc=foodogsquared,dc=one";
           olcRootDN = "cn=Manager,dc=foodogsquared,dc=one";
           olcAccess = [ "{0}to * by * read break" ];
+          olcRootPW = "{SSHA}xR54l7YZSD8QjnGeDJkikJm3/+HupUbo";
         };
 
         "cn=schema".includes = [
