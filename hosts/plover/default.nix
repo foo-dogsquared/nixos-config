@@ -160,9 +160,19 @@ in
       "${codeForgeDomain}" = {
         forceSSL = true;
         enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:${toString config.services.gitea.httpPort}";
+        };
+      };
+
+      # Keycloak instance.
+      "${authDomain}" = {
+        forceSSL = true;
+        enableACME = true;
         locations = let
           keycloakPath = path: "http://localhost:${toString config.services.gitea.httpPort}${path}";
-        in {
+        in
+          {
           "/realms".proxyPass = keycloakPath "/realms";
           "/resources".proxyPass = keycloakPath "/resources";
           "/robots.txt".proxyPass = keycloakPath "/robots.txt";
