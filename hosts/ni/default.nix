@@ -42,6 +42,7 @@
   in
     getSecrets {
       ssh-key = { };
+      "ldap/password" = { };
     };
 
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
@@ -152,4 +153,16 @@
   };
 
   system.stateVersion = "22.11"; # Yes! I read the comment!
+
+  users.ldap = {
+    enable = true;
+    base = "dc=foodogsquared,dc=one";
+    bind = {
+      distinguishedName = "cn=Manager,dc=foodogsquared,dc=one";
+      passwordFile = config.sops.secrets."ni/ldap/password".path;
+    };
+
+    daemon.enable = true;
+    server = "ldaps://ldap.foodogsquared.one/";
+  };
 }
