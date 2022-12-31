@@ -23,10 +23,27 @@
   ];
 
   services.openssh.hostKeys = [{
-    path = config.sops.secrets.ssh-key.path;
+    path = config.sops.secrets."ni/ssh-key".path;
     type = "ed25519";
   }];
-  sops.secrets.ssh-key.sopsFile = ./secrets/secrets.yaml;
+
+  sops.secrets = let
+    getKey = key: {
+      inherit key;
+      sopsFile = ./secrets/secrets.yaml;
+    };
+    getSecrets = secrets:
+      lib.mapAttrs'
+        (secret: config:
+          lib.nameValuePair
+            "ni/${secret}"
+            ((getKey secret) // config))
+        secrets;
+  in
+    getSecrets {
+      ssh-key = { };
+    };
+
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
   boot.binfmt.emulatedSystems = [
