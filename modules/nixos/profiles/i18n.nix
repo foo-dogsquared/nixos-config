@@ -27,10 +27,6 @@ in
       # additional language packs for it. ;p
       i18n.supportedLocales = lib.mkForce [ "all" ];
 
-      environment.systemPackages = with pkgs; [
-        goldendict
-      ];
-
       # The most minimal set of packages for most locales.
       fonts.fonts = with pkgs; [
         noto-fonts
