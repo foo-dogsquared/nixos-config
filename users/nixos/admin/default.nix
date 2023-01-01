@@ -12,6 +12,7 @@ in
     useDefaultShell = true;
     openssh.authorizedKeys.keyFiles = [
       ../../home-manager/foo-dogsquared/files/ssh-key.pub
+      ../../home-manager/foo-dogsquared/files/ssh-key-2.pub
       ../../../hosts/ni/files/ssh-key.pub
     ];
   };
