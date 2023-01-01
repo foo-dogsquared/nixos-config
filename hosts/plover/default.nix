@@ -163,22 +163,17 @@ in
       "${authDomain}" = {
         forceSSL = true;
         enableACME = true;
-        locations = let
-          keycloakPath = path: "http://localhost:${toString config.services.gitea.httpPort}${path}";
-        in
-          {
-          "/realms".proxyPass = keycloakPath "/realms";
-          "/resources".proxyPass = keycloakPath "/resources";
-          "/robots.txt".proxyPass = keycloakPath "/robots.txt";
+        locations."/" = {
+          proxyPass = "http://localhost:${toString config.services.gitea.httpPort}";
         };
       };
 
-      # OpenLDAP server.
+      # Portunus server which also has an OpenLDAP server running.
       "${ldapDomain}" = {
         forceSSL = true;
         enableACME = true;
         locations."/" = {
-          proxyPass = "http://localhost:389";
+          proxyPass = "http://localhost:${toString config.services.portunus.port}";
         };
       };
     };
@@ -242,60 +237,16 @@ in
     ];
   };
 
-  # How to overkill your multi-purpose single-user-oriented server that is
-  # typically accessed from the web with a single step.
-  services.openldap = let
-    openldapPackage = config.services.openldap.package;
-  in {
+  services.portunus = {
     enable = true;
 
-    mutableConfig = true;
+    port = 8168;
+    domain = ldapDomain;
 
-    urlList = [ "ldap:///" "ldaps:///" "ldapi://" ];
-
-    settings = {
-      attrs = {
-        olcLogLevel = [ "stats" ];
-        olcTLSCACertificateFile = "${certs.${ldapDomain}.directory}/fullchain.pem";
-        olcTLSCertificateFile = "${certs.${ldapDomain}.directory}/chain.pem";
-        olcTLSCertificateKeyFile = "${certs.${ldapDomain}.directory}/key.pem";
-      };
-
-      children = {
-        "olcDatabase={-1}frontend".attrs = {
-          objectClass = "olcDatabaseConfig";
-          olcDatabase = "{-1}frontend";
-          olcAccess = [ "{0}to * by dn.exact=uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth manage stop by * none stop" ];
-        };
-
-        "olcDatabase={0}config".attrs = {
-          objectClass = "olcDatabaseConfig";
-          olcDatabase = "{0}config";
-          olcAccess = [ "{0}to * by * none break" ];
-        };
-
-        "olcDatabase={1}mdb".attrs = {
-          objectClass = [ "olcDatabaseConfig" "olcMdbConfig" ];
-          olcDatabase = "{1}mdb";
-          olcDbDirectory = "/var/lib/openldap/ldap";
-          olcDbIndex = [
-            "objectClass eq"
-            "cn pres,eq"
-            "uid pres,eq"
-            "sn pres,eq,subany"
-          ];
-          olcSuffix = "dc=foodogsquared,dc=one";
-          olcRootDN = "cn=Manager,dc=foodogsquared,dc=one";
-          olcAccess = [ "{0}to * by * read break" ];
-          olcRootPW = "{SSHA}xR54l7YZSD8QjnGeDJkikJm3/+HupUbo";
-        };
-
-        "cn=schema".includes = [
-          "${openldapPackage}/etc/schema/core.ldif"
-          "${openldapPackage}/etc/schema/cosine.ldif"
-          "${openldapPackage}/etc/schema/inetorgperson.ldif"
-        ];
-      };
+    ldap = {
+      searchUserName = "admin";
+      suffix = "dc=foodogsquared,dc=one";
+      tls = true;
     };
   };
 
