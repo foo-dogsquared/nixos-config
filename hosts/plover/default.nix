@@ -38,6 +38,9 @@ in
     "${modulesPath}/profiles/hardened.nix"
   ];
 
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda";
+
   networking = {
     domain = "foodogsquared.one";
     firewall.allowedTCPPorts = [
