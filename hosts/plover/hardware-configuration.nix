@@ -10,13 +10,4 @@
     fsType = "ext4";
     autoResize = true;
   };
-
-  fileSystems."/srv" = lib.mkOverride 2000 {
-    label = "data";
-    options = [
-      "discard"
-      "defaults"
-    ];
-    fsType = "ext4";
-  };
 }
