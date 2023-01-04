@@ -318,7 +318,6 @@
       images = {
         bootstrap.format = "install-iso";
         graphical-installer.format = "install-iso";
-        plover.format = "gce";
         void.format = "vm";
       };
     in
