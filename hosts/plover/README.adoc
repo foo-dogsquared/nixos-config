@@ -1,5 +1,6 @@
 = Plover, the general-purpose server
 :toc:
+:nixos-infect-commit: bca605ce2c91bc4d79bf8afaa4e7ee4fee9563d4
 
 This is Plover, a configuration meant to be used in a low-powered general-purpose machine.
 It isn't much of an instance to be seriously used yet but hopefully it is getting there.
@@ -23,6 +24,7 @@ Some of the self-hosted services from this server:
 
 
 
+[#general-deployment-guidelines]
 == General deployment guidelines
 
 If you want to deploy it anywhere else, you have to keep some things in mind.
@@ -39,6 +41,8 @@ Mostly related to setting up the proper roles which should be set up with the in
 * If needed, restoring the application data from the backup into the services (e.g., Gitea, Keycloak, Vaultwarden).
 
 * Configuring the remaining parts for the services (which unfortunately involves manually going into each application).
+
+* Configure the database users with each appropriate service.
 
 
 
@@ -68,3 +72,31 @@ Just don't forget to immediately assign it to the instance since it will charge 
 
 * Creating a dedicated link:https://cloud.google.com/iam/docs/service-accounts[service account] for the VM is recommended.
 Just make sure to set the least amount of privileges for that account.
+
+
+
+
+== Deploying it to Hetzner Cloud
+
+To deploy this to Hetzner Cloud, just initialize a server and run link:https://github.com/elitak/nixos-infect/[nixos-infect] script.
+As an example, you can run the server with the following link:https://community.hetzner.com/tutorials/basic-cloud-config[cloud config].
+
+[source, yaml, subs=attributes]
+----
+#cloud-config
+
+runcmd:
+  - curl https://raw.githubusercontent.com/elitak/nixos-infect/{nixos-infect-commit}/nixos-infect | NIX_CHANNEL=nixos-unstable bash 2>&1 | tee /tmp/infect.log
+----
+
+You could also easily create a server with `hcloud` with the following command:
+
+[source, shell]
+----
+hcloud server create --location hel1 --type cx21 --image ubuntu-22.04 \
+    --user-data-from-file ./files/hcloud-user-data.yml \
+    --ssh-key foodogsquared@foodogsquared.one \
+    --name nixos-plover
+----
+
+Next, do the steps as written from <<general-deployment-guidelines>>.

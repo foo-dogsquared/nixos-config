@@ -1,0 +1,4 @@
+#cloud-config
+
+runcmd:
+  - curl https://raw.githubusercontent.com/elitak/nixos-infect/{nixos-infect-commit}/nixos-infect | NIX_CHANNEL=nixos-unstable bash 2>&1 | tee /tmp/infect.log
