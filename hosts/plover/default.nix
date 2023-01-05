@@ -166,7 +166,7 @@ in
         forceSSL = true;
         enableACME = true;
         locations."/" = {
-          proxyPass = "http://localhost:${toString config.services.gitea.httpPort}";
+          proxyPass = "http://localhost:${toString config.services.keycloak.settings.http-port}";
         };
       };
 
