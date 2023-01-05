@@ -8,6 +8,17 @@
   fileSystems."/" = lib.mkOverride 2000 {
     label = "nixos";
     fsType = "ext4";
-    autoResize = true;
+    options = [ "defaults" ];
   };
+
+  fileSystems."/boot" = lib.mkOverride 2000 {
+    label = "boot";
+    fsType = "vfat";
+  };
+
+  swapDevices = [{
+    label = "swap";
+    options = [ "defaults" ];
+    priority = 5;
+  }];
 }
