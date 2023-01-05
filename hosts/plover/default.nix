@@ -467,6 +467,14 @@ in
     port = 8965;
   };
 
+  systemd.services.atuin = {
+    path = [ config.services.postgresql.package ];
+    preStart = ''
+      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='atuin';" \
+        grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS atuin;"
+    '';
+  };
+
   # Of course, what is a server without a backup? A professionally-handled
   # production system. However, we're not professionals so we do have backups.
   services.borgbackup.jobs =
