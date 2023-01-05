@@ -43,15 +43,18 @@ in
 
   networking = {
     domain = "foodogsquared.one";
-    firewall.allowedTCPPorts = [
-      22 # Secure Shells.
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [
+        22 # Secure Shells.
 
-      80 # HTTP servers.
-      433 # HTTPS servers.
+        80 # HTTP servers.
+        433 # HTTPS servers.
 
-      389 # LDAP servers.
-      636 # LDAPS servers.
-    ];
+        389 # LDAP servers.
+        636 # LDAPS servers.
+      ];
+    };
   };
 
   sops.secrets =
