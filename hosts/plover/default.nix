@@ -10,6 +10,7 @@ let
   codeForgeDomain = subdomain "code";
   authDomain = subdomain "auth";
   ldapDomain = subdomain "ldap";
+  atuinDomain = subdomain "atuin";
 
   certs = config.security.acme.certs;
 
@@ -176,6 +177,15 @@ in
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:${toString config.services.portunus.port}";
+        };
+      };
+
+      # A nice little sync server for my shell history.
+      "${atuinDomain}" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:${toString config.services.atuin.port}";
         };
       };
     };
@@ -447,6 +457,14 @@ in
       SMTP_FROM_NAME = "Vaultwarden";
       SMTP_FROM = "bot+vaultwarden@foodogsquared.one";
     };
+  };
+
+  # Atuin sync server because why not.
+  services.atuin = {
+    enable = true;
+    openFirewall = true;
+    openRegistration = false;
+    port = 8965;
   };
 
   # Of course, what is a server without a backup? A professionally-handled
