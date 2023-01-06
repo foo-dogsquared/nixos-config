@@ -99,4 +99,15 @@ hcloud server create --location hel1 --type cx21 --image ubuntu-22.04 \
     --name nixos-plover
 ----
 
+If you don't want to setup the firewall in the system, you could use the firewall from Hetzner (which is recommended anyways).
+
+Then, don't forget to setup the prerequisites such as filesystems properly.
+Here's a set of commands setting up to the current filesystem configuration.
+
+[source, shell]
+----
+e2label /dev/sda1 nixos
+fatlabel /dev/sda15 boot
+----
+
 Next, do the steps as written from <<general-deployment-guidelines>>.
