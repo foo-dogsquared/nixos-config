@@ -42,6 +42,7 @@ in
   boot.loader.grub.enable = true;
 
   networking = {
+    nftables.enable = true;
     domain = "foodogsquared.one";
     firewall = {
       enable = true;
