@@ -487,7 +487,7 @@ in
   services.borgbackup.jobs =
     let
       jobCommonSettings = { patternFiles ? [ ], patterns ? [ ], paths ? [ ], repo }: {
-        inherit paths;
+        inherit paths repo;
         compression = "zstd,11";
         dateFormat = "+%F-%H-%M-%S-%z";
         doInit = true;
