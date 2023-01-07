@@ -36,8 +36,8 @@ let
     };
   };
 
-  # The head of the Borgbase hostname.
-  borgbase-remote = "r6o30viv";
+  hetzner-boxes-user = "u332477";
+  hetzner-boxes-server = "${hetzner-boxes-user}.your-storagebox.de";
 in
 {
   options.tasks.backup-archive.enable =
@@ -106,14 +106,14 @@ in
           ];
         } // {
         doInit = true;
-        repo = "${borgbase-remote}@${borgbase-remote}.repo.borgbase.com:repo";
+        repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/home";
         startAt = "daily";
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."borg-backup/ssh-key".path}";
       };
     };
 
     programs.ssh.extraConfig = ''
-      Host ${borgbase-remote}.repo.borgbase.com
+      Host ${hetzner-boxes-server}
        IdentityFile ${config.sops.secrets."borg-backup/ssh-key".path}
     '';
   };

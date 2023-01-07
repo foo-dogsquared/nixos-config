@@ -25,7 +25,8 @@ let
   keycloakDbName = if config.services.keycloak.database.createLocally then keycloakUser else config.services.keycloak.database.username;
 
   # The head of the Borgbase hostname.
-  borgbase-remote = "cr6pf13r";
+  hetzner-boxes-user = "u332477";
+  hetzner-boxes-server = "${hetzner-boxes-user}.your-storagebox.de";
 in
 {
   imports = [
@@ -86,6 +87,7 @@ in
       "vaultwarden/env".owner = vaultwardenUserGroup;
       "borg/patterns/keys" = { };
       "borg/password" = { };
+      "borg/ssh-key" = { };
       "keycloak/db/password".owner = postgresUserGroup;
     };
 
@@ -514,9 +516,9 @@ in
           monthly = 12;
           yearly = 6;
         };
-        repo = "${borgbase-remote}@${borgbase-remote}.repo.borgbase.com:repo";
+        repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/server";
         startAt = "monthly";
-        environment.BORG_RSH = "ssh -i ${config.sops.secrets."plover/ssh-key".path}";
+        environment.BORG_RSH = "ssh -i ${config.sops.secrets."plover/borg/ssh-key".path}";
       };
     in
     {
@@ -545,8 +547,8 @@ in
     };
 
   programs.ssh.extraConfig = ''
-    Host ${borgbase-remote}.repo.borgbase.com
-     IdentityFile ${config.sops.secrets."plover/ssh-key".path}
+    Host ${hetzner-boxes-server}
+     IdentityFile ${config.sops.secrets."plover/borg/ssh-key".path}
   '';
 
   systemd.tmpfiles.rules = let
