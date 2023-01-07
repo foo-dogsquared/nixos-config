@@ -485,7 +485,7 @@ in
   # production system. However, we're not professionals so we do have backups.
   services.borgbackup.jobs =
     let
-      jobCommonSettings = { patternFiles ? [ ], patterns ? [ ], paths ? [ ] }: {
+      jobCommonSettings = { patternFiles ? [ ], patterns ? [ ], paths ? [ ], repo }: {
         inherit paths;
         compression = "zstd,11";
         dateFormat = "+%F-%H-%M-%S-%z";
@@ -516,10 +516,11 @@ in
           monthly = 12;
           yearly = 6;
         };
-        repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/server";
         startAt = "monthly";
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."plover/borg/ssh-key".path}";
       };
+
+      borgRepo = path: "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/plover/${path}";
     in
     {
       # Backup for host-specific files. They don't change much so it is
@@ -528,6 +529,7 @@ in
         patternFiles = [
           config.sops.secrets."plover/borg/patterns/keys".path
         ];
+        repo = borgRepo "host";
       };
 
       # Backups for various services.
@@ -543,6 +545,7 @@ in
             # PostgreSQL database dumps
             config.services.postgresqlBackup.location
           ];
+          repo = borgRepo "services";
         } // { startAt = "weekly"; };
     };
 
