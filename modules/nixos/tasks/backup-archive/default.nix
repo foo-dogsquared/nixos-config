@@ -106,7 +106,7 @@ in
           ];
         } // {
         doInit = true;
-        repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/home";
+        repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/desktop/ni";
         startAt = "daily";
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."borg-backup/ssh-key".path}";
       };
