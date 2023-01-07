@@ -36,6 +36,6 @@ in
 
   # Allow the user to easily enter into several services such as the database
   # services to allowing some debugging.
-  services.postgresql.ensureUsers = [ { inherit name; } ];
-  services.mysql.ensureUsers = [ { inherit name; } ];
+  services.postgresql.ensureUsers = [{ inherit name; }];
+  services.mysql.ensureUsers = [{ inherit name; }];
 }

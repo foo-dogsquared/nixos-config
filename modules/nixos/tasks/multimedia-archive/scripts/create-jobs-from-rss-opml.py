@@ -170,7 +170,9 @@ class Outline(object):
                         if not category:
                             continue
 
-                        category_hierarchy = filter(lambda split: split.strip(), category.split("/"))
+                        category_hierarchy = filter(
+                            lambda split: split.strip(), category.split("/")
+                        )
                         first_category_split = first(None, category_hierarchy)
                         if first_category_split is None:
                             continue
@@ -231,10 +233,7 @@ def create_jobs_from_outline(root_outline: Outline, categories=[]):
         for subscription in outline.subscriptions:
             # There are some things that are meant not to be shown (i.e.,
             # `categories`) so we're putting it in a data template.
-            subscription_data = {
-                "name": subscription.name,
-                "url": subscription.url
-            }
+            subscription_data = {"name": subscription.name, "url": subscription.url}
 
             if subscription.description:
                 subscription_data["description"] = subscription.description

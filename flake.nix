@@ -340,9 +340,12 @@
                 networking.hostName = lib.mkOverride 2000 host';
               })
               (lib'.optionalAttrs (lib'.hasAttr host' images)
-                (let
-                  imageFormat = images.${host'}.format;
-                  in inputs.nixos-generators.nixosModules.${imageFormat}))
+                (
+                  let
+                    imageFormat = images.${host'}.format;
+                  in
+                  inputs.nixos-generators.nixosModules.${imageFormat}
+                ))
               hostSharedConfig
               path
             ];
@@ -388,24 +391,25 @@
 
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
-      packages = forAllSystems (system: let
-        pkgs = import nixpkgs { inherit system overlays; };
-      in
+      packages = forAllSystems (system:
+        let
+          pkgs = import nixpkgs { inherit system overlays; };
+        in
         inputs.flake-utils.lib.flattenTree (import ./pkgs { inherit pkgs; })
         // lib'.mapAttrs'
-            (name: value:
-              lib'.nameValuePair "${name}-${value.format}" (mkImage {
-                inherit system pkgs extraArgs;
-                inherit (value) format;
-                extraModules = [
-                  ({ lib, ... }: {
-                    networking.hostName = lib.mkOverride 2000 name;
-                  })
-                  hostSharedConfig
-                  ./hosts/${name}
-                ];
-              }))
-            images);
+          (name: value:
+            lib'.nameValuePair "${name}-${value.format}" (mkImage {
+              inherit system pkgs extraArgs;
+              inherit (value) format;
+              extraModules = [
+                ({ lib, ... }: {
+                  networking.hostName = lib.mkOverride 2000 name;
+                })
+                hostSharedConfig
+                ./hosts/${name}
+              ];
+            }))
+          images);
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
@@ -445,31 +449,33 @@
       # sensitive info such as the hostname and such. A helpful tip would be
       # ignoring the shell entry by simply prefixing it with a space which most
       # command-line shells have support for (e.g., Bash, zsh, fish).
-      deploy.nodes = let
-        nixosConfigurations = lib'.mapAttrs'
-          (name: value:
-            lib'.nameValuePair "nixos-${name}" {
-              hostname = name;
-              fastConnection = true;
-              profiles.system = {
-                sshUser = "admin";
-                user = "root";
-                path = inputs.deploy.lib.${defaultSystem}.activate.nixos value;
-              };
-            })
-          self.nixosConfigurations;
-        homeManagerConfigurations = lib'.mapAttrs'
-          (name: value:
-            lib'.nameValuePair "home-manager-${name}" {
-              hostname = name;
-              fastConnection = true;
-              profiles.home = {
-                sshUser = name;
-                path = inputs.deploy.lib.${defaultSystem}.activate.home-manager value;
-              };
-            })
-          self.homeManagerConfigurations;
-      in nixosConfigurations // homeManagerConfigurations;
+      deploy.nodes =
+        let
+          nixosConfigurations = lib'.mapAttrs'
+            (name: value:
+              lib'.nameValuePair "nixos-${name}" {
+                hostname = name;
+                fastConnection = true;
+                profiles.system = {
+                  sshUser = "admin";
+                  user = "root";
+                  path = inputs.deploy.lib.${defaultSystem}.activate.nixos value;
+                };
+              })
+            self.nixosConfigurations;
+          homeManagerConfigurations = lib'.mapAttrs'
+            (name: value:
+              lib'.nameValuePair "home-manager-${name}" {
+                hostname = name;
+                fastConnection = true;
+                profiles.home = {
+                  sshUser = name;
+                  path = inputs.deploy.lib.${defaultSystem}.activate.home-manager value;
+                };
+              })
+            self.homeManagerConfigurations;
+        in
+        nixosConfigurations // homeManagerConfigurations;
 
       # How to make yourself slightly saner than before. So far the main checks
       # are for deploy nodes.

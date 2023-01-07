@@ -220,7 +220,8 @@ in
             CREATE SCHEMA AUTHORIZATION ${user.name};
           '')
           config.services.postgresql.ensureUsers;
-      in pkgs.writeText "plover-initial-postgresql-script" ''
+      in
+      pkgs.writeText "plover-initial-postgresql-script" ''
         ${lib.concatStringsSep "\n" perUserSchemas}
       '';
 
@@ -554,14 +555,16 @@ in
      IdentityFile ${config.sops.secrets."plover/borg/ssh-key".path}
   '';
 
-  systemd.tmpfiles.rules = let
-    # To be used similarly to $GITEA_CUSTOM variable.
-    giteaCustomDir = "${config.services.gitea.stateDir}/custom";
-  in [
-    "L+ ${giteaCustomDir}/templates/home.tmpl - - - - ${./files/gitea/home.tmpl}"
-    "L+ ${giteaCustomDir}/public/img/logo.svg - - - - ${./files/gitea/logo.svg}"
-    "L+ ${giteaCustomDir}/public/img/logo.png - - - - ${./files/gitea/logo.png}"
-  ];
+  systemd.tmpfiles.rules =
+    let
+      # To be used similarly to $GITEA_CUSTOM variable.
+      giteaCustomDir = "${config.services.gitea.stateDir}/custom";
+    in
+    [
+      "L+ ${giteaCustomDir}/templates/home.tmpl - - - - ${./files/gitea/home.tmpl}"
+      "L+ ${giteaCustomDir}/public/img/logo.svg - - - - ${./files/gitea/logo.svg}"
+      "L+ ${giteaCustomDir}/public/img/logo.png - - - - ${./files/gitea/logo.png}"
+    ];
 
   system.stateVersion = "22.11";
 }

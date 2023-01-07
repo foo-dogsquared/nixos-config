@@ -26,7 +26,8 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = with qt5; [
-    autoreconfHook pkg-config
+    autoreconfHook
+    pkg-config
     wrapQtAppsHook
     qtbase
     qtwebchannel

@@ -126,9 +126,10 @@ in
         withDependencies = true;
         webserver.enable = true;
 
-        jobs = mkJobs {
-          db = lib.importJSON ./data/jobs.archivebox.json;
-        } // {
+        jobs = mkJobs
+          {
+            db = lib.importJSON ./data/jobs.archivebox.json;
+          } // {
           computer = {
             urls = [
               "https://blog.mozilla.org/en/feed/"

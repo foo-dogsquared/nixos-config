@@ -27,19 +27,20 @@
     type = "ed25519";
   }];
 
-  sops.secrets = let
-    getKey = key: {
-      inherit key;
-      sopsFile = ./secrets/secrets.yaml;
-    };
-    getSecrets = secrets:
-      lib.mapAttrs'
-        (secret: config:
-          lib.nameValuePair
-            "ni/${secret}"
-            ((getKey secret) // config))
-        secrets;
-  in
+  sops.secrets =
+    let
+      getKey = key: {
+        inherit key;
+        sopsFile = ./secrets/secrets.yaml;
+      };
+      getSecrets = secrets:
+        lib.mapAttrs'
+          (secret: config:
+            lib.nameValuePair
+              "ni/${secret}"
+              ((getKey secret) // config))
+          secrets;
+    in
     getSecrets {
       ssh-key = { };
       "ldap/password" = { };
