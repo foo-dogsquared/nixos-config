@@ -85,8 +85,9 @@ in
       "gitea/db/password".owner = giteaUserGroup;
       "gitea/smtp/password".owner = giteaUserGroup;
       "vaultwarden/env".owner = vaultwardenUserGroup;
-      "borg/patterns/keys" = { };
-      "borg/password" = { };
+      "borg/repos/host/patterns/keys" = { };
+      "borg/repos/host/password" = { };
+      "borg/repos/services/password" = { };
       "borg/ssh-key" = { };
       "keycloak/db/password".owner = postgresUserGroup;
     };
@@ -486,14 +487,14 @@ in
   # production system. However, we're not professionals so we do have backups.
   services.borgbackup.jobs =
     let
-      jobCommonSettings = { patternFiles ? [ ], patterns ? [ ], paths ? [ ], repo }: {
+      jobCommonSettings = { patternFiles ? [ ], patterns ? [ ], paths ? [ ], repo, passCommand }: {
         inherit paths repo;
         compression = "zstd,11";
         dateFormat = "+%F-%H-%M-%S-%z";
         doInit = true;
         encryption = {
+          inherit passCommand;
           mode = "repokey-blake2";
-          passCommand = "cat ${config.sops.secrets."plover/borg/password".path}";
         };
         extraCreateArgs =
           let
@@ -528,9 +529,10 @@ in
       # acceptable for it to be backed up monthly.
       host-backup = jobCommonSettings {
         patternFiles = [
-          config.sops.secrets."plover/borg/patterns/keys".path
+          config.sops.secrets."plover/borg/repos/host/patterns/keys".path
         ];
         repo = borgRepo "host";
+        passCommand = "cat ${config.sops.secrets."plover/borg/repos/host/password".path}";
       };
 
       # Backups for various services.
@@ -547,6 +549,7 @@ in
             config.services.postgresqlBackup.location
           ];
           repo = borgRepo "services";
+          passCommand = "cat ${config.sops.secrets."plover/borg/repos/services/password".path}";
         } // { startAt = "weekly"; };
     };
 
