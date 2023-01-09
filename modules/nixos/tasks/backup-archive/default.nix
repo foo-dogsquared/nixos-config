@@ -99,7 +99,7 @@ in
         startAt = "daily";
       };
 
-      remote-borgbase = borgJobCommonSetting
+      remote-backup-hetzner-box = borgJobCommonSetting
         {
           patterns = with config.sops; [
             secrets."borg-backup/borg-patterns/remote-backup".path
