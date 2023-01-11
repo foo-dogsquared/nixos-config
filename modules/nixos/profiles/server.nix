@@ -35,6 +35,10 @@ in
         passwordAuthentication = false;
         permitRootLogin = "no";
 
+        # Making it verbose for services such as fail2ban.
+        logLevel = "VERBOSE";
+      };
+
       # Manage your servers like a Linux-using basement dweller with their
       # precious window manager configuration.
       programs.tmux = {
@@ -65,7 +69,7 @@ in
 
       # We're only going to deal with servers in English.
       i18n.defaultLocale = "en_US.UTF-8";
-      i18n.supportedLocales = [ "en_US.UTF-8/UTF-8" ];
+      i18n.supportedLocales = lib.mkForce [ "en_US.UTF-8/UTF-8" ];
     })
 
     # We're only covering the most basic settings here.
@@ -96,6 +100,7 @@ in
           enable = true;
           factor = "4";
           maxtime = "24h";
+          overalljails = true;
         };
         extraPackages = with pkgs; [ ipset ];
       };
