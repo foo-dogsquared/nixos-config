@@ -34,6 +34,18 @@ in
         # Both are good for hardening as it only requires the keyfiles.
         passwordAuthentication = false;
         permitRootLogin = "no";
+
+      # Manage your servers like a Linux-using basement dweller with their
+      # precious window manager configuration.
+      programs.tmux = {
+        enable = true;
+
+        baseIndex = 1;
+        clock24 = true;
+        customPaneNavigationAndResize = true;
+        keyMode = "vi";
+        newSession = true;
+        secureSocket = true;
       };
 
       # It is expected that server configurations should be complete
@@ -85,6 +97,7 @@ in
           factor = "4";
           maxtime = "24h";
         };
+        extraPackages = with pkgs; [ ipset ];
       };
 
       boot.kernel.sysctl = {
