@@ -4,13 +4,13 @@
 let
   cfg = config.tasks.backup-archive;
 
-  borgJobCommonSetting = { patterns ? [ ] }: {
+  borgJobCommonSetting = { patterns ? [ ], passCommand }: {
     compression = "zstd,12";
     dateFormat = "+%F-%H-%M-%S-%z";
     doInit = false;
     encryption = {
+      inherit passCommand;
       mode = "repokey-blake2";
-      passCommand = "cat ${config.sops.secrets."borg-backup/password".path}";
     };
     extraCreateArgs = lib.concatStringsSep " "
       (builtins.map (patternFile: "--patterns-from ${patternFile}") patterns);
@@ -50,22 +50,24 @@ in
           inherit key;
           sopsFile = lib.getSecret "backup-archive.yaml";
         };
-        getSecrets = keys:
-          lib.listToAttrs (lib.lists.map
-            (key:
+        getSecrets = secrets:
+          lib.mapAttrs'
+            (key: config:
               lib.nameValuePair
                 "borg-backup/${key}"
-                (getKey key))
-            keys);
+                ((getKey key) // config))
+            secrets;
       in
-      getSecrets [
-        "borg-patterns/home"
-        "borg-patterns/etc"
-        "borg-patterns/keys"
-        "borg-patterns/remote-backup"
-        "ssh-key"
-        "password"
-      ];
+      getSecrets {
+        "borg-patterns/home" = { };
+        "borg-patterns/etc" = { };
+        "borg-patterns/keys" = { };
+        "borg-patterns/remote-backup" = { };
+        "borg-repos/archive/password" = { };
+        "borg-repos/external-drive/password" = { };
+        "borg-repos/hetzner-box/password" = { };
+        "ssh-key" = { };
+      };
 
     profiles.filesystem = {
       archive.enable = true;
@@ -80,6 +82,7 @@ in
             secrets."borg-backup/borg-patterns/etc".path
             secrets."borg-backup/borg-patterns/keys".path
           ];
+          passCommand = "cat ${config.sops.secrets."borg-backup/borg-repos/archive/password".path}";
         } // {
         removableDevice = true;
         repo = "/mnt/archives/backups";
@@ -93,6 +96,7 @@ in
             secrets."borg-backup/borg-patterns/etc".path
             secrets."borg-backup/borg-patterns/keys".path
           ];
+          passCommand = "cat ${config.sops.secrets."borg-backup/borg-repos/external-drive/password".path}";
         } // {
         removableDevice = true;
         repo = "/mnt/external-storage/backups";
@@ -104,6 +108,7 @@ in
           patterns = with config.sops; [
             secrets."borg-backup/borg-patterns/remote-backup".path
           ];
+          passCommand = "cat ${config.sops.secrets."borg-backup/borg-repos/hetzner-box/password".path}";
         } // {
         doInit = true;
         repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/desktop/ni";
