@@ -90,6 +90,7 @@ in
       "borg/repos/services/password" = { };
       "borg/ssh-key" = { };
       "keycloak/db/password".owner = postgresUserGroup;
+      "ldap/users/foodogsquared/password".owner = config.services.portunus.user;
     };
 
   # All of the keys required to deploy the secrets. Don't know how to make the
@@ -352,6 +353,39 @@ in
       suffix = "dc=foodogsquared,dc=one";
       tls = true;
     };
+
+    seedPath = let
+      seedData = {
+        groups = [
+          {
+            name = "admin-team";
+            long_name = "Portunus Administrators";
+            members = [ "foodogsquared" ];
+            permissions = {
+              portunus.is_admin = true;
+              ldap.can_read = true;
+            };
+            posix_gid = 101;
+          }
+        ];
+        users = [
+          {
+            login_name = "foodogsquared";
+            given_name = "Gabriel";
+            family_name = "Arazas";
+            email = "foodogsquared@${domain}";
+            ssh_public_keys = let
+              readFiles = list: lib.lists.map (path: lib.readFile path) list;
+            in readFiles [
+              ../../users/home-manager/foo-dogsquared/files/ssh-key.pub
+              ../../users/home-manager/foo-dogsquared/files/ssh-key-2.pub
+            ];
+            password.from_command = [ "${pkgs.coreutils}/bin/cat" config.sops.secrets."plover/ldap/users/foodogsquared/password".path ];
+          }
+        ];
+      };
+      settingsFormat = pkgs.formats.json { };
+    in settingsFormat.generate "portunus-seed" seedData;
   };
 
   # Hey, the hub for your application sign-in.
