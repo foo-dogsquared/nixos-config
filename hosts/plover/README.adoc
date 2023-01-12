@@ -44,6 +44,28 @@ Mostly related to setting up the proper roles which should be set up with the in
 
 * Configure the database users with each appropriate service.
 
+* Configure the services with users if starting from scratch.
+
+** For Gitea, you have to create the main admin user with the admin interface.
++
+--
+Here's a way to quickly create a user in the admin interface.
+
+[source, shell]
+----
+sudo -u gitea gitea admin user create --username USERNAME --email EMAIL \
+    --random-password --config /var/lib/gitea/custom/conf/app.ini --admin
+----
+--
+
+** For Vaultwarden, you have to go to the admin page of the Vaultwarden instance (i.e., `$VAULTWARDEN_INSTANCE/admin`), get the admin token to enter, and invite users from there.
+
+** For Keycloak, you have to create the appropriate realms and users as follows from the link:https://www.keycloak.org/docs/20.0.2/server_admin/index.html[server administration guide].
+Though, you can easily create one from the command-line interface with `kcadm.sh`.
+
+** For Portunus, this is already taken care of with a seed file.
+Still, test the logins as indicated from the seed file.
+
 
 
 
