@@ -3,27 +3,6 @@
 let
   inherit (builtins) toString;
 
-  domain = config.networking.domain;
-  subdomain = prefix: "${prefix}.${domain}";
-
-  passwordManagerDomain = subdomain "pass";
-  codeForgeDomain = subdomain "code";
-  authDomain = subdomain "auth";
-  ldapDomain = subdomain "ldap";
-  atuinDomain = subdomain "atuin";
-
-  certs = config.security.acme.certs;
-
-  # This should be set from service module from nixpkgs.
-  vaultwardenUser = config.users.users.vaultwarden.name;
-
-  # However, this is set on our own.
-  vaultwardenDbName = "vaultwarden";
-
-  # This is also set on our own.
-  keycloakUser = config.services.keycloak.database.username;
-  keycloakDbName = if config.services.keycloak.database.createLocally then keycloakUser else config.services.keycloak.database.username;
-
   # The head of the Borgbase hostname.
   hetzner-boxes-user = "u332477";
   hetzner-boxes-server = "${hetzner-boxes-user}.your-storagebox.de";
@@ -38,6 +17,16 @@ in
 
     # Hardened profile from nixpkgs.
     "${modulesPath}/profiles/hardened.nix"
+
+    ./modules/services/nginx.nix
+
+    # The application services for this server. They are modularized since
+    # configuring it here will make it too big.
+    ./modules/services/atuin.nix
+    ./modules/services/gitea.nix
+    ./modules/services/keycloak.nix
+    ./modules/services/portunus.nix
+    ./modules/services/vaultwarden.nix
   ];
 
   boot.loader.grub.enable = true;
@@ -59,6 +48,7 @@ in
     };
   };
 
+  # TODO: Put the secrets to the respective service module.
   sops.secrets =
     let
       getKey = key: {
@@ -93,9 +83,7 @@ in
       "ldap/users/foodogsquared/password".owner = config.services.portunus.user;
     };
 
-  # All of the keys required to deploy the secrets. Don't know how to make the
-  # GCP KMS key work though without manually going into the instance and
-  # configure it there.
+  # All of the keys required to deploy the secrets.
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
   profiles.server = {
@@ -105,92 +93,8 @@ in
     cleanup.enable = true;
   };
 
-  services.fail2ban.jails = {
-    nginx-http-auth = "enabled = true";
-    nginx-botsearch = "enabled = true";
-
-    # Max retries are pretty much based from whether or not the jail is
-    # attached to a more important service.
-    vaultwarden-user = ''
-      enabled = true
-      backend = systemd
-      filter = vaultwarden-user[journalmatch='_SYSTEMD_UNIT=vaultwarden.service']
-      maxretry = 5
-    '';
-
-    vaultwarden-admin = ''
-      enabled = true
-      backend = systemd
-      filter = vaultwarden-admin[journalmatch='_SYSTEMD_UNIT=vaultwarden.service']
-      maxretry = 3
-    '';
-
-    keycloak = ''
-      enabled = true
-      backend = systemd
-      filter = keycloak[journalmatch='_SYSTEMD_UNIT=keycloak.service']
-      maxretry = 3
-    '';
-
-    gitea = ''
-      enabled = true
-      backend = systemd
-      filter = gitea[journalmatch='_SYSTEMD_UNIT=gitea.service']
-      maxretry = 8
-    '';
-  };
-
-  # Create some custom fail2ban filters.
-  environment.etc = {
-    "fail2ban/filter.d/vaultwarden-user.conf".text = ''
-      [Includes]
-      before = common.conf
-
-      # For more information, Vaultwarden knowledge base has a dedicated page
-      # for configuring fail2ban with the application (i.e.,
-      # https://github.com/dani-garcia/vaultwarden/wiki/Fail2Ban-Setup).
-      [Definition]
-      failregex = ^.*Username or password is incorrect\. Try again\. IP: <HOST>\. Username:.*$
-      ignoreregex =
-    '';
-
-    "fail2ban/filter.d/vaultwarden-admin.conf".text = ''
-      [Includes]
-      before = common.conf
-
-      # For more information, Vaultwarden knowledge base has a dedicated page
-      # for configuring fail2ban with the application (i.e.,
-      # https://github.com/dani-garcia/vaultwarden/wiki/Fail2Ban-Setup).
-      [Definition]
-      failregex = ^.*Invalid admin token\. IP: <HOST>.*$
-      ignoreregex =
-    '';
-
-    "fail2ban/filter.d/keycloak.conf".text = ''
-      [Includes]
-      before = common.conf
-
-      # This is based from the server administration guide at
-      # https://www.keycloak.org/docs/$VERSION/server_admin/index.html.
-      [Definition]
-      failregex = ^.*type=LOGIN_ERROR.*ipAddress=<HOST>.*$
-      ignoreregex =
-    '';
-
-    "fail2ban/filter.d/gitea.conf".text = ''
-      [Includes]
-      before = common.conf
-
-      # Thankfully, Gitea also has a dedicated page for configuring fail2ban
-      # for the service at https://docs.gitea.io/en-us/fail2ban-setup/
-      [Definition]
-      failregex = ^.*(Failed authentication attempt|invalid credentials|Attempted access of unknown user).* from <HOST>
-      ignoreregex =
-    '';
-  };
-
-  # DNS-related settings. This is nice for automating them putting DNS records
-  # and other types of stuff.
+  # DNS-related settings. We're settling by configuring the ACME setup with a
+  # DNS provider.
   security.acme.defaults = {
     dnsProvider = "porkbun";
     credentialsFile = config.sops.secrets."plover/lego/env".path;
@@ -201,89 +105,7 @@ in
     type = "ed25519";
   }];
 
-  # The main server where it will tie all of the services in one neat little
-  # place.
-  services.nginx = {
-    enable = true;
-    enableReload = true;
-
-    package = pkgs.nginxMainline;
-
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-
-    # Server blocks with no forcing of SSL are static sites so it is pretty
-    # much OK.
-    virtualHosts = {
-      # Vaultwarden instance.
-      "${passwordManagerDomain}" = {
-        forceSSL = true;
-        enableACME = true;
-        locations =
-          let
-            address = config.services.vaultwarden.config.ROCKET_ADDRESS;
-            port = config.services.vaultwarden.config.ROCKET_PORT;
-            websocketPort = config.services.vaultwarden.config.WEBSOCKET_PORT;
-          in
-          {
-            "/" = {
-              proxyPass = "http://${address}:${toString port}";
-              proxyWebsockets = true;
-            };
-
-            "/notifications/hub" = {
-              proxyPass = "http://${address}:${toString websocketPort}";
-              proxyWebsockets = true;
-            };
-
-            "/notifications/hub/negotiate" = {
-              proxyPass = "http://${address}:${toString port}";
-              proxyWebsockets = true;
-            };
-          };
-      };
-
-      # Gitea instance.
-      "${codeForgeDomain}" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://localhost:${toString config.services.gitea.httpPort}";
-        };
-      };
-
-      # Keycloak instance.
-      "${authDomain}" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://localhost:${toString config.services.keycloak.settings.http-port}";
-        };
-      };
-
-      # Portunus server which also has an OpenLDAP server running.
-      "${ldapDomain}" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://localhost:${toString config.services.portunus.port}";
-        };
-      };
-
-      # A nice little sync server for my shell history.
-      "${atuinDomain}" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://localhost:${toString config.services.atuin.port}";
-        };
-      };
-    };
-  };
-
-  # Enable database services that is used in all of the services here so far.
+  # The database service of choice. Most services can use this so far (thankfully).
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_15;
@@ -315,117 +137,6 @@ in
       # Still doing the secure schema usage pattern.
       search_path = "\"$user\"";
     };
-
-    # There's no database and user checks for Vaultwarden service.
-    ensureDatabases = [ vaultwardenDbName keycloakDbName ];
-    ensureUsers = [
-      {
-        name = vaultwardenUser;
-        ensurePermissions = {
-          "DATABASE ${vaultwardenDbName}" = "ALL PRIVILEGES";
-          "SCHEMA ${vaultwardenDbName}" = "ALL PRIVILEGES";
-        };
-      }
-      {
-        name = config.services.gitea.user;
-        ensurePermissions = {
-          "SCHEMA ${config.services.gitea.user}" = "ALL PRIVILEGES";
-        };
-      }
-      {
-        name = keycloakUser;
-        ensurePermissions = {
-          "DATABASE ${keycloakDbName}" = "ALL PRIVILEGES";
-          "SCHEMA ${keycloakDbName}" = "ALL PRIVILEGES";
-        };
-      }
-    ];
-  };
-
-  services.portunus = {
-    enable = true;
-
-    port = 8168;
-    domain = ldapDomain;
-
-    ldap = {
-      searchUserName = "admin";
-      suffix = "dc=foodogsquared,dc=one";
-      tls = true;
-    };
-
-    seedPath = let
-      seedData = {
-        groups = [
-          {
-            name = "admin-team";
-            long_name = "Portunus Administrators";
-            members = [ "foodogsquared" ];
-            permissions = {
-              portunus.is_admin = true;
-              ldap.can_read = true;
-            };
-            posix_gid = 101;
-          }
-        ];
-        users = [
-          {
-            login_name = "foodogsquared";
-            given_name = "Gabriel";
-            family_name = "Arazas";
-            email = "foodogsquared@${domain}";
-            ssh_public_keys = let
-              readFiles = list: lib.lists.map (path: lib.readFile path) list;
-            in readFiles [
-              ../../users/home-manager/foo-dogsquared/files/ssh-key.pub
-              ../../users/home-manager/foo-dogsquared/files/ssh-key-2.pub
-            ];
-            password.from_command = [ "${pkgs.coreutils}/bin/cat" config.sops.secrets."plover/ldap/users/foodogsquared/password".path ];
-          }
-        ];
-      };
-      settingsFormat = pkgs.formats.json { };
-    in settingsFormat.generate "portunus-seed" seedData;
-  };
-
-  # Hey, the hub for your application sign-in.
-  services.keycloak = {
-    enable = true;
-
-    # Pls change at first login.
-    initialAdminPassword = "wow what is this thing";
-
-    database = {
-      type = "postgresql";
-      createLocally = true;
-      passwordFile = config.sops.secrets."plover/keycloak/db/password".path;
-    };
-
-    settings = {
-      host = "127.0.0.1";
-
-      db-schema = keycloakDbName;
-
-      http-enabled = true;
-      http-port = 8759;
-      https-port = 8760;
-
-      hostname = authDomain;
-      hostname-strict-backchannel = true;
-      proxy = "passthrough";
-    };
-
-    sslCertificate = "${certs."${authDomain}".directory}/fullchain.pem";
-    sslCertificateKey = "${certs."${authDomain}".directory}/key.pem";
-  };
-
-  # Modifying it a little bit for per-user schema.
-  systemd.services.keycloak = {
-    path = [ config.services.postgresql.package ];
-    preStart = ''
-      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${keycloakDbName}';" \
-        grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS keycloak;"
-    '';
   };
 
   # With a database comes a dumping.
@@ -436,169 +147,6 @@ in
 
     # Start at every 3 days starting from the first day of the month.
     startAt = "*-*-1/3";
-  };
-
-  # My code forge.
-  services.gitea = {
-    enable = true;
-    appName = "foodogsquared's code forge";
-    database = {
-      type = "postgres";
-      passwordFile = config.sops.secrets."plover/gitea/db/password".path;
-    };
-    domain = codeForgeDomain;
-    rootUrl = "https://${codeForgeDomain}";
-
-    # Allow Gitea to take a dump.
-    dump = {
-      enable = true;
-      interval = "weekly";
-    };
-
-    # There are a lot of services in port 3000 so we'll change it.
-    httpPort = 8432;
-    lfs.enable = true;
-
-    mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
-
-    settings = {
-      "repository.pull_request" = {
-        WORK_IN_PROGRESS_PREFIXES = "WIP:,[WIP],DRAFT,[DRAFT]";
-        ADD_CO_COMMITTERS_TRAILERS = true;
-      };
-
-      ui = {
-        DEFAULT_THEME = "auto";
-        EXPLORE_PAGING_SUM = 15;
-        GRAPH_MAX_COMMIT_NUM = 200;
-      };
-
-      "ui.meta" = {
-        AUTHOR = "foodogsquared's code forge";
-        DESCRIPTION = "foodogsquared's personal projects and some archived and mirrored codebases.";
-        KEYWORDS = "foodogsquared,gitea,self-hosted";
-      };
-
-      # It's a personal instance so nah...
-      service.DISABLE_REGISTRATION = true;
-
-      repository = {
-        ENABLE_PUSH_CREATE_USER = true;
-        DEFAULT_PRIVATE = "public";
-        DEFAULT_PRIVATE_PUSH_CREATE = true;
-      };
-
-      "markup.asciidoc" = {
-        ENABLED = true;
-        NEED_POSTPROCESS = true;
-        FILE_EXTENSIONS = ".adoc,.asciidoc";
-        RENDER_COMMAND = "${pkgs.asciidoctor}/bin/asciidoctor --out-file=- -";
-        IS_INPUT_FILE = false;
-      };
-
-      # Mailer service.
-      mailer = {
-        ENABLED = true;
-        PROTOCOL = "smtp+starttls";
-        SMTP_ADDRESS = "smtp.sendgrid.net";
-        SMTP_PORT = 587;
-        USER = "apikey";
-        FROM = "bot+gitea@foodogsquared.one";
-        SEND_AS_PLAIN_TEXT = true;
-        SENDMAIL_PATH = "${pkgs.system-sendmail}/bin/sendmail";
-      };
-
-      # Well, collaboration between forges is nice...
-      federation.ENABLED = true;
-
-      # Enable mirroring feature...
-      mirror.ENABLED = true;
-
-      # Session configuration.
-      session.COOKIE_SECURE = true;
-
-      # Some more database configuration.
-      database.SCHEMA = config.services.gitea.user;
-
-      # Run various periodic services.
-      "cron.update_mirrors".SCHEDULE = "@every 12h";
-
-      other = {
-        SHOW_FOOTER_VERSION = true;
-        ENABLE_SITEMAP = true;
-        ENABLE_FEED = true;
-      };
-    };
-  };
-
-  # Disk space is always assumed to be limited so we're really only limited with 2 dumps.
-  systemd.services.gitea-dump.serviceConfig = {
-    ExecStartPre = pkgs.writeShellScript "gitea-dump-limit" ''
-      ${pkgs.findutils}/bin/find ${config.services.gitea.dump.backupDir} -mtime 14 -maxdepth 1 -type f -delete
-    '';
-  };
-
-  # An alternative implementation of Bitwarden written in Rust. The project
-  # being written in Rust is a insta-self-hosting material right there.
-  services.vaultwarden = {
-    enable = true;
-    dbBackend = "postgresql";
-    environmentFile = config.sops.secrets."plover/vaultwarden/env".path;
-    config = {
-      DOMAIN = "https://${passwordManagerDomain}";
-
-      # Configuring the server.
-      ROCKET_ADDRESS = "127.0.0.1";
-      ROCKET_PORT = 8222;
-      ROCKET_LOG = "critical";
-
-      # Ehh... It's only a few (or even one) users anyways so nah. Since this
-      # instance will not configure SMTP server, this pretty much means
-      # invitation is only via email at this point.
-      SHOW_PASSWORD_HINT = false;
-
-      # Configuring some parts of account management which is almost
-      # nonexistent because this is just intended for me (at least right now).
-      SIGNUPS_ALLOWED = false;
-      SIGNUPS_VERIFY = true;
-
-      # Invitations...
-      INVITATIONS_ALLOWED = true;
-      INVITATION_ORG_NAME = "foodogsquared's Vaultwarden";
-
-      # Notifications...
-      WEBSOCKET_ENABLED = true;
-      WEBSOCKET_PORT = 3012;
-      WEBSOCKET_ADDRESS = "0.0.0.0";
-
-      # Enabling web vault with whatever nixpkgs comes in.
-      WEB_VAULT_ENABLED = true;
-
-      # Databasifications...
-      DATABASE_URL = "postgresql://${vaultwardenUser}@/${vaultwardenDbName}";
-
-      # Mailer service configuration (except the user and password).
-      SMTP_HOST = "smtp.sendgrid.net";
-      SMTP_PORT = 587;
-      SMTP_FROM_NAME = "Vaultwarden";
-      SMTP_FROM = "bot+vaultwarden@foodogsquared.one";
-    };
-  };
-
-  # Atuin sync server because why not.
-  services.atuin = {
-    enable = true;
-    openFirewall = true;
-    openRegistration = false;
-    port = 8965;
-  };
-
-  systemd.services.atuin = {
-    path = [ config.services.postgresql.package ];
-    preStart = ''
-      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='atuin';" \
-        grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS atuin;"
-    '';
   };
 
   # Of course, what is a server without a backup? A professionally-handled
@@ -675,17 +223,6 @@ in
     Host ${hetzner-boxes-server}
      IdentityFile ${config.sops.secrets."plover/borg/ssh-key".path}
   '';
-
-  systemd.tmpfiles.rules =
-    let
-      # To be used similarly to $GITEA_CUSTOM variable.
-      giteaCustomDir = "${config.services.gitea.stateDir}/custom";
-    in
-    [
-      "L+ ${giteaCustomDir}/templates/home.tmpl - - - - ${./files/gitea/home.tmpl}"
-      "L+ ${giteaCustomDir}/public/img/logo.svg - - - - ${./files/gitea/logo.svg}"
-      "L+ ${giteaCustomDir}/public/img/logo.png - - - - ${./files/gitea/logo.png}"
-    ];
 
   system.stateVersion = "22.11";
 }
