@@ -187,7 +187,8 @@ It is exported in the flakes at `outputs.packages` compiled through various syst
 * link:./scripts/[`./scripts/`] contains various scripts for various purposes.
 Should be self-explanatory.
 
-* link:./secrets/[`./secrets/`] contains my secrets managed with link:https://github.com/mozilla/sops[sops] and link:https://github.com/Mic92/sops-nix[sops-nix].
+* link:./secrets/[`./secrets/`] contains my cluster-wide secrets managed with link:https://github.com/mozilla/sops[sops] and link:https://github.com/Mic92/sops-nix[sops-nix].
+Take note, each component (e.g., hosts, modules, users) could have their own specific secrets.
 
 * link:./shells/[`./shells/`] contains my development shells for interacting with the usual type of projects.
 Setting this up can bring benefits outside of NixOS (unless you're interacting with projects with any OpenGL-related stuff).
