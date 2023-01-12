@@ -127,6 +127,10 @@ in
             name = "all.m3u8";
             query = "";
           }
+          {
+            name = "released-in-$year.m3u8";
+            query = "year:2000..2021";
+          }
         ];
       };
     };
@@ -257,6 +261,7 @@ in
       { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; } # Tampermonkey
       { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
       { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
+      { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
     ];
   };
 
