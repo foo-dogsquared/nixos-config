@@ -534,7 +534,7 @@ in
   # Disk space is always assumed to be limited so we're really only limited with 2 dumps.
   systemd.services.gitea-dump.serviceConfig = {
     ExecStartPre = pkgs.writeShellScript "gitea-dump-limit" ''
-      find ${config.services.gitea.dump.backupDir} -mtime 14 -maxdepth 1 -type f -delete
+      ${pkgs.findutils}/bin/find ${config.services.gitea.dump.backupDir} -mtime 14 -maxdepth 1 -type f -delete
     '';
   };
 
