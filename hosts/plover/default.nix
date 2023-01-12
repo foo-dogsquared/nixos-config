@@ -104,6 +104,90 @@ in
     cleanup.enable = true;
   };
 
+  services.fail2ban.jails = {
+    nginx-http-auth = "enabled = true";
+    nginx-botsearch = "enabled = true";
+
+    # Max retries are pretty much based from whether or not the jail is
+    # attached to a more important service.
+    vaultwarden-user = ''
+      enabled = true
+      backend = systemd
+      filter = vaultwarden-user[journalmatch='_SYSTEMD_UNIT=vaultwarden.service']
+      maxretry = 5
+    '';
+
+    vaultwarden-admin = ''
+      enabled = true
+      backend = systemd
+      filter = vaultwarden-admin[journalmatch='_SYSTEMD_UNIT=vaultwarden.service']
+      maxretry = 3
+    '';
+
+    keycloak = ''
+      enabled = true
+      backend = systemd
+      filter = keycloak[journalmatch='_SYSTEMD_UNIT=keycloak.service']
+      maxretry = 3
+    '';
+
+    gitea = ''
+      enabled = true
+      backend = systemd
+      filter = gitea[journalmatch='_SYSTEMD_UNIT=gitea.service']
+      maxretry = 8
+    '';
+  };
+
+  # Create some custom fail2ban filters.
+  environment.etc = {
+    "fail2ban/filter.d/vaultwarden-user.conf".text = ''
+      [Includes]
+      before = common.conf
+
+      # For more information, Vaultwarden knowledge base has a dedicated page
+      # for configuring fail2ban with the application (i.e.,
+      # https://github.com/dani-garcia/vaultwarden/wiki/Fail2Ban-Setup).
+      [Definition]
+      failregex = ^.*Username or password is incorrect\. Try again\. IP: <HOST>\. Username:.*$
+      ignoreregex =
+    '';
+
+    "fail2ban/filter.d/vaultwarden-admin.conf".text = ''
+      [Includes]
+      before = common.conf
+
+      # For more information, Vaultwarden knowledge base has a dedicated page
+      # for configuring fail2ban with the application (i.e.,
+      # https://github.com/dani-garcia/vaultwarden/wiki/Fail2Ban-Setup).
+      [Definition]
+      failregex = ^.*Invalid admin token\. IP: <HOST>.*$
+      ignoreregex =
+    '';
+
+    "fail2ban/filter.d/keycloak.conf".text = ''
+      [Includes]
+      before = common.conf
+
+      # This is based from the server administration guide at
+      # https://www.keycloak.org/docs/$VERSION/server_admin/index.html.
+      [Definition]
+      failregex = ^.*type=LOGIN_ERROR.*ipAddress=<HOST>.*$
+      ignoreregex =
+    '';
+
+    "fail2ban/filter.d/gitea.conf".text = ''
+      [Includes]
+      before = common.conf
+
+      # Thankfully, Gitea also has a dedicated page for configuring fail2ban
+      # for the service at https://docs.gitea.io/en-us/fail2ban-setup/
+      [Definition]
+      failregex = ^.*(Failed authentication attempt|invalid credentials|Attempted access of unknown user).* from <HOST>
+      ignoreregex =
+    '';
+  };
+
   # DNS-related settings. This is nice for automating them putting DNS records
   # and other types of stuff.
   security.acme.defaults = {
