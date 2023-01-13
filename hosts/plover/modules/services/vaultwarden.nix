@@ -1,5 +1,5 @@
-  # An alternative implementation of Bitwarden written in Rust. The project
-  # being written in Rust is a insta-self-hosting material right there.
+# An alternative implementation of Bitwarden written in Rust. The project
+# being written in Rust is a insta-self-hosting material right there.
 { config, lib, pkgs, ... }:
 
 let

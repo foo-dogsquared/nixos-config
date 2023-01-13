@@ -1,7 +1,7 @@
-  # My code forge service of choice. I'm pretty excited for the federation
-  # feature in particular to see how this plays out. It might not be toppling
-  # over the popular services but it is interesting to see new spaces for this
-  # one.
+# My code forge service of choice. I'm pretty excited for the federation
+# feature in particular to see how this plays out. It might not be toppling
+# over the popular services but it is interesting to see new spaces for this
+# one.
 { config, lib, pkgs, ... }:
 
 let
