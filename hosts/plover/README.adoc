@@ -100,6 +100,39 @@ Just make sure to set the least amount of privileges for that account.
 
 == Deploying it to Hetzner Cloud
 
+A deployment to Hetzner Cloud is composed of mainly three things:
+
+- A server.
+- A firewall.
+- A private network.
+
+First, we will set up the latter two before creating the server. footnote:[Though, it can be created in any order, it's just personal preferences at this point.]
+
+Setting up a firewall is pretty simple as the TCP/UDP ports is patterned after the allowed IP ranges in the host configuration.
+You can set up a firewall from Hetzner Cloud web UI but you can also deploy one with `hcloud`.
+
+[source, shell]
+----
+hcloud firewall create --name plover-firewall
+
+hcloud firewall add-rule plover-firewall --direction in --protocol tcp --port 22 --description "Secure shells"
+hcloud firewall add-rule plover-firewall --direction in --protocol tcp --port 80 --description "HTTP server"
+hcloud firewall add-rule plover-firewall --direction in --protocol tcp --port 433 --description "HTTPS server"
+hcloud firewall add-rule plover-firewall --direction in --protocol tcp --port 389 --description "LDAP server"
+hcloud firewall add-rule plover-firewall --direction in --protocol tcp --port 636 --description "LDAPS server"
+----
+
+Next up, the networking setup which is composed of a public IP used for accessing some services and a private network used to communicate inside of the network.
+However, the main reason we have a private network is to setup a VPN service.
+
+You can create one from Hetzner Cloud web UI.
+If you want to create with `hcloud`, however...
+
+[source, shell]
+----
+hcloud network create --name plover-local --ip-range 172.16.0.0/12
+----
+
 To deploy this to Hetzner Cloud, just initialize a server and run link:https://github.com/elitak/nixos-infect/[nixos-infect] script.
 As an example, you can run the server with the following link:https://community.hetzner.com/tutorials/basic-cloud-config[cloud config].
 
@@ -116,6 +149,7 @@ You could also easily create a server with `hcloud` with the following command:
 [source, shell]
 ----
 hcloud server create --location hel1 --type cx21 --image ubuntu-22.04 \
+    --firewall plover-firewall --network plover-local \
     --user-data-from-file ./files/hcloud/hcloud-user-data.yml \
     --ssh-key foodogsquared@foodogsquared.one \
     --name nixos-plover
