@@ -101,14 +101,14 @@ in {
     vaultwarden-user = ''
       enabled = true
       backend = systemd
-      filter = vaultwarden-user[journalmatch='_SYSTEMD_UNIT=vaultwarden.service']
+      filter = vaultwarden-user[journalmatch='_SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden']
       maxretry = 5
     '';
 
     vaultwarden-admin = ''
       enabled = true
       backend = systemd
-      filter = vaultwarden-admin[journalmatch='_SYSTEMD_UNIT=vaultwarden.service']
+      filter = vaultwarden-admin[journalmatch='_SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden']
       maxretry = 3
     '';
   };

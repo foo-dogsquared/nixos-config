@@ -29,6 +29,8 @@ in {
 
     mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
 
+    # You can see the available configuration options at
+    # https://docs.gitea.io/en-us/config-cheat-sheet/.
     settings = {
       "repository.pull_request" = {
         WORK_IN_PROGRESS_PREFIXES = "WIP:,[WIP],DRAFT,[DRAFT]";
@@ -107,7 +109,10 @@ in {
     '';
   };
 
-  # Making sure this plays nicely with the database service of choice.
+  # Making sure this plays nicely with the database service of choice. Take
+  # note, we're mainly using secure schema usage pattern here as described from
+  # the PostgreSQL documentation at
+  # https://www.postgresql.org/docs/15/ddl-schemas.html#DDL-SCHEMAS-PATTERNS.
   services.postgresql = {
     ensureUsers = [{
       name = config.services.gitea.user;
@@ -132,7 +137,7 @@ in {
     gitea = ''
       enabled = true
       backend = systemd
-      filter = gitea[journalmatch='_SYSTEMD_UNIT=gitea.service']
+      filter = gitea[journalmatch='_SYSTEMD_UNIT=gitea.service + _COMM=gitea']
       maxretry = 8
     '';
   };
