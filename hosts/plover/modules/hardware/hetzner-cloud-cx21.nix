@@ -3,10 +3,6 @@
 # Most of the filesystems listed here are supposed to be overriden to default
 # settings of whatever image format configuration this host system will import
 # from nixos-generators.
-#
-# Take note that this hardware configuration is mostly considered with Hetzner
-# Cloud hardware server settings in mind. Be sure to replace it whenever you
-# update your cloud provider.
 {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -35,6 +31,17 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  networking.useDHCP = false;
-  networking.interfaces.ens3.useDHCP = true;
+  networking = {
+    useDHCP = false;
+    enableIPv6 = true;
+
+    dhcpcd.persistent = true;
+
+    interfaces = {
+      ens3 = {
+        useDHCP = true;
+      };
+      ens10.useDHCP = true;
+    };
+  };
 }
