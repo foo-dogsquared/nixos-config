@@ -116,7 +116,7 @@ You could also easily create a server with `hcloud` with the following command:
 [source, shell]
 ----
 hcloud server create --location hel1 --type cx21 --image ubuntu-22.04 \
-    --user-data-from-file ./files/hcloud-user-data.yml \
+    --user-data-from-file ./files/hcloud/hcloud-user-data.yml \
     --ssh-key foodogsquared@foodogsquared.one \
     --name nixos-plover
 ----
