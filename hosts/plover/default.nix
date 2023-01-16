@@ -34,6 +34,7 @@ in
     ./modules/services/keycloak.nix
     ./modules/services/portunus.nix
     ./modules/services/vaultwarden.nix
+    ./modules/services/openvpn.nix
   ];
 
   boot.loader.grub.enable = true;
