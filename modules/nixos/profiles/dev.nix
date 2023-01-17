@@ -76,6 +76,7 @@ in {
       # This is set as our system packages for the sake of convenience.
       services.lorri.enable = true;
       environment.systemPackages = with pkgs; [
+        bind.dnsutils # A bunch of things to make sense with DNS.
         cachix # Compile no more by using someone's binary cache!
         curl # Our favorite network client.
         cmake # The poster boy for the hated build system.
@@ -85,6 +86,7 @@ in {
         gdb # The usual debugger.
         gnumake # The other poster boy for the hated build system.
         moreutils # Less is more but more utilities, the merrier.
+        whois # Doctor, are you not?
         valgrind # Making sure your applications don't pee as much.
       ]
       # Finally, a local environment for testing out GitHub workflows without
