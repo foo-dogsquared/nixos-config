@@ -10,7 +10,10 @@ This configuration is expected to be deployed in a Google Compute instance.
 It has a reasonable set of assumptions to keep in mind when modifying this configuration:
 
 - Most of the defaults are left to the link:https://github.com/NixOS/nixpkgs/tree/f92201f46109aabbbf41b8dc24bb9d342eb93a35/nixos/modules/virtualisation[image profiles from nixpkgs] including networking options and filesystems.
+Though, they should be handled on link:./modules/hardware[`./modules/hardware`].
+
 - No additional storage drives.
+
 - At least 32 GB of space is assumed.
 
 Some of the self-hosted services from this server:
@@ -19,6 +22,7 @@ Some of the self-hosted services from this server:
 * A link:https://github.com/dani-garcia/vaultwarden[Vaultwarden] instance for a little password management.
 * A link:https://gitea.io/[Gitea] instance for my personal projects.
 * A link:https://www.keycloak.org/[Keycloak] instance for identity management.
+* A VPN tunnel with link:https://www.wireguard.com/[Wireguard].
 * An LDAP server with link:https://www.openldap.org/[OpenLDAP].
 
 
@@ -123,7 +127,7 @@ hcloud firewall add-rule plover-firewall --direction in --protocol tcp --port 63
 ----
 
 Next up, the networking setup which is composed of a public IP used for accessing some services and a private network used to communicate inside of the network.
-However, the main reason we have a private network is to setup a VPN service.
+However, the main reason we have a private network is to setup a VPN service to hide some of the more sensitive services.
 
 You can create one from Hetzner Cloud web UI.
 If you want to create with `hcloud`, however...
@@ -131,6 +135,7 @@ If you want to create with `hcloud`, however...
 [source, shell]
 ----
 hcloud network create --name plover-local --ip-range 172.16.0.0/12
+hcloud network create --name wide-wide-wan --ip-range 10.0.0.0/8
 ----
 
 To deploy this to Hetzner Cloud, just initialize a server and run link:https://github.com/elitak/nixos-infect/[nixos-infect] script.
@@ -149,7 +154,7 @@ You could also easily create a server with `hcloud` with the following command:
 [source, shell]
 ----
 hcloud server create --location hel1 --type cx21 --image ubuntu-22.04 \
-    --firewall plover-firewall --network plover-local \
+    --firewall plover-firewall --network plover-local --network wide-wide-wan \
     --user-data-from-file ./files/hcloud/hcloud-user-data.yml \
     --ssh-key foodogsquared@foodogsquared.one \
     --name nixos-plover

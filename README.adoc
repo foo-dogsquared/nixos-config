@@ -138,7 +138,7 @@ There's no use for anyone else, really. :(
 === What should not be here?
 
 Despite being a NixOS configuration, this is not meant to be fully reproducible by anyone.
-There are still some things that would need to be privately held such as the following list of things not visible here.
+There are still some things that would need to be privately held as indicated by the following list.
 
 - Associated private keys: GPG, SSH, age, you name it.
 They are used with a secret management tool (see <<secrets-management>> for more information) to encrypt the more sensitive parts of the system such as credentials and environment files.
@@ -150,8 +150,7 @@ Though the unreproducible part is only like 10% of the whole configuration, it c
 Keep in mind, it comes with a few restrictions due to the lack of the appropriate credentials.
 
 - Certain tasks will not start.
-Most of the project tasks found in this repo requires the associated private key with the task which are not found in this repo.
-This is locked behind a secrets management tool.
+Most of the project tasks found in this repo requires the associated private key with the task.
 An example would be the link:./modules/nixos/tasks/backup-archive[Borg backup task] where it needs several files and credentials locked from the secrets management tool.
 
 - Certain components will be missing.
