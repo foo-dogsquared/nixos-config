@@ -76,24 +76,25 @@ in
               ((getKey secret) // config))
           secrets;
 
-      giteaUserGroup = config.users.users."${config.services.gitea.user}".group;
+      giteaUser = config.users.users."${config.services.gitea.user}".name;
+      portunusUser = config.users.users."${config.services.portunus.user}".name;
 
       # It is hardcoded but as long as the module is stable that way.
-      vaultwardenUserGroup = config.users.groups.vaultwarden.name;
-      postgresUserGroup = config.users.groups.postgres.name;
+      vaultwardenUser = config.users.groups.vaultwarden.name;
+      postgresUser = config.users.groups.postgres.name;
     in
     getSecrets {
       "ssh-key" = { };
       "lego/env" = { };
-      "gitea/db/password".owner = giteaUserGroup;
-      "gitea/smtp/password".owner = giteaUserGroup;
-      "vaultwarden/env".owner = vaultwardenUserGroup;
+      "gitea/db/password".owner = giteaUser;
+      "gitea/smtp/password".owner = giteaUser;
+      "vaultwarden/env".owner = vaultwardenUser;
       "borg/repos/host/patterns/keys" = { };
       "borg/repos/host/password" = { };
       "borg/repos/services/password" = { };
       "borg/ssh-key" = { };
-      "keycloak/db/password".owner = postgresUserGroup;
-      "ldap/users/foodogsquared/password".owner = config.services.portunus.user;
+      "keycloak/db/password".owner = postgresUser;
+      "ldap/users/foodogsquared/password".owner = portunusUser;
       "wireguard/private-key" = {
         group = config.users.users.systemd-network.group;
         reloadUnits = [ "systemd-networkd.service" ];
