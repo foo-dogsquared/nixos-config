@@ -50,7 +50,7 @@ in
     in
     getSecrets {
       ssh-key = { };
-      "ldap/password" = { };
+      "ldap/password".owner = "nslcd";
       "wireguard/private-key" = {
         group = config.users.users.systemd-network.group;
         reloadUnits = [ "systemd-networkd.service" ];
@@ -123,6 +123,8 @@ in
   programs.adb.enable = true;
 
   environment.systemPackages = with pkgs; [
+    openldap
+
     (swh.swh-core.overrideAttrs (super: self: {
       pythonPath = with swh; [
         swh-fuse
