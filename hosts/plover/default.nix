@@ -34,7 +34,7 @@ in
     ./modules/services/keycloak.nix
     ./modules/services/portunus.nix
     ./modules/services/vaultwarden.nix
-    ./modules/services/openvpn.nix
+    ./modules/services/wireguard.nix
   ];
 
   boot.loader.grub.enable = true;
@@ -55,6 +55,11 @@ in
       ];
     };
   };
+
+  services.fail2ban.ignoreIP = [
+    "172.16.0.0/12"
+    "fc00::/7"
+  ];
 
   # TODO: Put the secrets to the respective service module.
   sops.secrets =
@@ -89,7 +94,27 @@ in
       "borg/ssh-key" = { };
       "keycloak/db/password".owner = postgresUserGroup;
       "ldap/users/foodogsquared/password".owner = config.services.portunus.user;
+      "wireguard/private-key" = {
+        group = config.users.users.systemd-network.group;
+        reloadUnits = [ "systemd-networkd.service" ];
+        mode = "0640";
+      };
+      "wireguard/preshared-keys/ni" = {
+        group = config.users.users.systemd-network.group;
+        reloadUnits = [ "systemd-networkd.service" ];
+        mode = "0640";
+      };
+      "wireguard/preshared-keys/phone" = {
+        group = config.users.users.systemd-network.group;
+        reloadUnits = [ "systemd-networkd.service" ];
+        mode = "0640";
+      };
     };
+
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+  };
 
   # All of the keys required to deploy the secrets.
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
@@ -104,6 +129,7 @@ in
   # DNS-related settings. We're settling by configuring the ACME setup with a
   # DNS provider.
   security.acme.defaults = {
+    email = "admin@foodogsquared.one";
     dnsProvider = "porkbun";
     credentialsFile = config.sops.secrets."plover/lego/env".path;
   };

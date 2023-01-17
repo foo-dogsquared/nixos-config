@@ -1,5 +1,12 @@
 { config, pkgs, lib, ... }:
 
+let
+  network = import ../plover/modules/hardware/networks.nix;
+  inherit (network) publicIP wireguardIPv6BaseAddress wireguardPort;
+
+  wireguardAllowedIPs = [ "0:0:0:0/0" "::/0" ];
+  wireguardIFName = "wireguard0";
+in
 {
   imports = [
     # Include the results of the hardware scan.
@@ -44,6 +51,21 @@
     getSecrets {
       ssh-key = { };
       "ldap/password" = { };
+      "wireguard/private-key" = {
+        group = config.users.users.systemd-network.group;
+        reloadUnits = [ "systemd-networkd.service" ];
+        mode = "0640";
+      };
+      "wireguard/preshared-keys/plover" = {
+        group = config.users.users.systemd-network.group;
+        reloadUnits = [ "systemd-networkd.service" ];
+        mode = "0640";
+      };
+      "wireguard/preshared-keys/phone" = {
+        group = config.users.users.systemd-network.group;
+        reloadUnits = [ "systemd-networkd.service" ];
+        mode = "0640";
+      };
     };
 
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
@@ -165,5 +187,60 @@
 
     daemon.enable = true;
     server = "ldaps://ldap.foodogsquared.one/";
+  };
+
+  # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
+  # be used anywhere, we're configuring Wireguard here as a "client".
+  #
+  # We're also setting up this configuration as a forwarder
+  systemd.network = {
+    netdevs."99-${wireguardIFName}" = {
+      netdevConfig = {
+        Name = wireguardIFName;
+        Kind = "wireguard";
+      };
+
+      wireguardConfig = {
+        PrivateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
+        ListenPort = wireguardPort;
+      };
+
+      wireguardPeers = [
+        # Plover server peer. This is the main "server" of the network.
+        {
+          wireguardPeerConfig = {
+            PublicKey = lib.readFile ../plover/files/wireguard/wireguard-public-key-plover;
+            PresharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
+            AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
+            Endpoint = "${publicIP}:51820";
+          };
+        }
+
+        # "Phone" peer. It is also expected to be anywhere on the global
+        # network so we're basically setting up our own peer as a traffic
+        # forwarder in case there's ever a reason to do connect from the phone
+        # to the server which is always available anyways.
+        {
+          wireguardPeerConfig = {
+            PublicKey = lib.readFile ../plover/files/wireguard/wireguard-public-key-phone;
+            PresharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/phone".path;
+            AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
+            Endpoint = "${publicIP}:51820";
+          };
+        }
+      ];
+    };
+
+    networks."99-${wireguardIFName}" = {
+      matchConfig.Name = wireguardIFName;
+      address = [
+        "172.45.1.2/24"
+        "${wireguardIPv6BaseAddress}/48"
+      ];
+
+      # Otherwise, it will autostart every bootup when I need it only at few
+      # hours at a time.
+      linkConfig.Unmanaged = true;
+    };
   };
 }

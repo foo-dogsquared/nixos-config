@@ -7,4 +7,7 @@
 
   privateIPNetworkRange = "172.16.0.0/32";
   privateNetworkGatewayIP = "172.16.0.1/32";
+
+  wireguardIPv6BaseAddress = "fdee:b0de:54e6::";
+  wireguardPort = 51820;
 }
