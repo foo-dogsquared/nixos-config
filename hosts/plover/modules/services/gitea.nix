@@ -62,7 +62,7 @@ in {
         ENABLED = true;
         NEED_POSTPROCESS = true;
         FILE_EXTENSIONS = ".adoc,.asciidoc";
-        RENDER_COMMAND = "${pkgs.asciidoctor}/bin/asciidoctor --out-file=- -";
+        RENDER_COMMAND = "${pkgs.asciidoctor}/bin/asciidoctor --embedded --out-file=- -";
         IS_INPUT_FILE = false;
       };
 
