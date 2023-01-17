@@ -5,7 +5,8 @@
   home.packages = with pkgs; [
     wireshark-cli
     bind.dnsutils
-    nettools
+    inetutils
+    iputils
     bat
     fd
     jq
