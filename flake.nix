@@ -13,6 +13,7 @@
     # `nixpkgs-unstable` branch could be faster delivering updates, it is
     # looser when it comes to stability for the entirety of this configuration.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-22.11";
 
     # We're using these libraries for other functions.
     flake-utils.url = "github:numtide/flake-utils";
@@ -52,7 +53,7 @@
     # We're getting more unstable there should be a black hole at my home right
     # now. Also, we're seem to be collecting text editors like it is Pokemon.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    neovim-nightly-overlay.inputs.nixpkgs.url = "github:nixos/nixpkgs?rev=fad51abd42ca17a60fc1d4cb9382e2d79ae31836";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
