@@ -15,6 +15,18 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
+
+    # We're avoiding any service to be the default server especially that it
+    # could be used for enter a service with unencrypted HTTP. So we're setting
+    # up one with an unresponsive server response.
+    appendHttpConfig = ''
+      server {
+        listen 0.0.0.0:80 default_server;
+        listen [::]:80 default_server;
+        server_name "";
+        return 418;
+      }
+    '';
   };
 
   # Some fail2ban policies to apply for nginx.
