@@ -177,8 +177,25 @@ in
     ];
   };
 
+  # We'll go with a software firewall. We're mostly configuring it as if we're
+  # using a server even though the chances of that is pretty slim.
+  networking = {
+    nftables.enable = true;
+    firewall = {
+      enable = true;
+      allowedUDPPorts = [ wireguardPort ];
+      allowedTCPPorts = [
+        22 # Secure Shells.
+
+        80 # HTTP servers.
+        433 # HTTPS servers.
+      ];
+    };
+  };
+
   system.stateVersion = "22.11"; # Yes! I read the comment!
 
+  # Trying to be very portable with LDAP.
   users.ldap = {
     enable = true;
     base = "dc=foodogsquared,dc=one";
