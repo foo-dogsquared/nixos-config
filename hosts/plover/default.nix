@@ -43,7 +43,7 @@ in
     nftables.enable = true;
     domain = "foodogsquared.one";
     firewall = {
-      enable = true;
+      enable = false;
       allowedTCPPorts = [
         22 # Secure Shells.
 
