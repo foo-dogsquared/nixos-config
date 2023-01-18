@@ -38,6 +38,7 @@ in
 
   networking = {
     useDHCP = false;
+    usePredictableInterfaceNames = true;
     useNetworkd = true;
 
     # We're using networkd to configure so we're disabling this
@@ -58,7 +59,7 @@ in
         "${publicIPv6}1/64"
 
         # The private network IP.
-        "172.23.0.1/32"
+        "172.23.0.0/16"
 
         # Randomly generate from the IPv6 range.
         "::"
@@ -69,12 +70,6 @@ in
         { routeConfig.Gateway = "fe80::1"; }
         { routeConfig.Destination = privateNetworkGatewayIP; }
         { routeConfig = { Gateway = privateNetworkGatewayIP; GatewayOnLink = true; }; }
-
-        # Private addresses.
-        { routeConfig = { Destination = "172.16.0.0/12"; Type = "unreachable"; }; }
-        { routeConfig = { Destination = "192.168.0.0/16"; Type = "unreachable"; }; }
-        { routeConfig = { Destination = "10.0.0.0/8"; Type = "unreachable"; }; }
-        { routeConfig = { Destination = "fc00::/7"; Type = "unreachable"; }; }
       ];
     };
   };
