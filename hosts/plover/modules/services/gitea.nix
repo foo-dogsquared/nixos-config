@@ -6,7 +6,8 @@
 
 let
   codeForgeDomain = "code.${config.networking.domain}";
-in {
+in
+{
   services.gitea = {
     enable = true;
     appName = "foodogsquared's code forge";

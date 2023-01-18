@@ -10,7 +10,8 @@ let
 
   # However, this is set on our own.
   vaultwardenDbName = "vaultwarden";
-in {
+in
+{
   services.vaultwarden = {
     enable = true;
     dbBackend = "postgresql";

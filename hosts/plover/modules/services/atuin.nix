@@ -5,7 +5,8 @@
 
 let
   atuinDomain = "atuin.${config.networking.domain}";
-in {
+in
+{
   # Atuin sync server because why not.
   services.atuin = {
     enable = true;

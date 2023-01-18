@@ -5,7 +5,8 @@
 
 let
   ldapDomain = "ldap.${config.networking.domain}";
-in {
+in
+{
   services.portunus = {
     enable = true;
 
@@ -18,37 +19,41 @@ in {
       tls = true;
     };
 
-    seedPath = let
-      seedData = {
-        groups = [
-          {
-            name = "admin-team";
-            long_name = "Portunus Administrators";
-            members = [ "foodogsquared" ];
-            permissions = {
-              portunus.is_admin = true;
-              ldap.can_read = true;
-            };
-          }
-        ];
-        users = [
-          {
-            login_name = "foodogsquared";
-            given_name = "Gabriel";
-            family_name = "Arazas";
-            email = "foodogsquared@${config.networking.domain}";
-            ssh_public_keys = let
-              readFiles = list: lib.lists.map (path: lib.readFile path) list;
-            in readFiles [
-              ../../../../users/home-manager/foo-dogsquared/files/ssh-key.pub
-              ../../../../users/home-manager/foo-dogsquared/files/ssh-key-2.pub
-            ];
-            password.from_command = [ "${pkgs.coreutils}/bin/cat" config.sops.secrets."plover/ldap/users/foodogsquared/password".path ];
-          }
-        ];
-      };
-      settingsFormat = pkgs.formats.json { };
-    in settingsFormat.generate "portunus-seed" seedData;
+    seedPath =
+      let
+        seedData = {
+          groups = [
+            {
+              name = "admin-team";
+              long_name = "Portunus Administrators";
+              members = [ "foodogsquared" ];
+              permissions = {
+                portunus.is_admin = true;
+                ldap.can_read = true;
+              };
+            }
+          ];
+          users = [
+            {
+              login_name = "foodogsquared";
+              given_name = "Gabriel";
+              family_name = "Arazas";
+              email = "foodogsquared@${config.networking.domain}";
+              ssh_public_keys =
+                let
+                  readFiles = list: lib.lists.map (path: lib.readFile path) list;
+                in
+                readFiles [
+                  ../../../../users/home-manager/foo-dogsquared/files/ssh-key.pub
+                  ../../../../users/home-manager/foo-dogsquared/files/ssh-key-2.pub
+                ];
+              password.from_command = [ "${pkgs.coreutils}/bin/cat" config.sops.secrets."plover/ldap/users/foodogsquared/password".path ];
+            }
+          ];
+        };
+        settingsFormat = pkgs.formats.json { };
+      in
+      settingsFormat.generate "portunus-seed" seedData;
   };
 
   # Getting this to be accessible in the reverse proxy of choice.
