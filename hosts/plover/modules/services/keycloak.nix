@@ -69,9 +69,15 @@ in
   services.nginx.virtualHosts."${authDomain}" = {
     forceSSL = true;
     enableACME = true;
-    locations."/" = {
-      proxyPass = "http://localhost:${toString config.services.keycloak.settings.http-port}";
-    };
+
+    # This is based from the reverse proxy guide from the official
+    # documentation at https://www.keycloak.org/server/reverseproxy.
+    locations = let
+      keycloakPath = path: "http://localhost:${toString config.services.keycloak.settings.http-port}";
+    in
+    lib.listToAttrs
+      (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
+      [ "/js/" "/realms/" "/resources/" "/robots.txt" ];
   };
 
   # Configuring fail2ban for this services which is only present as a neat
