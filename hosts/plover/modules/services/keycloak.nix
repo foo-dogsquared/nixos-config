@@ -76,8 +76,9 @@ in
       keycloakPath = path: "http://localhost:${toString config.services.keycloak.settings.http-port}";
     in
     lib.listToAttrs
-      (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
-      [ "/js/" "/realms/" "/resources/" "/robots.txt" ];
+      (lib.lists.map
+        (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
+        [ "/js/" "/realms/" "/resources/" "/robots.txt" ]);
   };
 
   # Configuring fail2ban for this services which is only present as a neat
