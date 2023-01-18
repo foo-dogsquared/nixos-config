@@ -51,26 +51,8 @@ in
   systemd.network = {
     enable = true;
     networks."20-wan" = {
-      matchConfig.Name = "ens3";
-
-      address = [
-        # Public IPs.
-        publicIP
-        "${publicIPv6}1/64"
-
-        # The private network IP.
-        "172.23.0.0/16"
-
-        # Randomly generate from the IPv6 range.
-        "::"
-      ];
-
-      routes = [
-        # Configuring the route with the gateway addresses for this network.
-        { routeConfig.Gateway = "fe80::1"; }
-        { routeConfig.Destination = privateNetworkGatewayIP; }
-        { routeConfig = { Gateway = privateNetworkGatewayIP; GatewayOnLink = true; }; }
-      ];
+      matchConfig.Name = "en*";
+      networkConfig.DHCP = "yes";
     };
   };
 
