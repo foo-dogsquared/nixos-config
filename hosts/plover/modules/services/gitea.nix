@@ -92,7 +92,7 @@ in
       database.SCHEMA = config.services.gitea.user;
 
       # Run various periodic services.
-      "cron.update_mirrors".SCHEDULE = "@every 12h";
+      "cron.update_mirrors".SCHEDULE = "@every 3h";
 
       other = {
         SHOW_FOOTER_VERSION = true;
