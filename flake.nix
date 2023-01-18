@@ -338,7 +338,7 @@
                 # We're very lax with setting the default since there's a lot
                 # of modules that may set this especially with image media
                 # modules.
-                networking.hostName = lib.mkOverride 2000 host';
+                networking.hostName = host';
               })
               (lib'.optionalAttrs (lib'.hasAttr host' images)
                 (
