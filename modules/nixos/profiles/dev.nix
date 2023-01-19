@@ -82,6 +82,7 @@ in {
         cmake # The poster boy for the hated build system.
         diffoscope # Oversized caffeine grinder.
         direnv # The power of local development environment.
+        ipcalc # Calculate your IP without going to the web.
         gcc # The usual toolchain.
         gdb # The usual debugger.
         gnumake # The other poster boy for the hated build system.
@@ -105,6 +106,7 @@ in {
           Update service for user-specific Nix profile
         '';
         documentation = [ "man:nix3-profile(1)" ];
+        environment.NIXPKGS_ALLOW_UNFREE = "1";
         script = "nix profile upgrade '.*'";
         path = [ config.nix.package ];
         startAt = "weekly";
@@ -126,6 +128,7 @@ in {
       environment.systemPackages = with pkgs; [
         bandwhich # Sniffing your packets.
         lazygit # Git interface for the lazy.
+        lazydocker # Git interface for the lazy.
         fd # Oh nice, a more reliable `find`.
         ripgrep # On nice, a more reliable `grep`.
         exa # Oh nice, a shinier `ls`.
