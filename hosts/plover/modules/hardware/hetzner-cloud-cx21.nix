@@ -5,9 +5,11 @@
 # from nixos-generators.
 let
   network = import ./networks.nix;
-  inherit (network) publicIP publicIPv6 privateNetworkGatewayIP;
-in
+  inherit (network) publicIP' publicIPv6 publicIPv6PrefixLength privateNetworkGatewayIP;
 
+  # This is just referring to the same interface just with alternative names.
+  mainEthernetInterfaceNames = [ "ens3" "enp0s3" ];
+in
 {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -50,9 +52,47 @@ in
   # https://discourse.nixos.org/t/nixos-on-hetzner-cloud-servers-ipv6/221/
   systemd.network = {
     enable = true;
-    networks."20-wan" = {
-      matchConfig.Name = "en*";
-      networkConfig.DHCP = "yes";
+
+    # For more information, you can look at Hetzner documentation from
+    # https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/
+    networks = {
+      "60-wan" = {
+        matchConfig.Name = lib.concatStringsSep " " mainEthernetInterfaceNames;
+
+        # Setting the primary static IPs.
+        address = [
+          publicIP'
+
+          # The public IPv6 is assigned to a server so we'll to have to go with
+          # something else.
+          "${publicIPv6}1/${publicIPv6PrefixLength}"
+        ];
+
+        networkConfig = {
+          DHCP = "yes";
+          IPForward = true;
+          IPMasquerade = "both";
+        };
+
+        routes = [
+          { routeConfig.Gateway = "fe80::1"; }
+          { routeConfig.Destination = publicIP'; }
+
+          {
+            routeConfig = {
+              Gateway = publicIP';
+              GatewayOnLink = true;
+            };
+          }
+        ];
+      };
+
+      # This is to make use of the remaining ethernet interfaces as we can
+      # build a local network.
+      "60-dhcpv6-pd-downstreams" = {
+        matchConfig.Name = "en*";
+        networkConfig.DHCP = "yes";
+      };
     };
   };
 
