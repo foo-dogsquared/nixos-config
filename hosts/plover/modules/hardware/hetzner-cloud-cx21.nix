@@ -5,6 +5,7 @@
 # from nixos-generators.
 let
   network = import ./networks.nix;
+  inherit (builtins) toString;
   inherit (network) publicIP' publicIPv6 publicIPv6PrefixLength privateNetworkGatewayIP;
 
   # This is just referring to the same interface just with alternative names.
@@ -65,7 +66,7 @@ in
 
           # The public IPv6 is assigned to a server so we'll to have to go with
           # something else.
-          "${publicIPv6}1/${publicIPv6PrefixLength}"
+          "${publicIPv6}1/${toString publicIPv6PrefixLength}"
         ];
 
         networkConfig = {

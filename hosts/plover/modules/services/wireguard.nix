@@ -5,17 +5,11 @@
 let
   acmeName = "wireguard.${config.networking.domain}";
   networks = import ../hardware/networks.nix;
-  inherit (networks) privateNetworkGatewayIP wireguardIPv6BaseAddress wireguardPort;
+  inherit (builtins) toString;
+  inherit (networks) wireguardIPv6 wireguardIPv6LengthPrefix wireguardPort;
 
   wireguardIFName = "wireguard0";
-  wireguardAddresses = [
-    # Private IP address.
-    "172.45.1.1/32"
-
-    # Private IPv6 address. Just arbitrarily chosen.
-    "${wireguardIPv6BaseAddress}/48"
-  ];
-  wireguardAllowedIPs = [ "172.45.1.2/24" "${wireguardIPv6BaseAddress}/48" ];
+  wireguardAllowedIPs = [ "172.45.1.2/24" "${wireguardIPv6}/${toString wireguardIPv6LengthPrefix}" ];
 in
 {
   environment.systemPackages = [ pkgs.wireguard-tools ];
@@ -57,10 +51,13 @@ in
 
     networks."99-${wireguardIFName}" = {
       matchConfig.Name = wireguardIFName;
+      address = [
+        # Private IP address.
+        "172.45.1.1/32"
 
-      address = wireguardAddresses;
-
-      gateway = [ privateNetworkGatewayIP ];
+        # Private IPv6 address. Just arbitrarily chosen.
+        "${wireguardIPv6}1/${toString wireguardIPv6LengthPrefix}"
+      ];
     };
   };
 }
