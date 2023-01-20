@@ -124,7 +124,9 @@ in
   programs.adb.enable = true;
 
   environment.systemPackages = with pkgs; [
+    # Some sysadmin thingamajigs.
     openldap
+    wireguard-tools
 
     (swh.swh-core.overrideAttrs (super: self: {
       pythonPath = with swh; [
