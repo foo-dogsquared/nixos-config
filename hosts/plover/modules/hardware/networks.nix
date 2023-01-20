@@ -1,14 +1,17 @@
 # It just contains a set of network-related variables mainly used for
 # network-related services. Make sure to change this every time you migrate to
 # a new server.
+let
+  inherit (builtins) toString;
+in
 rec {
   publicIP = "95.217.212.19";
   publicIPPrefixLength = 32;
-  publicIP' = "${publicIP}/${publicIPPrefixLength}";
+  publicIP' = "${publicIP}/${toString publicIPPrefixLength}";
 
   publicIPv6 = "2a01:4f9:c011:a448::";
   publicIPv6PrefixLength = 64;
-  publicIPv6' = "${publicIPv6}/${publicIPv6PrefixLength}";
+  publicIPv6' = "${publicIPv6}/${toString publicIPv6PrefixLength}";
 
   privateIPNetworkRange = "172.16.0.0/32";
   privateNetworkGatewayIP = "172.16.0.1/32";
