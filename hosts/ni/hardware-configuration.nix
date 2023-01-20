@@ -65,7 +65,10 @@
 
       "40-bond1-dev2" = {
         matchConfig.Name = "wlp2s0";
-        networkConfig.Bond = "bond1";
+        networkConfig = {
+          Bond = "bond1";
+          IgnoreCarrierLoss = "15";
+        };
       };
     };
   };
