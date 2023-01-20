@@ -5,7 +5,7 @@ let
   inherit (builtins) toString;
   inherit (network) publicIP wireguardIPv6 wireguardIPv6LengthPrefix wireguardPort;
 
-  wireguardAllowedIPs = [ "0:0:0:0/0" "::/0" ];
+  wireguardAllowedIPs = [ "0.0.0.0/0" "::/0" ];
   wireguardIFName = "wireguard0";
 in
 {
