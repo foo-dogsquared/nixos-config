@@ -40,12 +40,13 @@ in
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   networking = {
-    useDHCP = false;
+    enableIPv6 = true;
     usePredictableInterfaceNames = true;
     useNetworkd = true;
 
     # We're using networkd to configure so we're disabling this
     # service.
+    useDHCP = false;
     dhcpcd.enable = false;
   };
 
@@ -66,7 +67,7 @@ in
 
           # The public IPv6 is assigned to a server so we'll to have to go with
           # something else.
-          "${publicIPv6}1/${toString publicIPv6PrefixLength}"
+          "${publicIPv6}2/${toString publicIPv6PrefixLength}"
         ];
 
         networkConfig = {
