@@ -14,16 +14,27 @@ rec {
   publicIPv6' = "${publicIPv6}/${toString publicIPv6PrefixLength}";
 
   # The private network for this host.
-  privateIPNetworkRange = "172.16.0.0/32";
   privateNetworkGatewayIP = "172.16.0.1/32";
-  privateNetworkServicesPart = "172.18.25";
+  privateNetworkServicesPart = "172.23.0";
   privateNetworkHostPart = hostPart: "${privateNetworkServicesPart}.${toString hostPart}";
+  preferredInternalTLD = "internal";
 
+  privateIP  = privateNetworkHostPart 1;
+  privateIPPrefixLength = 16;
+  privateIP' = "${privateIPv6}/${toString privateIPv6PrefixLength}";
+
+  # The IPv6 subnet for this host.
+  privateIPv6 = "fdee:b0de:5685:a4b3::";
+  privateIPv6PrefixLength = 64;
+  privateIPv6' = "${privateIPv6}/${toString privateIPv6PrefixLength}";
+
+  # Wireguard-related things.
+  wireguardIPv4 = "174";
   wireguardIPv6 = "fdee:b0de:54e6:ae74::";
   wireguardIPv6LengthPrefix = 64;
   wireguardPort = 51820;
 
   # Applications that are supposed to be internal.
-  atuinHost = privateNetworkHostPart 3;
+  atuinHostIP = privateNetworkHostPart 3;
   keycloakHost = privateNetworkHostPart 4;
 }

@@ -6,7 +6,14 @@
 let
   network = import ./networks.nix;
   inherit (builtins) toString;
-  inherit (network) publicIP' publicIPv6 publicIPv6PrefixLength privateNetworkGatewayIP;
+  inherit (network)
+    publicIP' publicIPv6
+    publicIPv6PrefixLength
+    privateNetworkGatewayIP
+    privateIP'
+    privateIPv6
+    privateIPv6PrefixLength
+    privateIPv6';
 
   # This is just referring to the same interface just with alternative names.
   mainEthernetInterfaceNames = [ "ens3" "enp0s3" ];
@@ -71,7 +78,6 @@ in
         ];
 
         networkConfig = {
-          DHCP = "yes";
           IPForward = true;
           IPMasquerade = "both";
         };
@@ -89,11 +95,23 @@ in
         ];
       };
 
+      "60-lan" = {
+        matchConfig.Name = "ens11";
+
+        address = [ privateIP' ];
+        networkConfig.DHCP = "yes";
+        dhcpV6Config.PrefixDelegationHint = privateIPv6';
+      };
+
       # This is to make use of the remaining ethernet interfaces as we can
       # build a local network.
       "60-dhcpv6-pd-downstreams" = {
         matchConfig.Name = "en*";
         networkConfig.DHCP = "yes";
+
+        # Even if there's one, it would have the interface with subnets and a
+        # guaranteed network interface for the internal services.
+        dhcpV6Config.PrefixDelegationHint = privateIPv6';
       };
     };
   };
