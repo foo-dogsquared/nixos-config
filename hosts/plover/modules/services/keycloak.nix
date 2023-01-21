@@ -2,6 +2,8 @@
 { config, lib, pkgs, ... }:
 
 let
+  inherit (import ../hardware/networks.nix) keycloakHost;
+
   authDomain = "auth.${config.networking.domain}";
 
   # This is also set on our own.
@@ -15,7 +17,7 @@ in
   services.keycloak = {
     enable = true;
 
-    # Pls change at first login.
+    # Pls change at first login. Or just change it through `kcadm.sh`.
     initialAdminPassword = "wow what is this thing";
 
     database = {
@@ -25,7 +27,7 @@ in
     };
 
     settings = {
-      host = "127.0.0.1";
+      host = keycloakHost;
 
       db-schema = keycloakDbName;
 
@@ -73,7 +75,7 @@ in
     # This is based from the reverse proxy guide from the official
     # documentation at https://www.keycloak.org/server/reverseproxy.
     locations = let
-      keycloakPath = path: "http://localhost:${toString config.services.keycloak.settings.http-port}";
+      keycloakPath = path: "http://${keycloakHost}:${toString config.services.keycloak.settings.http-port}";
     in
     lib.listToAttrs
       (lib.lists.map

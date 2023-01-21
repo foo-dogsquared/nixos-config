@@ -5,6 +5,8 @@
 
 let
   atuinDomain = "atuin.${config.networking.domain}";
+
+  inherit (import ../hardware/networks.nix) atuinHost;
 in
 {
   # Atuin sync server because why not.
@@ -12,6 +14,8 @@ in
     enable = true;
     openFirewall = true;
     openRegistration = false;
+
+    host = atuinHost;
     port = 8965;
   };
 
