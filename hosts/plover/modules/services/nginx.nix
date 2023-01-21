@@ -1,4 +1,4 @@
-# The reverse proxy of choice.
+# The reverse proxy of choice. Logs should be rotated weekly.
 { config, lib, pkgs, ... }:
 
 {
@@ -11,6 +11,7 @@
 
     package = pkgs.nginxMainline;
 
+    recommendedBrotliSettings = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
@@ -23,11 +24,16 @@
       server {
         listen 0.0.0.0:80 default_server;
         listen [::]:80 default_server;
-        server_name "";
+        server_name _;
         return 418;
       }
     '';
   };
+
+  networking.firewall.allowedTCPPorts = [
+    80 # HTTP servers.
+    433 # HTTPS servers.
+  ];
 
   # Some fail2ban policies to apply for nginx.
   services.fail2ban.jails = {
