@@ -26,12 +26,12 @@
   swapDevices = [{ label = "swap"; }];
 
   networking = {
-    useDHCP = false;
     usePredictableInterfaceNames = true;
     useNetworkd = true;
 
     # We're using networkd to configure so we're disabling this
     # service.
+    useDHCP = false;
     dhcpcd.enable = false;
   };
 
@@ -75,4 +75,15 @@
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
+
+  # Set up printers.
+  services.printing = {
+    enable = true;
+    browsing = true;
+    drivers = with pkgs; [
+      gutenprint
+      hplip
+      splix
+    ];
+  };
 }
