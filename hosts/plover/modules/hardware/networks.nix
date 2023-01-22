@@ -33,8 +33,4 @@ rec {
   wireguardIPv6 = "fdee:b0de:54e6:ae74::";
   wireguardIPv6LengthPrefix = 64;
   wireguardPort = 51820;
-
-  # Applications that are supposed to be internal.
-  atuinHostIP = privateNetworkHostPart 3;
-  keycloakHost = privateNetworkHostPart 4;
 }

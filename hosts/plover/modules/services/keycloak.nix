@@ -2,7 +2,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (import ../hardware/networks.nix) keycloakHost;
+  inherit (import ../hardware/networks.nix) privateIP';
 
   authDomain = "auth.${config.networking.domain}";
 
@@ -27,7 +27,7 @@ in
     };
 
     settings = {
-      host = keycloakHost;
+      host = privateIP';
 
       db-schema = keycloakDbName;
 
@@ -75,7 +75,7 @@ in
     # This is based from the reverse proxy guide from the official
     # documentation at https://www.keycloak.org/server/reverseproxy.
     locations = let
-      keycloakPath = path: "http://${keycloakHost}:${toString config.services.keycloak.settings.http-port}";
+      keycloakPath = path: "http://${privateIP'}:${toString config.services.keycloak.settings.http-port}";
     in
     lib.listToAttrs
       (lib.lists.map

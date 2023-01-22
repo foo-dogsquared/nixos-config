@@ -4,9 +4,9 @@
 { config, lib, pkgs, ... }:
 
 let
-  atuinDomain = "atuin.${config.networking.domain}";
+  inherit (import ../hardware/networks.nix) preferredInternalTLD privateIP';
 
-  inherit (import ../hardware/networks.nix) atuinHost;
+  atuinDomain = "atuin.${config.networking.domain}.${preferredInternalTLD}";
 in
 {
   # Atuin sync server because why not.
@@ -15,7 +15,7 @@ in
     openFirewall = true;
     openRegistration = false;
 
-    host = atuinHost;
+    host = privateIP';
     port = 8965;
   };
 
@@ -32,8 +32,6 @@ in
 
   # Putting it altogether in the reverse proxy of choice.
   services.nginx.virtualHosts."${atuinDomain}" = {
-    forceSSL = true;
-    enableACME = true;
     locations."/" = {
       proxyPass = "http://localhost:${toString config.services.atuin.port}";
     };
