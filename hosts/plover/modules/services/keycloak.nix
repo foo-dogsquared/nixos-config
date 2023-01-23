@@ -2,7 +2,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (import ../hardware/networks.nix) privateIP';
+  inherit (import ../hardware/networks.nix) interfaces;
 
   authDomain = "auth.${config.networking.domain}";
 
@@ -11,6 +11,7 @@ let
   keycloakDbName = if config.services.keycloak.database.createLocally then keycloakUser else config.services.keycloak.database.username;
 
   certs = config.security.acme.certs;
+  host = interfaces.internal.IPv4;
 in
 {
   # Hey, the hub for your application sign-in.
@@ -27,7 +28,7 @@ in
     };
 
     settings = {
-      host = privateIP';
+      inherit host;
 
       db-schema = keycloakDbName;
 
@@ -75,7 +76,7 @@ in
     # This is based from the reverse proxy guide from the official
     # documentation at https://www.keycloak.org/server/reverseproxy.
     locations = let
-      keycloakPath = path: "http://${privateIP'}:${toString config.services.keycloak.settings.http-port}";
+      keycloakPath = path: "http://${host}:${toString config.services.keycloak.settings.http-port}";
     in
     lib.listToAttrs
       (lib.lists.map

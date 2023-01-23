@@ -6,14 +6,7 @@
 let
   network = import ./networks.nix;
   inherit (builtins) toString;
-  inherit (network)
-    publicIP' publicIPv6
-    publicIPv6PrefixLength
-    privateNetworkGatewayIP
-    privateIP'
-    privateIPv6
-    privateIPv6PrefixLength
-    privateIPv6';
+  inherit (network) privateIPv6Prefix interfaces;
 
   # This is just referring to the same interface just with alternative names.
   mainEthernetInterfaceNames = [ "ens3" "enp0s3" ];
@@ -69,12 +62,14 @@ in
         matchConfig.Name = lib.concatStringsSep " " mainEthernetInterfaceNames;
 
         # Setting the primary static IPs.
-        address = [
-          publicIP'
+        address = with interfaces; [
+          # The public IPs.
+          "${main'.IPv4}/32"
+          "${main'.IPv6}/128"
 
-          # The public IPv6 is assigned to a server so we'll to have to go with
-          # something else.
-          "${publicIPv6}2/${toString publicIPv6PrefixLength}"
+          # IPs in the LAN.
+          "${main.IPv4}/16"
+          "${main.IPv6}/64"
         ];
 
         networkConfig = {
@@ -84,11 +79,11 @@ in
 
         routes = [
           { routeConfig.Gateway = "fe80::1"; }
-          { routeConfig.Destination = publicIP'; }
+          { routeConfig.Destination = "${interfaces.main'.IPv4}/32"; }
 
           {
             routeConfig = {
-              Gateway = publicIP';
+              Gateway = "${interfaces.main'.IPv4}/32";
               GatewayOnLink = true;
             };
           }
@@ -97,10 +92,11 @@ in
 
       "60-lan" = {
         matchConfig.Name = "ens11";
-
-        address = [ privateIP' ];
+        address = with interfaces.internal; [
+          "${IPv4}/16"
+          "${IPv6}/64"
+        ];
         networkConfig.DHCP = "yes";
-        dhcpV6Config.PrefixDelegationHint = privateIPv6';
       };
 
       # This is to make use of the remaining ethernet interfaces as we can
@@ -111,7 +107,7 @@ in
 
         # Even if there's one, it would have the interface with subnets and a
         # guaranteed network interface for the internal services.
-        dhcpV6Config.PrefixDelegationHint = privateIPv6';
+        dhcpV6Config.PrefixDelegationHint = "${privateIPv6Prefix}:43ff::/64";
       };
     };
   };

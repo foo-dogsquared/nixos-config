@@ -5,46 +5,53 @@ let
   inherit (builtins) toString;
 in
 rec {
-  publicIP = "95.217.212.19";
-  publicIPPrefixLength = 32;
-  publicIP' = "${publicIP}/${toString publicIPPrefixLength}";
+  privateIPv6Prefix = "fdee:b0de:5685";
+  interfaces = {
+    # This is the public-facing interface. Any interface name with a prime
+    # symbol means it's a public-facing interface.
+    main' = {
+      IPv4 = "95.217.212.19";
+      IPv6 = "2a01:4f9:c011:a448::1";
+    };
 
-  publicIPv6 = "2a01:4f9:c011:a448::";
-  publicIPv6PrefixLength = 64;
-  publicIPv6' = "${publicIPv6}/${toString publicIPv6PrefixLength}";
+    # /16 block for IPv4, /64 for IPv6.
+    main = {
+      IPv4 = "172.25.0.1";
+      IPv6 = "${privateIPv6Prefix}:1::";
+    };
+
+    # /16 block for IPv4, /64 for IPv6.
+    internal = {
+      IPv4 = "172.24.0.1";
+      IPv6 = "${privateIPv6Prefix}:2::";
+    };
+
+    # /16 BLOCK for IPv4, /64 for IPv6.
+    wireguard0 = {
+      IPv4 = "10.210.0.1";
+      IPv6 = "${privateIPv6Prefix}:12ae::";
+    };
+  };
 
   # The private network for this host.
-  privateNetworkGatewayIP = "172.16.0.1/32";
   preferredInternalTLD = "internal";
-
-  privateIP  = "172.23.0.2";
-  privateIPPrefixLength = 16;
-  privateIP' = "${privateIPv6}/${toString privateIPv6PrefixLength}";
-
-  # The IPv6 subnet for this host.
-  privateIPv6 = "fdee:b0de:5685:a4b3::";
-  privateIPv6PrefixLength = 64;
-  privateIPv6' = "${privateIPv6}/${toString privateIPv6PrefixLength}";
 
   # Wireguard-related things.
   wireguardPort = 51820;
-  wireguardIPHostPart = "172.23.152";
-  wireguardIPHostCreate = interfacePart: "${wireguardIPHostPart}.${toString interfacePart}";
-  wireguardIPv6Prefix = "fdee:b0de:54e6:ae74::";
-  wireguardIPv6Create = interfacePart: "${wireguardIPv6Prefix}${toString interfacePart}";
+  wireguardIPHostPart = "10.210.0";
+  wireguardIPv6Prefix = interfaces.wireguard0.IPv6;
 
+  # These are all fixed IP addresses. They should be /32 IPv4 block and /128
+  # IPv6 block.
   wireguardPeers = {
-    server = {
-      IPv4 = wireguardIPHostCreate 1;
-      IPv6 = wireguardIPv6Create 1;
-    };
+    server = with interfaces.wireguard0; { inherit IPv4 IPv6; };
     desktop = {
-      IPv4 = wireguardIPHostCreate 2;
-      IPv6 = wireguardIPv6Create 2;
+      IPv4 = "${wireguardIPHostPart}.2";
+      IPv6 = "${wireguardIPv6Prefix}:12ae::2";
     };
     phone = {
-      IPv4 = wireguardIPHostCreate 3;
-      IPv6 = wireguardIPv6Create 3;
+      IPv4 = "${wireguardIPHostPart}.3";
+      IPv6 = "${wireguardIPv6Prefix}:12ae::3";
     };
   };
 }

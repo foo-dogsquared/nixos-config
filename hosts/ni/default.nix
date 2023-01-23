@@ -4,11 +4,14 @@ let
   network = import ../plover/modules/hardware/networks.nix;
   inherit (builtins) toString;
   inherit (network)
-    publicIP
+    interfaces
     wireguardPort
     wireguardPeers;
 
-  wireguardAllowedIPs = [ "0.0.0.0/0" "::/0" ];
+  wireguardAllowedIPs = [
+    "${interfaces.internal.IPv4}/16"
+    "${interfaces.internal.IPv6}/64"
+  ];
   wireguardIFName = "wireguard0";
 in
 {
@@ -240,20 +243,7 @@ in
             PublicKey = lib.readFile ../plover/files/wireguard/wireguard-public-key-plover;
             PresharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
             AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
-            Endpoint = "${publicIP}:51820";
-          };
-        }
-
-        # "Phone" peer. It is also expected to be anywhere on the global
-        # network so we're basically setting up our own peer as a traffic
-        # forwarder in case there's ever a reason to do connect from the phone
-        # to the server which is always available anyways.
-        {
-          wireguardPeerConfig = {
-            PublicKey = lib.readFile ../plover/files/wireguard/wireguard-public-key-phone;
-            PresharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/phone".path;
-            AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
-            Endpoint = "${publicIP}:51820";
+            Endpoint = "${interfaces.main'.IPv4}:51820";
           };
         }
       ];
@@ -262,13 +252,30 @@ in
     networks."99-${wireguardIFName}" = {
       matchConfig.Name = wireguardIFName;
       address = with wireguardPeers.desktop; [
-        "${IPv4}/24"
-        "${IPv6}/64"
+        "${IPv4}/32"
+        "${IPv6}/128"
       ];
 
       # Otherwise, it will autostart every bootup when I need it only at few
       # hours at a time.
-      linkConfig.Unmanaged = true;
+      linkConfig = {
+        ActivationPolicy = "manual";
+        RequiredForOnline = false;
+      };
+
+      routes = [
+        {
+          routeConfig = {
+            Gateway = wireguardPeers.server.IPv4;
+            Destination = let
+              ip = lib.strings.splitString "." wireguardPeers.server.IPv4;
+              properRange = lib.lists.take 3 ip ++ [ "0" ];
+              ip' = lib.concatStringsSep "." properRange;
+            in "${ip'}/16";
+            GatewayOnLink = true;
+          };
+        }
+      ];
     };
   };
 }
