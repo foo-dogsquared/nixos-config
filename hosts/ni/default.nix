@@ -3,7 +3,10 @@
 let
   network = import ../plover/modules/hardware/networks.nix;
   inherit (builtins) toString;
-  inherit (network) publicIP wireguardIPv6 wireguardIPv6LengthPrefix wireguardPort;
+  inherit (network)
+    publicIP
+    wireguardPort
+    wireguardPeers;
 
   wireguardAllowedIPs = [ "0.0.0.0/0" "::/0" ];
   wireguardIFName = "wireguard0";
@@ -258,9 +261,9 @@ in
 
     networks."99-${wireguardIFName}" = {
       matchConfig.Name = wireguardIFName;
-      address = [
-        "172.45.1.2/24"
-        "${wireguardIPv6}/${toString wireguardIPv6LengthPrefix}"
+      address = with wireguardPeers.desktop; [
+        "${IPv4}/24"
+        "${IPv6}/64"
       ];
 
       # Otherwise, it will autostart every bootup when I need it only at few

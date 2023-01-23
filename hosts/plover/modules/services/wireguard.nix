@@ -4,12 +4,17 @@
 # this host so better stay focused on the hardware configuration on this host.
 let
   acmeName = "wireguard.${config.networking.domain}";
-  networks = import ../hardware/networks.nix;
   inherit (builtins) toString;
-  inherit (networks) wireguardIPv6 wireguardIPv6LengthPrefix wireguardPort;
+  inherit (import ../hardware/networks.nix)
+    privateIP' privateIPv6'
+    wireguardPort wireguardPeers;
 
   wireguardIFName = "wireguard0";
-  wireguardAllowedIPs = [ "172.45.1.2/24" "${wireguardIPv6}/${toString wireguardIPv6LengthPrefix}" ];
+
+  wireguardAllowedIPs = [ privateIP' privateIPv6' ];
+
+  desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/32" "${IPv6}/128" ];
+  phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
 in
 {
   environment.systemPackages = [ pkgs.wireguard-tools ];
@@ -34,7 +39,7 @@ in
           wireguardPeerConfig = {
             PublicKey = lib.readFile ../../../ni/files/wireguard/wireguard-public-key-ni;
             PresharedKeyFile = config.sops.secrets."plover/wireguard/preshared-keys/ni".path;
-            AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
+            AllowedIPs = lib.concatStringsSep "," (desktopPeerAddresses ++ wireguardAllowedIPs);
           };
         }
 
@@ -43,7 +48,7 @@ in
           wireguardPeerConfig = {
             PublicKey = lib.readFile ../../files/wireguard/wireguard-public-key-phone;
             PresharedKeyFile = config.sops.secrets."plover/wireguard/preshared-keys/phone".path;
-            AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
+            AllowedIPs = lib.concatStringsSep "," (phonePeerAddresses ++ wireguardAllowedIPs);
           };
         }
       ];
@@ -51,12 +56,9 @@ in
 
     networks."99-${wireguardIFName}" = {
       matchConfig.Name = wireguardIFName;
-      address = [
-        # Private IP address.
-        "172.45.1.1/32"
-
-        # Private IPv6 address. Just arbitrarily chosen.
-        "${wireguardIPv6}1/${toString wireguardIPv6LengthPrefix}"
+      address = with wireguardPeers.server; [
+        "${IPv4}/24"
+        "${IPv6}/64"
       ];
     };
   };

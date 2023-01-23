@@ -15,11 +15,9 @@ rec {
 
   # The private network for this host.
   privateNetworkGatewayIP = "172.16.0.1/32";
-  privateNetworkServicesPart = "172.23.0";
-  privateNetworkHostPart = hostPart: "${privateNetworkServicesPart}.${toString hostPart}";
   preferredInternalTLD = "internal";
 
-  privateIP  = privateNetworkHostPart 1;
+  privateIP  = "172.23.0.2";
   privateIPPrefixLength = 16;
   privateIP' = "${privateIPv6}/${toString privateIPv6PrefixLength}";
 
@@ -29,8 +27,24 @@ rec {
   privateIPv6' = "${privateIPv6}/${toString privateIPv6PrefixLength}";
 
   # Wireguard-related things.
-  wireguardIPv4 = "174";
-  wireguardIPv6 = "fdee:b0de:54e6:ae74::";
-  wireguardIPv6LengthPrefix = 64;
   wireguardPort = 51820;
+  wireguardIPHostPart = "172.23.152";
+  wireguardIPHostCreate = interfacePart: "${wireguardIPHostPart}.${toString interfacePart}";
+  wireguardIPv6Prefix = "fdee:b0de:54e6:ae74::";
+  wireguardIPv6Create = interfacePart: "${wireguardIPv6Prefix}${toString interfacePart}";
+
+  wireguardPeers = {
+    server = {
+      IPv4 = wireguardIPHostCreate 1;
+      IPv6 = wireguardIPv6Create 1;
+    };
+    desktop = {
+      IPv4 = wireguardIPHostCreate 2;
+      IPv6 = wireguardIPv6Create 2;
+    };
+    phone = {
+      IPv4 = wireguardIPHostCreate 3;
+      IPv6 = wireguardIPv6Create 3;
+    };
+  };
 }
