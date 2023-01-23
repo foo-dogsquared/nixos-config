@@ -71,6 +71,23 @@ Though, you can easily create one from the command-line interface with `kcadm.sh
 Still, test the logins as indicated from the seed file.
 
 
+=== Networking guidelines
+
+Networking for a first-timer can be confusing (at least for me).
+So here's the documentation for what is the practices that are following here.
+
+- Internal services is mainly at `172.24.0.0/16`.
+- Public services is at an increment to the internal services IP address (i.e., `172.25.0.0/16`).
+- Wireguard interfaces are mainly at `10.2xx.0.0/16`.
+
+There are some general guidelines to keep in mind when assigning the IPs statically.
+
+- Servers are intended at `172.1.x.x` to `172.101.x.x`.
+- VPNs are at `10.2xx.x.x`.
+
+For more details, you can see the interfaces and their networking-related configuration in link:./modules/hardware/networks.nix[`./modules/hardware/networks.nix`].
+
+
 
 
 == Deploying it as a Google Compute instance
