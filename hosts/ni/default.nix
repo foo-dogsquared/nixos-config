@@ -57,7 +57,6 @@ in
     in
     getSecrets {
       ssh-key = { };
-      "ldap/password".owner = "nslcd";
       "wireguard/private-key" = {
         group = config.users.users.systemd-network.group;
         reloadUnits = [ "systemd-networkd.service" ];
@@ -206,19 +205,6 @@ in
   };
 
   system.stateVersion = "22.11"; # Yes! I read the comment!
-
-  # Trying to be very portable with LDAP.
-  users.ldap = {
-    enable = true;
-    base = "dc=foodogsquared,dc=one";
-    bind = {
-      distinguishedName = "cn=Manager,dc=foodogsquared,dc=one";
-      passwordFile = config.sops.secrets."ni/ldap/password".path;
-    };
-
-    daemon.enable = true;
-    server = "ldaps://ldap.foodogsquared.one/";
-  };
 
   # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
   # be used anywhere, we're configuring Wireguard here as a "client".
