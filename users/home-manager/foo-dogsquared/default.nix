@@ -54,7 +54,7 @@ in
     lfs.enable = true;
     userName = "Gabriel Arazas";
     userEmail = "foodogsquared@foodogsquared.one";
-    signing.key = "129AFC6B4ABD6B61";
+    signing.key = "ADE0C41DAB221FCC";
     extraConfig = {
       # This is taken from the official Git book, for future references.
       sendemail = {
@@ -62,6 +62,11 @@ in
         smtpencryption = "tls";
         smtpserverport = 587;
         smtpuser = "foodogsquared@mailbox.org";
+      };
+
+      alias = {
+        unstage = "reset HEAD --";
+        quick-rebase = "rebase --interactive --autostash --committer-date-is-author-date";
       };
 
       init.defaultBranch = "main";
