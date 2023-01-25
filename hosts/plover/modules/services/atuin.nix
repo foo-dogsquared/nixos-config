@@ -7,7 +7,7 @@ let
   inherit (import ../hardware/networks.nix) preferredInternalTLD interfaces;
 
   atuinDomain = "atuin.${config.networking.domain}.${preferredInternalTLD}";
-  host = interfaces.internal.IPv4;
+  host = interfaces.internal.IPv4.address;
 in
 {
   # Atuin sync server because why not.

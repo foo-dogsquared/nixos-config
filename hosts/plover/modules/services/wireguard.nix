@@ -53,8 +53,8 @@ in
     networks."99-${wireguardIFName}" = {
       matchConfig.Name = wireguardIFName;
       address = with interfaces.wireguard0; [
-        "${IPv4}/32"
-        "${IPv6}/128"
+        "${IPv4.address}/32"
+        "${IPv6.address}/128"
       ];
 
       routes = [

@@ -11,7 +11,7 @@ let
   keycloakDbName = if config.services.keycloak.database.createLocally then keycloakUser else config.services.keycloak.database.username;
 
   certs = config.security.acme.certs;
-  host = interfaces.internal.IPv4;
+  host = interfaces.internal.IPv4.address;
 in
 {
   # Hey, the hub for your application sign-in.

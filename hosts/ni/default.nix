@@ -9,8 +9,8 @@ let
     wireguardPeers;
 
   wireguardAllowedIPs = [
-    "${interfaces.internal.IPv4}/16"
-    "${interfaces.internal.IPv6}/64"
+    "${interfaces.internal.IPv4.address}/16"
+    "${interfaces.internal.IPv6.address}/64"
   ];
   wireguardIFName = "wireguard0";
 in
@@ -229,7 +229,7 @@ in
             PublicKey = lib.readFile ../plover/files/wireguard/wireguard-public-key-plover;
             PresharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
             AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
-            Endpoint = "${interfaces.main'.IPv4}:51820";
+            Endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
           };
         }
       ];

@@ -2,6 +2,7 @@
 
 let
   inherit (builtins) toString;
+  inherit (import ./modules/hardware/networks.nix) interfaces;
 
   # The head of the Borgbase hostname.
   hetzner-boxes-user = "u332477";
@@ -56,6 +57,10 @@ in
   services.fail2ban.ignoreIP = [
     "172.16.0.0/12"
     "fc00::/7"
+
+    # Those from the tunneling services.
+    "${interfaces.wireguard0.IPv4.address}/16"
+    "${interfaces.wireguard0.IPv6.address}/64"
   ];
 
   # TODO: Put the secrets to the respective service module.
