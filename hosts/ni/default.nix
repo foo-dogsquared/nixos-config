@@ -33,6 +33,7 @@ in
       isNormalUser = true;
       createHome = true;
       home = "/home/foo-dogsquared";
+      description = "Gabriel Arazas";
     })
   ];
 
@@ -213,6 +214,7 @@ in
   systemd.network = {
     netdevs."99-${wireguardIFName}" = {
       netdevConfig = {
+        Description = "Plover - internal";
         Name = wireguardIFName;
         Kind = "wireguard";
       };
@@ -244,10 +246,7 @@ in
 
       # Otherwise, it will autostart every bootup when I need it only at few
       # hours at a time.
-      linkConfig = {
-        ActivationPolicy = "manual";
-        RequiredForOnline = false;
-      };
+      linkConfig.ActivationPolicy = "manual";
 
       routes = [
         {
