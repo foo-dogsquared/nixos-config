@@ -20,13 +20,13 @@ in
   boot.initrd.availableKernelModules = [ "ata_piix" "virtio_pci" "virtio_scsi" "xhci_pci" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ "nvme" ];
 
-  fileSystems."/" = lib.mkOverride 2000 {
+  fileSystems."/" = {
     label = "nixos";
     fsType = "ext4";
     options = [ "defaults" ];
   };
 
-  fileSystems."/boot" = lib.mkOverride 2000 {
+  fileSystems."/boot" = {
     label = "boot";
     fsType = "vfat";
   };
