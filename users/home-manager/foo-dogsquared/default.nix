@@ -84,6 +84,20 @@ in
     };
   };
 
+  # My GitHub CLI setup.
+  programs.gh = {
+    enable = true;
+    extensions = with pkgs; [
+      gh-eco
+      gh-dash
+    ];
+
+    settings = {
+      git_protocol = "ssh";
+      prompt_enabled = true;
+    };
+  };
+
   # My music player setup, completely configured with Nix!
   programs.beets = {
     enable = true;
