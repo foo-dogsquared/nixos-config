@@ -66,9 +66,7 @@ in {
       # Run unpatched binaries with these!
       programs.nix-ld.enable = true;
       environment.systemPackages = with pkgs; [
-        nix-alien # Ambassador for the pre-compiled binaries.
         nix-index # locate but for the entire store directory.
-        nix-index-update # If you don't want to rebuild the entire thing and have the chance for the operation to slow down to the point of freezing then here's your chance.
         steam-run # For the heathens that still uses FHS.
       ];
 

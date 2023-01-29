@@ -33,9 +33,6 @@
     # Running unpatched binaries on NixOS! :O
     nix-ld.url = "github:Mic92/nix-ld";
     nix-ld.inputs.nixpkgs.follows = "nixpkgs";
-    nix-alien.url = "github:thiagokokada/nix-alien";
-    nix-alien.inputs.nixpkgs.follows = "nixpkgs";
-    nix-alien.inputs.flake-utils.follows = "flake-utils";
 
     # Generate your NixOS systems to various formats!
     nixos-generators.url = "github:nix-community/nixos-generators";
@@ -97,9 +94,6 @@
 
         # Access to NUR.
         inputs.nur.overlay
-
-        # Running unpatched binaries in NixOS?!!
-        inputs.nix-alien.overlays.default
       ];
 
       defaultSystem = inputs.flake-utils.lib.system.x86_64-linux;
