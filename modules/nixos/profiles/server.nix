@@ -31,12 +31,14 @@ in
       services.openssh = lib.mkDefault {
         enable = true;
 
-        # Both are good for hardening as it only requires the keyfiles.
-        passwordAuthentication = false;
-        permitRootLogin = "no";
+        settings = {
+          # Making it verbose for services such as fail2ban.
+          LogLevel = "VERBOSE";
 
-        # Making it verbose for services such as fail2ban.
-        logLevel = "VERBOSE";
+          # Both are good for hardening as it only requires the keyfiles.
+          PasswordAuthentication = "no";
+          PermitRootLogin = "no";
+        };
       };
 
       # Manage your servers like a Linux-using basement dweller with their
