@@ -134,14 +134,6 @@ in
     openldap
     wireguard-tools
 
-    (swh.swh-core.overrideAttrs (super: self: {
-      pythonPath = with swh; [
-        swh-fuse
-        swh-web-client
-        swh-model
-        swh-auth
-      ];
-    }))
   ];
 
   # Enable Guix service.
