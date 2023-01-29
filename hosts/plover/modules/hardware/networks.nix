@@ -56,8 +56,14 @@ rec {
 
     # /16 BLOCK for IPv4, /64 for IPv6.
     wireguard0 = {
-      IPv4.address = "10.210.0.1";
-      IPv6.address = "${privateIPv6Prefix}:12ae::";
+      IPv4 = {
+        address = "10.210.0.1";
+        gateway = widdeerLan;
+      };
+      IPv6 = {
+        address = "${privateIPv6Prefix}:12ae::";
+        gateway = ipv6Gateway;
+      };
     };
   };
 
