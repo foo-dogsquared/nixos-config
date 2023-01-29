@@ -91,7 +91,7 @@ in
       security.protectKernelImage = true;
 
       # Hardened config equals hardened kernel.
-      boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_0_hardened;
+      boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_1_hardened;
 
       # Be STRICT! MUAHAHAHAHA!!!!
       services.fail2ban = {
