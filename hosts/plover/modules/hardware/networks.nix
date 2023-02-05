@@ -31,25 +31,13 @@ rec {
     };
 
     # /16 block for IPv4, /64 for IPv6.
-    main = {
+    internal = {
       IPv4 = {
         address = "172.27.0.1";
         gateway = ploverInternalNetworkGateway;
       };
       IPv6 = {
         address = "${privateIPv6Prefix}:1::";
-        gateway = ipv6Gateway;
-      };
-    };
-
-    # /16 block for IPv4, /64 for IPv6.
-    internal = {
-      IPv4 = {
-        address = "172.27.0.2";
-        gateway = ploverInternalNetworkGateway;
-      };
-      IPv6 = {
-        address = "${privateIPv6Prefix}:2::";
         gateway = ipv6Gateway;
       };
     };

@@ -5,11 +5,11 @@
 # from nixos-generators.
 let
   inherit (builtins) toString;
-  inherit (import ./networks.nix) interfaces;
+  inherit (import ./networks.nix) interfaces privateIPv6Prefix;
 
   # This is just referring to the same interface just with alternative names.
-  mainEthernetInterfaceNames = [ "ens10" "enp0s10" ];
-  internalEthernetInterfaceNames = [ "ens11" "enp0s11" ];
+  mainEthernetInterfaceNames = [ "ens3" "enp0s3" ];
+  internalEthernetInterfaceNames = [ "ens10" "enp0s10" ];
 in
 {
   imports = [
@@ -58,63 +58,33 @@ in
     # For more information, you can look at Hetzner documentation from
     # https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/
     networks = {
-      "20-wan" = {
+      "10-wan" = with interfaces.main'; {
         matchConfig.Name = lib.concatStringsSep " " mainEthernetInterfaceNames;
 
-        # Setting the primary static IPs.
-        address = with interfaces; [
-          # The public IPs.
-          "${main'.IPv4.address}/32"
-          "${main'.IPv6.address}/128"
-        ];
+        # Setting up IPv6.
+        address = [ "${IPv6.address}/64" ];
+        gateway = [ IPv6.gateway ];
 
-        networkConfig.IPForward = true;
-
-        gateway = [
-          interfaces.main'.IPv4.gateway
-          interfaces.main'.IPv6.gateway
-        ];
-
-        routes = [
-          { routeConfig.Gateway = interfaces.main'.IPv6.gateway; }
-          { routeConfig.Destination = interfaces.main'.IPv4.address; }
-
-          {
-            routeConfig = {
-              Gateway = interfaces.main'.IPv4.gateway;
-              GatewayOnLink = true;
-            };
-          }
-        ];
+        networkConfig = {
+          DHCP = "yes";
+          IPForward = true;
+          IPMasquerade = "ipv4";
+        };
       };
 
+      # The internal server.
       "20-lan" = with interfaces.internal; {
         matchConfig.Name = lib.concatStringsSep " " internalEthernetInterfaceNames;
+
         address = [
-          "${IPv4.address}/16"
-          "${IPv6.address}/64"
+          "${IPv4.address}/32"
+          "${IPv6.address}/128"
         ];
+
         gateway = [
           IPv4.gateway
           IPv6.gateway
         ];
-
-        routes = [
-          { routeConfig.Gateway = IPv6.gateway; }
-          { routeConfig.Destination = IPv4.address; }
-
-          {
-            routeConfig = {
-              Gateway = IPv4.gateway;
-              GatewayOnLink = true;
-            };
-          }
-        ];
-      };
-
-      "60-internal" = {
-        matchConfig.Name = "ens*";
-        networkConfig.DHCP = "yes";
       };
     };
   };
