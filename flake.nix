@@ -134,6 +134,9 @@
             ++ extraModules;
         };
 
+      # The shared configuration for the entire list of hosts for this cluster.
+      # Take note to only set as minimal configuration as possible since we're
+      # also using this with the stable version of nixpkgs.
       hostSharedConfig = { config, lib, pkgs, ... }: {
         # Some defaults for evaluating modules.
         _module.check = true;
