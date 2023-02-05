@@ -94,7 +94,12 @@ in
 
     settings = {
       git_protocol = "ssh";
-      prompt_enabled = true;
+      prompt = "enabled";
+
+      aliases = {
+        pc = "pr checkout";
+        pv = "pr view";
+      };
     };
   };
 
