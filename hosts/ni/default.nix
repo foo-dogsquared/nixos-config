@@ -195,57 +195,24 @@ in
   # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
   # be used anywhere, we're configuring Wireguard here as a "client".
   #
-  # We're also setting up this configuration as a forwarder
-  systemd.network = {
-    netdevs."99-${wireguardIFName}" = {
-      netdevConfig = {
-        Description = "Plover - internal";
-        Name = wireguardIFName;
-        Kind = "wireguard";
-      };
+  # We're using wg-quick here as this host is using network managers that can
+  # differ between workflows (i.e., GNOME and KDE Plasma using NetworkManager,
+  # something else using systemd-networkd).
+  networking.wg-quick.interfaces.wireguard0 = {
+    privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
 
-      wireguardConfig = {
-        PrivateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
-        ListenPort = wireguardPort;
-      };
+    address = with wireguardPeers.desktop; [
+      "${IPv4}/32"
+      "${IPv6}/128"
+    ];
 
-      wireguardPeers = [
-        # Plover server peer. This is the main "server" of the network.
-        {
-          wireguardPeerConfig = {
-            PublicKey = lib.readFile ../plover/files/wireguard/wireguard-public-key-plover;
-            PresharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
-            AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
-            Endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
-          };
-        }
-      ];
-    };
-
-    networks."99-${wireguardIFName}" = {
-      matchConfig.Name = wireguardIFName;
-      address = with wireguardPeers.desktop; [
-        "${IPv4}/32"
-        "${IPv6}/128"
-      ];
-
-      # Otherwise, it will autostart every bootup when I need it only at few
-      # hours at a time.
-      linkConfig.ActivationPolicy = "manual";
-
-      routes = [
-        {
-          routeConfig = {
-            Gateway = wireguardPeers.server.IPv4;
-            Destination = let
-              ip = lib.strings.splitString "." wireguardPeers.server.IPv4;
-              properRange = lib.lists.take 3 ip ++ [ "0" ];
-              ip' = lib.concatStringsSep "." properRange;
-            in "${ip'}/16";
-            GatewayOnLink = true;
-          };
-        }
-      ];
-    };
+    peers = [
+      {
+        publicKey = lib.readFile ../plover/files/wireguard/wireguard-public-key-plover;
+        presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
+        allowedIPs = wireguardAllowedIPs;
+        endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
+      }
+    ];
   };
 }
