@@ -97,13 +97,6 @@ in
         desktopManager.gnome.enable = true;
       };
 
-      xdg.portal = {
-        enable = true;
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-wlr
-        ];
-      };
-
       # All GNOME-related additional options.
       services.gnome = {
         core-os-services.enable = true;
