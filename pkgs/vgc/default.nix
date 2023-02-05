@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , wrapQtAppsHook
+, qtbase
 , cmake
 , python3
 , harfbuzz
@@ -14,24 +15,32 @@
 # reproducible.
 stdenv.mkDerivation rec {
   pname = "vgc";
-  version = "unstable-2022-08-27";
+  version = "unstable-2023-02-05";
 
   src = fetchFromGitHub {
     owner = "vgc";
     repo = "vgc";
-    rev = "e7db360f27b059c3dfd0e002c6b29f6a558edd47";
-    sha256 = "sha256-yHQKOMBfMVS9+mwulgTEFOl9bE5CA+psJUaE432YTmo=";
+    rev = "8e8d958ab9f7fa6f741346d60f17af44d7abb592";
+    sha256 = "sha256-84dckIOrHmxVX7U7VM1Le6tEqG1cJYaAfBcbKqJ6Ros=";
     fetchSubmodules = true;
   };
 
-  nativeBuildInputs = [ wrapQtAppsHook cmake harfbuzz ];
+  patches = [
+    ./patches/set-reproducible-build.patch
+  ];
 
-  buildInputs = [ python3 git freetype libGLU ];
+  nativeBuildInputs = [ wrapQtAppsHook cmake ];
+
+  buildInputs = [
+    python3
+    git
+    freetype
+    harfbuzz
+    libGLU
+    qtbase
+  ];
 
   meta = with lib; {
-    # Harfbuzz CMake path is not correct. See NixOS/nixpkgs#180054 for the
-    # specific issue. Wait until this has been resolved.
-    broken = true;
     homepage = "https://www.vgc.io/";
     description =
       "Upcoming suite of vector-drawing applications that makes use of Vector Graphics Complex (VGC)";

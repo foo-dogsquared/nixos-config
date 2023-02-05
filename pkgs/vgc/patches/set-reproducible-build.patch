@@ -1,0 +1,15 @@
+diff --git a/tools/version.py b/tools/version.py
+index feb53ce..6f03c85 100644
+--- a/tools/version.py
++++ b/tools/version.py
+@@ -320,8 +320,8 @@ if __name__ == "__main__":
+     res += "buildCompilerVersion=" + buildCompilerVersion + "\n"
+     res += "buildArchitecture=" + buildArchitecture + "\n"
+     res += "buildConfig=" + buildConfig + "\n"
+-    res += "buildDate=" + now.date().isoformat() + "\n"
+-    res += "buildTime=" + now.time().isoformat(timespec="seconds") + "\n"
++    res += "buildDate=" + "1970-01-01" + "\n"
++    res += "buildTime=" + "00:00:00" + "\n"
+ 
+     # Write to file
+     versionDir = Path(buildDir) / buildConfig / "resources" / "core"
