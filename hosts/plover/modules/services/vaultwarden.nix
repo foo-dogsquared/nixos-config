@@ -22,7 +22,6 @@ in
       # Configuring the server.
       ROCKET_ADDRESS = "127.0.0.1";
       ROCKET_PORT = 8222;
-      ROCKET_LOG = "critical";
 
       # Ehh... It's only a few (or even one) users anyways so nah. Since this
       # instance will not configure SMTP server, this pretty much means
