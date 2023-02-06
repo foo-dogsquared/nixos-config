@@ -157,7 +157,6 @@ If you want to create with `hcloud`, however...
 [source, shell]
 ----
 hcloud network create --name plover-local --ip-range 172.16.0.0/12
-hcloud network create --name wide-wide-wan --ip-range 10.0.0.0/8
 ----
 
 To deploy this to Hetzner Cloud, just initialize a server and run link:https://github.com/elitak/nixos-infect/[nixos-infect] script.
@@ -177,7 +176,7 @@ You could also easily create a server with `hcloud` with the following command:
 ----
 hcloud server create --location hel1 --type cx21 --image ubuntu-22.04 \
     --firewall tcp-fw --firewall udp-fw \
-    --network plover-local --network wide-wide-wan \
+    --network plover-local \
     --user-data-from-file ./files/hcloud/hcloud-user-data.yml \
     --ssh-key foodogsquared@foodogsquared.one \
     --name nixos-plover
