@@ -5,11 +5,15 @@
 # from nixos-generators.
 let
   inherit (builtins) toString;
-  inherit (import ./networks.nix) interfaces privateIPv6Prefix;
+  inherit (import ./networks.nix) interfaces preferredInternalTLD privateIPv6Prefix;
 
   # This is just referring to the same interface just with alternative names.
   mainEthernetInterfaceNames = [ "ens3" "enp0s3" ];
   internalEthernetInterfaceNames = [ "ens10" "enp0s10" ];
+
+  internalDomains = [
+    "~${config.networking.domain}.${preferredInternalTLD}"
+  ];
 in
 {
   imports = [
@@ -50,6 +54,19 @@ in
     dhcpcd.enable = false;
   };
 
+  # The internal DNS server of choice.
+  services.dnsmasq = {
+    enable = true;
+    settings.listen-address = with interfaces.internal; [ IPv4.address IPv6.address ];
+  };
+
+  # The main DNS server (not exactly by choice).
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+    domains = internalDomains;
+  };
+
   # The interface configuration is based from the following discussion:
   # https://discourse.nixos.org/t/nixos-on-hetzner-cloud-servers-ipv6/221/
   systemd.network = {
@@ -68,7 +85,6 @@ in
         networkConfig = {
           DHCP = "yes";
           IPForward = true;
-          IPMasquerade = "ipv4";
         };
       };
 
@@ -85,11 +101,12 @@ in
           IPv4.gateway
           IPv6.gateway
         ];
+
+        networkConfig = {
+          DNS = [ interfaces.internal.IPv4.address ];
+          Domains = lib.concatStringsSep " " internalDomains;
+        };
       };
     };
   };
-
-  # This is to look out for any errors that will occur for my networking setup
-  # which is always a possibility.
-  systemd.services.systemd-networkd.serviceConfig.Environment = "SYSTEMD_LOG_LEVEL=info";
 }

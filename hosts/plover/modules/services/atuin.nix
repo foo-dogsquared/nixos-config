@@ -6,7 +6,7 @@
 let
   inherit (import ../hardware/networks.nix) preferredInternalTLD interfaces;
 
-  atuinDomain = "atuin.${config.networking.domain}.${preferredInternalTLD}";
+  atuinInternalDomain = "atuin.${config.networking.domain}.${preferredInternalTLD}";
   host = interfaces.internal.IPv4.address;
 in
 {
@@ -31,8 +31,11 @@ in
     '';
   };
 
+  # Attaching the domain name to the DNS server.
+  services.dnsmasq.settings.address = [ "/${atuinInternalDomain}/${host}" ];
+
   # Putting it altogether in the reverse proxy of choice.
-  services.nginx.virtualHosts."${atuinDomain}" = {
+  services.nginx.virtualHosts."${atuinInternalDomain}" = {
     locations."/" = {
       proxyPass = "http://${host}:${toString config.services.atuin.port}";
     };

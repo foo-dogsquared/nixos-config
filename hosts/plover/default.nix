@@ -114,11 +114,6 @@ in
       };
     };
 
-  services.resolved = {
-    enable = true;
-    dnssec = "true";
-  };
-
   # All of the keys required to deploy the secrets.
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 

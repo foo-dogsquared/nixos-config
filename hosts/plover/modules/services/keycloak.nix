@@ -2,9 +2,10 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (import ../hardware/networks.nix) interfaces;
+  inherit (import ../hardware/networks.nix) preferredInternalTLD interfaces;
 
   authDomain = "auth.${config.networking.domain}";
+  authInternalDomain = "auth.${config.networking.domain}.${preferredInternalTLD}";
 
   # This is also set on our own.
   keycloakUser = config.services.keycloak.database.username;
@@ -68,20 +69,31 @@ in
     ];
   };
 
-  # Attaching it to the reverse proxy of choice.
-  services.nginx.virtualHosts."${authDomain}" = {
-    forceSSL = true;
-    enableACME = true;
+  # Attach an domain name to the DNS server.
+  services.dnsmasq.settings.address = [ "/${authInternalDomain}/${host}" ];
 
-    # This is based from the reverse proxy guide from the official
-    # documentation at https://www.keycloak.org/server/reverseproxy.
-    locations = let
-      keycloakPath = path: "http://${host}:${toString config.services.keycloak.settings.http-port}";
-    in
-    lib.listToAttrs
-      (lib.lists.map
-        (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
-        [ "/js/" "/realms/" "/resources/" "/robots.txt" ]);
+  # Attaching it to the reverse proxy of choice.
+  services.nginx.virtualHosts = {
+    "${authDomain}" = {
+      forceSSL = true;
+      enableACME = true;
+
+      # This is based from the reverse proxy guide from the official
+      # documentation at https://www.keycloak.org/server/reverseproxy.
+      locations = let
+        keycloakPath = path: "http://${host}:${toString config.services.keycloak.settings.http-port}";
+      in
+      lib.listToAttrs
+        (lib.lists.map
+          (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
+          [ "/js/" "/realms/" "/resources/" "/robots.txt" ]);
+    };
+
+    "${authInternalDomain}" = {
+      locations."/" = {
+        proxyPass = "http://${host}:${toString config.services.keycloak.settings.http-port}";
+      };
+    };
   };
 
   # Configuring fail2ban for this services which is only present as a neat
