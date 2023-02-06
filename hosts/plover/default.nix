@@ -44,12 +44,9 @@ in
     nftables.enable = true;
     domain = "foodogsquared.one";
     firewall = {
-      enable = false;
+      enable = true;
       allowedTCPPorts = [
         22 # Secure Shells.
-
-        389 # LDAP servers.
-        636 # LDAPS servers.
       ];
     };
   };
