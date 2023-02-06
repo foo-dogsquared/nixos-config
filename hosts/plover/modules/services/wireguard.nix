@@ -9,8 +9,8 @@ let
 
   wireguardIFName = "wireguard0";
 
-  desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/32" "${IPv6}/128" ];
-  phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
+  desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/24" "${IPv6}/96" ];
+  phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/24" "${IPv6}/96" ];
 in
 {
   environment.systemPackages = [ pkgs.wireguard-tools ];

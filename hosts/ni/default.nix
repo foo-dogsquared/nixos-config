@@ -201,14 +201,16 @@ in
   networking.wg-quick.interfaces.wireguard0 = {
     privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
 
+    dns = with wireguardPeers.server; [ IPv4 IPv6 ];
+
     address = with wireguardPeers.desktop; [
-      "${IPv4}/32"
-      "${IPv6}/128"
+      "${IPv4}/24"
+      "${IPv6}/96"
     ];
 
     peers = [
       {
-        publicKey = lib.readFile ../plover/files/wireguard/wireguard-public-key-plover;
+        publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-plover);
         presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
         allowedIPs = wireguardAllowedIPs;
         endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
