@@ -5,12 +5,16 @@
 let
   acmeName = "wireguard.${config.networking.domain}";
   inherit (builtins) toString;
-  inherit (import ../hardware/networks.nix) interfaces wireguardPort wireguardPeers;
+  inherit (import ../hardware/networks.nix) interfaces wireguardPort wireguardPeers preferredInternalTLD;
 
   wireguardIFName = "wireguard0";
 
   desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/24" "${IPv6}/96" ];
   phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/24" "${IPv6}/96" ];
+
+  internalDomains = [
+    "~${config.networking.domain}.${preferredInternalTLD}"
+  ];
 in
 {
   environment.systemPackages = [ pkgs.wireguard-tools ];
@@ -52,6 +56,18 @@ in
 
     networks."99-${wireguardIFName}" = {
       matchConfig.Name = wireguardIFName;
+
+      networkConfig = {
+        DNS = with interfaces.internal; let
+          internalDNSPort = config.services.dnsmasq.settings.port;
+        in [
+          "${IPv4.address}:${toString internalDNSPort}"
+          "${IPv6.address}:${toString internalDNSPort}"
+        ];
+        Domains = lib.concatStringsSep " " internalDomains;
+        DNSDefaultRoute = false;
+      };
+
       address = with interfaces.wireguard0; [
         "${IPv4.address}/32"
         "${IPv6.address}/128"

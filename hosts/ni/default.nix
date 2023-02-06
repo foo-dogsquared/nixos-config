@@ -203,8 +203,6 @@ in
   networking.wg-quick.interfaces.wireguard0 = {
     privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
 
-    dns = with wireguardPeers.server; [ IPv4 IPv6 ];
-
     address = with wireguardPeers.desktop; [
       "${IPv4}/24"
       "${IPv6}/96"
