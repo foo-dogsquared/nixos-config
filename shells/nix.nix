@@ -1,6 +1,15 @@
 # For usual Nix projects such as overlays, package repositories, and whatnot.
 # Also, it's fun to have a file named `nix.nix`.
-{ mkShell, lib, nixfmt, jq, rnix-lsp, rnix-hashes, nix-tree }:
+{ mkShell
+, lib
+, jq
+, nix-init
+, nix-tree
+, nixfmt
+, nurl
+, rnix-hashes
+, rnix-lsp
+}:
 
 mkShell {
   packages = [
@@ -9,5 +18,7 @@ mkShell {
     rnix-hashes # Quick utility for converting hashes.
     rnix-lsp # Make your editing experience nicer with a nice language server.
     nix-tree # Suprisingly nice exploration tool for your packages in the store directory.
+    nurl # Nice way to catch up with some things.
+    nix-init # Scaffolding out-of-tree packages (NO SUBSTANDARD MATERIALS ALLOWED!!!).
   ];
 }
