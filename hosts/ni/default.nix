@@ -139,13 +139,6 @@ in
   # Enable Guix service.
   services.guix.enable = true;
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot = {
-    enable = true;
-    netbootxyz.enable = true;
-  };
-  boot.loader.efi.canTouchEfiVariables = true;
-
   # Set your time zone.
   time.timeZone = "Asia/Manila";
 
