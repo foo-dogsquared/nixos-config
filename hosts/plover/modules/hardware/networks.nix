@@ -21,11 +21,11 @@ rec {
       # * https://docs.hetzner.com/cloud/networks/faq/#are-any-ip-addresses-reserved
       # * https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/#gateway
       IPv4 = {
-        address = "95.217.212.19";
+        address = "65.109.224.213";
         gateway = "172.31.1.1";
       };
       IPv6 = {
-        address = "2a01:4f9:c011:a448::1";
+        address = "2a01:4f9:c012:607a::1";
         gateway = ipv6Gateway;
       };
     };
