@@ -134,6 +134,8 @@ in
     openldap
     wireguard-tools
 
+    # For debugging build environments in Nix packages.
+    cntr
   ];
 
   # Enable Guix service.
