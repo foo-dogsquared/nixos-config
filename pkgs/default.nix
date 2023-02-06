@@ -75,7 +75,7 @@ let
       smile = callPackage ./smile { };
       vipsdisp = callPackage ./vipsdisp { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
-      vgc = libsForQt5.callPackage ./vgc { };
+      vgc = qt6Packages.callPackage ./vgc { };
       watc = callPackage ./watc { };
       wayback = callPackage ./wayback.nix { };
       wzmach = callPackage ./wzmach { };
