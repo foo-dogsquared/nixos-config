@@ -84,7 +84,12 @@ in
 
         networkConfig = {
           DHCP = "yes";
+          LinkLocalAddressing = "ipv6";
           IPForward = true;
+          DNS = [
+            "2a01:4ff:ff00::add:2"
+            "2a01:4ff:ff00::add:1"
+          ];
         };
       };
 
