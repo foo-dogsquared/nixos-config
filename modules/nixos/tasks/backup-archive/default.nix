@@ -119,7 +119,7 @@ in
 
     programs.ssh.extraConfig = ''
       Host ${hetzner-boxes-server}
-       IdentityFile ${config.sops.secrets."borg-backup/ssh-key".path}
+        IdentityFile ${config.sops.secrets."borg-backup/ssh-key".path}
     '';
   };
 }
