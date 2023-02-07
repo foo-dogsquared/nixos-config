@@ -67,6 +67,15 @@ in
     }];
   };
 
+  # Making it comply with PostgreSQL secure schema usage pattern.
+  systemd.services.vaultwarden = {
+    path = [ config.services.postgresql.package ];
+    preStart = lib.mkAfter ''
+      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${vaultwardenUser}';" \
+        | grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${vaultwardenUser};"
+    '';
+  };
+
   # Attaching it to our reverse proxy of choice.
   services.nginx.virtualHosts."${passwordManagerDomain}" = {
     forceSSL = true;

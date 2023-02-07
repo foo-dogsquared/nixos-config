@@ -6,6 +6,8 @@
 
 let
   codeForgeDomain = "code.${config.networking.domain}";
+
+  giteaDatabaseUser = config.services.gitea.user;
 in
 {
   services.gitea = {
@@ -121,6 +123,15 @@ in
         "SCHEMA ${config.services.gitea.user}" = "ALL PRIVILEGES";
       };
     }];
+  };
+
+  # Setting up Gitea for PostgreSQL secure schema usage.
+  systemd.services.gitea = {
+    path = [ config.services.postgresql.package ];
+    preStart = lib.mkAfter ''
+      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${giteaDatabaseUser}';" \
+        grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${giteaDatabaseUser};"
+    '';
   };
 
   # Attaching it altogether with the reverse proxy of choice.

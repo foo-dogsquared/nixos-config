@@ -46,15 +46,6 @@ in
     sslCertificateKey = "${certs."${authDomain}".directory}/key.pem";
   };
 
-  # Modifying it a little bit for per-user schema.
-  systemd.services.keycloak = {
-    path = [ config.services.postgresql.package ];
-    preStart = ''
-      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${keycloakDbName}';" \
-        grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS keycloak;"
-    '';
-  };
-
   # Configuring the database of choice to play nicely with the service.
   services.postgresql = {
     ensureDatabases = [ keycloakDbName ];
@@ -67,6 +58,15 @@ in
         };
       }
     ];
+  };
+
+  # Modifying it a little bit for per-user schema.
+  systemd.services.keycloak = {
+    path = [ config.services.postgresql.package ];
+    preStart = lib.mkAfter ''
+      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${keycloakUser}';" \
+        | grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${keycloakUser};"
+    '';
   };
 
   # Attach an domain name to the DNS server.
