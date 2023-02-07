@@ -22,10 +22,9 @@
     # up one with an unresponsive server response.
     appendHttpConfig = ''
       server {
-        listen 0.0.0.0:80 default_server;
+        listen 80 default_server;
         listen [::]:80 default_server;
-        server_name _;
-        return 418;
+        return 444;
       }
     '';
   };
