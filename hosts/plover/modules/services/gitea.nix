@@ -106,11 +106,10 @@ in
 
   # Disk space is always assumed to be limited so we're really only limited
   # with 2 dumps.
-  systemd.services.gitea-dump.serviceConfig = {
-    ExecStartPre = pkgs.writeShellScript "gitea-dump-limit" ''
-      ${pkgs.findutils}/bin/find ${config.services.gitea.dump.backupDir} -mtime 14 -maxdepth 1 -type f -delete
-    '';
-  };
+  systemd.services.gitea-dump.preStart = lib.mkAfter ''
+    ${pkgs.findutils}/bin/find ${lib.escapeShellArg config.services.gitea.dump.backupDir} \
+      -mtime 14 -maxdepth 1 -type f -delete
+  '';
 
   # Making sure this plays nicely with the database service of choice. Take
   # note, we're mainly using secure schema usage pattern here as described from
