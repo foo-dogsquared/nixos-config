@@ -12,7 +12,7 @@ let
   keycloakDbName = if config.services.keycloak.database.createLocally then keycloakUser else config.services.keycloak.database.username;
 
   certs = config.security.acme.certs;
-  host = interfaces.internal.IPv4.address;
+  host = "127.0.0.1";
 in
 {
   # Hey, the hub for your application sign-in.
@@ -68,9 +68,6 @@ in
         | grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${keycloakUser};"
     '';
   };
-
-  # Attach an domain name to the DNS server.
-  services.dnsmasq.settings.address = [ "/${authInternalDomain}/${host}" ];
 
   # Attaching it to the reverse proxy of choice.
   services.nginx.virtualHosts = {

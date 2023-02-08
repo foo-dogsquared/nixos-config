@@ -30,9 +30,6 @@ in
     '';
   };
 
-  # Attaching the domain name to the DNS server.
-  services.dnsmasq.settings.address = [ "/${atuinInternalDomain}/${host}" ];
-
   # Putting it altogether in the reverse proxy of choice.
   services.nginx.virtualHosts."${atuinInternalDomain}" = {
     locations."/" = {

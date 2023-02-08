@@ -6,6 +6,16 @@ let
 in
 rec {
   privateIPv6Prefix = "fdee:b0de:5685";
+
+  clientNetworks = [
+    "172.24.0.0/13"
+    "10.128.0.0/9"
+  ];
+  serverNetworks = [
+    "172.16.0.0/13"
+    "10.0.0.0/9"
+  ];
+
   interfaces = let
     ploverInternalNetworkGateway = "172.16.0.1";
     widdeerLan = "10.0.0.1";
@@ -77,6 +87,21 @@ rec {
     phone = {
       IPv4 = "${wireguardIPHostPart}.3";
       IPv6 = "${wireguardIPv6Prefix}3";
+    };
+  };
+
+  secondaryNameServers = {
+    "ns1.first-ns.de." = {
+      IPv4 = [ "213.239.242.238" ];
+      IPv6 = [ "2a01:4f8:0:a101::a:1" ];
+    };
+    "robotns2.second-ns.de." = {
+      IPv4 = [ "213.133.105.6" ];
+      IPv6 = [ "2a01:4f8:d0a:2004::2" ];
+    };
+    "robotns3.second-ns.com." = {
+      IPv4 = [ "193.47.99.3" ];
+      IPv6 = [ "2001:67c:192c::add:a3" ];
     };
   };
 }

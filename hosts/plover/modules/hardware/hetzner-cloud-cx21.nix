@@ -50,15 +50,6 @@ in
     dhcpcd.enable = false;
   };
 
-  # The internal DNS server of choice.
-  services.dnsmasq = {
-    enable = true;
-    settings = {
-      listen-address = with interfaces.internal; [ IPv4.address IPv6.address ];
-      port = 3908;
-    };
-  };
-
   # The main DNS server (not exactly by choice).
   services.resolved = {
     enable = true;
@@ -102,6 +93,11 @@ in
         gateway = [
           IPv4.gateway
           IPv6.gateway
+        ];
+
+        networkConfig.DNS = [
+          "127.0.0.1"
+          "::1"
         ];
       };
     };

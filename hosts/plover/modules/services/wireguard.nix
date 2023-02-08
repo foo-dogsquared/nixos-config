@@ -58,11 +58,9 @@ in
       matchConfig.Name = wireguardIFName;
 
       networkConfig = {
-        DNS = with interfaces.internal; let
-          internalDNSPort = config.services.dnsmasq.settings.port;
-        in [
-          "${IPv4.address}:${toString internalDNSPort}"
-          "${IPv6.address}:${toString internalDNSPort}"
+        DNS = with interfaces.internal; [
+          "127.0.0.1"
+          "::1"
         ];
         Domains = lib.concatStringsSep " " internalDomains;
         DNSDefaultRoute = false;

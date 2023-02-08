@@ -22,6 +22,9 @@ in
     # Hardened profile from nixpkgs.
     "${modulesPath}/profiles/hardened.nix"
 
+    # The primary DNS server that is completely hidden.
+    ./modules/services/coredns.nix
+
     ./modules/services/nginx.nix
 
     # The database of choice which is used by most self-managed services on
