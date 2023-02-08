@@ -25,6 +25,7 @@ in
     # The primary DNS server that is completely hidden.
     ./modules/services/coredns.nix
 
+    # The reverse proxy of choice.
     ./modules/services/nginx.nix
 
     # The database of choice which is used by most self-managed services on

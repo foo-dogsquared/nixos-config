@@ -127,7 +127,11 @@ in
   # Setting up Gitea for PostgreSQL secure schema usage.
   systemd.services.gitea = {
     path = [ config.services.postgresql.package ];
-    preStart = lib.mkAfter ''
+
+    # Gitea service module will have to set up certain things first which is
+    # why we have to go first.
+    preStart = lib.mkBefore ''
+      # Setting up the appropriate schema for PostgreSQL secure schema usage.
       psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${giteaDatabaseUser}';" \
         grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${giteaDatabaseUser};"
     '';

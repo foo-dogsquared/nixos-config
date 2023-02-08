@@ -71,6 +71,7 @@ in
   systemd.services.vaultwarden = {
     path = [ config.services.postgresql.package ];
     preStart = lib.mkAfter ''
+      # Setting up the appropriate schema for PostgreSQL secure schema usage.
       psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${vaultwardenUser}';" \
         | grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${vaultwardenUser};"
     '';
