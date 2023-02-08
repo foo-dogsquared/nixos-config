@@ -65,9 +65,6 @@ rec {
     };
   };
 
-  # The private network for this host.
-  preferredInternalTLD = "internal";
-
   # Wireguard-related things.
   wireguardPort = 51820;
   wireguardIPHostPart = "10.210.0";

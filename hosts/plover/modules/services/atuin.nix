@@ -4,9 +4,9 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (import ../hardware/networks.nix) preferredInternalTLD interfaces;
+  inherit (import ../hardware/networks.nix) interfaces;
 
-  atuinInternalDomain = "atuin.${config.networking.domain}.${preferredInternalTLD}";
+  atuinInternalDomain = "atuin.${config.networking.fqdn}";
   host = interfaces.internal.IPv4.address;
 in
 {

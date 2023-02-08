@@ -4,7 +4,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  ldapDomain = "ldap.${config.networking.domain}";
+  ldapDomain = "ldap.${config.networking.fqdn}";
 in
 {
   services.portunus = {

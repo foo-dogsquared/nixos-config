@@ -5,7 +5,7 @@
 let
   acmeName = "wireguard.${config.networking.domain}";
   inherit (builtins) toString;
-  inherit (import ../hardware/networks.nix) interfaces wireguardPort wireguardPeers preferredInternalTLD;
+  inherit (import ../hardware/networks.nix) interfaces wireguardPort wireguardPeers;
 
   wireguardIFName = "wireguard0";
 
@@ -13,7 +13,7 @@ let
   phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/24" "${IPv6}/96" ];
 
   internalDomains = [
-    "~${config.networking.domain}.${preferredInternalTLD}"
+    "~${config.networking.fqdn}"
   ];
 in
 {

@@ -2,10 +2,10 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (import ../hardware/networks.nix) preferredInternalTLD interfaces;
+  inherit (import ../hardware/networks.nix) interfaces;
 
   authDomain = "auth.${config.networking.domain}";
-  authInternalDomain = "auth.${config.networking.domain}.${preferredInternalTLD}";
+  authInternalDomain = "auth.${config.networking.fqdn}";
 
   # This is also set on our own.
   keycloakUser = config.services.keycloak.database.username;
