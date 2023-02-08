@@ -76,14 +76,20 @@ Still, test the logins as indicated from the seed file.
 Networking for a first-timer can be confusing (at least for me).
 So here's the documentation for what is the practices that are following here.
 
-- Internal services is mainly at `172.24.0.0/16`.
-- Public services is at an increment to the internal services IP address (i.e., `172.25.0.0/16`).
-- Wireguard interfaces are mainly at `10.2xx.0.0/16`.
+- Networks are mainly divided into client and server blocks.
 
-There are some general guidelines to keep in mind when assigning the IPs statically.
+- Server networks are made up of interfaces attached to machines that provide services.
+They mainly live in `172.16.0.0/13` and `10.0.0.0/9`.
 
-- Servers are intended at `172.1.x.x` to `172.101.x.x`.
-- VPNs are at `10.2xx.x.x`.
+- Client networks are made up of interfaces attached to machines that are mainly used as clients.
+They mainly live in `172.24.0.0/13` and `10.128.0.0/9`.
+Furthermore, most of them should be freely assigned an IP address.
+Thus, use of DHCP is pretty much ideal.
+
+- Wireguard interfaces are mainly at `10.2xx.0.0/16` and is included as part of the client network.
+Same if you are considering implement other VPN servers.
+
+- For private network `192.168.0.0/16`, it is basically a free-for-all.
 
 For more details, you can see the interfaces and their networking-related configuration in link:./modules/hardware/networks.nix[`./modules/hardware/networks.nix`].
 
@@ -136,6 +142,7 @@ You can set up a firewall from Hetzner Cloud web UI but you can also deploy one 
 ----
 hcloud firewall create --name tcp-fw
 hcloud firewall create --name udp-fw
+hcloud firewall create --name dns-fw
 
 hcloud firewall add-rule tcp-fw --direction in --protocol tcp --port 22 --description "Secure shells"
 hcloud firewall add-rule tcp-fw --direction in --protocol tcp --port 80 --description "HTTP server"
@@ -146,6 +153,9 @@ hcloud firewall add-rule tcp-fw --direction in --protocol tcp --port 636 --descr
 hcloud firewall add-rule udp-fw --direction in --protocol udp --port 51820 --description "Wireguard"
 hcloud firewall add-rule tcp-fw --direction in --protocol udp --port 389 --description "LDAP server"
 hcloud firewall add-rule tcp-fw --direction in --protocol udp --port 636 --description "LDAPS server"
+
+hcloud firewall add-rule dns-fw [--source-ips "SLAVE_DNS_IP"]... --direction in --protocol udp --port 53 --description "Hidden primary DNS server"
+hcloud firewall add-rule dns-fw [--source-ips "SLAVE_DNS_IP"]... --direction in --protocol tcp --port 53 --description "Hidden primary DNS server"
 ----
 
 Next up, the networking setup which is composed of a public IP used for accessing some services and a private network used to communicate inside of the network.
