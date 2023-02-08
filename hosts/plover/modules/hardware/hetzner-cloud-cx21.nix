@@ -72,9 +72,12 @@ in
         gateway = [ IPv6.gateway ];
 
         networkConfig = {
-          DHCP = "yes";
+          # IPv6 has to be manually configured.
+          DHCP = "ipv4";
+
           LinkLocalAddressing = "ipv6";
           IPForward = true;
+
           DNS = [
             "2a01:4ff:ff00::add:2"
             "2a01:4ff:ff00::add:1"
