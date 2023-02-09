@@ -23,7 +23,7 @@ Some of the self-hosted services from this server:
 * A link:https://gitea.io/[Gitea] instance for my personal projects.
 * A link:https://www.keycloak.org/[Keycloak] instance for identity management.
 * A VPN tunnel with link:https://www.wireguard.com/[Wireguard].
-* An LDAP server with link:https://www.openldap.org/[OpenLDAP].
+* A DNS server with link:https://coredns.io/[CoreDNS] managed as a "hidden" authoritative server and as a local DNS server for easily accessing the services with domain names.
 
 
 
@@ -76,20 +76,25 @@ Still, test the logins as indicated from the seed file.
 Networking for a first-timer can be confusing (at least for me).
 So here's the documentation for what is the practices that are following here.
 
-- Networks are mainly divided into client and server blocks.
+* Networks are mainly divided into client and server blocks.
+Keep in mind, these blocks are not subnets.
+They're more like abstract guidelines for assigning subnets with some ease and some exceptions could be made.
 
-- Server networks are made up of interfaces attached to machines that provide services.
-They mainly live in `172.16.0.0/13` and `10.0.0.0/9`.
+* Server block are made up of interfaces attached to machines that provide services.
+They mainly live in `172.16.0.0/13` and `10.0.0.0/9` for IPv4, `fc00::/8` for IPv6.
 
-- Client networks are made up of interfaces attached to machines that are mainly used as clients.
-They mainly live in `172.24.0.0/13` and `10.128.0.0/9`.
+* Client block are made up of interfaces attached to machines that are mainly used as clients.
+They mainly live in `172.24.0.0/13` and `10.128.0.0/9` for IPv4, `fd00::/8` for IPv6.
 Furthermore, most of them should be freely assigned an IP address.
 Thus, use of DHCP is pretty much ideal.
 
-- Wireguard interfaces are mainly at `10.2xx.0.0/16` and is included as part of the client network.
-Same if you are considering implement other VPN servers.
+* Wireguard interfaces (including the server) are mainly at `172.28.0.0/14`, `10.200.0.0/13`, and `fd00:ffff::/64`.
+They are also included as part of the client block.
+The same principles are applied if you are considering to implement other VPN servers instead of the current setup.
 
-- For private network `192.168.0.0/16`, it is basically a free-for-all.
+* For private network `192.168.0.0/16` (for IPv4), it is basically a free-for-all.
+There is no equivalent of a free-for-all network for IPv6 networks.
+We're just dealing with the fact that the aforementioned network is widely used so we'll leave no assumptions here.
 
 For more details, you can see the interfaces and their networking-related configuration in link:./modules/hardware/networks.nix[`./modules/hardware/networks.nix`].
 
@@ -135,28 +140,7 @@ A deployment to Hetzner Cloud is composed of mainly three things:
 
 First, we will set up the latter two before creating the server. footnote:[Though, it can be created in any order, it's just personal preferences at this point.]
 
-Setting up a firewall is pretty simple as the TCP/UDP ports is patterned after the allowed IP ranges in the host configuration.
-You can set up a firewall from Hetzner Cloud web UI but you can also deploy one with `hcloud`.
-
-[source, shell]
-----
-hcloud firewall create --name tcp-fw
-hcloud firewall create --name udp-fw
-hcloud firewall create --name dns-fw
-
-hcloud firewall add-rule tcp-fw --direction in --protocol tcp --port 22 --description "Secure shells"
-hcloud firewall add-rule tcp-fw --direction in --protocol tcp --port 80 --description "HTTP server"
-hcloud firewall add-rule tcp-fw --direction in --protocol tcp --port 433 --description "HTTPS server"
-hcloud firewall add-rule tcp-fw --direction in --protocol tcp --port 389 --description "LDAP server"
-hcloud firewall add-rule tcp-fw --direction in --protocol tcp --port 636 --description "LDAPS server"
-
-hcloud firewall add-rule udp-fw --direction in --protocol udp --port 51820 --description "Wireguard"
-hcloud firewall add-rule tcp-fw --direction in --protocol udp --port 389 --description "LDAP server"
-hcloud firewall add-rule tcp-fw --direction in --protocol udp --port 636 --description "LDAPS server"
-
-hcloud firewall add-rule dns-fw [--source-ips "SLAVE_DNS_IP"]... --direction in --protocol udp --port 53 --description "Hidden primary DNS server"
-hcloud firewall add-rule dns-fw [--source-ips "SLAVE_DNS_IP"]... --direction in --protocol tcp --port 53 --description "Hidden primary DNS server"
-----
+The firewall is already set in the host so no need to worry about it (as long as it is configured correctly, of course :p).
 
 Next up, the networking setup which is composed of a public IP used for accessing some services and a private network used to communicate inside of the network.
 However, the main reason we have a private network is to setup a VPN service to hide some of the more sensitive services.
@@ -185,16 +169,13 @@ You could also easily create a server with `hcloud` with the following command:
 [source, shell]
 ----
 hcloud server create --location hel1 --type cx21 --image ubuntu-22.04 \
-    --firewall tcp-fw --firewall udp-fw \
     --network plover-local \
     --user-data-from-file ./files/hcloud/hcloud-user-data.yml \
     --ssh-key foodogsquared@foodogsquared.one \
     --name nixos-plover
 ----
 
-If you don't want to setup the firewall in the system, you could use the firewall from Hetzner (which is recommended anyways).
-
-Then, don't forget to setup the prerequisites such as filesystems properly.
+Don't forget to setup the prerequisites such as filesystems properly.
 Here's a set of commands setting up to the current filesystem configuration.
 
 [source, shell]
