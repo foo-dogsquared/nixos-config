@@ -62,12 +62,14 @@ in
 
   # Modifying it a little bit for per-user schema.
   systemd.services.keycloak = {
-    path = [ config.services.postgresql.package ];
-    preStart = lib.mkAfter ''
-      # Setting up the appropriate schema for PostgreSQL secure schema usage.
-      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${keycloakUser}';" \
-        | grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${keycloakUser};"
-    '';
+    preStart = let
+      psqlBin = "${lib.getBin config.services.postgresql.package}/bin/psql";
+      in
+      lib.mkAfter ''
+        # Setting up the appropriate schema for PostgreSQL secure schema usage.
+        ${psqlBin} -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${keycloakUser}';" \
+          | grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${keycloakUser};"
+      '';
   };
 
   # Attaching it to the reverse proxy of choice.
