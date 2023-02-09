@@ -50,11 +50,10 @@ in
     dhcpcd.enable = false;
   };
 
-  # The main DNS server (not exactly by choice).
-  services.resolved = {
-    enable = true;
-    dnssec = "true";
-  };
+  # The local DNS resolver. This should be used in conjunction with an
+  # authoritative DNS server as a forwarder. Also, it should live in its
+  # default address at 127.0.0.53 (as of systemd v252).
+  services.resolved.enable = true;
 
   # The interface configuration is based from the following discussion:
   # https://discourse.nixos.org/t/nixos-on-hetzner-cloud-servers-ipv6/221/
@@ -98,6 +97,8 @@ in
           IPv6.gateway
         ];
 
+        # Using the authoritative DNS server to enable accessing them nice
+        # internal services with domain names.
         networkConfig.DNS = [
           "127.0.0.1"
           "::1"

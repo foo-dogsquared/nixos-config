@@ -55,14 +55,21 @@ in
     };
   };
 
-  services.fail2ban.ignoreIP = [
-    "172.16.0.0/12"
-    "fc00::/7"
+  services.fail2ban = {
+    ignoreIP = [
+      # VPN clients.
+      "${interfaces.wireguard0.IPv4.address}/13"
+      "${interfaces.wireguard0.IPv6.address}/64"
+    ];
 
-    # Those from the tunneling services.
-    "${interfaces.wireguard0.IPv4.address}/16"
-    "${interfaces.wireguard0.IPv6.address}/64"
-  ];
+    # We're going to be unforgiving with this one since we only have key
+    # authentication and password authentication is disabled anyways.
+    jails.sshd = ''
+      enabled = true
+      maxretry = 1
+      port = 22
+    '';
+  };
 
   # TODO: Put the secrets to the respective service module.
   sops.secrets =
