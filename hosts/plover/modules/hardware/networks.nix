@@ -26,17 +26,22 @@ rec {
       ipv6Gateway = "fe80::1";
     in
     {
-    # This is the public-facing interface. Any interface name with a prime
-    # symbol means it's a public-facing interface.
-    main' = {
-      # The gateways for the public addresses are retrieved from the following
-      # pages:
-      #
-      # * https://docs.hetzner.com/cloud/networks/faq/#are-any-ip-addresses-reserved
-      # * https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/#gateway
-      IPv4 = {
-        address = "65.109.224.213";
-        gateway = "172.31.1.1";
+      # This is the public-facing interface. Any interface name with a prime
+      # symbol means it's a public-facing interface.
+      main' = {
+        # The gateways for the public addresses are retrieved from the following
+        # pages:
+        #
+        # * https://docs.hetzner.com/cloud/networks/faq/#are-any-ip-addresses-reserved
+        # * https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/#gateway
+        IPv4 = {
+          address = "65.109.224.213";
+          gateway = "172.31.1.1";
+        };
+        IPv6 = {
+          address = "2a01:4f9:c012:607a::1";
+          gateway = ipv6Gateway;
+        };
       };
 
       internal = {

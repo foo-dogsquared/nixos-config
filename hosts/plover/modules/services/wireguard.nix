@@ -71,11 +71,13 @@ in
         {
           routeConfig = {
             Gateway = wireguardPeers.server.IPv4;
-            Destination = let
-              ip = lib.strings.splitString "." wireguardPeers.server.IPv4;
-              properRange = lib.lists.take 3 ip ++ [ "0" ];
-              ip' = lib.concatStringsSep "." properRange;
-            in "${ip'}/16";
+            Destination =
+              let
+                ip = lib.strings.splitString "." wireguardPeers.server.IPv4;
+                properRange = lib.lists.take 3 ip ++ [ "0" ];
+                ip' = lib.concatStringsSep "." properRange;
+              in
+              "${ip'}/16";
           };
         }
       ];

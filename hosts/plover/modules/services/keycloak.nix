@@ -78,13 +78,14 @@ in
 
       # This is based from the reverse proxy guide from the official
       # documentation at https://www.keycloak.org/server/reverseproxy.
-      locations = let
-        keycloakPath = path: "http://${host}:${toString config.services.keycloak.settings.http-port}";
-      in
-      lib.listToAttrs
-        (lib.lists.map
-          (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
-          [ "/js/" "/realms/" "/resources/" "/robots.txt" ]);
+      locations =
+        let
+          keycloakPath = path: "http://${host}:${toString config.services.keycloak.settings.http-port}";
+        in
+        lib.listToAttrs
+          (lib.lists.map
+            (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
+            [ "/js/" "/realms/" "/resources/" "/robots.txt" ]);
     };
 
     "${authInternalDomain}" = {

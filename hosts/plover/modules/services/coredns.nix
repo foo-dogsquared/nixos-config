@@ -47,7 +47,8 @@ let
   domainZoneFile' = "/etc/coredns/zones/${domain}.zone";
 in
 {
-  sops.secrets = let
+  sops.secrets =
+    let
       getKey = key: {
         inherit key;
         sopsFile = ../../secrets/secrets.yaml;
@@ -58,8 +59,8 @@ in
             lib.nameValuePair
               "plover/${secret}"
               ((getKey secret) // config))
-              secrets;
-  in
+          secrets;
+    in
     getSecrets {
       "dns/mailbox-security-key" = { };
       "dns/mailbox-security-key-record" = { };
