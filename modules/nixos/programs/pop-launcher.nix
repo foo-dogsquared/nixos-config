@@ -34,7 +34,7 @@ in
         Whether to enable Pop launcher, a launcher service for application
         launchers.
 
-        Take note you have to install an application launcher frontend to make
+        However, you have to install an application launcher frontend to make
         use of this such as <command>onagre</command> or
         <command>cosmic-launcher</command>.
       '';
@@ -53,8 +53,6 @@ in
     };
 
     plugins = lib.mkOption {
-      # Wait, why isn't this working? WHY IS THIS NOT WORKING?!
-      #type = with lib.types; listOf package;
       type = lib.types.listOf lib.types.package;
       description = ''
         List of packages containing Pop launcher plugins and scripts to be

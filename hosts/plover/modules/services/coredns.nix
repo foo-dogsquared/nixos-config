@@ -109,6 +109,9 @@ in
           block
         }
 
+        # We're just setting up a dummy SOA. If the authority section is
+        # missing, it will be considered invalid and might not play nice with
+        # the other things that rely on the DNS server so we'll play nice.
         template ANY ANY {
           authority "{{ .Zone }} IN SOA {{ .Zone }} ${dnsEmail} (1 60 60 60 60)"
           fallthrough

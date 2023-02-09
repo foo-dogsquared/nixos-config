@@ -199,7 +199,7 @@ in
   #
   # We're using wg-quick here as this host is using network managers that can
   # differ between workflows (i.e., GNOME and KDE Plasma using NetworkManager,
-  # something else using systemd-networkd).
+  # others might be using systemd-networkd).
   networking.wg-quick.interfaces.wireguard0 = {
     privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
 

@@ -1,7 +1,8 @@
 ; This is trying to be discrete with certain information. This should be copied
 ; and replaced with more confidential information somewhere.
 
-; Take note we're not making the
+; Take note we're not making the NS record type since it will be dynamically
+; queried by the DNS server.
 $TTL 2h
 $ORIGIN @domain@
 
