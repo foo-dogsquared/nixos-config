@@ -9,8 +9,8 @@ let
 
   wireguardIFName = "wireguard0";
 
-  desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/14" "${IPv6}/64" ];
-  phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/14" "${IPv6}/64" ];
+  desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/32" "${IPv6}/128" ];
+  phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
 
   internalDomains = [
     "~${config.networking.fqdn}"
@@ -58,13 +58,15 @@ in
       matchConfig.Name = wireguardIFName;
 
       networkConfig.DNS = with interfaces.internal; [
-        "127.0.0.1"
-        "::1"
+        IPv4.address
+        IPv6.address
       ];
 
+      linkConfig.RequiredForOnline = "no";
+
       address = with interfaces.wireguard0; [
-        "${IPv4.address}/32"
-        "${IPv6.address}/128"
+        "${IPv4.address}/14"
+        "${IPv6.address}/64"
       ];
 
       routes = [
