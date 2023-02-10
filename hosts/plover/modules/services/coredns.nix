@@ -11,25 +11,20 @@ let
   dnsSubdomain = "ns1";
   dnsDomainName = "${dnsSubdomain}.${domain}";
   certs = config.security.acme.certs;
-  dnsEmail = "hostmaster.${domain}";
-
-  # This is the part of the SOA record. You'll have to modify it here instead
-  # of modifying a zone file since it does not play well with a dynamically
-  # configured server it seems.
-  dnsSerialNumber = "2023020800";
-	dnsRefresh = "3h";
-	dnsUpdateRetry = "15m";
-	dnsExpiry = "3w";
-	dnsNxTTL = "3h";
 
   corednsServiceName = "coredns";
 
   domainZoneFile = pkgs.substituteAll {
     src = ../../config/coredns/${domain}.zone;
     inherit domain dnsSubdomain;
-    email = dnsEmail;
+    dnsEmail = "dns.hetzner.com.";
     publicIPv4 = interfaces.main'.IPv4.address;
     publicIPv6 = interfaces.main'.IPv6.address;
+    dnsNameserver = lib.head secondaryNameserverDomains;
+    dnsNameservers = lib.concatStringsSep "\n"
+      (lib.lists.map
+        (ns: "\tIN\tNS\t${ns}")
+        secondaryNameserverDomains);
   };
 
   secondaryNameserverDomains = lib.attrNames secondaryNameServers;
@@ -91,78 +86,55 @@ in
     #
     # https://docs.hetzner.com/dns-console/dns/general/dnssec
     config = ''
-      (common) {
+      . {
         forward . /etc/resolv.conf
         log
-        cache
         errors
-      }
 
-      ${fqdn} {
-        import common
-
-        bind ${interfaces.internal.IPv4.address} ${interfaces.internal.IPv6.address}
-
-        local
-
-        acl {
-          allow net ${lib.concatStringsSep " " (clientNetworks ++ serverNetworks)}
-          block
-        }
-
-        # We're just setting up a dummy SOA. If the authority section is
-        # missing, it will be considered invalid and might not play nice with
-        # the other things that rely on the DNS server so we'll play nice.
-        template ANY ANY {
-          authority "{{ .Zone }} IN SOA {{ .Zone }} ${dnsEmail} (1 60 60 60 60)"
-          fallthrough
-        }
-
-        template IN A {
-          answer "{{ .Zone }} IN 60 A ${interfaces.internal.IPv4.address}"
-          answer "{{ .Zone }} IN 60 A ${interfaces.internal.IPv4.address}"
-        }
-
-        template IN AAAA {
-          answer "{{ .Zone }} IN 60 AAAA ${interfaces.internal.IPv6.address}"
-          answer "{{ .Zone }} IN 60 AAAA ${interfaces.internal.IPv6.address}"
-        }
-      }
-
-      ${domain} {
-        import common
-
-        bind lo {
+        bind lo ${interfaces.internal.IPv4.address} ${interfaces.internal.IPv6.address} {
           # These are already taken from systemd-resolved.
           except 127.0.0.53 127.0.0.54
         }
 
-        acl {
+        acl ${domain} {
           # We're setting this up as a "hidden" primary server.
           allow type AXFR net ${lib.concatStringsSep " " secondaryNameServersIPs}
           allow type IXFR net ${lib.concatStringsSep " " secondaryNameServersIPs}
-          block type AXFR
-          block type IXFR
+
+          # Allowing this for debugging.
+          allow net 127.0.0.0/8 ::1
+
+          # Otherwise, it's just really a primary server that is hidden
+          # somewhere (or just very shy, whichever of the two).
+          block
         }
 
-        template IN NS {
-          ${lib.concatStringsSep "\n    "
-            (lib.lists.map
-              (ns: ''answer "{{ .Zone }} IN NS ${ns}"'')
-              secondaryNameserverDomains)}
+        transfer ${domain} {
+          to *
         }
 
         file ${domainZoneFile'}
 
-        transfer {
-          to *
+        # ${fqdn} DNS server blocks. This is an internal DNS server so we'll
+        # only allow queries from the internal network.
+        acl ${fqdn} {
+          allow net ${lib.concatStringsSep " " (clientNetworks ++ serverNetworks)}
+          allow net 127.0.0.0/8 ::1
+          block
+        }
+
+        template IN A ${fqdn} {
+          answer "{{ .Name }} IN 60 A ${interfaces.internal.IPv4.address}"
+        }
+
+        template IN AAAA ${fqdn} {
+          answer "{{ .Name }} IN 60 AAAA ${interfaces.internal.IPv6.address}"
         }
       }
 
-      tls://${domain} {
-        import common
-
+      tls://. {
         tls {$CREDENTIALS_DIRECTORY}/cert.pem {$CREDENTIALS_DIRECTORY}/key.pem {$CREDENTIALS_DIRECTORY}/fullchain.pem
+        forward . /etc/resolv.conf
       }
     '';
   };

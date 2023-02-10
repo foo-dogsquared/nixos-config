@@ -1,18 +1,18 @@
 ; This is trying to be discrete with certain information. This should be copied
 ; and replaced with more confidential information somewhere.
-
-; Take note we're not making the NS record type since it will be dynamically
-; queried by the DNS server.
 $TTL 2h
 $ORIGIN @domain@
 
-@	IN	SOA	@dnsSubdomain@.@domain@	@email@ (
-				2023020800	; serial number
-				3h		; refresh
+; Take note we're not making the NS record type since it will be dynamically
+; queried by the DNS server.
+@	IN	SOA	@dnsNameserver@ @dnsEmail@ (
+				2023021002	; serial number
+				2h		; refresh
 				15m		; update retry
 				3w		; expiry
 				3h		; nx = nxdomain ttl
-				)
+			)
+@dnsNameservers@
 
 ; Setting up the mail-related DNS entries.
 ; For future references, please the see the following document at
@@ -21,12 +21,12 @@ $ORIGIN @domain@
 	IN	MX	10 mxext2.mailbox.org
 	IN	MX	20 mxext3.mailbox.org
 	IN	TXT	v=spf1 include:mailbox.org ~all
-_dmarc	IN	TXT	v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one
-mbo0001._domainkey	IN	CNAME	mbo0001._domainkey.mailbox.org.
-mbo0002._domainkey	IN	CNAME	mbo0002._domainkey.mailbox.org.
-mbo0003._domainkey	IN	CNAME	mbo0003._domainkey.mailbox.org.
-mbo0004._domainkey	IN	CNAME	mbo0004._domainkey.mailbox.org.
-#mailboxSecurityKey#	IN	TXT	#mailboxSecurityKeyRecord#
+_dmarc.	IN	TXT	v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one
+mbo0001._domainkey.	IN	CNAME	mbo0001._domainkey.mailbox.org.
+mbo0002._domainkey.	IN	CNAME	mbo0002._domainkey.mailbox.org.
+mbo0003._domainkey.	IN	CNAME	mbo0003._domainkey.mailbox.org.
+mbo0004._domainkey.	IN	CNAME	mbo0004._domainkey.mailbox.org.
+#mailboxSecurityKey#.	IN	TXT	#mailboxSecurityKeyRecord#
 
 ; My websites that are deployed by somewhere else.
 @	IN	ALIAS	apex-loadbalancer.netlify.com.
@@ -34,26 +34,26 @@ www	IN	CNAME	foodogsquared.netlify.app.
 wiki	IN	CNAME	foodogsquared-wiki.netlify.app.
 
 ; Public-facing services from this server.
-auth	IN	A	@publicIPv4@
-auth	IN	AAAA	@publicIPv6@
+auth.	IN	A	@publicIPv4@
+auth.	IN	AAAA	@publicIPv6@
 
-pass	IN	A	@publicIPv4@
-pass	IN	AAAA	@publicIPv6@
+pass.	IN	A	@publicIPv4@
+pass.	IN	AAAA	@publicIPv6@
 
-code	IN	A	@publicIPv4@
-code	IN	AAAA	@publicIPv6@
+code.	IN	A	@publicIPv4@
+code.	IN	AAAA	@publicIPv6@
 
 ; Other things.
-_github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709
+_github-pages-challenge-foo-dogsquared.	IN	TXT	673febae1ea0095e76d1e02a7a1709
 
 ; Setting up SendGrid.
 ; This is for rewriting tracking links to my domain.
-url2871	IN	CNAME	sendgrid.net
-30339354	IN	CNAME	sendgrid.net
+url2871.	IN	CNAME	sendgrid.net
+30339354.	IN	CNAME	sendgrid.net
 
 ; This is for SendGrid sender authentication.
-em1172	IN	CNAME	u30339354.wl105.sendgrid.net
-s1._domainkey	IN	CNAME	s1.domainkey.u30339354.wl105.sendgrid.net
-s2._domainkey	IN	CNAME	s2.domainkey.u30339354.wl105.sendgrid.net
+em1172.	IN	CNAME	u30339354.wl105.sendgrid.net
+s1._domainkey.	IN	CNAME	s1.domainkey.u30339354.wl105.sendgrid.net
+s2._domainkey.	IN	CNAME	s2.domainkey.u30339354.wl105.sendgrid.net
 
 ; vim: expandtab! tabstop=8 shiftwidth=8 filetype=dns
