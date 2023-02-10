@@ -25,6 +25,11 @@ in
         '';
       }];
 
+      # Set the time zone. We're making it easier to track by assigning a
+      # universal time zone and what could be more universal than the
+      # "Coordinated Universal Time" (which does not abbreviates to UTC, WTF?).
+      time.timeZone = "UTC";
+
       # Most servers will have to be accessed for debugging so it is here. But
       # be sure to set the appropriate public keys for the users from that
       # server.
