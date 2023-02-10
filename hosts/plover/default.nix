@@ -136,7 +136,7 @@ in
   # DNS provider.
   security.acme.defaults = {
     email = "admin@foodogsquared.one";
-    dnsProvider = "porkbun";
+    dnsProvider = "hetzner";
     credentialsFile = config.sops.secrets."plover/lego/env".path;
   };
 
