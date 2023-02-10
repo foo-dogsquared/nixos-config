@@ -16,7 +16,6 @@ in
     ldap = {
       searchUserName = "admin";
       suffix = "dc=foodogsquared,dc=one";
-      tls = true;
     };
 
     seedPath =
@@ -38,7 +37,7 @@ in
               login_name = "foodogsquared";
               given_name = "Gabriel";
               family_name = "Arazas";
-              email = "foodogsquared@${config.networking.domain}";
+              email = "foodogsquared@foodogsquared.one";
               ssh_public_keys =
                 let
                   readFiles = list: lib.lists.map (path: lib.readFile path) list;
@@ -58,8 +57,6 @@ in
 
   # Getting this to be accessible in the reverse proxy of choice.
   services.nginx.virtualHosts."${ldapDomain}" = {
-    forceSSL = true;
-    enableACME = true;
     locations."/" = {
       proxyPass = "http://localhost:${toString config.services.portunus.port}";
     };
