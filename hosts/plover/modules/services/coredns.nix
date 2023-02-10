@@ -16,16 +16,12 @@ let
 
   domainZoneFile = pkgs.substituteAll {
     src = ../../config/coredns/${domain}.zone;
-    inherit domain dnsSubdomain;
-    dnsEmail = "dns.hetzner.com.";
     publicIPv4 = interfaces.main'.IPv4.address;
     publicIPv6 = interfaces.main'.IPv6.address;
-    dnsNameserver = lib.head secondaryNameserverDomains;
-    dnsNameservers = lib.concatStringsSep "\n"
-      (lib.lists.map
-        (ns: "\tIN\tNS\t${ns}")
-        secondaryNameserverDomains);
   };
+
+  # The final location of the thing.
+  domainZoneFile' = "/etc/coredns/zones/${domain}.zone";
 
   secondaryNameserverDomains = lib.attrNames secondaryNameServers;
   secondaryNameServersIPv4 = lib.foldl'
@@ -38,8 +34,12 @@ let
     (lib.attrValues secondaryNameServers);
   secondaryNameServersIPs = secondaryNameServersIPv4 ++ secondaryNameServersIPv6;
 
-  # The final location of the thing.
-  domainZoneFile' = "/etc/coredns/zones/${domain}.zone";
+  dnsListenAddresses = with interfaces; [
+    internal.IPv4.address
+    internal.IPv6.address
+    main'.IPv4.address
+    main'.IPv6.address
+  ];
 in
 {
   sops.secrets =
@@ -87,11 +87,10 @@ in
     # https://docs.hetzner.com/dns-console/dns/general/dnssec
     config = ''
       . {
-        forward . /etc/resolv.conf
         log
         errors
 
-        bind lo ${interfaces.internal.IPv4.address} ${interfaces.internal.IPv6.address} {
+        bind lo ${lib.concatStringsSep " " dnsListenAddresses} {
           # These are already taken from systemd-resolved.
           except 127.0.0.53 127.0.0.54
         }
@@ -101,7 +100,9 @@ in
           allow type AXFR net ${lib.concatStringsSep " " secondaryNameServersIPs}
           allow type IXFR net ${lib.concatStringsSep " " secondaryNameServersIPs}
 
-          # Allowing this for debugging.
+          # This will allow internal clients connect to the subdomains that
+          # have internal resources.
+          allow net ${lib.concatStringsSep " " (clientNetworks ++ serverNetworks)}
           allow net 127.0.0.0/8 ::1
 
           # Otherwise, it's just really a primary server that is hidden
@@ -112,8 +113,6 @@ in
         transfer ${domain} {
           to *
         }
-
-        file ${domainZoneFile'}
 
         # ${fqdn} DNS server blocks. This is an internal DNS server so we'll
         # only allow queries from the internal network.
@@ -130,6 +129,8 @@ in
         template IN AAAA ${fqdn} {
           answer "{{ .Name }} IN 60 AAAA ${interfaces.internal.IPv6.address}"
         }
+
+        file ${domainZoneFile'}
       }
 
       tls://. {

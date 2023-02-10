@@ -209,6 +209,9 @@ in
 
             # PostgreSQL database dumps
             config.services.postgresqlBackup.location
+
+            # DNS records.
+            "/etc/coredns"
           ];
           repo = borgRepo "services";
           passCommand = "cat ${config.sops.secrets."plover/borg/repos/services/password".path}";
