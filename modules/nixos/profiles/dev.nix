@@ -61,6 +61,9 @@ in {
       # Instrumentate your instrument.
       programs.systemtap.enable = true;
 
+      # Search around sharks for wires.
+      programs.wireshark.enable = true;
+
       # Profile your whole system.
       services.sysprof.enable = true;
 

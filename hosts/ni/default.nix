@@ -27,6 +27,7 @@ in
         "docker"
         "podman"
         "networkmanager"
+        "wireshark"
       ];
       hashedPassword =
         "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
@@ -81,6 +82,8 @@ in
     "aarch64-linux"
     "riscv64-linux"
   ];
+
+  programs.wireshark.package = pkgs.wireshark;
 
   boot.initrd.supportedFilesystems = [ "btrfs" ];
   boot.supportedFilesystems = [ "btrfs" ];
