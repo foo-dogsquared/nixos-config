@@ -31,7 +31,7 @@
 
   networking.firewall.allowedTCPPorts = [
     80 # HTTP servers.
-    433 # HTTPS servers.
+    443 # HTTPS servers.
   ];
 
   # Some fail2ban policies to apply for nginx.
