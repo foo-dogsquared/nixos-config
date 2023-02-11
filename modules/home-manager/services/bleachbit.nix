@@ -105,7 +105,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.user.services.bleachbit-cleanup = {
+    systemd.user.services.bleachbit = {
       Unit = {
         Description = "Periodic cleaning with Bleachbit";
         Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
@@ -116,7 +116,7 @@ in
       '';
     };
 
-    systemd.user.timers.bleachbit-cleanup = {
+    systemd.user.timers.bleachbit = {
       Unit = {
         Description = "Periodic cleaning with Bleachbit";
         Documentation = [ "man:bleachbit(1)" "https://www.bleachbit.org" ];
