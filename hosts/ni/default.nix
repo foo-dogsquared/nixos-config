@@ -188,9 +188,6 @@ in
       allowedUDPPorts = [ wireguardPort ];
       allowedTCPPorts = [
         22 # Secure Shells.
-
-        80 # HTTP servers.
-        433 # HTTPS servers.
       ];
     };
   };

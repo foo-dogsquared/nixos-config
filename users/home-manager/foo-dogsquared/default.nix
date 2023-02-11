@@ -296,6 +296,7 @@ in
       "zoom.logs"
     ];
     withChatCleanup = true;
+    withBrowserCleanup = true;
   };
 
   systemd.user.sessionVariables = {
