@@ -16,8 +16,8 @@ let
 
   domainZoneFile = pkgs.substituteAll {
     src = ../../config/coredns/${domain}.zone;
-    publicIPv4 = interfaces.main'.IPv4.address;
-    publicIPv6 = interfaces.main'.IPv6.address;
+    ploverPublicIPv4 = interfaces.main'.IPv4.address;
+    ploverPublicIPv6 = interfaces.main'.IPv6.address;
   };
 
   # The final location of the thing.

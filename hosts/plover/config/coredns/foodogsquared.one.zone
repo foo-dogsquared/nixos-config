@@ -1,10 +1,10 @@
 ; This is trying to be discrete with certain information. This should be copied
 ; and replaced with more confidential information somewhere.
 $TTL 2h
-$ORIGIN foodogsquared.one
+$ORIGIN foodogsquared.one.
 
-@	IN	SOA	ns1.foodogsquared.one. hostmaster.foodogsquared.one. (
-				2023021100	; serial number
+@	IN	SOA	ns1.first-ns.de. hostmaster.foodogsquared.one. (
+				2023021301	; serial number
 				2h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -20,13 +20,27 @@ $ORIGIN foodogsquared.one
 @	IN	MX	10 mxext1.mailbox.org.
 	IN	MX	10 mxext2.mailbox.org.
 	IN	MX	20 mxext3.mailbox.org.
-	IN	TXT	v=spf1 include:mailbox.org ~all
-_dmarc	IN	TXT	v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one
-mbo0001._domainkey	IN	CNAME	mbo0001._domainkey.mailbox.org.
-mbo0002._domainkey	IN	CNAME	mbo0002._domainkey.mailbox.org.
-mbo0003._domainkey	IN	CNAME	mbo0003._domainkey.mailbox.org.
-mbo0004._domainkey	IN	CNAME	mbo0004._domainkey.mailbox.org.
-#mailboxSecurityKey#	IN	TXT	#mailboxSecurityKeyRecord#
+	IN	TXT	"v=spf1 include:mailbox.org ~all"
+
+; This is something that is needed for mailbox.org to verify it is indeed in my
+; domain.
+#mailboxSecurityKey#	IN	TXT	"#mailboxSecurityKeyRecord#"
+
+; Protect the validity of my emails sent by me!!!!
+MBO0001._domainkey	IN	CNAME	MBO0001._domainkey.mailbox.org.
+MBO0002._domainkey	IN	CNAME	MBO0002._domainkey.mailbox.org.
+MBO0003._domainkey	IN	CNAME	MBO0003._domainkey.mailbox.org.
+MBO0004._domainkey	IN	CNAME	MBO0004._domainkey.mailbox.org.
+
+; Protect my domain email from spoofing.
+_dmarc	IN	400	TXT	"v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one;ruf=mailto:admin@foodogsquared.one"
+
+; This will make PGP clients find my public key for the email.
+_hkps._tcp	IN	SRV	1 1 443 pgp.mailbox.org.
+
+; Email clients autoconfiguration. Useful for email clients like Thunderbird.
+autoconfig	IN	CNAME	mailbox.org.
+_autodiscover._tcp	IN	SRV	0 0 443 mailbox.org.
 
 ; My websites that are deployed by somewhere else.
 @	IN	A	75.2.60.5
@@ -35,17 +49,17 @@ wiki	IN	CNAME	foodogsquared-wiki.netlify.app.
 
 ; Public-facing services from this server. Just remember to increment the
 ; serial number once the public IPs changes. PLEEEEEEEEEEEAAAAAAAAASE!
-auth	IN	A	@publicIPv4@
-auth	IN	AAAA	@publicIPv6@
+auth	IN	A	@ploverPublicIPv4@
+auth	IN	AAAA	@ploverPublicIPv6@
 
-pass	IN	A	@publicIPv4@
-pass	IN	AAAA	@publicIPv6@
+pass	IN	A	@ploverPublicIPv4@
+pass	IN	AAAA	@ploverPublicIPv6@
 
-code	IN	A	@publicIPv4@
-code	IN	AAAA	@publicIPv6@
+code	IN	A	@ploverPublicIPv4@
+code	IN	AAAA	@ploverPublicIPv6@
 
-vpn	IN	A	@publicIPv4@
-vpn	IN	AAAA	@publicIPv6@
+vpn	IN	A	@ploverPublicIPv4@
+vpn	IN	AAAA	@ploverPublicIPv6@
 
 ; Other things.
 _github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709
