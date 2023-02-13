@@ -87,7 +87,8 @@ in
         lib.listToAttrs
           (lib.lists.map
             (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
-            [ "/js/" "/realms/" "/resources/" "/robots.txt" ]);
+            [ "/js/" "/realms/" "/resources/" "/robots.txt" ])
+            // { "/".return = "444"; };
     };
 
     "${authInternalDomain}" = {
