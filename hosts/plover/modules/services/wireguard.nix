@@ -12,9 +12,6 @@ let
   desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/32" "${IPv6}/128" ];
   phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
 
-  internalDomains = [
-    "~${config.networking.fqdn}"
-  ];
 in
 {
   environment.systemPackages = [ pkgs.wireguard-tools ];
@@ -22,6 +19,8 @@ in
   networking.firewall.allowedUDPPorts = [ wireguardPort ];
 
   systemd.network = {
+    wait-online.ignoredInterfaces = [ wireguardIFName ];
+
     netdevs."99-${wireguardIFName}" = {
       netdevConfig = {
         Name = wireguardIFName;
@@ -57,31 +56,9 @@ in
     networks."99-${wireguardIFName}" = {
       matchConfig.Name = wireguardIFName;
 
-      networkConfig.DNS = with interfaces.internal; [
-        IPv4.address
-        IPv6.address
-      ];
-
-      linkConfig.RequiredForOnline = "no";
-
       address = with interfaces.wireguard0; [
         "${IPv4.address}/14"
         "${IPv6.address}/64"
-      ];
-
-      routes = [
-        {
-          routeConfig = {
-            Gateway = wireguardPeers.server.IPv4;
-            Destination =
-              let
-                ip = lib.strings.splitString "." wireguardPeers.server.IPv4;
-                properRange = lib.lists.take 3 ip ++ [ "0" ];
-                ip' = lib.concatStringsSep "." properRange;
-              in
-              "${ip'}/16";
-          };
-        }
       ];
     };
   };
