@@ -88,20 +88,18 @@ in
         matchConfig.Name = lib.concatStringsSep " " internalEthernetInterfaceNames;
 
         address = [
-          "${IPv4.address}/32"
-          "${IPv6.address}/128"
-        ];
-
-        gateway = [
-          IPv4.gateway
-          IPv6.gateway
+          "${IPv4.address}/16"
+          "${IPv6.address}/64"
         ];
 
         # Using the authoritative DNS server to enable accessing them nice
         # internal services with domain names.
-        networkConfig.DNS = [
-          "127.0.0.1"
-          "::1"
+        dns = [ "127.0.0.1" "::1" ];
+        domains = [ config.networking.fqdn ];
+
+        gateway = [
+          IPv4.gateway
+          IPv6.gateway
         ];
       };
     };
