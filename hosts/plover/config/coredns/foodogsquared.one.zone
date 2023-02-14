@@ -1,10 +1,10 @@
 ; This is trying to be discrete with certain information. This should be copied
 ; and replaced with more confidential information somewhere.
-$TTL 2h
+$TTL 12h
 $ORIGIN foodogsquared.one.
 
-@	IN	SOA	ns1.first-ns.de. hostmaster.foodogsquared.one. (
-				2023021301	; serial number
+@	IN	SOA	ns1.first-ns.de. dns.hetzner.com. (
+				2023021501	; serial number
 				2h		; refresh
 				15m		; update retry
 				3w		; expiry
