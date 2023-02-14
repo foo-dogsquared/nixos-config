@@ -6,7 +6,7 @@
 # on you. Either that or we can easily move the resolver somewhere else.
 let
   inherit (config.networking) domain fqdn;
-  inherit (import ../hardware/networks.nix) interfaces clientNetworks serverNetworks secondaryNameServers;
+  inherit (import ../hardware/networks.nix) privateIPv6Prefix interfaces clientNetworks serverNetworks secondaryNameServers;
 
   dnsSubdomain = "ns1";
   dnsDomainName = "${dnsSubdomain}.${domain}";
@@ -33,6 +33,10 @@ let
     [ ]
     (lib.attrValues secondaryNameServers);
   secondaryNameServersIPs = secondaryNameServersIPv4 ++ secondaryNameServersIPv6;
+
+  # The local network segments.
+  allowedIPs = secondaryNameServersIPv4 ++ [ "172.16.0.0/12" ];
+  allowedIPv6s = secondaryNameServersIPv6 ++ [ "${privateIPv6Prefix}::/64" ];
 
   dnsListenAddresses = with interfaces; [
     internal.IPv4.address
@@ -69,8 +73,8 @@ in
   # Setting up the firewall to make less things to screw up in case anything is
   # screwed up.
   networking.firewall.extraInputRules = ''
-    meta l4proto {tcp, udp} th dport 53 ip saddr { ${lib.concatStringsSep ", " secondaryNameServersIPv4} } accept comment "Accept DNS queries from secondary nameservers"
-    meta l4proto {tcp, udp} th dport 53 ip6 saddr { ${lib.concatStringsSep ", " secondaryNameServersIPv6} } accept comment "Accept DNS queries from secondary nameservers"
+    meta l4proto {tcp, udp} th dport 53 ip saddr { ${lib.concatStringsSep ", " allowedIPs} } accept comment "Accept DNS queries from secondary nameservers"
+    meta l4proto {tcp, udp} th dport 53 ip6 saddr { ${lib.concatStringsSep ", " allowedIPv6s} } accept comment "Accept DNS queries from secondary nameservers"
   '';
 
   # The main DNS server.
