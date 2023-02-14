@@ -68,6 +68,7 @@ in
         gnome.dconf-editor # A saner version of Windows registry.
         dialect # Your gateway to polyglotting.
         fractal # Your gateway to the matrix.
+        tangram # Your social media manager, probably.
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         gnome.gnome-boxes # Virtual machines, son.
@@ -107,7 +108,12 @@ in
         gnome-initial-setup.enable = false;
       };
 
+      # It makes Nix store directory read/write so no...
       services.packagekit.enable = false;
+
+      # Setting up split DNS with systemd-resolved. The domains should already
+      # be configured somewhere else.
+      services.resolved.enable = true;
 
       # Since we're using KDE Connect, we'll have to use gsconnect.
       programs.kdeconnect = {

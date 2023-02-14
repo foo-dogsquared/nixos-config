@@ -194,6 +194,9 @@ in
 
   system.stateVersion = "22.11"; # Yes! I read the comment!
 
+  # Setting up split DNS whenever possible.
+  services.resolved.domains = [ "~plover.foodogsquared.one" ];
+
   # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
   # be used anywhere, we're configuring Wireguard here as a "client".
   #
@@ -202,6 +205,13 @@ in
   # others might be using systemd-networkd).
   networking.wg-quick.interfaces.wireguard0 = {
     privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
+
+    dns = with interfaces.internal; [
+      IPv4.address
+      IPv6.address
+    ];
+
+    listenPort = wireguardPort;
 
     address = with wireguardPeers.desktop; [
       "${IPv4}/24"
