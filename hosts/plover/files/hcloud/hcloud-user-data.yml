@@ -2,3 +2,5 @@
 
 runcmd:
   - curl https://raw.githubusercontent.com/elitak/nixos-infect/e6c879494717cf3a3a54deb0d8630133127f810b/nixos-infect | NIX_CHANNEL=nixos-unstable bash 2>&1 | tee /tmp/infect.log
+  - e2label /dev/sda1 nixos
+  - fatlabel /dev/sda15 boot
