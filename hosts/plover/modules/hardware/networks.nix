@@ -5,7 +5,8 @@ let
   inherit (builtins) toString;
 in
 rec {
-  privateIPv6Prefix = "fc00:b0de:5685::";
+  # This is expected to be /64 block (i.e., `fc00:b0de:5685::/64`).
+  privateIPv6Prefix = "fc00:b0de:5685";
 
   # These blocks should be used sparingly with how wide these blocks cover.
   # Plus, they shouldn't be treated as subnets.
@@ -50,7 +51,7 @@ rec {
           gateway = ploverInternalNetworkGateway;
         };
         IPv6 = {
-          address = "${privateIPv6Prefix}1";
+          address = "${privateIPv6Prefix}::1";
           gateway = ipv6Gateway;
         };
       };
@@ -61,7 +62,7 @@ rec {
           gateway = ploverInternalNetworkGateway;
         };
         IPv6 = {
-          address = "${wireguardIPv6Prefix}1";
+          address = "${wireguardIPv6Prefix}::1";
           gateway = ipv6Gateway;
         };
       };
@@ -74,7 +75,7 @@ rec {
   wireguardIPv4Prefix = "172.28.0";
 
   # This IPv6 network prefix should have /64 for the entire Wireguard network.
-  wireguardIPv6Prefix = "fd00:ffff::";
+  wireguardIPv6Prefix = "${privateIPv6Prefix}:ffff";
 
   # These are all fixed IP addresses. However, they should be assigned in /16
   # and /64 for IPv4 and IPv6 block respectively.
@@ -85,11 +86,11 @@ rec {
     };
     desktop = {
       IPv4 = "${wireguardIPv4Prefix}.2";
-      IPv6 = "${wireguardIPv6Prefix}2";
+      IPv6 = "${wireguardIPv6Prefix}::2";
     };
     phone = {
       IPv4 = "${wireguardIPv4Prefix}.3";
-      IPv6 = "${wireguardIPv6Prefix}3";
+      IPv6 = "${wireguardIPv6Prefix}::3";
     };
   };
 
