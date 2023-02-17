@@ -91,8 +91,13 @@ in
     # https://docs.hetzner.com/dns-console/dns/general/dnssec
     config = ''
       . {
-        log
-        errors
+        log ${domain} ${fqdn} {
+          class success error
+        }
+
+        errors {
+          consolidate 1m "^.* no next plugin found$"
+        }
 
         bind lo ${lib.concatStringsSep " " dnsListenAddresses} {
           # These are already taken from systemd-resolved.
@@ -114,10 +119,6 @@ in
           block
         }
 
-        transfer ${domain} {
-          to *
-        }
-
         # ${fqdn} DNS server blocks. This is an internal DNS server so we'll
         # only allow queries from the internal network.
         acl ${fqdn} {
@@ -134,7 +135,13 @@ in
           answer "{{ .Name }} IN 60 AAAA ${interfaces.internal.IPv6.address}"
         }
 
-        file ${domainZoneFile'}
+        file ${domainZoneFile'} ${domain} {
+          reload 30s
+        }
+
+        transfer ${domain} {
+          to ${lib.concatStringsSep " " secondaryNameServersIPs}
+        }
       }
 
       tls://. {

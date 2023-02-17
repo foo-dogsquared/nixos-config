@@ -1,18 +1,17 @@
 ; This is trying to be discrete with certain information. This should be copied
 ; and replaced with more confidential information somewhere.
 $TTL 12h
-$ORIGIN foodogsquared.one.
 
-@	IN	SOA	ns1.first-ns.de. dns.hetzner.com. (
-				2023021501	; serial number
-				2h		; refresh
+@	3600	IN	SOA	ns1.first-ns.de. hostmaster.foodogsquared.one. (
+				2023021701 	; serial number
+				1h		; refresh
 				15m		; update retry
 				3w		; expiry
 				3h		; nx = nxdomain ttl
 			)
-	IN	NS	ns1.first-ns.de.
-	IN	NS	robotns2.second-ns.de.
-	IN	NS	robotns3.second-ns.com.
+	3600	IN	NS	ns1.first-ns.de.
+	3600	IN	NS	robotns2.second-ns.de.
+	3600	IN	NS	robotns3.second-ns.com.
 
 ; Setting up the mail-related DNS entries.
 ; For future references, please the see the following document at
@@ -60,6 +59,9 @@ code	IN	AAAA	@ploverPublicIPv6@
 
 vpn	IN	A	@ploverPublicIPv4@
 vpn	IN	AAAA	@ploverPublicIPv6@
+
+plover	IN	A	@ploverPublicIPv4@
+plover	IN	AAAA	@ploverPublicIPv6@
 
 ; Other things.
 _github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709
