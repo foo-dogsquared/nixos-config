@@ -357,7 +357,7 @@
 
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
-      homeManagerConfigurations = lib'.mapAttrs
+      homeConfigurations = lib'.mapAttrs
         (_: path:
           let
             extraModules = [
@@ -461,7 +461,7 @@
                 };
               })
             self.nixosConfigurations;
-          homeManagerConfigurations = lib'.mapAttrs'
+          homeConfigurations = lib'.mapAttrs'
             (name: value:
               lib'.nameValuePair "home-manager-${name}" {
                 hostname = name;
@@ -471,9 +471,9 @@
                   path = inputs.deploy.lib.${defaultSystem}.activate.home-manager value;
                 };
               })
-            self.homeManagerConfigurations;
+            self.homeConfigurations;
         in
-        nixosConfigurations // homeManagerConfigurations;
+        nixosConfigurations // homeConfigurations;
 
       # How to make yourself slightly saner than before. So far the main checks
       # are for deploy nodes.
