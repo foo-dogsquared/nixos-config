@@ -3,7 +3,7 @@
 $TTL 12h
 
 @	3600	IN	SOA	ns1.first-ns.de. hostmaster.foodogsquared.one. (
-				2023021701 	; serial number
+				2023021803 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -19,11 +19,11 @@ $TTL 12h
 @	IN	MX	10 mxext1.mailbox.org.
 	IN	MX	10 mxext2.mailbox.org.
 	IN	MX	20 mxext3.mailbox.org.
-	IN	TXT	"v=spf1 include:mailbox.org ~all"
+	IN	TXT	v=spf1 include:mailbox.org ~all
 
 ; This is something that is needed for mailbox.org to verify it is indeed in my
 ; domain.
-#mailboxSecurityKey#	IN	TXT	"#mailboxSecurityKeyRecord#"
+#mailboxSecurityKey#	3600	IN	TXT	#mailboxSecurityKeyRecord#
 
 ; Protect the validity of my emails sent by me!!!!
 MBO0001._domainkey	IN	CNAME	MBO0001._domainkey.mailbox.org.
@@ -32,7 +32,7 @@ MBO0003._domainkey	IN	CNAME	MBO0003._domainkey.mailbox.org.
 MBO0004._domainkey	IN	CNAME	MBO0004._domainkey.mailbox.org.
 
 ; Protect my domain email from spoofing.
-_dmarc	IN	400	TXT	"v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one;ruf=mailto:admin@foodogsquared.one"
+_dmarc	400	IN	TXT	v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one;ruf=mailto:admin@foodogsquared.one
 
 ; This will make PGP clients find my public key for the email.
 _hkps._tcp	IN	SRV	1 1 443 pgp.mailbox.org.

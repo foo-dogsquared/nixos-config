@@ -36,7 +36,7 @@ let
 
   # The local network segments.
   allowedIPs = secondaryNameServersIPv4 ++ [ "172.16.0.0/12" ];
-  allowedIPv6s = secondaryNameServersIPv6 ++ [ "${privateIPv6Prefix}::/64" ];
+  allowedIPv6s = secondaryNameServersIPv6 ++ [ "${privateIPv6Prefix}::/48" ];
 
   dnsListenAddresses = with interfaces; [
     internal.IPv4.address
@@ -61,8 +61,8 @@ in
           secrets;
     in
     getSecrets {
-      "dns/mailbox-security-key" = { };
-      "dns/mailbox-security-key-record" = { };
+      "dns/${domain}/mailbox-security-key" = { };
+      "dns/${domain}/mailbox-security-key-record" = { };
     };
 
   # Generating a certificate for the DNS-over-TLS feature.
@@ -162,8 +162,8 @@ in
       lib.mkBefore ''
         install -Dm0644 ${domainZoneFile} ${domainZoneFile'}
 
-        ${replaceSecretBin} '#mailboxSecurityKey#' '${secretsPath "dns/mailbox-security-key"}' '${domainZoneFile'}'
-        ${replaceSecretBin} '#mailboxSecurityKeyRecord#' '${secretsPath "dns/mailbox-security-key-record"}' '${domainZoneFile'}'
+        ${replaceSecretBin} '#mailboxSecurityKey#' '${secretsPath "dns/${domain}/mailbox-security-key"}' '${domainZoneFile'}'
+        ${replaceSecretBin} '#mailboxSecurityKeyRecord#' '${secretsPath "dns/${domain}/mailbox-security-key-record"}' '${domainZoneFile'}'
       '';
     serviceConfig.LoadCredential = let
       certDirectory = certs."${dnsDomainName}".directory;
