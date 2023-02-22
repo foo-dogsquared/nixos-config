@@ -14,7 +14,7 @@
   # Enable systemd-resolved. This is mostly setup by `systemd.network.enable`
   # by we're being explicit just to be safe.
   services.resolved = {
-    enable = false;
+    enable = true;
     llmnr = "true";
   };
 
