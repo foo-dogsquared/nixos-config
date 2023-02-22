@@ -59,6 +59,7 @@ in
   # https://discourse.nixos.org/t/nixos-on-hetzner-cloud-servers-ipv6/221/
   systemd.network = {
     enable = true;
+    wait-online.ignoredInterfaces = [ "lo" ];
 
     # For more information, you can look at Hetzner documentation from
     # https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/
@@ -73,9 +74,10 @@ in
         networkConfig = {
           # IPv6 has to be manually configured.
           DHCP = "ipv4";
+          IPForward = true;
 
           LinkLocalAddressing = "ipv6";
-          IPForward = true;
+          IPv6AcceptRA = true;
 
           DNS = [
             "2a01:4ff:ff00::add:2"
@@ -101,6 +103,8 @@ in
           IPv4.gateway
           IPv6.gateway
         ];
+
+        networkConfig.IPv6AcceptRA = true;
       };
     };
   };

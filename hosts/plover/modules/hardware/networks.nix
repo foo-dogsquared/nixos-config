@@ -5,8 +5,9 @@ let
   inherit (builtins) toString;
 in
 rec {
-  # This is expected to be /64 block (i.e., `fc00:b0de:5685::/64`).
-  privateIPv6Prefix = "fc00:b0de:5685";
+  # This is expected to be /48 block (i.e., `fc00:b0de:5685::/48`).
+  # The thing is generated using a ULA generator.
+  privateIPv6Prefix = "fd89:c181:8016";
 
   # These blocks should be used sparingly with how wide these blocks cover.
   # Plus, they shouldn't be treated as subnets.
