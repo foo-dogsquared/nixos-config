@@ -139,7 +139,7 @@ in
       systemd.services.cleanup-logs = {
         description = "Weekly log cleanup";
         documentation = [ "man:journalctl(1)" ];
-        script = "${pkgs.systemd}/bin/journalctl --vacuum-time=30d";
+        serviceConfig.ExecStart = "${pkgs.systemd}/bin/journalctl --vacuum-time=30d";
       };
 
       systemd.timers.clean-log = {
@@ -147,7 +147,7 @@ in
         documentation = [ "man:journalctl(1)" ];
         wantedBy = [ "multi-user.target" ];
         timerConfig = {
-          OnCalendar = "weekly";
+          OnCalendar = "monthly";
           Persistent = true;
         };
       };
