@@ -3,7 +3,7 @@
 $TTL 12h
 
 @	3600	IN	SOA	ns1.first-ns.de. hostmaster.foodogsquared.one. (
-				2023021803 	; serial number
+				2023022400 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -48,20 +48,13 @@ wiki	IN	CNAME	foodogsquared-wiki.netlify.app.
 
 ; Public-facing services from this server. Just remember to increment the
 ; serial number once the public IPs changes. PLEEEEEEEEEEEAAAAAAAAASE!
-auth	IN	A	@ploverPublicIPv4@
-auth	IN	AAAA	@ploverPublicIPv6@
-
-pass	IN	A	@ploverPublicIPv4@
-pass	IN	AAAA	@ploverPublicIPv6@
-
-code	IN	A	@ploverPublicIPv4@
-code	IN	AAAA	@ploverPublicIPv6@
-
-vpn	IN	A	@ploverPublicIPv4@
-vpn	IN	AAAA	@ploverPublicIPv6@
-
 plover	IN	A	@ploverPublicIPv4@
 plover	IN	AAAA	@ploverPublicIPv6@
+
+auth	IN	CNAME	plover
+pass	IN	CNAME	plover
+code	IN	CNAME	plover
+vpn	IN	CNAME	plover
 
 ; Other things.
 _github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709
