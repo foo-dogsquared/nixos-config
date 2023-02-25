@@ -92,10 +92,10 @@ Keep in mind, these blocks are not subnets.
 They're more like abstract guidelines for assigning subnets with some ease and some exceptions could be made.
 
 * Server block are made up of interfaces attached to machines that provide services.
-They mainly live in `172.16.0.0/13` and `10.0.0.0/9` for IPv4, `fc00::/8` for IPv6.
+They mainly live in `172.16.0.0/13` and `10.0.0.0/9` for IPv4, `fd00::/9` for IPv6.
 
 * Client block are made up of interfaces attached to machines that are mainly used as clients.
-They mainly live in `172.24.0.0/13` and `10.128.0.0/9` for IPv4, `fd00::/8` for IPv6.
+They mainly live in `172.24.0.0/13` and `10.128.0.0/9` for IPv4, `fd00::/9` for IPv6.
 Furthermore, most of them should be freely assigned an IP address.
 Thus, use of DHCP is pretty much ideal.
 
