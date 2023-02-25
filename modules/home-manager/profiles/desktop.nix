@@ -18,6 +18,7 @@ in {
         aseprite # Pixel art wannabe tool.
         blender # 3D modelling wannabe tool.
         emulsion-palette # Manage your color palettes.
+        eyedropper # Gotta keep your monitor moist.
         inkscape # Illustration wannabe tool.
         gimp # Photo editing wannabe tool.
         krita # Digital art wannabe tool.
@@ -54,6 +55,7 @@ in {
     (lib.mkIf cfg.multimedia.enable {
       home.packages = with pkgs; [
         brave # The only web browser that gives me money.
+        dino # Some modern chat client featuring a dinosaur for what could be considered a dinosaur.
         foliate # The prettier PDF viewer.
         thunderbird # Email checks.
         languagetool # You're personal assistant for proper grammar,
