@@ -81,6 +81,10 @@ in
         SENDMAIL_PATH = "${pkgs.system-sendmail}/bin/sendmail";
       };
 
+      # Reduce the logs to be filled with. You also have to keep in mind this
+      # to be configured with fail2ban.
+      log.LEVEL = "Warn";
+
       # Well, collaboration between forges is nice...
       federation.ENABLED = true;
 
