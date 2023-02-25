@@ -65,6 +65,7 @@ in
         amberol # An unambitious music player.
         authenticator # 2-factor codes for 2-factor storages.
         blanket # Zen...
+        eyedropper # Some nice eyedropper tool.
         gnome.dconf-editor # A saner version of Windows registry.
         dialect # Your gateway to polyglotting.
         fractal # Your gateway to the matrix.
