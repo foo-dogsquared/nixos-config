@@ -3,7 +3,7 @@
 $TTL 12h
 
 @	3600	IN	SOA	ns1.first-ns.de. hostmaster.foodogsquared.one. (
-				2023022400 	; serial number
+				2023022801 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -61,12 +61,12 @@ _github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709
 
 ; Setting up SendGrid.
 ; This is for rewriting tracking links to my domain.
-url2871	IN	CNAME	sendgrid.net
-30339354	IN	CNAME	sendgrid.net
+url2871	IN	CNAME	sendgrid.net.
+30339354	IN	CNAME	sendgrid.net.
 
 ; This is for SendGrid sender authentication.
-em1172	IN	CNAME	u30339354.wl105.sendgrid.net
-s1._domainkey	IN	CNAME	s1.domainkey.u30339354.wl105.sendgrid.net
-s2._domainkey	IN	CNAME	s2.domainkey.u30339354.wl105.sendgrid.net
+em1172	IN	CNAME	u30339354.wl105.sendgrid.net.
+s1._domainkey	IN	CNAME	s1.domainkey.u30339354.wl105.sendgrid.net.
+s2._domainkey	IN	CNAME	s2.domainkey.u30339354.wl105.sendgrid.net.
 
 ; vim: expandtab! tabstop=8 shiftwidth=8 filetype=dns
