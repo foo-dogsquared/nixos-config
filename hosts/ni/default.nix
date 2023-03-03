@@ -115,10 +115,7 @@ in
     };
   };
 
-  tasks = {
-    multimedia-archive.enable = true;
-    backup-archive.enable = true;
-  };
+  tasks.backup-archive.enable = true;
   workflows.workflows.a-happy-gnome.enable = true;
 
   programs.pop-launcher = {
