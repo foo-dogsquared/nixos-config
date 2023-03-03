@@ -102,6 +102,7 @@ in {
         tea # Make some Tea...
         hut # ...in the Hut...
         github-cli # ...in the GitHub CLI.
+        git-filter-repo # History is written by the victors (and force-pushers which are surely not victors).
       ]);
 
       systemd.user.services.nix-upgrade-profile = {
