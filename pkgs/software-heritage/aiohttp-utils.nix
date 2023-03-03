@@ -3,12 +3,12 @@
 with python3Packages;
 buildPythonPackage rec {
   pname = "aiohttp-utils";
-  version = "3.1.1";
+  version = "3.2.1";
 
   src = fetchPypi {
     inherit version;
-    pname = "aiohttp_utils";
-    sha256 = "sha256-CPLE3BWj/Rk6qQSiH0/zZfW64LE6Z2Tz59BaO7gC3BQ";
+    pname = "aiohttp-utils";
+    sha256 = "sha256-UJWcQ68aXvgwvHrWLB6NgFlGpB51VhFpSHvPuJq1IDw=";
   };
 
   doCheck = false;
