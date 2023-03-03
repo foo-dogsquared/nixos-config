@@ -381,7 +381,7 @@
         (lib'.filesToAttr ./users/home-manager);
 
       # Extending home-manager with my custom modules, if anyone cares.
-      homeManagerModules =
+      homeModules =
         lib'.importModules (lib'.filesToAttr ./modules/home-manager);
 
       # In case somebody wants to use my stuff to be included in nixpkgs.
