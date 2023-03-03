@@ -3,12 +3,12 @@
 with python3Packages;
 buildPythonPackage rec {
   pname = "swh-auth";
-  version = "0.6.6";
+  version = "0.7.1";
 
   src = fetchPypi {
     inherit version;
     pname = "swh.auth";
-    sha256 = "sha256-TWLrZC4Iv0HTCtGjraPZRpGLiZFxTXZw6trWzC0GkHw=";
+    sha256 = "sha256-tmHyDSUDIWLNRTgPquyYaeIg2wZdYMJWpK9Gy8h1B6k=";
   };
 
   # Tests require network access.
