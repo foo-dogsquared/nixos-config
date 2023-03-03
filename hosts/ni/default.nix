@@ -136,9 +136,17 @@ in
     # Some sysadmin thingamajigs.
     openldap
     wireguard-tools
+    (swh.swh-core.overrideAttrs (attrs: {
+      pythonPath = with pkgs.swh; [
+        swh-model
+      ];
+    }))
 
     # For debugging build environments in Nix packages.
     cntr
+
+    # Searchsploit.
+    exploitdb
   ];
 
   # Enable Guix service.
