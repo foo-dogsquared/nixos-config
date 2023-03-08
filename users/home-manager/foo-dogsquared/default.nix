@@ -278,7 +278,8 @@ in
       enable = true;
       graphics.enable = true;
       audio.enable = true;
-      multimedia.enable = true;
+      video.enable = true;
+      documents.enable = true;
     };
     research.enable = true;
   };

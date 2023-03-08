@@ -8,8 +8,9 @@ in {
     graphics.enable =
       lib.mkEnableOption "installations of graphics-related apps";
     audio.enable = lib.mkEnableOption "installations of audio-related apps";
-    multimedia.enable =
-      lib.mkEnableOption "installations for opening multimedia files";
+    video.enable = lib.mkEnableOption "installations of video-related apps";
+    documents.enable =
+      lib.mkEnableOption "installations for document-related apps";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -52,15 +53,23 @@ in {
       };
     })
 
-    (lib.mkIf cfg.multimedia.enable {
+    (lib.mkIf cfg.video.enable {
       home.packages = with pkgs; [
-        brave # The only web browser that gives me money.
-        dino # Some modern chat client featuring a dinosaur for what could be considered a dinosaur.
-        foliate # The prettier PDF viewer.
-        thunderbird # Email checks.
-        languagetool # You're personal assistant for proper grammar,
-        vale # Elevate your fanfics to an arguably higher caliber!
+        ffmpeg # Ah yes, everyman's multimedia swiss army knife.
       ];
+
+      # The one-stop shop for your broadcasting and recording needs. Not to be
+      # confused with the build service.
+      programs.obs-studio = {
+        enable = true;
+        plugins = with pkgs.obs-studio-plugins; [
+          droidcam-obs
+          obs-multi-rtmp
+          obs-gstreamer
+          obs-pipewire-audio-capture
+          wlrobs
+        ];
+      };
 
       # The modern VLC if you have little sense of design.
       programs.mpv = {
@@ -108,6 +117,17 @@ in {
           youtube-quality
         ];
       };
+    })
+
+    (lib.mkIf cfg.documents.enable {
+      home.packages = with pkgs; [
+        brave # The only web browser that gives me money.
+        dino # Some modern chat client featuring a dinosaur for what could be considered a dinosaur.
+        foliate # The prettier PDF viewer.
+        thunderbird # Email checks.
+        languagetool # You're personal assistant for proper grammar,
+        vale # Elevate your fanfics to an arguably higher caliber!
+      ];
 
       # Some PDF viewer with a penchant for research.
       programs.sioyek = {
