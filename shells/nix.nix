@@ -3,7 +3,6 @@
 { mkShell
 , lib
 , jq
-, nix-init
 , nix-tree
 , nixfmt
 , nurl
@@ -19,6 +18,5 @@ mkShell {
     rnix-lsp # Make your editing experience nicer with a nice language server.
     nix-tree # Suprisingly nice exploration tool for your packages in the store directory.
     nurl # Nice way to catch up with some things.
-    nix-init # Scaffolding out-of-tree packages (NO SUBSTANDARD MATERIALS ALLOWED!!!).
   ];
 }
