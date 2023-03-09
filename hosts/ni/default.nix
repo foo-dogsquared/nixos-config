@@ -78,6 +78,7 @@ in
 
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_2;
   boot.binfmt.emulatedSystems = [
     "aarch64-linux"
     "riscv64-linux"
