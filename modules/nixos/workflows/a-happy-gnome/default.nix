@@ -115,6 +115,7 @@ in
       # Setting up split DNS with systemd-resolved. The domains should already
       # be configured somewhere else.
       services.resolved.enable = true;
+      networking.networkmanager.dns = "systemd-resolved";
 
       # Since we're using KDE Connect, we'll have to use gsconnect.
       programs.kdeconnect = {
