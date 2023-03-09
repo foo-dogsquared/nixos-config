@@ -221,7 +221,7 @@ in
 
     address = with wireguardPeers.desktop; [
       "${IPv4}/24"
-      "${IPv6}/96"
+      "${IPv6}/64"
     ];
 
     peers = [
