@@ -141,6 +141,7 @@ in {
         act # Test your CI without embarrassing yourself repeatedly pushing into GitHub repos.
         irssi # Communicate in the terminal like a normal person.
         treefmt # I like the tagline of this tool: "One CLI for formatting your code tree." (It rhymes somewhat.)
+        zenith # Very fanciful system dashboard.
       ];
     })
   ]);
