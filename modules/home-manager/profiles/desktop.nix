@@ -24,7 +24,7 @@ in {
         gimp # Photo editing wannabe tool.
         krita # Digital art wannabe tool.
 
-        ffmpeg # Ah yes, everyman's multimedia swiss army knife.
+        ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         imagemagick # Ah yes, everyman's image manipulation tool.
         gmic # Don't let the gimmicks fool you, it's a magical image framework.
       ];
@@ -42,7 +42,7 @@ in {
         yabridge # Building bridges to Windows and Linux audio tools.
         yabridgectl # The bridge controller.
 
-        ffmpeg # Ah yes, everyman's multimedia swiss army knife.
+        ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         helvum # The Pipewire Patchbay.
         carla # The Carla Carla.
       ];
@@ -57,7 +57,7 @@ in {
 
     (lib.mkIf cfg.video.enable {
       home.packages = with pkgs; [
-        ffmpeg # Ah yes, everyman's multimedia swiss army knife.
+        ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
       ];
 
       # The one-stop shop for your broadcasting and recording needs. Not to be
