@@ -12,6 +12,26 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  # The simpler WiFi manager.
+  networking.wireless.iwd = {
+    enable = true;
+    settings = {
+      General = {
+        EnableNetworkConfiguration = true;
+        UseDefaultInterface = true;
+        ControlPortOverNL80211 = true;
+      };
+
+      Network = {
+        AutoConnect = true;
+        NameResolvingService = "systemd";
+      };
+    };
+  };
+
+  # Set the NetworkManager backend to iwd for workflows that use it.
+  network.networkmanager.wifi.backend = "iwd";
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot = {
     enable = true;
