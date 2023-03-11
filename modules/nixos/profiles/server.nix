@@ -12,6 +12,7 @@ in
     headless.enable = lib.mkEnableOption "configuration for headless servers";
     hardened-config.enable = lib.mkEnableOption "additional hardened configuration for NixOS systems";
     cleanup.enable = lib.mkEnableOption "cleanup service for the system";
+    auto-upgrade.enable = lib.mkEnableOption "unattended system upgrades";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -115,6 +116,27 @@ in
       boot.kernel.sysctl = {
         # Disable system console entirely. We don't need it so get rid of it.
         "kernel.sysrq" = 0;
+      };
+    })
+
+    (lib.mkIf cfg.auto-upgrade.enable {
+      system.autoUpgrade = {
+        enable = true;
+        flake = "github:foo-dogsquared/nixos-config";
+        allowReboot = true;
+        persistent = true;
+        rebootWindow = {
+          lower = "22:00";
+          upper = "00:00";
+        };
+        dates = "weekly";
+        flags = [
+          "--update-input"
+          "nixpkgs"
+          "--commit-lock-file"
+          "--no-write-lock-file"
+        ];
+        randomizedDelaySec = "1min";
       };
     })
 
