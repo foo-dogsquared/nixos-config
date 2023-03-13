@@ -1,4 +1,4 @@
-{ dotfiles, config, options, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 let
   yt-dlp-for-audio-config = pkgs.writeText "yt-dlp-for-audio-config" ''
@@ -20,7 +20,7 @@ let
   yt-dlp-for-audio = pkgs.writeScriptBin "yt-dlp-audio" ''
     ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${yt-dlp-for-audio-config}" $@
   '';
-  getDotfiles = path: "${dotfiles}/${path}";
+  getDotfiles = path: config.lib.file.mkOutOfStoreSymlink "${config.home.mutableFile."library/dotfiles".path}/${path}";
 
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";
@@ -339,5 +339,12 @@ in
     "lf".source = getDotfiles "lf";
     "nvim".source = getDotfiles "nvim";
     "wezterm".source = getDotfiles "wezterm";
+  };
+
+  home.mutableFile = {
+    "library/dotfiles" = {
+      url = "https://github.com/foo-dogsquared/dotfiles.git";
+      type = "git";
+    };
   };
 }

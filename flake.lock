@@ -77,22 +77,6 @@
         "type": "github"
       }
     },
-    "dotfiles": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1668655246,
-        "narHash": "sha256-V7Js99Pyg0UvP6RNg3Isv3MgCKZO9cqVxiiVa9ZZiFU=",
-        "owner": "foo-dogsquared",
-        "repo": "dotfiles",
-        "rev": "5862afecaf045175891550c1020c09cd2dbb32ed",
-        "type": "github"
-      },
-      "original": {
-        "owner": "foo-dogsquared",
-        "repo": "dotfiles",
-        "type": "github"
-      }
-    },
     "dream2nix": {
       "inputs": {
         "alejandra": [
@@ -665,7 +649,6 @@
       "inputs": {
         "deploy": "deploy",
         "devshell": "devshell",
-        "dotfiles": "dotfiles",
         "emacs-overlay": "emacs-overlay",
         "flake-utils": "flake-utils",
         "guix-overlay": "guix-overlay",

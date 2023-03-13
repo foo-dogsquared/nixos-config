@@ -18,10 +18,6 @@
     # We're using these libraries for other functions.
     flake-utils.url = "github:numtide/flake-utils";
 
-    # My personal dotfiles.
-    dotfiles.url = "github:foo-dogsquared/dotfiles";
-    dotfiles.flake = false;
-
     # Managing home configurations.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -109,7 +105,7 @@
         // import ./lib/private.nix { lib = final; });
 
       extraArgs = {
-        inherit (inputs) nix-colors dotfiles;
+        inherit (inputs) nix-colors;
         inherit inputs self;
 
         # This is a variable that is used to check whether the module is
