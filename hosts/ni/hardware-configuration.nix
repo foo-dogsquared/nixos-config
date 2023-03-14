@@ -30,7 +30,7 @@
   };
 
   # Set the NetworkManager backend to iwd for workflows that use it.
-  network.networkmanager.wifi.backend = "iwd";
+  networking.networkmanager.wifi.backend = "iwd";
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot = {
