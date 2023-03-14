@@ -106,6 +106,7 @@ in {
       ]);
 
       systemd.user.services.nix-upgrade-profile = {
+        after = [ "default.target" ];
         description = ''
           Update service for user-specific Nix profile
         '';
