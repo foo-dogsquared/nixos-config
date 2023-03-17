@@ -20,8 +20,11 @@ let
           The path of the mutable file. By default, it will be relative to the
           home directory.
         '';
-        default = "${homeDir}/${name}";
         example = lib.literalExpression "\${config.xdg.userDirs.documents}/top-secret";
+        apply = p:
+          let
+            absDir = if lib.hasPrefix "/" p then p else "${baseDir}/${p}";
+          in lib.removePrefix "${baseDir}/" absDir;
       };
 
       extractPath = lib.mkOption {
@@ -44,7 +47,8 @@ let
 
           - For `fetch`, the file will be fetched with `curl`.
           - For `git`, it will be fetched with `git clone`.
-          - For `archive`, the file will be extracted before putting the file.
+          - For `archive`, the file will be fetched with `curl` and extracted
+          before putting the file.
 
           The default type is `fetch`.
         '';
@@ -130,11 +134,7 @@ in
                 '')
               cfg;
 
-            script = pkgs.writeShellApplication {
-              name = "put-mutable-files";
-              runtimeInputs = with pkgs; [ archiver curl git ];
-              text = lib.concatStringsSep "\n" mutableFilesCmds;
-            };
+            script = pkgs.writeScriptBin "put-mutable-files" (lib.concatStringsSep "\n" mutableFilesCmds);
           in
           "${script}/bin/put-mutable-files";
       };
