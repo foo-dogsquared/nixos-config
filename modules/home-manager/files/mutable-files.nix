@@ -4,7 +4,7 @@ let
   cfg = config.home.mutableFile;
   homeDir = config.home.homeDirectory;
 
-  fileSubmodule = { name, config, options, ... }: {
+  fileSubmodule = baseDir: { name, config, options, ... }: {
     options = {
       url = lib.mkOption {
         type = lib.types.str;
@@ -56,7 +56,7 @@ let
 in
 {
   options.home.mutableFile = lib.mkOption {
-    type = with lib.types; attrsOf (submodule fileSubmodule);
+    type = with lib.types; attrsOf (submodule (fileSubmodule config.home.homeDirectory));
     description = lib.mkDoc ''
       An attribute set of mutable files and directories to be declaratively put
       into the home directory. Take note this is not exactly pure (or
