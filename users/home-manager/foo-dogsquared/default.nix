@@ -346,5 +346,11 @@ in
       url = "https://github.com/foo-dogsquared/dotfiles.git";
       type = "git";
     };
+
+    "${config.xdg.configHome}/emacs" = {
+      url = "https://github.com/doomemacs/doomemacs.git";
+      type = "git";
+      extraArgs = [ "--depth" "1" ];
+    };
   };
 }
