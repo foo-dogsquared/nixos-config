@@ -51,6 +51,17 @@ let
         default = "fetch";
         example = "git";
       };
+
+      extraArgs = lib.mkOption {
+        type = with lib.types; listOf str;
+        description = lib.mkDoc ''
+          A list of extra arguments to be included with the fetch command. Take
+          note of the commands used for each type as documented from
+          `config.home.mutableFile.<name>.type`.
+        '';
+        default = [];
+        example = [ "--depth" "1" ];
+      };
     };
   };
 in
@@ -101,13 +112,14 @@ in
                 let
                   url = lib.escapeShellArg value.url;
                   path = lib.escapeShellArg value.path;
+                  extraArgs = lib.escapeShellArgs value.extraArgs;
                 in
                 ''
-                  ${lib.optionalString (value.type == "git") "[ -d ${path} ] || git clone ${url} ${path}"}
-                  ${lib.optionalString (value.type == "fetch") "[ -d ${path} ] || curl ${url} --output ${path}"}
+                  ${lib.optionalString (value.type == "git") "[ -d ${path} ] || git clone ${extraArgs} ${url} ${path}"}
+                  ${lib.optionalString (value.type == "fetch") "[ -e ${path} ] || curl ${extraArgs} ${url} --output ${path}"}
                   ${lib.optionalString (value.type == "archive") ''
-                    [ -d ${path} ] || {
-                      filename=$(curl --output-dir /tmp --silent --show-error --write-out '%{filename_effective}' --remote-name --remote-header-name --location ${url})
+                    [ -e ${path} ] || {
+                      filename=$(curl ${extraArgs} --output-dir /tmp --silent --show-error --write-out '%{filename_effective}' --remote-name --remote-header-name --location ${url})
                       ${if (value.extractPath != null) then
                           ''arc extract "/tmp/$filename" ${lib.escapeShellArg value.extractPath} ${path}''
                         else
