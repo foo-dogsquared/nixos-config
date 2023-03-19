@@ -18,15 +18,18 @@
     settings = {
       General = {
         EnableNetworkConfiguration = true;
-        UseDefaultInterface = true;
         ControlPortOverNL80211 = true;
       };
 
-      Network = {
-        AutoConnect = true;
-        NameResolvingService = "systemd";
-      };
+      Network.NameResolvingService = "systemd";
+      Settings.AutoConnect = true;
     };
+  };
+
+  # Welp....
+  systemd.network.links."80-iwd" = {
+    matchConfig = lib.mkForce { };
+    linkConfig = lib.mkForce { };
   };
 
   # Set the NetworkManager backend to iwd for workflows that use it.
