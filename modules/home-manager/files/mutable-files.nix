@@ -2,9 +2,8 @@
 
 let
   cfg = config.home.mutableFile;
-  homeDir = config.home.homeDirectory;
 
-  fileSubmodule = baseDir: { name, config, options, ... }: {
+  fileType = baseDir: { name, config, options, ... }: {
     options = {
       url = lib.mkOption {
         type = lib.types.str;
@@ -21,10 +20,9 @@ let
           home directory.
         '';
         example = lib.literalExpression "\${config.xdg.userDirs.documents}/top-secret";
+        default = name;
         apply = p:
-          let
-            absDir = if lib.hasPrefix "/" p then p else "${baseDir}/${p}";
-          in lib.removePrefix "${baseDir}/" absDir;
+          if lib.hasPrefix "/" p then p else "${baseDir}/${p}";
       };
 
       extractPath = lib.mkOption {
@@ -71,7 +69,7 @@ let
 in
 {
   options.home.mutableFile = lib.mkOption {
-    type = with lib.types; attrsOf (submodule (fileSubmodule config.home.homeDirectory));
+    type = with lib.types; attrsOf (submodule (fileType config.home.homeDirectory));
     description = lib.mkDoc ''
       An attribute set of mutable files and directories to be declaratively put
       into the home directory. Take note this is not exactly pure (or
@@ -97,8 +95,9 @@ in
   config = lib.mkIf (cfg != { }) {
     systemd.user.services.put-mutable-files = {
       Unit = {
-        Description = "Download mutable home-manager-managed files";
-        After = [ "default.target" ];
+        Description = "Fetch mutable home-manager-managed files";
+        After = [ "default.target" "network-online.target" ];
+        Wants = [ "network-online.target" ];
       };
 
       Service = {
@@ -134,7 +133,10 @@ in
                 '')
               cfg;
 
-            script = pkgs.writeScriptBin "put-mutable-files" (lib.concatStringsSep "\n" mutableFilesCmds);
+            script = pkgs.writeScriptBin "put-mutable-files" ''
+              #!${pkgs.runtimeShell}
+              ${lib.concatStringsSep "\n" mutableFilesCmds}
+            '';
           in
           "${script}/bin/put-mutable-files";
       };
