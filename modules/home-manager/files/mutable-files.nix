@@ -93,7 +93,7 @@ in
   };
 
   config = lib.mkIf (cfg != { }) {
-    systemd.user.services.put-mutable-files = {
+    systemd.user.services.fetch-mutable-files = {
       Unit = {
         Description = "Fetch mutable home-manager-managed files";
         After = [ "default.target" "network-online.target" ];
@@ -132,13 +132,11 @@ in
                   ''}
                 '')
               cfg;
-
-            script = pkgs.writeScriptBin "put-mutable-files" ''
-              #!${pkgs.runtimeShell}
-              ${lib.concatStringsSep "\n" mutableFilesCmds}
-            '';
           in
-          "${script}/bin/put-mutable-files";
+          pkgs.writeScript "fetch-mutable-files" ''
+            #!${pkgs.runtimeShell}
+            ${lib.concatStringsSep "\n" mutableFilesCmds}
+          '';
       };
 
       Install.WantedBy = [ "default.target" ];
