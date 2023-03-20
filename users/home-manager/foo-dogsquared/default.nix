@@ -353,4 +353,13 @@ in
       extraArgs = [ "--depth" "1" ];
     };
   };
+
+  systemd.user.services.fetch-mutable-files = {
+    Service.ExecStartPost = pkgs.writeScript "${config.home.username}-post-fetch-mutable-files" ''
+      #!${pkgs.runtimeShell}
+
+      # Automate installation of Doom Emacs.
+      ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
+    '';
+  };
 }
