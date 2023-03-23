@@ -132,11 +132,11 @@ in
                   ''}
                 '')
               cfg;
-          in
-          pkgs.writeScript "fetch-mutable-files" ''
-            #!${pkgs.runtimeShell}
-            ${lib.concatStringsSep "\n" mutableFilesCmds}
-          '';
+
+            script = pkgs.writeShellScript "fetch-mutable-files" ''
+              ${lib.concatStringsSep "\n" mutableFilesCmds}
+            '';
+          in builtins.toString script;
       };
 
       Install.WantedBy = [ "default.target" ];
