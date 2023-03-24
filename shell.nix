@@ -12,7 +12,7 @@ pkgs.mkShell {
     deploy-rs
 
     # Language servers for various parts of the config that uses a language.
-    sumneko-lua-language-server
+    lua-language-server
     pyright
     rnix-lsp
 
