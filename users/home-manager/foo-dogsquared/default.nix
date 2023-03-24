@@ -352,14 +352,19 @@ in
       type = "git";
       extraArgs = [ "--depth" "1" ];
     };
+
+    "${config.xdg.dataHome}/base16/bark-on-a-tree" = {
+      url = "https://github.com/foo-dogsquared/base16-bark-on-a-tree-scheme.git";
+      type = "git";
+    };
   };
 
   systemd.user.services.fetch-mutable-files = {
-    Service.ExecStartPost = pkgs.writeScript "${config.home.username}-post-fetch-mutable-files" ''
-      #!${pkgs.runtimeShell}
-
-      # Automate installation of Doom Emacs.
-      ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
-    '';
+    Service.ExecStartPost = let
+      script = pkgs.writeShellScript "post-fetch-mutable-files" ''
+        # Automate installation of Doom Emacs.
+        ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
+      '';
+    in builtins.toString script;
   };
 }
