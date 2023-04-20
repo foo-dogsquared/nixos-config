@@ -27,8 +27,16 @@ in {
         fd # Oh nice, a more reliable `find`.
         ripgrep # On nice, a more reliable `grep`.
         exa # Oh nice, a shinier `ls`.
-        bat # dog > bat > cat
       ];
+
+      programs.bat = {
+        enable = true;
+        config = {
+          pager = "${lib.getBin pkgs.moar}/bin/moar";
+          theme = "base16";
+          style = "plain";
+        };
+      };
     })
 
     (lib.mkIf cfg.shell.enable {
