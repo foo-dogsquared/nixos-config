@@ -22,11 +22,17 @@ let
   '';
   getDotfiles = path: config.lib.file.mkOutOfStoreSymlink "${config.home.mutableFile."library/dotfiles".path}/${path}";
 
+  customScripts = pkgs.runCommandLocal "install-custom-scripts" { } ''
+    install -Dm0755 "${config.home.mutableFile."library/dotfiles".path}/bin/*" -t $out/bin
+  '';
+
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";
 in
 {
   home.packages = with pkgs; [
+    customScripts
+
     songrec
     vscodium-fhs
     neovim
