@@ -181,12 +181,10 @@
           substituters = [
             "https://nix-community.cachix.org"
             "https://foo-dogsquared.cachix.org"
-            "https://helix.cachix.org"
           ];
           trusted-public-keys = [
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
             "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
-            "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
           ];
 
           # Sane config for the package manager.
