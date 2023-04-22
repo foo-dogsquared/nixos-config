@@ -21,7 +21,6 @@
     # Managing home configurations.
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.inputs.utils.follows = "flake-utils";
 
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
