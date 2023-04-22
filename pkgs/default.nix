@@ -6,7 +6,6 @@ let
   packages = self:
     let callPackage = newScope self;
     in rec {
-      artem = callPackage ./artem.nix { };
       auto-editor = callPackage ./auto-editor.nix { };
       awesome-cli = callPackage ./awesome-cli { };
       decker = callPackage ./decker { };
