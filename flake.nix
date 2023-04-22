@@ -206,7 +206,7 @@
         nixpkgs.overlays = overlays;
 
         # Please clean your temporary crap.
-        boot.cleanTmpDir = lib.mkDefault true;
+        boot.tmp.cleanOnBoot = lib.mkDefault true;
 
         # We live in a Unicode world and dominantly English in technical fields so we'll
         # have to go with it.
