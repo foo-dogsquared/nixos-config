@@ -62,7 +62,6 @@ let
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
       pop-launcher-plugin-jetbrains = callPackage ./pop-launcher-plugin-jetbrains { };
       swh = callPackage ./software-heritage { python3Packages = python310Packages; };
-      text-engine = callPackage ./text-engine.nix { };
       tic-80 = callPackage ./tic-80 { };
       thokr = callPackage ./thokr.nix { };
       segno = callPackage ./segno.nix { };
