@@ -33,7 +33,6 @@ let
           sha256 = "sha256-yPyomT+OmOe4mFJMNCq2FBgNHzuAvZ70itFA0s5BwV8=";
         };
       });
-      gradience = callPackage ./gradience { libadwaita = libadwaita-latest; };
       guile-config = callPackage ./guile-config.nix { };
       guile-hall = callPackage ./guile-hall.nix { };
       gnome-info-collect = callPackage ./gnome-info-collect { };
