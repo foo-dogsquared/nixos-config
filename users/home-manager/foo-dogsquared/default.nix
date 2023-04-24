@@ -4,23 +4,23 @@ let
   ytdlpAudio = pkgs.writeScriptBin "yt-dlp-audio" ''
     ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${./config/yt-dlp-audio.conf}" $@
   '';
-  getDotfiles = path: config.lib.file.mkOutOfStoreSymlink "${config.home.mutableFile."library/dotfiles".path}/${path}";
 
-  customScripts = pkgs.runCommandLocal "install-custom-scripts" { } ''
-    install -Dm0755 "${config.home.mutableFile."library/dotfiles".path}/bin/*" -t $out/bin
-  '';
+  dotfilesAsStorePath = config.lib.file.mkOutOfStoreSymlink config.home.mutableFile."library/dotfiles".path;
+  getDotfiles = path: "${dotfilesAsStorePath}/${path}";
 
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";
 in
 {
   home.packages = with pkgs; [
-    customScripts
+    vscodium-fhs # Visual Studio-lite and for those who suffer from Visual Studio withdrawal.
+    hledger # Trying to be a good accountant.
+    hledger-utils # For extra trying to be a better accountant.
 
-    songrec
-    vscodium-fhs
-    neovim
+    # My music-related tools.
+    songrec # SHAZAM!
     ytdlpAudio # My custom script for downloading music with yt-dlp.
+    picard # Graphical beets.
   ];
 
   fonts.fontconfig.enable = true;
