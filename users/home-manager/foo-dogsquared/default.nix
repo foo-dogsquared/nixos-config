@@ -134,12 +134,12 @@ in
       library = "${musicDir}/library.db";
       plugins = [
         "acousticbrainz"
-        "fetchart"
-        "fromfilename"
         "chroma"
         "deezer"
         "edit"
         "export"
+        "fetchart"
+        "fromfilename"
         "fuzzy"
         "mbsync"
         "playlist"
@@ -150,6 +150,8 @@ in
       directory = musicDir;
       ui.color = true;
 
+      deezer.source_weight = 0.0;
+
       import = {
         move = true;
         link = false;
@@ -159,10 +161,7 @@ in
         log = "beets.log";
       };
 
-      match = {
-        required = "year label";
-        ignore_video_tracks = true;
-      };
+      match.ignore_video_tracks = true;
 
       # Plugins configuration.
       fuzzy.prefix = "-";
@@ -177,7 +176,7 @@ in
           }
           {
             name = "released-in-$year.m3u8";
-            query = "year:2000..2021";
+            query = "year:2000..2023";
           }
         ];
       };
@@ -331,18 +330,22 @@ in
     "wezterm".source = getDotfiles "wezterm";
   };
 
+  # Automating some files to be fetched on activation.
   home.mutableFile = {
+    # Fetching my dotfiles,...
     "library/dotfiles" = {
       url = "https://github.com/foo-dogsquared/dotfiles.git";
       type = "git";
     };
 
+    # ...Doom Emacs,...
     "${config.xdg.configHome}/emacs" = {
       url = "https://github.com/doomemacs/doomemacs.git";
       type = "git";
       extraArgs = [ "--depth" "1" ];
     };
 
+    # ...and my custom theme to be a showoff.
     "${config.xdg.dataHome}/base16/bark-on-a-tree" = {
       url = "https://github.com/foo-dogsquared/base16-bark-on-a-tree-scheme.git";
       type = "git";
