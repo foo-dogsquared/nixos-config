@@ -1,24 +1,8 @@
 { config, options, lib, pkgs, ... }:
 
 let
-  yt-dlp-for-audio-config = pkgs.writeText "yt-dlp-for-audio-config" ''
-    # Don't overwrite for cautious individuals.
-    --no-overwrite
-
-    # To make sure all audio-related.
-    --extract-audio
-    --format bestaudio
-    --audio-format opus
-
-    --output '%(track_number,playlist_autonumber)d-%(track,title)s.%(ext)s'
-    --download-archive archive
-
-    # Add all sorts of metadata.
-    --embed-thumbnail
-    --add-metadata
-  '';
-  yt-dlp-for-audio = pkgs.writeScriptBin "yt-dlp-audio" ''
-    ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${yt-dlp-for-audio-config}" $@
+  ytdlpAudio = pkgs.writeScriptBin "yt-dlp-audio" ''
+    ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${./config/yt-dlp-audio.conf}" $@
   '';
   getDotfiles = path: config.lib.file.mkOutOfStoreSymlink "${config.home.mutableFile."library/dotfiles".path}/${path}";
 
@@ -36,7 +20,7 @@ in
     songrec
     vscodium-fhs
     neovim
-    yt-dlp-for-audio
+    ytdlpAudio # My custom script for downloading music with yt-dlp.
   ];
 
   fonts.fontconfig.enable = true;
