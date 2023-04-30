@@ -3,6 +3,10 @@
 let
   cfg = config.tasks.multimedia-archive;
   mountName = "/mnt/archives";
+
+  deviantArt = name: "https://deviantart.com/${name}";
+  artStation = name: "https://www.artstation.com/${name}";
+  newgrounds = name: "https://${name}.newgrounds.com";
 in
 {
   options.tasks.multimedia-archive.enable =
@@ -176,21 +180,25 @@ in
         jobs = {
           arts = {
             urls = [
-              "https://www.deviantart.com/xezeno" # Xezeno
+              (deviantArt "xezeno") # Xezeno
+              (deviantArt "jenzee") # JenZee
               #"https://www.pixiv.net/en/users/60562229" # Ravioli
-              "https://www.artstation.com/kuvshinov_ilya" # Ilya Kuvshinov
-              "https://www.artstation.com/meiipng" # Meiiart
-              "https://www.artstation.com/bassem_wageeh" # Bassem wageeh
-              "https://www.artstation.com/ocellusart" # Ocellus
-              "https://www.artstation.com/jordanparrin" # Jordan Parrin
-              "https://www.artstation.com/blazporenta" # Blaz Porenta
-              "https://www.artstation.com/an_na" # Anya Mozharovska
-              "https://www.artstation.com/dllxtt" # Mykhail Klymenko
-              "https://www.artstation.com/nicwilliams" # Nic Williams
-              "https://www.artstation.com/aaconcept" # Andrew An
-              "https://www.artstation.com/aliena85" # Mandy Jurgens
-              "https://www.artstation.com/666kart" # Kan Liu
-              "https://hyperjerk.newgrounds.com" # HyperJerk
+              (artStation "kuvshinov_ilya") # Ilya Kuvshinov
+              (artStation "meiipng") # Meiiart
+              (artStation "bassem_wageeh") # Bassem wageeh
+              (artStation "ocellusart") # Ocellus
+              (artStation "jordanparrin") # Jordan Parrin
+              (artStation "blazporenta") # Blaz Porenta
+              (artStation "an_na") # Anya Mozharovska
+              (artStation "dllxtt") # Mykhail Klymenko
+              (artStation "nicwilliams") # Nic Williams
+              (artStation "aaconcept") # Andrew An
+              (artStation "aliena85") # Mandy Jurgens
+              (artStation "666kart") # Kan Liu
+              (artStation "angryangryasian") # David Liu
+              (artStation "mikedilonardo") # Michael Di Lonardo
+              (artStation "karlschecht") # Karl Schecht
+              (newgrounds "hyperjerk") # HyperJerk
             ];
             startAt = "weekly";
             persistent = true;
