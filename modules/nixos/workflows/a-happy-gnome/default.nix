@@ -66,6 +66,7 @@ in
         authenticator # 2-factor codes for 2-factor storages.
         blanket # Zen...
         eyedropper # Some nice eyedropper tool.
+        flowtime # Some nice timer for those overworking.
         gnome.dconf-editor # A saner version of Windows registry.
         dialect # Your gateway to polyglotting.
         fractal # Your gateway to the matrix.
