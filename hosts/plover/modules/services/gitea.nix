@@ -17,8 +17,6 @@ in
       type = "postgres";
       passwordFile = config.sops.secrets."plover/gitea/db/password".path;
     };
-    domain = codeForgeDomain;
-    rootUrl = "https://${codeForgeDomain}";
 
     # Allow Gitea to take a dump.
     dump = {
@@ -27,7 +25,6 @@ in
     };
 
     # There are a lot of services in port 3000 so we'll change it.
-    httpPort = 8432;
     lfs.enable = true;
 
     mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
@@ -35,6 +32,12 @@ in
     # You can see the available configuration options at
     # https://docs.gitea.io/en-us/config-cheat-sheet/.
     settings = {
+      server = {
+        ROOT_URL = "https://${codeForgeDomain}";
+        HTTP_PORT = 8432;
+        DOMAIN = codeForgeDomain;
+      };
+
       "repository.pull_request" = {
         WORK_IN_PROGRESS_PREFIXES = "WIP:,[WIP],DRAFT,[DRAFT]";
         ADD_CO_COMMITTERS_TRAILERS = true;
@@ -160,7 +163,7 @@ in
     forceSSL = true;
     enableACME = true;
     locations."/" = {
-      proxyPass = "http://localhost:${toString config.services.gitea.httpPort}";
+      proxyPass = "http://localhost:${toString config.services.gitea.settings.server.HTTP_PORT}";
     };
   };
 
