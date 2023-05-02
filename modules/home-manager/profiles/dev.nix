@@ -29,6 +29,7 @@ in {
         exa # Oh nice, a shinier `ls`.
       ];
 
+      # dog > sky dog > cat.
       programs.bat = {
         enable = true;
         config = {
@@ -142,13 +143,13 @@ in {
 
     (lib.mkIf cfg.extras.enable {
       home.packages = with pkgs; [
-        tree-sitter # The modern way of text highlighting.
-        hyperfine # Making sure your apps are not just fine but REEEEEEAAAAALY fine.
+        act # Test your CI without embarrassing yourself repeatedly pushing into GitHub repos.
         github-cli # So you don't have to use much of GitHub on the site, I guess.
         hut # So you don't have to see much of Sourcehut's brutalist design, I guess.
-        act # Test your CI without embarrassing yourself repeatedly pushing into GitHub repos.
+        hyperfine # Making sure your apps are not just fine but REEEEEEAAAAALY fine.
         irssi # Communicate in the terminal like a normal person.
         license-cli # A nice generator template for license files.
+        tree-sitter # The modern way of text highlighting.
         treefmt # I like the tagline of this tool: "One CLI for formatting your code tree." (It rhymes somewhat.)
         zenith # Very fanciful system dashboard.
       ];
