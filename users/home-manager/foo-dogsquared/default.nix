@@ -135,7 +135,6 @@ in
       plugins = [
         "acousticbrainz"
         "chroma"
-        "deezer"
         "edit"
         "export"
         "fetchart"
@@ -149,8 +148,6 @@ in
       ignore_hidden = true;
       directory = musicDir;
       ui.color = true;
-
-      deezer.source_weight = 0.0;
 
       import = {
         move = true;
