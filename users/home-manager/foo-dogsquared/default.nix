@@ -354,6 +354,7 @@ in
       script = pkgs.writeShellScript "post-fetch-mutable-files" ''
         # Automate installation of Doom Emacs.
         ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
+        ${config.xdg.configHome}/emacs/bin/doom sync
       '';
     in builtins.toString script;
   };
