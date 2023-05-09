@@ -1,6 +1,7 @@
 { stdenv, lib, python3Packages, swh-core, ... }:
 
 with python3Packages;
+
 buildPythonPackage rec {
   pname = "swh-auth";
   version = "0.7.1";
@@ -20,7 +21,15 @@ buildPythonPackage rec {
     sentry-sdk
     click
     pyyaml
-    python-keycloak
+    (python-keycloak.overrideAttrs (final: prev: rec {
+      version = "2.16.1";
+      src = pkgs.fetchPypi {
+        inherit version;
+        pname = "python_keycloak";
+        hash = "sha256-LyJwC274wWcoSoLCNzb2/ryQW9CrhZgdyhIXGt82Z68=";
+      };
+      propagatedBuildInputs = prev.propagatedBuildInputs ++ [ setuptools deprecation ];
+    }))
 
     swh-core
   ];
