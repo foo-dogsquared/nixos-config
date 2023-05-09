@@ -30,18 +30,18 @@ in
         enabling the extensions.
       '';
       default = with pkgs.gnomeExtensions; [
-        arcmenu
-        appindicator
         alphabetical-app-grid
+        appindicator
+        arcmenu
         burn-my-windows
         caffeine
         desktop-cube
         gsconnect
-        x11-gestures
-        kimpanel
-        runcat
         just-perfection
+        kimpanel
         mpris-indicator-button
+        runcat
+        x11-gestures
       ] ++ [
         pkgs.gnome-shell-extension-fly-pie
         pkgs.gnome-shell-extension-pop-shell
@@ -65,17 +65,17 @@ in
         amberol # An unambitious music player.
         authenticator # 2-factor codes for 2-factor storages.
         blanket # Zen...
+        dialect # Your gateway to polyglotting.
         eyedropper # Some nice eyedropper tool.
         flowtime # Some nice timer for those overworking.
-        gnome.dconf-editor # A saner version of Windows registry.
-        dialect # Your gateway to polyglotting.
         fractal # Your gateway to the matrix.
-        tangram # Your social media manager, probably.
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
+        gnome.dconf-editor # A saner version of Windows registry.
         gnome.gnome-boxes # Virtual machines, son.
         gnome.polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
         shortwave # Yer' humble internet radio.
+        tangram # Your social media manager, probably.
         ymuse # Simple MPD client.
 
         gnome.gnome-backgrounds # Default backgrounds.
