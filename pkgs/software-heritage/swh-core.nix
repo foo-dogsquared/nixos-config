@@ -3,12 +3,12 @@
 with python3Packages;
 buildPythonPackage rec {
   pname = "swh-core";
-  version = "2.21.0";
+  version = "2.22.0";
 
   src = fetchPypi {
     inherit version;
     pname = "swh.core";
-    sha256 = "sha256-8zzHoCzA3ka6v6VbtAo7M2pInuY1QN8GvaYQu3201bg=";
+    sha256 = "sha256-y7jehR53jNdM0L625BlpRurRvoHDl4k/sgXZrT48p6A=";
   };
 
   # Tests require network access.
