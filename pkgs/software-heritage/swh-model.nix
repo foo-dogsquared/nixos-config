@@ -3,12 +3,12 @@
 with python3Packages;
 buildPythonPackage rec {
   pname = "swh-model";
-  version = "6.6.3";
+  version = "6.7.0";
 
   src = fetchPypi {
     inherit version;
     pname = "swh.model";
-    sha256 = "sha256-UFZyC2TVkfzk330GCW7vFHdhqqyC+4VkC9S2wNYIXu4=";
+    sha256 = "sha256-88xlN/vGXMG858+0A1Wb4EIYC9btRTopY7Ryvw/huDo=";
   };
 
   doCheck = false;
