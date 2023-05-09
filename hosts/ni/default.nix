@@ -137,6 +137,7 @@ in
     (swh.swh-core.overrideAttrs (attrs: {
       pythonPath = with pkgs.swh; [
         swh-model
+        swh-fuse
       ];
     }))
 
