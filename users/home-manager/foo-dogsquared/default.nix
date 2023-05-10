@@ -29,13 +29,17 @@ in
   # blocking the Wezterm's shell integration by fetching another
   # instance of bash-preexec.
   programs.atuin.enableBashIntegration = false;
-  programs.bash.bashrcExtra = ''
-    source ${pkgs.wezterm}/etc/profile.d/wezterm.sh
+  programs.bash = {
+    bashrcExtra = ''
+      source ${pkgs.wezterm}/etc/profile.d/wezterm.sh
 
-    if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-      eval "$(${config.programs.atuin.package}/bin/atuin init bash)"
-    fi
-  '';
+      if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+        eval "$(${config.programs.atuin.package}/bin/atuin init bash)"
+      fi
+    '';
+
+    sessionVariables.PATH = "${config.home.mutableFile."library/dotfiles".path}/bin\${PATH:+:$PATH}";
+  };
 
   # My SSH client configuration. It is encouraged to keep matches and extra
   # configurations included in a separate `config.d/` directory. This enables
