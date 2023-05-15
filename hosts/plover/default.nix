@@ -223,5 +223,5 @@ in
      IdentityFile ${config.sops.secrets."plover/borg/ssh-key".path}
   '';
 
-  system.stateVersion = "22.11";
+  system.stateVersion = "23.05";
 }
