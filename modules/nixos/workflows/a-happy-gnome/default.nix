@@ -62,6 +62,7 @@ in
       type = with lib.types; listOf package;
       description = "A list of applications to be included in the theme.";
       default = with pkgs; [
+        adw-gtk3 # A nice theme for GTK3.
         amberol # An unambitious music player.
         authenticator # 2-factor codes for 2-factor storages.
         blanket # Zen...
@@ -74,6 +75,7 @@ in
         gnome.dconf-editor # A saner version of Windows registry.
         gnome.gnome-boxes # Virtual machines, son.
         gnome.polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
+        handbrake # Take a break from those custom ffmpeg conversion scripts.
         shortwave # Yer' humble internet radio.
         tangram # Your social media manager, probably.
         ymuse # Simple MPD client.
