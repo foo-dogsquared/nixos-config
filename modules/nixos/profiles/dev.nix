@@ -89,6 +89,7 @@ in {
         gcc # The usual toolchain.
         gdb # The usual debugger.
         gnumake # The other poster boy for the hated build system.
+        man-pages # Extra manpages.
         moreutils # Less is more but more utilities, the merrier.
         whois # Doctor, are you not?
         valgrind # Making sure your applications don't pee as much.
