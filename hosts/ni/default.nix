@@ -202,7 +202,10 @@ in
   system.stateVersion = "22.11"; # Yes! I read the comment!
 
   # Setting up split DNS whenever possible.
-  services.resolved.domains = [ "~plover.foodogsquared.one" ];
+  services.resolved.domains = [
+    "~plover.foodogsquared.one"
+    "~0.27.172.in-addr.arpa"
+  ];
 
   # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
   # be used anywhere, we're configuring Wireguard here as a "client".
