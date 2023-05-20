@@ -215,12 +215,6 @@ in
   # others might be using systemd-networkd).
   networking.wg-quick.interfaces.wireguard0 = {
     privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
-
-    dns = with interfaces.internal; [
-      IPv4.address
-      IPv6.address
-    ];
-
     listenPort = wireguardPort;
 
     address = with wireguardPeers.desktop; [
@@ -229,11 +223,19 @@ in
     ];
 
     peers = [
+      # The "server" peer.
       {
         publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-plover);
         presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
         allowedIPs = wireguardAllowedIPs;
         endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
+      }
+
+      # The "phone" peer.
+      {
+        publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-phone);
+        presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/phone".path;
+        allowedIPs = wireguardAllowedIPs;
       }
     ];
   };
