@@ -422,6 +422,10 @@
           path = ./templates/basic-overlay-flake;
           description = "Basic overlay as a flake";
         };
+        sample-nixos-template = {
+          path = ./templates/sample-nixos-template;
+          description = "Simple sample Nix flake with NixOS and home-manager";
+        };
       };
 
       # No amount of formatters will make this codebase nicer but it sure does
