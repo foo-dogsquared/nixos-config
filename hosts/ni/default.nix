@@ -199,7 +199,7 @@ in
     };
   };
 
-  system.stateVersion = "22.11"; # Yes! I read the comment!
+  system.stateVersion = "23.05"; # Yes! I read the comment!
 
   # Setting up split DNS whenever possible.
   services.resolved.domains = [
