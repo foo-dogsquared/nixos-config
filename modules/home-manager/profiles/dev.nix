@@ -15,13 +15,15 @@ in {
   config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
       home.packages = with pkgs; [
-        lazygit # Git interface for the lazy who cannot be asked to add hunks properly.
+        dasel # Universal version of jq.
         fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
         gopass # An improved version of the password manager for hipsters.
-        perl534Packages.vidir # Bulk rename for your organizing needs in the terminal.
-        zellij # A modern tmux? Yeah, modern tmux.
-        tealdeer # An easy cop-out for basic help.
+        lazygit # Git interface for the lazy who cannot be asked to add hunks properly.
         lf # File manager in the terminal, really.
+        moar # More 'more'.
+        perl534Packages.vidir # Bulk rename for your organizing needs in the terminal.
+        tealdeer # An easy cop-out for basic help.
+        zellij # A modern tmux? Yeah, modern tmux.
 
         # Coreutils replacement.
         fd # Oh nice, a more reliable `find`.
