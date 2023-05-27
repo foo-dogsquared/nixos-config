@@ -40,7 +40,6 @@
     # Easy access to development environments.
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    devshell.inputs.flake-utils.follows = "flake-utils";
 
     # We're getting more unstable there should be a black hole at my home right
     # now. Also, we're seem to be collecting text editors like it is Pokemon.
