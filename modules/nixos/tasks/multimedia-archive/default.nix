@@ -198,6 +198,9 @@ in
               (artStation "angryangryasian") # David Liu
               (artStation "mikedilonardo") # Michael Di Lonardo
               (artStation "karlschecht") # Karl Schecht
+              (artStation "12oyraj") # Royraj Vichaidit
+              (artStation "jcru3d") # Jan Cruz
+              (artStation "wookun") # Sangtaek Woo
               (newgrounds "hyperjerk") # HyperJerk
             ];
             startAt = "weekly";
