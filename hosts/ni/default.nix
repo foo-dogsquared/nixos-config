@@ -43,6 +43,23 @@ in
     type = "ed25519";
   }];
 
+  services.gonic = {
+    enable = true;
+    settings = {
+      listen-addr = "127.0.0.1:4747";
+      cache-path = "/var/cache/gonic";
+      music-path = [
+        "/srv/music"
+      ];
+      podcast-path = "/var/cache/gonic/podcasts";
+
+      jukebox-enabled = true;
+
+      scan-interval = 1;
+      scan-at-start-enabled = true;
+    };
+  };
+
   sops.secrets =
     let
       getKey = key: {
