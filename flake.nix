@@ -20,7 +20,6 @@
 
     # Managing home configurations.
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
@@ -48,7 +47,6 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    emacs-overlay.inputs.flake-utils.follows = "flake-utils";
 
     helix-editor.url = "github:helix-editor/helix";
     helix-editor.inputs.nixpkgs.follows = "nixpkgs";
@@ -59,7 +57,6 @@
     # The more recommended Rust overlay so I'm going with it.
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    rust-overlay.inputs.flake-utils.follows = "flake-utils";
 
     # Generating an entire flavored themes with Nix?
     nix-colors.url = "github:misterio77/nix-colors";
