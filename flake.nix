@@ -190,7 +190,7 @@
           #
           # Since we're using flakes to make this possible, we need it. Plus, the
           # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
-          experimental-features = [ "nix-command" "flakes" ];
+          experimental-features = [ "nix-command" "flakes" "repl-flake" ];
           auto-optimise-store = lib.mkDefault true;
         };
 
