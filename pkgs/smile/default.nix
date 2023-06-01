@@ -17,13 +17,16 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "smile";
-  version = "1.7.0";
+  version = "2.3.0";
 
   src = fetchFromGitHub {
     owner = "mijorus";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-F1ZDwCvhLMcqqtfneN12IMslhA2E54Oxcnaqy+AdMXI=";
+
+    # There's no proper Git tag so we'll have to manually retrieve the commit
+    # for now.
+    rev = "3ad0888f54bfde67ed6ee3b8335625347b53d460";
+    hash = "sha256-PhSiZw/V9DEAa0AYtr0ZIuyrZDZoNN/Ln9Zq+Xl4Vek=";
   };
 
   format = "other";
@@ -53,6 +56,7 @@ python3Packages.buildPythonApplication rec {
   propagatedBuildInputs = with python3Packages; [
     pygobject3
     manimpango
+    dbus-python
   ];
 
   buildInputs = [
@@ -66,8 +70,10 @@ python3Packages.buildPythonApplication rec {
   '';
 
   meta = with lib; {
-    homepage = "https://github.com/mijorus/smile";
-    description = "Emoji picker with custom tabs support.";
-    license = licenses.gpl3Only;
+    homepage = "https://smile.mijorus.it";
+    description = "Emoji picker with custom tabs support and localization";
+    license = licenses.gpl3Plus;
+    maintainers = with maintainers; [ foo-dogsquared ];
+    platforms = platforms.linux;
   };
 }
