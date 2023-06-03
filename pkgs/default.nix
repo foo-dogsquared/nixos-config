@@ -47,7 +47,6 @@ let
         };
       });
       libcs50 = callPackage ./libcs50.nix { };
-      license-cli = callPackage ./license-cli { };
       lwp = callPackage ./lwp { };
       moac = callPackage ./moac.nix { };
       mopidy-beets = callPackage ./mopidy-beets.nix { };
