@@ -33,7 +33,6 @@ let
         };
       });
       guile-config = callPackage ./guile-config.nix { };
-      guile-hall = callPackage ./guile-hall.nix { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
       kiwmi = callPackage ./kiwmi { };
