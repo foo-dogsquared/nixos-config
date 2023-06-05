@@ -230,8 +230,8 @@ in {
     (lib.mkIf cfg.wine.enable {
       environment.systemPackages = with pkgs; [
         cfg.wine.package # The star of the show.
-        winetricks # We do a little trickery with missing Windows runtimes.
-        bottles # PlayOnLinux but better. :>
+        airwave # Trying to broadcast from one bridge to the next.
+        bottles # The Windows environment package manager.
       ];
     })
   ]);
