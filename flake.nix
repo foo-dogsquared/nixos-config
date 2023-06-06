@@ -13,7 +13,7 @@
     # `nixpkgs-unstable` branch could be faster delivering updates, it is
     # looser when it comes to stability for the entirety of this configuration.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
 
     # We're using these libraries for other functions.
     flake-utils.url = "github:numtide/flake-utils";
