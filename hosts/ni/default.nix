@@ -132,6 +132,12 @@ in
       virtualization.enable = true;
       neovim.enable = true;
     };
+    gaming = {
+      enable = true;
+      emulators.enable = true;
+      retro-computing.enable = true;
+    };
+    vpn.personal.enable = true;
   };
 
   tasks.backup-archive.enable = true;
