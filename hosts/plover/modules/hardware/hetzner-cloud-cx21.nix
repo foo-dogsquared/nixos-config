@@ -86,6 +86,8 @@ in
       "20-lan" = with interfaces.internal; {
         matchConfig.Name = lib.concatStringsSep " " internalEthernetInterfaceNames;
 
+        # Take note of the private subnets set in your Hetzner Cloud instance
+        # (at least for IPv4 addresses)..
         address = [
           "${IPv4.address}/16"
           "${IPv6.address}/64"
@@ -102,8 +104,10 @@ in
           "::1"
         ];
 
+        # Force our own internal domain to be used in the system.
         domains = [ config.networking.fqdn ];
 
+        # Use the gateway to enable resolution of external domains.
         gateway = [
           IPv4.gateway
           IPv6.gateway

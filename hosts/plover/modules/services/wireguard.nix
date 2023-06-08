@@ -27,6 +27,9 @@ in
     filterForward = true;
   };
 
+  # Since we're using systemd-networkd to configure interfaces, we can control
+  # how each interface can handle things such as IP masquerading so no need for
+  # modifying sysctl settings like 'ipv4.ip_forward' or similar.
   systemd.network = {
     wait-online.ignoredInterfaces = [ wireguardIFName ];
 

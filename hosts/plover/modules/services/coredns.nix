@@ -73,8 +73,8 @@ in
   # Setting up the firewall to make less things to screw up in case anything is
   # screwed up.
   networking.firewall.extraInputRules = ''
-    meta l4proto {tcp, udp} th dport 53 ip saddr { ${lib.concatStringsSep ", " allowedIPs} } accept comment "Accept DNS queries from secondary nameservers"
-    meta l4proto {tcp, udp} th dport 53 ip6 saddr { ${lib.concatStringsSep ", " allowedIPv6s} } accept comment "Accept DNS queries from secondary nameservers"
+    meta l4proto {tcp, udp} th dport 53 ip saddr { ${lib.concatStringsSep ", " allowedIPs} } accept comment "Accept DNS queries from secondary nameservers and private networks"
+    meta l4proto {tcp, udp} th dport 53 ip6 saddr { ${lib.concatStringsSep ", " allowedIPv6s} } accept comment "Accept DNS queries from secondary nameservers and private networks"
   '';
 
   # The main DNS server.
