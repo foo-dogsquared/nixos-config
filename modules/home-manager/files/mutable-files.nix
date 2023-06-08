@@ -61,7 +61,7 @@ let
           note of the commands used for each type as documented from
           `config.home.mutableFile.<name>.type`.
         '';
-        default = [];
+        default = [ ];
         example = [ "--depth" "1" ];
       };
     };
@@ -136,7 +136,8 @@ in
             script = pkgs.writeShellScript "fetch-mutable-files" ''
               ${lib.concatStringsSep "\n" mutableFilesCmds}
             '';
-          in builtins.toString script;
+          in
+          builtins.toString script;
       };
 
       Install.WantedBy = [ "default.target" ];

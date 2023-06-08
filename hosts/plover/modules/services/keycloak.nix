@@ -62,8 +62,9 @@ in
 
   # Modifying it a little bit for per-user schema.
   systemd.services.keycloak = {
-    preStart = let
-      psqlBin = "${lib.getBin config.services.postgresql.package}/bin/psql";
+    preStart =
+      let
+        psqlBin = "${lib.getBin config.services.postgresql.package}/bin/psql";
       in
       lib.mkAfter ''
         # Setting up the appropriate schema for PostgreSQL secure schema usage.
@@ -88,7 +89,7 @@ in
           (lib.lists.map
             (appPath: lib.nameValuePair appPath { proxyPass = keycloakPath appPath; })
             [ "/js/" "/realms/" "/resources/" "/robots.txt" ])
-            // { "/".return = "444"; };
+        // { "/".return = "444"; };
     };
 
     "${authInternalDomain}" = {

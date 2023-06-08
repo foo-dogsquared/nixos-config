@@ -231,41 +231,45 @@ in
   # We're using wg-quick here as this host is using network managers that can
   # differ between workflows (i.e., GNOME and KDE Plasma using NetworkManager,
   # others might be using systemd-networkd).
-  networking.wg-quick.interfaces.wireguard0 = let
-    domains = [
-      "~plover.foodogsquared.one"
-      "~0.27.172.in-addr.arpa"
-    ];
-  in {
-    privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
-    listenPort = wireguardPort;
-    dns = with interfaces.internal; [ IPv4.adress IPv6.address ];
-    postUp = let
-      resolvectl = "${lib.getBin pkgs.systemd}/bin/resolvectl";
-    in ''
-      ${resolvectl} domain %i ${lib.concatStringsSep " " domains}
-    '';
+  networking.wg-quick.interfaces.wireguard0 =
+    let
+      domains = [
+        "~plover.foodogsquared.one"
+        "~0.27.172.in-addr.arpa"
+      ];
+    in
+    {
+      privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
+      listenPort = wireguardPort;
+      dns = with interfaces.internal; [ IPv4.adress IPv6.address ];
+      postUp =
+        let
+          resolvectl = "${lib.getBin pkgs.systemd}/bin/resolvectl";
+        in
+        ''
+          ${resolvectl} domain %i ${lib.concatStringsSep " " domains}
+        '';
 
-    address = with wireguardPeers.desktop; [
-      "${IPv4}/32"
-      "${IPv6}/128"
-    ];
+      address = with wireguardPeers.desktop; [
+        "${IPv4}/32"
+        "${IPv6}/128"
+      ];
 
-    peers = [
-      # The "server" peer.
-      {
-        publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-plover);
-        presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
-        allowedIPs = wireguardAllowedIPs;
-        endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
-      }
+      peers = [
+        # The "server" peer.
+        {
+          publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-plover);
+          presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
+          allowedIPs = wireguardAllowedIPs;
+          endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
+        }
 
-      # The "phone" peer.
-      {
-        publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-phone);
-        presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/phone".path;
-        allowedIPs = wireguardAllowedIPs;
-      }
-    ];
-  };
+        # The "phone" peer.
+        {
+          publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-phone);
+          presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/phone".path;
+          allowedIPs = wireguardAllowedIPs;
+        }
+      ];
+    };
 }

@@ -165,13 +165,14 @@ in
         ${replaceSecretBin} '#mailboxSecurityKey#' '${secretsPath "dns/${domain}/mailbox-security-key"}' '${domainZoneFile'}'
         ${replaceSecretBin} '#mailboxSecurityKeyRecord#' '${secretsPath "dns/${domain}/mailbox-security-key-record"}' '${domainZoneFile'}'
       '';
-    serviceConfig.LoadCredential = let
-      certDirectory = certs."${dnsDomainName}".directory;
-    in
-    [
-      "cert.pem:${certDirectory}/cert.pem"
-      "key.pem:${certDirectory}/key.pem"
-      "fullchain.pem:${certDirectory}/fullchain.pem"
-    ];
+    serviceConfig.LoadCredential =
+      let
+        certDirectory = certs."${dnsDomainName}".directory;
+      in
+      [
+        "cert.pem:${certDirectory}/cert.pem"
+        "key.pem:${certDirectory}/key.pem"
+        "fullchain.pem:${certDirectory}/fullchain.pem"
+      ];
   };
 }

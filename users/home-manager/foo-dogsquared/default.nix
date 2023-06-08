@@ -354,12 +354,14 @@ in
   };
 
   systemd.user.services.fetch-mutable-files = {
-    Service.ExecStartPost = let
-      script = pkgs.writeShellScript "post-fetch-mutable-files" ''
-        # Automate installation of Doom Emacs.
-        ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
-        ${config.xdg.configHome}/emacs/bin/doom sync
-      '';
-    in builtins.toString script;
+    Service.ExecStartPost =
+      let
+        script = pkgs.writeShellScript "post-fetch-mutable-files" ''
+          # Automate installation of Doom Emacs.
+          ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
+          ${config.xdg.configHome}/emacs/bin/doom sync
+        '';
+      in
+      builtins.toString script;
   };
 }
