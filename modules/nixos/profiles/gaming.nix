@@ -21,6 +21,16 @@ in
         retroarchFull
       ];
 
+      # Setup the go-to platform for Linux gaming. Most of the
+      # games should work now with Proton integration.
+      programs.steam = {
+        enable = true;
+        gamescopeSession.enable = true;
+      };
+
+      # Enable them controllers in case you have one.
+      hardware.steam-hardware.enable = true;
+
       # Enabling all hardware settings for the desktop (unless the user
       # explicitly disabled it).
       profiles.desktop.hardware.enable = lib.mkDefault true;
