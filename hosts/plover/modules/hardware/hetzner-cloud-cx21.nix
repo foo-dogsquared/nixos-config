@@ -93,7 +93,15 @@ in
 
         # Using the authoritative DNS server to enable accessing them nice
         # internal services with domain names.
-        dns = [ "127.0.0.1" "::1" ];
+        dns = [
+          IPv4.address
+          IPv6.address
+
+          # Just in case it cannot really do it.
+          "127.0.0.1"
+          "::1"
+        ];
+
         domains = [ config.networking.fqdn ];
 
         gateway = [
