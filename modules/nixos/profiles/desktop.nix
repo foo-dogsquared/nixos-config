@@ -230,7 +230,6 @@ in {
     (lib.mkIf cfg.wine.enable {
       environment.systemPackages = with pkgs; [
         cfg.wine.package # The star of the show.
-        airwave # Trying to broadcast from one bridge to the next.
         bottles # The Windows environment package manager.
       ];
     })
