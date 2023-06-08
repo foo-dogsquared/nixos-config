@@ -225,25 +225,30 @@ in
 
   system.stateVersion = "23.05"; # Yes! I read the comment!
 
-  # Setting up split DNS whenever possible.
-  services.resolved.domains = [
-    "~plover.foodogsquared.one"
-    "~0.27.172.in-addr.arpa"
-  ];
-
   # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
   # be used anywhere, we're configuring Wireguard here as a "client".
   #
   # We're using wg-quick here as this host is using network managers that can
   # differ between workflows (i.e., GNOME and KDE Plasma using NetworkManager,
   # others might be using systemd-networkd).
-  networking.wg-quick.interfaces.wireguard0 = {
+  networking.wg-quick.interfaces.wireguard0 = let
+    domains = [
+      "~plover.foodogsquared.one"
+      "~0.27.172.in-addr.arpa"
+    ];
+  in {
     privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
     listenPort = wireguardPort;
+    dns = with interfaces.internal; [ IPv4.adress IPv6.address ];
+    postUp = let
+      resolvectl = "${lib.getBin pkgs.systemd}/bin/resolvectl";
+    in ''
+      ${resolvectl} domain %i ${lib.concatStringsSep " " domains}
+    '';
 
     address = with wireguardPeers.desktop; [
-      "${IPv4}/24"
-      "${IPv6}/64"
+      "${IPv4}/32"
+      "${IPv6}/128"
     ];
 
     peers = [
