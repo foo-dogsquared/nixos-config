@@ -9,6 +9,7 @@ in
     enable = lib.mkEnableOption "foodogsquared's gaming setup";
     emulators.enable = lib.mkEnableOption "installation of individual game emulators";
     retro-computing.enable = lib.mkEnableOption "installation of retro computer systems";
+    games.enable = lib.mkEnableOption "installation of certain FOSS games for funsies";
   };
 
   # Just don't ask where you can sail getting the games. :)
@@ -41,6 +42,24 @@ in
         ppsspp # (PSP)-squared for foodogsquared.
         pcsx2 # A nice emulator with a nice (NOT) name.
         scummvm # Pretty scummy of us to put it here despite not being an emulator.
+      ];
+    })
+
+    # Despite the module being for gaming setup, no individual games are
+    # installed. Also, all of the installed games are FOSS so far. At least,
+    # Stallman-senpai would be proud.
+    (lib.mkIf cfg.games.enable {
+      environment.systemPackages = with pkgs; [
+        cataclysm-dda
+        dwarf-fortress
+        endless-sky
+        mindustry
+        minetest
+        openra
+        superTuxKart
+        the-powder-toy
+        wesnoth
+        zeroad
       ];
     })
 
