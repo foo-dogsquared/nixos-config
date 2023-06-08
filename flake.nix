@@ -75,10 +75,10 @@
         self.overlays.default
 
         # Neovim nightly!
-        inputs.neovim-nightly-overlay.overlay
+        inputs.neovim-nightly-overlay.overlays.default
 
         # Emacs unstable version!
-        inputs.emacs-overlay.overlay
+        inputs.emacs-overlay.overlays.default
 
         # Rust overlay for them ease of setting up Rust toolchains.
         inputs.rust-overlay.overlays.default
