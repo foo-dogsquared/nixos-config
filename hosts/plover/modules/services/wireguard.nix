@@ -16,7 +16,16 @@ in
 {
   environment.systemPackages = [ pkgs.wireguard-tools ];
 
-  networking.firewall.allowedUDPPorts = [ wireguardPort ];
+  networking.firewall = {
+    # Allow the UDP traffic for the Wireguard service.
+    allowedUDPPorts = [ wireguardPort ];
+
+    # Accept the traffic from the Wireguard interface.
+    trustedInterfaces = [ wireguardIFName ];
+
+    # IP forwarding for specific interfaces.
+    filterForward = true;
+  };
 
   systemd.network = {
     wait-online.ignoredInterfaces = [ wireguardIFName ];
