@@ -241,7 +241,7 @@ in
     {
       privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
       listenPort = wireguardPort;
-      dns = with interfaces.internal; [ IPv4.adress IPv6.address ];
+      dns = with wireguardPeers.server; [ IPv4 IPv6 ];
       postUp =
         let
           resolvectl = "${lib.getBin pkgs.systemd}/bin/resolvectl";
@@ -262,6 +262,7 @@ in
           presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
           allowedIPs = wireguardAllowedIPs;
           endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
+          persistentKeepalive = 25;
         }
 
         # The "phone" peer.
