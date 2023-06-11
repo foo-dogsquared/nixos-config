@@ -31,6 +31,7 @@ rec {
       # This is the public-facing interface. Any interface name with a prime
       # symbol means it's a public-facing interface.
       main' = {
+        ifname = "ens3";
         # The gateways for the public addresses are retrieved from the following
         # pages:
         #
@@ -47,6 +48,7 @@ rec {
       };
 
       internal = {
+        ifname = "ens10";
         IPv4 = {
           address = "172.27.0.1";
           gateway = ploverInternalNetworkGateway;
@@ -58,6 +60,7 @@ rec {
       };
 
       wireguard0 = {
+        ifname = "wireguard0";
         IPv4 = {
           address = "172.28.0.1";
           gateway = ploverInternalNetworkGateway;
