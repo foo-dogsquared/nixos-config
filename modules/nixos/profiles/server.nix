@@ -31,6 +31,10 @@ in
       # "Coordinated Universal Time" (which does not abbreviates to UTC, WTF?).
       time.timeZone = "UTC";
 
+      # Add the usual manpages because it is not installed by default
+      # apparently.
+      environment.systemPackages = with pkgs; [ man-pages ];
+
       # Most servers will have to be accessed for debugging so it is here. But
       # be sure to set the appropriate public keys for the users from that
       # server.
