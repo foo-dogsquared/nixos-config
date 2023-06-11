@@ -70,6 +70,7 @@ in
         eyedropper # Some nice eyedropper tool.
         flowtime # Some nice timer for those overworking.
         fractal # Your gateway to the matrix.
+        gnome-decoder # Go with them QR codes.
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         gnome.dconf-editor # A saner version of Windows registry.
