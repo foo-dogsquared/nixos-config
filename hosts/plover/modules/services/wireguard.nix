@@ -7,7 +7,8 @@ let
   inherit (builtins) toString;
   inherit (import ../hardware/networks.nix) interfaces wireguardPort wireguardPeers;
 
-  wireguardIFName = "wireguard0";
+  wireguardIFName = interfaces.wireguard0.ifname;
+  lanIFName = interfaces.internal.ifname;
 
   desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/32" "${IPv6}/128" ];
   phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
@@ -20,12 +21,21 @@ in
     # Allow the UDP traffic for the Wireguard service.
     allowedUDPPorts = [ wireguardPort ];
 
-    # Accept the traffic from the Wireguard interface.
-    trustedInterfaces = [ wireguardIFName ];
-
     # IP forwarding for specific interfaces.
     filterForward = true;
+    extraForwardRules = ''
+      iifname ${wireguardIFName} oifname ${lanIFName} accept comment "IP forward from Wireguard interface to LAN"
+    '';
   };
+
+  networking.nftables.ruleset = ''
+    table ip wireguard-${wireguardIFName} {
+      chain postrouting {
+        type nat hook postrouting priority srcnat; policy accept;
+        iifname ${wireguardIFName} oifname ${lanIFName} masquerade comment "Masquerade packets from Wireguard interface to LAN"
+      }
+    }
+  '';
 
   # Since we're using systemd-networkd to configure interfaces, we can control
   # how each interface can handle things such as IP masquerading so no need for
