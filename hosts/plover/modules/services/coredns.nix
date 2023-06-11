@@ -6,7 +6,7 @@
 # on you. Either that or we can easily move the resolver somewhere else.
 let
   inherit (config.networking) domain fqdn;
-  inherit (import ../hardware/networks.nix) privateIPv6Prefix interfaces clientNetworks serverNetworks secondaryNameServers;
+  inherit (import ../hardware/networks.nix) privateIPv6Prefix interfaces clientNetworks serverNetworks secondaryNameServers wireguardPeers;
 
   dnsSubdomain = "ns1";
   dnsDomainName = "${dnsSubdomain}.${domain}";
@@ -38,12 +38,20 @@ let
   allowedIPs = secondaryNameServersIPv4 ++ [ "172.16.0.0/12" ];
   allowedIPv6s = secondaryNameServersIPv6 ++ [ "${privateIPv6Prefix}::/48" ];
 
-  dnsListenAddresses = with interfaces; [
+  dnsListenInterfaces = (with interfaces; [
+    # For whatever reason, I would say though I don't think it is wise to
+    # attach one in this interface.
     internal.IPv4.address
     internal.IPv6.address
+
+    # This is needed for the secondary name servers to reach the DNS records
+    # (or at least I think).
     main'.IPv4.address
     main'.IPv6.address
-  ];
+  ]) ++ (with wireguardPeers.server; [
+    # This is for use from Wireguard peers.
+    IPv4 IPv6
+  ]);
 in
 {
   sops.secrets =
@@ -73,9 +81,11 @@ in
   # Setting up the firewall to make less things to screw up in case anything is
   # screwed up.
   networking.firewall.extraInputRules = ''
-    meta l4proto {tcp, udp} th dport 53 ip saddr { ${lib.concatStringsSep ", " allowedIPs} } accept comment "Accept DNS queries from secondary nameservers and private networks"
-    meta l4proto {tcp, udp} th dport 53 ip6 saddr { ${lib.concatStringsSep ", " allowedIPv6s} } accept comment "Accept DNS queries from secondary nameservers and private networks"
+    meta l4proto {tcp, udp} th dport domain ip saddr { ${lib.concatStringsSep ", " allowedIPs} } accept comment "Accept DNS queries from secondary nameservers and private networks"
+    meta l4proto {tcp, udp} th dport domain ip6 saddr { ${lib.concatStringsSep ", " allowedIPv6s} } accept comment "Accept DNS queries from secondary nameservers and private networks"
   '';
+
+  networking.nameservers = dnsListenInterfaces;
 
   # The main DNS server.
   services.coredns = {
@@ -91,15 +101,18 @@ in
     # https://docs.hetzner.com/dns-console/dns/general/dnssec
     config = ''
       . {
+        forward . /etc/resolv.conf
+
         log ${domain} ${fqdn} {
           class success error
         }
 
         errors {
           consolidate 1m "^.* no next plugin found$"
+          consolidate 5m "^.* i/o timeout$"
         }
 
-        bind lo ${lib.concatStringsSep " " dnsListenAddresses} {
+        bind ${lib.concatStringsSep " " dnsListenInterfaces} {
           # These are already taken from systemd-resolved.
           except 127.0.0.53 127.0.0.54
         }
@@ -143,17 +156,13 @@ in
           to ${lib.concatStringsSep " " secondaryNameServersIPs}
         }
       }
-
-      tls://. {
-        tls {$CREDENTIALS_DIRECTORY}/cert.pem {$CREDENTIALS_DIRECTORY}/key.pem {$CREDENTIALS_DIRECTORY}/fullchain.pem
-        forward . /etc/resolv.conf
-      }
     '';
   };
 
   # This is based from the Gitea pre-start script.
   systemd.services.${corednsServiceName} = {
     requires = [ "acme-finished-${dnsDomainName}.target" ];
+
     preStart =
       let
         secretsPath = path: config.sops.secrets."plover/${path}".path;
@@ -165,6 +174,8 @@ in
         ${replaceSecretBin} '#mailboxSecurityKey#' '${secretsPath "dns/${domain}/mailbox-security-key"}' '${domainZoneFile'}'
         ${replaceSecretBin} '#mailboxSecurityKeyRecord#' '${secretsPath "dns/${domain}/mailbox-security-key-record"}' '${domainZoneFile'}'
       '';
+
+    # Though DNSSEC is disabled for now, we'll set it up in anticipation.
     serviceConfig.LoadCredential =
       let
         certDirectory = certs."${dnsDomainName}".directory;
