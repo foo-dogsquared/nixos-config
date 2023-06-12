@@ -8,12 +8,6 @@ let
   inherit (config.networking) domain fqdn;
   inherit (import ../hardware/networks.nix) privateIPv6Prefix interfaces clientNetworks serverNetworks secondaryNameServers wireguardPeers;
 
-  dnsSubdomain = "ns1";
-  dnsDomainName = "${dnsSubdomain}.${domain}";
-  certs = config.security.acme.certs;
-
-  corednsServiceName = "coredns";
-
   domainZoneFile = pkgs.substituteAll {
     src = ../../config/coredns/${domain}.zone;
     ploverPublicIPv4 = interfaces.main'.IPv4.address;
@@ -35,23 +29,38 @@ let
   secondaryNameServersIPs = secondaryNameServersIPv4 ++ secondaryNameServersIPv6;
 
   # The local network segments.
-  allowedIPs = secondaryNameServersIPv4 ++ [ "172.16.0.0/12" ];
-  allowedIPv6s = secondaryNameServersIPv6 ++ [ "${privateIPv6Prefix}::/48" ];
+  allowedIPs = secondaryNameServersIPv4 ++ [
+    # Loopback address
+    "127.0.0.0/8"
+
+    # Private uses
+    "10.0.0.0/8"
+    "172.16.0.0/12"
+    "192.168.0.0/16"
+  ];
+  allowedIPv6s = secondaryNameServersIPv6 ++ [
+    "::1" # Loopback
+    "${privateIPv6Prefix}::/48" # Private uses
+  ];
+
+  mainIP = with interfaces.main'; [
+    IPv4.address
+    IPv6.address
+  ];
+
+  internalIP = with interfaces.internal; [
+    IPv4.address
+    IPv6.address
+  ];
+
+  wireguardIP = with wireguardPeers.server; [
+    IPv4 IPv6
+  ];
 
   dnsListenInterfaces = (with interfaces; [
-    # For whatever reason, I would say though I don't think it is wise to
-    # attach one in this interface.
-    internal.IPv4.address
-    internal.IPv6.address
-
-    # This is needed for the secondary name servers to reach the DNS records
-    # (or at least I think).
-    main'.IPv4.address
-    main'.IPv6.address
-  ]) ++ (with wireguardPeers.server; [
-    # This is for use from Wireguard peers.
-    IPv4 IPv6
-  ]);
+    "127.0.0.1"
+    "::1"
+  ]) ++ mainIP ++ internalIP ++ wireguardPeers;
 in
 {
   sops.secrets =
@@ -73,11 +82,6 @@ in
       "dns/${domain}/mailbox-security-key-record" = { };
     };
 
-  # Generating a certificate for the DNS-over-TLS feature.
-  security.acme.certs."${dnsDomainName}".postRun = ''
-    systemctl restart ${corednsServiceName}.service
-  '';
-
   # Setting up the firewall to make less things to screw up in case anything is
   # screwed up.
   networking.firewall.extraInputRules = ''
@@ -85,9 +89,8 @@ in
     meta l4proto {tcp, udp} th dport domain ip6 saddr { ${lib.concatStringsSep ", " allowedIPv6s} } accept comment "Accept DNS queries from secondary nameservers and private networks"
   '';
 
-  networking.nameservers = dnsListenInterfaces;
-
-  # The main DNS server.
+  # For more information how the server is set up, you could take a look at the
+  # hardware networking configuration.
   services.coredns = {
     enable = true;
 
@@ -100,24 +103,32 @@ in
     #
     # https://docs.hetzner.com/dns-console/dns/general/dnssec
     config = ''
-      . {
-        forward . /etc/resolv.conf
+      # The LAN.
+      ${fqdn} {
+        bind ${interfaces.internal.ifname}
+        acl {
+          # Hetzner doesn't support DNSSEC yet though.
+          block type DS SIG RRSIG TA TSIG PTR DLV DNSKEY KEY NSEC NSEC3
 
-        log ${domain} ${fqdn} {
-          class success error
+          allow net ${lib.concatStringsSep " " (clientNetworks ++ serverNetworks)}
+          allow net 127.0.0.0/8 ::1
+          block
         }
 
-        errors {
-          consolidate 1m "^.* no next plugin found$"
-          consolidate 5m "^.* i/o timeout$"
+        template IN A {
+          answer "{{ .Name }} IN 60 A ${interfaces.internal.IPv4.address}"
         }
 
-        bind ${lib.concatStringsSep " " dnsListenInterfaces} {
-          # These are already taken from systemd-resolved.
-          except 127.0.0.53 127.0.0.54
+        template IN AAAA {
+          answer "{{ .Name }} IN 60 AAAA ${interfaces.internal.IPv6.address}"
         }
+      }
 
-        acl ${domain} {
+      # The WAN.
+      ${domain} {
+        bind ${interfaces.main'.ifname}
+
+        acl {
           # We're setting this up as a "hidden" primary server.
           allow type AXFR net ${lib.concatStringsSep " " secondaryNameServersIPs}
           allow type IXFR net ${lib.concatStringsSep " " secondaryNameServersIPs}
@@ -132,58 +143,28 @@ in
           block
         }
 
-        # ${fqdn} DNS server blocks. This is an internal DNS server so we'll
-        # only allow queries from the internal network.
-        acl ${fqdn} {
-          allow net ${lib.concatStringsSep " " (clientNetworks ++ serverNetworks)}
-          allow net 127.0.0.0/8 ::1
-          block
-        }
-
-        template IN A ${fqdn} {
-          answer "{{ .Name }} IN 60 A ${interfaces.internal.IPv4.address}"
-        }
-
-        template IN AAAA ${fqdn} {
-          answer "{{ .Name }} IN 60 AAAA ${interfaces.internal.IPv6.address}"
-        }
-
-        file ${domainZoneFile'} ${domain} {
+        file ${domainZoneFile'} {
           reload 30s
         }
 
-        transfer ${domain} {
+        transfer {
           to ${lib.concatStringsSep " " secondaryNameServersIPs}
         }
       }
+
+      # The NAN.
+      . {
+        cache
+        forward . /etc/resolv.conf
+
+        log ${domain} {
+          class success error
+        }
+
+        errors {
+          consolidate 1m "^.* no next plugin found$"
+        }
+      }
     '';
-  };
-
-  # This is based from the Gitea pre-start script.
-  systemd.services.${corednsServiceName} = {
-    requires = [ "acme-finished-${dnsDomainName}.target" ];
-
-    preStart =
-      let
-        secretsPath = path: config.sops.secrets."plover/${path}".path;
-        replaceSecretBin = "${lib.getBin pkgs.replace-secret}/bin/replace-secret";
-      in
-      lib.mkBefore ''
-        install -Dm0644 ${domainZoneFile} ${domainZoneFile'}
-
-        ${replaceSecretBin} '#mailboxSecurityKey#' '${secretsPath "dns/${domain}/mailbox-security-key"}' '${domainZoneFile'}'
-        ${replaceSecretBin} '#mailboxSecurityKeyRecord#' '${secretsPath "dns/${domain}/mailbox-security-key-record"}' '${domainZoneFile'}'
-      '';
-
-    # Though DNSSEC is disabled for now, we'll set it up in anticipation.
-    serviceConfig.LoadCredential =
-      let
-        certDirectory = certs."${dnsDomainName}".directory;
-      in
-      [
-        "cert.pem:${certDirectory}/cert.pem"
-        "key.pem:${certDirectory}/key.pem"
-        "fullchain.pem:${certDirectory}/fullchain.pem"
-      ];
   };
 }
