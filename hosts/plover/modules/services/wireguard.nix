@@ -24,15 +24,19 @@ in
     # IP forwarding for specific interfaces.
     filterForward = true;
     extraForwardRules = ''
-      iifname ${wireguardIFName} oifname ${lanIFName} accept comment "IP forward from Wireguard interface to LAN"
+      iifname ${wireguardIFName} accept comment "IP forward from Wireguard interface to LAN"
     '';
   };
 
   networking.nftables.ruleset = ''
     table ip wireguard-${wireguardIFName} {
+      chain prerouting {
+        type nat hook prerouting priority filter; policy accept;
+      }
+
       chain postrouting {
         type nat hook postrouting priority srcnat; policy accept;
-        iifname ${wireguardIFName} oifname ${lanIFName} masquerade comment "Masquerade packets from Wireguard interface to LAN"
+        iifname ${wireguardIFName} snat to ip ${interfaces.internal.IPv4.address} comment "Make packets from Wireguard interface appear as coming from the LAN interface"
       }
     }
   '';
