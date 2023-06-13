@@ -56,7 +56,7 @@ in
   # https://discourse.nixos.org/t/nixos-on-hetzner-cloud-servers-ipv6/221/
   systemd.network = {
     enable = true;
-    wait-online.ignoredInterfaces = [ "lo" ];
+    wait-online.ignoredInterfaces = [ "lo" interfaces.internal.ifname ];
 
     # For more information, you can look at Hetzner documentation from
     # https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/
@@ -68,6 +68,8 @@ in
         address = [ "${IPv6.address}/64" ];
         gateway = [ IPv6.gateway ];
 
+        # Setting up some other networking thingy.
+        domains = [ config.networking.domain ];
         networkConfig = {
           # IPv6 has to be manually configured.
           DHCP = "ipv4";
@@ -77,12 +79,17 @@ in
           IPv6AcceptRA = true;
 
           DNS = [
+            # The custom DNS servers.
+            IPv4.address
+            IPv6.address
+
             "2a01:4ff:ff00::add:2"
             "2a01:4ff:ff00::add:1"
           ];
         };
       };
 
+      # The interface for our LAN.
       "20-lan" = with interfaces.internal; {
         matchConfig.Name = lib.concatStringsSep " " internalEthernetInterfaceNames;
 
@@ -98,10 +105,6 @@ in
         dns = [
           IPv4.address
           IPv6.address
-
-          # Just in case it cannot really do it.
-          "127.0.0.1"
-          "::1"
         ];
 
         # Force our own internal domain to be used in the system.
