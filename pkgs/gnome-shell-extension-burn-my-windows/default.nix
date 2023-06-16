@@ -8,13 +8,13 @@
 # Please refer to the `pkgs/desktops/gnome/extensions/{extensions.json,extensionRenames.nix}` in the future to check.
 stdenv.mkDerivation rec {
   pname = "gnome-shell-extension-burn-my-windows";
-  version = "31";
+  version = "34";
 
   src = fetchFromGitHub {
     owner = "Schneegans";
     repo = "Burn-My-Windows";
     rev = "v${version}";
-    sha256 = "sha256-2UovHCVP2fsAbD87mq5yxOvGGS80ro2cONSVvC+kO8Q=";
+    sha256 = "sha256-CseLQpxTK6kzc4aSm3U17AyJ05mv5RmocCxIMngMhO8=";
   };
 
   nativeBuildInputs = [ glib gettext ];
