@@ -28,7 +28,14 @@ in
   # We're disabling it since the default Atuin integration is
   # blocking the Wezterm's shell integration by fetching another
   # instance of bash-preexec.
-  programs.atuin.enableBashIntegration = false;
+  programs.atuin = {
+    enableBashIntegration = false;
+    settings = {
+      auto_sync = true;
+      sync_address = "http://atuin.plover.foodogsquared.one";
+      sync_frequency = "10m";
+    };
+  };
   programs.bash = {
     bashrcExtra = ''
       source ${pkgs.wezterm}/etc/profile.d/wezterm.sh
