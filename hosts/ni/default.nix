@@ -223,6 +223,12 @@ in
     };
   };
 
+  services.resolved.domains = [
+    "~plover.foodogsquared.one"
+    "~0.27.172.in-addr.arpa"
+    "~0.28.172.in-addr.arpa"
+  ];
+
   system.stateVersion = "23.05"; # Yes! I read the comment!
 
   # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
@@ -236,18 +242,20 @@ in
       domains = [
         "~plover.foodogsquared.one"
         "~0.27.172.in-addr.arpa"
+        "~0.28.172.in-addr.arpa"
       ];
     in
     {
       privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
       listenPort = wireguardPort;
-      dns = with wireguardPeers.server; [ IPv4 IPv6 ];
+      dns = with interfaces.internal; [ IPv4.address IPv6.address ];
       postUp =
         let
           resolvectl = "${lib.getBin pkgs.systemd}/bin/resolvectl";
         in
         ''
-          ${resolvectl} domain %i ${lib.concatStringsSep " " domains}
+          ${resolvectl} domain ${wireguardIFName} ${lib.concatStringsSep " " domains}
+          ${resolvectl} dnssec ${wireguardIFName} no
         '';
 
       address = with wireguardPeers.desktop; [
