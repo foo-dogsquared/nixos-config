@@ -69,6 +69,14 @@
 
   outputs = inputs@{ self, nixpkgs, ... }:
     let
+      # A set of images with their metadata that is usually built for usual
+      # purposes. The format used here is whatever formats nixos-generators
+      # support.
+      images = lib'.importTOML ./images.toml;
+
+      # A set of image-related utilities for the flake outputs.
+      inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkUser mkImage;
+
       # The order here is important(?).
       overlays = [
         # Put my custom packages to be available.
@@ -93,15 +101,9 @@
       systems = with inputs.flake-utils.lib.system; [ defaultSystem ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
-      # We're considering this as the variant since we'll export the custom
-      # library as `lib` in the output attribute.
-      lib' = nixpkgs.lib.extend (final: prev:
-        import ./lib { lib = prev; }
-        // import ./lib/private.nix { lib = final; });
-
       extraArgs = {
         inherit (inputs) nix-colors;
-        inherit inputs self;
+        inherit inputs;
 
         # This is a variable that is used to check whether the module is
         # exported or not. Useful for configuring parts of the configuration
@@ -111,19 +113,11 @@
         _isInsideFds = true;
       };
 
-      mkHost = { system ? defaultSystem, extraModules ? [ ] }:
-        (lib'.makeOverridable inputs.nixpkgs.lib.nixosSystem) {
-          # The system of the NixOS system.
-          inherit system;
-          lib = lib';
-          specialArgs = extraArgs;
-          modules =
-            # Append with our custom NixOS modules from the modules folder.
-            (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
-
-            # Our own modules.
-            ++ extraModules;
-        };
+      # We're considering this as the variant since we'll export the custom
+      # library as `lib` in the output attribute.
+      lib' = nixpkgs.lib.extend (final: prev:
+        import ./lib { lib = prev; }
+        // import ./lib/private.nix { lib = final; });
 
       # The shared configuration for the entire list of hosts for this cluster.
       # Take note to only set as minimal configuration as possible since we're
@@ -225,19 +219,6 @@
         services.guix.package = inputs.guix-overlay.packages.${config.nixpkgs.system}.guix;
       };
 
-      mkUser = { system ? defaultSystem, extraModules ? [ ] }:
-        inputs.home-manager.lib.homeManagerConfiguration {
-          extraSpecialArgs = extraArgs;
-          lib = lib';
-          pkgs = import nixpkgs { inherit system overlays; };
-          modules =
-            # Importing our custom home-manager modules.
-            (lib'.modulesToList (lib'.filesToAttr ./modules/home-manager))
-
-            # Plus our own.
-            ++ extraModules;
-        };
-
       # The default config for our home-manager configurations. This is also to
       # be used for sharing modules among home-manager users from NixOS
       # configurations with `nixpkgs.useGlobalPkgs` set to `true` so avoid
@@ -284,29 +265,6 @@
           manpages.enable = true;
         };
       };
-
-      # A wrapper around the nixos-generators `nixosGenerate` function.
-      mkImage = { system ? null, pkgs ? null, extraModules ? [ ], extraArgs ? { }, format ? "iso" }:
-        inputs.nixos-generators.nixosGenerate {
-          inherit pkgs system format;
-          lib = lib';
-          specialArgs = extraArgs;
-          modules =
-            # Import all of the NixOS modules.
-            (lib'.modulesToList (lib'.filesToAttr ./modules/nixos))
-
-            # Our own modules.
-            ++ extraModules;
-        };
-
-      # A set of images with their metadata that is usually built for usual
-      # purposes. The format used here is whatever formats nixos-generators
-      # support.
-      images = {
-        bootstrap.format = "install-iso";
-        graphical-installer.format = "install-iso";
-        void.format = "vm";
-      };
     in
     {
       # Exposes only my library with the custom functions to make it easier to
@@ -315,30 +273,32 @@
 
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
-      nixosConfigurations = lib'.mapAttrsRecursive
-        (host: path:
+      nixosConfigurations = lib'.mapAttrs
+        (host: metadata:
           let
-            host' = lib'.last host;
+            path = ./hosts/${host};
             extraModules = [
               ({ lib, ... }: {
-                # We're very lax with setting the default since there's a lot
-                # of modules that may set this especially with image media
-                # modules.
-                networking.hostName = host';
+                config = lib.mkMerge [
+                  { networking.hostName = metadata.hostname or host; }
+
+                  (lib.mkIf (metadata ? domain)
+                    { networking.domain = metadata.domain; })
+                ];
               })
-              (lib'.optionalAttrs (lib'.hasAttr host' images)
-                (
-                  let
-                    imageFormat = images.${host'}.format;
-                  in
-                  inputs.nixos-generators.nixosModules.${imageFormat}
-                ))
+
+              (lib'.optionalAttrs (metadata ? format)
+                inputs.nixos-generators.nixosModules."${metadata.format}")
+
               hostSharedConfig
               path
             ];
           in
-          mkHost { inherit extraModules; })
-        (lib'.filesToAttr ./hosts);
+          mkHost {
+            inherit extraModules extraArgs;
+            system = metadata.system or defaultSystem;
+          })
+        images;
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
@@ -366,7 +326,7 @@
               path
             ];
           in
-          mkUser { inherit extraModules; })
+          mkUser { inherit extraModules extraArgs; })
         (lib'.filesToAttr ./users/home-manager);
 
       # Extending home-manager with my custom modules, if anyone cares.
@@ -384,16 +344,16 @@
         in
         inputs.flake-utils.lib.flattenTree (import ./pkgs { inherit pkgs; })
         // lib'.mapAttrs'
-          (name: value:
-            lib'.nameValuePair "${name}-${value.format}" (mkImage {
+          (host: metadata:
+            lib'.nameValuePair "${host}-${metadata.format or "iso"}" (mkImage {
               inherit system pkgs extraArgs;
-              inherit (value) format;
+              format = metadata.format or "iso";
               extraModules = [
                 ({ lib, ... }: {
-                  networking.hostName = lib.mkOverride 2000 name;
+                  networking.hostName = lib.mkOverride 2000 host;
                 })
                 hostSharedConfig
-                ./hosts/${name}
+                ./hosts/${host}
               ];
             }))
           images);
