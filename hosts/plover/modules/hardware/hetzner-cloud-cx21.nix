@@ -50,7 +50,10 @@ in
   # The local DNS resolver. This should be used in conjunction with an
   # authoritative DNS server as a forwarder. Also, it should live in its
   # default address at 127.0.0.53 (as of systemd v252).
-  services.resolved.enable = true;
+  services.resolved = {
+    enable = true;
+    dnssec = "false";
+  };
 
   # The interface configuration is based from the following discussion:
   # https://discourse.nixos.org/t/nixos-on-hetzner-cloud-servers-ipv6/221/
