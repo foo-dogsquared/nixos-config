@@ -16,6 +16,9 @@ in
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
+  # Hetzner can only support non-UEFI bootloader (or at least it doesn't with
+  # systemd-boot).
+  boot.loader.grub.enable = lib.mkForce true;
   boot.loader.grub.device = "/dev/sda";
   boot.initrd.availableKernelModules = [ "ata_piix" "virtio_pci" "virtio_scsi" "xhci_pci" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ "nvme" ];

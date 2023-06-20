@@ -42,8 +42,6 @@ in
     ./modules/services/wireguard.nix
   ];
 
-  boot.loader.grub.enable = true;
-
   networking = {
     nftables.enable = true;
     domain = "foodogsquared.one";
