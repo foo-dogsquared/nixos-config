@@ -410,9 +410,13 @@
         let
           nixosConfigurations = lib'.mapAttrs'
             (name: value:
+              let metadata = images.${name}; in
               lib'.nameValuePair "nixos-${name}" {
-                hostname = name;
-                fastConnection = true;
+                hostname = metadata.deploy.hostname or name;
+                autoRollback = metadata.deploy.auto-rollback or true;
+                magicRollback = metadata.deploy.magic-rollback or true;
+                fastConnection = metadata.deploy.fast-connection or true;
+                remoteBuild = metadata.deploy.remote-build or false;
                 profiles.system = {
                   sshUser = "admin";
                   user = "root";

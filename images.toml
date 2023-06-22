@@ -18,6 +18,11 @@ system = "x86_64-linux"
 format = "iso"
 domain = "foodogsquared.one"
 
+[plover.deploy]
+hostname = "plover.foodogsquared.one"
+auto-rollback = true
+magic-rollback = true
+
 [void]
 system = "x86_64-linux"
 format = "vm"
