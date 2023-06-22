@@ -25,6 +25,7 @@ format = "vm"
 [bootstrap]
 system = "x86_64-linux"
 format = "install-iso"
+nixpkgs-channel = "nixos-unstable-small"
 
 [graphical-installer]
 system = "x86_64-linux"

@@ -13,7 +13,12 @@
     # `nixpkgs-unstable` branch could be faster delivering updates, it is
     # looser when it comes to stability for the entirety of this configuration.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+
+    # Here are the nixpkgs variants used for creating the system configuration
+    # in `mkHost`.
+    nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
 
     # We're using these libraries for other functions.
     flake-utils.url = "github:numtide/flake-utils";
@@ -297,6 +302,7 @@
           mkHost {
             inherit extraModules extraArgs;
             system = metadata.system or defaultSystem;
+            nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
           })
         images;
 
