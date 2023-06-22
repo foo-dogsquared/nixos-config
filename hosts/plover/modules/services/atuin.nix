@@ -13,7 +13,7 @@ in
   # Atuin sync server because why not.
   services.atuin = {
     enable = true;
-    openRegistration = false;
+    openRegistration = true;
 
     inherit host;
     port = 8965;
