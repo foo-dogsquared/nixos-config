@@ -62,12 +62,12 @@ in
   # https://discourse.nixos.org/t/nixos-on-hetzner-cloud-servers-ipv6/221/
   systemd.network = {
     enable = true;
-    wait-online.ignoredInterfaces = [ "lo" interfaces.internal.ifname ];
+    wait-online.ignoredInterfaces = [ "lo" interfaces.lan.ifname ];
 
     # For more information, you can look at Hetzner documentation from
     # https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/
     networks = {
-      "10-wan" = with interfaces.main'; {
+      "10-wan" = with interfaces.wan; {
         matchConfig.Name = lib.concatStringsSep " " mainEthernetInterfaceNames;
 
         # Setting up IPv6.
@@ -96,7 +96,7 @@ in
       };
 
       # The interface for our LAN.
-      "20-lan" = with interfaces.internal; {
+      "20-lan" = with interfaces.lan; {
         matchConfig.Name = lib.concatStringsSep " " internalEthernetInterfaceNames;
 
         # Take note of the private subnets set in your Hetzner Cloud instance

@@ -9,8 +9,8 @@ let
     wireguardPeers;
 
   wireguardAllowedIPs = [
-    "${interfaces.internal.IPv4.address}/16"
-    "${interfaces.internal.IPv6.address}/64"
+    "${interfaces.lan.IPv4.address}/16"
+    "${interfaces.lan.IPv6.address}/64"
   ];
   wireguardIFName = "wireguard0";
 in
@@ -248,7 +248,7 @@ in
     {
       privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
       listenPort = wireguardPort;
-      dns = with interfaces.internal; [ IPv4.address IPv6.address ];
+      dns = with interfaces.lan; [ IPv4.address IPv6.address ];
       postUp =
         let
           resolvectl = "${lib.getBin pkgs.systemd}/bin/resolvectl";
@@ -269,7 +269,7 @@ in
           publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-plover);
           presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
           allowedIPs = wireguardAllowedIPs;
-          endpoint = "${interfaces.main'.IPv4.address}:${toString wireguardPort}";
+          endpoint = "${interfaces.wan.IPv4.address}:${toString wireguardPort}";
           persistentKeepalive = 25;
         }
 

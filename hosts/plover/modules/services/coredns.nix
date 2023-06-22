@@ -9,9 +9,9 @@ let
   inherit (import ../hardware/networks.nix) privateIPv6Prefix interfaces clientNetworks serverNetworks secondaryNameServers wireguardPeers;
 
   domainZoneFile = pkgs.substituteAll {
-    ploverPublicIPv4 = interfaces.main'.IPv4.address;
-    ploverPublicIPv6 = interfaces.main'.IPv6.address;
     src = ../../config/dns/${domain}.zone;
+    ploverWANIPv4 = interfaces.wan.IPv4.address;
+    ploverWANIPv6 = interfaces.wan.IPv6.address;
   };
 
   # The final location of the thing.
@@ -43,12 +43,12 @@ let
     "${privateIPv6Prefix}::/48" # Private uses
   ];
 
-  mainIP = with interfaces.main'; [
+  mainIP = with interfaces.wan; [
     IPv4.address
     IPv6.address
   ];
 
-  internalIP = with interfaces.internal; [
+  internalIP = with interfaces.lan; [
     IPv4.address
     IPv6.address
   ];
@@ -105,7 +105,7 @@ in
     config = ''
       # The LAN.
       ${fqdn} {
-        bind ${interfaces.internal.ifname}
+        bind ${interfaces.lan.ifname}
         acl {
           # Hetzner doesn't support DNSSEC yet though.
           block type DS SIG RRSIG TA TSIG PTR DLV DNSKEY KEY NSEC NSEC3
@@ -116,11 +116,11 @@ in
         }
 
         template IN A {
-          answer "{{ .Name }} IN 60 A ${interfaces.internal.IPv4.address}"
+          answer "{{ .Name }} IN 60 A ${interfaces.lan.IPv4.address}"
         }
 
         template IN AAAA {
-          answer "{{ .Name }} IN 60 AAAA ${interfaces.internal.IPv6.address}"
+          answer "{{ .Name }} IN 60 AAAA ${interfaces.lan.IPv6.address}"
         }
       }
 

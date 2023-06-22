@@ -8,7 +8,7 @@ let
   inherit (import ../hardware/networks.nix) interfaces wireguardPort wireguardPeers;
 
   wireguardIFName = interfaces.wireguard0.ifname;
-  lanIFName = interfaces.internal.ifname;
+  lanIFName = interfaces.lan.ifname;
 
   desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/32" "${IPv6}/128" ];
   phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
@@ -36,7 +36,7 @@ in
 
       chain postrouting {
         type nat hook postrouting priority srcnat; policy accept;
-        iifname ${wireguardIFName} snat to ip ${interfaces.internal.IPv4.address} comment "Make packets from Wireguard interface appear as coming from the LAN interface"
+        iifname ${wireguardIFName} snat to ip ${interfaces.lan.IPv4.address} comment "Make packets from Wireguard interface appear as coming from the LAN interface"
       }
     }
   '';
