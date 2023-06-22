@@ -9,3 +9,8 @@ includes = [ "*.nix" ]
 [formatter.python]
 command = "black"
 includes = [ "*.py" ]
+
+[formatter.terraform]
+command = "terraform"
+options = [ "fmt" ]
+includes = [ "*.tf" ]

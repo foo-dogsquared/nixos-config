@@ -10,11 +10,13 @@ pkgs.mkShell {
     sops
     treefmt
     deploy-rs
+    terraform
 
     # Language servers for various parts of the config that uses a language.
     lua-language-server
     pyright
     rnix-lsp
+    terraform-ls
 
     # Formatters...
     stylua # ...for Lua.
