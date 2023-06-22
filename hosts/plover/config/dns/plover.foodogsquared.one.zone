@@ -1,0 +1,19 @@
+$TTL 12h
+$ORIGIN plover.foodogsquared.one.
+
+@	3600	IN	SOA	ns	hostmaster.foodogsquared.one. (
+				2023062201 	; serial number
+				1h		; refresh
+				15m		; update retry
+				3w		; expiry
+				2h		; nx = nxdomain ttl
+			)
+	3600	IN	NS	ns
+
+ns	3600	IN	A	@ploverLANIPv4@
+	3600	IN	AAAA	@ploverLANIPv6@
+
+*	3600	IN	A	@ploverLANIPv4@
+	3600	IN	AAAA	@ploverLANIPv6@
+
+; vim: expandtab! tabstop=8 shiftwidth=8 filetype=dns

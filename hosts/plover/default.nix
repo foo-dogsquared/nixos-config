@@ -23,7 +23,7 @@ in
     "${modulesPath}/profiles/hardened.nix"
 
     # The primary DNS server that is completely hidden.
-    ./modules/services/coredns.nix
+    ./modules/services/bind.nix
 
     # The reverse proxy of choice.
     ./modules/services/nginx.nix
@@ -145,11 +145,12 @@ in
   };
 
   # DNS-related settings. We're settling by configuring the ACME setup with a
-  # DNS provider.
+  # self-hosted DNS server.
   security.acme.defaults = {
     email = "admin@foodogsquared.one";
-    dnsProvider = "porkbun";
+    dnsProvider = "rfc2136";
     credentialsFile = config.sops.secrets."plover/lego/env".path;
+    dnsPropagationCheck = false;
   };
 
   services.openssh.hostKeys = [{

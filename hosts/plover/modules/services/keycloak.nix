@@ -78,6 +78,7 @@ in
     "${authDomain}" = {
       forceSSL = true;
       enableACME = true;
+      acmeRoot = null;
 
       # This is based from the reverse proxy guide from the official
       # documentation at https://www.keycloak.org/server/reverseproxy.

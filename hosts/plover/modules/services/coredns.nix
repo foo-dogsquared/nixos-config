@@ -9,9 +9,9 @@ let
   inherit (import ../hardware/networks.nix) privateIPv6Prefix interfaces clientNetworks serverNetworks secondaryNameServers wireguardPeers;
 
   domainZoneFile = pkgs.substituteAll {
-    src = ../../config/coredns/${domain}.zone;
     ploverPublicIPv4 = interfaces.main'.IPv4.address;
     ploverPublicIPv6 = interfaces.main'.IPv6.address;
+    src = ../../config/dns/${domain}.zone;
   };
 
   # The final location of the thing.

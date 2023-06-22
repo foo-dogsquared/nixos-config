@@ -163,6 +163,7 @@ in
   services.nginx.virtualHosts."${codeForgeDomain}" = {
     forceSSL = true;
     enableACME = true;
+    acmeRoot = null;
     locations."/" = {
       proxyPass = "http://localhost:${toString config.services.gitea.settings.server.HTTP_PORT}";
     };

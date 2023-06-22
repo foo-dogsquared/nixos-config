@@ -1,9 +1,10 @@
 ; This is trying to be discrete with certain information. This should be copied
 ; and replaced with more confidential information somewhere.
 $TTL 12h
+$ORIGIN foodogsquared.one.
 
 @	3600	IN	SOA	ns1.first-ns.de. hostmaster.foodogsquared.one. (
-				2023061201 	; serial number
+				2023062201 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -48,13 +49,15 @@ wiki	IN	CNAME	foodogsquared-wiki.netlify.app.
 
 ; Public-facing services from this server. Just remember to increment the
 ; serial number once the public IPs changes. PLEEEEEEEEEEEAAAAAAAAASE!
-plover	IN	A	@ploverPublicIPv4@
-plover	IN	AAAA	@ploverPublicIPv6@
+plover	IN	A	@ploverWANIPv4@
+plover	IN	AAAA	@ploverWANIPv6@
 
 auth	IN	CNAME	plover
 pass	IN	CNAME	plover
 code	IN	CNAME	plover
 vpn	IN	CNAME	plover
+
+postgres	IN	CNAME	plover
 
 ; Other things.
 _github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709

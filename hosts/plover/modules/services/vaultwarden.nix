@@ -81,6 +81,7 @@ in
   services.nginx.virtualHosts."${passwordManagerDomain}" = {
     forceSSL = true;
     enableACME = true;
+    acmeRoot = null;
     locations =
       let
         address = config.services.vaultwarden.config.ROCKET_ADDRESS;
