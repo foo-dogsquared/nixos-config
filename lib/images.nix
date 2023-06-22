@@ -35,7 +35,7 @@ in
     };
 
   # A wrapper around the nixos-generators `nixosGenerate` function.
-  mkImage = { system ? null, pkgs ? null, extraModules ? [ ], extraArgs ? { }, format ? "iso" }:
+  mkImage = { system, pkgs ? null, extraModules ? [ ], extraArgs ? { }, format ? "iso" }:
     inputs.nixos-generators.nixosGenerate {
       inherit pkgs system format lib;
       specialArgs = extraArgs;
