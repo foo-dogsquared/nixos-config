@@ -50,7 +50,10 @@ wiki	IN	CNAME	foodogsquared-wiki.netlify.app.
 ; Public-facing services from this server. Just remember to increment the
 ; serial number once the public IPs changes. PLEEEEEEEEEEEAAAAAAAAASE!
 plover	IN	A	@ploverWANIPv4@
-plover	IN	AAAA	@ploverWANIPv6@
+        IN	AAAA	@ploverWANIPv6@
+
+ns1     IN      A       @ploverWANIPv4@
+        IN      AAAA    @ploverWANIPv6@
 
 auth	IN	CNAME	plover
 pass	IN	CNAME	plover
