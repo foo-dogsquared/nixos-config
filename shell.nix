@@ -2,15 +2,15 @@
 
 pkgs.mkShell {
   packages = with pkgs; [
-    asciidoctor
     age
-    git
-    jq
-    nixpkgs-fmt
-    sops
-    treefmt
+    asciidoctor
     deploy-rs
+    git
+    sops
     terraform
+
+    jq
+    wl-clipboard
 
     # Language servers for various parts of the config that uses a language.
     lua-language-server
@@ -19,6 +19,7 @@ pkgs.mkShell {
     terraform-ls
 
     # Formatters...
+    treefmt # The universal formatter (if you configured it).
     stylua # ...for Lua.
     black # ...for Python.
     nixpkgs-fmt # ...for Nix.
