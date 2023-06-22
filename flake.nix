@@ -292,9 +292,6 @@
                 ];
               })
 
-              (lib'.optionalAttrs (metadata ? format)
-                inputs.nixos-generators.nixosModules."${metadata.format}")
-
               hostSharedConfig
               path
             ];
