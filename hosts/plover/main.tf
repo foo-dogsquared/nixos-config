@@ -7,15 +7,15 @@ provider "hcloud" {
 }
 
 resource "hcloud_server" "plover" {
-  name = "plover"
-  image = "debian-12"
+  name        = "plover"
+  image       = "debian-12"
   server_type = "cx21"
-  location = "hel1"
-  datacenter = "hel1-dc2"
+  location    = "hel1"
+  datacenter  = "hel1-dc2"
 
-  ssh_keys = [ hcloud_ssh_key.foodogsquared.id ]
+  ssh_keys = [hcloud_ssh_key.foodogsquared.id]
 
-  delete_protection = true
+  delete_protection  = true
   rebuild_protection = true
 
   user_data = file("${path.module}/files/hcloud/hcloud-user-data.yml")
@@ -26,8 +26,8 @@ resource "hcloud_server" "plover" {
   }
 
   network {
-    network_id  = hcloud_network.plover.id
-    ip = "172.27.0.1"
+    network_id = hcloud_network.plover.id
+    ip         = "172.27.0.1"
     alias_ips = [
       "172.27.0.2",
       "172.27.0.3"
@@ -40,18 +40,18 @@ resource "hcloud_server" "plover" {
 }
 
 resource "hcloud_ssh_key" "foodogsquared" {
-  name = "foodogsquared@foodogsquared.one"
+  name       = "foodogsquared@foodogsquared.one"
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILPR52KfVODfKsgdvYSoQinV3kyOTZ4mtKa0fah5Wkfr foodogsquared@foodogsquared.one"
 }
 
 resource "hcloud_network" "plover" {
-  name = "plover"
+  name     = "plover"
   ip_range = "172.16.0.0/12"
 }
 
 resource "hcloud_network_subnet" "plover-subnet" {
-  network_id = hcloud_network.plover.id
-  type = "cloud"
+  network_id   = hcloud_network.plover.id
+  type         = "cloud"
   network_zone = "eu-central"
-  ip_range = "172.27.0.0/16"
+  ip_range     = "172.27.0.0/16"
 }

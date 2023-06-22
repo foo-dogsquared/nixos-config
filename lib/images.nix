@@ -18,7 +18,7 @@ in
 
         # Our own modules.
         ++ extraModules;
-      };
+    };
 
   # A wrapper around the home-manager configuration function.
   mkUser = { system, extraModules ? [ ], extraArgs ? { } }:
