@@ -23,7 +23,18 @@ Some of the self-hosted services from this server:
 * A link:https://gitea.io/[Gitea] instance for my personal projects.
 * A link:https://www.keycloak.org/[Keycloak] instance for identity management.
 * A VPN tunnel with link:https://www.wireguard.com/[Wireguard].
-* A DNS server with link:https://coredns.io/[CoreDNS] managed as a "hidden" authoritative server and as a local DNS server for easily accessing the services with domain names.
+* A DNS server with link:https://www.isc.org/bind/[Bind9] managed as a "hidden" authoritative server and as a local DNS server for easily accessing the services with domain names.
+
+A Terraform plan is also available to be deployed given with the right credentials.
+To deploy it, just start up a Terraform project as usual (assuming it is run from the project root).
+
+[source, shell]
+----
+terraform -chdir=./hosts/plover init
+----
+
+There are ways to deploy with the given credentials but the common way to do it with this setup is modifying `.envrc` located at the project root.
+Just provide the sensitive credentials as an environment variable `TF_VAR_$KEY=$VALUE`.
 
 
 
@@ -108,91 +119,3 @@ There is no equivalent of a free-for-all network for IPv6 networks.
 We're just dealing with the fact that the aforementioned network is widely used so we'll leave no assumptions here.
 
 For more details, you can see the interfaces and their networking-related configuration in link:./modules/hardware/networks.nix[`./modules/hardware/networks.nix`].
-
-
-
-
-== Deploying it as a Google Compute instance
-
-Some documented guidelines to deploy this instance in Google Cloud Platform (GCP) so you won't have to re-read those documentation like a stuck rat the next time you visit them.
-
-* A GCP Compute Instance image of the configuration is available to be stored at your storage buckets.
-You can simply build it at `packages.plover-gce` and store it there.
-+
-You can take it further automating it by running link:../../scripts/generate-and-upload-gce-image[`../../scripts/generate-and-upload-gce-image`] which is just a modified version of the link:https://github.com/NixOS/nixpkgs/blob/ebdafd7244832f1f52cacd3eda39f2156988957e/nixos/maintainers/scripts/gce/create-gce.sh[`create-gce.sh` script from nixpkgs].
-
-* If you already have access to at least one GCP KMS key, then skip this part.
-Add a key to be used for deployment to wherever relevant file in the link:./secrets[secrets directory]. footnote:[Of course, you need previous keys which you're likely using the private age key for this system.]
-For this, you'll have to create a GCP keyring on their key management system (KMS) and generate a key there.
-
-* Enable link:https://cloud.google.com/compute/docs/oslogin/set-up-oslogin[OS Login] for your Compute Engine instance.
-
-* Enable HTTP and HTTPS traffic in the firewall settings.
-
-* Don't forget to set the appropriate scopes for the instance.
-Use the least privileged scopes as much as possible.
-
-* Reserve a static IP address, pls.
-Just don't forget to immediately assign it to the instance since it will charge higher if you just leave it alone.
-
-* Creating a dedicated link:https://cloud.google.com/iam/docs/service-accounts[service account] for the VM is recommended.
-Just make sure to set the least amount of privileges for that account.
-
-
-
-
-== Deploying it to Hetzner Cloud
-
-A deployment to Hetzner Cloud is composed of mainly three things:
-
-- A server.
-- A firewall.
-- A private network.
-
-First, we will set up the latter two before creating the server. footnote:[Though, it can be created in any order, it's just personal preferences at this point.]
-
-The firewall is already set in the host so no need to worry about it (as long as it is configured correctly, of course :p).
-
-Next up, the networking setup which is composed of a public IP used for accessing some services and a private network used to communicate inside of the network.
-However, the main reason we have a private network is to setup a VPN service to hide some of the more sensitive services.
-
-You can create one from Hetzner Cloud web UI.
-If you want to create with `hcloud`, however...
-
-[source, shell]
-----
-hcloud network create --name plover-local --ip-range 172.16.0.0/12
-----
-
-To deploy this to Hetzner Cloud, just initialize a server and run link:https://github.com/elitak/nixos-infect/[nixos-infect] script.
-As an example, you can run the server with the following link:https://community.hetzner.com/tutorials/basic-cloud-config[cloud config].
-
-[source, yaml, subs=attributes]
-----
-#cloud-config
-
-runcmd:
-  - curl https://raw.githubusercontent.com/elitak/nixos-infect/{nixos-infect-commit}/nixos-infect | NIX_CHANNEL=nixos-unstable bash 2>&1 | tee /tmp/infect.log
-----
-
-You could also easily create a server with `hcloud` with the following command:
-
-[source, shell]
-----
-hcloud server create --location hel1 --type cx21 --image ubuntu-22.04 \
-    --network plover-local \
-    --user-data-from-file ./files/hcloud/hcloud-user-data.yml \
-    --ssh-key foodogsquared@foodogsquared.one \
-    --name nixos-plover
-----
-
-Don't forget to setup the prerequisites such as filesystems properly.
-Here's a set of commands setting up to the current filesystem configuration.
-
-[source, shell]
-----
-e2label /dev/sda1 nixos
-fatlabel /dev/sda15 boot
-----
-
-Next, do the steps as written from <<general-deployment-guidelines>>.
