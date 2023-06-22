@@ -1,8 +1,1 @@
 *.yaml diff=sopsfilter
-
-# I want to be able to quickly list them in a view whenever I'm using a
-# supported forge with linguist.
-*.adoc linguist-detectable
-*.adoc -linguist-documentation
-*.org linguist-detectable
-*.org -linguist-documentation
