@@ -3,7 +3,6 @@ keys:
   - &foo-dogsquared-age age1say65zc678yc03tx4zexp20c9gvskvwrm4390j4x2jkepn97duhq9ptuj9
   - &ni age1dm9xugju4q5gx0zty8ckw655ea904c64gv9qw9fn3lu507ck8uzsag59y8
   - &plover age1sj497yr895335rk77qqnrqyx9f7462ma3lz0a0x3w5cnla5uqgpspgggtz
-  - &gcp-sops projects/pivotal-sprite-295112/locations/global/keyRings/sops/cryptoKeys/plover-key
 creation_rules:
   - path_regex: hosts/ni/secrets/[^/]+\.(yaml|json)$
     age: *ni
