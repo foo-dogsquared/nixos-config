@@ -36,7 +36,7 @@ in
 
       chain postrouting {
         type nat hook postrouting priority srcnat; policy accept;
-        iifname ${wireguardIFName} snat to ip ${interfaces.lan.IPv4.address} comment "Make packets from Wireguard interface appear as coming from the LAN interface"
+        iifname ${wireguardIFName} snat to ${interfaces.lan.IPv4.address} comment "Make packets from Wireguard interface appear as coming from the LAN interface"
       }
     }
   '';
