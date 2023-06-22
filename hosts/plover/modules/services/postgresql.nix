@@ -2,6 +2,9 @@
 # (thankfully).
 { config, lib, pkgs, ... }:
 
+let
+  postgresqlDomain = "postgres.${config.networking.domain}";
+in
 {
   services.postgresql = {
     enable = true;
@@ -30,9 +33,15 @@
         ${lib.concatStringsSep "\n" perUserSchemas}
       '';
 
-    settings = {
+    settings = let
+      credsDir = path: "/run/credentials/postgresql.service/${path}";
+    in {
       # Still doing the secure schema usage pattern.
       search_path = "\"$user\"";
+
+      ssl_cert_file = credsDir "cert.pem";
+      ssl_key_file = credsDir "key.pem";
+      ssl_ca_file = credsDir "fullchain.pem";
     };
   };
 
@@ -45,4 +54,22 @@
     # Start at every 3 days starting from the first day of the month.
     startAt = "*-*-1/3";
   };
+
+  # Setting this up for TLS.
+  systemd.services.postgresql = {
+    requires = [ "acme-finished-${postgresqlDomain}.target" ];
+    serviceConfig.LoadCredential = let
+      certDirectory = config.security.acme.certs."${postgresqlDomain}".directory;
+      certCredentialPath = path: "${path}:${certDirectory}/${path}";
+    in
+    [
+      (certCredentialPath "cert.pem")
+      (certCredentialPath "key.pem")
+      (certCredentialPath "fullchain.pem")
+    ];
+  };
+
+  security.acme.certs."${postgresqlDomain}".reloadServices = [
+    "postgresql.service"
+  ];
 }
