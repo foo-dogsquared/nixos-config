@@ -138,6 +138,11 @@ in
     };
   };
 
+  programs.zellij.settings = {
+    default_layout = "editor";
+    layout_dir = "${config.xdg.configHome}/zellij/layouts";
+  };
+
   # My music player setup, completely configured with Nix!
   programs.beets = {
     enable = true;
@@ -336,6 +341,8 @@ in
     "lf".source = getDotfiles "lf";
     "nvim".source = getDotfiles "nvim";
     "wezterm".source = getDotfiles "wezterm";
+
+    "zellij/layouts".source = ./config/zellij/layouts;
   };
 
   # Automating some files to be fetched on activation.
