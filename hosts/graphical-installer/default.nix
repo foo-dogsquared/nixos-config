@@ -16,6 +16,8 @@
     ] ++ builtins.attrValues inputs;
   };
 
+  networking.wireless.enable = false;
+
   profiles = {
     desktop = {
       enable = true;
