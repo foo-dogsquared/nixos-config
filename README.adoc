@@ -200,8 +200,7 @@ nixos-config
 ----
 
 One of the more notable files here when first start looking is the link:./images.toml[`./images.toml`] file where it contains a description of the images.
-The data is then used for certain functions in the flake definition file (i.e., `flake.nix`).
-The data can contain from what image output format it is intended to be deployed (most likely used anyways), the nixpkgs channel to be used, and its system (e.g., `x86_64-linux`).
+For more details, see <<declarative-host-management>>.
 
 Most of the said folders are related to a flake output attribute, see <<whats-in-my-flake>> for more details.
 
@@ -230,6 +229,57 @@ footnote:[Since packages brought from Nix shells can only work with the store, a
 * link:./users/[`./users/`] contains my link:https://github.com/nix-community/home-manager[home-manager] configurations.
 It is exported in the flakes at `outputs.homeConfigurations`.
 For more information, see the link:./users/README.adoc[related documentation].
+
+
+[#declarative-host-management]
+=== Declarative host management
+
+This project uses a custom setup for declarative host management.
+Specifically, it is done with a simple file at link:./images.toml[`./images.toml`] where it expects a table of the hosts' metadata.
+Each host in the table represents one of the hosts at link:./hosts/[`./hosts/`].
+
+A host metadata has a certain schema which the following example is a complete version of it.
+The data is then used for certain functions in the flake definition file (i.e., `flake.nix`).
+
+[#lst:images-metadata-example]
+[source, toml]
+----
+[plover]
+system = "x86_64-linux"
+format = "iso"
+hostname = "ploverrific"
+domain = "foodogsquared.one"
+nixpkgs-channel = "nixos-unstable-small"
+
+[plover.deploy]
+hostname = "plover.foodogsquared.one"
+fast-connection = true
+auto-rollback = true
+magic-rollback = true
+remote-build = true
+----
+
+For a complete reference, here are the expected attributes.
+
+- `system` contains the platform of the host system.
+This is mainly used to indicate the platform used for the nixpkgs repository.
+
+- `format` is the image output format for the host.
+It expects an accepted value from link:https://github.com/nix-community/nixos-generators[nixos-generators] project.
+
+- `hostname` is the canonical hostname for the host.
+If unset, the hostname is the name of the table key.
+In the <<lst:images-metadata-example, previous example>>, if `plover.hostname` is unset, the value would be `plover` instead of `ploverrific`.
+
+- `domain` is the domain used for networking configuration.
+It is set for `networking.domain` in NixOS configuration.
+
+- `nixpkgs-channel` is the nixpkgs channel to be used for the host.
+The value could be any one of the nixpkgs flake inputs imported into this flake.
+By default, it uses `nixpkgs` flake input which points to the `nixos-unstable` channel.
+
+- `deploy` is a table containing arguments from link:https://github.com/serokell/deploy-rs[deploy-rs].
+Only a few arguments are accepted (i.e., `hostname`, `fast-connection`, `remote-build`, `magic-rollback`, and `auto-rollback`).
 
 
 [#secrets-management]
