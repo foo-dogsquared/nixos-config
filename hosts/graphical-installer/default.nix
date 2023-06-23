@@ -1,4 +1,4 @@
-{ self, lib, config, pkgs, inputs, modulesPath, ... }:
+{ lib, config, pkgs, inputs, ... }:
 
 {
   imports = [
@@ -8,15 +8,13 @@
   isoImage = {
     isoBaseName = config.networking.hostName;
     contents = [{
-      source = self;
+      source = inputs.self;
       target = "/bootstrap/";
     }];
     storeContents = [
-      self.devShells.${config.nixpkgs.system}.default
+      inputs.self.devShells.${config.nixpkgs.system}.default
     ] ++ builtins.attrValues inputs;
   };
-
-  networking.wireless.enable = lib.mkForce false;
 
   profiles = {
     desktop = {
@@ -41,8 +39,6 @@
       user = "nixos";
     };
   };
-
-  networking.hostName = "graphical-installer";
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
