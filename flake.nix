@@ -79,6 +79,9 @@
       # support.
       images = lib'.importTOML ./images.toml;
 
+      # A set of users with their metadata to be deployed with home-manager.
+      users = lib'.importTOML ./users.toml;
+
       # A set of image-related utilities for the flake outputs.
       inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkUser mkImage;
 
@@ -310,8 +313,9 @@
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
       homeConfigurations = lib'.mapAttrs
-        (_: path:
+        (name: metadata:
           let
+            path = ./users/home-manager/${name};
             extraModules = [
               ({ pkgs, config, ... }: {
                 # To be able to use the most of our config as possible, we want
@@ -329,8 +333,11 @@
               path
             ];
           in
-          mkUser { inherit extraModules extraArgs; })
-        (lib'.filesToAttr ./users/home-manager);
+          mkUser {
+            inherit extraModules extraArgs;
+            system = metadata.system or defaultSystem;
+          })
+        users;
 
       # Extending home-manager with my custom modules, if anyone cares.
       homeModules =
