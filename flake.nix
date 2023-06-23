@@ -353,7 +353,12 @@
               format = metadata.format or "iso";
               extraModules = [
                 ({ lib, ... }: {
-                  networking.hostName = lib.mkOverride 2000 host;
+                  config = lib.mkMerge [
+                    { networking.hostName = metadata.hostname or host; }
+
+                    (lib.mkIf (metadata ? domain)
+                      { networking.domain = metadata.domain; })
+                  ];
                 })
                 hostSharedConfig
                 ./hosts/${host}
