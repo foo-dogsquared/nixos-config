@@ -16,7 +16,6 @@ in {
     ({
       home.packages = with pkgs; [
         dasel # Universal version of jq.
-        fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
         gopass # An improved version of the password manager for hipsters.
         lazygit # Git interface for the lazy who cannot be asked to add hunks properly.
         lf # File manager in the terminal, really.
@@ -30,6 +29,16 @@ in {
         ripgrep # On nice, a more reliable `grep`.
         exa # Oh nice, a shinier `ls`.
       ];
+
+
+      # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
+      programs.fzf = let
+        fd = "${lib.getBin pkgs.fd}/bin/fd";
+      in {
+        enable = true;
+        changeDirWidgetCommand = "${fd} --type d";
+        defaultCommand = "${fd} --type f";
+      };
 
       # dog > sky dog > cat.
       programs.bat = {
