@@ -1,4 +1,4 @@
-{ self, lib, config, pkgs, inputs, modulesPath, ... }:
+{ lib, config, pkgs, inputs, ... }:
 
 {
   imports = [
@@ -6,13 +6,13 @@
   ];
 
   isoImage = {
-    isoBaseName = "bootstrap";
+    isoBaseName = config.networking.hostName;
     contents = [{
-      source = self;
+      source = inputs.self;
       target = "/bootstrap/";
     }];
     storeContents = [
-      self.devShells.${config.nixpkgs.system}.default
+      inputs.self.devShells.${config.nixpkgs.system}.default
     ] ++ builtins.attrValues inputs;
   };
 
@@ -21,8 +21,6 @@
     loader.systemd-boot.enable = true;
     supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
   };
-
-  networking.hostName = "bootstrap";
 
   users.users.root.password = "";
 }
