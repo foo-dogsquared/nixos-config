@@ -17,7 +17,6 @@ in {
       home.packages = with pkgs; [
         dasel # Universal version of jq.
         gopass # An improved version of the password manager for hipsters.
-        lazygit # Git interface for the lazy who cannot be asked to add hunks properly.
         lf # File manager in the terminal, really.
         moar # More 'more'.
         perl534Packages.vidir # Bulk rename for your organizing needs in the terminal.
@@ -30,6 +29,22 @@ in {
         exa # Oh nice, a shinier `ls`.
       ];
 
+      # Git interface for the lazy who cannot be asked to add hunks properly.
+      programs.lazygit = {
+        enable = true;
+        settings = {
+          gui = {
+            expandFocusedSidePanel = true;
+            showBottomLine = false;
+            skipRewordInEditorWarning = true;
+            theme = {
+              selectedLineBgColor = [ "reverse" ];
+              selectedRangeBgColor = [ "reverse" ];
+            };
+          };
+          notARepository = "skip";
+        };
+      };
 
       # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
       programs.fzf = let
