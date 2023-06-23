@@ -105,29 +105,6 @@ in {
         github-cli # ...in the GitHub CLI.
         git-filter-repo # History is written by the victors (and force-pushers which are surely not victors).
       ]);
-
-      systemd.user.services.nix-upgrade-profile = {
-        after = [ "default.target" ];
-        description = ''
-          Update service for user-specific Nix profile
-        '';
-        documentation = [ "man:nix3-profile(1)" ];
-        environment.NIXPKGS_ALLOW_UNFREE = "1";
-        script = "nix profile upgrade '.*'";
-        path = [ config.nix.package ];
-        startAt = "weekly";
-      };
-
-      systemd.user.timers.nix-upgrade-profile = {
-        description = ''
-          Update service for user-specific Nix profile
-        '';
-        wantedBy = [ "default.target" ];
-        timerConfig = {
-          Persistent = true;
-          RandomizedDelaySec = 50;
-        };
-      };
     })
 
     (lib.mkIf cfg.shell.enable {
