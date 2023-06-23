@@ -21,7 +21,6 @@ in {
         moar # More 'more'.
         perl534Packages.vidir # Bulk rename for your organizing needs in the terminal.
         tealdeer # An easy cop-out for basic help.
-        zellij # A modern tmux? Yeah, modern tmux.
 
         # Coreutils replacement.
         fd # Oh nice, a more reliable `find`.
@@ -62,6 +61,18 @@ in {
           pager = "${lib.getBin pkgs.moar}/bin/moar";
           theme = "base16";
           style = "plain";
+        };
+      };
+
+      # Modern tmux? Yeah, modern tmux! For layout configurations, they are
+      # more individualized so just set your home-manager users individually
+      # with those. pls?
+      programs.zellij = {
+        enable = true;
+        settings = {
+          mouse_mode = false;
+          copy_on_select = false;
+          pane_frames = false;
         };
       };
     })
