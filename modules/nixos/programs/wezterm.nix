@@ -2,6 +2,11 @@
 
 let
   cfg = config.programs.wezterm;
+
+  shellIntegration = ''
+    source ${pkgs.bash-preexec}/share/bash/bash-preexec.sh
+    source ${cfg.package}/etc/profile.d/wezterm.sh
+  '';
 in
 {
   options.programs.wezterm = {
@@ -17,8 +22,7 @@ in
     environment.systemPackages = [ cfg.package ];
 
     # This is needed for shell integration and applying semantic zones.
-    environment.interactiveShellInit = ''
-      . ${cfg.package}/etc/profile.d/wezterm.sh
-    '';
+    programs.bash.interactiveShellInit = lib.mkIf config.programs.bash.enable shellIntegration;
+    programs.zsh.interactiveShellInit = lib.mkIf config.programs.zsh.enable shellIntegration;
   };
 }
