@@ -103,21 +103,6 @@ in
       "borg/ssh-key" = { };
       "keycloak/db/password".owner = postgresUser;
       "ldap/users/foodogsquared/password".owner = portunusUser;
-      "wireguard/private-key" = {
-        group = config.users.users.systemd-network.group;
-        reloadUnits = [ "systemd-networkd.service" ];
-        mode = "0640";
-      };
-      "wireguard/preshared-keys/ni" = {
-        group = config.users.users.systemd-network.group;
-        reloadUnits = [ "systemd-networkd.service" ];
-        mode = "0640";
-      };
-      "wireguard/preshared-keys/phone" = {
-        group = config.users.users.systemd-network.group;
-        reloadUnits = [ "systemd-networkd.service" ];
-        mode = "0640";
-      };
     };
 
   # All of the keys required to deploy the secrets.

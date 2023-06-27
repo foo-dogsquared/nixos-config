@@ -12,10 +12,34 @@ let
 
   desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/32" "${IPv6}/128" ];
   phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
-
 in
 {
   environment.systemPackages = [ pkgs.wireguard-tools ];
+
+  sops.secrets = let
+    getKey = key: {
+      inherit key;
+      sopsFile = ../../secrets/secrets.yaml;
+    };
+
+    getSecrets = secrets:
+      (lib.mapAttrs' (name: config:
+        lib.nameValuePair
+          "plover/${name}"
+          ((getKey name) // config))
+          secrets);
+
+    systemdNetworkdPermission = {
+      group = config.users.users.systemd-network.group;
+      reloadUnits = [ "systemd-networkd.service" ];
+      mode = "0640";
+    };
+  in
+  getSecrets {
+    "wireguard/private-key" = systemdNetworkdPermission;
+    "wireguard/preshared-keys/ni" = systemdNetworkdPermission;
+    "wireguard/preshared-keys/phone" = systemdNetworkdPermission;
+  };
 
   networking.firewall = {
     # Allow the UDP traffic for the Wireguard service.
