@@ -14,6 +14,8 @@ let
     (lib.attrValues secondaryNameServers);
   secondaryNameServersIPs = secondaryNameServersIPv4 ++ secondaryNameServersIPv6;
 
+  serviceUser = config.users.users.named.name;
+
   domainZone = pkgs.substituteAll {
     src = ../../config/dns/${domain}.zone;
     ploverWANIPv4 = interfaces.wan.IPv4.address;
@@ -26,7 +28,7 @@ let
     ploverLANIPv6 = interfaces.lan.IPv6.address;
   };
 
-  zonesDir = "/var/db/dns";
+  zonesDir = "/etc/bind/zones";
   zoneFile = domain: "${zonesDir}/${domain}.zone";
 
   localhostIP = [
@@ -48,6 +50,8 @@ let
     "::1" # Loopback
     "${privateIPv6Prefix}::/48" # Private uses
   ];
+
+  internalsACL = clientNetworks ++ serverNetworks;
 in
 {
   sops.secrets =
@@ -67,16 +71,26 @@ in
     getSecrets {
       "dns/${domain}/mailbox-security-key" = { };
       "dns/${domain}/mailbox-security-key-record" = { };
+
+      "dns/${domain}/rfc2136-key" = {
+        owner = serviceUser;
+        group = "root";
+        reloadUnits = [ "bind.service" ];
+        mode = "0400";
+      };
     };
 
-  networking.nameservers = localhostIP;
-
-  environment.etc."bind/named.conf".source = config.services.bind.configFile;
+  # Install the utilities.
+  environment.systemPackages = [ config.services.bind.package ];
 
   services.bind = {
     enable = true;
     forward = "first";
-    forwarders = [ "127.0.0.53 port 53" ];
+
+    cacheNetworks = [
+      "127.0.0.1"
+      "::1"
+    ];
 
     listenOn = [
       "127.0.0.1"
@@ -91,58 +105,50 @@ in
     ];
 
     extraConfig = ''
-      acl internals { ${lib.concatStringsSep "; " (clientNetworks ++ serverNetworks ++ [ "127.0.0.0/8" "::1" ])}; };
-    '';
+      include "${config.sops.secrets."plover/dns/${domain}/rfc2136-key".path}";
+      acl trusted { ${lib.concatStringsSep "; " internalsACL}; localhost; };
 
-    extraOptions = ''
-      allow-recursion { internals; };
-      empty-zones-enable yes;
-    '';
+      view external {
+        match-clients { any; };
 
-    zones = {
-      "${config.networking.domain}" = {
-        file = zoneFile domain;
-        allowQuery = allowedLANIPs ++ allowedLANIPv6s;
-        master = true;
-        slaves = secondaryNameServersIPs;
-        extraConfig = ''
-          forwarders { };
-          update-policy local;
-        '';
+        forwarders { };
+        empty-zones-enable yes;
+        allow-query { any; };
+        allow-recursion { none; };
+
+        zone "${domain}" {
+          type primary;
+
+          file "${zoneFile domain}";
+          allow-transfer { ${lib.concatStringsSep "; " secondaryNameServersIPs}; };
+          update-policy {
+            grant rfc2136key.${domain}. zonesub TXT;
+          };
+        };
       };
 
-      "${config.networking.fqdn}" = {
-        file = zoneFile fqdn;
-        master = true;
-        allowQuery = allowedLANIPs ++ allowedLANIPv6s;
-        slaves = [ "none" ];
+      view internal {
+        match-clients { trusted; };
+        allow-recursion { any; };
+        forwarders { 127.0.0.53 port 53; };
+
+        zone "${fqdn}" {
+          type primary;
+          file "${zoneFile fqdn}";
+        };
+
+        zone "${domain}" {
+          in-view external;
+        };
       };
-    };
+    '';
   };
 
-  networking.firewall.extraInputRules =
-    let
-      allowedIPs = secondaryNameServersIPv4 ++ allowedLANIPs;
-      allowedIPv6s = secondaryNameServersIPv6 ++ allowedLANIPv6s;
-    in
-    ''
-      meta l4proto {tcp, udp} th dport domain ip saddr { ${lib.concatStringsSep ", " allowedIPs} } accept comment "Accept DNS queries from secondary nameservers and private networks"
-      meta l4proto {tcp, udp} th dport domain ip6 saddr { ${lib.concatStringsSep ", " allowedIPv6s} } accept comment "Accept DNS queries from secondary nameservers and private networks"
-      meta l4proto {tcp, udp} th dport domain-s ip saddr { ${lib.concatStringsSep ", " allowedIPs} } accept comment "Accept DNS queries from secondary nameservers and private networks"
-      meta l4proto {tcp, udp} th dport domain-s ip6 saddr { ${lib.concatStringsSep ", " allowedIPv6s} } accept comment "Accept DNS queries from secondary nameservers and private networks"
-    '';
-
-  systemd.services.bind = {
-    preStart = let
-      secretsPath = path: config.sops.secrets."plover/${path}".path;
-      replaceSecretBin = "${lib.getBin pkgs.replace-secret}/bin/replace-secret";
-    in
-    lib.mkBefore ''
-      install -Dm0644 ${domainZone} ${zoneFile domain}
-      install -Dm0644 ${fqdnZone} ${zoneFile fqdn}
-
-      ${replaceSecretBin} '#mailboxSecurityKey#' '${secretsPath "dns/${domain}/mailbox-security-key"}' '${zoneFile domain}'
-      ${replaceSecretBin} '#mailboxSecurityKeyRecord#' '${secretsPath "dns/${domain}/mailbox-security-key-record"}' '${zoneFile domain}'
-    '';
+  networking.firewall ={
+    allowedUDPPorts = [
+      53  # DNS
+      853 # DNS-over-TLS/DNS-over-QUIC
+    ];
+    allowedTCPPorts = [ 53 853 ];
   };
 }

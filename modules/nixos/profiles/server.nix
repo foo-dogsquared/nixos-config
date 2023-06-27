@@ -76,7 +76,7 @@ in
       # this.
       security.acme = {
         acceptTerms = true;
-        defaults.email = "admin@foodogsquared.one";
+        defaults.email = "admin+acme@foodogsquared.one";
       };
 
       # We're only going to deal with servers in English.

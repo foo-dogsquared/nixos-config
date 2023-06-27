@@ -3,8 +3,8 @@
 $TTL 12h
 $ORIGIN foodogsquared.one.
 
-@	3600	IN	SOA	ns1.first-ns.de. hostmaster.foodogsquared.one. (
-				2023062201 	; serial number
+@	3600	IN	SOA	ns1 hostmaster (
+				2023062601 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry

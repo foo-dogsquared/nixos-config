@@ -133,10 +133,10 @@ in
   # DNS-related settings. We're settling by configuring the ACME setup with a
   # self-hosted DNS server.
   security.acme.defaults = {
-    email = "admin@foodogsquared.one";
+    email = "admin+acme@foodogsquared.one";
     dnsProvider = "rfc2136";
+    dnsResolver = "1.1.1.1";
     credentialsFile = config.sops.secrets."plover/lego/env".path;
-    dnsPropagationCheck = false;
   };
 
   services.openssh.hostKeys = [{
