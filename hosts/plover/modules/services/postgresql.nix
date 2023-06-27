@@ -69,7 +69,7 @@ in
     ];
   };
 
-  security.acme.certs."${postgresqlDomain}".reloadServices = [
-    "postgresql.service"
-  ];
+  security.acme.certs."${postgresqlDomain}".postRun = ''
+    systemctl restart postgresql.service
+  '';
 }
