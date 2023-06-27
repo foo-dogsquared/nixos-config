@@ -2,6 +2,9 @@
 result*
 *.qcow2
 
+# These are dotenv files with sensitive data so we won't have to include them.
+.*.envrc
+
 ### Terraform ###
 # Local .terraform directories
 **/.terraform/*
