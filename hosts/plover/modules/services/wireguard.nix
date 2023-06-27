@@ -79,12 +79,16 @@ in
       ];
     };
 
-    networks."99-${wireguardIFName}" = {
-      matchConfig.Name = wireguardIFName;
+    networks."99-${wireguardIFName}" = with interfaces.wireguard0; {
+      matchConfig.Name = ifname;
 
-      address = with interfaces.wireguard0; [
+      address = [
         "${IPv4.address}/14"
         "${IPv6.address}/64"
+      ];
+
+      routes = [
+        { routeConfig.Gateway = IPv4.gateway; }
       ];
     };
   };
