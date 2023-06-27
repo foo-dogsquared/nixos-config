@@ -144,6 +144,64 @@ in
     '';
   };
 
+  # Additional service hardening. You can see most of the options
+  # from systemd.exec(5) manual.
+  systemd.services.bind = {
+    serviceConfig = {
+      # Run it as an unprivileged user.
+      User = config.users.users.named.name;
+      Group = config.users.users.named.group;
+      UMask = "0037";
+
+      # Lock and protect various system components.
+      LockPersonality = true;
+      PrivateTmp = true;
+      NoNewPrivileges = true;
+      RestrictSUIDSGID = true;
+      ProtectHome = true;
+      ProtectHostname = true;
+      ProtectClock = true;
+      ProtectKernelModules = true;
+      ProtectKernelTunables = true;
+      ProtectKernelLogs = true;
+      ProtectControlGroups = true;
+      ProtectProc = "invisible";
+
+      # Make the filesystem invisible to the service.
+      ProtectSystem = "strict";
+      ReadWritePaths = [
+        config.services.bind.directory
+        "/etc/bind"
+      ];
+
+      # Filtering system calls.
+      SystemCallFilter = [ "@system-service" ];
+      SystemCallErrorNumber = "EPERM";
+      SystemCallArchitectures = "native";
+
+      # Granting and restricting its capabilities. Take note we're not using
+      # syslog for this even if the application can so no syslog capability.
+      CapabilityBoundingSet = [
+        "CAP_NET_BIND_SERVICE"
+        "CAP_NET_RAW"
+        "CAP_SYS_CHROOT"
+      ];
+      AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+
+      # Restrict what address families can it access.
+      RestrictAddressFamilies = [
+        "AF_LOCAL"
+        "AF_NETLINK"
+        "AF_BRIDGE"
+        "AF_INET"
+        "AF_INET6"
+      ];
+
+      # Restricting what namespaces it can create.
+      RestrictNamespaces = [ "network" "pid" ];
+    };
+  };
+
   networking.firewall ={
     allowedUDPPorts = [
       53  # DNS
