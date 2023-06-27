@@ -97,10 +97,12 @@ in
       "gitea/db/password".owner = giteaUser;
       "gitea/smtp/password".owner = giteaUser;
       "vaultwarden/env".owner = vaultwardenUser;
+
       "borg/repos/host/patterns/keys" = { };
       "borg/repos/host/password" = { };
       "borg/repos/services/password" = { };
       "borg/ssh-key" = { };
+
       "keycloak/db/password".owner = postgresUser;
       "ldap/users/foodogsquared/password".owner = portunusUser;
     };
@@ -185,17 +187,20 @@ in
       services-backup = jobCommonSettings
         {
           paths = [
-            # Vaultwarden
+            # Vaultwarden.
             "/var/lib/bitwarden_rs"
 
-            # Gitea
+            # Gitea.
             config.services.gitea.dump.backupDir
 
-            # PostgreSQL database dumps
+            # PostgreSQL database dumps.
             config.services.postgresqlBackup.location
 
-            # DNS records.
-            "/etc/coredns"
+            # ACME accounts.
+            "/var/lib/acme/.lego/accounts"
+
+            # Zone files.
+            "/etc/bind/zones"
           ];
           repo = borgRepo "services";
           passCommand = "cat ${config.sops.secrets."plover/borg/repos/services/password".path}";
