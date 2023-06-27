@@ -128,9 +128,10 @@ in
     };
   };
 
+  # Making my favorite terminal multiplexer right now.
   programs.zellij.settings = {
     default_layout = "editor";
-    layout_dir = "${config.xdg.configHome}/zellij/layouts";
+    layout_dir = builtins.toString ./config/zellij/layouts;
   };
 
   # My music player setup, completely configured with Nix!
@@ -331,8 +332,6 @@ in
     "lf".source = getDotfiles "lf";
     "nvim".source = getDotfiles "nvim";
     "wezterm".source = getDotfiles "wezterm";
-
-    "zellij/layouts".source = ./config/zellij/layouts;
   };
 
   # Automating some files to be fetched on activation.
