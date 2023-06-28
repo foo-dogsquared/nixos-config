@@ -7,6 +7,8 @@ pkgs.mkShell {
     deploy-rs
     git
     sops
+
+    bind
     terraform
 
     jq
