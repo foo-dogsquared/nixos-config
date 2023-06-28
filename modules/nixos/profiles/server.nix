@@ -29,7 +29,7 @@ in
       # Set the time zone. We're making it easier to track by assigning a
       # universal time zone and what could be more universal than the
       # "Coordinated Universal Time" (which does not abbreviates to UTC, WTF?).
-      time.timeZone = "UTC";
+      time.timeZone = lib.mkForce "UTC";
 
       # Add the usual manpages because it is not installed by default
       # apparently.
@@ -66,7 +66,7 @@ in
 
       # It is expected that server configurations should be complete
       # service-wise so we're not allowing user database to be mutable.
-      users.mutableUsers = false;
+      users.mutableUsers = lib.mkForce false;
 
       # Most of the servers will be deployed with outside access in mind so
       # generate them certificates. Anything with a private network, ehh... so
@@ -80,7 +80,7 @@ in
       };
 
       # We're only going to deal with servers in English.
-      i18n.defaultLocale = "en_US.UTF-8";
+      i18n.defaultLocale = lib.mkForce "en_US.UTF-8";
       i18n.supportedLocales = lib.mkForce [ "en_US.UTF-8/UTF-8" ];
     })
 
