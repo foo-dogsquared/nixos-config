@@ -161,22 +161,10 @@ in
         dates = [ "weekly" ];
       };
 
-      # Journals cleanup every week.
-      systemd.services.cleanup-logs = {
-        description = "Weekly log cleanup";
-        documentation = [ "man:journalctl(1)" ];
-        serviceConfig.ExecStart = "${pkgs.systemd}/bin/journalctl --vacuum-time=30d";
-      };
-
-      systemd.timers.clean-log = {
-        description = "Weekly log cleanup";
-        documentation = [ "man:journalctl(1)" ];
-        wantedBy = [ "multi-user.target" ];
-        timerConfig = {
-          OnCalendar = "monthly";
-          Persistent = true;
-        };
-      };
+      # Journal settings for retention.
+      services.journald.extraConfig = ''
+        MaxRetentionSec="3 month"
+      '';
     })
   ]);
 }
