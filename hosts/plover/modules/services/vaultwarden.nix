@@ -67,14 +67,60 @@ in
     }];
   };
 
-  # Making it comply with PostgreSQL secure schema usage pattern.
   systemd.services.vaultwarden = {
     path = [ config.services.postgresql.package ];
+
+    # Making it comply with PostgreSQL secure schema usage pattern.
     preStart = lib.mkAfter ''
       # Setting up the appropriate schema for PostgreSQL secure schema usage.
       psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${vaultwardenUser}';" \
         | grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${vaultwardenUser};"
     '';
+
+    # We do a little service hardening. Even though the Vaultwarden NixOS
+    # module is already doing some of those things, we'll just add some of
+    # them.
+    serviceConfig = lib.mkAfter {
+      LockPersonality = true;
+      NoNewPrivileges = true;
+      RestrictSUIDSGID = true;
+      RestrictRealtime = true;
+      ProtectClock = true;
+      ProtectKernelLogs = true;
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectHostname = true;
+      ProtectControlGroups = true;
+      ProtectProc = "invisible";
+
+      # Filtering system calls.
+      SystemCallFilter = [
+        "@system-service"
+        "~@privileged"
+      ];
+      SystemCallErrorNumber = "EPERM";
+      SystemCallArchitectures = "native";
+
+      # Restricting what capabilities it has access to which it
+      # has none.
+      CapabilityBoundingSet = [ "" ];
+      AmbientCapability = [ "" ];
+
+      # Restrict what address families this service can interact
+      # with. Since it is a web service, we expect it will only
+      # interact with web service stuff like IPs.
+      RestrictAddressFamilies = [
+        # It's required especially it can communicate with the local system.
+        "AF_LOCAL"
+
+        # The IPs.
+        "AF_INET"
+        "AF_INET6"
+      ];
+
+      # Restrict what namespaces it can create which is none.
+      RestrictNamespaces = true;
+    };
   };
 
   # Attaching it to our reverse proxy of choice.
