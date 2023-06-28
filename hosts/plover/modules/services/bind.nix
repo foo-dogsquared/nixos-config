@@ -174,6 +174,12 @@ in
         "/etc/bind"
       ];
 
+      # Set up writable directories.
+      RuntimeDirectory = "named";
+      RuntimeDirectoryMode = "0750";
+      CacheDirectory = "named";
+      CacheDirectoryMode = "0750";
+
       # Filtering system calls.
       SystemCallFilter = [ "@system-service" ];
       SystemCallErrorNumber = "EPERM";
@@ -184,6 +190,7 @@ in
       CapabilityBoundingSet = [
         "CAP_NET_BIND_SERVICE"
         "CAP_NET_RAW"
+        "CAP_CHOWN"
         "CAP_SYS_CHROOT"
       ];
       AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
@@ -198,7 +205,7 @@ in
       ];
 
       # Restricting what namespaces it can create.
-      RestrictNamespaces = [ "network" "pid" ];
+      RestrictNamespaces = true;
     };
   };
 
@@ -209,4 +216,12 @@ in
     ];
     allowedTCPPorts = [ 53 853 ];
   };
+
+  # Set up a fail2ban which is apparently already available in the package.
+  services.fail2ban.jails."named-refused" = ''
+    enabled = true
+    backend = systemd
+    filter = named-refused[journalmatch='_SYSTEMD_UNIT=bind.service']
+    maxretry = 3
+  '';
 }
