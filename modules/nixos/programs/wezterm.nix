@@ -22,7 +22,7 @@ in
     environment.systemPackages = [ cfg.package ];
 
     # This is needed for shell integration and applying semantic zones.
-    programs.bash.interactiveShellInit = lib.mkIf config.programs.bash.enable shellIntegration;
-    programs.zsh.interactiveShellInit = lib.mkIf config.programs.zsh.enable shellIntegration;
+    programs.bash.interactiveShellInit = shellIntegration;
+    programs.zsh.interactiveShellInit = shellIntegration;
   };
 }
