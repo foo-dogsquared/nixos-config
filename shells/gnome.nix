@@ -11,8 +11,7 @@
 , libadwaita
 , gjs
 , pkg-config
-, rustPlatform
-, nodePackages
+
 , blueprint-compiler
 , desktop-file-utils
 , librsvg
@@ -26,6 +25,12 @@
 , glib-networking
 , glib-testing
 , libsoup_3
+
+, nodePackages
+
+# Rust
+, cargo
+, rustc
 }:
 
 mkShell {
@@ -58,8 +63,8 @@ mkShell {
     libsoup_3
 
     # When Rust and GTK go together...
-    rustPlatform.rust.cargo
-    rustPlatform.rust.rustc
+    cargo
+    rustc
 
     # Creating desktop applications with JavaScript without Electron!
     nodePackages.typescript
