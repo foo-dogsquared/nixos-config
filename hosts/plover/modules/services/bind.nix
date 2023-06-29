@@ -14,8 +14,6 @@ let
     (lib.attrValues secondaryNameServers);
   secondaryNameServersIPs = secondaryNameServersIPv4 ++ secondaryNameServersIPv6;
 
-  serviceUser = config.users.users.named.name;
-
   domainZone = pkgs.substituteAll {
     src = ../../config/dns/${domain}.zone;
     ploverWANIPv4 = interfaces.wan.IPv4.address;
@@ -67,16 +65,17 @@ in
               "plover/${secret}"
               ((getKey secret) // config))
           secrets;
+      dnsFileAttribute = {
+        owner = config.users.users.named.name;
+        group = config.users.users.named.group;
+        mode = "0400";
+      };
     in
     getSecrets {
-      "dns/${domain}/mailbox-security-key" = { };
-      "dns/${domain}/mailbox-security-key-record" = { };
-
-      "dns/${domain}/rfc2136-key" = {
-        owner = serviceUser;
-        group = "root";
+      "dns/${domain}/mailbox-security-key" = dnsFileAttribute;
+      "dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
+      "dns/${domain}/rfc2136-key" = dnsFileAttribute // {
         reloadUnits = [ "bind.service" ];
-        mode = "0400";
       };
     };
 
