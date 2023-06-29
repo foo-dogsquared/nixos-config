@@ -108,13 +108,17 @@ in
       include "${config.sops.secrets."plover/dns/${domain}/rfc2136-key".path}";
       acl trusted { ${lib.concatStringsSep "; " internalsACL}; localhost; };
 
-      view external {
-        match-clients { any; };
+      view internal {
+        match-clients { trusted; };
 
-        forwarders { };
-        empty-zones-enable yes;
         allow-query { any; };
-        allow-recursion { none; };
+        allow-recursion { any; };
+        forwarders { 127.0.0.53 port 53; };
+
+        zone "${fqdn}" {
+          type primary;
+          file "${zoneFile fqdn}";
+        };
 
         zone "${domain}" {
           type primary;
@@ -127,18 +131,16 @@ in
         };
       };
 
-      view internal {
-        match-clients { trusted; };
-        allow-recursion { any; };
-        forwarders { 127.0.0.53 port 53; };
+      view external {
+        match-clients { any; };
 
-        zone "${fqdn}" {
-          type primary;
-          file "${zoneFile fqdn}";
-        };
+        forwarders { };
+        empty-zones-enable yes;
+        allow-query { any; };
+        allow-recursion { none; };
 
         zone "${domain}" {
-          in-view external;
+          in-view internal;
         };
       };
     '';
