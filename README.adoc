@@ -288,6 +288,42 @@ Otherwise, most images are intended to be built.
 footnote:[Though, one could create a custom activation and deployment script with deploy-rs.]
 
 
+[#declarative-user-management]
+=== Declarative user management
+
+Similarly to <<declarative-host-management>>, this project also provides a way to declare home-manager users.
+
+Similar to `images.toml`, it expects a table of users with each representing one of the users from link:./users/home-manager/[`./users/home-manager/`].
+These are then included as part of `homeConfigurations` for easier installation with the standalone home-manager tool.
+Of which they are then included as part of deploy nodes for deploy-rs (also for easier deployment).
+
+Here's an example user with complete schema.
+
+[source, toml]
+----
+[foo-dogsquared]
+system = "x86_64-linux"
+home-manager-channel = "home-manager-23.05"
+home-directory = "/home/foo-dogsquared"
+username = "foodogsquared"
+----
+
+- `system` contains the platform of the home-manager user.
+This is mainly used to indicate the platform used for the nixpkgs repository.
+
+- `home-manager-channel` contains the home-manager channel to be used.
+The value should be one of the home-manager channel that is imported into this flake.
+By default, it sets the home-manager channel at `home-manager` which is pointed at the unstable channel.
+
+- `home-directory` is the associated home directory of the home-manager.
+It is set for `config.home.directory` at the home-manager configuration.
+By default, it will be set at `/home/$USERNAME`.
+
+- `username` is the username of the home-manager user to be used for `config.home.username` at the home-manager configuration.
+If unset, it will use the table key.
+In the above example, the unset value would be `foo-dogsquared`.
+
+
 [#secrets-management]
 === Secrets management
 
