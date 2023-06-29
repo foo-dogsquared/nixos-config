@@ -33,16 +33,18 @@ in
         ${lib.concatStringsSep "\n" perUserSchemas}
       '';
 
-    settings = let
-      credsDir = path: "/run/credentials/postgresql.service/${path}";
-    in {
-      # Still doing the secure schema usage pattern.
-      search_path = "\"$user\"";
+    settings =
+      let
+        credsDir = path: "/run/credentials/postgresql.service/${path}";
+      in
+      {
+        # Still doing the secure schema usage pattern.
+        search_path = "\"$user\"";
 
-      ssl_cert_file = credsDir "cert.pem";
-      ssl_key_file = credsDir "key.pem";
-      ssl_ca_file = credsDir "fullchain.pem";
-    };
+        ssl_cert_file = credsDir "cert.pem";
+        ssl_key_file = credsDir "key.pem";
+        ssl_ca_file = credsDir "fullchain.pem";
+      };
   };
 
   # With a database comes a dumping.
@@ -58,15 +60,16 @@ in
   # Setting this up for TLS.
   systemd.services.postgresql = {
     requires = [ "acme-finished-${postgresqlDomain}.target" ];
-    serviceConfig.LoadCredential = let
-      certDirectory = config.security.acme.certs."${postgresqlDomain}".directory;
-      certCredentialPath = path: "${path}:${certDirectory}/${path}";
-    in
-    [
-      (certCredentialPath "cert.pem")
-      (certCredentialPath "key.pem")
-      (certCredentialPath "fullchain.pem")
-    ];
+    serviceConfig.LoadCredential =
+      let
+        certDirectory = config.security.acme.certs."${postgresqlDomain}".directory;
+        certCredentialPath = path: "${path}:${certDirectory}/${path}";
+      in
+      [
+        (certCredentialPath "cert.pem")
+        (certCredentialPath "key.pem")
+        (certCredentialPath "fullchain.pem")
+      ];
   };
 
   security.acme.certs."${postgresqlDomain}".postRun = ''

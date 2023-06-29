@@ -28,7 +28,7 @@
 
 , nodePackages
 
-# Rust
+  # Rust
 , cargo
 , rustc
 }:

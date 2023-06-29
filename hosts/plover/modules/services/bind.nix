@@ -210,9 +210,9 @@ in
     };
   };
 
-  networking.firewall ={
+  networking.firewall = {
     allowedUDPPorts = [
-      53  # DNS
+      53 # DNS
       853 # DNS-over-TLS/DNS-over-QUIC
     ];
     allowedTCPPorts = [ 53 853 ];

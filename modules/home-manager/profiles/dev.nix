@@ -46,13 +46,15 @@ in {
       };
 
       # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
-      programs.fzf = let
-        fd = "${lib.getBin pkgs.fd}/bin/fd";
-      in {
-        enable = true;
-        changeDirWidgetCommand = "${fd} --type d";
-        defaultCommand = "${fd} --type f";
-      };
+      programs.fzf =
+        let
+          fd = "${lib.getBin pkgs.fd}/bin/fd";
+        in
+        {
+          enable = true;
+          changeDirWidgetCommand = "${fd} --type d";
+          defaultCommand = "${fd} --type f";
+        };
 
       # dog > sky dog > cat.
       programs.bat = {
