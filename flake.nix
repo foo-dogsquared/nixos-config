@@ -304,7 +304,7 @@
             system = metadata.system or defaultSystem;
             nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
           })
-        images;
+        (lib'.filterAttrs (name: host: (host.format or "iso") == "iso") images);
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
