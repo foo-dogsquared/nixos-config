@@ -108,7 +108,7 @@ A few examples include:
 --
 
 * `devShells` from link:./shells/[my custom environments].
-Similar to `homeManagerConfigurations`, you can easily use it outside of NixOS.
+Similar to `homeConfigurations`, you can easily use it outside of NixOS.
 
 * `homeConfigurations` contains my various link:https://github.com/nix-community/home-manager[home-manager] configurations from link:./users/home-manager/[`./users/home-manager/`].
 The neat thing about it is you can easily install it in a non-NixOS Linux distro.
@@ -280,6 +280,12 @@ By default, it uses `nixpkgs` flake input which points to the `nixos-unstable` c
 
 - `deploy` is a table containing arguments from link:https://github.com/serokell/deploy-rs[deploy-rs].
 Only a few arguments are accepted (i.e., `hostname`, `fast-connection`, `remote-build`, `magic-rollback`, and `auto-rollback`).
+
+Take note, only certain hosts can be considered as a NixOS configuration (e.g., `nixosConfigurations`).
+Specifically, those images with a format of `iso` and those without (since they fall back to `iso` anyways).
+Those NixOS configuration are then included as part of the deploy nodes for deploy-rs.
+Otherwise, most images are intended to be built.
+footnote:[Though, one could create a custom activation and deployment script with deploy-rs.]
 
 
 [#secrets-management]
