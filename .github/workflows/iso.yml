@@ -16,7 +16,7 @@ jobs:
         id: build-iso
         # TODO: Use the registry.
         run: |
-          nix build .#bootstrap-install-iso --out-link build-iso-result
+          nix build .#nixos-image-install-iso-bootstrap --out-link build-iso-result
       - name: Create release
         if: github.ref == 'refs/heads/master'
         id: create-release
