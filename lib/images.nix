@@ -21,8 +21,8 @@ in
     };
 
   # A wrapper around the home-manager configuration function.
-  mkUser = { system, extraModules ? [ ], extraArgs ? { } }:
-    inputs.home-manager.lib.homeManagerConfiguration {
+  mkUser = { system, extraModules ? [ ], extraArgs ? { }, home-manager-channel ? "home-manager" }:
+    inputs."${home-manager-channel}".lib.homeManagerConfiguration {
       inherit lib;
       extraSpecialArgs = extraArgs;
       pkgs = import nixpkgs { inherit system; };

@@ -326,8 +326,8 @@
                 nixpkgs.config.allowUnfree = true;
 
                 # Setting the homely options.
-                home.username = builtins.baseNameOf path;
-                home.homeDirectory = "/home/${config.home.username}";
+                home.username = metadata.username or name;
+                home.homeDirectory = metadata.home-directory or "/home/${config.home.username}";
               })
               userSharedConfig
               path
@@ -336,6 +336,7 @@
           mkUser {
             inherit extraModules extraArgs;
             system = metadata.system or defaultSystem;
+            home-manager-channel = metadata.home-manager-channel or "home-manager";
           })
         users;
 
