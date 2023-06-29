@@ -355,7 +355,7 @@
         inputs.flake-utils.lib.flattenTree (import ./pkgs { inherit pkgs; })
         // lib'.mapAttrs'
           (host: metadata:
-            lib'.nameValuePair "${host}-${metadata.format or "iso"}" (mkImage {
+            lib'.nameValuePair "nixos-image-${metadata.format or "iso"}-${host}" (mkImage {
               inherit system pkgs extraArgs;
               format = metadata.format or "iso";
               extraModules = [
