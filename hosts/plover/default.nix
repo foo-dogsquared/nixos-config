@@ -126,6 +126,10 @@ in
     credentialsFile = config.sops.secrets."plover/lego/env".path;
   };
 
+  # Enable generating new DH params.
+  security.dhparams.enable = true;
+
+  # !!! The keys should be rotated at an interval here.
   services.openssh.hostKeys = [{
     path = config.sops.secrets."plover/ssh-key".path;
     type = "ed25519";
