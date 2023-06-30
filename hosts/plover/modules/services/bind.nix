@@ -3,7 +3,6 @@
 let
   inherit (config.networking) domain fqdn;
   inherit (import ../hardware/networks.nix) privateIPv6Prefix interfaces clientNetworks serverNetworks secondaryNameServers wireguardPeers;
-  secondaryNameserverDomains = lib.attrNames secondaryNameServers;
   secondaryNameServersIPv4 = lib.foldl'
     (total: addresses: total ++ addresses.IPv4)
     [ ]
@@ -49,7 +48,7 @@ let
     "${privateIPv6Prefix}::/48" # Private uses
   ];
 
-  internalsACL = clientNetworks ++ serverNetworks;
+  dnsSubdomain = "ns1.${domain}";
 in
 {
   sops.secrets =
@@ -103,9 +102,56 @@ in
       interfaces.wan.IPv6.address
     ];
 
+    # Welp, since the template is pretty limited, we'll have to go with our
+    # own. This is partially based from the NixOS Bind module except without
+    # the template for filling in zones since we use views.
+    configFile =
+      let
+        cfg = config.services.bind;
+        certDir = path: "${config.security.acme.certs."${dnsSubdomain}".directory}/${path}";
+      in
+      pkgs.writeText "named.conf" ''
+        include "/etc/bind/rndc.key";
+        controls {
+          inet 127.0.0.1 allow {localhost;} keys {"rndc-key";};
+        };
+
+        tls ${dnsSubdomain} {
+          key-file "${certDir "key.pem"}";
+          cert-file "${certDir "cert.pem"}";
+          dhparam-file "${config.security.dhparams.params.bind.path}";
+          ciphers "HIGH:!kRSA:!aNULL:!eNULL:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:!SHA1:!SHA256:!SHA384";
+          prefer-server-ciphers yes;
+          session-tickets no;
+        };
+
+        acl cachenetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.cacheNetworks} };
+        acl badnetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.blockedNetworks} };
+
+        options {
+          listen-on { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOn} };
+          listen-on-v6 { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOnIpv6} };
+          allow-query { cachenetworks; };
+          blackhole { badnetworks; };
+          forward ${cfg.forward};
+          forwarders { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.forwarders} };
+          directory "${cfg.directory}";
+          pid-file "/run/named/named.pid";
+          ${cfg.extraOptions}
+        };
+
+        ${cfg.extraConfig}
+    '';
+
+    extraOptions = ''
+      listen-on tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") config.services.bind.listenOn} };
+      listen-on-v6 tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") config.services.bind.listenOnIpv6} };
+    '';
+
     extraConfig = ''
       include "${config.sops.secrets."plover/dns/${domain}/rfc2136-key".path}";
-      acl trusted { ${lib.concatStringsSep "; " internalsACL}; localhost; };
+
+      acl trusted { ${lib.concatStringsSep "; " (clientNetworks ++ serverNetworks)}; localhost; };
 
       view internal {
         match-clients { trusted; };
@@ -145,10 +191,28 @@ in
     '';
   };
 
-  # Additional service hardening. You can see most of the options
-  # from systemd.exec(5) manual.
   systemd.services.bind = {
+    path = with pkgs; [ replace-secret ];
+    preStart =
+      let
+        domainZone' = zoneFile domain;
+        fqdnZone' = zoneFile fqdn;
+        secretPath = path: config.sops.secrets."plover/dns/${path}".path;
+      in lib.mkAfter ''
+        [ -f '${domainZone'}' ] || {
+          install -Dm0600 '${domainZone}' '${domainZone'}'
+          replace-secret #mailboxSecurityKey# '${secretPath "${domain}/mailbox-security-key"}' '${domainZone'}'
+          replace-secret #mailboxSecurityKeyRecord# '${secretPath "${domain}/mailbox-security-key-record"}' '${domainZone'}'
+        }
+
+        [ -f '${fqdnZone'}' ] || {
+          install -Dm0600 '${fqdnZone}' '${fqdnZone'}'
+        }
+    '';
+
     serviceConfig = {
+      # Additional service hardening. You can see most of the options
+      # from systemd.exec(5) manual.
       # Run it as an unprivileged user.
       User = config.users.users.named.name;
       Group = config.users.users.named.group;
@@ -173,6 +237,10 @@ in
       ReadWritePaths = [
         config.services.bind.directory
         "/etc/bind"
+      ];
+      ReadOnlyPaths = [
+        config.security.dhparams.params.bind.path
+        config.security.acme.certs."${dnsSubdomain}".directory
       ];
 
       # Set up writable directories.
@@ -210,6 +278,7 @@ in
     };
   };
 
+  # Set up the firewall.
   networking.firewall = {
     allowedUDPPorts = [
       53 # DNS
@@ -217,6 +286,12 @@ in
     ];
     allowedTCPPorts = [ 53 853 ];
   };
+
+  # Setting up DNS-over-TLS by generating a certificate.
+  security.acme.certs."${dnsSubdomain}".group = config.users.users.named.group;
+
+  # Then generate a DH parameter for the application.
+  security.dhparams.params.bind.bits = 4096;
 
   # Set up a fail2ban which is apparently already available in the package.
   services.fail2ban.jails."named-refused" = ''
