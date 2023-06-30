@@ -67,6 +67,9 @@ in {
       # Profile your whole system.
       services.sysprof.enable = true;
 
+      # Make shebangs even more magical.
+      services.envfs.enable = true;
+
       # Convenience!
       environment.localBinInPath = true;
 
