@@ -196,24 +196,6 @@ in
   services.thermald.enable = true;
   services.avahi.enable = true;
 
-  # The usual doas config.
-  security.doas = {
-    enable = true;
-    extraRules = [
-      {
-        groups = [ "wheel" ];
-        persist = true;
-      }
-
-      # It is the primary user so we may as well just make this easier to run.
-      {
-        users = [ "foo-dogsquared" ];
-        cmd = "nixos-rebuild";
-        noPass = true;
-      }
-    ];
-  };
-
   # We'll go with a software firewall. We're mostly configuring it as if we're
   # using a server even though the chances of that is pretty slim.
   networking = {
