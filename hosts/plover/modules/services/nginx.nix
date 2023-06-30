@@ -38,5 +38,6 @@
   services.fail2ban.jails = {
     nginx-http-auth = "enabled = true";
     nginx-botsearch = "enabled = true";
+    nginx-bad-request = "enabled = true";
   };
 }
