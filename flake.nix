@@ -66,6 +66,10 @@
     # Generating an entire flavored themes with Nix?
     nix-colors.url = "github:misterio77/nix-colors";
 
+    # Removing the manual partitioning part with a little boogie.
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+
     # Deploying stuff with Nix. This is becoming a monorepo for everything I
     # need and I'm liking it.
     deploy.url = "github:serokell/deploy-rs";
@@ -143,6 +147,7 @@
           inputs.nur.nixosModules.nur
           inputs.sops-nix.nixosModules.sops
           inputs.guix-overlay.nixosModules.guix
+          inputs.disko.nixosModules.disko
         ];
 
         # BOOOOOOOOOOOOO! Somebody give me a tomato!
