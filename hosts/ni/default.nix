@@ -38,6 +38,10 @@ in
     })
   ];
 
+  disko.devices = import ./disko.nix {
+    disks = [ "/dev/nvme0n1" ];
+  };
+
   services.openssh.hostKeys = [{
     path = config.sops.secrets."ni/ssh-key".path;
     type = "ed25519";

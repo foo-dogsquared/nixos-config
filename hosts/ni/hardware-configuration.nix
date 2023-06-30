@@ -42,22 +42,6 @@
   };
   boot.loader.efi.canTouchEfiVariables = true;
 
-  fileSystems."/" = {
-    label = "root";
-    options = [
-      "defaults"
-      "noatime"
-    ];
-    fsType = "ext4";
-  };
-
-  fileSystems."/boot" = {
-    label = "boot";
-    fsType = "vfat";
-  };
-
-  swapDevices = [{ label = "swap"; }];
-
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
 
