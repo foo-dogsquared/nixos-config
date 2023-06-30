@@ -42,6 +42,11 @@ in
     ./modules/services/wireguard.nix
   ];
 
+  # Automatic format and partitioning.
+  disko.devices = import ./disko.nix {
+    disks = [ "/dev/sda" ];
+  };
+
   networking = {
     nftables.enable = true;
     domain = "foodogsquared.one";

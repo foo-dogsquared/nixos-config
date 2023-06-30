@@ -18,21 +18,15 @@ in
 
   # Hetzner can only support non-UEFI bootloader (or at least it doesn't with
   # systemd-boot).
-  boot.loader.grub.enable = lib.mkForce true;
-  boot.loader.grub.device = "/dev/sda";
+  boot.loader.grub = {
+    enable = lib.mkForce true;
+    device = "/dev/sda";
+    efiSupport = true;
+    efiInstallAsRemovable = true;
+  };
+
   boot.initrd.availableKernelModules = [ "ata_piix" "virtio_pci" "virtio_scsi" "xhci_pci" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ "nvme" ];
-
-  fileSystems."/" = {
-    label = "nixos";
-    fsType = "ext4";
-    options = [ "defaults" ];
-  };
-
-  fileSystems."/boot" = {
-    label = "boot";
-    fsType = "vfat";
-  };
 
   zramSwap.enable = true;
 
