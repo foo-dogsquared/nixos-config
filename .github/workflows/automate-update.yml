@@ -11,14 +11,15 @@ env:
   # GitHub bot
   GIT_AUTHOR_NAME: "github-actions[bot]"
   GIT_AUTHOR_EMAIL: "github-actions[bot]@users.noreply.github.com"
+  GIT_COMMITTER_NAME: "github-actions[bot]"
+  GIT_COMMITTER_EMAIL: "github-actions[bot]@users.noreply.github.com"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v16
+      - uses: cachix/install-nix-action@v22
         with:
-          # TODO: This is a terrible idea, pls switch to stable channel at some point.
           nix_path: nixpkgs=channel:nixos-unstable
           extra_nix_config: |
             keep-going = true
