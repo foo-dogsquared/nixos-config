@@ -3,28 +3,28 @@ on:
   schedule:
     # Every day.
     - cron: '30 0 * * *'
+env:
+  GIT_AUTHOR_NAME: "github-actions[bot]"
+  GIT_COMMITTER_NAME: "github-actions[bot]"
+  GIT_COMMITTER_NAME: "github-actions[bot]"
+  GIT_COMMITTER_EMAIL: "github-actions[bot]@users.noreply.github.com"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v16
+      - uses: cachix/install-nix-action@v22
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Update flake inputs
         run: |
-          nix shell nixpkgs#git
-
-          # This is set by the GitHub Actions bot just to make identifying which commits are automated.
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-
-          nix flake lock --update-input 'dotfiles' --commit-lock-file --commit-lockfile-summary "flake.lock: update dotfiles"
+          nix flake lock --impure \
+            --update-input 'dotfiles' \
+            --commit-lock-file --commit-lockfile-summary "flake.lock: update dotfiles"
       - name: Build NixOS configurations that uses the dotfiles
         run: nix build .#nixosConfigurations.ni.config.system.build.toplevel
       - name: Push updates to remote
         run: |
-          nix flake lock --commit-lock-file
           git remote remove origin
           git remote add origin https://${{ secrets.GITHUB_TOKEN }}@github.com/foo-dogsquared/nixos-config.git
           git push --set-upstream origin master --tags
