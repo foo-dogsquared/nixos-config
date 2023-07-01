@@ -25,9 +25,6 @@ in
 
   fonts.fontconfig.enable = true;
 
-  # We're disabling it since the default Atuin integration is
-  # blocking the Wezterm's shell integration by fetching another
-  # instance of bash-preexec.
   programs.atuin = {
     settings = {
       auto_sync = true;
