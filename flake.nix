@@ -413,10 +413,6 @@
       # nixops-lite (that is much more powerful than nixops itself)... in
       # here!?! We got it all, son!
       #
-      # Take note for automatically imported nodes, various options should be
-      # overridden in the deploy utility considering that most have only
-      # certain values and likely not work if run with the intended value.
-      #
       # Also, don't forget to always clean your shell history when overriding
       # sensitive info such as the hostname and such. A helpful tip would be
       # ignoring the shell entry by simply prefixing it with a space which most
@@ -425,7 +421,9 @@
         let
           nixosConfigurations = lib'.mapAttrs'
             (name: value:
-              let metadata = images.${name}; in
+              let
+                metadata = images.${name};
+              in
               lib'.nameValuePair "nixos-${name}" {
                 hostname = metadata.deploy.hostname or name;
                 autoRollback = metadata.deploy.auto-rollback or true;
@@ -433,22 +431,30 @@
                 fastConnection = metadata.deploy.fast-connection or true;
                 remoteBuild = metadata.deploy.remote-build or false;
                 profiles.system = {
-                  sshUser = "admin";
+                  sshUser = metadata.deploy.ssh-user or "admin";
                   user = "root";
-                  path = inputs.deploy.lib.${defaultSystem}.activate.nixos value;
+                  path = inputs.deploy.lib.${metadata.system or defaultSystem}.activate.nixos value;
                 };
               })
             self.nixosConfigurations;
           homeConfigurations = lib'.mapAttrs'
             (name: value:
-              lib'.nameValuePair "home-manager-${name}" {
-                hostname = name;
-                fastConnection = true;
-                profiles.home = {
-                  sshUser = name;
-                  path = inputs.deploy.lib.${defaultSystem}.activate.home-manager value;
-                };
-              })
+              let
+                metadata = users.${name};
+                username = metadata.deploy.username or name;
+              in
+                lib'.nameValuePair "home-manager-${name}" {
+                  hostname = metadata.deploy.hostname or name;
+                  autoRollback = metadata.deploy.auto-rollback or true;
+                  magicRollback = metadata.deploy.magic-rollback or true;
+                  fastConnection = metadata.deploy.fast-connection or true;
+                  remoteBuild = metadata.deploy.remote-build or false;
+                  profiles.home = {
+                    sshUser = metadata.deploy.ssh-user or username;
+                    user = metadata.deploy.user or username;
+                    path = inputs.deploy.lib.${metadata.system or defaultSystem}.activate.home-manager value;
+                  };
+                })
             self.homeConfigurations;
         in
         nixosConfigurations // homeConfigurations;
