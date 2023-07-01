@@ -115,7 +115,8 @@ in
   # with 2 dumps.
   systemd.services.gitea-dump.preStart = lib.mkAfter ''
     ${pkgs.findutils}/bin/find ${lib.escapeShellArg config.services.gitea.dump.backupDir} \
-      -mtime 14 -maxdepth 1 -type f -delete
+      -maxdepth 1 -type f -iname '*.${config.services.gitea.dump.type}' -ctime 21 \
+      | tail -n -3 | xargs rm
   '';
 
   # Making sure this plays nicely with the database service of choice. Take
