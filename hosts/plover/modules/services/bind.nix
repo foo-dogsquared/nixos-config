@@ -300,4 +300,7 @@ in
     filter = named-refused[journalmatch='_SYSTEMD_UNIT=bind.service']
     maxretry = 3
   '';
+
+  # Add the following to be backed up.
+  services.borgbackup.jobs.services-backup.paths = [ zonesDir ];
 }

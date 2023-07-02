@@ -207,4 +207,7 @@ in
       "L+ ${giteaCustomDir}/public/img/logo.svg - - - - ${../../files/gitea/logo.svg}"
       "L+ ${giteaCustomDir}/public/img/logo.png - - - - ${../../files/gitea/logo.png}"
     ];
+
+  # Add the following files to be backed up.
+  services.borgbackup.jobs.services-backup.paths = [ config.services.gitea.dump.backupDir ];
 }

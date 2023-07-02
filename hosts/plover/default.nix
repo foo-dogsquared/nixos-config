@@ -196,20 +196,8 @@ in
       services-backup = jobCommonSettings
         {
           paths = [
-            # Vaultwarden.
-            "/var/lib/bitwarden_rs"
-
-            # Gitea.
-            config.services.gitea.dump.backupDir
-
-            # PostgreSQL database dumps.
-            config.services.postgresqlBackup.location
-
-            # ACME accounts.
-            "/var/lib/acme/.lego/accounts"
-
-            # Zone files.
-            "/etc/bind/zones"
+            # ACME accounts and TLS certificates
+            "/var/lib/acme"
           ];
           repo = borgRepo "services";
           passCommand = "cat ${config.sops.secrets."plover/borg/repos/services/password".path}";

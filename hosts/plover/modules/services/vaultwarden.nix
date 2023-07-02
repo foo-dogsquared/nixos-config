@@ -195,4 +195,7 @@ in
       ignoreregex =
     '';
   };
+
+  # Add the data directory to be backed up.
+  services.borgbackup.jobs.services-backup.paths = [ "/var/lib/bitwarden_rs" ];
 }

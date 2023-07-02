@@ -75,4 +75,7 @@ in
   security.acme.certs."${postgresqlDomain}".postRun = ''
     systemctl restart postgresql.service
   '';
+
+  # Add the dumps to be backed up.
+  services.borgbackup.jobs.services-backup.paths = [ config.services.postgresqlBackup.location ];
 }
