@@ -33,7 +33,7 @@ To deploy it, just start up a Terraform project as usual (assuming it is run fro
 terraform -chdir=./hosts/plover init
 ----
 
-There are ways to deploy with the given credentials but the common way to do it with this setup is modifying `.envrc` located at the project root.
+There are ways to deploy with the given credentials but the common way to do it with this setup is creating a production dotenv (`.production.envrc`) located at the project root.
 Just provide the sensitive credentials as an environment variable `TF_VAR_$KEY=$VALUE`.
 
 
@@ -85,9 +85,6 @@ Still, test the logins as indicated from the seed file.
 Please activate them and with the right ports.
 
 * Get the appropriate credentials for the following services:
-
-** An API key from the domain registrar (i.e., Porkbun).
-This is used for the certificate generation in case the ACME client went with the DNS-1 challenge.
 
 ** An API key/credentials for the email service (i.e., SendGrid).
 This is used for setting up configuration for transactional emails used by some of the services such as Gitea and Vaultwarden.
