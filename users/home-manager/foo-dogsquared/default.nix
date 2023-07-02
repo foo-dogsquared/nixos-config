@@ -199,7 +199,9 @@ in
 
     settings = {
       http = {
-        hostname = "0.0.0.0";
+        hostname = "127.0.0.1";
+        port = 6680;
+        default_app = "iris";
       };
 
       file = {
@@ -285,9 +287,11 @@ in
       "google_toolbar.search_history"
       "thumbnails.cache"
       "zoom.logs"
+      "vim.history"
     ];
     withChatCleanup = true;
     withBrowserCleanup = true;
+    persistent = true;
   };
 
   systemd.user.sessionVariables = {
