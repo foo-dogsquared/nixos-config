@@ -30,12 +30,11 @@ in
 
   zramSwap.enable = true;
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   networking = {
     enableIPv6 = true;
-    usePredictableInterfaceNames = true;
+    usePredictableInterfaceNames = lib.mkDefault true;
     useNetworkd = true;
 
     # We're using networkd to configure so we're disabling this
