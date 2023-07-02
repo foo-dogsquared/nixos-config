@@ -253,6 +253,7 @@ nixpkgs-channel = "nixos-unstable-small"
 
 [plover.deploy]
 hostname = "plover.foodogsquared.one"
+ssh-user = "admin"
 fast-connection = true
 auto-rollback = true
 magic-rollback = true
@@ -306,6 +307,15 @@ system = "x86_64-linux"
 home-manager-channel = "home-manager-23.05"
 home-directory = "/home/foo-dogsquared"
 username = "foodogsquared"
+
+[foo-dogsquared.deploy]
+hostname = "local.foodogsquared.one"
+ssh-user = "admin"
+profile = "foodogsquared"
+fast-connection = true
+auto-rollback = true
+magic-rollback = true
+remote-build = true
 ----
 
 - `system` contains the platform of the home-manager user.
@@ -322,6 +332,8 @@ By default, it will be set at `/home/$USERNAME`.
 - `username` is the username of the home-manager user to be used for `config.home.username` at the home-manager configuration.
 If unset, it will use the table key.
 In the above example, the unset value would be `foo-dogsquared`.
+
+- `deploy` is pretty similar to the previous configuration setting that it sets certain options for deploy-rs.
 
 
 [#secrets-management]
