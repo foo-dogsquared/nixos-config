@@ -55,4 +55,7 @@
       splix
     ];
   };
+
+  # Extend the life of an SSD.
+  services.fstrim.enable = true;
 }
