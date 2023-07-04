@@ -6,6 +6,7 @@ let
 in
 {
   imports = [
+    ./modules/browser.nix
     ./modules/email.nix
     ./modules/keys.nix
     ./modules/git.nix
@@ -92,26 +93,6 @@ in
   systemd.user.sessionVariables = {
     MANPAGER = "nvim +Man!";
     EDITOR = "nvim";
-  };
-
-  # WHOA! Even browsers with extensions can be declarative!
-  programs.brave = {
-    enable = true;
-    extensions = [
-      { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
-      { id = "ekhagklcjbdpajgpjgmbionohlpdbjgc"; } # Zotero connector
-      { id = "jfnifeihccihocjbfcfhicmmgpjicaec"; } # GSConnect
-      { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # Google Translate
-      { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; } # Firenvim
-      { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
-      { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
-      { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
-      { id = "haebnnbpedcbhciplfhjjkbafijpncjl"; } # TinEye Reverse Image Search
-      { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; } # Tampermonkey
-      { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
-      { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
-      { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
-    ];
   };
 
   home.stateVersion = "23.05";
