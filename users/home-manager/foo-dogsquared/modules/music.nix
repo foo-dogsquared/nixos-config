@@ -128,4 +128,12 @@ in
     mpdMusicDir = musicDir;
   };
 
+  # Add more cleaners.
+  services.bleachbit.cleaners = [
+    "audacious.log"
+    "audacious.cache"
+    "audacious.mru"
+    "vlc.memory_dump"
+    "vlc.mru"
+  ];
 }
