@@ -6,6 +6,7 @@ let
 in
 {
   imports = [
+    ./modules/email.nix
     ./modules/keys.nix
     ./modules/git.nix
     ./modules/music.nix
