@@ -132,6 +132,12 @@ in
   programs.wezterm.enable = true;
   programs.adb.enable = true;
 
+  environment.etc."nix/nixpkgs-config.nix".source = pkgs.writeText "nixpkgs-config" ''
+    {
+      allowUnfree = true;
+    }
+  '';
+
   environment.systemPackages = with pkgs; [
     # Some sysadmin thingamajigs.
     openldap
