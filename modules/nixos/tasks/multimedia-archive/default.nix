@@ -7,6 +7,8 @@ let
   deviantArt = name: "https://deviantart.com/${name}";
   artStation = name: "https://www.artstation.com/${name}";
   newgrounds = name: "https://${name}.newgrounds.com";
+
+  pathPrefix = "multimedia-archive";
 in
 {
   options.tasks.multimedia-archive.enable =
@@ -94,7 +96,7 @@ in
       environment.systemPackages = [ ytdlpArchiveVariant ];
 
       sops.secrets = lib.getSecrets (lib.getSecret "multimedia-archive.yaml")
-        (lib.attachSopsPathPrefix "multimedia-archive" {
+        (lib.attachSopsPathPrefix pathPrefix {
           "secrets-config" = { };
         });
 
@@ -164,7 +166,7 @@ in
           # in the service properly since secrets decrypted by sops-nix cannot
           # be read in Nix.
           "--config"
-          "${config.sops.secrets."multimedia-archive/secrets-config".path}"
+          "${config.sops.secrets."${pathPrefix}/secrets-config".path}"
         ];
 
         settings.extractor = {

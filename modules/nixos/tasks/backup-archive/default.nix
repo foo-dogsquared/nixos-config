@@ -38,6 +38,8 @@ let
 
   hetzner-boxes-user = "u332477";
   hetzner-boxes-server = "${hetzner-boxes-user}.your-storagebox.de";
+
+  pathPrefix = "borg-backup";
 in
 {
   options.tasks.backup-archive.enable =
@@ -46,7 +48,7 @@ in
   config = lib.mkIf cfg.enable {
     sops.secrets = lib.getSecrets
       (lib.getSecret "backup-archive.yaml")
-      (lib.attachSopsPathPrefix "borg-backup" {
+      (lib.attachSopsPathPrefix pathPrefix {
         "patterns/home" = { };
         "patterns/etc" = { };
         "patterns/keys" = { };
@@ -66,11 +68,11 @@ in
       local-archive = borgJobCommonSetting
         {
           patterns = with config.sops; [
-            secrets."borg-backup/patterns/home".path
-            secrets."borg-backup/patterns/etc".path
-            secrets."borg-backup/patterns/keys".path
+            secrets."${pathPrefix}/patterns/home".path
+            secrets."${pathPrefix}/patterns/etc".path
+            secrets."${pathPrefix}/patterns/keys".path
           ];
-          passCommand = "cat ${config.sops.secrets."borg-backup/repos/archive/password".path}";
+          passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/archive/password".path}";
         } // {
         removableDevice = true;
         repo = "/mnt/archives/backups";
@@ -80,11 +82,11 @@ in
       local-external-drive = borgJobCommonSetting
         {
           patterns = with config.sops; [
-            secrets."borg-backup/patterns/home".path
-            secrets."borg-backup/patterns/etc".path
-            secrets."borg-backup/patterns/keys".path
+            secrets."${pathPrefix}/patterns/home".path
+            secrets."${pathPrefix}/patterns/etc".path
+            secrets."${pathPrefix}/patterns/keys".path
           ];
-          passCommand = "cat ${config.sops.secrets."borg-backup/repos/external-drive/password".path}";
+          passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/external-drive/password".path}";
         } // {
         removableDevice = true;
         repo = "/mnt/external-storage/backups";
@@ -94,20 +96,20 @@ in
       remote-backup-hetzner-box = borgJobCommonSetting
         {
           patterns = with config.sops; [
-            secrets."borg-backup/patterns/remote-backup".path
+            secrets."${pathPrefix}/patterns/remote-backup".path
           ];
-          passCommand = "cat ${config.sops.secrets."borg-backup/repos/hetzner-box/password".path}";
+          passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/hetzner-box/password".path}";
         } // {
         doInit = true;
         repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/desktop/ni";
         startAt = "daily";
-        environment.BORG_RSH = "ssh -i ${config.sops.secrets."borg-backup/ssh-key".path}";
+        environment.BORG_RSH = "ssh -i ${config.sops.secrets."${pathPrefix}/ssh-key".path}";
       };
     };
 
     programs.ssh.extraConfig = ''
       Host ${hetzner-boxes-server}
-        IdentityFile ${config.sops.secrets."borg-backup/ssh-key".path}
+        IdentityFile ${config.sops.secrets."${pathPrefix}/ssh-key".path}
     '';
   };
 }
