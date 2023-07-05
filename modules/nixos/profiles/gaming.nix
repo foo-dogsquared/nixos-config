@@ -56,20 +56,20 @@ in
     })
 
     # Despite the module being for gaming setup, no individual games are
-    # installed. Also, all of the installed games are FOSS so far. At least,
-    # Stallman-senpai would be proud.
+    # installed.
     (lib.mkIf cfg.games.enable {
       environment.systemPackages = with pkgs; [
-        cataclysm-dda
-        dwarf-fortress
-        endless-sky
-        mindustry
-        minetest
-        openra
-        superTuxKart
-        the-powder-toy
-        wesnoth
-        zeroad
+        cataclysm-dda # Dwarf Fortress but in the future.
+        dwarf-fortress # Dwarf Fortress.
+        endless-sky # Dwarf Fortress but in space and in the far future.
+        mindustry # Dwarf Fortress but with machineries.
+        minetest # Dwarf Fortress but with voxels.
+        openra # Dwarf Fortress but with futuristic armed civilizations.
+        superTuxKart # Dwarf Fortress but with racing carts.
+        starsector # Dwarf Fortress but in space and in the far future.
+        the-powder-toy # Microscopic Dwarf Fortress.
+        wesnoth # Dwarf Fortress but with dwarves and fortresses.
+        zeroad # Dwarf Fortress but with ancient armed civilizations.
       ];
     })
 
