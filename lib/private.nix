@@ -32,14 +32,14 @@ rec {
       getKey = key: { inherit key sopsFile; };
     in
     lib.mapAttrs (path: attrs:
-      attrs // (getKey path)) secrets;
+      (getKey path) // attrs) secrets;
 
   attachSopsPathPrefix = prefix: secrets:
     lib.mapAttrs'
       (key: settings:
         lib.nameValuePair
           "${prefix}/${key}"
-          settings // { inherit key; })
+          ({ inherit key; } // settings))
       secrets;
 
   getUsers = type: users:
