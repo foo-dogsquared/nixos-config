@@ -34,6 +34,14 @@ rec {
     lib.mapAttrs (path: attrs:
       attrs // (getKey path)) secrets;
 
+  attachSopsPathPrefix = prefix: secrets:
+    lib.mapAttrs'
+      (key: settings:
+        lib.nameValuePair
+          "${prefix}/${key}"
+          settings // { inherit key; })
+      secrets;
+
   getUsers = type: users:
     let
       userModules = lib.filesToAttr ../users/${type};
