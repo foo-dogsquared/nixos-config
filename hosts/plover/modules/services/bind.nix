@@ -130,7 +130,7 @@ in
         };
 
         ${cfg.extraConfig}
-    '';
+      '';
 
     extraOptions = ''
       listen-on tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") config.services.bind.listenOn} };
@@ -187,7 +187,8 @@ in
         domainZone' = zoneFile domain;
         fqdnZone' = zoneFile fqdn;
         secretPath = path: config.sops.secrets."dns/${path}".path;
-      in lib.mkAfter ''
+      in
+      lib.mkAfter ''
         [ -f '${domainZone'}' ] || {
           install -Dm0600 '${domainZone}' '${domainZone'}'
           replace-secret #mailboxSecurityKey# '${secretPath "${domain}/mailbox-security-key"}' '${domainZone'}'
@@ -197,7 +198,7 @@ in
         [ -f '${fqdnZone'}' ] || {
           install -Dm0600 '${fqdnZone}' '${fqdnZone'}'
         }
-    '';
+      '';
 
     serviceConfig = {
       # Additional service hardening. You can see most of the options

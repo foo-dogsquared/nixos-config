@@ -31,8 +31,10 @@ rec {
     let
       getKey = key: { inherit key sopsFile; };
     in
-    lib.mapAttrs (path: attrs:
-      (getKey path) // attrs) secrets;
+    lib.mapAttrs
+      (path: attrs:
+        (getKey path) // attrs)
+      secrets;
 
   attachSopsPathPrefix = prefix: secrets:
     lib.mapAttrs'

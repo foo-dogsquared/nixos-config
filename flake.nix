@@ -442,18 +442,18 @@
                 metadata = users.${name};
                 username = metadata.deploy.username or name;
               in
-                lib'.nameValuePair "home-manager-${name}" {
-                  hostname = metadata.deploy.hostname or name;
-                  autoRollback = metadata.deploy.auto-rollback or true;
-                  magicRollback = metadata.deploy.magic-rollback or true;
-                  fastConnection = metadata.deploy.fast-connection or true;
-                  remoteBuild = metadata.deploy.remote-build or false;
-                  profiles.home = {
-                    sshUser = metadata.deploy.ssh-user or username;
-                    user = metadata.deploy.user or username;
-                    path = inputs.deploy.lib.${metadata.system or defaultSystem}.activate.home-manager value;
-                  };
-                })
+              lib'.nameValuePair "home-manager-${name}" {
+                hostname = metadata.deploy.hostname or name;
+                autoRollback = metadata.deploy.auto-rollback or true;
+                magicRollback = metadata.deploy.magic-rollback or true;
+                fastConnection = metadata.deploy.fast-connection or true;
+                remoteBuild = metadata.deploy.remote-build or false;
+                profiles.home = {
+                  sshUser = metadata.deploy.ssh-user or username;
+                  user = metadata.deploy.user or username;
+                  path = inputs.deploy.lib.${metadata.system or defaultSystem}.activate.home-manager value;
+                };
+              })
             self.homeConfigurations;
         in
         nixosConfigurations // homeConfigurations;

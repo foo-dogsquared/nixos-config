@@ -75,15 +75,16 @@ in
 
     (lib.mkIf config.systemd.network.enable {
       # Just apply the appropriate permissions for systemd-networkd.
-      sops.secrets = let
-        systemdNetworkFileAttrs = {
-          group = config.users.users.systemd-network.group;
-          reloadUnits = [ "systemd-networkd.service" ];
-          mode = "0640";
-        };
-        applySystemdAttr = secretPaths: lib.listToAttrs
-          (builtins.map (path: lib.nameValuePair path systemdNetworkFileAttrs))
-          secretPaths;
+      sops.secrets =
+        let
+          systemdNetworkFileAttrs = {
+            group = config.users.users.systemd-network.group;
+            reloadUnits = [ "systemd-networkd.service" ];
+            mode = "0640";
+          };
+          applySystemdAttr = secretPaths: lib.listToAttrs
+            (builtins.map (path: lib.nameValuePair path systemdNetworkFileAttrs))
+            secretPaths;
         in
         applySystemdAttr [
           "wireguard/private-key"

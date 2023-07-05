@@ -33,8 +33,9 @@
         enable = true;
         perIdentitySettings = id:
           let
-            identitySettings = attrs: lib.mapAttrs' (setting: value:
-              lib.nameValuePair "mail.identity.id${id}.${setting}" value)
+            identitySettings = attrs: lib.mapAttrs'
+              (setting: value:
+                lib.nameValuePair "mail.identity.id${id}.${setting}" value)
               attrs;
           in
           identitySettings {
