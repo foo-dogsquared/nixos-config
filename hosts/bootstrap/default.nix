@@ -22,5 +22,10 @@
     supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
   };
 
+  services.openssh = {
+    enable = true;
+    allowSFTP = true;
+  };
+
   users.users.root.password = "";
 }
