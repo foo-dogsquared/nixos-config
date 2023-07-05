@@ -64,38 +64,12 @@ in
     };
   };
 
-  sops.secrets =
-    let
-      getKey = key: {
-        inherit key;
-        sopsFile = ./secrets/secrets.yaml;
-      };
-      getSecrets = secrets:
-        lib.mapAttrs'
-          (secret: config:
-            lib.nameValuePair
-              "ni/${secret}"
-              ((getKey secret) // config))
-          secrets;
-    in
-    getSecrets {
-      ssh-key = { };
-      "wireguard/private-key" = {
-        group = config.users.users.systemd-network.group;
-        reloadUnits = [ "systemd-networkd.service" ];
-        mode = "0640";
-      };
-      "wireguard/preshared-keys/plover" = {
-        group = config.users.users.systemd-network.group;
-        reloadUnits = [ "systemd-networkd.service" ];
-        mode = "0640";
-      };
-      "wireguard/preshared-keys/phone" = {
-        group = config.users.users.systemd-network.group;
-        reloadUnits = [ "systemd-networkd.service" ];
-        mode = "0640";
-      };
-    };
+  sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
+    "ni/ssh-key" = { };
+    "ni/wireguard/private-key" = { };
+    "ni/wireguard/preshared-keys/plover" = { };
+    "ni/wireguard/preshared-keys/phone" = { };
+  };
 
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 

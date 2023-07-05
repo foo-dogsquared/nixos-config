@@ -74,43 +74,15 @@ in
     '';
   };
 
-  # TODO: Put the secrets to the respective service module.
-  sops.secrets =
-    let
-      getKey = key: {
-        inherit key;
-        sopsFile = ./secrets/secrets.yaml;
-      };
-      getSecrets = secrets:
-        lib.mapAttrs'
-          (secret: config:
-            lib.nameValuePair
-              "plover/${secret}"
-              ((getKey secret) // config))
-          secrets;
+  sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
+    "plover/ssh-key" = { };
+    "plover/lego/env" = { };
 
-      giteaUser = config.users.users."${config.services.gitea.user}".name;
-      portunusUser = config.users.users."${config.services.portunus.user}".name;
-
-      # It is hardcoded but as long as the module is stable that way.
-      vaultwardenUser = config.users.groups.vaultwarden.name;
-      postgresUser = config.users.groups.postgres.name;
-    in
-    getSecrets {
-      "ssh-key" = { };
-      "lego/env" = { };
-      "gitea/db/password".owner = giteaUser;
-      "gitea/smtp/password".owner = giteaUser;
-      "vaultwarden/env".owner = vaultwardenUser;
-
-      "borg/repos/host/patterns/keys" = { };
-      "borg/repos/host/password" = { };
-      "borg/repos/services/password" = { };
-      "borg/ssh-key" = { };
-
-      "keycloak/db/password".owner = postgresUser;
-      "ldap/users/foodogsquared/password".owner = portunusUser;
-    };
+    "plover/borg/repos/host/patterns/keys" = { };
+    "plover/borg/repos/host/password" = { };
+    "plover/borg/repos/services/password" = { };
+    "plover/borg/ssh-key" = { };
+  };
 
   # All of the keys required to deploy the secrets.
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";

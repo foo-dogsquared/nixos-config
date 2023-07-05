@@ -18,29 +18,16 @@ in
 
   sops.secrets =
     let
-      getKey = key: {
-        inherit key;
-        sopsFile = ../../secrets/secrets.yaml;
-      };
-
-      getSecrets = secrets:
-        (lib.mapAttrs'
-          (name: config:
-            lib.nameValuePair
-              "plover/${name}"
-              ((getKey name) // config))
-          secrets);
-
       systemdNetworkdPermission = {
         group = config.users.users.systemd-network.group;
         reloadUnits = [ "systemd-networkd.service" ];
         mode = "0640";
       };
     in
-    getSecrets {
-      "wireguard/private-key" = systemdNetworkdPermission;
-      "wireguard/preshared-keys/ni" = systemdNetworkdPermission;
-      "wireguard/preshared-keys/phone" = systemdNetworkdPermission;
+    lib.getSecrets ../../secrets/secrets.yaml {
+      "plover/wireguard/private-key" = systemdNetworkdPermission;
+      "plover/wireguard/preshared-keys/ni" = systemdNetworkdPermission;
+      "plover/wireguard/preshared-keys/phone" = systemdNetworkdPermission;
     };
 
   networking.firewall = {

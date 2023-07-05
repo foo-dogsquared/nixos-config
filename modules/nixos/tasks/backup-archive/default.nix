@@ -44,30 +44,16 @@ in
     lib.mkEnableOption "backup setup with BorgBackup";
 
   config = lib.mkIf cfg.enable {
-    sops.secrets =
-      let
-        getKey = key: {
-          inherit key;
-          sopsFile = lib.getSecret "backup-archive.yaml";
-        };
-        getSecrets = secrets:
-          lib.mapAttrs'
-            (key: config:
-              lib.nameValuePair
-                "borg-backup/${key}"
-                ((getKey key) // config))
-            secrets;
-      in
-      getSecrets {
-        "patterns/home" = { };
-        "patterns/etc" = { };
-        "patterns/keys" = { };
-        "patterns/remote-backup" = { };
-        "repos/archive/password" = { };
-        "repos/external-drive/password" = { };
-        "repos/hetzner-box/password" = { };
-        "ssh-key" = { };
-      };
+    sops.secrets = lib.getSecrets (lib.getSecret "backup-archive.yaml") {
+      "borg-backup/patterns/home" = { };
+      "borg-backup/patterns/etc" = { };
+      "borg-backup/patterns/keys" = { };
+      "borg-backup/patterns/remote-backup" = { };
+      "borg-backup/repos/archive/password" = { };
+      "borg-backup/repos/external-drive/password" = { };
+      "borg-backup/repos/hetzner-box/password" = { };
+      "borg-backup/ssh-key" = { };
+    };
 
     profiles.filesystem = {
       archive.enable = true;

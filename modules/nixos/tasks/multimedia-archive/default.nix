@@ -93,16 +93,9 @@ in
     {
       environment.systemPackages = [ ytdlpArchiveVariant ];
 
-      sops.secrets =
-        let
-          getKey = key: {
-            inherit key;
-            sopsFile = lib.getSecret "multimedia-archive.yaml";
-          };
-        in
-        {
-          "multimedia-archive/secrets-config" = getKey "secrets-config";
-        };
+      sops.secrets = lib.getSecrets (lib.getSecret "multimedia-archive.yaml") {
+        "multimedia-archive/secrets-config" = { };
+      };
 
       profiles.filesystem.archive.enable = true;
 

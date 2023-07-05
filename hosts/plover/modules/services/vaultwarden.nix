@@ -12,6 +12,10 @@ let
   vaultwardenDbName = "vaultwarden";
 in
 {
+  sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
+    "plover/vaultwarden/env".owner = vaultwardenUser;
+  };
+
   services.vaultwarden = {
     enable = true;
     dbBackend = "postgresql";

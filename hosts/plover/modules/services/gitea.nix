@@ -7,9 +7,15 @@
 let
   codeForgeDomain = "code.${config.networking.domain}";
 
+  giteaUser = config.users.users."${config.services.gitea.user}".name;
   giteaDatabaseUser = config.services.gitea.user;
 in
 {
+  sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
+    "plover/gitea/db/password".owner = giteaUser;
+    "plover/gitea/smtp/password".owner = giteaUser;
+  };
+
   services.gitea = {
     enable = true;
     appName = "foodogsquared's code forge";

@@ -5,8 +5,13 @@
 
 let
   ldapDomain = "ldap.${config.networking.fqdn}";
+  portunusUser = config.users.users."${config.services.portunus.user}".name;
 in
 {
+  sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
+    "plover/ldap/users/foodogsquared/password".owner = portunusUser;
+  };
+
   services.portunus = {
     enable = true;
 

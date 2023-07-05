@@ -11,10 +11,17 @@ let
   keycloakUser = config.services.keycloak.database.username;
   keycloakDbName = if config.services.keycloak.database.createLocally then keycloakUser else config.services.keycloak.database.username;
 
+  # This is for access to PostgreSQL database.
+  postgresUser = config.users.groups.postgres.name;
+
   certs = config.security.acme.certs;
   host = "localhost";
 in
 {
+  sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
+    "plover/keycloak/db/password".owner = postgresUser;
+  };
+
   # Hey, the hub for your application sign-in.
   services.keycloak = {
     enable = true;

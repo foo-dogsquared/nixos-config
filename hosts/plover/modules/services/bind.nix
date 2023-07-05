@@ -53,27 +53,16 @@ in
 {
   sops.secrets =
     let
-      getKey = key: {
-        inherit key;
-        sopsFile = ../../secrets/secrets.yaml;
-      };
-      getSecrets = secrets:
-        lib.mapAttrs'
-          (secret: config:
-            lib.nameValuePair
-              "plover/${secret}"
-              ((getKey secret) // config))
-          secrets;
       dnsFileAttribute = {
         owner = config.users.users.named.name;
         group = config.users.users.named.group;
         mode = "0400";
       };
     in
-    getSecrets {
-      "dns/${domain}/mailbox-security-key" = dnsFileAttribute;
-      "dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
-      "dns/${domain}/rfc2136-key" = dnsFileAttribute // {
+    lib.getSecrets ../../secrets/secrets.yaml {
+      "plover/dns/${domain}/mailbox-security-key" = dnsFileAttribute;
+      "plover/dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
+      "plover/dns/${domain}/rfc2136-key" = dnsFileAttribute // {
         reloadUnits = [ "bind.service" ];
       };
     };
