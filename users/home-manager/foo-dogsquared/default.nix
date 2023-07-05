@@ -29,7 +29,7 @@ in
     };
   };
 
-  programs.bash.sessionVariables.PATH = "${config.home.mutableFile."library/dotfiles".path}/bin\${PATH:+:$PATH}";
+  home.sessionVariables.PATH = "${config.home.mutableFile."library/dotfiles".path}/bin\${PATH:+:$PATH}";
 
   # Making my favorite terminal multiplexer right now.
   programs.zellij.settings = {
