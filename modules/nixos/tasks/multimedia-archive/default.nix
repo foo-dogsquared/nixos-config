@@ -93,9 +93,10 @@ in
     {
       environment.systemPackages = [ ytdlpArchiveVariant ];
 
-      sops.secrets = lib.getSecrets (lib.getSecret "multimedia-archive.yaml") {
-        "multimedia-archive/secrets-config" = { };
-      };
+      sops.secrets = lib.getSecrets (lib.getSecret "multimedia-archive.yaml")
+        (lib.attachSopsPathPrefix "multimedia-archive" {
+          "secrets-config" = { };
+        });
 
       profiles.filesystem.archive.enable = true;
 
