@@ -27,15 +27,15 @@ in
     {
       networking.firewall.allowedUDPPorts = [ wireguardPort ];
       sops.secrets = lib.getSecrets ../secrets/secrets.yaml {
-        "ni/wireguard/private-key" = { };
-        "ni/wireguard/preshared-keys/plover" = { };
-        "ni/wireguard/preshared-keys/phone" = { };
+        "wireguard/private-key" = { };
+        "wireguard/preshared-keys/plover" = { };
+        "wireguard/preshared-keys/phone" = { };
       };
     }
 
     (lib.mkIf config.networking.networkmanager.enable {
       networking.wg-quick.interfaces.wireguard0 = {
-        privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
+        privateKeyFile = config.sops.secrets."wireguard/private-key".path;
         listenPort = wireguardPort;
         dns = with interfaces.lan; [ IPv4.address IPv6.address ];
         postUp =
@@ -57,7 +57,7 @@ in
           # The "server" peer.
           {
             publicKey = lib.removeSuffix "\n" (lib.readFile ../../plover/files/wireguard/wireguard-public-key-plover);
-            presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
+            presharedKeyFile = config.sops.secrets."wireguard/preshared-keys/plover".path;
             allowedIPs = wireguardAllowedIPs;
             endpoint = "${interfaces.wan.IPv4.address}:${toString wireguardPort}";
             persistentKeepalive = 25;
@@ -66,7 +66,7 @@ in
           # The "phone" peer.
           {
             publicKey = lib.removeSuffix "\n" (lib.readFile ../../plover/files/wireguard/wireguard-public-key-phone);
-            presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/phone".path;
+            presharedKeyFile = config.sops.secrets."wireguard/preshared-keys/phone".path;
             allowedIPs = wireguardAllowedIPs;
           }
         ];
@@ -86,9 +86,9 @@ in
           secretPaths;
         in
         applySystemdAttr [
-          "ni/wireguard/private-key"
-          "ni/wireguard/preshared-keys/phone"
-          "ni/wireguard/preshared-keys/plover"
+          "wireguard/private-key"
+          "wireguard/preshared-keys/phone"
+          "wireguard/preshared-keys/plover"
         ];
 
       systemd.network = {
@@ -99,7 +99,7 @@ in
           };
 
           wireguardConfig = {
-            PrivateKeyFile = config.sops.secrets."ni/wireguard/private-key";
+            PrivateKeyFile = config.sops.secrets."wireguard/private-key";
             ListenPort = wireguardPort;
           };
 
@@ -107,7 +107,7 @@ in
             # The "server" peer.
             {
               PublicKey = lib.readFile ../../plover/files/wireguard/wireguard-public-key-plover;
-              PresharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
+              PresharedKeyFile = config.sops.secrets."wireguard/preshared-keys/plover".path;
               AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
               Endpoint = "${interfaces.wan.IPv4.address}:${toString wireguardPort}";
               PersistentKeepalive = 25;
@@ -116,7 +116,7 @@ in
             # The "phone" peer.
             {
               PublicKey = lib.readFile ../../plover/files/wireguard/wireguard-public-key-phone;
-              PresharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/phone".path;
+              PresharedKeyFile = config.sops.secrets."wireguard/preshared-keys/phone".path;
               AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
             }
           ];

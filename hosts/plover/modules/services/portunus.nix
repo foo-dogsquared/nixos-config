@@ -9,7 +9,7 @@ let
 in
 {
   sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
-    "plover/ldap/users/foodogsquared/password".owner = portunusUser;
+    "ldap/users/foodogsquared/password".owner = portunusUser;
   };
 
   services.portunus = {
@@ -51,7 +51,7 @@ in
                   ../../../../users/home-manager/foo-dogsquared/files/ssh-key.pub
                   ../../../../users/home-manager/foo-dogsquared/files/ssh-key-2.pub
                 ];
-              password.from_command = [ "${pkgs.coreutils}/bin/cat" config.sops.secrets."plover/ldap/users/foodogsquared/password".path ];
+              password.from_command = [ "${pkgs.coreutils}/bin/cat" config.sops.secrets."ldap/users/foodogsquared/password".path ];
             }
           ];
         };

@@ -25,9 +25,9 @@ in
       };
     in
     lib.getSecrets ../../secrets/secrets.yaml {
-      "plover/wireguard/private-key" = systemdNetworkdPermission;
-      "plover/wireguard/preshared-keys/ni" = systemdNetworkdPermission;
-      "plover/wireguard/preshared-keys/phone" = systemdNetworkdPermission;
+      "wireguard/private-key" = systemdNetworkdPermission;
+      "wireguard/preshared-keys/ni" = systemdNetworkdPermission;
+      "wireguard/preshared-keys/phone" = systemdNetworkdPermission;
     };
 
   networking.firewall = {
@@ -67,7 +67,7 @@ in
       };
 
       wireguardConfig = {
-        PrivateKeyFile = config.sops.secrets."plover/wireguard/private-key".path;
+        PrivateKeyFile = config.sops.secrets."wireguard/private-key".path;
         ListenPort = wireguardPort;
       };
 
@@ -76,7 +76,7 @@ in
         {
           wireguardPeerConfig = {
             PublicKey = lib.readFile ../../../ni/files/wireguard/wireguard-public-key-ni;
-            PresharedKeyFile = config.sops.secrets."plover/wireguard/preshared-keys/ni".path;
+            PresharedKeyFile = config.sops.secrets."wireguard/preshared-keys/ni".path;
             AllowedIPs = lib.concatStringsSep "," desktopPeerAddresses;
           };
         }
@@ -85,7 +85,7 @@ in
         {
           wireguardPeerConfig = {
             PublicKey = lib.readFile ../../files/wireguard/wireguard-public-key-phone;
-            PresharedKeyFile = config.sops.secrets."plover/wireguard/preshared-keys/phone".path;
+            PresharedKeyFile = config.sops.secrets."wireguard/preshared-keys/phone".path;
             AllowedIPs = lib.concatStringsSep "," phonePeerAddresses;
           };
         }

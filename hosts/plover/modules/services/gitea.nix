@@ -12,8 +12,8 @@ let
 in
 {
   sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
-    "plover/gitea/db/password".owner = giteaUser;
-    "plover/gitea/smtp/password".owner = giteaUser;
+    "gitea/db/password".owner = giteaUser;
+    "gitea/smtp/password".owner = giteaUser;
   };
 
   services.gitea = {
@@ -21,7 +21,7 @@ in
     appName = "foodogsquared's code forge";
     database = {
       type = "postgres";
-      passwordFile = config.sops.secrets."plover/gitea/db/password".path;
+      passwordFile = config.sops.secrets."gitea/db/password".path;
     };
 
     # Allow Gitea to take a dump.
@@ -33,7 +33,7 @@ in
     # There are a lot of services in port 3000 so we'll change it.
     lfs.enable = true;
 
-    mailerPasswordFile = config.sops.secrets."plover/gitea/smtp/password".path;
+    mailerPasswordFile = config.sops.secrets."gitea/smtp/password".path;
 
     # You can see the available configuration options at
     # https://docs.gitea.io/en-us/config-cheat-sheet/.

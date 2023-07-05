@@ -60,9 +60,9 @@ in
       };
     in
     lib.getSecrets ../../secrets/secrets.yaml {
-      "plover/dns/${domain}/mailbox-security-key" = dnsFileAttribute;
-      "plover/dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
-      "plover/dns/${domain}/rfc2136-key" = dnsFileAttribute // {
+      "dns/${domain}/mailbox-security-key" = dnsFileAttribute;
+      "dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
+      "dns/${domain}/rfc2136-key" = dnsFileAttribute // {
         reloadUnits = [ "bind.service" ];
       };
     };
@@ -138,7 +138,7 @@ in
     '';
 
     extraConfig = ''
-      include "${config.sops.secrets."plover/dns/${domain}/rfc2136-key".path}";
+      include "${config.sops.secrets."dns/${domain}/rfc2136-key".path}";
 
       acl trusted { ${lib.concatStringsSep "; " (clientNetworks ++ serverNetworks)}; localhost; };
 
@@ -186,7 +186,7 @@ in
       let
         domainZone' = zoneFile domain;
         fqdnZone' = zoneFile fqdn;
-        secretPath = path: config.sops.secrets."plover/dns/${path}".path;
+        secretPath = path: config.sops.secrets."dns/${path}".path;
       in lib.mkAfter ''
         [ -f '${domainZone'}' ] || {
           install -Dm0600 '${domainZone}' '${domainZone'}'

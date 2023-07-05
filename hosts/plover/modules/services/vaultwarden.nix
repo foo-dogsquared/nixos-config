@@ -13,13 +13,13 @@ let
 in
 {
   sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
-    "plover/vaultwarden/env".owner = vaultwardenUser;
+    "vaultwarden/env".owner = vaultwardenUser;
   };
 
   services.vaultwarden = {
     enable = true;
     dbBackend = "postgresql";
-    environmentFile = config.sops.secrets."plover/vaultwarden/env".path;
+    environmentFile = config.sops.secrets."vaultwarden/env".path;
     config = {
       DOMAIN = "https://${passwordManagerDomain}";
 

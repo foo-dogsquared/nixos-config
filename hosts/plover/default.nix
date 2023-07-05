@@ -75,13 +75,13 @@ in
   };
 
   sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
-    "plover/ssh-key" = { };
-    "plover/lego/env" = { };
+    "ssh-key" = { };
+    "lego/env" = { };
 
-    "plover/borg/repos/host/patterns/keys" = { };
-    "plover/borg/repos/host/password" = { };
-    "plover/borg/repos/services/password" = { };
-    "plover/borg/ssh-key" = { };
+    "borg/repos/host/patterns/keys" = { };
+    "borg/repos/host/password" = { };
+    "borg/repos/services/password" = { };
+    "borg/ssh-key" = { };
   };
 
   # All of the keys required to deploy the secrets.
@@ -100,7 +100,7 @@ in
     email = "admin+acme@foodogsquared.one";
     dnsProvider = "rfc2136";
     dnsResolver = "1.1.1.1";
-    credentialsFile = config.sops.secrets."plover/lego/env".path;
+    credentialsFile = config.sops.secrets."lego/env".path;
   };
 
   # Enable generating new DH params.
@@ -108,7 +108,7 @@ in
 
   # !!! The keys should be rotated at an interval here.
   services.openssh.hostKeys = [{
-    path = config.sops.secrets."plover/ssh-key".path;
+    path = config.sops.secrets."ssh-key".path;
     type = "ed25519";
   }];
 
@@ -148,7 +148,7 @@ in
           yearly = 6;
         };
         startAt = "monthly";
-        environment.BORG_RSH = "ssh -i ${config.sops.secrets."plover/borg/ssh-key".path}";
+        environment.BORG_RSH = "ssh -i ${config.sops.secrets."borg/ssh-key".path}";
       };
 
       borgRepo = path: "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/plover/${path}";
@@ -158,10 +158,10 @@ in
       # acceptable for it to be backed up monthly.
       host-backup = jobCommonSettings {
         patternFiles = [
-          config.sops.secrets."plover/borg/repos/host/patterns/keys".path
+          config.sops.secrets."borg/repos/host/patterns/keys".path
         ];
         repo = borgRepo "host";
-        passCommand = "cat ${config.sops.secrets."plover/borg/repos/host/password".path}";
+        passCommand = "cat ${config.sops.secrets."borg/repos/host/password".path}";
       };
 
       # Backups for various services.
@@ -172,13 +172,13 @@ in
             "/var/lib/acme"
           ];
           repo = borgRepo "services";
-          passCommand = "cat ${config.sops.secrets."plover/borg/repos/services/password".path}";
+          passCommand = "cat ${config.sops.secrets."borg/repos/services/password".path}";
         } // { startAt = "weekly"; };
     };
 
   programs.ssh.extraConfig = ''
     Host ${hetzner-boxes-server}
-     IdentityFile ${config.sops.secrets."plover/borg/ssh-key".path}
+     IdentityFile ${config.sops.secrets."borg/ssh-key".path}
   '';
 
   system.stateVersion = "23.05";

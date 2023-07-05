@@ -31,7 +31,7 @@
   };
 
   services.openssh.hostKeys = [{
-    path = config.sops.secrets."ni/ssh-key".path;
+    path = config.sops.secrets."ssh-key".path;
     type = "ed25519";
   }];
 
@@ -53,7 +53,7 @@
   };
 
   sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
-    "ni/ssh-key" = { };
+    "ssh-key" = { };
   };
 
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
