@@ -1,23 +1,11 @@
 { config, pkgs, lib, ... }:
 
-let
-  network = import ../plover/modules/hardware/networks.nix;
-  inherit (builtins) toString;
-  inherit (network)
-    interfaces
-    wireguardPort
-    wireguardPeers;
-
-  wireguardAllowedIPs = [
-    "${interfaces.lan.IPv4.address}/16"
-    "${interfaces.lan.IPv6.address}/64"
-  ];
-  wireguardIFName = "wireguard0";
-in
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+
+    ./modules/wireguard.nix
 
     (lib.mapHomeManagerUser "foo-dogsquared" {
       extraGroups = [
@@ -66,9 +54,6 @@ in
 
   sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
     "ni/ssh-key" = { };
-    "ni/wireguard/private-key" = { };
-    "ni/wireguard/preshared-keys/plover" = { };
-    "ni/wireguard/preshared-keys/phone" = { };
   };
 
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
@@ -182,7 +167,6 @@ in
     nftables.enable = true;
     firewall = {
       enable = true;
-      allowedUDPPorts = [ wireguardPort ];
       allowedTCPPorts = [
         22 # Secure Shells.
       ];
@@ -196,55 +180,4 @@ in
   ];
 
   system.stateVersion = "23.05"; # Yes! I read the comment!
-
-  # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
-  # be used anywhere, we're configuring Wireguard here as a "client".
-  #
-  # We're using wg-quick here as this host is using network managers that can
-  # differ between workflows (i.e., GNOME and KDE Plasma using NetworkManager,
-  # others might be using systemd-networkd).
-  networking.wg-quick.interfaces.wireguard0 =
-    let
-      domains = [
-        "~plover.foodogsquared.one"
-        "~0.27.172.in-addr.arpa"
-        "~0.28.172.in-addr.arpa"
-      ];
-    in
-    {
-      privateKeyFile = config.sops.secrets."ni/wireguard/private-key".path;
-      listenPort = wireguardPort;
-      dns = with interfaces.lan; [ IPv4.address IPv6.address ];
-      postUp =
-        let
-          resolvectl = "${lib.getBin pkgs.systemd}/bin/resolvectl";
-        in
-        ''
-          ${resolvectl} domain ${wireguardIFName} ${lib.concatStringsSep " " domains}
-          ${resolvectl} dnssec ${wireguardIFName} no
-        '';
-
-      address = with wireguardPeers.desktop; [
-        "${IPv4}/32"
-        "${IPv6}/128"
-      ];
-
-      peers = [
-        # The "server" peer.
-        {
-          publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-plover);
-          presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/plover".path;
-          allowedIPs = wireguardAllowedIPs;
-          endpoint = "${interfaces.wan.IPv4.address}:${toString wireguardPort}";
-          persistentKeepalive = 25;
-        }
-
-        # The "phone" peer.
-        {
-          publicKey = lib.removeSuffix "\n" (lib.readFile ../plover/files/wireguard/wireguard-public-key-phone);
-          presharedKeyFile = config.sops.secrets."ni/wireguard/preshared-keys/phone".path;
-          allowedIPs = wireguardAllowedIPs;
-        }
-      ];
-    };
 }
