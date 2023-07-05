@@ -27,6 +27,13 @@ rec {
 
   getSecret = path: ../secrets/${path};
 
+  getSecrets = sopsFile: secrets:
+    let
+      getKey = key: { inherit key sopsFile; };
+    in
+    lib.mapAttrs (path: attrs:
+      attrs // (getKey path)) secrets;
+
   getUsers = type: users:
     let
       userModules = lib.filesToAttr ../users/${type};
@@ -59,5 +66,5 @@ rec {
         "profiles"
       ];
     in
-    lib.filterAttrs (n: v: !lib.elem n blocklist) (lib.mapAttrsRecursive (_: path: import path) attrs);
+    lib.filterAttrs (n: v: !lib.elem n blocklist) (lib.mapAttrsRecursive (_: sopsFile: import sopsFile) attrs);
 }
