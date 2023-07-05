@@ -223,7 +223,6 @@
           enable = true;
           enableSSHSupport = true;
         };
-        services.sshd.enable = lib.mkDefault true;
         services.openssh.enable = lib.mkDefault true;
 
         # We're setting Guix service package with the flake-provided package.
