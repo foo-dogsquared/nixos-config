@@ -74,6 +74,10 @@
     # need and I'm liking it.
     deploy.url = "github:serokell/deploy-rs";
     deploy.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Someone has already solved downloading Firefox addons so we'll use it.
+    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
@@ -93,6 +97,10 @@
       overlays = [
         # Put my custom packages to be available.
         self.overlays.default
+
+        (final: prev: {
+          inherit (inputs.firefox-addons.lib.${defaultSystem}) buildFirefoxXpiAddon;
+        })
 
         # Neovim nightly!
         inputs.neovim-nightly-overlay.overlays.default
