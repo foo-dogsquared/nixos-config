@@ -25,6 +25,29 @@
     enable = true;
     profiles.personal = {
       isDefault = true;
+
+      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        bitwarden
+        facebook-container
+        firefox-color
+        firefox-translations
+        firenvim
+        languagetool
+        multi-account-containers
+        privacy-badger
+        tampermonkey
+        ublock-origin
+        vimium
+        wayback-machine
+      ] ++ (with pkgs.firefox-addons; [
+        get-rss-feed-url
+        regretsreporter
+        simple-translate
+        tineye-reverse-image-search
+        updateswh
+        zhongwen
+      ]);
+
       settings = {
         "browser.search.widget.inNavBar" = true;
         "browser.search.openintab" = true;
