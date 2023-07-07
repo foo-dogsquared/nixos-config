@@ -37,7 +37,7 @@ let
       };
 
       type = lib.mkOption {
-        type = lib.types.enum [ "git" "fetch" "archive" ];
+        type = lib.types.enum [ "git" "fetch" "archive" "gopass" ];
         description = lib.mkDoc ''
           Type that configures the behavior for fetching the URL.
 
@@ -47,6 +47,7 @@ let
           - For `git`, it will be fetched with `git clone`.
           - For `archive`, the file will be fetched with `curl` and extracted
           before putting the file.
+          - For `gopass`, the file will be cloned with `gopass`.
 
           The default type is `fetch`.
         '';
@@ -116,11 +117,12 @@ in
                   url = lib.escapeShellArg value.url;
                   path = lib.escapeShellArg value.path;
                   extraArgs = lib.escapeShellArgs value.extraArgs;
+                  isFetchType = type: lib.optionalString (value.type == type);
                 in
                 ''
-                  ${lib.optionalString (value.type == "git") "[ -d ${path} ] || git clone ${extraArgs} ${url} ${path}"}
-                  ${lib.optionalString (value.type == "fetch") "[ -e ${path} ] || curl ${extraArgs} ${url} --output ${path}"}
-                  ${lib.optionalString (value.type == "archive") ''
+                  ${isFetchType "git" "[ -d ${path} ] || git clone ${extraArgs} ${url} ${path}"}
+                  ${isFetchType "fetch" "[ -e ${path} ] || curl ${extraArgs} ${url} --output ${path}"}
+                  ${isFetchType "archive" ''
                     [ -e ${path} ] || {
                       filename=$(curl ${extraArgs} --output-dir /tmp --silent --show-error --write-out '%{filename_effective}' --remote-name --remote-header-name --location ${url})
                       ${if (value.extractPath != null) then
@@ -129,6 +131,9 @@ in
                           ''arc unarchive "/tmp/$filename" ${path}''
                       }
                     }
+                  ''}
+                  ${isFetchType "gopass" ''
+                    [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
                   ''}
                 '')
               cfg;
