@@ -13,6 +13,10 @@ in
     ./modules/music.nix
   ];
 
+  # Set nixpkgs config both outside and inside of home-manager.
+  nixpkgs.config = import ./config/nixpkgs/config.nix;
+  xdg.configFile."nixpkgs/config.nix".source = ./config/nixpkgs/config.nix;
+
   home.packages = with pkgs; [
     vscodium-fhs # Visual Studio-lite and for those who suffer from Visual Studio withdrawal.
     hledger # Trying to be a good accountant.
