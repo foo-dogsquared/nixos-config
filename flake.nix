@@ -393,6 +393,7 @@
         let pkgs = import nixpkgs { inherit system overlays; };
         in {
           default = import ./shell.nix { inherit pkgs; };
+          docs = import ./docs/shell.nix { inherit pkgs; };
         } // (import ./shells { inherit pkgs; }));
 
       # Cookiecutter templates for your mama.
