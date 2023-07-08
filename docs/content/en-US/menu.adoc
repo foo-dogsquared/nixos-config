@@ -1,0 +1,23 @@
+* link:./introduction[Introduction]
+
+* The lay of the land
+** link:./lay-of-the-land/prerequisites/[Prerequisites]
+** link:./lay-of-the-land/channels-support[Channels support]
+** link:./lay-of-the-land/whats-in-my-flake[What's in my flake?]
+** link:./lay-of-the-land/what-should-not-be-here[What should not be here?]
+
+* Project-specific setup
+** link:./project-specific-setup/declarative-host-management[Declarative host management]
+** link:./project-specific-setup/declarative-user-management[Declarative user management]
+** link:./project-specific-setup/secrets-management[Secrets management]
+** link:./project-specific-setup/custom-firefox-addons[Custom Firefox addons]
+
+* NixOS modules
+** link:./nixos-modules/profiles[Profiles]
+** link:./nixos-modules/workflows[Workflows]
+
+* link:./using-parts-of-my-configuration[Using parts of my configuration]
+
+* link:./faq[Frequently asked questions]
+
+* link:./acknowledgement[Acknowledgement]
