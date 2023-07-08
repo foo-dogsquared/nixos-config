@@ -1,0 +1,58 @@
+---
+title: Declarative host management
+---
+= Declarative host management
+
+This project uses a custom setup for declarative host management.
+Specifically, it is done with a simple file at github:{github-repo}[`./images.toml`, path=./images.toml, rev=master] where it expects a table of the hosts' metadata.
+Each host in the table represents one of the hosts at github:{github-repo}[`./hosts/`, path=./hosts/, rev=master].
+
+A host metadata has a certain schema which the following example is a complete version of it.
+The data is then used for certain functions in the flake definition file (i.e., `flake.nix`).
+
+[#lst:images-metadata-example]
+[source, toml]
+----
+[plover]
+system = "x86_64-linux"
+format = "iso"
+hostname = "ploverrific"
+domain = "foodogsquared.one"
+nixpkgs-channel = "nixos-unstable-small"
+
+[plover.deploy]
+hostname = "plover.foodogsquared.one"
+ssh-user = "admin"
+fast-connection = true
+auto-rollback = true
+magic-rollback = true
+remote-build = true
+----
+
+For a complete reference, here are the expected attributes.
+
+- `system` contains the platform of the host system.
+This is mainly used to indicate the platform used for the nixpkgs repository.
+
+- `format` is the image output format for the host.
+It expects an accepted value from github:nix-community/nixos-generators[opts=repo] project.
+
+- `hostname` is the canonical hostname for the host.
+If unset, the hostname is the name of the table key.
+In the <<lst:images-metadata-example, previous example>>, if `plover.hostname` is unset, the value would be `plover` instead of `ploverrific`.
+
+- `domain` is the domain used for networking configuration.
+It is set for `networking.domain` in NixOS configuration.
+
+- `nixpkgs-channel` is the nixpkgs channel to be used for the host.
+The value could be any one of the nixpkgs flake inputs imported into this flake.
+By default, it uses `nixpkgs` flake input which points to the `nixos-unstable` channel.
+
+- `deploy` is a table containing arguments from github:serokell/deploy-rs[opts=repo].
+Only a few arguments are accepted (i.e., `hostname`, `fast-connection`, `remote-build`, `magic-rollback`, and `auto-rollback`).
+
+Take note, only certain hosts can be considered as a NixOS configuration (e.g., `nixosConfigurations`).
+Specifically, those images with a format of `iso` and those without (since they fall back to `iso` anyways).
+Those NixOS configuration are then included as part of the deploy nodes for deploy-rs.
+Otherwise, most images are intended to be built.
+footnote:[Though, one could create a custom activation and deployment script with deploy-rs.]

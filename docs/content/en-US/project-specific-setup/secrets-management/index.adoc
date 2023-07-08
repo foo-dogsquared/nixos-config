@@ -1,0 +1,51 @@
+---
+title: Secrets management
+---
+= Secrets management
+
+This repo uses github:mozilla/sops[opts=repo] as the main secret management tool.
+For integrating this into NixOS, I use github:Mic92/sops-nix[opts=repo].
+
+To get started, you need to be familiar with using sops and then be intimately familiar with sops-nix NixOS module footnote:[There's even a home-manager module available which is nice.].
+
+To get started using sops, I recommend to take a look at `.sops.yaml` file which secrets belong to whom.
+Then edit a secrets with `sops PATH_TO_SECRET`.
+Take note, you need to respective keys to edit the secret in the first place.
+If you edit `./secrets/backup-archive.yaml` for example, it needs one of the keys (either my age and GPG key or the age key from host `ni`).
+
+The recommended practice to manage them secrets is to have them consolidate into one file.
+However, once the namespace has a large number (preferably 7 or more) of secrets under it, you can separate them into a individual file with the namespace as the filename.
+
+In order to use sops with NixOS, we have to use sops-nix NixOS module.
+The best practice for using this module (for this project anyways) is to not set `sops.defaultSopsFile` and set individual secrets with `sopsFile`.
+Obviously, this is tedious.
+
+Which is why I have several functions in my custom library that helps with setting secrets.
+The star of the show is `getSecrets` which accepts a path to the sops file and an attribute set of secrets to be set with `sops.secrets`.
+As you might've guessed, `getSecrets` will set the `sopsFile` to the given secret.
+
+[#lst:get-secrets-demo]
+[source, nix]
+----
+include::./assets/get-secrets.nix[]
+----
+
+[chat, foodogsquared]
+====
+What about for secrets that have been separated into its own file, you ask.
+The files under that namespace will be moved up in the filesystem which is not nice for organizing your decrypted secrets.
+====
+
+[chat, Ezran]
+====
+I'm going to guess you also have a function in your library for that.
+====
+
+For secrets that have been eventually moved into its own file where the decrypted secrets location will be moved one parent up in the location, there is a function for it which is `attachSopsPathPrefix`.
+The following example assumes that Wireguard secrets has been moved into its own file.
+
+[#lst:attach-sops-prefix-demo]
+[source, nix]
+----
+include::./assets/attach-sops-prefix.nix[]
+----

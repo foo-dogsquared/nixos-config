@@ -1,0 +1,26 @@
+---
+title: Custom Firefox addons
+---
+= Custom Firefox addons
+
+This project has a set of custom Firefox addons similar from link:https://nur.nix-community.org/repos/rycee/[rycee's NUR repo].
+In fact, it uses the link:https://sr.ht/~rycee/mozilla-addons-to-nix/[same tooling] as rycee's to generate my own list.
+
+To get started, you'll have to create an input file containing the addons.
+In the project, this is found in github:{github-repo}[`./pkgs/firefox-addons.json`, path=./pkgs/firefox-addons.json, rev=master].
+For reference, here's my current list of Firefox addons.
+
+[source, json]
+----
+include::github:{github-repo}[path=pkgs/firefox-addons/firefox-addons.json]
+----
+
+But you're not done yet, you have to generate the output with the following command.
+
+[source, shell]
+----
+mozilla-addons-to-nix pkgs/firefox-addons/firefox-addons.json pkgs/firefox-addons/default.nix
+----
+
+Then add the generated output into your package list at `./pkgs/default.nix`.
+At this point, you should be done.
