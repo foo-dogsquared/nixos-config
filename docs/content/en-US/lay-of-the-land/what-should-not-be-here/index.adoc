@@ -1,0 +1,27 @@
+---
+title: What should not be here?
+---
+= What should not be here?
+
+Despite being a NixOS configuration, this is not meant to be fully reproducible by anyone.
+There are still some things that would need to be privately held as indicated by the following list.
+
+- Associated private keys: GPG, SSH, age, you name it.
+They are used with a secret management tool (see xref:../../project-specific-setup/secrets-management/index.adoc[Secret management] for more information) to encrypt the more sensitive parts of the system such as credentials and environment files.
+
+- Disposable hosts configurations.
+They will typically just make a messier mess than the current situation.
+
+Though the unreproducible part is only like 10% of the whole configuration, it can be successfully deployed by anyone.
+Keep in mind, it comes with a few restrictions due to the lack of the appropriate credentials.
+
+- Certain tasks will not start.
+Most of the project tasks found in this repo requires the associated private key with the task.
+An example would be the github:{github-repo}[Borg backup task, path=./modules/nixos/tasks/backup-archive, rev=master] where it needs several files and credentials locked from the secrets management tool.
+
+- Certain components will be missing.
+Most notably, the associated SSH key for the hosts.
+You won't be able to connect to the host if you don't have the private key.
+
+- Not to mention not all modules listed committed here are up-to-date.
+Though this only applies to non-critical services like the github:{github-repo}[multimedia archiving service, path=./modules/nixos/tasks/multimedia-archive, rev=master].

@@ -1,0 +1,28 @@
+---
+title: Channels support
+---
+= Channels support
+
+While this primarily uses flakes as its main form of distribution, this project does keep some use cases for traditional channels.
+It's not guaranteed to be good as xref:../../using-parts-of-my-configuration/index.adoc#using-my-config-with-flakes[Using my config with flakes] but it's an option.
+Anyhow, there is a section for using my configuration with channels as shown in xref:../../using-parts-of-my-configuration/index.adoc#using-my-config-with-channels[Using my config with channels].
+
+The entry point is found at github:{github-repo}[`./default.nix`, path=./default.nix, rev=master].
+However, you have to keep some limitations and guidelines in mind.
+
+* It exports an attribute based from the github:nix-community/NUR/[NUR template].
++
+--
+Several exports includes...
+
+* My custom library at `lib`.
+* Custom NixOS modules at `modules`.
+* Custom home-manager modules at `hmModules`.
+* An overlay of my custom packages at `overlays.foo-dogsquared-pkgs`.
+* My packages as the rest of the top-level attributes from the attrset.
+--
+
+* Keep in mind it doesn't export the NixOS hosts and home-manager user configurations.
+It would be pointless as it is duplicating effort plus **I really like managing my NixOS config more with the flakes way** compared to setting up channels.
+It has a lot of advantages such as the ease of provisioning and updating your setups along with its dependencies, enforcing certain values in a certain attribute that can be seen in the revised Nix CLI, and nicer interface overall.
+While possible with channels, this is just better experience overall and I have no interest in maintaining setups in both ways.

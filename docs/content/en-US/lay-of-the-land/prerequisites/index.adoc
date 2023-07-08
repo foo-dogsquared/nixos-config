@@ -1,0 +1,37 @@
+---
+title: Prerequisites
+---
+= Prerequisites
+
+Before you get into dive into this configuration, let's establish a few things first.
+In order to make use of this system in the first place, you need the following components.
+
+- A NixOS installer image with flakes enabled.
+An example would be the unstable versions from link:https://releases.nixos.org/?prefix=nixos/unstable/[NixOS project release page].
+As an additional option, you can also use link:https://github.com/foo-dogsquared/nixos-config/releases/tag/latest[my personalized NixOS installers] which is primarily intended for me configs.
+
+- A flash drive or any storage device that will boot the installer image up for installation.
+
+- A computer with disabled secure boot.
+Because unfortunately, that's the state of most Linux distros right now. footnote:[But things change hopefully with github:nix-community/lanzaboote[Lanzaboote project] into usable and stable state.]
+
+This primarily uses Nix flakes so you can have a preview of what's available in my config.
+
+[source, shell, subs=attributes]
+----
+nix flake show {canonical-flake-url}
+----
+
+All you have to do is to flash the installer image into the flash drive and boot with the drive (with the disabled secure boot).
+Then run the following command in the shell as root.
+
+[source, shell, subs=attributes]
+----
+nixos-install --flake {canonical-flake-url}#INSTALLABLE
+----
+
+Despite being a NixOS system, it isn't entirely reproducible to the point of installing this config will work out-of-the-box.
+It has some things needed in the first place to work like my external backup setup where it needs my SSH private keys to work in the first place.
+You can see more details from xref:../what-should-not-be-here/index.adoc[What should not be here?].
+Nonetheless, the parts is it isn't reproducible is only about 10% of this config.
+Everything else is fine and dandy and can be deployed successfully (but not used as intended).

@@ -1,10 +1,10 @@
 * link:{{< relref "./introduction/" >}}[Introduction]
 
 * The lay of the land
-** link:./lay-of-the-land/prerequisites/[Prerequisites]
-** link:./lay-of-the-land/channels-support[Channels support]
-** link:./lay-of-the-land/whats-in-my-flake[What's in my flake?]
-** link:./lay-of-the-land/what-should-not-be-here[What should not be here?]
+** link:{{< relref "./lay-of-the-land/prerequisites/" >}}[Prerequisites]
+** link:{{< relref "./lay-of-the-land/whats-in-my-flake/" >}}[What's in my flake?]
+** link:{{< relref "./lay-of-the-land/channels-support/" >}}[Channels support]
+** link:{{< relref "./lay-of-the-land/what-should-not-be-here/" >}}[What should not be here?]
 
 * Project-specific setup
 ** link:./project-specific-setup/declarative-host-management[Declarative host management]
