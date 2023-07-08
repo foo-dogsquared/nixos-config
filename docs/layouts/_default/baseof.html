@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+  <head>
+    {{- partial "head.html" . -}}
+  </head>
+  <body>
+    <section class="book sidebar">
+      {{ partial "header.html" . }}
+      <hr aria-hidden="true">
+      {{ partialCached "chapters.html" . }}
+    </section>
+    <section class="book content">
+      {{ block "main" . }}{{ end }}
+      {{- partial "footer.html" . -}}
+    </section>
+  </body>
+</html>
