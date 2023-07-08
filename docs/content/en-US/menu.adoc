@@ -16,7 +16,7 @@
 ** link:./nixos-modules/profiles[Profiles]
 ** link:./nixos-modules/workflows[Workflows]
 
-* link:./using-parts-of-my-configuration[Using parts of my configuration]
+* link:{{< relref "./using-parts-of-my-configuration" >}}[Using parts of my configuration]
 
 * link:{{< relref "./faq" >}}[Frequently asked questions]
 
