@@ -1,0 +1,13 @@
+baseURL = 'https://foo-dogsquared.github.io/nixos-config'
+defaultContentLanguage = 'en-US'
+title = "foo-dogsquared's NixOS config book"
+timeZone = "UTC"
+
+[params]
+toc = true
+
+[security.exec]
+allow = [
+  "^go$",
+  "^asciidoctor$",
+]

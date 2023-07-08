@@ -1,0 +1,16 @@
+[[imports]]
+path = "github.com/foo-dogsquared/hugo-theme-more-contentful"
+
+[[imports]]
+path = "github.com/foo-dogsquared/website"
+  [[imports.mounts]]
+  source = "assets/svg/avatars"
+  target = "assets/svg/avatars"
+
+  [[imports.mounts]]
+  source = "assets/scss/"
+  target = "assets/scss/"
+
+  [[imports.mounts]]
+  source = "assets/css/"
+  target = "assets/css/"
