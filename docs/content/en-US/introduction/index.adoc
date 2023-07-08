@@ -1,0 +1,45 @@
+---
+title: Introduction
+---
+= Introduction
+
+Hey there, fellow traveler!
+You've fell into the rabbit hole we call Nix where it leads to other rabbit holes such as functional package management, reproducibility, declarative systems, and immutable operating systems.
+
+Legends say the rabbit hole runs so deep you'll eventually spend hours to create a dedicated website only for your NixOS configuration.
+However, I haven't seen this for myself nor I see much examples of it.
+But it is just mere legend anyways for a radically different package management, operating system, and deployment method, so who cares really.
+
+Anyways...
+What you're seeing right now is the documentation for my NixOS configuration as a link:https://www.tweag.io/blog/2020-05-25-flakes/[Nix flake].
+It eventually evolves as a massive blob of abomination that will surely get simpler as time go by.
+
+[chat, Ezran, state=curious, role=reversed]
+====
+Why would you have an entire book on just your NixOS configuration?
+This seems like overkill.
+====
+
+[chat, foodogsquared]
+====
+Because **it is overkill** and that's what we're going for.
+====
+
+[chat, Ezran, state=curious, role=reversed]
+====
+And what is this book made of?
+Hugo?
+With Asciidoctor?
+With a customized version of github:foo-dogsquared/hugo-theme-more-contentful[your own theme]?
+Of all options!?!
+Why?
+
+Why not use something like github:rust-lang/mdBook[mdBook]?
+Or link:https://squidfunk.github.io/mkdocs-material/[mkdocs-material] that makes things eas-
+====
+
+[chat, Ezran, role=reversed]
+====
+You know what, I'm not going to continue with this.
+I think I know why.
+====

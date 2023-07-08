@@ -1,4 +1,4 @@
-* link:./introduction[Introduction]
+* link:{{< relref "./introduction/" >}}[Introduction]
 
 * The lay of the land
 ** link:./lay-of-the-land/prerequisites/[Prerequisites]
