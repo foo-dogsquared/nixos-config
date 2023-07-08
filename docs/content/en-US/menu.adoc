@@ -18,6 +18,6 @@
 
 * link:./using-parts-of-my-configuration[Using parts of my configuration]
 
-* link:./faq[Frequently asked questions]
+* link:{{< relref "./faq" >}}[Frequently asked questions]
 
 * link:./acknowledgement[Acknowledgement]
