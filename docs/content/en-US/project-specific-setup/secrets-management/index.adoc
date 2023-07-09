@@ -36,7 +36,7 @@ What about for secrets that have been separated into its own file, you ask.
 The files under that namespace will be moved up in the filesystem which is not nice for organizing your decrypted secrets.
 ====
 
-[chat, Ezran]
+[chat, Ezran, role=reversed]
 ====
 I'm going to guess you also have a function in your library for that.
 ====

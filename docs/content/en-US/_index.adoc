@@ -3,16 +3,29 @@
 Hey there!
 This is my NixOS configuration abomination documentation "book" called "foodogsquared's NixOS config" book or "f(a)Nc(y)" config book for short.
 
+.Here's a Nix snowflake logo for some reason
 image::./nix-snowflake.svg[width=256px]
 
 Why don't you start skimming the "book" by taking a glance at the table of contents over there.
 
-[chat, Ezran]
+[chat, Ezran, role=reversed]
 ====
 And what if your readers doesn't find it?
 ====
 
 [chat, foodogsquared]
 ====
-I supposed you can view an entire page of it at link:./menu[`./menu`].
+I suppose you can view an entire page of it at link:./menu[`./menu`].
+====
+
+[chat, Ezran, state=disappointed, role=reversed]
+====
+You didn't bother to improve the way how the menu rendered though unlike in mdBook or something similar.
+====
+
+[chat, foodogsquared]
+====
+Yeah, so?
+It just happen to double as a neat standalone way to view the table of contents.
+It's a feature, not a bug.
 ====

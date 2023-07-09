@@ -2,6 +2,7 @@
 title: Frequently asked questions (FAQ)
 ---
 = Frequently asked questions (FAQ)
+:devos-example-commit: 580fc57ffaaf9cf3a582372235759dccfe44ac92
 
 More like "Most anticipated questions (MAQ)" since almost no one asked me about this yet. :)
 However, it doesn't roll off the tongue.
@@ -19,7 +20,7 @@ Fortunately footnote:[Or unfortunately from a different perspective.], it is mos
 For a more practical start, I recommend to look into several configurations to see the general gist of configuration with Nix.
 Here's a few I personally dug into:
 
-* {devos-link}
+* github:divnix/digga[rev={devos-example-commit}, path=examples/devos]
 * github:hlissner/dotfiles[]
 * github:thiagokokada/nix-configs[]
 --

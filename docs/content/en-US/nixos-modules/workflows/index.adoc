@@ -36,3 +36,19 @@ Take note you cannot enable more than two workflows at any given time.
 
 You can get around this by setting `workflows.disableLimit` to `true`.
 However, this shouldn't be taken lightly as workflow modules are very vast in scope and are expected to set system settings that can affect your hardware, enabling (and/or disabling) system services, and modifying the list of installed applications (among other things).
+
+[chat, foodogsquared]
+====
+By organizing the workflow modules this way, you can easily create your desktop rices without overlapping system settings.
+Bless the Nix module system!
+====
+
+[chat, foodogsquared, state=cheeky]
+====
+Whether those rices are worth posting to Unix ricing communities is up to you though.
+====
+
+[chat, Ezran, state=disappointed, role=reversed]
+====
+Whippersnappers with your "riced"-up systems...
+====

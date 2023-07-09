@@ -12,7 +12,7 @@ For reference, here's my current list of Firefox addons.
 
 [source, json]
 ----
-include::github:{github-repo}[path=pkgs/firefox-addons/firefox-addons.json]
+include::../../../../../pkgs/firefox-addons/firefox-addons.json[]
 ----
 
 But you're not done yet, you have to generate the output with the following command.

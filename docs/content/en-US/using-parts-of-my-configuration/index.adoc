@@ -119,7 +119,7 @@ You could also pin my config similarly to link:https://nix.dev/tutorials/towards
 
 Here's a snippet of using it as part of a NixOS configuration.
 
-[source, nix, subs=attributes]
+[source, nix]
 ----
 let
   foo-dogsquared-nixos-config = import (fetchTarball "{canonical-flake-url-tarball-specific}") { inherit pkgs; };

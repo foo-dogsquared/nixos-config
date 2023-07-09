@@ -20,25 +20,24 @@ Why would you have an entire book on just your NixOS configuration?
 This seems like overkill.
 ====
 
-[chat, foodogsquared]
+[chat, foodogsquared, state=cheeky]
 ====
 Because **it is overkill** and that's what we're going for.
 ====
 
-[chat, Ezran, state=curious, role=reversed]
+[chat, Ezran, state=disappointed, role=reversed]
 ====
 And what is this book made of?
 Hugo?
 With Asciidoctor?
 With a customized version of github:foo-dogsquared/hugo-theme-more-contentful[your own theme]?
 Of all options!?!
-Why?
 
 Why not use something like github:rust-lang/mdBook[mdBook]?
 Or link:https://squidfunk.github.io/mkdocs-material/[mkdocs-material] that makes things eas-
 ====
 
-[chat, Ezran, role=reversed]
+[chat, Ezran, state=skeptical, role=reversed]
 ====
 You know what, I'm not going to continue with this.
 I think I know why.
