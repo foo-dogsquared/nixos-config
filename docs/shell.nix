@@ -3,6 +3,10 @@
 with pkgs;
 
 let
+  asciidoctorWrapper = writeShellScriptBin "asciidoctor" ''
+    ${lib.getBin gems}/bin/asciidoctor -T ${./assets/templates/asciidoctor}
+  '';
+
   gems = bundlerEnv {
     name = "nixos-config-project-docs";
     ruby = ruby_3_1;
@@ -15,6 +19,7 @@ mkShell {
     gems.wrappedRuby
     bundix
 
+    asciidoctorWrapper
     hugo
     go
     nodePackages.prettier

@@ -1,0 +1,6 @@
+<p<%= @id && %( id="#{@id}") %> <% if role %>class="<%= role %>"<% end %>><%
+if title? %>
+  <div class="title"><%= title %></div><%
+end %>
+<%= content %>
+</p>
