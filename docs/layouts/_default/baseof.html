@@ -4,14 +4,14 @@
     {{- partial "head.html" . -}}
   </head>
   <body>
-    <section class="book sidebar">
+    <nav class="book sidebar" aria-label="Table of contents">
+      {{ partialCached "chapters.html" . }}
+    </nav>
+    <section class="book content">
       {{ partial "header.html" . }}
       <hr aria-hidden="true">
-      {{ partialCached "chapters.html" . }}
-    </section>
-    <section class="book content">
       {{ block "main" . }}{{ end }}
-      {{- partial "footer.html" . -}}
+      {{ partial "footer.html" . }}
     </section>
   </body>
 </html>

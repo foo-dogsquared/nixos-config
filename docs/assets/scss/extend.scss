@@ -1,12 +1,9 @@
 :root {
   --gap: 1rem;
+  --sidebar-width: 300px;
 }
 
 body {
-  display: grid;
-  grid-template-columns: [sidebar] 1fr [content] 3fr;
-  grid-gap: var(--gap);
-  overflow: hidden;
   padding: 0;
   margin: 0;
 
@@ -16,14 +13,35 @@ body {
 }
 
 .book.sidebar {
-  padding: 0 var(--gap);
+  margin: 0;
+  padding: var(--gap);
+  background: var(--base01);
+  height: 100vh;
   overflow-y: auto;
-  resize: horizontal;
+  outline: none;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+
+  & ul, & ol {
+    padding-left: 1em;
+  }
 }
 
 .book.content {
   padding: var(--gap);
   overflow-y: auto;
+  margin: 0 auto;
+  margin-left: var(--sidebar-width);
+
+  max-width: var(--content-width);
+}
+
+.site__toc-header {
+  font-size: 1.25em;
+  font-weight: bold;
 }
 
 article h1 {

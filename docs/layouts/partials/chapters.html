@@ -1,3 +1,4 @@
+<div class="site__toc-header">{{ T "table_of_contents" | default "Table of contents" }}</div>
 {{ with .Site.GetPage "/menu" }}
   {{ .Content | safeHTML }}
 {{ end }}
