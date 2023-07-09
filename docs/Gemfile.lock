@@ -53,6 +53,8 @@ GEM
     sorbet-runtime (0.5.10908)
     syntax_tree (6.1.1)
       prettier_print (>= 1.2.0)
+    temple (0.10.2)
+    tilt (2.2.0)
     unicode-display_width (2.4.2)
 
 PLATFORMS
@@ -68,6 +70,8 @@ DEPENDENCIES
   rouge
   rubocop
   ruby-lsp
+  slim
+  tilt
 
 BUNDLED WITH
    2.4.10

@@ -4,7 +4,7 @@ with pkgs;
 
 let
   asciidoctorWrapper = writeShellScriptBin "asciidoctor" ''
-    ${lib.getBin gems}/bin/asciidoctor -T ${./assets/templates/asciidoctor}
+    ${lib.getBin gems}/bin/asciidoctor -T ${./assets/templates/asciidoctor} $@
   '';
 
   gems = bundlerEnv {
@@ -15,11 +15,11 @@ let
 in
 mkShell {
   packages = [
+    asciidoctorWrapper
     gems
     gems.wrappedRuby
     bundix
 
-    asciidoctorWrapper
     hugo
     go
     nodePackages.prettier
