@@ -8,24 +8,31 @@ image::./nix-snowflake.svg[width=256px]
 
 Why don't you start skimming the "book" by taking a glance at the table of contents over there.
 
-[chat, Ezran, role=reversed]
+[chat, Ezran, state=curious, role=reversed]
 ====
-And what if your readers doesn't find it?
+Why would you have an entire book on just your NixOS configuration?
+This seems like overkill.
 ====
 
-[chat, foodogsquared]
+[chat, foodogsquared, state=cheeky]
 ====
-I suppose you can view an entire page of it at link:./menu[`./menu`].
+Because **it is overkill** and that's what we're going for.
 ====
 
 [chat, Ezran, state=disappointed, role=reversed]
 ====
-You didn't bother to improve the way how the menu rendered though unlike in mdBook or something similar.
+And what is this book made of?
+Hugo?
+With Asciidoctor?
+With a customized version of github:foo-dogsquared/hugo-theme-more-contentful[your own theme]?
+OF ALL OPTIONS!?!
+
+Why not use something like github:rust-lang/mdBook[mdBook]?
+Or link:https://squidfunk.github.io/mkdocs-material/[mkdocs-material] that makes things eas-
 ====
 
-[chat, foodogsquared]
+[chat, Ezran, state=skeptical, role=reversed]
 ====
-Yeah, so?
-It just happen to double as a neat standalone way to view the table of contents.
-It's a feature, not a bug.
+You know what, I'm not going to continue with this.
+I think I know why.
 ====
