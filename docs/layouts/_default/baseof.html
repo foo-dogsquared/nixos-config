@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.LanguageCode | default "en" }}">
   <head>
-    {{- partial "head.html" . -}}
+    {{ partial "head.html" . -}}
+    {{ partial "head-extended.html" . }}
   </head>
   <body>
     <nav class="book sidebar" aria-label="Table of contents">
