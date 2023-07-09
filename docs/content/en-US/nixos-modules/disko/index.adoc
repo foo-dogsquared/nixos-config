@@ -1,0 +1,24 @@
+---
+title: disko
+---
+= disko
+
+This configuration uses github:nix-community/disko[opts=repo] extensively for creating them filesystem configurations and automating them filesystem partitioning.
+Take note this should be only declared for hosts with the format `iso` (or without the format) as mentioned from xref:../../project-specific-setup/declarative-host-management/index.adoc[Declarative host management].
+
+They are declared in the `disko.nix` at the host root which they are then imported into `disko.devices` attribute.
+Here's an example configuration for my desktop workstation.
+
+[#lst:desktop-disko-config]
+.`./hosts/ni/disko.nix`
+[source, nix]
+----
+include::../../../../../hosts/ni/disko.nix[]
+----
+
+Take note the disko NixOS module already handles NixOS filesystem configuration (i.e., `fileSystems.<name>`) so if you have already have an existing hardware configuration, you have to delete it to prevent conflicting fstab configuration.
+
+Another thing to take notice is disko is mostly intended for fresh systems.
+Migrating your already existing systems with disko can be problematic.
+In the <<lst:desktop-disko-config, previous config>>, the order of the declared partitions should match with the initial order when you manually partitioned the system.
+If you cannot deal with it, reinstalling the system will help you there.
