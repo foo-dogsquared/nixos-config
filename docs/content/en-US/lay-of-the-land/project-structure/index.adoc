@@ -26,37 +26,41 @@ nixos-config
 ├── flake.lock
 ├── flake.nix
 ├── images.toml
+├── users.toml
 └── README.adoc
 ----
 
-One of the more notable files here when first start looking is the link:./images.toml[`./images.toml`] file where it contains a description of the images.
-For more details, see <<declarative-host-management>>.
+One of the more notable files here when first start looking is the `./images.toml` file where it contains a description of the images.
+For more details, see xref:../../project-specific-setup/declarative-host-management/index.adoc[Declarative host management].
 
-Most of the said folders are related to a flake output attribute, see <<whats-in-my-flake>> for more details.
+A similar file, `./users.toml`, contains the description for the home-manager users to be exported from this flake.
+For more details, see xref:../../project-specific-setup/declarative-user-management/index.adoc[Declarative user management].
 
-* link:./hosts/[`./hosts/`] contain machine-specific configuration.
+Most of the said folders are related to a flake output attribute, see xref:../whats-in-my-flake/index.adoc[What's in my flake?] for more details.
+
+* `./hosts/` contain machine-specific configuration.
 This usually configures like the hardware setup, timezone, and users.
 Host configurations are also exported in the flakes in `outputs.nixosConfigurations`.
 
-* link:./modules/[`./modules/`] contain my custom modules including NixOS and home-manager modules.
-For more information, see the link:./modules/README.adoc[related documentation].
+* `./modules/` contain my custom modules including NixOS and home-manager modules.
+For more information, see the github:{github-repo}[related documentation, path=./modules/README.adoc, rev=master].
 
-* link:./pkgs/[`./pkgs/`] contains my custom packages.
+* `./pkgs/` contains my custom packages.
 It is exported in the flakes at `outputs.packages` compiled through various systems.
 
-* link:./scripts/[`./scripts/`] contains various scripts for various purposes.
+* `./scripts/` contains various scripts for various purposes.
 Should be self-explanatory.
 
-* link:./secrets/[`./secrets/`] contains my cluster-wide secrets managed with link:https://github.com/mozilla/sops[sops] and link:https://github.com/Mic92/sops-nix[sops-nix].
+* `./secrets/` contains my cluster-wide secrets managed with github:mozilla/sops[opts=repo] and github:Mic92/sops-nix[opts=repo].
 Take note, each component (e.g., hosts, modules, users) could have their own specific secrets.
+For more information, see xref:../../project-specific-setup/secrets-management/index.adoc[Secrets management].
 
-* link:./shells/[`./shells/`] contains my development shells for interacting with the usual type of projects.
+* `./shells/` contains my development shells for interacting with the usual type of projects.
 Setting this up can bring benefits outside of NixOS (unless you're interacting with projects with any OpenGL-related stuff).
 footnote:[Since packages brought from Nix shells can only work with the store, a container might be better at some situations.]
 
-* link:./templates/[`./templates/`] contains my custom templates handy for quickly initializing for various types of projects.
+* `./templates/` contains my custom templates handy for quickly initializing for various types of projects.
 
-* link:./users/[`./users/`] contains my link:https://github.com/nix-community/home-manager[home-manager] configurations.
+* `./users/` contains my github:nix-community/home-manager[opts=repo] configurations.
 It is exported in the flakes at `outputs.homeConfigurations`.
-For more information, see the link:./users/README.adoc[related documentation].
-
+For more information, see the github:{github-repo}[related documentation, path=./users/README.adoc, rev=master].

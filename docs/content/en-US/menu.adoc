@@ -2,6 +2,7 @@
 
 * The lay of the land
 ** link:{{< relref "./lay-of-the-land/prerequisites/" >}}[Prerequisites]
+** link:{{< relref "./lay-of-the-land/project-structure/" >}}[Project structure]
 ** link:{{< relref "./lay-of-the-land/whats-in-my-flake/" >}}[What's in my flake?]
 ** link:{{< relref "./lay-of-the-land/channels-support/" >}}[Channels support]
 ** link:{{< relref "./lay-of-the-land/what-should-not-be-here/" >}}[What should not be here?]
