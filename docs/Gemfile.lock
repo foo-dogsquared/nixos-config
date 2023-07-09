@@ -9,7 +9,7 @@ GEM
       rexml
     asciidoctor-diagram-ditaamini (1.0.3)
     asciidoctor-diagram-plantuml (1.2023.5)
-    asciidoctor-foodogsquared-extensions (1.0.0)
+    asciidoctor-foodogsquared-extensions (1.0.1)
       asciidoctor (~> 2.0)
       rugged (~> 1.0)
     ast (2.4.2)
@@ -47,7 +47,10 @@ GEM
       syntax_tree (>= 6.1.1, < 7)
     ruby-progressbar (1.13.0)
     rugged (1.6.3)
-    sorbet-runtime (0.5.10904)
+    slim (5.1.1)
+      temple (~> 0.10.0)
+      tilt (>= 2.1.0)
+    sorbet-runtime (0.5.10908)
     syntax_tree (6.1.1)
       prettier_print (>= 1.2.0)
     unicode-display_width (2.4.2)
@@ -67,4 +70,4 @@ DEPENDENCIES
   ruby-lsp
 
 BUNDLED WITH
-   2.4.14
+   2.4.10

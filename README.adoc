@@ -1,6 +1,7 @@
 = foo-dogsquared's NixOS config
 :toc:
 :devos_link: https://github.com/divnix/digga/tree/580fc57ffaaf9cf3a582372235759dccfe44ac92/examples/devos
+:doc_site: https://foo-dogsquared.github.io/nixos-config
 :canonical_flake_url: github:foo-dogsquared/nixos-config
 :canonical_flake_url_tarball_master: https://github.com/foo-dogsquared/nixos-config/archive/master.tar.gz
 :canonical_flake_url_tarball_specific: https://github.com/foo-dogsquared/nixos-config/archive/35c27749c55077727529f412dade862e4deb2ae8.tar.gz
@@ -9,6 +10,8 @@ This is my NixOS config as a link:https://www.tweag.io/blog/2020-05-25-flakes/[N
 
 I finally have some time trying to grok flakes and redo my NixOS config from scratch after leaving it for some time (because I have work and have to quickly set things up without me trying to debug how NixOS works).
 Here is the result.
+
+Anyways, this project also has a dedicated website at {doc_site}.
 
 
 

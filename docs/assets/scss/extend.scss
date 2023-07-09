@@ -6,7 +6,7 @@ $line-height: 1.45;
 
 :root {
   --gap: 1rem;
-  --sidebar-width: 300px;
+  --sidebar-width: 22%;
 }
 
 body {
@@ -18,13 +18,14 @@ body {
   height: 100vh;
 }
 
-.book.sidebar {
+.book__sidebar {
   margin: 0;
   padding: var(--gap);
   background: var(--base01);
   height: 100vh;
   overflow-y: auto;
   outline: none;
+  transition: 0.2s;
 
   position: fixed;
   top: 0;
@@ -36,7 +37,7 @@ body {
   }
 }
 
-.book.content {
+.book__content {
   padding: var(--gap);
   overflow-y: auto;
   margin: 0 auto;

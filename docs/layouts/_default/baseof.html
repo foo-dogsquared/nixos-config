@@ -5,10 +5,10 @@
     {{ partial "head-extended.html" . }}
   </head>
   <body>
-    <nav class="book sidebar" aria-label="Table of contents">
+    <nav class="book__sidebar" aria-label="Table of contents">
       {{ partialCached "chapters.html" . }}
     </nav>
-    <section class="book content">
+    <section class="book__content">
       {{ partial "header.html" . }}
       <hr aria-hidden="true">
       {{ block "main" . }}{{ end }}
