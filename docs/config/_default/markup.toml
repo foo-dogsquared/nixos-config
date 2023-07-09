@@ -18,14 +18,16 @@ cache-uri = true
 reproducible = true
 stem = "latexmath"
 
-avatarsdir = "/icons/avatars"
-avatarstype = "avif"
+avatarsdir = "/nixos-config/icons/avatars"
+avatarstype = "svg"
 
 icons = "image"
-iconsdir = "/icons/asciidoctor"
+iconsdir = "/nixos-config/icons/asciidoctor"
 icontype = "svg"
 
 # Project-wide attributes to be used.
+github-repo = "foo-dogsquared/nixos-config"
+check-variable = "_isInsideFds"
 canonical-flake-url = "github:foo-dogsquared/nixos-config"
 canonical-source-repo = "https://github.com/foo-dogsquared/nixos-config"
 canonical-flake-url-tarball-master = "https://github.com/foo-dogsquared/nixos-config/archive/master.tar.gz"
