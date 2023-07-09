@@ -13,8 +13,8 @@
 ** link:{{< relref "./project-specific-setup/custom-firefox-addons" >}}[Custom Firefox addons]
 
 * NixOS modules
-** link:./nixos-modules/profiles[Profiles]
-** link:./nixos-modules/workflows[Workflows]
+** link:{{< relref "./nixos-modules/profiles" >}}[Profiles]
+** link:{{< relref "./nixos-modules/workflows" >}}[Workflows]
 
 * link:{{< relref "./using-parts-of-my-configuration" >}}[Using parts of my configuration]
 

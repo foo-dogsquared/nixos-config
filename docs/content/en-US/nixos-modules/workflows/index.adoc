@@ -1,0 +1,38 @@
+---
+title: Workflows
+---
+= Workflows
+
+Workflows are an all-encompassing NixOS module for dictating how you interact with your computer/device/whatever.
+Basically, this is where certain things are set such as your GNOME desktop environment settings or your dolled up standalone window manager setup.
+They are located in `./nixos/modules/workflows` at the project root.
+
+Workflows are defined under the namespace `workflows` where each workflow module is set to be declared and to be enabled at `workflows.workflows.<name>`.
+For example, here's how I would enable my (hypothetical) GNOME desktop workflow.
+
+[source, nix]
+----
+{ config, lib, pkgs, ... }:
+
+{
+  workflows.workflows.a-happy-gnome.enable = true;
+}
+----
+
+Take note you cannot enable more than two workflows at any given time.
+
+[source, nix]
+----
+{ config, lib, pkgs, ... }:
+
+{
+  # This would cause an assertion error.
+  workflows.workflows = {
+    a-happy-gnome.enable = true;
+    knome.enable = true;
+  };
+}
+----
+
+You can get around this by setting `workflows.disableLimit` to `true`.
+However, this shouldn't be taken lightly as workflow modules are very vast in scope and are expected to set system settings that can affect your hardware, enabling (and/or disabling) system services, and modifying the list of installed applications (among other things).
