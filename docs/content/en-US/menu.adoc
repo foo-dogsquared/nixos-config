@@ -20,4 +20,4 @@
 
 * link:{{< relref "./faq" >}}[Frequently asked questions]
 
-* link:./acknowledgement[Acknowledgement]
+* link:{{< relref "./acknowledgement" >}}[Acknowledgement]

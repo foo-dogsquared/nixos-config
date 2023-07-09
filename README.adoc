@@ -167,22 +167,6 @@ Sudden changes can happen at any point.
 
 
 
-== Inspirations and acknowledgment
-
-I ~stole~ got several parts of this configuration from the following projects:
-
-* link:{devos_link}[devos, an overengineered configuration framework.]
-I'm slowly grokking Nix and its ecosystem so I didn't use this outright.
-Though, this is where my config is heading to be and instead slowly making parts of my config based from this template.
-
-* link:https://github.com/divnix/digga/[digga, an flake utility library for your overengineered config.]
-I also stole parts of it for my custom library.
-I may have to use this at some point.
-
-* link:https://github.com/hlissner/dotfiles/[hlissner's dotfiles, the original inspiration for this functional abomination of a configuration.]
-Very nice.
-
-
 == Copyright
 
 This project is licensed under MIT license.

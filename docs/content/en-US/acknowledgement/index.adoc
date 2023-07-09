@@ -1,0 +1,17 @@
+---
+title: Acknowledgment
+---
+= Acknowledgment
+
+I ~stole~ got several parts of this configuration from the following projects:
+
+* link:{devos-link}[devos, an overengineered configuration framework.]
+I'm slowly grokking Nix and its ecosystem so I didn't use this outright.
+Though, this is where my config is heading to be and instead slowly making parts of my config based from this template.
+
+* github:divnix/digga/[opts=repo], a flake utility library for your overengineered config.
+I also stole parts of it for my custom library.
+I may have to use this at some point. footnote:[Unfortunately, digga is considered to be a retired project as of 2023-07-09 so that may not be true.]
+
+* github:hlissner/dotfiles/[hlissner's dotfiles], the original inspiration for this functional abomination of a configuration.
+Very nice.
