@@ -44,6 +44,8 @@ rec {
           ({ inherit key; } // settings))
       secrets;
 
+  isInternal = config: config ? _isInsideFds && config._isInsideFds;
+
   getUsers = type: users:
     let
       userModules = lib.filesToAttr ../users/${type};
