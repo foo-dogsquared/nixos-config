@@ -1,0 +1,34 @@
+name: "Building project site"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - env:
+          NIXPKGS_ALLOW_UNFREE: "1"
+        run: nix develop .#docs --impure -c hugo -s ./docs/
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: "docs/public"
+          retention-days: 7
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
