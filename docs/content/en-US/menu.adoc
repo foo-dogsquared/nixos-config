@@ -1,25 +1,25 @@
-* link:{{< relref "./introduction/" >}}[Introduction]
+* link:{{< relref "./01-introduction/" >}}[Introduction]
 
 * The lay of the land
-** link:{{< relref "./lay-of-the-land/prerequisites/" >}}[Prerequisites]
-** link:{{< relref "./lay-of-the-land/project-structure/" >}}[Project structure]
-** link:{{< relref "./lay-of-the-land/whats-in-my-flake/" >}}[What's in my flake?]
-** link:{{< relref "./lay-of-the-land/channels-support/" >}}[Channels support]
-** link:{{< relref "./lay-of-the-land/what-should-not-be-here/" >}}[What should not be here?]
+** link:{{< relref "./02-lay-of-the-land/01-prerequisites/" >}}[Prerequisites]
+** link:{{< relref "./02-lay-of-the-land/02-project-structure/" >}}[Project structure]
+** link:{{< relref "./02-lay-of-the-land/03-whats-in-my-flake/" >}}[What's in my flake?]
+** link:{{< relref "./02-lay-of-the-land/04-channels-support/" >}}[Channels support]
+** link:{{< relref "./02-lay-of-the-land/05-what-should-not-be-here/" >}}[What should not be here?]
 
 * Project-specific setup
-** link:{{< relref "./project-specific-setup/declarative-host-management" >}}[Declarative host management]
-** link:{{< relref "./project-specific-setup/declarative-user-management" >}}[Declarative user management]
-** link:{{< relref "./project-specific-setup/secrets-management" >}}[Secrets management]
-** link:{{< relref "./project-specific-setup/custom-firefox-addons" >}}[Custom Firefox addons]
+** link:{{< relref "./03-project-specific-setup/01-declarative-host-management" >}}[Declarative host management]
+** link:{{< relref "./03-project-specific-setup/02-declarative-user-management" >}}[Declarative user management]
+** link:{{< relref "./03-project-specific-setup/03-secrets-management" >}}[Secrets management]
+** link:{{< relref "./03-project-specific-setup/04-custom-firefox-addons" >}}[Custom Firefox addons]
 
 * NixOS modules
-** link:{{< relref "./nixos-modules/profiles" >}}[Profiles]
-** link:{{< relref "./nixos-modules/workflows" >}}[Workflows]
-** link:{{< relref "./nixos-modules/disko" >}}[disko]
+** link:{{< relref "./04-nixos-modules/01-profiles" >}}[Profiles]
+** link:{{< relref "./04-nixos-modules/02-workflows" >}}[Workflows]
+** link:{{< relref "./04-nixos-modules/03-disko" >}}[disko]
 
-* link:{{< relref "./using-parts-of-my-configuration" >}}[Using parts of my configuration]
+* link:{{< relref "./05-using-parts-of-my-configuration" >}}[Using parts of my configuration]
 
-* link:{{< relref "./faq" >}}[Frequently asked questions]
+* link:{{< relref "./06-faq" >}}[Frequently asked questions]
 
-* link:{{< relref "./acknowledgement" >}}[Acknowledgement]
+* link:{{< relref "./07-acknowledgement" >}}[Acknowledgement]
