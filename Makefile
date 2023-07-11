@@ -24,3 +24,11 @@ update_with_forked_inputs:
 	nix flake lock \
 		--override-input guix-overlay git+file:///home/foo-dogsquared/library/projects/software/nix-overlay-guix/ \
 		--override-input dotfiles git+file:///home/foo-dogsquared/library/dotfiles/
+
+.PHONY: docs-serve
+docs-serve:
+	nix develop '.#docs' --impure -c hugo -s ./docs serve
+
+.PHONY: docs-build
+docs-build:
+	nix develop '.#docs' --impure -c hugo -s ./docs/
