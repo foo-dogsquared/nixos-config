@@ -66,7 +66,6 @@ let
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
       vgc = qt6Packages.callPackage ./vgc { };
       watc = callPackage ./watc { };
-      wayback = callPackage ./wayback.nix { };
       wzmach = callPackage ./wzmach { };
       xs = callPackage ./xs { };
     };
