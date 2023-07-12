@@ -62,7 +62,6 @@ let
       swh = callPackage ./software-heritage { python3Packages = python310Packages; };
       speki = callPackage ./speki { };
       tic-80 = callPackage ./tic-80 { };
-      thokr = callPackage ./thokr.nix { };
       segno = callPackage ./segno.nix { };
       smile = callPackage ./smile { };
       vpaint = libsForQt5.callPackage ./vpaint.nix { };
