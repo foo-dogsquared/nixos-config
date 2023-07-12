@@ -1,0 +1,30 @@
+name: "Update Firefox addons"
+on:
+  schedule:
+    # Every week on Monday.
+    - cron: '0 0 * * 1'
+  push:
+    branches:
+      - master
+    paths:
+      - 'pkgs/firefox-addons'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      content: write
+    steps:
+      - name: Set the date
+        id: metadata
+        run: echo "DATE=$(date +%F)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - env:
+          NIXPKGS_ALLOW_UNFREE: "1"
+        run: nix develop --impure -c mozilla-addons-to-nix pkgs/firefox-addons/firefox-addons.json pkgs/firefox-addons/default.nix
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "pkgs/firefox-addons: update as of ${{ steps.metadata.outputs.DATE }}"
+          file_pattern: pkgs/firefox-addons/
