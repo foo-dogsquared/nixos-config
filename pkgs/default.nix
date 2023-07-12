@@ -47,7 +47,6 @@ let
           hash = "sha256-3lH7Vi9M8k+GSrCpvruRpLrIpMoOakKbcJlaAc/FK+U=";
         };
       });
-      libcs50 = callPackage ./libcs50.nix { };
       lwp = callPackage ./lwp { };
       moac = callPackage ./moac.nix { };
       mopidy-beets = callPackage ./mopidy-beets.nix { };
