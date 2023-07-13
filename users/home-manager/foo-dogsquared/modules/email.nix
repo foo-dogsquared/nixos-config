@@ -19,9 +19,23 @@
           foodogsquared at foodogsquared dot one
         '';
       };
-      passwordCommand = "gopass show work/websites/mailbox.org/foodogsquared@mailbox.org | head -n 1";
+      passwordCommand = "gopass show personal/websites/mailbox.org/foodogsquared@mailbox.org | head -n 1";
 
-      # GPG settings
+      # Set up the ingoing mails.
+      imap = {
+        host = "imap.mailbox.org";
+        port = 993;
+        tls.enable = true;
+      };
+
+      # Set up the outgoing mails.
+      smtp = {
+        host = "smtp.mailbox.org";
+        port = 465;
+        tls.enable = true;
+      };
+
+      # GPG settings... wablamo.
       gpg = {
         key = "0xADE0C41DAB221FCC";
         encryptByDefault = false;
@@ -35,7 +49,7 @@
           let
             identitySettings = attrs: lib.mapAttrs'
               (setting: value:
-                lib.nameValuePair "mail.identity.id${id}.${setting}" value)
+                lib.nameValuePair "mail.identity.id_${id}.${setting}" value)
               attrs;
           in
           identitySettings {
