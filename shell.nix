@@ -25,5 +25,8 @@ pkgs.mkShell {
     stylua # ...for Lua.
     black # ...for Python.
     nixpkgs-fmt # ...for Nix.
+
+    # Mozilla addons-specific tooling.
+    nur.repos.rycee.mozilla-addons-to-nix
   ];
 }
