@@ -40,12 +40,10 @@ in
         just-perfection
         kimpanel
         mpris-indicator-button
+        paperwm
+        pop-shell
         runcat
         x11-gestures
-      ] ++ [
-        pkgs.gnome-shell-extension-fly-pie
-        pkgs.gnome-shell-extension-pop-shell
-        pkgs.gnome-shell-extension-paperwm-latest
       ];
       example = lib.literalExpression ''
         with pkgs.gnomeExtensions; [
