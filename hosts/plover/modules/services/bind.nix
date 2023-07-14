@@ -284,12 +284,12 @@ in
   security.dhparams.params.bind.bits = 4096;
 
   # Set up a fail2ban which is apparently already available in the package.
-  services.fail2ban.jails."named-refused" = ''
-    enabled = true
-    backend = systemd
-    filter = named-refused[journalmatch='_SYSTEMD_UNIT=bind.service']
-    maxretry = 3
-  '';
+  services.fail2ban.jails."named-refused".settings = {
+    enabled = true;
+    backend = "systemd";
+    filter = "named-refused[journalmatch='_SYSTEMD_UNIT=bind.service']";
+    maxretry = 3;
+  };
 
   # Add the following to be backed up.
   services.borgbackup.jobs.services-backup.paths = [ zonesDir ];

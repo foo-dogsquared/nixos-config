@@ -67,11 +67,10 @@ in
 
     # We're going to be unforgiving with this one since we only have key
     # authentication and password authentication is disabled anyways.
-    jails.sshd = ''
-      enabled = true
-      maxretry = 1
-      port = 22
-    '';
+    jails.sshd.settings = {
+      enabled = true;
+      maxretry = 1;
+    };
   };
 
   sops.secrets = lib.getSecrets ./secrets/secrets.yaml {

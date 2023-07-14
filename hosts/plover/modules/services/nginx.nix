@@ -36,8 +36,8 @@
 
   # Some fail2ban policies to apply for nginx.
   services.fail2ban.jails = {
-    nginx-http-auth = "enabled = true";
-    nginx-botsearch = "enabled = true";
-    nginx-bad-request = "enabled = true";
+    nginx-http-auth.settings = { enabled = true; };
+    nginx-botsearch.settings = { enabled = true; };
+    nginx-bad-request.settings = { enabled = true; };
   };
 }

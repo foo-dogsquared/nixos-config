@@ -159,19 +159,19 @@ in
   # Configuring fail2ban for this service which thankfully has a dedicated page
   # at https://github.com/dani-garcia/vaultwarden/wiki/Fail2Ban-Setup.
   services.fail2ban.jails = {
-    vaultwarden-user = ''
-      enabled = true
-      backend = systemd
-      filter = vaultwarden-user[journalmatch='_SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden']
-      maxretry = 5
-    '';
+    vaultwarden-user.settings = {
+      enabled = true;
+      backend = "systemd";
+      filter = "vaultwarden-user[journalmatch='_SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden']";
+      maxretry = 5;
+    };
 
-    vaultwarden-admin = ''
-      enabled = true
-      backend = systemd
-      filter = vaultwarden-admin[journalmatch='_SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden']
-      maxretry = 3
-    '';
+    vaultwarden-admin.settings = {
+      enabled = true;
+      backend = "systemd";
+      filter = "vaultwarden-admin[journalmatch='_SYSTEMD_UNIT=vaultwarden.service + _COMM=vaultwarden']";
+      maxretry = 3;
+    };
   };
 
   environment.etc = {

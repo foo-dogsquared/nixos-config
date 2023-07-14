@@ -179,12 +179,12 @@ in
   # Configuring fail2ban for this service which thankfully has a dedicated page
   # at https://docs.gitea.io/en-us/fail2ban-setup/.
   services.fail2ban.jails = {
-    gitea = ''
-      enabled = true
-      backend = systemd
-      filter = gitea[journalmatch='_SYSTEMD_UNIT=gitea.service + _COMM=gitea']
-      maxretry = 8
-    '';
+    gitea.settings = {
+      enabled = true;
+      backend = "systemd";
+      filter = "gitea[journalmatch='_SYSTEMD_UNIT=gitea.service + _COMM=gitea']";
+      maxretry = 8;
+    };
   };
 
   environment.etc = {

@@ -110,12 +110,12 @@ in
   # Configuring fail2ban for this services which is only present as a neat
   # little hint from its server administration guide.
   services.fail2ban.jails = {
-    keycloak = ''
-      enabled = true
-      backend = systemd
-      filter = keycloak[journalmatch='_SYSTEMD_UNIT=keycloak.service']
-      maxretry = 3
-    '';
+    keycloak.settings = {
+      enabled = true;
+      backend = "systemd";
+      filter = "keycloak[journalmatch='_SYSTEMD_UNIT=keycloak.service']";
+      maxretry = 3;
+    };
   };
 
   environment.etc = {
