@@ -166,7 +166,7 @@ in
     }
 
     # Check whether this is inside of my personal configuration or nah.
-    (lib.mkIf (attrs ? _isInsideFds && attrs._isInsideFds) {
+    (lib.mkIf (lib.isInternal config) {
       profiles.i18n = lib.mkDefault {
         enable = true;
         ibus.enable = true;
