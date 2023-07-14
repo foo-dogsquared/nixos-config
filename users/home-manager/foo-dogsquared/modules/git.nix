@@ -6,16 +6,11 @@
     enable = true;
     package = pkgs.gitFull;
     lfs.enable = true;
-    userName = config.accounts.email.accounts.personal.realName;
-    userEmail = config.accounts.email.accounts.personal.address;
     signing.key = "ADE0C41DAB221FCC";
     extraConfig = {
-      # This is taken from the official Git book, for future references.
-      sendemail = {
-        smtpserver = "smtp.mailbox.org";
-        smtpencryption = "tls";
-        smtpserverport = 587;
-        smtpuser = "foodogsquared@mailbox.org";
+      user = {
+        name = config.accounts.email.accounts.personal.realName;
+        email = config.accounts.email.accounts.personal.address;
       };
 
       alias = {
