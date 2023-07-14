@@ -222,7 +222,10 @@
         home-manager.useUserPackages = lib.mkDefault true;
         home-manager.useGlobalPkgs = lib.mkDefault true;
         home-manager.sharedModules =
-          lib.modulesToList (lib.filesToAttr ./modules/home-manager)
+          (import ./modules/home-manager {
+            inherit lib;
+            isInternal = true;
+          })
           ++ [ userSharedConfig ];
         home-manager.extraSpecialArgs = extraArgs;
 

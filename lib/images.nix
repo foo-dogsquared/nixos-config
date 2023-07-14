@@ -14,7 +14,7 @@ in
       specialArgs = extraArgs;
       modules =
         # Append with our custom NixOS modules from the modules folder.
-        (lib.modulesToList (lib.filesToAttr ../modules/nixos))
+        (import ../modules/nixos { inherit lib; isInternal = true; })
 
         # Our own modules.
         ++ extraModules;
@@ -28,7 +28,7 @@ in
       pkgs = import nixpkgs { inherit system; };
       modules =
         # Importing our custom home-manager modules.
-        (lib.modulesToList (lib.filesToAttr ../modules/home-manager))
+        (import ../modules/home-manager { inherit lib; isInternal = true; })
 
         # Plus our own.
         ++ extraModules;
@@ -41,7 +41,7 @@ in
       specialArgs = extraArgs;
       modules =
         # Import all of the NixOS modules.
-        (lib.modulesToList (lib.filesToAttr ../modules/nixos))
+        (import ../modules/nixos { inherit lib; isInternal = true; })
 
         # Our own modules.
         ++ extraModules;
