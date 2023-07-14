@@ -19,7 +19,7 @@ let
 in
 {
   sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
-    "plover/keycloak/db/password".owner = postgresUser;
+    "keycloak/db/password".owner = postgresUser;
   };
 
   # Hey, the hub for your application sign-in.
@@ -32,7 +32,7 @@ in
     database = {
       type = "postgresql";
       createLocally = true;
-      passwordFile = config.sops.secrets."plover/keycloak/db/password".path;
+      passwordFile = config.sops.secrets."keycloak/db/password".path;
     };
 
     settings = {
