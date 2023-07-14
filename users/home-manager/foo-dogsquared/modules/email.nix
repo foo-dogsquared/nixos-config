@@ -13,6 +13,7 @@
       ];
       primary = true;
       realName = "Gabriel Arazas";
+      userName = "foodogsquared@mailbox.org";
       signature = {
         delimiter = "--<----<---->---->--";
         text = ''
