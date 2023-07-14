@@ -27,23 +27,6 @@ rec {
 
   getSecret = path: ../secrets/${path};
 
-  getSecrets = sopsFile: secrets:
-    let
-      getKey = key: { inherit key sopsFile; };
-    in
-    lib.mapAttrs
-      (path: attrs:
-        (getKey path) // attrs)
-      secrets;
-
-  attachSopsPathPrefix = prefix: secrets:
-    lib.mapAttrs'
-      (key: settings:
-        lib.nameValuePair
-          "${prefix}/${key}"
-          ({ inherit key; } // settings))
-      secrets;
-
   isInternal = config: config ? _isInsideFds && config._isInsideFds;
 
   getUsers = type: users:
