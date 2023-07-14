@@ -6,7 +6,9 @@ title: What's in my flake?
 You can see the full details with `nix flake show`.
 As a helpful summary, here's what my flake should contain sorting from the most interesting and helpful outputs to the most boring and unnecessary.
 
-* `packages` contains github:{github-repo}[my custom packages, path=./pkgs, rev=master] and some of usual images of several hosts which is nice for easily fetching custom images.
+* `packages` contains github:{github-repo}[my custom packages, path=./pkgs, rev=master].
+
+* `images` contains the hosts as a build output generated from github:nix-community/nixos-generators[opts=repo].
 
 * `overlays` contains the overlay for extending nixpkgs with my packages.
 If you want to use my packages alongside the nixpkgs attribute then this is what you're looking for.
