@@ -1,5 +1,11 @@
 name: "Check flake outputs"
-on: [pull_request, push]
+on:
+  pull_request:
+  push:
+    - master
+    - develop
+  schedule:
+    - cron: '30 11 * * *' # At 11:30 everyday.
 env:
   NIXPKGS_ALLOW_UNFREE: "1"
 jobs:
