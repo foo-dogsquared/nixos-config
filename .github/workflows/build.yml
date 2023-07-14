@@ -1,4 +1,4 @@
-name: "Caching outputs"
+name: "Cache outputs"
 on:
   push:
     branches:

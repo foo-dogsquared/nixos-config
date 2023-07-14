@@ -1,4 +1,4 @@
-name: "Building project site"
+name: "Build project site"
 on:
   push:
     branches:
