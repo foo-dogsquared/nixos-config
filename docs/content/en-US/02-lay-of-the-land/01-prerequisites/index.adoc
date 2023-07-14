@@ -32,6 +32,6 @@ nixos-install --flake {canonical-flake-url}#INSTALLABLE
 
 Despite being a NixOS system, it isn't entirely reproducible to the point of installing this config will work out-of-the-box.
 It has some things needed in the first place to work like my external backup setup where it needs my SSH private keys to work in the first place.
-You can see more details from xref:../what-should-not-be-here/index.adoc[What should not be here?].
+You can see more details from xref:../05-what-should-not-be-here/index.adoc[What should not be here?].
 Nonetheless, the parts is it isn't reproducible is only about 10% of this config.
 Everything else is fine and dandy and can be deployed successfully (but not used as intended).

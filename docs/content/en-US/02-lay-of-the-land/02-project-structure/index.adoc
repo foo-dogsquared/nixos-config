@@ -31,12 +31,12 @@ nixos-config
 ----
 
 One of the more notable files here when first start looking is the `./images.toml` file where it contains a description of the images.
-For more details, see xref:../../project-specific-setup/declarative-host-management/index.adoc[Declarative host management].
+For more details, see xref:../../03-project-specific-setup/01-declarative-host-management/index.adoc[Declarative host management].
 
 A similar file, `./users.toml`, contains the description for the home-manager users to be exported from this flake.
-For more details, see xref:../../project-specific-setup/declarative-user-management/index.adoc[Declarative user management].
+For more details, see xref:../../03-project-specific-setup/02-declarative-user-management/index.adoc[Declarative user management].
 
-Most of the said folders are related to a flake output attribute, see xref:../whats-in-my-flake/index.adoc[What's in my flake?] for more details.
+Most of the said folders are related to a flake output attribute, see xref:../03-whats-in-my-flake/index.adoc[What's in my flake?] for more details.
 
 * `./hosts/` contain machine-specific configuration.
 This usually configures like the hardware setup, timezone, and users.
@@ -53,7 +53,7 @@ Should be self-explanatory.
 
 * `./secrets/` contains my cluster-wide secrets managed with github:mozilla/sops[opts=repo] and github:Mic92/sops-nix[opts=repo].
 Take note, each component (e.g., hosts, modules, users) could have their own specific secrets.
-For more information, see xref:../../project-specific-setup/secrets-management/index.adoc[Secrets management].
+For more information, see xref:../../03-project-specific-setup/03-secrets-management/index.adoc[Secrets management].
 
 * `./shells/` contains my development shells for interacting with the usual type of projects.
 Setting this up can bring benefits outside of NixOS (unless you're interacting with projects with any OpenGL-related stuff).

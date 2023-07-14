@@ -23,7 +23,7 @@ To start, you can simply add my flake to your list of flake inputs.
 inputs.foo-dogsquared-nixos-config.url = "{canonical-flake-url}";
 ----
 
-Then, you could use parts of the config as exported from my flake which you can refer back to xref:../lay-of-the-land/whats-in-my-flake/index.adoc[What's in my flake?].
+Then, you could use parts of the config as exported from my flake which you can refer back to xref:../02-lay-of-the-land/03-whats-in-my-flake/index.adoc[What's in my flake?].
 
 For example, you could make use of my packages by adding them as an overlay which is recommended if you're going to use my NixOS modules anyways.
 Here's one way to put as part of your NixOS configuration...
@@ -90,7 +90,7 @@ nix-channel --update
 import <foo-dogsquared-nixos-config> { inherit pkgs; }
 ----
 
-You can see github:{github-repo}[`./default.nix`, path=default.nix, rev=master] to see more details but there are general guidelines to the attributes that is contained in this file which is outlined in xref:../lay-of-the-land/channels-support/index.adoc[Channels support] section.
+You can see github:{github-repo}[`./default.nix`, path=default.nix, rev=master] to see more details but there are general guidelines to the attributes that is contained in this file which is outlined in xref:../02-lay-of-the-land/04-channels-support/index.adoc[Channels support] section.
 
 Here's an example snippet in a NixOS config making use of my configuration without flakes:
 
