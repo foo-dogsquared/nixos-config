@@ -100,6 +100,7 @@
 
         (final: prev: {
           inherit (inputs.firefox-addons.lib.${defaultSystem}) buildFirefoxXpiAddon;
+          firefox-addons = final.callPackage ./pkgs/firefox-addons { };
         })
 
         # Neovim nightly!

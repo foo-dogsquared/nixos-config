@@ -14,7 +14,6 @@ let
       clidle = callPackage ./clidle.nix { };
       domterm = callPackage ./domterm { };
       freerct = callPackage ./freerct.nix { };
-      firefox-addons = callPackage ./firefox-addons { };
       distant = callPackage ./distant.nix { };
       gol-c = callPackage ./gol-c.nix { };
       gnome-search-provider-recoll =
