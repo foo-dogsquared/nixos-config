@@ -22,8 +22,6 @@ let
       gnome-shell-extension-burn-my-windows = callPackage ./gnome-shell-extension-burn-my-windows { };
       gnome-shell-extension-fly-pie =
         callPackage ./gnome-shell-extension-fly-pie.nix { };
-      gnome-shell-extension-pop-shell =
-        callPackage ./gnome-shell-extension-pop-shell.nix { };
       gnome-shell-extension-paperwm-latest = gnomeExtensions.paperwm.overrideAttrs (prev: {
         rev = "unstable-2022-11-13";
         src = fetchFromGitHub {
