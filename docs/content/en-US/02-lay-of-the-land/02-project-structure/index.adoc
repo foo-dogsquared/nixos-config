@@ -13,6 +13,7 @@ My NixOS config should look like the following:
 [source, tree]
 ----
 nixos-config
+├── docs/
 ├── hosts/
 ├── lib/
 ├── modules/
@@ -37,6 +38,9 @@ A similar file, `./users.toml`, contains the description for the home-manager us
 For more details, see xref:../../03-project-specific-setup/02-declarative-user-management/index.adoc[Declarative user management].
 
 Most of the said folders are related to a flake output attribute, see xref:../03-whats-in-my-flake/index.adoc[What's in my flake?] for more details.
+
+* `./docs/` contain the source code for the website.
+Currently, it uses link:https://gohugo.io/[Hugo] for statically generating the website.
 
 * `./hosts/` contain machine-specific configuration.
 This usually configures like the hardware setup, timezone, and users.
