@@ -17,8 +17,6 @@ let
       gol-c = callPackage ./gol-c.nix { };
       gnome-search-provider-recoll =
         callPackage ./gnome-search-provider-recoll.nix { };
-      gnome-shell-extension-fly-pie =
-        callPackage ./gnome-shell-extension-fly-pie.nix { };
       guile-config = callPackage ./guile-config.nix { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
