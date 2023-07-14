@@ -21,4 +21,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref }}" --generate-notes build-iso-result/iso/*.iso
+          gh release create latest --prerelease --generate-notes build-iso-result/iso/*.iso

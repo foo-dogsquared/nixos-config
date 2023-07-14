@@ -1,10 +1,9 @@
 name: "Build project site"
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
-    paths:
-      - docs/
 jobs:
   build:
     runs-on: ubuntu-latest
