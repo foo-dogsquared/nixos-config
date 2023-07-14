@@ -69,6 +69,8 @@ in {
           obs-multi-rtmp
           obs-gstreamer
           obs-pipewire-audio-capture
+          obs-source-switcher
+          obs-vkcapture
           wlrobs
         ];
       };
