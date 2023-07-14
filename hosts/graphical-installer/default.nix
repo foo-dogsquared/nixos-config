@@ -7,30 +7,30 @@
 
   isoImage = {
     isoBaseName = config.networking.hostName;
+
+    # Put the source code somewhere easy to see.
     contents = [{
       source = inputs.self;
-      target = "/bootstrap/";
+      target = "/etc/nixos";
     }];
-    storeContents = [
-      inputs.self.devShells.${config.nixpkgs.system}.default
-    ] ++ builtins.attrValues inputs;
   };
 
+  # We'll be using NetworkManager with the desktop environment anyways.
   networking.wireless.enable = false;
 
-  profiles = {
-    desktop = {
-      enable = true;
-      fonts.enable = true;
-    };
-    dev = {
-      enable = true;
-      shell.enable = true;
-      neovim.enable = true;
-    };
+  # Use my desktop environment configuration without the apps just to make the
+  # closure size smaller.
+  workflows.workflows.a-happy-gnome = {
+    enable = true;
+    extraApps = [ ];
   };
 
-  workflows.workflows.a-happy-gnome.enable = true;
+  # Some niceties.
+  profiles = {
+    desktop.enable = true;
+    dev.enable = true;
+  };
+
   services.xserver.displayManager = {
     gdm = {
       enable = true;
