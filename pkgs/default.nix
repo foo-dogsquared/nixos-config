@@ -22,15 +22,6 @@ let
       gnome-shell-extension-burn-my-windows = callPackage ./gnome-shell-extension-burn-my-windows { };
       gnome-shell-extension-fly-pie =
         callPackage ./gnome-shell-extension-fly-pie.nix { };
-      gnome-shell-extension-paperwm-latest = gnomeExtensions.paperwm.overrideAttrs (prev: {
-        rev = "unstable-2022-11-13";
-        src = fetchFromGitHub {
-          owner = "paperwm";
-          repo = "PaperWM";
-          rev = "db9d63302b593c7a663791b577a306d3f432e18a";
-          sha256 = "sha256-yPyomT+OmOe4mFJMNCq2FBgNHzuAvZ70itFA0s5BwV8=";
-        };
-      });
       guile-config = callPackage ./guile-config.nix { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
