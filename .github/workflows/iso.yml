@@ -4,6 +4,8 @@ on:
     branches:
       - master
       - develop
+    paths-ignore:
+      - docs/
 jobs:
   build-iso:
     runs-on: ubuntu-latest
@@ -12,19 +14,11 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@v2
       - uses: DeterminateSystems/nix-installer-action@v4
       - name: Build ISO
-        id: build-iso
-        # TODO: Use the registry.
         run: |
-          nix build .#nixos-image-install-iso-bootstrap --out-link build-iso-result
+          nix build .#images.bootstrap --out-link build-iso-result
       - name: Create release
         if: github.ref == 'refs/heads/master'
-        id: create-release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: latest
-          prerelease: true
-          title: Latest release
-          files:
-            build-iso-result/iso/bootstrap-*.iso
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref }}" --generate-notes build-iso-result/iso/*.iso
