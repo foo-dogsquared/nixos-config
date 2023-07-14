@@ -388,7 +388,7 @@
             let
               system = metadata.system or defaultSystem;
               nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-              pkgs = import inputs."${nixpkgs-channel}" { inherit system; };
+              pkgs = import inputs."${nixpkgs-channel}" { inherit system overlays; };
               format = metadata.format or "iso";
             in
               mkImage {
