@@ -365,29 +365,45 @@
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
       packages = forAllSystems (system:
-        let
-          pkgs = import nixpkgs { inherit system overlays; };
-        in
-        inputs.flake-utils.lib.flattenTree (import ./pkgs { inherit pkgs; })
-        // lib'.mapAttrs'
-          (host: metadata:
-            lib'.nameValuePair "nixos-image-${metadata.format or "iso"}-${host}" (mkImage {
-              inherit system pkgs extraArgs;
-              format = metadata.format or "iso";
-              extraModules = [
-                ({ lib, ... }: {
-                  config = lib.mkMerge [
-                    { networking.hostName = metadata.hostname or host; }
+        inputs.flake-utils.lib.flattenTree (import ./pkgs {
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [
+              (final: prev: {
+                inherit (inputs.firefox-addons.lib.${system}) buildFirefoxXpiAddon;
+              })
+            ];
+          };
+        }));
 
-                    (lib.mkIf (metadata ? domain)
-                      { networking.domain = metadata.domain; })
-                  ];
-                })
-                hostSharedConfig
-                ./hosts/${host}
-              ];
-            }))
-          images);
+      # This contains images that are meant to be built and distributed
+      # somewhere else including those NixOS configurations that are built as
+      # an ISO.
+      images =
+        lib'.mapAttrs
+          (host: metadata:
+            let
+              system = metadata.system or defaultSystem;
+              nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
+              pkgs = import inputs."${nixpkgs-channel}" { inherit system; };
+              format = metadata.format or "iso";
+            in
+              mkImage {
+                inherit format system pkgs extraArgs;
+                extraModules = [
+                  ({ lib, ... }: {
+                    config = lib.mkMerge [
+                      { networking.hostName = lib.mkForce metadata.hostname or host; }
+
+                      (lib.mkIf (metadata ? domain)
+                        { networking.domain = lib.mkForce metadata.domain; })
+                    ];
+                  })
+                  hostSharedConfig
+                  ./hosts/${host}
+                ];
+              })
+          images;
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
