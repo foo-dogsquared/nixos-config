@@ -330,6 +330,10 @@
       homeConfigurations = lib'.mapAttrs
         (name: metadata:
           let
+            system = metadata.system or defaultSystem;
+            pkgs = import inputs."${metadata.nixpkgs-channel or "nixpkgs"}" {
+              inherit system overlays;
+            };
             path = ./users/home-manager/${name};
             extraModules = [
               ({ pkgs, config, ... }: {
@@ -349,8 +353,7 @@
             ];
           in
           mkUser {
-            inherit extraModules extraArgs;
-            system = metadata.system or defaultSystem;
+            inherit pkgs system extraModules extraArgs;
             home-manager-channel = metadata.home-manager-channel or "home-manager";
           })
         users;
