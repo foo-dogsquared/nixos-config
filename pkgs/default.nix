@@ -24,16 +24,6 @@ let
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
       kiwmi = callPackage ./kiwmi { };
-      libadwaita-latest = libadwaita.overrideAttrs (super: self: {
-        version = "1.2.0";
-        src = fetchFromGitLab {
-          domain = "gitlab.gnome.org";
-          owner = "GNOME";
-          repo = "libadwaita";
-          rev = "1.2.0";
-          hash = "sha256-3lH7Vi9M8k+GSrCpvruRpLrIpMoOakKbcJlaAc/FK+U=";
-        };
-      });
       lwp = callPackage ./lwp { };
       moac = callPackage ./moac.nix { };
       mopidy-beets = callPackage ./mopidy-beets.nix { };
