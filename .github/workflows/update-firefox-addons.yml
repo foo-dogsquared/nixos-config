@@ -9,7 +9,7 @@ on:
     paths:
       - 'pkgs/firefox-addons'
 jobs:
-  build:
+  update-firefox-addons:
     runs-on: ubuntu-latest
     permissions:
       content: write
@@ -18,9 +18,8 @@ jobs:
         id: metadata
         run: echo "DATE=$(date +%F)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v22
-        with:
-          nix_path: nixpkgs=channel:nixos-unstable
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+      - uses: DeterminateSystems/nix-installer-action@v4
       - env:
           NIXPKGS_ALLOW_UNFREE: "1"
         run: nix develop --impure -c mozilla-addons-to-nix pkgs/firefox-addons/firefox-addons.json pkgs/firefox-addons/default.nix
