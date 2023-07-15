@@ -21,4 +21,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          gh release delete latest --cleanup-tag --yes || true
           gh release create latest --prerelease --generate-notes build-iso-result/iso/*.iso
