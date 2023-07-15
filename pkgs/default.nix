@@ -13,7 +13,6 @@ let
       domterm = callPackage ./domterm { };
       freerct = callPackage ./freerct.nix { };
       distant = callPackage ./distant.nix { };
-      gol-c = callPackage ./gol-c.nix { };
       gnome-search-provider-recoll =
         callPackage ./gnome-search-provider-recoll.nix { };
       guile-config = callPackage ./guile-config.nix { };
