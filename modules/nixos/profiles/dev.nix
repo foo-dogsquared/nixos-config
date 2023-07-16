@@ -132,12 +132,17 @@ in {
         virt-manager # An interface for those who are lazy to read a reference manual and create a 1000-line configuration per machine.
       ];
 
-      # Enable Docker just as my main container runtime or something.
-      virtualisation.docker = {
+      # Podman with Docker compatibility which is not 100% but still better
+      # than nothing.
+      virtualisation.podman = {
         enable = true;
+        dockerCompat = true;
         autoPrune = {
           enable = true;
           dates = "weekly";
+        };
+        defaultNetwork.settings = {
+          dns_enabled = true;
         };
       };
 
