@@ -2,8 +2,9 @@ name: "Check flake outputs"
 on:
   pull_request:
   push:
-    - master
-    - develop
+    branches:
+      - master
+      - develop
   schedule:
     - cron: '30 11 * * *' # At 11:30 everyday.
 env:
