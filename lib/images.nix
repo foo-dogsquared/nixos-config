@@ -2,9 +2,6 @@
 # for use in flake.nix and nowhere else.
 { inputs, lib }:
 
-let
-  inherit (inputs) nixpkgs home-manager nixos-generators;
-in
 {
   # A wrapper around the NixOS configuration function.
   mkHost = { system, extraModules ? [ ], extraArgs ? { }, nixpkgs-channel ? "nixpkgs" }:
