@@ -74,6 +74,7 @@ in {
       environment.localBinInPath = true;
 
       # Find Nix files with these!
+      programs.command-not-found.enable = false;
       programs.nix-index.enable = true;
 
       # Additional settings for developing with nix.
