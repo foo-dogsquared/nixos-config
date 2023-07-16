@@ -15,8 +15,11 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v4
       - name: Build ISO
         run: |
-          nix build .#images.bootstrap --out-link build-iso-result
-          nix build .#images.graphical-installer --out-link build-graphical-iso-result
+          nix build .#images.bootstrap --impure --out-link build-iso-result
+          nix build .#images.graphical-installer --impure --out-link build-graphical-iso-result
+        env:
+          NIXPKGS_ALLOW_BROKEN: "1"
+          NIXPKGS_ALLOW_UNFREE: "1"
       - name: Create release
         if: github.ref == 'refs/heads/master'
         env:
