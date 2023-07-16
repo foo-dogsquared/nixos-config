@@ -1,8 +1,11 @@
-{ lib, config, pkgs, inputs, ... }:
+{ lib, config, pkgs, inputs, modulesPath, ... }:
 
+# Since this will be exported as an installer ISO, you'll have to keep in mind
+# about the added imports from nixos-generators. In this case, it simply adds
+# the NixOS installation CD profile.
 {
   imports = [
-    (lib.getUser "nixos" "nixos")
+    "${modulesPath}/installer/cd-dvd/installation-cd-graphical-base.nix"
   ];
 
   isoImage = {
@@ -15,9 +18,6 @@
     }];
   };
 
-  # We'll be using NetworkManager with the desktop environment anyways.
-  networking.wireless.enable = false;
-
   # Use my desktop environment configuration without the apps just to make the
   # closure size smaller.
   workflows.workflows.a-happy-gnome = {
@@ -26,10 +26,7 @@
   };
 
   # Some niceties.
-  profiles = {
-    desktop.enable = true;
-    dev.enable = true;
-  };
+  profiles.desktop.enable = true;
 
   services.xserver.displayManager = {
     gdm = {
@@ -41,13 +38,4 @@
       user = "nixos";
     };
   };
-
-  boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-    loader.systemd-boot.enable = true;
-    supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
-  };
-
-  users.users.root.password = "";
-
 }
