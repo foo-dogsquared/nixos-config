@@ -73,6 +73,9 @@ in {
       # Convenience!
       environment.localBinInPath = true;
 
+      # Find Nix files with these!
+      programs.nix-index.enable = true;
+
       # Additional settings for developing with nix.
       nix.settings = {
         keep-outputs = true;

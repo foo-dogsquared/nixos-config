@@ -65,16 +65,10 @@ in {
 
       # Run unpatched binaries with these!
       programs.nix-ld.enable = true;
+
       environment.systemPackages = with pkgs; [
-        nix-index # locate but for the entire store directory.
         steam-run # For the heathens that still uses FHS.
       ];
-
-      # command-not-found except better integrated since we're already using
-      # nix-index.
-      environment.interactiveShellInit = ''
-        . ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
-      '';
 
       # Enable running GNOME apps outside GNOME.
       programs.dconf.enable = true;
@@ -184,24 +178,10 @@ in {
         dates = [ "weekly" ];
       };
 
-      # Clear logs that are more than a month old weekly.
-      systemd = {
-        services.clean-log = {
-          description = "Weekly log cleanup";
-          documentation = [ "man:journalctl(1)" ];
-          script = "${pkgs.systemd}/bin/journalctl --vacuum-time=30d";
-        };
-
-        timers.clean-log = {
-          description = "Weekly log cleanup";
-          documentation = [ "man:journalctl(1)" ];
-          wantedBy = [ "multi-user.target" ];
-          timerConfig = {
-            OnCalendar = "weekly";
-            Persistent = true;
-          };
-        };
-      };
+      # Journal settings for retention.
+      services.journald.extraConfig = ''
+        MaxRetentionSec="3 month"
+      '';
     })
 
     (lib.mkIf cfg.autoUpgrade.enable {
