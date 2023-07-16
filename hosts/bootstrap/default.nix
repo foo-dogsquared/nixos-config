@@ -1,10 +1,11 @@
-{ lib, config, pkgs, inputs, ... }:
+{ lib, config, pkgs, inputs, modulesPath, ... }:
 
+# Since this will be exported as an installer ISO, you'll have to keep in mind
+# about the added imports from nixos-generators. In this case, it simply adds
+# the NixOS installation CD profile.
+#
+# This means, there will be a "nixos" user among other things.
 {
-  imports = [
-    (lib.getUser "nixos" "nixos")
-  ];
-
   isoImage = {
     isoBaseName = config.networking.hostName;
 
@@ -15,17 +16,11 @@
     }];
   };
 
-  boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-    loader.systemd-boot.enable = true;
-    supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
-  };
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Assume that this will be used for remote installations.
   services.openssh = {
     enable = true;
     allowSFTP = true;
   };
-
-  users.users.root.password = "";
 }
