@@ -29,10 +29,6 @@
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
 
-    # Running unpatched binaries on NixOS! :O
-    nix-ld.url = "github:Mic92/nix-ld";
-    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
-
     # Generate your NixOS systems to various formats!
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
@@ -152,7 +148,6 @@
         # optional NixOS modules.
         imports = [
           inputs.home-manager.nixosModules.home-manager
-          inputs.nix-ld.nixosModules.nix-ld
           inputs.nur.nixosModules.nur
           inputs.sops-nix.nixosModules.sops
           inputs.guix-overlay.nixosModules.guix
