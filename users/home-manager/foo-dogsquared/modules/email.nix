@@ -43,24 +43,6 @@
         signByDefault = false;
       };
 
-      # Include it in Thunderbird.
-      thunderbird = {
-        enable = true;
-        perIdentitySettings = id:
-          let
-            identitySettings = attrs: lib.mapAttrs'
-              (setting: value:
-                lib.nameValuePair "mail.identity.id_${id}.${setting}" value)
-              attrs;
-          in
-          identitySettings {
-            "compose_html" = false;
-            "sig_on_reply" = true;
-            "protectSubject" = true;
-            "autocompleteToMyDomain" = true;
-          };
-        profiles = [ "personal" ];
-      };
     };
   };
 
@@ -71,7 +53,10 @@
       settings = {
         "mail.identity.default.archive_enabled" = true;
         "mail.identity.default.archive_keep_folder_structure" = true;
+        "mail.identity.default.compose_html" = false;
+        "mail.identity.default.protectSubject" = true;
         "mail.identity.default.reply_on_top" = 1;
+        "mail.identity.default.sig_on_reply" = true;
 
         "mail.server.default.canDelete" = true;
       };
@@ -103,7 +88,6 @@
 
       # Show time. :)
       "mail.ui.display.dateformat.default" = 1;
-      "mail.ui.display.dateformat.thisweek" = 2;
 
       # Sanitize it to UTC to prevent leaking local time.
       "mail.sanitize_date_header" = true;
@@ -121,7 +105,7 @@
       "rss.disable_feeds_on_update_failure" = false;
 
       # Open web page on default browser on select.
-      "rss.message.loadWebPageOnSelect" = 1;
+      "rss.message.loadWebPageOnSelect" = 0;
 
       # Load the summary on display.
       "rss.show.summary" = 1;
