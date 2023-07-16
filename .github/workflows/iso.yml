@@ -16,10 +16,11 @@ jobs:
       - name: Build ISO
         run: |
           nix build .#images.bootstrap --out-link build-iso-result
+          nix build .#images.graphical-installer --out-link build-graphical-iso-result
       - name: Create release
         if: github.ref == 'refs/heads/master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete latest --cleanup-tag --yes || true
-          gh release create latest --prerelease --generate-notes build-iso-result/iso/*.iso
+          gh release create latest --prerelease --generate-notes build-iso-result/iso/*.iso build-graphical-iso-result/iso/*.iso
