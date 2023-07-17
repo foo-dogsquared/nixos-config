@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - develop
     paths-ignore:
       - docs/
 jobs:
@@ -16,14 +15,12 @@ jobs:
       - name: Build ISO
         run: |
           nix build .#images.bootstrap --impure --out-link build-iso-result
-          nix build .#images.graphical-installer --impure --out-link build-graphical-iso-result
         env:
           NIXPKGS_ALLOW_BROKEN: "1"
           NIXPKGS_ALLOW_UNFREE: "1"
       - name: Create release
-        if: github.ref == 'refs/heads/master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete latest --cleanup-tag --yes || true
-          gh release create latest --prerelease --generate-notes build-iso-result/iso/*.iso build-graphical-iso-result/iso/*.iso
+          gh release create latest --prerelease --generate-notes build-iso-result/iso/*.iso
