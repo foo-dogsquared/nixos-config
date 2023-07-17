@@ -1,47 +1,53 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, cmake
 , SDL2
 , xorg
+, xwayland
 , libconfig
 }:
 
 stdenv.mkDerivation rec {
   pname = "lwp";
-  version = "1.2";
+  version = "2.0.0";
 
   src = fetchFromGitHub {
     owner = "jszczerbinsky";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-5/wnPXIfC8jiyjC0/2x/PoBZ1lONcoQ3NWL6uEuqPv8=";
+    rev = "v${version}";
+    hash = "sha256-cy5ZnkC/KtZsjFLAtWjfWL4gacQpEhNv0VC/hbw0LFA=";
   };
 
-  postPatch = ''
-    substituteInPlace default.cfg --replace "/usr/share" "${placeholder "out"}/share"
-  '';
-
-  buildPhase = ''
-    gcc main.c window.c parser.c debug.c -lSDL2 -lX11
-  '';
-
-  installPhase = ''
-    install -Dm0755 a.out $out/bin/lwp
-    install -Dm0644 default.cfg -t $out/etc
-    mkdir -p $out/share/lwp
-    cp -R ./wallpapers $out/share/lwp
-  '';
-
+  nativeBuildInputs = [ cmake ];
   buildInputs = [
     SDL2
     xorg.libX11
+    xwayland
     libconfig
+  ];
+
+  # TODO: Add conditional for Mac systems.
+  postPatch = ''
+    substituteInPlace default.cfg \
+      --replace "/usr/share" "${placeholder "out"}/share" \
+      --replace "/usr/local" "${placeholder "out"}"
+    substituteInPlace CMakeLists.txt \
+      --replace "usr/local" "${placeholder "out"}"
+  '';
+
+  cmakeFlags = [
+    "-DPROGRAM_VERSION=${version}"
   ];
 
   meta = with lib; {
     homepage = "https://github.com/jszczerbinsky/lwp";
     description = "Parallax wallpaper engine for Linux and Windows";
     license = licenses.mit;
-    platforms = platforms.unix;
+
+    # We'll package it for Linux only for now.
+    platforms = platforms.linux;
+
+    maintainers = with maintainers; [ foo-dogsquared ];
   };
 }
