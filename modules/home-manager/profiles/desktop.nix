@@ -118,7 +118,7 @@ in {
           mpris
           mpvacious
           thumbnail
-          youtube-quality
+          quality-menu
         ];
       };
     })
