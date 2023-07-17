@@ -4,6 +4,7 @@
 , glib
 , gnome
 , gtksourceview5
+, libadwaita
 , autoreconfHook
 , wrapGAppsHook
 , pkg-config
@@ -11,20 +12,28 @@
 
 stdenv.mkDerivation rec {
   pname = "nautilus-annotations";
-  version = "0.10.0";
+  version = "2.0.1";
 
   src = fetchFromGitLab {
     domain = "gitlab.gnome.org";
     owner = "madmurphy";
     repo = "nautilus-annotations";
     rev = version;
-    sha256 = "sha256-obhy95HvlZuiqTf6IC+epqiWS8hcDHsOkYLSJ8LZ6z0=";
+    hash = "sha256-BivnmsACnpxdd6FV+ncdDd5ZwtJSSzNExoiCXeXIFkA=";
   };
 
-  nativeBuildInputs =
-    [ autoreconfHook glib gnome.nautilus pkg-config wrapGAppsHook ];
+  nativeBuildInputs = [
+    autoreconfHook
+    glib
+    gnome.nautilus
+    pkg-config
+    wrapGAppsHook
+  ];
 
-  buildInputs = [ gtksourceview5 ];
+  buildInputs = [
+    libadwaita
+    gtksourceview5
+  ];
 
   preConfigure = ''
     ./bootstrap
