@@ -15,7 +15,6 @@ let
       distant = callPackage ./distant.nix { };
       gnome-search-provider-recoll =
         callPackage ./gnome-search-provider-recoll.nix { };
-      guile-config = callPackage ./guile-config.nix { };
       hush-shell = callPackage ./hush-shell.nix { };
       ictree = callPackage ./ictree.nix { };
       kiwmi = callPackage ./kiwmi { };
