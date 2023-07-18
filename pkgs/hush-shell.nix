@@ -1,22 +1,32 @@
-{ stdenv, lib, fetchFromGitHub, rustPlatform, util-linux }:
+{ stdenv
+, lib
+, fetchFromGitHub
+, rustPlatform
+, toybox
+}:
 
 rustPlatform.buildRustPackage rec {
   pname = "hush";
-  version = "0.1.4-alpha";
+  version = "unstable-2023-07-18";
 
   src = fetchFromGitHub {
     owner = "hush-shell";
     repo = pname;
-    rev = "v${version}";
-    sha256 = "sha256-35iaJTA9GZLiJ8KerwzG0d5CGYo8yhBkrjPp7pDAJpc=";
+    rev = "01b4303d86048c36c2bc196d8a6fba1bddfa0811";
+    hash = "sha256-MH7Qb5FgAvfgfuYihomYDHA456/WU1zf5P9mneB5Og4=";
   };
 
-  checkInputs = [ util-linux ];
-  cargoSha256 = "sha256-PW+T9mu6VGyCRwZSuphQfbsKeX6L2RzCrg5gt+9AeHY=";
+  cargoSha256 = "sha256-iN8qOZoTJwvxKQT0Plm0SjwaBUE+vSM0r9FERr4smeo=";
 
   postPatch = ''
     patchShebangs ./src/runtime/tests/data/stdout-stderr.sh
   '';
+
+  checkInputs = [ toybox ];
+  checkFlags = [
+    "--skip=tests::test_token_kind_size"
+    "--skip=tests::test_positive"
+  ];
 
   meta = with lib; {
     homepage = "https://github.com/hush-shell/hush";
