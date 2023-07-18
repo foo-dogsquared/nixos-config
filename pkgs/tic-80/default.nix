@@ -4,6 +4,7 @@
 { stdenv
 , lib
 , SDL2
+, SDL2_sound
 , alsaLib
 , cmake
 , fetchFromGitHub
@@ -13,48 +14,50 @@
 , dbus
 , libGLU
 , libX11
-, libstdcxx5
 , libglvnd
 , libsamplerate
 , mesa
 , pkg-config
 , sndio
-, valgrind
 , zlib
+
 , pulseaudioSupport ? stdenv.isLinux
 , libpulseaudio
+
 , waylandSupport ? true
 , wayland
 , libxkbcommon
+, libdecor
+
 , esoundSupport ? true
 , espeak
+
 , jackSupport ? true
 , jack2
+
+# Ruby support requires compiling mruby so we'll skip it for now.
 , rubySupport ? false
-, mruby
+, ruby
 , rake
+
+, pythonSupport ? true
+, python3
+
+, withPro ? true
 }:
 
 # TODO: Fix the timestamp in the help section.
 stdenv.mkDerivation rec {
   pname = "tic-80";
-  version = "unstable-2022-10-26";
+  version = "unstable-2023-07-18";
 
   src = fetchFromGitHub {
     owner = "nesbox";
     repo = "TIC-80";
-    rev = "7f4ad780d75d2cd8446f856f85ba293af70530eb";
-    sha256 = "sha256-8ciBya9ismBQ27JFQr3Qsk72UvHA1vMEExSwGNk3iOk=";
+    rev = "68b94ee596e1ac218b8b9685fd0485c7ee8d2f18";
+    hash = "sha256-S3LYuRRFMZYl6dENrV21bowzo7smm+zSHXt77/83oL0=";
     fetchSubmodules = true;
   };
-
-  # We're only replacing 'mruby' since it will have the most complications to
-  # build. Also, it uses the same version as the nixpkgs version as of
-  # 2021-12-18 which is v3.0.0.
-  patches = [ ./change-cmake.patch ];
-  postPatch = ''
-    substituteInPlace CMakeLists.txt --replace '@mruby@' "${mruby}"
-  '';
 
   nativeBuildInputs = [ cmake pkg-config ];
   buildInputs = [
@@ -67,20 +70,25 @@ stdenv.mkDerivation rec {
     mesa
     git
     SDL2
+    SDL2_sound
     zlib
-    mruby
-    rake
-    valgrind
     sndio
-  ] ++ lib.optional pulseaudioSupport libpulseaudio
-  ++ lib.optional jackSupport jack2 ++ lib.optional esoundSupport espeak
+  ]
+  ++ lib.optional pulseaudioSupport libpulseaudio
+  ++ lib.optional jackSupport jack2
+  ++ lib.optional esoundSupport espeak
+  ++ lib.optionals rubySupport [
+    ruby
+    rake
+  ]
+  ++ lib.optional pythonSupport python3
   ++ lib.optionals (stdenv.isLinux && waylandSupport) [
     wayland
     libxkbcommon
+    libdecor
   ];
 
-  # TODO: Replace SOKOL-built version with SDL.
-  cmakeFlags = [ "-DBUILD_PRO=ON" ];
+  cmakeFlags = lib.optional withPro "-DBUILD_PRO=ON";
 
   # Export all of the TIC-80-related utilities.
   outputs = [ "out" "dev" ];
@@ -91,7 +99,6 @@ stdenv.mkDerivation rec {
 
     mkdir -p $out/share/tic80
     cp -r ../demos $out/share/tic80/
-    patchelf --set-rpath ${lib.makeLibraryPath [ libstdcxx5 libX11 dbus ]} $out/bin/tic80
   '';
 
   meta = with lib; {
