@@ -25,6 +25,10 @@ rustPlatform.buildRustPackage rec {
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [ openssl alsaLib ];
 
+  # Most of the tests require filesystem access with the home directory so
+  # we'll have to disable them for now.
+  doCheck = false;
+
   meta = with lib; {
     homepage = "https://github.com/TBS1996/speki/";
     description = "Flashcard app on the terminal";
