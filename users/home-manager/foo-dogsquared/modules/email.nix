@@ -42,7 +42,14 @@
         encryptByDefault = false;
         signByDefault = false;
       };
+    };
 
+    old_personal = {
+      address = "foo.dogsquared@gmail.com";
+      realName = config.accounts.email.accounts.personal.realName;
+      userName = "foo.dogsquared@gmail.com";
+      flavor = "gmail.com";
+      passwordCommand = "gopass show personal/websites/accounts.google.com/foo.dogsquared | head -n 1";
     };
   };
 
