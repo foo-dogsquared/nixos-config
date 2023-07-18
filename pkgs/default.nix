@@ -11,6 +11,7 @@ let
       cosmic-launcher = callPackage ./cosmic-launcher { };
       clidle = callPackage ./clidle.nix { };
       domterm = callPackage ./domterm { };
+      fastn = callPackage ./fastn { };
       freerct = callPackage ./freerct.nix { };
       distant = callPackage ./distant.nix { };
       gnome-search-provider-recoll =
