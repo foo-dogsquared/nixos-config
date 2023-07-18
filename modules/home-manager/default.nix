@@ -10,6 +10,7 @@ let
     ./programs/pop-launcher.nix
     ./services/archivebox.nix
     ./services/bleachbit.nix
+    ./services/distant.nix
     ./services/gallery-dl.nix
     ./services/plover.nix
     ./services/yt-dlp.nix
