@@ -11,7 +11,7 @@ let
 in
 {
   options.services.distant = {
-    enable = lib.mkEnableOption "Distant manager";
+    enable = lib.mkEnableOption "Distant-related services";
 
     package = lib.mkOption {
       description = lib.mkDoc "The package containing the `distant` executable.";
@@ -33,10 +33,13 @@ in
         }
       '';
     };
+
+    manager.enable = lib.mkEnableOption "Distant manager daemon";
+    server.enable = lib.mkEnableOption "Distant server daemon";
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.user.services.distant-manager = {
+    systemd.user.services.distant-manager = lib.mkIf cfg.manager.enable {
       Unit = {
         Description = "Distant manager daemon";
         Documentation = [ "https://distant.dev" ];
@@ -47,19 +50,35 @@ in
           ${lib.getBin cfg.package}/bin/distant manager listen --config ${settingsFile} ${lib.optionalString (!hasCustomSocketPath) "--unix-socket ${defaultSocketPath}"}
         '';
         Restart = "on-failure";
-        StandardInput = "socket";
       };
 
       Install.WantedBy = "default.target";
     };
 
-    systemd.user.sockets.distant-manager = {
+    systemd.user.sockets.distant-manager = lib.mkIf cfg.manager.enable {
       Unit = {
         Description = "Distant manager daemon";
         Documentation = [ "https://distant.dev" ];
       };
 
       Socket.ListenStream = if hasCustomSocketPath then cfg.settings.manager.unix_socket else defaultSocketPath;
+    };
+
+    systemd.user.services.distant-server = lib.mkIf cfg.server.enable {
+      Unit = {
+        Description = "Distant manager daemon";
+        Documentation = [ "https://distant.dev" ];
+      };
+
+      Service = {
+        ExecStart = ''
+          ${lib.getBin cfg.package}/bin/distant server listen --config ${settingsFile}
+        '';
+        Restart = "on-failure";
+        StandardInput = "socket";
+      };
+
+      Install.WantedBy = "default.target";
     };
   };
 }
