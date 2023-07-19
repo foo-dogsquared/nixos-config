@@ -12,7 +12,7 @@ jobs:
   update-firefox-addons:
     runs-on: ubuntu-latest
     permissions:
-      content: write
+      contents: write
     steps:
       - name: Set the date
         id: metadata
