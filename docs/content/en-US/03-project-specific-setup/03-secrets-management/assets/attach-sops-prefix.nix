@@ -2,10 +2,11 @@
 
 {
   sops.secrets =
-    lib.getSecrets ./sops.yaml {
-      ssh-key = { };
-      "borg/ssh-key" = { };
-    } //
+    lib.getSecrets ./sops.yaml
+      {
+        ssh-key = { };
+        "borg/ssh-key" = { };
+      } //
     (lib.getSecrets ./wireguard.yaml
       (lib.attachSopsPathPrefix "wireguard" {
         "private-key" = {

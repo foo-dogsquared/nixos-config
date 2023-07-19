@@ -1,6 +1,6 @@
 { lib
 
-# Include the private modules.
+  # Include the private modules.
 , isInternal ? false
 }:
 
@@ -28,5 +28,5 @@ let
     ./tasks/multimedia-archive
   ];
 in
-  modules
-  ++ (lib.optionals isInternal privateModules)
+modules
+++ (lib.optionals isInternal privateModules)

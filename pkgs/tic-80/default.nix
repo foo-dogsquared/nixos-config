@@ -35,7 +35,7 @@
 , jackSupport ? true
 , jack2
 
-# Ruby support requires compiling mruby so we'll skip it for now.
+  # Ruby support requires compiling mruby so we'll skip it for now.
 , rubySupport ? false
 , ruby
 , rake

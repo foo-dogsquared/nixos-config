@@ -3,7 +3,7 @@
 let
   cfg = config.services.distant;
 
-  settingsFormat = pkgs.formats.toml {};
+  settingsFormat = pkgs.formats.toml { };
   settingsFile = settingsFormat.generate "distant-settings-${config.home.username}" cfg.settings;
 
   hasCustomSocketPath = cfg.settings.manager.unix_socket != null;

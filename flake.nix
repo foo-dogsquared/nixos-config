@@ -389,21 +389,21 @@
               pkgs = import inputs."${nixpkgs-channel}" { inherit system overlays; };
               format = metadata.format or "iso";
             in
-              mkImage {
-                inherit format system pkgs extraArgs;
-                extraModules = [
-                  ({ lib, ... }: {
-                    config = lib.mkMerge [
-                      { networking.hostName = lib.mkForce metadata.hostname or host; }
+            mkImage {
+              inherit format system pkgs extraArgs;
+              extraModules = [
+                ({ lib, ... }: {
+                  config = lib.mkMerge [
+                    { networking.hostName = lib.mkForce metadata.hostname or host; }
 
-                      (lib.mkIf (metadata ? domain)
-                        { networking.domain = lib.mkForce metadata.domain; })
-                    ];
-                  })
-                  hostSharedConfig
-                  ./hosts/${host}
-                ];
-              })
+                    (lib.mkIf (metadata ? domain)
+                      { networking.domain = lib.mkForce metadata.domain; })
+                  ];
+                })
+                hostSharedConfig
+                ./hosts/${host}
+              ];
+            })
           images;
 
       # My several development shells for usual type of projects. This is much

@@ -1,6 +1,6 @@
 { lib
 
-# Import the private modules
+  # Import the private modules
 , isInternal ? false
 }:
 
@@ -23,5 +23,5 @@ let
     ./profiles/research.nix
   ];
 in
-  modules
-  ++ (lib.optionals isInternal privateModules)
+modules
+++ (lib.optionals isInternal privateModules)
