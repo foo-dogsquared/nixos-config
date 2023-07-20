@@ -1,0 +1,13 @@
+---
+title: Copyright
+---
+= Copyright
+
+The NixOS configuration is licensed under MIT license since it is also what github:NixOS/nixpkgs[opts=repo] and github:nix-community/home-manager[opts=repo] project is under the same license.
+Plus it makes upstreaming certain parts of the configuration (i.e., packages, modules) easier.
+
+The code used to build the website is licensed under MIT license similar to the NixOS configuration.
+I just want it to be consistent with the NixOS configuration.
+Do whatever you want with it.
+
+The content of the website is licensed under © 2023 Gabriel Arazas except for the code listings which are licensed under the same license as the NixOS configuration.

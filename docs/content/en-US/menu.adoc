@@ -23,3 +23,5 @@
 * link:{{< relref "./06-faq" >}}[Frequently asked questions]
 
 * link:{{< relref "./07-acknowledgement" >}}[Acknowledgement]
+
+* link:{{< relref "./08-copyright" >}}[Copyright]
