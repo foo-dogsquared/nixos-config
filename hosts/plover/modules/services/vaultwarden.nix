@@ -108,7 +108,7 @@ in
       # Restricting what capabilities it has access to which it
       # has none.
       CapabilityBoundingSet = [ "" ];
-      AmbientCapability = [ "" ];
+      AmbientCapabilities = lib.mkForce [ "" ];
 
       # Restrict what address families this service can interact
       # with. Since it is a web service, we expect it will only
