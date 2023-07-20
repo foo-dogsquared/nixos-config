@@ -51,19 +51,6 @@ in
         };
       };
 
-      # Manage your servers like a Linux-using basement dweller with their
-      # precious window manager configuration.
-      programs.tmux = {
-        enable = true;
-
-        baseIndex = 1;
-        clock24 = true;
-        customPaneNavigationAndResize = true;
-        keyMode = "vi";
-        newSession = true;
-        secureSocket = true;
-      };
-
       # It is expected that server configurations should be complete
       # service-wise so we're not allowing user database to be mutable.
       users.mutableUsers = lib.mkForce false;
