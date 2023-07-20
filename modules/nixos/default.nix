@@ -12,6 +12,7 @@ let
     ./programs/wezterm.nix
     ./services/archivebox.nix
     ./services/gallery-dl.nix
+    ./services/wezterm-mux-server.nix
     ./services/yt-dlp.nix
     ./workflows
   ];
