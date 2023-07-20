@@ -6,6 +6,7 @@
 ** link:{{< relref "./02-lay-of-the-land/03-whats-in-my-flake/" >}}[What's in my flake?]
 ** link:{{< relref "./02-lay-of-the-land/04-channels-support/" >}}[Channels support]
 ** link:{{< relref "./02-lay-of-the-land/05-what-should-not-be-here/" >}}[What should not be here?]
+** link:{{< relref "./02-lay-of-the-land/06-the-ci-server/" >}}[The CI server]
 
 * Project-specific setup
 ** link:{{< relref "./03-project-specific-setup/01-declarative-host-management" >}}[Declarative host management]

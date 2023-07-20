@@ -1,0 +1,34 @@
+---
+title: The CI server
+---
+= The CI server
+
+This project makes a lot of milage from using link:https://docs.github.com/actions[GitHub Actions] as the CI server.
+It uses the server for a lot of automated tasks including:
+
+* Checking whether all flake outputs are valid.
+* Checking if the flake lockfile is up-to-date.
+* Building the packages from this project and pushing it to a binary cache which speeds up fetching my packages.
+* Building the personalized console ISO mainly used for bootstrapping systems and publicly releasing it. footnote:[I can't build the graphical installer since its size is more than 2GB which is the size limit for GitHub Releases.]
+* Building the site project.
+
+Not only this is great for them automation but also it prevents the magical it-works-on-my-machine-related problems.
+
+[chat, Ezran, role=reversed]
+====
+Isn't that the point of using Nix, though?
+To easily make reproducible builds preventing the it-works-on-my-machine problems.
+====
+
+[chat, foodogsquared]
+====
+Yeah but it can still happen especially that not all of the changes I push into the public repo is out.
+====
+
+To keep the CI workflows up-to-date, this project makes use of link:https://github.com/dependabot[Dependabot] which checks for GitHub actions versions weekly.
+
+As a highlight, there are some nifty GitHub actions I found to fully take advantage of GitHub's large ecosystem.
+
+* github:DeterminateSystems/update-flake-lock[Determinate Systems has a GitHub action for automating flake updates.]
+* github:DeterminateSystems/nix-installer-action[They also have a Nix installer GitHub action.]
+* github:DeterminateSystems/magic-nix-cache-action[They also have a nice GitHub action for caching Nix outputs] using your runners' built-in cache making certain steps faster.
