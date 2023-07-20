@@ -7,9 +7,6 @@ on:
       - develop
   schedule:
     - cron: '30 11 * * *' # At 11:30 everyday.
-env:
-  NIXPKGS_ALLOW_BROKEN: "1"
-  NIXPKGS_ALLOW_UNFREE: "1"
 jobs:
   check-outputs:
     runs-on: ubuntu-latest
@@ -22,3 +19,6 @@ jobs:
       - name: Check flake outputs
         run: |
           nix flake check --impure
+        env:
+          NIXPKGS_ALLOW_BROKEN: "1"
+          NIXPKGS_ALLOW_UNFREE: "1"
