@@ -40,6 +40,7 @@ in
     ./modules/services/portunus.nix
     ./modules/services/vaultwarden.nix
     ./modules/services/wireguard.nix
+    ./modules/services/wezterm-mux-server.nix
   ];
 
   # Automatic format and partitioning.
