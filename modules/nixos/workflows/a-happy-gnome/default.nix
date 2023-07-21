@@ -85,6 +85,10 @@ in
         gnome-menus # It is required for custom menus in extensions.
         gnome-extension-manager # The cooler GNOME extensions app.
         gnome-search-provider-recoll # This is here for some reason.
+
+        # Nautilus extensions
+        nautilus-annotations
+        nautilus-open-any-terminal
       ];
       example = lib.literalExpression ''
         with pkgs; [ gnome.polari ];
