@@ -7,6 +7,7 @@ $line-height: 1.45;
 :root {
   --gap: 1rem;
   --sidebar-width: 22%;
+  --min-sidebar-width: 225px;
 }
 
 body {
@@ -31,6 +32,7 @@ body {
   top: 0;
   left: 0;
   width: var(--sidebar-width);
+  min-width: var(--min-sidebar-width);
 
   & ul, & ol {
     padding-left: 1em;
@@ -41,7 +43,7 @@ body {
   padding: var(--gap);
   overflow-y: auto;
   margin: 0 auto;
-  margin-left: var(--sidebar-width);
+  margin-left: calc(max(var(--min-sidebar-width), var(--sidebar-width)));
 
   max-width: var(--content-width);
 }
