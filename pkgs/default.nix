@@ -19,6 +19,7 @@ let
       hush-shell = callPackage ./hush-shell.nix { };
       kiwmi = callPackage ./kiwmi { };
       lwp = callPackage ./lwp { };
+      matcha = callPackage ./matcha { };
       moac = callPackage ./moac.nix { };
       mopidy-beets = callPackage ./mopidy-beets.nix { };
       mopidy-funkwhale = callPackage ./mopidy-funkwhale.nix { };
