@@ -37,7 +37,7 @@ let
       };
 
       type = lib.mkOption {
-        type = lib.types.enum [ "git" "fetch" "archive" "gopass" ];
+        type = lib.types.enum [ "git" "fetch" "archive" "gopass" "custom" ];
         description = lib.mdDoc ''
           Type that configures the behavior for fetching the URL.
 
@@ -48,6 +48,9 @@ let
           - For `archive`, the file will be fetched with `curl` and extracted
           before putting the file.
           - For `gopass`, the file will be cloned with `gopass`.
+          - For `custom`, the file will be passed with a user-given command.
+          The `extraArgs` option is now assumed to be a list of a command and
+          its arguments.
 
           The default type is `fetch`.
         '';
@@ -135,6 +138,7 @@ in
                   ${isFetchType "gopass" ''
                     [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
                   ''}
+                  ${isFetchType "custom" "[ -e ${path} ] || ${extraArgs}"}
                 '')
               cfg;
 
