@@ -3,8 +3,8 @@
 Hey there!
 This is my NixOS configuration abomination documentation "book" called "foodogsquared's NixOS config" book or "f(a)Nc(y)" config book for short.
 
-.Here's a Nix snowflake logo for some reason
-image::./nix-snowflake.svg[width=256px]
+.This St. Nixolas's reindeer cosplay is made with a tight budget but it's functionally identical, right?
+image::./nix-snowflake-with-fds.svg[width=256px]
 
 Why don't you start skimming the "book" by taking a glance at the table of contents over there.
 
