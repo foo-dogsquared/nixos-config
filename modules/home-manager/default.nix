@@ -12,6 +12,7 @@ let
     ./services/bleachbit.nix
     ./services/distant.nix
     ./services/gallery-dl.nix
+    ./services/matcha.nix
     ./services/plover.nix
     ./services/yt-dlp.nix
   ];
