@@ -130,6 +130,12 @@ in
       extraArgs = [ "--depth" "1" ];
     };
 
+    # ...my gopass secrets,...
+    ".local/share/gopass/stores/personal" = {
+      url = "gitea@code.foodogsquared.one:foodogsquared/gopass-secrets-personal.git";
+      type = "gopass";
+    };
+
     # ...and my custom theme to be a showoff.
     "${config.xdg.dataHome}/base16/bark-on-a-tree" = {
       url = "https://github.com/foo-dogsquared/base16-bark-on-a-tree-scheme.git";
