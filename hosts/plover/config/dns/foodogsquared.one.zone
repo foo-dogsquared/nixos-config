@@ -4,7 +4,7 @@ $TTL 12h
 $ORIGIN foodogsquared.one.
 
 @	3600	IN	SOA	ns1 hostmaster (
-				2023062601 	; serial number
+				2023072101 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -21,6 +21,9 @@ $ORIGIN foodogsquared.one.
 	IN	MX	10 mxext2.mailbox.org.
 	IN	MX	20 mxext3.mailbox.org.
 	IN	TXT	v=spf1 include:mailbox.org ~all
+
+; Keybase verification key.
+@	3600	IN	TXT #keybaseVerificationKey#
 
 ; This is something that is needed for mailbox.org to verify it is indeed in my
 ; domain.

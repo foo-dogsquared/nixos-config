@@ -62,6 +62,7 @@ in
     lib.getSecrets ../../secrets/secrets.yaml {
       "dns/${domain}/mailbox-security-key" = dnsFileAttribute;
       "dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
+      "dns/${domain}/keybase-verification-key" = dnsFileAttribute;
       "dns/${domain}/rfc2136-key" = dnsFileAttribute // {
         reloadUnits = [ "bind.service" ];
       };
@@ -189,13 +190,13 @@ in
         secretPath = path: config.sops.secrets."dns/${path}".path;
       in
       lib.mkAfter ''
-        [ -f '${domainZone'}' ] || {
+        {
           install -Dm0600 '${domainZone}' '${domainZone'}'
           replace-secret #mailboxSecurityKey# '${secretPath "${domain}/mailbox-security-key"}' '${domainZone'}'
           replace-secret #mailboxSecurityKeyRecord# '${secretPath "${domain}/mailbox-security-key-record"}' '${domainZone'}'
         }
 
-        [ -f '${fqdnZone'}' ] || {
+        {
           install -Dm0600 '${fqdnZone}' '${fqdnZone'}'
         }
       '';
