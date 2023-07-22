@@ -4,7 +4,7 @@ title: Workflows
 = Workflows
 
 Workflows are an all-encompassing NixOS module for dictating how you interact with your computer/device/whatever.
-Basically, this is where certain things are set such as your GNOME desktop environment settings or your dolled up standalone window manager setup.
+Basically, this is where certain things are set such as your GNOME desktop environment settings, your dolled up standalone window manager setup, or an oddball audio-only desktop interface.
 They are located in `./nixos/modules/workflows` at the project root.
 
 Workflows are defined under the namespace `workflows` where each workflow module is set to be declared and to be enabled at `workflows.workflows.<name>`.
