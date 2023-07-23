@@ -10,7 +10,7 @@ let
       decker = callPackage ./decker { };
       cosmic-launcher = callPackage ./cosmic-launcher { };
       clidle = callPackage ./clidle.nix { };
-      domterm = callPackage ./domterm { };
+      domterm = libsForQt5.callPackage ./domterm { };
       fastn = callPackage ./fastn { };
       freerct = callPackage ./freerct.nix { };
       distant = callPackage ./distant.nix { };

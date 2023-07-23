@@ -5,27 +5,52 @@
 , desktop-file-utils
 , pkg-config
 , libwebsockets
-, json_c
+, ncurses
 , openssl
-, asciidoctor
 , unixtools
 , zlib
 , rustPlatform
-, qt5
+, perl
+, qtbase
+, qtwebchannel
+, qtwebengine
+, wrapQtAppsHook
+
+, withQtDocking ? false
+
+, withKddockwidgets ? false
+, kddockwidgets
+
+, withAsciidoctor ? true
+, asciidoctor
+
+, withDocbook ? true
+, docbook-xsl-ns
+, libxslt
 }:
 
 stdenv.mkDerivation rec {
   pname = "domterm";
-  version = "unstable-2022-11-02";
+  version = "unstable-2023-07-22";
 
   src = fetchFromGitHub {
     owner = "PerBothner";
     repo = "DomTerm";
-    rev = "71f726c387c708fd4c3a4363771afdcd1993b9eb";
-    sha256 = "sha256-De3AnruWFK73TgGFWzOC0GaHjIW52pEqPwhRj9/RQx4=";
+    rev = "33ca5ad96cd8fc274b8e97533123dd8c33fb1938";
+    hash = "sha256-H1Nzqzz7dv4j9hkb08FCExLeq69EkFNXGzhhl/e+uxI=";
   };
 
-  nativeBuildInputs = with qt5; [
+  configureFlags = [
+    "--with-libwebsockets"
+    "--enable-compiled-in-resources"
+    "--with-qt"
+  ]
+  ++ lib.optional withAsciidoctor "--with-asciidoctor"
+  ++ lib.optional withQtDocking "--with-qt-docking"
+  ++ lib.optional withKddockwidgets "--with-kddockwidgets"
+  ++ lib.optional withDocbook "--with-docbook";
+
+  nativeBuildInputs = [
     autoreconfHook
     pkg-config
     wrapQtAppsHook
@@ -34,27 +59,27 @@ stdenv.mkDerivation rec {
     qtwebengine
   ];
 
-  buildInputs = with qt5; [
+  buildInputs = [
     asciidoctor
     desktop-file-utils
-    json_c
+    ncurses
     libwebsockets
     openssl
+    perl
     unixtools.xxd
     zlib
-  ];
-
-  configureFlags = [
-    "--with-libwebsockets"
-    "--with-asciidoctor"
-    "--enable-compiled-in-resources"
-    "--enable-debug"
-    "--with-qt"
+  ]
+  ++ lib.optional withKddockwidgets kddockwidgets
+  ++ lib.optional withAsciidoctor asciidoctor
+  ++ lib.optionals withDocbook [
+    docbook-xsl-ns
+    libxslt
   ];
 
   meta = with lib; {
     homepage = "https://domterm.org/";
     description = "Terminal emulator based on web technologies.";
     license = licenses.bsd3;
+    maintainers = with maintainers; [ foo-dogsquared ];
   };
 }
