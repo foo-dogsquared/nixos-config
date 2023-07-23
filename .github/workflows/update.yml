@@ -6,6 +6,9 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    env:
+      NIXPKGS_ALLOW_BROKEN: "1"
+      NIXPKGS_ALLOW_UNFREE: "1"
     permissions:
       contents: write
     steps:
