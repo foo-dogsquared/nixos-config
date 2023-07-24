@@ -443,24 +443,6 @@
         "type": "github"
       }
     },
-    "flake-utils_6": {
-      "inputs": {
-        "systems": "systems_6"
-      },
-      "locked": {
-        "lastModified": 1681202837,
-        "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "cfacdce06f30d2b68473a46042957675eebb3401",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "guix-overlay": {
       "inputs": {
         "nixpkgs": "nixpkgs"
@@ -1009,7 +991,6 @@
         "nixos-unstable-small": "nixos-unstable-small",
         "nixpkgs": "nixpkgs_4",
         "nur": "nur",
-        "rust-overlay": "rust-overlay_2",
         "sops-nix": "sops-nix"
       }
     },
@@ -1027,27 +1008,6 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "c57e210faf68e5d5386f18f1b17ad8365d25e4ed",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "rust-overlay_2": {
-      "inputs": {
-        "flake-utils": "flake-utils_6",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1690165277,
-        "narHash": "sha256-P3X8iSAu12z+UFxquuntZnR8sXjKwgYHf0wTzgO8I7M=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "317c523c09218f27f1da1ec0d06bbd2cbc0c1939",
         "type": "github"
       },
       "original": {
@@ -1138,21 +1098,6 @@
       }
     },
     "systems_5": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_6": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

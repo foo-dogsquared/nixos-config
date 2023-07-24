@@ -55,10 +55,6 @@
     # Guix in NixOS?!
     guix-overlay.url = "github:foo-dogsquared/nix-overlay-guix";
 
-    # The more recommended Rust overlay so I'm going with it.
-    rust-overlay.url = "github:oxalica/rust-overlay";
-    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
-
     # Generating an entire flavored themes with Nix?
     nix-colors.url = "github:misterio77/nix-colors";
 
@@ -104,9 +100,6 @@
 
         # Emacs unstable version!
         inputs.emacs-overlay.overlays.default
-
-        # Rust overlay for them ease of setting up Rust toolchains.
-        inputs.rust-overlay.overlays.default
 
         # Access to NUR.
         inputs.nur.overlay
