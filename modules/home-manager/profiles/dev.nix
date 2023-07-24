@@ -52,8 +52,8 @@ in {
         in
         {
           enable = true;
-          changeDirWidgetCommand = "${fd} --type d";
-          defaultCommand = "${fd} --type f";
+          changeDirWidgetCommand = "${fd} --type directory --unrestricted";
+          defaultCommand = "${fd} --type file --hidden";
         };
 
       # dog > sky dog > cat.
