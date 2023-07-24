@@ -1,5 +1,6 @@
 keys:
-  - &foo-dogsquared 8FCE86932583783E515B6FE55F2B001E20ED3763
+  - &foo-dogsquared DDD7D0BD602E564BAA04FC3514310D9141152B92
+  - &foo-dogsquared-old 8FCE86932583783E515B6FE55F2B001E20ED3763
   - &foo-dogsquared-age age1say65zc678yc03tx4zexp20c9gvskvwrm4390j4x2jkepn97duhq9ptuj9
   - &ni age1dm9xugju4q5gx0zty8ckw655ea904c64gv9qw9fn3lu507ck8uzsag59y8
   - &plover age1sj497yr895335rk77qqnrqyx9f7462ma3lz0a0x3w5cnla5uqgpspgggtz
