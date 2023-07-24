@@ -100,6 +100,10 @@
       emulators.enable = true;
       retro-computing.enable = true;
     };
+    filesystem = {
+      tools.enable = true;
+      setups.personal-webstorage.enable = true;
+    };
     vpn.personal.enable = true;
   };
 
