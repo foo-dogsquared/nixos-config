@@ -16,6 +16,7 @@ in
     setups = {
       archive.enable = lib.mkEnableOption "automounting offline archive";
       external-hdd.enable = lib.mkEnableOption "automounting personal external hard drive";
+      personal-webstorage.enable = lib.mkEnableOption "automounting of personal WebDAV directory";
     };
   };
 
@@ -57,6 +58,34 @@ in
           "x-systemd.automount"
           "x-systemd.device-timeout=2"
           "x-systemd.idle-timeout=2"
+        ];
+      };
+    })
+
+    (lib.mkIf cfg.setups.personal-webstorage.enable {
+      assertions = [{
+        assertion = config.services.davfs2.enable;
+        message = ''
+          Mounting WebDAVs is not possible since davfs2 NixOS service is not
+          enabled.
+        '';
+      }];
+
+      # You have to set up the secrets for this somewhere.
+      fileSystems."/mnt/personal-webdav" = {
+        device = "https://dav.mailbox.org/servlet/webdav.infostore";
+        fsType = "davfs";
+        noCheck = true;
+        options = [
+          "rw"
+          "user"
+          "noauto"
+          "nofail"
+
+          "x-systemd.automount"
+          "x-systemd.idle-timeout=300"
+          "x-systemd.mount-timeout=20"
+          "x-systemd.wanted-by=multi-user.target"
         ];
       };
     })
