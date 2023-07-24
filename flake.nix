@@ -242,7 +242,10 @@
       # configurations with `nixpkgs.useGlobalPkgs` set to `true` so avoid
       # setting nixpkgs-related options here.
       userSharedConfig = { pkgs, config, ... }: {
-        imports = [ inputs.nur.hmModules.nur ];
+        imports = [
+          inputs.nur.hmModules.nur
+          inputs.sops-nix.homeManagerModules.sops
+        ];
 
         # Hardcoding this is not really great especially if you consider using
         # other locales but its default values are already hardcoded so what
