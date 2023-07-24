@@ -59,7 +59,7 @@ in
         "ssh-key" = { };
       });
 
-    profiles.filesystem = {
+    profiles.filesystem.setups = {
       archive.enable = true;
       external-hdd.enable = true;
     };
