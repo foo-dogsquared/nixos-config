@@ -13,6 +13,15 @@ in
     ./modules/music.nix
   ];
 
+  # The keyfile required to decrypt the secrets.
+  sops.age.keyFile = "${config.xdg.configHome}/age/user";
+
+  sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
+    davfs2-credentials = {
+      path = "${config.home.homeDirectory}/.davfs2/davfs2.conf";
+    };
+  };
+
   # Set nixpkgs config both outside and inside of home-manager.
   nixpkgs.config = import ./config/nixpkgs/config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./config/nixpkgs/config.nix;
