@@ -13,6 +13,7 @@ let
 in
 {
   options.profiles.filesystem = {
+    tools.enable = lib.mkEnableOption "filesystem-related settings";
     setups = {
       archive.enable = lib.mkEnableOption "automounting offline archive";
       external-hdd.enable = lib.mkEnableOption "automounting personal external hard drive";
@@ -21,6 +22,16 @@ in
   };
 
   config = lib.mkMerge [
+    (lib.mkIf cfg.tools.enable {
+      # Enable WebDAV mounting.
+      services.davfs2.enable = true;
+
+      # Installing filesystem debugging utilities.
+      environment.systemPackages = with pkgs; [
+        afuse
+      ];
+    })
+
     (lib.mkIf cfg.setups.archive.enable {
       fileSystems."/mnt/archives" = {
         device = "/dev/disk/by-uuid/6ba86a30-5fa4-41d9-8354-fa8af0f57f49";
