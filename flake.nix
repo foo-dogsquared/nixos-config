@@ -83,7 +83,7 @@
       users = lib'.importTOML ./users.toml;
 
       # A set of image-related utilities for the flake outputs.
-      inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkUser mkImage;
+      inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage;
 
       # The order here is important(?).
       overlays = [
@@ -347,7 +347,7 @@
               path
             ];
           in
-          mkUser {
+          mkHome {
             inherit pkgs system extraModules extraArgs;
             home-manager-channel = metadata.home-manager-channel or "home-manager";
           })
