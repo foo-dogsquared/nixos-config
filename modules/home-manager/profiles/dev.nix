@@ -17,7 +17,6 @@ in {
       home.packages = with pkgs; [
         dasel # Universal version of jq.
         gopass # An improved version of the password manager for hipsters.
-        lf # File manager in the terminal, really.
         moar # More 'more'.
         perl534Packages.vidir # Bulk rename for your organizing needs in the terminal.
         tealdeer # An easy cop-out for basic help.
@@ -55,6 +54,34 @@ in {
           changeDirWidgetCommand = "${fd} --type directory --unrestricted";
           defaultCommand = "${fd} --type file --hidden";
         };
+
+      # The file manager of choice.
+      programs.lf = {
+        enable = true;
+
+        keybindings = {
+          "<enter>" = "shell";
+          "gr" = "cd /";
+        };
+
+        settings = {
+          # Aesthetics.
+          color256 = true;
+          dircounts = true;
+          hidden = true;
+          drawbox = true;
+          timefmt = "2006-01-02 15:04:05";
+
+          # Scrolling options.
+          wrapscroll = true;
+          scrolloff = 10;
+        };
+
+        extraConfig = ''
+          cmap <tab> cmd-menu-complete
+          cmap <backtab> cmd-menu-complete-back
+        '';
+      };
 
       # dog > sky dog > cat.
       programs.bat = {
