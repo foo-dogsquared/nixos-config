@@ -1,3 +1,8 @@
+[global]
+excludes = [
+  "pkgs/firefox-addons/default.nix"
+]
+
 [formatter.lua]
 command = "stylua"
 includes = [ "*.lua" ]
