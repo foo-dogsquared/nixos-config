@@ -6,7 +6,7 @@ on:
       - master
       - develop
   schedule:
-    - cron: '30 11 * * *' # At 11:30 everyday.
+    - cron: '5 10 * * 4' # At 10:05 on Thursday.
 jobs:
   check-outputs:
     runs-on: ubuntu-latest
