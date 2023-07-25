@@ -119,7 +119,6 @@ in
   xdg.configFile = {
     "doom".source = getDotfiles "emacs";
     "kitty".source = getDotfiles "kitty";
-    "lf".source = getDotfiles "lf";
     "nvim".source = getDotfiles "nvim";
     "wezterm".source = getDotfiles "wezterm";
   };
