@@ -30,6 +30,8 @@ Then run the following command in the shell as root.
 nixos-install --flake {canonical-flake-url}#INSTALLABLE
 ----
 
+Take note most systems have an additional prerequisites such as activating xref:../../04-nixos-modules/03-disko/index.adoc[disko modules] and the private keys that are missing (and other stuff as mentioned from xref:../05-what-should-not-be-here/index.adoc[What should not be here?]).
+
 Despite being a NixOS system, it isn't entirely reproducible to the point of installing this config will work out-of-the-box.
 It has some things needed in the first place to work like my external backup setup where it needs my SSH private keys to work in the first place.
 You can see more details from xref:../05-what-should-not-be-here/index.adoc[What should not be here?].

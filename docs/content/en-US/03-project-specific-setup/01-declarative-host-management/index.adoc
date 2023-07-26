@@ -7,6 +7,14 @@ This project uses a custom setup for declarative host management.
 Specifically, it is done with a simple file at github:{github-repo}[`./images.toml`, path=./images.toml, rev=master] where it expects a table of the hosts' metadata.
 Each host in the table represents one of the hosts at github:{github-repo}[`./hosts/`, path=./hosts/, rev=master].
 
+Each of declared hosts are then exported as part of the `images` flake output attribute where each is a derivation for building them as an image output.
+For example, you can build my personalized NixOS installer ISO with the following command.
+
+[source, shell, subs=attributes]
+----
+nix build {canonical-flake-url}#images.bootstrap
+----
+
 A host metadata has a certain schema which the following example is a complete version of it.
 The data is then used for certain functions in the flake definition file (i.e., `flake.nix`).
 
@@ -51,8 +59,15 @@ By default, it uses `nixpkgs` flake input which points to the `nixos-unstable` c
 - `deploy` is a table containing arguments from github:serokell/deploy-rs[opts=repo].
 Only a few arguments are accepted (i.e., `hostname`, `fast-connection`, `remote-build`, `magic-rollback`, and `auto-rollback`).
 
-Take note, only certain hosts can be considered as a NixOS configuration (e.g., `nixosConfigurations`).
+Take note only certain hosts can be considered as a NixOS configuration (e.g., `nixosConfigurations`).
 Specifically, those images with a format of `iso` and those without (since they fall back to `iso` anyways).
-Those NixOS configuration are then included as part of the deploy nodes for deploy-rs.
 Otherwise, most images are intended to be built.
 footnote:[Though, one could create a custom activation and deployment script with deploy-rs.]
+
+Furthermore, those imported NixOS configurations are also exported as part of the deploy nodes for deploy-rs with the `nixos` prefix.
+For example, here's the command to deploy my Plover server.
+
+[source, shell, subs=attributes]
+----
+deploy {canonical-flake-url}#nixos-plover
+----
