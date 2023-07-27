@@ -1,7 +1,7 @@
 return {
   tls_servers = {
-    pem_private_key = "@CERT_DIR@/key.pem",
-    pem_cert = "@CERT_DIR@/cert.pem",
-    pem_ca = "@CERT_DIR@/fullchain.pem",
+    pem_private_key = os.getenv("CREDENTIALS_DIRECTORY") .. "/key.pem",
+    pem_cert = os.getenv("CREDENTIALS_DIRECTORY") .. "/cert.pem",
+    pem_ca = os.getenv("CREDENTIALS_DIRECTORY") .. "/fullchain.pem",
   }
 }
