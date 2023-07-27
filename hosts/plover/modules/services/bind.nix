@@ -239,6 +239,8 @@ in
       RuntimeDirectoryMode = "0750";
       CacheDirectory = "named";
       CacheDirectoryMode = "0750";
+      ConfigurationDirectory = "bind";
+      ConfigurationDirectoryMode = "0755";
 
       # Filtering system calls.
       SystemCallFilter = [ "@system-service" ];
