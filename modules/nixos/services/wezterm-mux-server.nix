@@ -30,6 +30,7 @@ in
     systemd.services.wezterm-mux-server = {
       description = "Wezterm mux server";
       after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
       script = "${lib.getBin cfg.package}/bin/wezterm-mux-server ${lib.optionalString (cfg.configFile != null) "--config-file ${cfg.configFile}"}";
 
       # Give it some tough love.
