@@ -9,7 +9,7 @@ in
   options.programs.kiwmi = {
     enable = lib.mkEnableOption "Kiwmi, a fully programmable Wayland compositor";
     package = lib.mkOption {
-      description = "The package containing the <literal>kiwmi</literal> and <literal>kiwmic</literal>.";
+      description = "The package containing the {command}`kiwmi` and {command}`kiwmic`.";
       type = lib.types.package;
       default = pkgs.kiwmi;
     };

@@ -16,8 +16,8 @@ let
         type = with lib.types; listOf str;
         default = [ ];
         description = ''
-          A list of URLs to be downloaded to <command>gallery-dl</command>. Please
-          see the list of extractors with <option>--list-extractors</option>.
+          A list of URLs to be downloaded to {command}`gallery-dl`. Please
+          see the list of extractors with `--list-extractors`.
         '';
         example = lib.literalExpression ''
           [
@@ -32,10 +32,7 @@ let
         description = ''
           Indicates how frequent the download will occur. The given schedule
           should follow the format as described from
-          <citerefentry>
-            <refentrytitle>systemd.time</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>.
+          {manpage}`systemd.time(5)`.
         '';
         default = "daily";
         example = "*-*-3/4";
@@ -45,8 +42,7 @@ let
         type = lib.types.bool;
         description = ''
           Indicates whether job is persistent, starting the service despite the
-          timer missed. Defaults to <literal>true</literal> assuming it is used
-          on the desktop.
+          timer missed. Defaults to `true` assuming it is used on the desktop.
         '';
         default = true;
         defaultText = "true";
@@ -57,7 +53,7 @@ let
         type = with lib.types; listOf str;
         description = ''
           Job-specific extra arguments to be passed to the
-          <command>gallery-dl</command>.
+          {command}`gallery-dl`.
         '';
         default = [ ];
         example = lib.literalExpression ''
@@ -90,7 +86,7 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       description =
-        "Package containing the <command>gallery-dl</command> binary.";
+        "Package containing the {command}`gallery-dl` binary.";
       default = pkgs.gallery-dl;
       defaultText = lib.literalExpression "pkgs.gallery-dl";
     };
@@ -125,7 +121,7 @@ in
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       description =
-        "List of arguments to be passed to <command>gallery-dl</command>.";
+        "List of arguments to be passed to {command}`gallery-dl`.";
       default = [ ];
       example = lib.literalExpression ''
         [

@@ -56,7 +56,7 @@ in
       description = ''
         How often or when cleanup will occur. For most cases, it should be enough to clean it up once per month.
 
-        See systemd.time(7) to see the date format.
+        See {manpage}`systemd.time(7)` to see the date format.
       '';
       default = "monthly";
       example = "Fri 10:00:00";
@@ -65,7 +65,7 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       description = ''
-        The derivation containing <literal>bleachbit</literal> executable.
+        The derivation containing {command}`bleachbit` executable.
       '';
       default = pkgs.bleachbit;
     };

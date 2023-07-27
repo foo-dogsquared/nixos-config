@@ -19,8 +19,8 @@ let
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description = ''
-          Additional arguments for adding links (i.e., <literal>archivebox add
-          $LINK</literal>) from <option>links</option>.
+          Additional arguments for adding links (i.e., {command}`archivebox add
+          $LINK`) from {option}`links`.
         '';
         default = [ ];
         example = lib.literalExpression ''
@@ -31,8 +31,8 @@ let
       startAt = lib.mkOption {
         type = with lib.types; str;
         description = ''
-          Indicates how frequent the scheduled archiving will occur.
-          Should be a valid string format as described from systemd.time(5).
+          Indicates how frequent the scheduled archiving will occur. Should be
+          a valid string format as described from {manpage}`systemd.time(5)`.
         '';
         default = "weekly";
         defaultText = "weekly";

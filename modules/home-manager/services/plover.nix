@@ -30,7 +30,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      description = -"The derivation containing the binaries for the service.";
+      description = "The derivation containing the binaries for the service.";
       default = pkgs.plover.dev;
       defaultText = "pkgs.plover.dev";
       example = lib.literalExpression "pkgs.plover.stable";
@@ -57,7 +57,7 @@ in
     extraOptions = lib.mkOption {
       type = with lib.types; listOf str;
       description =
-        "Extra command-line arguments to pass to <literal>plover</literal>";
+        "Extra command-line arguments to pass to {command}`plover`";
       default = [ ];
       defaultText = lib.literalExpression "[]";
       example = lib.literalExpression ''

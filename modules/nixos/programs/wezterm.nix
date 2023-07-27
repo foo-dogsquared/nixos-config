@@ -14,7 +14,7 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.wezterm;
-      description = "Package containing <command>wezterm</command> binary.";
+      description = "Package containing {command}`wezterm` binary.";
     };
   };
 

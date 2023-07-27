@@ -26,7 +26,7 @@ in
       type = with lib.types; listOf package;
       description = ''
         A list of GNOME Shell extensions to be included. Take note the package
-        contain <literal>passthru.extensionUuid</literal> to be used for
+        contain `passthru.extensionUuid` to be used for
         enabling the extensions.
       '';
       default = with pkgs.gnomeExtensions; [

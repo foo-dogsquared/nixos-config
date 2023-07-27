@@ -17,8 +17,8 @@ in
       default = pkgs.cardboard;
       defaultText = lib.literalExpression "pkgs.cardboard";
       description = ''
-        The derivation containing the <command>cardboard</command>
-        and <command>cutter</command> binary.
+        The derivation containing the {command}`cardboard` and
+        {command}`cutter` binary.
       '';
     };
 

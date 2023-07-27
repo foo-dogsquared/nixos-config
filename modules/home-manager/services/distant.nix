@@ -14,14 +14,14 @@ in
     enable = lib.mkEnableOption "Distant-related services";
 
     package = lib.mkOption {
-      description = lib.mdDoc "The package containing the `distant` executable.";
+      description =  "The package containing the {command}`distant` executable.";
       type = lib.types.package;
       default = pkgs.distant;
       defaultText = "pkgs.distant";
     };
 
     settings = lib.mkOption {
-      description = lib.mdDoc ''
+      description =  ''
         The configuration settings to be passed to the service.
       '';
       types = settingsFormat.type;

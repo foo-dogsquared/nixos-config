@@ -8,7 +8,7 @@ in
     enable = lib.mkEnableOption "Wezterm mux server";
     package = lib.mkOption {
       type = lib.types.package;
-      description = lib.mdDoc ''
+      description = ''
         The package containing the {command}`wezterm-mux-server` binary.
       '';
       default = pkgs.wezterm;
@@ -16,7 +16,7 @@ in
     };
     configFile = lib.mkOption {
       type = with lib.types; nullOr path;
-      description = lib.mdDoc ''
+      description = ''
         The path to the configuration file. For more information, you can see
         [its section for setting up multiplexing](https://wezfurlong.org/wezterm/multiplexing.html).
       '';

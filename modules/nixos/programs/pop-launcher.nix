@@ -35,8 +35,8 @@ in
         launchers.
 
         However, you have to install an application launcher frontend to make
-        use of this such as <command>onagre</command> or
-        <command>cosmic-launcher</command>.
+        use of this such as {command}`onagre` or
+        {command}`cosmic-launcher`.
       '';
       type = lib.types.bool;
       default = false;
@@ -46,8 +46,8 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       description = ''
-        The package where <command>pop-launcher</command> binary and
-        built-in plugins are expected.
+        The package where {command}`pop-launcher` binary and built-in plugins
+        are expected.
       '';
       default = pkgs.pop-launcher;
     };

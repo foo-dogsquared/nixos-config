@@ -13,8 +13,8 @@ let
         type = with lib.types; listOf str;
         default = [ ];
         description = ''
-          A list of URLs to be downloaded to <command>yt-dlp</command>. Please
-          see the list of extractors with <option>--list-extractors</option>.
+          A list of URLs to be downloaded to {command}`yt-dlp`. Please
+          see the list of extractors with `--list-extractors`.
         '';
         example = lib.literalExpression ''
           [
@@ -29,10 +29,7 @@ let
         description = ''
           Indicates how frequent the download will occur. The given schedule
           should follow the format as described from
-          <citerefentry>
-            <refentrytitle>systemd.time</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry>.
+          {manpage}`systemd.time(5)`.
         '';
         default = "daily";
         example = "*-*-3/4";
@@ -52,7 +49,7 @@ let
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description =
-          "Job-specific extra arguments to be passed to the <command>yt-dlp</command>.";
+          "Job-specific extra arguments to be passed to the {command}`yt-dlp`.";
         default = [ ];
         example = lib.literalExpression ''
           [
@@ -70,7 +67,7 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       description =
-        "The derivation that contains <command>yt-dlp</command> binary.";
+        "The derivation that contains {command}`yt-dlp` binary.";
       default = pkgs.yt-dlp;
       defaultText = lib.literalExpression "pkgs.yt-dlp";
       example = lib.literalExpression
@@ -88,7 +85,7 @@ in
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       description =
-        "List of arguments to be passed to <command>yt-dlp</command>.";
+        "List of arguments to be passed to {command}`yt-dlp`.";
       default = [ "--download-archive videos" ];
       example = lib.literalExpression ''
         [
