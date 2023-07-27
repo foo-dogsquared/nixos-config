@@ -46,9 +46,17 @@ in
         RestrictRealtime = true;
         ProtectClock = true;
         ProtectKernelLogs = true;
+        ProtectKernelTunables = true;
+        ProtectKernelModules = true;
+        ProtectHome = true;
         ProtectHostname = true;
         ProtectControlGroups = true;
         ProtectProc = "invisible";
+        ProcSubset = "pid";
+
+        RuntimeDirectory = "wezterm";
+        CacheDirectory = "wezterm";
+        StateDirectory = "wezterm";
 
         # Filtering system calls.
         SystemCallFilter = [
