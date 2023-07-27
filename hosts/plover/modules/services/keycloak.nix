@@ -76,7 +76,7 @@ in
       lib.mkAfter ''
         # Setting up the appropriate schema for PostgreSQL secure schema usage.
         ${psqlBin} -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${keycloakUser}';" \
-          | grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${keycloakUser};"
+          | grep -q 1 || ${psqlBin} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${keycloakUser};"
       '';
   };
 
