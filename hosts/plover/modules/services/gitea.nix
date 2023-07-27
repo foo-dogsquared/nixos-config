@@ -206,12 +206,12 @@ in
   systemd.tmpfiles.rules =
     let
       # To be used similarly to $GITEA_CUSTOM variable.
-      giteaCustomDir = "${config.services.gitea.stateDir}/custom";
+      giteaCustomDir = config.services.gitea.customDir;
     in
     [
-      "L+ ${giteaCustomDir}/templates/home.tmpl - - - - ${../../files/gitea/home.tmpl}"
-      "L+ ${giteaCustomDir}/public/img/logo.svg - - - - ${../../files/gitea/logo.svg}"
-      "L+ ${giteaCustomDir}/public/img/logo.png - - - - ${../../files/gitea/logo.png}"
+      "L+ ${giteaCustomDir}/templates/home.tmpl 0750 gitea gitea - ${../../files/gitea/home.tmpl}"
+      "L+ ${giteaCustomDir}/public/img/logo.svg 0750 gitea gitea - ${../../files/gitea/logo.svg}"
+      "L+ ${giteaCustomDir}/public/img/logo.png 0750 gitea gitea - ${../../files/gitea/logo.png}"
     ];
 
   # Add the following files to be backed up.
