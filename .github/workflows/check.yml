@@ -17,7 +17,7 @@ jobs:
         uses: DeterminateSystems/flake-checker-action@v5
       - name: Check flake outputs
         run: |
-          nix flake check --impure --no-build
+          nix flake check --impure --no-build --accept-flake-config
         env:
           NIXPKGS_ALLOW_BROKEN: "1"
           NIXPKGS_ALLOW_UNFREE: "1"
