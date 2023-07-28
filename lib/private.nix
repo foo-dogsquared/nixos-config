@@ -27,7 +27,7 @@ rec {
 
   getSecret = path: ../secrets/${path};
 
-  isInternal = config: config ? _isInsideFds && config._isInsideFds;
+  isInternal = config: config ? _isfoodogsquaredcustom && config._isfoodogsquaredcustom;
 
   getUsers = type: users:
     let

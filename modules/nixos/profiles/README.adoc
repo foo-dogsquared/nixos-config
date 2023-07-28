@@ -1,6 +1,6 @@
 = Profiles
 :toc:
-:check_variable: _isInsideFds
+:check_variable: _isfoodogsquaredcustom
 
 
 We're defining profiles after how link:https://digga.divnix.com/concepts/profiles.html[digga library from divnix defines it].

@@ -168,7 +168,7 @@ in
     }
 
     # Check whether this is inside of my personal configuration or nah.
-    (lib.mkIf (lib.isInternal config) {
+    (lib.mkIf (attrs ? _isfoodogsquaredcustom && attrs._isfoodogsquaredcustom) {
       profiles.i18n = lib.mkDefault {
         enable = true;
         ibus.enable = true;

@@ -27,7 +27,7 @@ icontype = "svg"
 
 # Project-wide attributes to be used.
 github-repo = "foo-dogsquared/nixos-config"
-check-variable = "_isInsideFds"
+check-variable = "_isfoodogsquaredcustom"
 canonical-flake-url = "github:foo-dogsquared/nixos-config"
 canonical-source-repo = "https://github.com/foo-dogsquared/nixos-config"
 canonical-flake-url-tarball-master = "https://github.com/foo-dogsquared/nixos-config/archive/master.tar.gz"
