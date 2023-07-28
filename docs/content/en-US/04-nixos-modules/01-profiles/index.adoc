@@ -12,6 +12,14 @@ Profiles are a convenient shorthand for the definition of options in contrast to
 They're built into the NixOS module system for a reason: to elegantly provide a clear separation of concerns.
 ____
 
+[NOTE]
+====
+Despite mainly focusing on NixOS, this definition also applies to other environments such as github:nix-community/home-manager[opts=repo], github:numtide/system-manager[opts=repo], or github:LnL7/nix-darwin[opts=repo].
+====
+
+
+== What are profiles really?
+
 Except the difference is we also included a declaration for setting those options.
 This enables different modules in our NixOS configurations to set those up in different points in time without getting a duplicate value error which is nice.
 However, enabling profiles shouldn't be taken lightly.
@@ -19,6 +27,7 @@ In my project, the situations to enable profiles are limited.
 
 Here are the module namespaces with their guidelines for setting them profiles.
 
+[#lst:profile-namespace-guidelines]
 * `services` and `programs` shouldn't use any profiles at all since they are small in scope that they are more likely to be combined with other modules.
 
 * Any modules under `workflows` are not exactly prohibited to use profiles since they are all-encompassing modules that creates a desktop that may be composed of multiple modules.
@@ -53,5 +62,42 @@ But the project is really big and overwhelming to use it for someone who only st
 I think link:https://github.com/divnix/digga/issues/503#issuecomment-1546359287[this comment sums up the problems of the project].
 ====
 
-Also take note, you'll see similar home-manager profile modules around in my project.
-They're pretty much the same as defined here except that they're home-manager modules.
+
+== Setting profiles conditionally
+
+In case of making modules that are intended to be used somewhere else but also needing a part of my profiles to be applied, there are ways to get around this.
+The main way is through checking a certain variable, `{check-variable}`, which is intended for this configuration and only for this configuration.
+
+As noted from the <<lst:profile-namespace-guidelines, guidelines>>, this is mainly used for certain types of modules such as the xref:../02-workflows/index.adoc[workflow modules] where it is used by me as well as (potentially) by others.
+
+Here's a snippet of conditionally setting a profile within the module.
+
+[source, nix, subs=attributes]
+----
+{ config, options, pkgs, lib, ... }@attrs:
+
+{
+  # ...
+
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
+      # Some required parts here.
+    }
+
+    (lib.mkIf (attrs ? {check-variable} && attrs.{check-variable}) {
+      # Set profiles here.
+    })
+  ];
+}
+----
+
+[chat, Ezran, role=reversed]
+====
+Why not just set a separate module that contains all of the setup-specific checks with their settings?
+====
+
+[chat, foodogsquared]
+====
+Convenience and better organization.
+But yeah, ideally these checks should be in a separate module especially for workflow modules at the cost of organization (and also needing to update it separately since it's on a separate file).
+====
