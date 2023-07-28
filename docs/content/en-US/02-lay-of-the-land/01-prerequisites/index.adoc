@@ -23,14 +23,27 @@ nix flake show {canonical-flake-url}
 ----
 
 All you have to do is to flash the installer image into the flash drive and boot with the drive (with the disabled secure boot).
-Then run the following command in the shell as root.
+
+[NOTE]
+====
+For this example, we'll assume you're installing my desktop configuration which is at `nixosConfigurations.ni`.
+====
+
+Next, we'll partition the disk of the system.
+This is already handled for us since this project uses xref:../../04-nixos-modules/03-disko/index.adoc[disko modules].
+Just run the following command as root.
+
+[source, shell]
+----
+nix run github:nix-community/disko -- --mode disko ./hosts/ni/disko.nix --arg disks '[ "/dev/nvme0n1" ]'
+----
+
+Then install the NixOS configuration (also as root).
 
 [source, shell, subs=attributes]
 ----
 nixos-install --flake {canonical-flake-url}#INSTALLABLE
 ----
-
-Take note most systems have an additional prerequisites such as activating xref:../../04-nixos-modules/03-disko/index.adoc[disko modules] and the private keys that are missing (and other stuff as mentioned from xref:../05-what-should-not-be-here/index.adoc[What should not be here?]).
 
 Despite being a NixOS system, it isn't entirely reproducible to the point of installing this config will work out-of-the-box.
 It has some things needed in the first place to work like my external backup setup where it needs my SSH private keys to work in the first place.
