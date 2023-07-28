@@ -2,10 +2,13 @@
 
 let
   cfg = config.services.wezterm-mux-server;
+
+  defaultUser = "wezterm";
 in
 {
   options.services.wezterm-mux-server = {
     enable = lib.mkEnableOption "Wezterm mux server";
+
     package = lib.mkOption {
       type = lib.types.package;
       description = ''
@@ -14,6 +17,7 @@ in
       default = pkgs.wezterm;
       defaultText = "pkgs.wezterm";
     };
+
     configFile = lib.mkOption {
       type = with lib.types; nullOr path;
       description = ''
@@ -24,9 +28,44 @@ in
       defaultText = "null";
       example = lib.literalExpression "./wezterm-mux-server.lua";
     };
+
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = defaultUser;
+      defaultText = defaultUser;
+      description = ''
+        User account of the Wezterm mux server. It is recommended to change
+        this with a dedicated user account intended to be accessed through SSH.
+      '';
+    };
+
+    group = lib.mkOption {
+      type = lib.types.str;
+      default = defaultUser;
+      defaultText = defaultUser;
+      description = ''
+        The group which the Wezterm mux server runs under. It is recommended to
+        change this with a dedicated user group intended to be accessed through
+        SSH.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    users.users = lib.mkIf (cfg.user == defaultUser) {
+      "${defaultUser}" = {
+        description = "Wezterm mux service";
+        home = "/home/wezterm";
+        useDefaultShell = true;
+        group = cfg.group;
+        isSystemUser = true;
+      };
+    };
+
+    users.groups = lib.mkIf (cfg.group == defaultUser) {
+      "${defaultUser}" = { };
+    };
+
     systemd.services.wezterm-mux-server = {
       description = "Wezterm mux server";
       after = [ "network.target" ];
@@ -35,10 +74,8 @@ in
 
       # Give it some tough love.
       serviceConfig = {
-        # Use a dynamic user.
-        User = "wezterm";
-        Group = "wezterm";
-        DynamicUser = true;
+        User = cfg.user;
+        Group = cfg.group;
 
         LockPersonality = true;
         NoNewPrivileges = true;
@@ -48,7 +85,6 @@ in
         ProtectKernelLogs = true;
         ProtectKernelTunables = true;
         ProtectKernelModules = true;
-        ProtectHome = true;
         ProtectHostname = true;
         ProtectControlGroups = true;
         ProtectProc = "invisible";
@@ -57,14 +93,6 @@ in
         RuntimeDirectory = "wezterm";
         CacheDirectory = "wezterm";
         StateDirectory = "wezterm";
-
-        # Filtering system calls.
-        SystemCallFilter = [
-          "@system-service"
-          "~@privileged"
-        ];
-        SystemCallErrorNumber = "EPERM";
-        SystemCallArchitectures = "native";
 
         # Restricting what capabilities this service has.
         CapabilityBoundingSet = [ "" ];
