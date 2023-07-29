@@ -83,7 +83,7 @@
       users = lib'.importTOML ./users.toml;
 
       # A set of image-related utilities for the flake outputs.
-      inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage;
+      inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage listImagesWithSystems;
 
       # The order here is important(?).
       overlays = [
@@ -294,30 +294,35 @@
 
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
-      nixosConfigurations = lib'.mapAttrs
-        (host: metadata:
-          let
-            path = ./hosts/${host};
-            extraModules = [
-              ({ lib, ... }: {
-                config = lib.mkMerge [
-                  { networking.hostName = metadata.hostname or host; }
+      nixosConfigurations =
+        let
+          images' = listImagesWithSystems images;
+        in
+        lib'.mapAttrs
+          (_: host:
+            let
+              name = host._name;
+              path = ./hosts/${name};
+              extraModules = [
+                ({ lib, ... }: {
+                  config = lib.mkMerge [
+                    { networking.hostName = lib.mkForce name; }
 
-                  (lib.mkIf (metadata ? domain)
-                    { networking.domain = metadata.domain; })
-                ];
-              })
+                    (lib.mkIf (host ? domain)
+                      { networking.domain = lib.mkForce host.domain; })
+                  ];
+                })
 
-              hostSharedConfig
-              path
-            ];
-          in
-          mkHost {
-            inherit extraModules extraArgs;
-            system = metadata.system or defaultSystem;
-            nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-          })
-        (lib'.filterAttrs (name: host: (host.format or "iso") == "iso") images);
+                hostSharedConfig
+                path
+              ];
+            in
+            mkHost {
+              inherit extraModules extraArgs;
+              system = host._system;
+              nixpkgs-channel = host.nixpkgs-channel or "nixpkgs";
+            })
+          (lib'.filterAttrs (_: host: (host.format or "iso") == "iso") images');
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
@@ -325,10 +330,15 @@
 
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
-      homeConfigurations = lib'.mapAttrs
+      homeConfigurations =
+        let
+          users' = listImagesWithSystems users;
+        in
+        lib'.mapAttrs
         (name: metadata:
           let
-            system = metadata.system or defaultSystem;
+            name = metadata._name;
+            system = metadata._system;
             pkgs = import inputs."${metadata.nixpkgs-channel or "nixpkgs"}" {
               inherit system overlays;
             };
@@ -359,7 +369,7 @@
             inherit pkgs system extraModules extraArgs;
             home-manager-channel = metadata.home-manager-channel or "home-manager";
           })
-        users;
+        users';
 
       # Extending home-manager with my custom modules, if anyone cares.
       homeModules =
@@ -386,30 +396,34 @@
       # somewhere else including those NixOS configurations that are built as
       # an ISO.
       images =
-        lib'.mapAttrs
-          (host: metadata:
-            let
-              system = metadata.system or defaultSystem;
-              nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-              pkgs = import inputs."${nixpkgs-channel}" { inherit system overlays; };
-              format = metadata.format or "iso";
-            in
-            mkImage {
-              inherit format system pkgs extraArgs;
-              extraModules = [
-                ({ lib, ... }: {
-                  config = lib.mkMerge [
-                    { networking.hostName = lib.mkForce metadata.hostname or host; }
+        forAllSystems (system:
+          let
+            images' = lib'.filterAttrs (host: metadata: lib'.elem system metadata.systems) images;
+          in
+          lib'.mapAttrs
+            (host: metadata:
+              let
+                inherit system;
+                nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
+                pkgs = import inputs."${nixpkgs-channel}" { inherit system overlays; };
+                format = metadata.format or "iso";
+              in
+              mkImage {
+                inherit format system pkgs extraArgs;
+                extraModules = [
+                  ({ lib, ... }: {
+                    config = lib.mkMerge [
+                      { networking.hostName = lib.mkForce metadata.hostname or host; }
 
-                    (lib.mkIf (metadata ? domain)
-                      { networking.domain = lib.mkForce metadata.domain; })
-                  ];
-                })
-                hostSharedConfig
-                ./hosts/${host}
-              ];
-            })
-          images;
+                      (lib.mkIf (metadata ? domain)
+                        { networking.domain = lib.mkForce metadata.domain; })
+                    ];
+                  })
+                  hostSharedConfig
+                  ./hosts/${host}
+                ];
+              })
+            images');
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system

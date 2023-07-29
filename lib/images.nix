@@ -42,4 +42,30 @@
         # Our own modules.
         ++ extraModules;
     };
+
+  listImagesWithSystems = data:
+    lib.foldlAttrs
+      (acc: name: metadata:
+      let
+        name' = metadata.hostname or name;
+      in
+        if lib.length metadata.systems > 1 then
+          acc // (lib.foldl
+            (images: system: images // {
+              "${name'}-${system}" = metadata // {
+                _system = system;
+                _name = name';
+              };
+            })
+            {}
+            metadata.systems)
+        else
+          acc // {
+            "${name'}" = metadata // {
+              _system = lib.head metadata.systems;
+              _name = name';
+            };
+          })
+      {}
+      data;
 }

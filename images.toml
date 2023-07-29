@@ -8,13 +8,12 @@
 #
 # Take note, any images with the "iso" format is essentially made to be
 # deployed somewhere (e.g., desktop, homelab server, VPS).
-
 [ni]
-system = "x86_64-linux"
+systems = [ "x86_64-linux" ]
 format = "iso"
 
 [plover]
-system = "x86_64-linux"
+systems = [ "x86_64-linux" ]
 format = "iso"
 domain = "foodogsquared.one"
 
@@ -24,14 +23,20 @@ auto-rollback = true
 magic-rollback = true
 
 [void]
-system = "x86_64-linux"
+systems = [ "x86_64-linux" ]
 format = "vm"
 
 [bootstrap]
-system = "x86_64-linux"
+systems = [
+  "aarch64-linux",
+  "x86_64-linux",
+]
 format = "install-iso"
 nixpkgs-channel = "nixos-unstable-small"
 
 [graphical-installer]
-system = "x86_64-linux"
+systems = [
+  "aarch64-linux",
+  "x86_64-linux",
+]
 format = "install-iso"
