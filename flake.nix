@@ -345,6 +345,11 @@
                 # Setting the homely options.
                 home.username = metadata.username or name;
                 home.homeDirectory = metadata.home-directory or "/home/${config.home.username}";
+
+                # home-manager configurations are expected to be deployed on
+                # non-NixOS systems so it is safe to set this.
+                programs.home-manager.enable = true;
+                targets.genericLinux.enable = true;
               })
               userSharedConfig
               path
