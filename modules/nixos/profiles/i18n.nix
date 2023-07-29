@@ -28,7 +28,7 @@ in
       i18n.supportedLocales = lib.mkForce [ "all" ];
 
       # The most minimal set of packages for most locales.
-      fonts.fonts = with pkgs; [
+      fonts.packages = with pkgs; [
         noto-fonts
         noto-fonts-cjk
         noto-fonts-cjk-sans

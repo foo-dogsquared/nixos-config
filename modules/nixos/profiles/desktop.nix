@@ -112,7 +112,7 @@ in {
 
     (lib.mkIf cfg.fonts.enable {
       fonts = {
-        enableDefaultFonts = true;
+        enableDefaultPackages = true;
         fontDir.enable = true;
         fontconfig = {
           enable = true;
@@ -126,7 +126,7 @@ in {
           };
         };
 
-        fonts = with pkgs; [
+        packages = with pkgs; [
           # Some monospace fonts.
           iosevka
           jetbrains-mono
