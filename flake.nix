@@ -105,10 +105,14 @@
         inputs.nur.overlay
       ];
 
-      defaultSystem = inputs.flake-utils.lib.system.x86_64-linux;
+      defaultSystem = "x86_64-linux";
 
       # Just add systems here and it should add systems to the outputs.
-      systems = with inputs.flake-utils.lib.system; [ defaultSystem ];
+      systems = with inputs.flake-utils.lib.system; [
+        "x86_64-linux"
+        "aarch64-linux"
+        "riscv64-linux"
+      ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
       extraArgs = {
