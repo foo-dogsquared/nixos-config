@@ -22,7 +22,10 @@ The data is then used for certain functions in the flake definition file (i.e., 
 [source, toml]
 ----
 [plover]
-system = "x86_64-linux"
+systems = [
+  "aarch64-linux",
+  "x86_64-linux",
+]
 format = "iso"
 hostname = "ploverrific"
 domain = "foodogsquared.one"
@@ -39,8 +42,9 @@ remote-build = true
 
 For a complete reference, here are the expected attributes.
 
-- `system` contains the platform of the host system.
+- `systems` contains a list of platforms of the host system.
 This is mainly used to indicate the platform used for the nixpkgs repository.
+Take note if `systems` contains more than one platform, the NixOS configurations will be renamed as `$NAME-$SYSTEM` (e.g., `plover` to `plover-x86_64-linux`, `plover-aarch64-linux`).
 
 - `format` is the image output format for the host.
 It expects an accepted value from github:nix-community/nixos-generators[opts=repo] project.
