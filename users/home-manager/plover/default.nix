@@ -22,7 +22,7 @@
     editors.neovim.enable = true;
   };
 
-  systemd.user.sessionVariables = {
+  home.sessionVariables = {
     MANPAGER = "nvim +Man!";
     EDITOR = "nvim";
   };
