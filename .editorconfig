@@ -4,6 +4,6 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 
-[*.{nix,yaml,json,tf}]
+[*.{nix,yaml,json,toml,tf}]
 indent_style = space
 indent_size = 2
