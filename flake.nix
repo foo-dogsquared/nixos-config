@@ -355,7 +355,7 @@
                 nixpkgs.config.allowUnfree = true;
 
                 # Setting the homely options.
-                home.username = metadata.username or name;
+                home.username = name;
                 home.homeDirectory = metadata.home-directory or "/home/${config.home.username}";
 
                 # home-manager configurations are expected to be deployed on
