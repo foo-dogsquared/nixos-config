@@ -200,7 +200,7 @@
       # be used for sharing modules among home-manager users from NixOS
       # configurations with `nixpkgs.useGlobalPkgs` set to `true` so avoid
       # setting nixpkgs-related options here.
-      userSharedConfig = { pkgs, config, ... }: {
+      userSharedConfig = { pkgs, config, lib, ... }: {
         imports = [
           inputs.nur.hmModules.nur
           inputs.sops-nix.homeManagerModules.sops
@@ -239,11 +239,14 @@
 
         programs.home-manager.enable = true;
 
-        manual = {
+        manual = lib.mkDefault {
           html.enable = true;
           json.enable = true;
           manpages.enable = true;
         };
+
+        home.stateVersion = lib.mkDefault "23.11";
+      };
 
       nixSettingsSharedConfig = { config, lib, pkgs, ... }: {
         # I want to capture the usual flakes to its exact version so we're
