@@ -122,9 +122,7 @@
         # This is a variable that is used to check whether the module is
         # exported or not. Useful for configuring parts of the configuration
         # that is otherwise that cannot be exported for others' use.
-        #
-        # "Fds" stands for foo-dogsquared just because. :p
-        _isInsideFds = true;
+        _isfoodogsquaredcustom = true;
       };
 
       # We're considering this as the variant since we'll export the custom
