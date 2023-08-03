@@ -3,8 +3,7 @@ title: Project structure
 ---
 = Project structure
 
-Last and foremost, we have the project directory —  the environment you'll be living in for the next year, tinkering your Nix configs.
-.
+Next, we have the project directory —  the environment you'll be living in for the next year, tinkering your Nix configs.
 It is required to be familiar with the workspace, after all.
 My configuration takes a lot of cues from link:{devos-link}[devos] (which is unfortunately is a lot to take if you're just beginning to grok Nix as a whole).
 
