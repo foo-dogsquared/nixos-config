@@ -183,5 +183,5 @@
     "~0.28.172.in-addr.arpa"
   ];
 
-  system.stateVersion = "23.05"; # Yes! I read the comment!
+  system.stateVersion = "23.11"; # Yes! I read the comment!
 }

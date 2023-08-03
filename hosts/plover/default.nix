@@ -181,5 +181,5 @@ in
      IdentityFile ${config.sops.secrets."borg/ssh-key".path}
   '';
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }
