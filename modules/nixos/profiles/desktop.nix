@@ -161,6 +161,11 @@ in {
 
       # Enable support for Bluetooth.
       hardware.bluetooth.enable = true;
+
+      # Enable yer game controllers.
+      hardware.steam-hardware.enable = true;
+      hardware.xone.enable = true;
+      hardware.xpadneo.enable = true;
     })
 
     (lib.mkIf cfg.cleanup.enable {
