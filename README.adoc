@@ -6,125 +6,38 @@
 :canonical_flake_url_tarball_master: https://github.com/foo-dogsquared/nixos-config/archive/master.tar.gz
 :canonical_flake_url_tarball_specific: https://github.com/foo-dogsquared/nixos-config/archive/35c27749c55077727529f412dade862e4deb2ae8.tar.gz
 
-This is my NixOS config as a link:https://www.tweag.io/blog/2020-05-25-flakes/[Nix flake].
+This is my NixOS config as a link:https://www.tweag.io/blog/2020-05-25-flakes/[Nix flake] eventually containing my (almost) complete setup from a desktop, to a server, to a personalized installer, almost everything.
+Who knows it might contain another server just for the infrastructure for my custom non-NixOS distro just to flex how flexible NixOS can be. footnote:[This is how Garuda Linux is set up, btw.]
 
-I finally have some time trying to grok flakes and redo my NixOS config from scratch after leaving it for some time (because I have work and have to quickly set things up without me trying to debug how NixOS works).
-Here is the result.
-
-Anyways, this project also has a dedicated website at {doc_site}.
+Anyways, this project also has a dedicated website at {doc_site} which I recommend to take a gander on how this project structures its configuration (and much of the information is not covered in this README anyways).
+If you want the local documentation and has angst against online documentation, you can view the source code of the book at link:./docs/[`./docs/`].
 
 
 
 
 == Getting started
 
-[CAUTION]
-====
-Despite being a NixOS system, it isn't entirely reproducible to the point of installing this config will work out-of-the-box.
-It has some things needed in the first place to work like my external backup setup where it needs my SSH private keys to work in the first place.
-Nonetheless, the parts is it isn't reproducible is only about 10% of this config.
-Everything else is fine and dandy.
+This is an overencumbered set of NixOS configurations for different systems.
+For this section though, we'll assume you're only interested in installing the desktop configuration.
 
-Oh right...
-Don't expect everything is working in each commit but I'm doing my best to make them build successfully in each, yeah?
-
-Also, this configuration is expected to use under non-restricted evaluation mode.
-====
-
-Hey there, fellow traveler!
-You've fell into the rabbit hole we call Nix where it leads to other rabbit holes such as functional package management, reproducibility, declarative systems, and immutable operating systems.
-
-This is one of the many tickets to that rabbit hole, allow me to be your guide in this mark:[painful] wonderful declarative journey.
-Hope to see you on the other side!
-
-
-=== Installation
-
-Since this uses Nix flakes, you should have Nix v2.8 and above installed.
-
-If you're going to install one of my NixOS configs, be sure to download the unstable versions from link:https://releases.nixos.org/?prefix=nixos/unstable/[their release page].
-As an additional option, you can also use link:https://github.com/foo-dogsquared/nixos-config/releases/tag/latest[my personalized NixOS installers] which is primarily intended for me configs.
-
-This primarily uses Nix flakes so you can have a preview of what's available in my config.
+To start, you'll have to download a NixOS installer image.
+While you can download link:https://releases.nixos.org/?prefix=nixos/unstable/[the latest revisions from the official website], you can get my personalized installer from link:https://github.com/foo-dogsquared/nixos-config/releases/tag/latest[the releases page of this project].
+Next, boot into the installer image.
+Then as root, install the desktop with the following commands.
 
 [source, shell, subs=attributes]
 ----
-nix flake show {canonical_flake_url}
+bash $(nix build --no-link --print-out-paths {canonical_flake_url}#nixosConfigurations.ni.config.system.build.diskoScript)
+nixos-install --flake {canonical_flake_url}#ni
 ----
 
-It should export my NixOS configurations of my different hosts (of only one so far excluding VMs and VPSs ;p) among other things.
-To install it, run the `nixos-install --flake {canonical_flake_url}#ni`.
-(Please see the respective appropriate host README for more information.)
+The above command will automate everything for you including the partitioning steps.
 
+Voila!
+You should have my desktop configuration installed.
 
-=== The remote repo
-
-For a complete overkill, we use a CI to further the configuration abomination.
-It uses GitHub workflows to enable things such as...
-
-* Automatically building link:./pkgs[my custom packages] and sending them to my binary cache to easily distribute it for others.
-* Building my personalized NixOS installers and link:https://github.com/foo-dogsquared/nixos-config/releases[making a release out of it].
-* Testing the flake outputs (in progress lel).
-
-
-=== Project structure
-
-Last and foremost, we have the project directory —  the environment you'll be living in for the next year, tinkering your Nix configs.
-.
-It is required to be familiar with the workspace, after all.
-My configuration takes a lot of cues from link:{devos_link}[devos] (which is unfortunately is a lot to take if you're just beginning to grok Nix as a whole).
-
-My NixOS config should look like the following:
-
-[source, tree]
-----
-nixos-config
-├── hosts/
-├── lib/
-├── modules/
-├── pkgs/
-├── scripts/
-├── secrets/
-├── shells/
-├── templates/
-├── users/
-├── default.nix
-├── flake.lock
-├── flake.nix
-├── images.toml
-└── README.adoc
-----
-
-One of the more notable files here when first start looking is the link:./images.toml[`./images.toml`] file where it contains a description of the images.
-For more details, see <<declarative-host-management>>.
-
-Most of the said folders are related to a flake output attribute, see <<whats-in-my-flake>> for more details.
-
-* link:./hosts/[`./hosts/`] contain machine-specific configuration.
-This usually configures like the hardware setup, timezone, and users.
-Host configurations are also exported in the flakes in `outputs.nixosConfigurations`.
-
-* link:./modules/[`./modules/`] contain my custom modules including NixOS and home-manager modules.
-For more information, see the link:./modules/README.adoc[related documentation].
-
-* link:./pkgs/[`./pkgs/`] contains my custom packages.
-It is exported in the flakes at `outputs.packages` compiled through various systems.
-
-* link:./scripts/[`./scripts/`] contains various scripts for various purposes.
-Should be self-explanatory.
-
-* link:./secrets/[`./secrets/`] contains my cluster-wide secrets managed with link:https://github.com/mozilla/sops[sops] and link:https://github.com/Mic92/sops-nix[sops-nix].
-Take note, each component (e.g., hosts, modules, users) could have their own specific secrets.
-
-* link:./shells/[`./shells/`] contains my development shells for interacting with the usual type of projects.
-Setting this up can bring benefits outside of NixOS (unless you're interacting with projects with any OpenGL-related stuff).
-footnote:[Since packages brought from Nix shells can only work with the store, a container might be better at some situations.]
-
-* link:./templates/[`./templates/`] contains my custom templates handy for quickly initializing for various types of projects.
-
-* link:./users/[`./users/`] contains my link:https://github.com/nix-community/home-manager[home-manager] configurations.
-It is exported in the flakes at `outputs.homeConfigurations`.
-For more information, see the link:./users/README.adoc[related documentation].
+However, it should also be barely usable since there are a couple of missing components that are needed such as the private keys for the desktop which is required for certain tasks such as backup task with Borg among other things.
+There are also some additional prerequisites such as partitioning which is already handled with link:https://github.com/nix-community/disko[disko].
 
 
 
