@@ -460,6 +460,10 @@
           path = ./templates/sample-nixos-template;
           description = "Simple sample Nix flake with NixOS and home-manager";
         };
+        local-ruby-nix = {
+          path = ./templates/local-ruby-nix;
+          description = "Local Ruby app development with ruby-nix";
+        };
       };
 
       # No amount of formatters will make this codebase nicer but it sure does
