@@ -392,14 +392,7 @@
       # "x86_64-linux". I just want to try out supporting other systems.
       packages = forAllSystems (system:
         inputs.flake-utils.lib.flattenTree (import ./pkgs {
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [
-              (final: prev: {
-                inherit (inputs.firefox-addons.lib.${system}) buildFirefoxXpiAddon;
-              })
-            ];
-          };
+          pkgs = import nixpkgs { inherit system; };
         }));
 
       # This contains images that are meant to be built and distributed
