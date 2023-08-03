@@ -307,14 +307,13 @@
           images' = listImagesWithSystems images;
         in
         lib'.mapAttrs
-          (_: host:
+          (filename: host:
             let
-              name = host._name;
-              path = ./hosts/${name};
+              path = ./hosts/${filename};
               extraModules = [
                 ({ lib, ... }: {
                   config = lib.mkMerge [
-                    { networking.hostName = lib.mkForce name; }
+                    { networking.hostName = lib.mkForce host._name; }
 
                     (lib.mkIf (host ? domain)
                       { networking.domain = lib.mkForce host.domain; })
@@ -344,14 +343,14 @@
           users' = listImagesWithSystems users;
         in
         lib'.mapAttrs
-        (name: metadata:
+        (filename: metadata:
           let
             name = metadata._name;
             system = metadata._system;
             pkgs = import inputs."${metadata.nixpkgs-channel or "nixpkgs"}" {
               inherit system overlays;
             };
-            path = ./users/home-manager/${name};
+            path = ./users/home-manager/${filename};
             extraModules = [
               ({ pkgs, config, ... }: {
                 # To be able to use the most of our config as possible, we want
