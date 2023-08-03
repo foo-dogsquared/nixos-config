@@ -50,6 +50,15 @@ in
     layout_dir = builtins.toString ./config/zellij/layouts;
   };
 
+  # Self-inflicted telemetry.
+  services.activitywatch = {
+    enable = true;
+    watchers = {
+      aw-watcher-afk.package = pkgs.activitywatch;
+      aw-watcher-window.package = pkgs.activitywatch;
+    };
+  };
+
   # My preferred file indexing service.
   services.recoll = {
     enable = true;
