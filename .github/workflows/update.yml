@@ -25,7 +25,7 @@ jobs:
       - name: Build custom packages
         run: nix build --dry-run --impure --file ./pkgs
       - name: Build NixOS configurations
-        run: nix build --dry-run --impure .#images.{ni,plover,bootstrap}
+        run: nix build --dry-run --impure .#images.x86_64-linux.{ni,plover,bootstrap}
       - name: Push changes to remote
         run: |
           git remote remove origin
