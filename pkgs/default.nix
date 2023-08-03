@@ -7,6 +7,7 @@ let
     let callPackage = newScope self;
     in rec {
       awesome-cli = callPackage ./awesome-cli { };
+      aw-watcher-window-wayland = callPackage ./aw-watcher-window-wayland { };
       decker = callPackage ./decker { };
       cosmic-launcher = callPackage ./cosmic-launcher { };
       clidle = callPackage ./clidle.nix { };
