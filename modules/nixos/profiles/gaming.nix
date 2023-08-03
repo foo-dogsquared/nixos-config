@@ -30,6 +30,8 @@ in
 
       # Enable them controllers in case you have one.
       hardware.steam-hardware.enable = true;
+      hardware.xone.enable = true;
+      hardware.xpadneo.enable = true;
 
       # Enabling all hardware settings for the desktop (unless the user
       # explicitly disabled it).
