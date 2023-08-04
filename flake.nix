@@ -394,31 +394,32 @@
       images =
         forAllSystems (system:
           let
-            images' = lib'.filterAttrs (host: metadata: lib'.elem system metadata.systems) images;
+            images' = lib'.filterAttrs (host: metadata: system == metadata._system) images;
           in
-          lib'.mapAttrs
+          lib'.mapAttrs'
             (host: metadata:
               let
                 inherit system;
+                name = metadata._name;
                 nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
                 pkgs = import inputs."${nixpkgs-channel}" { inherit system overlays; };
                 format = metadata.format or "iso";
               in
-              mkImage {
+              lib'.nameValuePair name (mkImage {
                 inherit format system pkgs extraArgs;
                 extraModules = [
                   ({ lib, ... }: {
                     config = lib.mkMerge [
-                      { networking.hostName = lib.mkForce metadata.hostname or host; }
+                      { networking.hostName = lib.mkForce metadata.hostname or name; }
 
                       (lib.mkIf (metadata ? domain)
                         { networking.domain = lib.mkForce metadata.domain; })
                     ];
                   })
                   hostSharedConfig
-                  ./hosts/${host}
+                  ./hosts/${name}
                 ];
-              })
+              }))
             images');
 
       # My several development shells for usual type of projects. This is much
