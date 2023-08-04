@@ -77,10 +77,10 @@
       # A set of images with their metadata that is usually built for usual
       # purposes. The format used here is whatever formats nixos-generators
       # support.
-      images = lib'.importTOML ./images.toml;
+      images = listImagesWithSystems (lib'.importTOML ./images.toml);
 
       # A set of users with their metadata to be deployed with home-manager.
-      users = lib'.importTOML ./users.toml;
+      users = listImagesWithSystems (lib'.importTOML ./users.toml);
 
       # A set of image-related utilities for the flake outputs.
       inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage listImagesWithSystems;
@@ -303,9 +303,6 @@
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
       nixosConfigurations =
-        let
-          images' = listImagesWithSystems images;
-        in
         lib'.mapAttrs
           (filename: host:
             let
@@ -330,7 +327,7 @@
               system = host._system;
               nixpkgs-channel = host.nixpkgs-channel or "nixpkgs";
             })
-          (lib'.filterAttrs (_: host: (host.format or "iso") == "iso") images');
+          (lib'.filterAttrs (_: host: (host.format or "iso") == "iso") images);
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
@@ -339,9 +336,6 @@
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
       homeConfigurations =
-        let
-          users' = listImagesWithSystems users;
-        in
         lib'.mapAttrs
         (filename: metadata:
           let
@@ -350,7 +344,7 @@
             pkgs = import inputs."${metadata.nixpkgs-channel or "nixpkgs"}" {
               inherit system overlays;
             };
-            path = ./users/home-manager/${filename};
+            path = ./users/home-manager/${name};
             extraModules = [
               ({ pkgs, config, ... }: {
                 # To be able to use the most of our config as possible, we want
@@ -378,7 +372,7 @@
             inherit pkgs system extraModules extraArgs;
             home-manager-channel = metadata.home-manager-channel or "home-manager";
           })
-        users';
+        users;
 
       # Extending home-manager with my custom modules, if anyone cares.
       homeModules =
