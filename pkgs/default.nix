@@ -17,6 +17,7 @@ let
       distant = callPackage ./distant.nix { };
       gnome-search-provider-recoll =
         callPackage ./gnome-search-provider-recoll.nix { };
+      gtk4-layer-shell = callPackage ./gtk4-layer-shell { };
       hush-shell = callPackage ./hush-shell.nix { };
       kiwmi = callPackage ./kiwmi { };
       lwp = callPackage ./lwp { };
