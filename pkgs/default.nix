@@ -6,6 +6,7 @@ let
   packages = self:
     let callPackage = newScope self;
     in rec {
+      ags = callPackage ./ags { };
       awesome-cli = callPackage ./awesome-cli { };
       aw-watcher-window-wayland = callPackage ./aw-watcher-window-wayland { };
       decker = callPackage ./decker { };
