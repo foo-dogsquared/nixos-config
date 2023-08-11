@@ -1,0 +1,26 @@
+= Mosey branch
+:toc:
+
+A workflow module of a Hyprland desktop environment featuring my link:https://github.com/foo-dogsquared/base16-bark-on-a-tree-scheme[custom colorscheme].
+
+// TODO: Screenshot
+
+It's a dolled up setup that is mainly inspired from GNOME Shell's layout (being an enthusiastic GNOME user myself) and link:https://github.com/PoSayDone/.dotfiles_wayland/[PoSayDone's Wayland dotfiles].
+In here, I tried to recreate GNOME Shell's workflow and link:../a-happy-gnome[my GNOME configuration] as close as possible, keybindings and everything.
+
+Here's a list of components used for this workflow module.
+
+- Hyprland as the Wayland window compositor.
+
+- link:https://github.com/Aylur/ags/[ags] as a widget system with link:https://github.com/wmww/gtk4-layer-shell[gtk4-layer-shell].
+Since Hyprland has implemented Layer Shell protocol, we may as well try to implement them widgets ourselves (which is quite fun).
+
+- link:https://github.com/Kirottu/anyrun[anyrun] as the application launcher and also uses custom menu.
+
+- Expects GDM as the display manager.
+Though you should be able to easily replace it with something else.
+
+- Uses a custom desktop session with link:https://gitlab.gnome.org/GNOME/gnome-session/[gnome-session].
+This allows me to make this workflow as a full desktop environment with easy access for link:https://systemd.io/DESKTOP_ENVIRONMENTS/[systemd integration]. footnote:[Some might say Hyprland is not a desktop environment but for me, every single graphical session IS a desktop environment.]
+
+- As most workflows, it makes use of link:https://github.com/Misterio77/nix-colors/[nix-colors] as it makes color scheme management easier.

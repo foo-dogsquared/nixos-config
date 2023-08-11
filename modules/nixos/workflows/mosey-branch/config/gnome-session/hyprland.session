@@ -1,0 +1,3 @@
+[GNOME Session]
+Name=Hyprland
+RequiredComponents=@requiredComponents@

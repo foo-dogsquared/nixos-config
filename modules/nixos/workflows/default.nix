@@ -18,6 +18,7 @@ in {
   imports = [
     ./a-happy-gnome
     ./knome
+    ./mosey-branch
   ];
 
   config = {

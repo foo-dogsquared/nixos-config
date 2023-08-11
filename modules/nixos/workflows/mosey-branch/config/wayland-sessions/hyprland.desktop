@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Hyprland
+Comment=foodogsquared's Hyprland-based desktop environment setup
+Exec=@script@
+TryExec=@script@
+Type=Application
+DesktopNames=Hyprland
