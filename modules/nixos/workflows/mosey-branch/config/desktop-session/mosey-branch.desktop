@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Hyprland
+Name=Mosey Branch
 Comment=foodogsquared's Hyprland-based desktop environment setup
-Exec=@script@
-TryExec=@script@
+Exec=@session_script@
+TryExec=@session_script@
 Type=Application
-DesktopNames=Hyprland
+DesktopNames=Mosey Branch

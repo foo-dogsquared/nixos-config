@@ -1,0 +1,22 @@
+# This user service is intended to be started with gnome-session.
+[Unit]
+Description=Mosey Branch, a custom desktop session with Hyprland
+Documentation=https://wiki.hyprland.org
+
+After=gnome-manager-manager.target
+Requisite=gnome-session-initialized.target
+PartOf=gnome-session-initialized.target
+
+OnFailure=gnome-session-shutdown.target
+OnFailureJobMode=replace-irreversibly
+CollectMode=inactive-or-failed
+RefuseManualStart=true
+RefuseManualStop=true
+
+StartLimitBurst=4
+
+[Service]
+Type=notify
+Slice=session.slice
+Restart=on-failure
+ExecStart=@script@

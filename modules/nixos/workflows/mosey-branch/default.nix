@@ -4,36 +4,16 @@ let
   cfg = config.workflows.workflows.mosey-branch;
   workflowName = "mosey-branch";
 
-  # This is used in a similar manner for GNOME desktop applications and its
-  # services.
-  prefix = "one.foodogsquared.${workflowName}.";
+  # A reverse DNS prefix similarly used to GNOME services.
+  prefix = "one.foodogsquared.MoseyBranch.";
 
-  hyprlandCustomGnomeSession = pkgs.substituteAll {
-    src = ./config/gnome-session/hyprland.session;
-    name = "${workflowName}.session";
-    dir = "share/gnome-session";
-    requiredComponents =
-      lib.concatMapString (component: "${prefix}${component};") ([
-        "ags"
-        "polkit"
-      ]
-      ++ lib.optional (config.i18n.inputMethod == "fcitx5") "fcitx5"
-      ++ lib.optional (config.i18n.inputMethod == "ibus") "ibus");
+  customDesktopSession = pkgs.callPackage ./config/desktop-session {
+    inherit prefix;
+    serviceScript = "${pkgs.hyprland}/bin/Hyprland --config ${./config/hyprland/hyprland.conf}";
+    sessionScript = pkgs.writeShellScript "${workflowName}-hyprland-custom-start" ''
+      ${pkgs.gnome.gnome-session}/bin/gnome-session --session=${workflowName}
+    '';
   };
-
-  hyprlandStartScript = pkgs.writeShellScript "${workflowName}-hyprland-custom-start" ''
-    ${pkgs.gnome.gnome-session}/bin/gnome-session --session=${workflowName}
-  '';
-
-  hyprlandSessionPackage =
-    (pkgs.substituteAll {
-      src = ./config/wayland-sessions/hyprland.desktop;
-      name = "${workflowName}.desktop";
-      dir = "share/wayland-sessions";
-      script = hyprlandStartScript;
-    }).overrideAttrs {
-      passthru.providedSessions = [ workflowName ];
-    };
 
   requiredPackages = with pkgs; [
     # The star of this show: the window manager (or Wayland compositor if you
@@ -46,8 +26,8 @@ let
     ags
     gtk4-layer-shell
 
-    # Install with the custom session.
-    hyprlandCustomGnomeSession
+    # Install with the custom desktop session files.
+    customDesktopSession
 
     # Optional dependencies that are required in this workflow module.
     socat
@@ -63,12 +43,6 @@ let
     # The chosen terminal emulator.
     wezterm
   ];
-
-  createPrefixedServices = name: value:
-    lib.nameValuePair "${prefix}${name}" (value // {
-      partOf = [ "graphical-session.target" ];
-      wantedBy = [ "gnome-session.target" ];
-    });
 in
 {
   options.workflows.workflows.mosey-branch = {
@@ -98,13 +72,14 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       environment.systemPackages = cfg.extraApps ++ requiredPackages;
+      systemd.packages = [ customDesktopSession ];
 
       # Our preferred display manager.
       services.xserver = {
         enable = true;
         displayManager = {
           gdm.enable = lib.mkDefault true;
-          sessionPackages = [ hyprlandSessionPackage ];
+          sessionPackages = [ customDesktopSession ];
         };
         updateDbusEnvironment = true;
       };
@@ -149,64 +124,6 @@ in
           xdg-desktop-portal-hyprland
           xdg-desktop-portal-gtk
         ];
-      };
-    }
-
-    # These are all intended to be started with gnome-session.
-    # Much of the templates used are from Phosh systemd templates at
-    # https://gitlab.gnome.org/World/Phosh/phosh/-/blob/main/data/systemd.
-    # Big thanks to them! :)
-    {
-      systemd.user.targets."${prefix}" = {
-        description = "${workflowName} Hyprland shell";
-        documentation = [ "man:systemd.special(7)" ];
-        unitConfig.DefaultDependencies = "no";
-        requisite = [ "gnome-session-initialized.target" ];
-        partOf = [ "gnome-session-initialized.target" ];
-        before = [ "gnome-session-initialized.target" ];
-
-        wants = [ "${prefix}.service" ];
-        after = [ "${prefix}.service" ];
-      };
-
-      systemd.user.services = lib.mapAttrs' createPrefixedServices {
-        ags = {
-          description = "Widget system layer for the desktop";
-          script = "${pkgs.ags}/bin/ags";
-        };
-
-        polkit = {
-          description = "Authentication agent for the desktop session";
-          script = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-        };
-
-        fcitx5 = lib.mkIf (config.i18n.inputMethod.enabled == "fcitx5") {
-          description = "Input method engine for the desktop session";
-          script = "${config.i18n.inputMethod.package}/bin/fcitx5";
-        };
-
-        ibus = lib.mkIf (config.i18n.inputMethod.enabled == "ibus") {
-          description = "Input method engine for the desktop session";
-          script = "${config.i18n.inputMethod.package}/bin/ibus start";
-        };
-      } // {
-        "${prefix}" = {
-          description = "${workflowName}, a custom desktop session with Hyprland";
-          documentation = [ "https://wiki.hyprland.org" ];
-          after = [ "gnome-manager-manager.target" ];
-          requisite = [ "gnome-session-initialized.target" ];
-          partOf = [ "gnome-session-initialized.target" ];
-
-          unitConfig = {
-            OnFailure = "gnome-session-shutdown.target";
-            OnFailureJobMode = "replace-irreversibly";
-            CollectMode = "inactive-or-failed";
-            RefuseManualStart = true;
-            RefuseManualStop = true;
-          };
-
-          script = "${pkgs.hyprland}/bin/Hyprland --config ${./config/hyprland/hyprland.conf}";
-        };
       };
     }
 

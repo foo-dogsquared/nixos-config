@@ -1,0 +1,11 @@
+option('service_script',
+  type: 'string',
+  value: 'Hyprland',
+  description: 'Executable for the main session script.'
+)
+
+option('session_script',
+  type: 'string',
+  value: 'gnome-session --session=mosey-branch',
+  description: 'Program (including its arguments) for the Wayland session entry file.',
+)

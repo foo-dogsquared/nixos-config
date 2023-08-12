@@ -1,0 +1,4 @@
+= Mosey branch custom session
+:toc:
+
+This is an installation script for the custom desktop environment "Mosey branch".
