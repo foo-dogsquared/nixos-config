@@ -53,6 +53,7 @@ desktopentryconf = configuration_data()
 desktopentryconf.set('session_script', get_option('session_script'))
 configure_file(
   input: 'mosey-branch.desktop',
+  output: 'mosey-branch.desktop',
   install_dir: join_paths(datadir, 'wayland-sessions'),
   configuration: desktopentryconf,
   install: true,
