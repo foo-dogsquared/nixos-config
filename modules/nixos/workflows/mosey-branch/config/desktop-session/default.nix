@@ -8,14 +8,18 @@
 , prefix ? "one.foodogsquared.MoseyBranch"
 , serviceScript ? "Hyprland"
 , sessionScript ? "gnome-session --session=mosey-branch"
+
+, agsScript ? "ags"
+, polkitScript ? "polkit"
+, ibusScript ? "ibus start"
 }:
 
 stdenv.mkDerivation rec {
   pname = "mosey-branch-custom-desktop-session";
-  version = "2023-08-11";
+  version = "2023-08-13";
 
   src = ./.;
-  nativeBulidInputs = [
+  nativeBuildInputs = [
     meson
     ninja
     pkg-config
@@ -24,6 +28,9 @@ stdenv.mkDerivation rec {
   mesonFlags = [
     "-Dsession_script=${sessionScript}"
     "-Dservice_script=${serviceScript}"
+    "-Dags_script=${agsScript}"
+    "-Dibus_script=${ibusScript}"
+    "-Dpolkit_script=${polkitScript}"
   ];
 
   passthru.providedSessions = [ "mosey-branch" ];

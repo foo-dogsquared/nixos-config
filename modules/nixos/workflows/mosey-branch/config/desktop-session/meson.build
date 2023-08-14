@@ -9,20 +9,30 @@ prefix = get_option('prefix')
 datadir = join_paths(prefix, get_option('datadir'))
 systemddir = join_paths(prefix, 'share/systemd')
 systemduserdir = join_paths(systemddir, 'user')
+unit_name_template = app_id + '.@0@.@1@'
 
-required_components = [
-  #'polkit',
-  #'ibus',
-  #'ags',
-]
+required_components = {
+  'polkit': {
+    'description': 'Authentication agent for the desktop service',
+    'script': get_option('polkit_script'),
+  },
+  'ibus': {
+    'description': 'Input method engine for the desktop service',
+    'script': get_option('ibus_script'),
+  },
+  'ags': {
+    'description': 'Widget system',
+    'script': get_option('ags_script'),
+  },
+}
 
 session_dropins = [
   'gnome-session@mosey-branch.target.d',
 ]
 
 session_wants = ''
-foreach component : required_components
-  session_wants += 'Wants=' + app_id + '.' + component + '.target\n'
+foreach name, component : required_components
+  session_wants += 'Wants=' + unit_name_template.format(name, 'target') + '\n'
 endforeach
 
 # Install each gnome-session overrides.

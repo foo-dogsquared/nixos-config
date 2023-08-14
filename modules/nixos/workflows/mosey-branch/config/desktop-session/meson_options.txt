@@ -9,3 +9,21 @@ option('session_script',
   value: 'gnome-session --session=mosey-branch',
   description: 'Program (including its arguments) for the Wayland session entry file.',
 )
+
+option('polkit_script',
+  type: 'string',
+  value: 'polkit',
+  description: 'Executable and its arguments of the polkit daemon.'
+)
+
+option('ags_script',
+  type: 'string',
+  value: 'ags',
+  description: 'Executable and its arguments of the AGS widget system.'
+)
+
+option('ibus_script',
+  type: 'string',
+  value: 'ibus start',
+  description: 'Executable and its arguments of the IBus input engine.'
+)

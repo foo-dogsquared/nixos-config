@@ -1,5 +1,8 @@
 { config, options, lib, pkgs, ... }@attrs:
 
+# TODO: Create Meson installation package for custom desktop environment
+# session files and whatnot. I want to try out Meson and this is a perfect
+# excuse.
 let
   cfg = config.workflows.workflows.mosey-branch;
   workflowName = "mosey-branch";
@@ -9,10 +12,15 @@ let
 
   customDesktopSession = pkgs.callPackage ./config/desktop-session {
     inherit prefix;
-    serviceScript = "${pkgs.hyprland}/bin/Hyprland --config ${./config/hyprland/hyprland.conf}";
+    serviceScript = pkgs.writeShellScript "${workflowName}-service-script" ''
+      ${pkgs.hyprland}/bin/Hyprland --config ${./config/hyprland/hyprland.conf}
+    '';
     sessionScript = pkgs.writeShellScript "${workflowName}-hyprland-custom-start" ''
       ${pkgs.gnome.gnome-session}/bin/gnome-session --session=${workflowName}
     '';
+    agsScript = "${pkgs.ags}/bin/ags";
+    polkitScript = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+    ibusScript = pkgs.writeShellScript "${workflowName}-ibus-script" "${pkgs.ibus}/bin/ibus start";
   };
 
   requiredPackages = with pkgs; [
