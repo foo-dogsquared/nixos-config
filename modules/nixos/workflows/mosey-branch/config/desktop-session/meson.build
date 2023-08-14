@@ -79,5 +79,45 @@ configure_file(
   install: true,
 )
 
-# TODO: Install the systemd units for the core components of the desktop
-# environment.
+# Setting up for installing with the core services systemd units.
+required_services = []
+foreach name, component : required_components
+  required_services += unit_name_template.format(name, 'target')
+endforeach
+
+gnomesessionconf = configuration_data()
+gnomesessionconf.set(
+  'required_components',
+  ';'.join(required_services + [ (app_id + '.target') ]) + ';'
+)
+configure_file(
+  input: 'mosey-branch.session',
+  output: 'mosey-branch.session',
+  install_dir: datadir / 'gnome-session/sessions',
+  configuration: gnomesessionconf,
+  install: true,
+)
+
+foreach name, component : required_components
+  componentsconf = configuration_data()
+  componentsconf.set('component', name)
+  componentsconf.set('app_id', app_id)
+  componentsconf.set('description', component.get('description'))
+  componentsconf.set('script', component.get('script'))
+
+  configure_file(
+    input: 'core-service.service.in',
+    output: unit_name_template.format(name, 'service'),
+    install_dir: systemduserdir,
+    configuration: componentsconf,
+    install: true,
+  )
+
+  configure_file(
+    input: 'core-service.target.in',
+    output: unit_name_template.format(name, 'target'),
+    install_dir: systemduserdir,
+    configuration: componentsconf,
+    install: true,
+  )
+endforeach

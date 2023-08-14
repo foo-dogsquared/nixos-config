@@ -1,0 +1,17 @@
+[Unit]
+Description=@description@
+CollectMode=inactive-or-failed
+RefuseManualStart=true
+RefuseManualStop=true
+
+After=gnome-session-initialized.target
+
+PartOf=@app_id@.@component@.target
+Requisite=@app_id@.@component@.target
+Before=@app_id@.@component@.target
+
+[Service]
+Slice=session.slice
+Restart=on-failure
+ExecStart=@script@
+TimeoutStopSec=5
