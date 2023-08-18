@@ -8,7 +8,9 @@ app_id = 'one.foodogsquared.MoseyBranch'
 prefix = get_option('prefix')
 datadir = join_paths(prefix, get_option('datadir'))
 systemddir = join_paths(prefix, 'share/systemd')
+applicationsdir = join_paths(datadir, 'applications')
 systemduserdir = join_paths(systemddir, 'user')
+autostartdir = join_paths(prefix, 'etc/xdg/autostart')
 unit_name_template = app_id + '.@0@.@1@'
 
 required_components = {
@@ -80,6 +82,14 @@ configure_file(
   install: true,
 )
 
+configure_file(
+  input: 'mosey-branch.desktop.in',
+  output: app_id + '.desktop',
+  install_dir: applicationsdir,
+  configuration: serviceconf,
+  install: true,
+)
+
 # Setting up for installing with the core services systemd units.
 required_services = []
 foreach name, component : required_components
@@ -105,6 +115,7 @@ foreach name, component : required_components
   componentsconf.set('app_id', app_id)
   componentsconf.set('description', component.get('description'))
   componentsconf.set('script', component.get('script'))
+  componentsconf.set('gsm_phase', component.get('gsm_phase', 'Desktop'))
 
   configure_file(
     input: 'core-service.service.in',
@@ -118,6 +129,14 @@ foreach name, component : required_components
     input: 'core-service.target.in',
     output: unit_name_template.format(name, 'target'),
     install_dir: systemduserdir,
+    configuration: componentsconf,
+    install: true,
+  )
+
+  configure_file(
+    input: 'core-service.desktop.in',
+    output: unit_name_template.format(name, 'desktop'),
+    install_dir: autostartdir,
     configuration: componentsconf,
     install: true,
   )
