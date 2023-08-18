@@ -3,12 +3,12 @@
 with python3Packages;
 buildPythonPackage rec {
   pname = "swh-web-client";
-  version = "0.5.0";
+  version = "0.6.0";
 
   src = fetchPypi {
     inherit version;
     pname = "swh.web.client";
-    sha256 = "sha256-TC3KMMf2lpZA9DuwViu1Osb07eT25K+LyS49jeNZVwA=";
+    sha256 = "sha256-o1FcJh3nmGXWZABRQQUj3qgDPaHXwfazaBv8f3LENpk=";
   };
 
   doCheck = false;
