@@ -1,12 +1,12 @@
 [Unit]
 Description=@description@
+Documentation=man:gnome-session(1) man:systemd.special(7)
 CollectMode=inactive-or-failed
 
 # Pull in the service.
 Wants=@app_id@.@component@.service
 
 # Require GNOME session and do some reordering.
-Requisite=gnome-session-initialized.target
 PartOf=gnome-session-initialized.target
 After=gnome-session-initialized.target
 Before=gnome-session.target

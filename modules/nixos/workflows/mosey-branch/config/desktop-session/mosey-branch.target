@@ -1,6 +1,6 @@
 [Unit]
-Description=Mosey Branch
-Documentation=man:systemd.special(7)
+Description=Mosey Branch session
+Documentation=man:gnome-session(1) man:systemd.special(7)
 DefaultDependencies=no
 
 Requisite=gnome-session-initialized.target

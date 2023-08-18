@@ -6,9 +6,11 @@ RefuseManualStop=true
 
 After=gnome-session-initialized.target
 
-PartOf=@app_id@.@component@.target
+# These are implied to be `Before=gnome-session.target` since we're packing
+# them all up in the override configuration of the session target anyways.
 Requisite=@app_id@.@component@.target
 Before=@app_id@.@component@.target
+PartOf=@app_id@.@component@.target
 
 [Service]
 Slice=session.slice
