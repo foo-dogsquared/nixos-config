@@ -51,5 +51,6 @@ buildNpmPackage rec {
     description = "A EWW-inspired widget system as a GJS library";
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ foo-dogsquared ];
+    platforms = platforms.linux;
   };
 }
