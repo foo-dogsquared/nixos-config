@@ -18,7 +18,7 @@ in {
         dasel # Universal version of jq.
         gopass # An improved version of the password manager for hipsters.
         moar # More 'more'.
-        perl534Packages.vidir # Bulk rename for your organizing needs in the terminal.
+        perlPackages.vidir # Bulk rename for your organizing needs in the terminal.
         tealdeer # An easy cop-out for basic help.
 
         # Coreutils replacement.
