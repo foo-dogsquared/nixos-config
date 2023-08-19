@@ -101,6 +101,10 @@ in {
         moreutils # Less is more but more utilities, the merrier.
         whois # Doctor, are you not?
         valgrind # Making sure your applications don't pee as much.
+
+        # Measuring your bloated tanks power and bandwidth consumption.
+        powertop
+        nethogs
       ]
       # Finally, a local environment for testing out GitHub workflows without
       # embarassing yourself pushing a bunch of commits.
