@@ -183,7 +183,7 @@ in
     (lib.mkIf (attrs ? _isfoodogsquaredcustom && attrs._isfoodogsquaredcustom) {
       profiles.i18n = {
         enable = true;
-        fcitx5.enable = true;
+        ibus.enable = true;
       };
     })
   ]);
