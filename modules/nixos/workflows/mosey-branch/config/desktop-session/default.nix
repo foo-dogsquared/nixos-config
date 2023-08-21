@@ -7,17 +7,16 @@
 , gnome
 
 # This is the prefix used for the installed files in the output.
-, prefix ? "one.foodogsquared.MoseyBranch"
+, prefix ? "one.foodogsquared.MoseyBranch."
 , serviceScript ? "Hyprland"
 
 , agsScript ? "ags"
 , polkitScript ? "polkit"
-, ibusScript ? "ibus start"
 }:
 
 stdenv.mkDerivation rec {
   pname = "mosey-branch-custom-desktop-session";
-  version = "2023-08-13";
+  version = "2023-08-21";
 
   src = ./.;
   nativeBuildInputs = [
@@ -30,7 +29,6 @@ stdenv.mkDerivation rec {
   mesonFlags = [
     "-Dservice_script=${serviceScript}"
     "-Dags_script=${agsScript}"
-    "-Dibus_script=${ibusScript}"
     "-Dpolkit_script=${polkitScript}"
   ];
 
@@ -40,6 +38,11 @@ stdenv.mkDerivation rec {
     wrapProgram "$out/bin/mosey-branch-session" \
       --prefix XDG_DATA_DIRS : "${placeholder "out"}/share" \
       --prefix PATH : "${lib.makeBinPath [ gnome.gnome-session ]}"
+  '';
+
+  postFixup = ''
+    mkdir -p $out/share/wayland-sessions
+    ln -s $out/share/applications/${prefix}desktop $out/share/wayland-sessions
   '';
 
   meta = with lib; {

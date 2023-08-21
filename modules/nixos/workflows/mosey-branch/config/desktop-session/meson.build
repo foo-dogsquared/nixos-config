@@ -1,5 +1,5 @@
 project('mosey-branch',
-  version: '2023-08-11',
+  version: '2023-08-21',
   license: 'GPL-3.0-or-later',
   meson_version: '>=0.54.0',
 )
@@ -8,10 +8,11 @@ app_id = 'one.foodogsquared.MoseyBranch'
 prefix = get_option('prefix')
 bindir = join_paths(prefix, get_option('bindir'))
 datadir = join_paths(prefix, get_option('datadir'))
-systemddir = join_paths(prefix, 'share/systemd')
+systemddir = join_paths(datadir, 'systemd')
 applicationsdir = join_paths(datadir, 'applications')
 systemduserdir = join_paths(systemddir, 'user')
-autostartdir = join_paths(prefix, 'etc/xdg/autostart')
+gsd_schemadir = join_paths(datadir, 'glib-2.0', 'schemas')
+autostartdir = join_paths(gsd_schemadir, 'etc', 'autostart')
 unit_name_template = app_id + '.@0@.@1@'
 
 required_components = {
@@ -53,7 +54,7 @@ endforeach
 
 # Installing the Wayland session desktop entry.
 desktopentryconf = configuration_data()
-desktopentryconf.set('session_script', get_option('session_script'))
+desktopentryconf.set('prefix', prefix)
 configure_file(
   input: 'mosey-branch.desktop',
   output: 'mosey-branch.desktop',
@@ -73,6 +74,7 @@ configure_file(
   install: true,
 )
 
+# This is both for the systemd- and non-systemd-managed GNOME sessions.
 serviceconf = configuration_data()
 serviceconf.set('script', get_option('service_script'))
 configure_file(
@@ -94,13 +96,13 @@ configure_file(
 # Setting up for installing with the core services systemd units.
 required_services = []
 foreach name, component : required_components
-  required_services += unit_name_template.format(name, 'target')
+  required_services += app_id + name
 endforeach
 
 gnomesessionconf = configuration_data()
 gnomesessionconf.set(
   'required_components',
-  ';'.join(required_services + [ (app_id + '.target') ]) + ';'
+  ';'.join([ app_id ] + required_services) + ';'
 )
 configure_file(
   input: 'mosey-branch.session',
