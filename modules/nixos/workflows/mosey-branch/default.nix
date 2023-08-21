@@ -110,12 +110,16 @@ in
         tangram # Make yourself a professional social media manager.
       ];
     };
+
+    debug = lib.mkEnableOption "gnome-session debug messages";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       environment.systemPackages = cfg.extraApps ++ requiredPackages;
       systemd.packages = [ customDesktopSession ];
+
+      environment.sessionVariables.GNOME_SESSION_DEBUG = lib.mkIf cfg.debug "1";
 
       # Our preferred display manager.
       services.xserver = {
