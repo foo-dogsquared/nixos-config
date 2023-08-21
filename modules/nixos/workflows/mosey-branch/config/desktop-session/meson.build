@@ -6,6 +6,7 @@ project('mosey-branch',
 
 app_id = 'one.foodogsquared.MoseyBranch'
 prefix = get_option('prefix')
+bindir = join_paths(prefix, get_option('bindir'))
 datadir = join_paths(prefix, get_option('datadir'))
 systemddir = join_paths(prefix, 'share/systemd')
 applicationsdir = join_paths(datadir, 'applications')
@@ -106,6 +107,15 @@ configure_file(
   output: 'mosey-branch.session',
   install_dir: datadir / 'gnome-session/sessions',
   configuration: gnomesessionconf,
+  install: true,
+)
+
+runconf = configuration_data()
+configure_file(
+  input: 'mosey-branch.bin.in',
+  output: 'mosey-branch-session',
+  install_dir: bindir,
+  configuration: runconf,
   install: true,
 )
 

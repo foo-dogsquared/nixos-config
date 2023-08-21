@@ -3,11 +3,12 @@
 , meson
 , ninja
 , pkg-config
+, makeWrapper
+, gnome
 
 # This is the prefix used for the installed files in the output.
 , prefix ? "one.foodogsquared.MoseyBranch"
 , serviceScript ? "Hyprland"
-, sessionScript ? "gnome-session --session=mosey-branch"
 
 , agsScript ? "ags"
 , polkitScript ? "polkit"
@@ -23,10 +24,10 @@ stdenv.mkDerivation rec {
     meson
     ninja
     pkg-config
+    makeWrapper
   ];
 
   mesonFlags = [
-    "-Dsession_script=${sessionScript}"
     "-Dservice_script=${serviceScript}"
     "-Dags_script=${agsScript}"
     "-Dibus_script=${ibusScript}"
@@ -34,6 +35,12 @@ stdenv.mkDerivation rec {
   ];
 
   passthru.providedSessions = [ "mosey-branch" ];
+
+  postInstall = ''
+    wrapProgram "$out/bin/mosey-branch-session" \
+      --prefix XDG_DATA_DIRS : "${placeholder "out"}/share" \
+      --prefix PATH : "${lib.makeBinPath [ gnome.gnome-session ]}"
+  '';
 
   meta = with lib; {
     description = "Custom desktop files for the custom desktop environment";

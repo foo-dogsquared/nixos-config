@@ -15,9 +15,6 @@ let
     serviceScript = pkgs.writeShellScript "${workflowName}-service-script" ''
       ${pkgs.hyprland}/bin/Hyprland --config ${./config/hyprland/hyprland.conf}
     '';
-    sessionScript = pkgs.writeShellScript "${workflowName}-hyprland-custom-start" ''
-      ${pkgs.gnome.gnome-session}/bin/gnome-session --session=${workflowName}
-    '';
     agsScript = "${pkgs.ags}/bin/ags";
     polkitScript = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
     ibusScript = pkgs.writeShellScript "${workflowName}-ibus-script" "${pkgs.ibus}/bin/ibus start";

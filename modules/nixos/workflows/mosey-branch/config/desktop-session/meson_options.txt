@@ -4,12 +4,6 @@ option('service_script',
   description: 'Executable for the main session script.'
 )
 
-option('session_script',
-  type: 'string',
-  value: 'gnome-session --session=mosey-branch',
-  description: 'Program (including its arguments) for the Wayland session entry file.',
-)
-
 option('polkit_script',
   type: 'string',
   value: 'polkit',
@@ -20,10 +14,4 @@ option('ags_script',
   type: 'string',
   value: 'ags',
   description: 'Executable and its arguments of the AGS widget system.'
-)
-
-option('ibus_script',
-  type: 'string',
-  value: 'ibus start',
-  description: 'Executable and its arguments of the IBus input engine.'
 )

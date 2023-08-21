@@ -1,7 +1,6 @@
 [Desktop Entry]
 Name=Mosey Branch
 Comment=foodogsquared's Hyprland-based desktop environment setup
-Exec=@session_script@
-TryExec=@session_script@
+Exec=@prefix@/bin/mosey-branch-session
 Type=Application
 DesktopNames=Mosey Branch
