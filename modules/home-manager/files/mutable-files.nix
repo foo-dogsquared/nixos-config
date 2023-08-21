@@ -142,9 +142,11 @@ in
                 '')
               cfg;
 
-            script = pkgs.writeShellScript "fetch-mutable-files" ''
-              ${lib.concatStringsSep "\n" mutableFilesCmds}
-            '';
+            script = pkgs.writeShellApplication {
+              name = "fetch-mutable-files";
+              runtimeInputs = with pkgs; [ archiver curl git gopass ];
+              text = "${lib.concatStringsSep "\n" mutableFilesCmds}";
+            };
           in
           builtins.toString script;
       };
