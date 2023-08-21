@@ -117,7 +117,12 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       environment.systemPackages = cfg.extraApps ++ requiredPackages;
-      systemd.packages = [ customDesktopSession ];
+
+      # Install all of the required systemd units.
+      systemd.packages = with pkgs.gnome; [
+        customDesktopSession
+        gnome-session
+      ];
 
       # We'll have to include them for gnome-session to recognize it in NixOS
       # systems.
