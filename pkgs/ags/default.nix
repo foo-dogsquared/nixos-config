@@ -24,6 +24,7 @@ buildNpmPackage rec {
   };
 
   npmDepsHash = "sha256-9EOpgm3Hg5MO9JIRNBgqmAA2Pf1QxgU1QGo+VVa1WjM=";
+  patches = [ ./lib-path.patch ];
 
   nativeBuildInputs = [
     meson
