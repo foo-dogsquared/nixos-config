@@ -1,14 +1,8 @@
 { config, options, lib, pkgs, ... }@attrs:
 
-# TODO: Create Meson installation package for custom desktop environment
-# session files and whatnot. I want to try out Meson and this is a perfect
-# excuse.
 let
   cfg = config.workflows.workflows.mosey-branch;
   workflowName = "mosey-branch";
-
-  # A reverse DNS prefix similarly used to GNOME services.
-  prefix = "one.foodogsquared.MoseyBranch.";
 
   createServiceScript = { runtimeInputs ? [], text, name }:
     let
@@ -33,7 +27,6 @@ let
     in "${script}/bin/${name}";
 
   customDesktopSession = pkgs.callPackage ./config/desktop-session {
-    inherit prefix;
     serviceScript = createServiceScript {
       name = "${workflowName}-service-script";
       runtimeInputs = with pkgs; [ hyprland ];
