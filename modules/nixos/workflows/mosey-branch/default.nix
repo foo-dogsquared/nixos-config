@@ -10,14 +10,52 @@ let
   # A reverse DNS prefix similarly used to GNOME services.
   prefix = "one.foodogsquared.MoseyBranch.";
 
+  createServiceScript = { runtimeInputs ? [], text, name }:
+    let
+      runtimeInputs' = runtimeInputs ++ [ pkgs.dbus ];
+      text' = ''
+        DESKTOP_AUTOSTART_ID="''${DESKTOP_AUTOSTART_ID:-}"
+        echo "$DESKTOP_AUTOSTART_ID"
+        test -n "$DESKTOP_AUTOSTART_ID" && {
+          dbus-send --print-reply --session \
+            --dest=org.gnome.SessionManager "/org/gnome/SessionManager" \
+            org.gnome.SessionManager.RegisterClient \
+            "string:${workflowName}" "string:$DESKTOP_AUTOSTART_ID"
+        }
+
+        ${text}
+      '';
+      script = pkgs.writeShellApplication {
+        inherit name;
+        runtimeInputs = runtimeInputs';
+        text = text';
+      };
+    in "${script}/bin/${name}";
+
   customDesktopSession = pkgs.callPackage ./config/desktop-session {
     inherit prefix;
-    serviceScript = pkgs.writeShellScript "${workflowName}-service-script" ''
-      ${pkgs.hyprland}/bin/Hyprland --config ${./config/hyprland/hyprland.conf}
-    '';
-    agsScript = "${pkgs.ags}/bin/ags";
-    polkitScript = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-    ibusScript = pkgs.writeShellScript "${workflowName}-ibus-script" "${pkgs.ibus}/bin/ibus start";
+    serviceScript = createServiceScript {
+      name = "${workflowName}-service-script";
+      runtimeInputs = with pkgs; [ hyprland ];
+      text = ''
+        Hyprland --config ${./config/hyprland/hyprland.conf}
+
+        test -n "$DESKTOP_AUTOSTART_ID" && {
+          dbus-send --print-reply --session \
+            --dest=org.gnome.SessionManager "/org/gnome/SessionManager" \
+            org.gnome.SessionManager.Logout "uint32:1"
+        }
+      '';
+    };
+    agsScript = createServiceScript {
+      name = "${workflowName}-widgets";
+      runtimeInputs = with pkgs; [ ags ];
+      text = "ags";
+    };
+    polkitScript = createServiceScript {
+      name = "${workflowName}-authentication-agent";
+      text = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+    };
   };
 
   requiredPackages = with pkgs; [
