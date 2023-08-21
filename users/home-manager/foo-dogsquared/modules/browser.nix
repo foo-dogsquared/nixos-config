@@ -18,6 +18,7 @@
       { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
       { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
       { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
+      { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
     ];
   };
 
@@ -27,6 +28,7 @@
       isDefault = true;
 
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        aw-watcher-web
         bitwarden
         facebook-container
         firefox-color
