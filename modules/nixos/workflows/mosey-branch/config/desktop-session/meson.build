@@ -39,7 +39,7 @@ sessionconf = configuration_data()
 sessionconf.set('session_wants', session_wants)
 foreach session_dropin : session_dropins
   configure_file(
-    input: 'mosey-branch.session.conf.in',
+    input: 'mosey-branch.systemd-conf.in',
     output: 'session.conf',
     install_dir: join_paths(systemduserdir, session_dropin),
     configuration: sessionconf,
@@ -100,7 +100,7 @@ gnomesessionconf.set(
   ';'.join([ app_id ] + required_services) + ';'
 )
 configure_file(
-  input: 'mosey-branch.session',
+  input: 'mosey-branch.gnome-session.in',
   output: 'mosey-branch.session',
   install_dir: datadir / 'gnome-session/sessions',
   configuration: gnomesessionconf,
