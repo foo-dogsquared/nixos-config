@@ -11,18 +11,13 @@ datadir = join_paths(prefix, get_option('datadir'))
 systemddir = join_paths(datadir, 'systemd')
 applicationsdir = join_paths(datadir, 'applications')
 systemduserdir = join_paths(systemddir, 'user')
-gsd_schemadir = join_paths(datadir, 'glib-2.0', 'schemas')
-autostartdir = join_paths(gsd_schemadir, 'etc', 'autostart')
+autostartdir = join_paths(prefix, 'etc', 'xdg', 'autostart')
 unit_name_template = app_id + '.@0@.@1@'
 
 required_components = {
   'polkit': {
     'description': 'Authentication agent for the desktop service',
     'script': get_option('polkit_script'),
-  },
-  'ibus': {
-    'description': 'Input method engine for the desktop service',
-    'script': get_option('ibus_script'),
   },
   'ags': {
     'description': 'Widget system',
@@ -63,7 +58,8 @@ configure_file(
   install: true,
 )
 
-# Installing the core systemd units for the desktop session.
+# Installing the core systemd units for the desktop session. This is both for
+# the systemd- and non-systemd-managed GNOME sessions.
 targetconf = configuration_data()
 targetconf.set('app_id', app_id)
 configure_file(
@@ -74,7 +70,6 @@ configure_file(
   install: true,
 )
 
-# This is both for the systemd- and non-systemd-managed GNOME sessions.
 serviceconf = configuration_data()
 serviceconf.set('script', get_option('service_script'))
 configure_file(
@@ -96,7 +91,7 @@ configure_file(
 # Setting up for installing with the core services systemd units.
 required_services = []
 foreach name, component : required_components
-  required_services += app_id + name
+  required_services += app_id + '.' + name
 endforeach
 
 gnomesessionconf = configuration_data()
@@ -113,6 +108,7 @@ configure_file(
 )
 
 runconf = configuration_data()
+runconf.set('prefix', prefix)
 configure_file(
   input: 'mosey-branch.bin.in',
   output: 'mosey-branch-session',
