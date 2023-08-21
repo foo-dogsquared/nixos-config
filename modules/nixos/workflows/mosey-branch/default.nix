@@ -119,6 +119,10 @@ in
       environment.systemPackages = cfg.extraApps ++ requiredPackages;
       systemd.packages = [ customDesktopSession ];
 
+      # We'll have to include them for gnome-session to recognize it in NixOS
+      # systems.
+      environment.pathsToLink = [ "/share/gnome-session" ];
+
       environment.sessionVariables.GNOME_SESSION_DEBUG = lib.mkIf cfg.debug "1";
 
       # Our preferred display manager.
