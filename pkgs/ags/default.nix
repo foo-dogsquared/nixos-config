@@ -13,17 +13,17 @@
 
 buildNpmPackage rec {
   pname = "ags";
-  version = "0.1.0";
+  version = "unstable-2023-08-21";
 
   src = fetchFromGitHub {
     owner = "Aylur";
     repo = "ags";
-    rev = "v${version}";
-    hash = "sha256-maDUYMdB0xyl9ju1pFfqaczlKyBizbG5UkE4DQ2D67w=";
+    rev = "2a875d4813c52a1a97aab31fccaead74e4e46fea";
+    hash = "sha256-zYvjFeKSDD6MM2j0UErsx6v43ikQHPFUklh9LnfGpUs=";
     fetchSubmodules = true;
   };
 
-  npmDepsHash = "sha256-e1YYtWiO/dN7w2s+En3+3gc98R/hM5pJnTK7kCCH8Mc=";
+  npmDepsHash = "sha256-9EOpgm3Hg5MO9JIRNBgqmAA2Pf1QxgU1QGo+VVa1WjM=";
 
   nativeBuildInputs = [
     meson
