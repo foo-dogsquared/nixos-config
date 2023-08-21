@@ -62,7 +62,6 @@ in
       i18n.inputMethod = {
         enabled = "fcitx5";
         fcitx5 = {
-          enableRimeData = true;
           addons = with pkgs; [
             fcitx5-lua
             fcitx5-mozc
