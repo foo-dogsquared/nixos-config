@@ -6,7 +6,7 @@ project('mosey-branch',
 
 app_id = 'one.foodogsquared.MoseyBranch'
 prefix = get_option('prefix')
-bindir = join_paths(prefix, get_option('bindir'))
+libexecdir = join_paths(prefix, get_option('libexecdir'))
 datadir = join_paths(prefix, get_option('datadir'))
 systemddir = join_paths(datadir, 'systemd')
 applicationsdir = join_paths(datadir, 'applications')
@@ -54,7 +54,7 @@ endforeach
 
 # Installing the Wayland session desktop entry.
 desktopentryconf = configuration_data()
-desktopentryconf.set('prefix', prefix)
+desktopentryconf.set('libexecdir', libexecdir)
 configure_file(
   input: 'mosey-branch.desktop',
   output: 'mosey-branch.desktop',
@@ -116,7 +116,7 @@ runconf = configuration_data()
 configure_file(
   input: 'mosey-branch.bin.in',
   output: 'mosey-branch-session',
-  install_dir: bindir,
+  install_dir: libexecdir,
   configuration: runconf,
   install: true,
 )

@@ -35,8 +35,7 @@ stdenv.mkDerivation rec {
   passthru.providedSessions = [ "mosey-branch" ];
 
   postInstall = ''
-    wrapProgram "$out/bin/mosey-branch-session" \
-      --prefix XDG_DATA_DIRS : "${placeholder "out"}/share" \
+    wrapProgram "$out/libexec/mosey-branch-session" \
       --prefix PATH : "${lib.makeBinPath [ gnome.gnome-session ]}"
   '';
 
