@@ -1,7 +1,8 @@
 = Mosey branch
 :toc:
 
-A workflow module of a Hyprland desktop environment featuring my link:https://github.com/foo-dogsquared/base16-bark-on-a-tree-scheme[custom colorscheme].
+A workflow module of a "prim" and "proper" desktop environment featuring Hyprland and my link:https://github.com/foo-dogsquared/base16-bark-on-a-tree-scheme[custom colorscheme].
+It is integrated with link:https://systemd.io/DESKTOP_ENVIRONMENTS/[systemd] through link:https://gitlab.gnome.org/GNOME/gnome-session/[gnome-session] (but it could be used without systemd since gnome-session can be also be used without systemd).
 
 // TODO: Screenshot
 

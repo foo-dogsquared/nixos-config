@@ -1,4 +1,14 @@
 = Mosey branch custom session
 :toc:
 
-This is an installation script for the custom desktop environment "Mosey branch".
+This is an installation template for the custom desktop environment "Mosey branch" containing configuration files including systemd units, gnome-session sessions, and desktop entries for the required components.
+Much of it is inspired from link:https://gitlab.gnome.org/World/Phosh/phosh/[Phosh session files], link:https://gitlab.gnome.org/GNOME/gnome-shell[gnome-shell session files], and link:https://gitlab.gnome.org/GNOME/gnome-settings-daemon/[gnome-settings-daemon systemd service files].
+You can also find out more details to configure gnome-session from `gnome-session(1)` manual page.
+
+To build this template, you have to build with link:https://mesonbuild.com/[Meson build system].
+
+[source, shell]
+----
+meson setup builddir && cd builddir
+meson compile
+----
