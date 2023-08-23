@@ -73,6 +73,8 @@ in {
         wordnet
 
         ## :lang org +roam2
+        texlive.combined.scheme-medium
+        (python3.withPackages (ps: with ps; [ jupyter ]))
         sqlite
         anystyle-cli
       ];
