@@ -11,7 +11,6 @@ jobs:
       matrix:
         arch:
           - "x86_64-linux"
-          - "aarch64-linux"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
