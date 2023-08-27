@@ -22,15 +22,16 @@ in
     requires = [ "acme-finished-${weztermDomain}.target" ];
     environment.WEZTERM_LOG = "info";
     serviceConfig = {
-      LoadCredential = let
-        certDir = config.security.acme.certs."${weztermDomain}".directory;
-        credentialCertPath = path: "${path}:${certDir}/${path}";
-      in
-      [
-        (credentialCertPath "key.pem")
-        (credentialCertPath "cert.pem")
-        (credentialCertPath "fullchain.pem")
-      ];
+      LoadCredential =
+        let
+          certDir = config.security.acme.certs."${weztermDomain}".directory;
+          credentialCertPath = path: "${path}:${certDir}/${path}";
+        in
+        [
+          (credentialCertPath "key.pem")
+          (credentialCertPath "cert.pem")
+          (credentialCertPath "fullchain.pem")
+        ];
     };
   };
 

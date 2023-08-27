@@ -6,7 +6,7 @@
 , makeWrapper
 , gnome
 
-# This is the prefix used for the installed files in the output.
+  # This is the prefix used for the installed files in the output.
 , prefix ? "one.foodogsquared.MoseyBranch."
 , serviceScript ? "Hyprland"
 

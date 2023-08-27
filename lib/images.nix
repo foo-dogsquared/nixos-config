@@ -46,9 +46,9 @@
   listImagesWithSystems = data:
     lib.foldlAttrs
       (acc: name: metadata:
-      let
-        name' = metadata.hostname or name;
-      in
+        let
+          name' = metadata.hostname or name;
+        in
         if lib.length metadata.systems > 1 then
           acc // (lib.foldl
             (images: system: images // {
@@ -57,7 +57,7 @@
                 _name = name';
               };
             })
-            {}
+            { }
             metadata.systems)
         else
           acc // {
@@ -66,6 +66,6 @@
               _name = name';
             };
           })
-      {}
+      { }
       data;
 }

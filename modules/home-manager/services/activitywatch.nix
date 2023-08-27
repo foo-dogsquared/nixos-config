@@ -158,7 +158,7 @@ in
         Additional arguments to be passed on to the ActivityWatch server.
       '';
       type = with lib.types; listOf str;
-      default = [];
+      default = [ ];
       defaultText = "[ ]";
       example = lib.literalExpression ''
         [

@@ -53,9 +53,10 @@ in {
           };
         in
         lib.mapAttrs'
-          (name: remote: lib.nameValuePair "flatpak/remotes.d/${name}.flatpakrepo" {
-            source = pkgs.fetchurl remote;
-          })
+          (name: remote:
+            lib.nameValuePair
+              "flatpak/remotes.d/${name}.flatpakrepo"
+              { source = pkgs.fetchurl remote; })
           urls;
 
       programs.extra-container.enable = true;

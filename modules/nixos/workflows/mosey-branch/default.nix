@@ -4,7 +4,7 @@ let
   cfg = config.workflows.workflows.mosey-branch;
   workflowName = "mosey-branch";
 
-  createServiceScript = { runtimeInputs ? [], text, name }:
+  createServiceScript = { runtimeInputs ? [ ], text, name }:
     let
       runtimeInputs' = runtimeInputs ++ [ pkgs.dbus ];
       text' = ''
@@ -24,7 +24,8 @@ let
         runtimeInputs = runtimeInputs';
         text = text';
       };
-    in "${script}/bin/${name}";
+    in
+    "${script}/bin/${name}";
 
   customDesktopSession = pkgs.callPackage ./config/desktop-session {
     serviceScript = createServiceScript {
@@ -69,6 +70,7 @@ let
     socat
     qt5.qtwayland
     qt6.qtwayland
+    pciutils
 
     # The authentication agent.
     polkit_gnome
