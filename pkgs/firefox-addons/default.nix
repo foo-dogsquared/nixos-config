@@ -11,6 +11,12 @@
         homepage = "https://github.com/shevabam/get-rss-feed-url-extension";
         description = "Retrieve RSS feeds URLs from a WebSite. Now in Firefox!";
         license = licenses.mit;
+        mozPermissions = [
+          "http://*/*"
+          "https://*/*"
+          "notifications"
+          "<all_urls>"
+          ];
         platforms = platforms.all;
         };
       };
@@ -25,6 +31,13 @@
         homepage = "https://foundation.mozilla.org/regrets-reporter";
         description = "The RegretsReporter browser extension, built by the nonprofit Mozilla, helps you take control of your YouTube recommendations.";
         license = licenses.mpl20;
+        mozPermissions = [
+          "*://*.youtube.com/*"
+          "https://incoming.telemetry.mozilla.org/*"
+          "storage"
+          "alarms"
+          "webRequest"
+          ];
         platforms = platforms.all;
         };
       };
@@ -39,6 +52,13 @@
         homepage = "https://simple-translate.sienori.com";
         description = "Quickly translate selected or typed text on web pages. Supports Google Translate and DeepL API.";
         license = licenses.mpl20;
+        mozPermissions = [
+          "<all_urls>"
+          "storage"
+          "contextMenus"
+          "http://*/*"
+          "https://*/*"
+          ];
         platforms = platforms.all;
         };
       };
@@ -53,6 +73,7 @@
         homepage = "https://tineye.com/";
         description = "Click on any image on the web to search for it on TinEye. Recommended by Firefox! \nDiscover where an image came from, see how it is being used, check if modified versions exist or locate high resolution versions. Made with love by the TinEye team.";
         license = licenses.mit;
+        mozPermissions = [ "contextMenus" "storage" ];
         platforms = platforms.all;
         };
       };
@@ -66,6 +87,7 @@
       {
         description = "Check archival state of a source code repository and propose to update it if needed.";
         license = licenses.mit;
+        mozPermissions = [ "<all_urls>" "storage" "tabs" "activeTab" ];
         platforms = platforms.all;
         };
       };
@@ -80,6 +102,7 @@
         homepage = "https://github.com/cschiller/zhongwen";
         description = "Official Firefox port of the Zhongwen Chrome extension (<a href=\"https://prod.outgoing.prod.webservices.mozgcp.net/v1/4d8401bdeba5d777261b82f644f164d046c1c71c9382465493a10144cbd23de0/http%3A//github.com/cschiller/zhongwen\" rel=\"nofollow\">http://github.com/cschiller/zhongwen</a>). Translate Chinese characters by hovering over them with the mouse. Includes internal word list, links to Chinese Grammar Wiki, tone colors, and more.";
         license = licenses.gpl2;
+        mozPermissions = [ "contextMenus" "tabs" "<all_urls>" ];
         platforms = platforms.all;
         };
       };
