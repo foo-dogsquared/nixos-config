@@ -12,7 +12,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@v2
       - uses: DeterminateSystems/nix-installer-action@v4
         with:
-          extra_conf: |
+          extra-conf: |
             keep-going = true
       - name: Prepare push to binary cache
         uses: cachix/cachix-action@v12
