@@ -12,6 +12,7 @@ in {
   options.profiles.editors = {
     neovim.enable = lib.mkEnableOption "foo-dogsquared's Neovim setup with Nix";
     emacs.enable = lib.mkEnableOption "foo-dogsquared's (Doom) Emacs setup";
+    vscode.enable = lib.mkEnableOption "foo-dogsquared's Visual Studio Code setup";
   };
 
   config = lib.mkMerge [
@@ -78,6 +79,43 @@ in {
         sqlite
         anystyle-cli
       ];
+    })
+
+    # The Visual Studio Code setup. Probably the hardest one to fully configure
+    # not because it has extensions available which will make things harder.
+    # This might make me not consider an extension and settings sync extension
+    # for this.
+    (lib.mkIf cfg.vscode.enable {
+      programs.vscode = {
+        enable = true;
+        extensions = with pkgs.vscode-extensions; [
+          # All the niceties for developmenties.
+          ms-vscode-remote.remote-containers
+          ms-vscode-remote.remote-ssh
+          ms-vsliveshare.vsliveshare
+          tailscale.vscode-tailscale
+
+          # Additional language support.
+          bbenoist.nix
+          graphql.vscode-graphql
+          ms-vscode.cmake-tools
+          ms-vscode.cpptools
+          ms-vscode.powershell
+
+          # Extra editor niceties.
+          eamodio.gitlens
+          mkhl.direnv
+          usernamehw.errorlens
+          vadimcn.vscode-lldb
+
+          # The other niceties.
+          editorconfig.editorconfig
+          vscode-icons-team.vscode-icons
+        ];
+
+        # Yay! Thank you!
+        mutableExtensionsDir = true;
+      };
     })
   ];
 }
