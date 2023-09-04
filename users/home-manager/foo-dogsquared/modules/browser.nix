@@ -2,6 +2,11 @@
 { config, lib, pkgs, ... }:
 
 {
+  home.packages = with pkgs; [
+    google-chrome-dev
+    nyxt
+  ];
+
   programs.brave = {
     enable = true;
     commandLineArgs = [
