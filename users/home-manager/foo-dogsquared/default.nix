@@ -132,6 +132,7 @@ in
     "doom".source = getDotfiles "emacs";
     "kitty".source = getDotfiles "kitty";
     "nvim".source = getDotfiles "nvim";
+    "nyxt".source = getDotfiles "nyxt";
     "wezterm".source = getDotfiles "wezterm";
   };
 
