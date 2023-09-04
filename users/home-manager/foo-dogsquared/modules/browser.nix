@@ -4,6 +4,10 @@
 {
   programs.brave = {
     enable = true;
+    commandLineArgs = [
+      "--no-default-browser-check"
+      "--use-system-default-printer"
+    ];
     extensions = [
       { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
       { id = "ekhagklcjbdpajgpjgmbionohlpdbjgc"; } # Zotero connector
