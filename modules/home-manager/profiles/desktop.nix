@@ -125,7 +125,6 @@ in {
 
     (lib.mkIf cfg.documents.enable {
       home.packages = with pkgs; [
-        brave # The only web browser that gives me money.
         dino # Some modern chat client featuring a dinosaur for what could be considered a dinosaur.
         foliate # The prettier PDF viewer.
         thunderbird # Email checks.
