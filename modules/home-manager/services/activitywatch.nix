@@ -16,6 +16,7 @@ let
 
       Service = {
         ExecStart = "${cfg.package}/bin/${cfg.executable} ${lib.escapeShellArgs cfg.extraArgs}";
+        Restart = "on-failure";
 
         # Some sandboxing.
         LockPersonality = true;
