@@ -84,7 +84,10 @@ in
       shell.enable = true;
       extras.enable = true;
     };
-    editors.emacs.enable = true;
+    editors = {
+      emacs.enable = true;
+      vscode.enable = true;
+    };
     desktop = {
       enable = true;
       graphics.enable = true;
