@@ -24,6 +24,34 @@
 
   programs.firefox = {
     enable = true;
+
+    package = with pkgs; wrapFirefox firefox-unwrapped {
+      extraPolicies = {
+        AppAutoUpdate = false;
+        DisableAppUpdate = true;
+        DisableMasterPasswordCreation = true;
+        DisablePocket = true;
+        DisableSetDesktopBackground = true;
+        DontCheckDefaultBrowser = true;
+        FirefoxHome = {
+          Highlights = false;
+          Pocket = false;
+          Snippets = false;
+          SponsporedPocket = false;
+          SponsporedTopSites = false;
+        };
+        NoDefaultBookmarks = true;
+        OfferToSaveLoginsDefault = false;
+        PasswordManagerEnabled = false;
+        SanitizeOnShutdown = {
+          Cache = true;
+          Cookies = true;
+          FormData = true;
+        };
+        UseSystemPrintDialog = true;
+      };
+    };
+
     profiles.personal = {
       isDefault = true;
 
