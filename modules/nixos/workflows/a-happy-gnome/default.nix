@@ -16,6 +16,7 @@ let
   dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" { } ''
     install -Dm644 ${./config/dconf}/*.conf -t $out/etc/dconf/db/${name}-conf.d
     install -Dm644 ${enabledExtensions} $out/etc/dconf/db/${name}-conf.d/90-enabled-extensions.conf
+    install -Dm644 ${./config/dconf/user} $out/etc/dconf/profile/user
   '';
 in
 {
@@ -134,16 +135,6 @@ in
       programs.dconf = {
         enable = true;
         packages = [ dconfConfig ];
-
-        # The `user` profile needed to set custom system-wide settings in GNOME.
-        # Also, this is a private option so take precautions with this.
-        profiles.user = pkgs.writeTextFile {
-          name = "a-happy-gnome";
-          text = ''
-            user-db:user
-            system-db:${name}-conf
-          '';
-        };
       };
 
       xdg.mime = {
