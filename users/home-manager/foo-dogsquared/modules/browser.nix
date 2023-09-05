@@ -53,8 +53,6 @@
         OfferToSaveLoginsDefault = false;
         PasswordManagerEnabled = false;
         SanitizeOnShutdown = {
-          Cache = true;
-          Cookies = true;
           FormData = true;
         };
         UseSystemPrintDialog = true;
