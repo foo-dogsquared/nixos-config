@@ -266,29 +266,31 @@
         nix.package = pkgs.nixUnstable;
 
         # Set the configurations for the package manager.
-        nix.settings = let
-          substituters = [
-            "https://nix-community.cachix.org"
-            "https://foo-dogsquared.cachix.org"
-          ];
-        in {
-          # Set several binary caches.
-          inherit substituters;
-          trusted-substituters = substituters;
-          trusted-public-keys = [
-            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
-          ];
+        nix.settings =
+          let
+            substituters = [
+              "https://nix-community.cachix.org"
+              "https://foo-dogsquared.cachix.org"
+            ];
+          in
+          {
+            # Set several binary caches.
+            inherit substituters;
+            trusted-substituters = substituters;
+            trusted-public-keys = [
+              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+              "foo-dogsquared.cachix.org-1:/2fmqn/gLGvCs5EDeQmqwtus02TUmGy0ZlAEXqRE70E="
+            ];
 
-          # Sane config for the package manager.
-          # TODO: Remove this after nix-command and flakes has been considered
-          # stable.
-          #
-          # Since we're using flakes to make this possible, we need it. Plus, the
-          # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
-          experimental-features = [ "nix-command" "flakes" "repl-flake" ];
-          auto-optimise-store = lib.mkDefault true;
-        };
+            # Sane config for the package manager.
+            # TODO: Remove this after nix-command and flakes has been considered
+            # stable.
+            #
+            # Since we're using flakes to make this possible, we need it. Plus, the
+            # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
+            experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+            auto-optimise-store = lib.mkDefault true;
+          };
 
         # Stallman-senpai will be disappointed.
         nixpkgs.config.allowUnfree = true;
@@ -340,42 +342,42 @@
       # NICE!
       homeConfigurations =
         lib'.mapAttrs
-        (filename: metadata:
-          let
-            name = metadata._name;
-            system = metadata._system;
-            pkgs = import inputs."${metadata.nixpkgs-channel or "nixpkgs"}" {
-              inherit system overlays;
-            };
-            path = ./users/home-manager/${name};
-            extraModules = [
-              ({ pkgs, config, ... }: {
-                # To be able to use the most of our config as possible, we want
-                # both to use the same overlays.
-                nixpkgs.overlays = overlays;
+          (filename: metadata:
+            let
+              name = metadata._name;
+              system = metadata._system;
+              pkgs = import inputs."${metadata.nixpkgs-channel or "nixpkgs"}" {
+                inherit system overlays;
+              };
+              path = ./users/home-manager/${name};
+              extraModules = [
+                ({ pkgs, config, ... }: {
+                  # To be able to use the most of our config as possible, we want
+                  # both to use the same overlays.
+                  nixpkgs.overlays = overlays;
 
-                # Stallman-senpai will be disappointed. :/
-                nixpkgs.config.allowUnfree = true;
+                  # Stallman-senpai will be disappointed. :/
+                  nixpkgs.config.allowUnfree = true;
 
-                # Setting the homely options.
-                home.username = name;
-                home.homeDirectory = metadata.home-directory or "/home/${config.home.username}";
+                  # Setting the homely options.
+                  home.username = name;
+                  home.homeDirectory = metadata.home-directory or "/home/${config.home.username}";
 
-                # home-manager configurations are expected to be deployed on
-                # non-NixOS systems so it is safe to set this.
-                programs.home-manager.enable = true;
-                targets.genericLinux.enable = true;
-              })
-              userSharedConfig
-              nixSettingsSharedConfig
-              path
-            ];
-          in
-          mkHome {
-            inherit pkgs system extraModules extraArgs;
-            home-manager-channel = metadata.home-manager-channel or "home-manager";
-          })
-        users;
+                  # home-manager configurations are expected to be deployed on
+                  # non-NixOS systems so it is safe to set this.
+                  programs.home-manager.enable = true;
+                  targets.genericLinux.enable = true;
+                })
+                userSharedConfig
+                nixSettingsSharedConfig
+                path
+              ];
+            in
+            mkHome {
+              inherit pkgs system extraModules extraArgs;
+              home-manager-channel = metadata.home-manager-channel or "home-manager";
+            })
+          users;
 
       # Extending home-manager with my custom modules, if anyone cares.
       homeModules =
