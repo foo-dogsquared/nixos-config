@@ -148,7 +148,7 @@ in
               text = "${lib.concatStringsSep "\n" mutableFilesCmds}";
             };
           in
-          builtins.toString script;
+          "${script}/bin/fetch-mutable-files";
       };
 
       Install.WantedBy = [ "default.target" ];
