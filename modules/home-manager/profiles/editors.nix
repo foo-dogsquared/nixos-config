@@ -28,6 +28,11 @@ in {
           parinfer-rust
         ];
       };
+
+      xdg.mimeApps.defaultApplications = {
+        "application/json" = [ "nvim.desktop" ];
+        "text/plain" = [ "nvim.desktop" ];
+      };
     })
 
     # I only use Emacs for org-roam (seriously... I only learned Emacs for
@@ -79,6 +84,12 @@ in {
         sqlite
         anystyle-cli
       ];
+
+      xdg.mimeApps.defaultApplications = {
+        "application/json" = [ "emacs.desktop" ];
+        "text/org" = [ "emacs.desktop" ];
+        "text/plain" = [ "emacs.desktop" ];
+      };
     })
 
     # The Visual Studio Code setup. Probably the hardest one to fully configure
@@ -115,6 +126,11 @@ in {
 
         # Yay! Thank you!
         mutableExtensionsDir = true;
+      };
+
+      xdg.mimeApps.defaultApplications = {
+        "application/json" = [ "code.desktop" ];
+        "text/plain" = [ "code.desktop" ];
       };
     })
   ];

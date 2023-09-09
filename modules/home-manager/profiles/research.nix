@@ -22,5 +22,9 @@ in {
     ];
 
     services.syncthing.enable = true;
+
+    xdg.mimeApps.defaultApplications = {
+      "application/vnd.anki" = [ "anki.desktop" ];
+    };
   };
 }

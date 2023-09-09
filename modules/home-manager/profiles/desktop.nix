@@ -121,6 +121,11 @@ in {
           quality-menu
         ];
       };
+
+      xdg.mimeApps.defaultApplications = {
+        "audio/*" = [ "mpv.desktop" ];
+        "video/*" = [ "mpv.desktop" ];
+      };
     })
 
     (lib.mkIf cfg.documents.enable {
@@ -131,6 +136,13 @@ in {
         languagetool # You're personal assistant for proper grammar,
         vale # Elevate your fanfics to an arguably higher caliber!
       ];
+
+      xdg.mimeApps.defaultApplications = {
+        "application/pdf" = [
+          "sioyek.desktop"
+          "com.github.johnfactotum.Foliate.desktop"
+        ];
+      };
 
       # Some PDF viewer with a penchant for research.
       programs.sioyek = {
