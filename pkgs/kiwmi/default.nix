@@ -1,5 +1,6 @@
 { stdenv
 , lib
+, fetchpatch
 , fetchFromGitHub
 , meson
 , ninja
@@ -30,6 +31,13 @@ stdenv.mkDerivation rec {
     repo = pname;
     sha256 = "sha256-n9PA6cyEjSlnDcRrqIkO83UaCE/hovbi/oZon1B+nuw=";
   };
+
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/buffet/kiwmi/pull/71.patch";
+      hash = "sha256-28/i2fpYD2w9SxtMprT4qOoeCG2CIn31hav07W/oY2o=";
+    })
+  ];
 
   nativeBuildInputs = [
     meson
