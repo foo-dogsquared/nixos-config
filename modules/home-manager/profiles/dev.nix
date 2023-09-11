@@ -166,6 +166,7 @@ in {
         hyperfine # Making sure your apps are not just fine but REEEEEEAAAAALY fine.
         irssi # Communicate in the terminal like a normal person.
         license-cli # A nice generator template for license files.
+        quilt # Patching right up yer' alley.
         tree-sitter # The modern way of text highlighting.
         treefmt # I like the tagline of this tool: "One CLI for formatting your code tree." (It rhymes somewhat.)
         zenith # Very fanciful system dashboard.
