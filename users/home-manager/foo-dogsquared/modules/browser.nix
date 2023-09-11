@@ -7,6 +7,7 @@
     nyxt
   ];
 
+  # The only browser to give me money.
   programs.brave = {
     enable = true;
     commandLineArgs = [
@@ -31,6 +32,7 @@
     ];
   };
 
+  # Despite the name, it isn't a browser for furries.
   programs.firefox = {
     enable = true;
 

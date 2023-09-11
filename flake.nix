@@ -248,6 +248,7 @@
         home.stateVersion = lib.mkDefault "23.11";
       };
 
+      # This will be shared among NixOS and home-manager configurations.
       nixSettingsSharedConfig = { config, lib, pkgs, ... }: {
         # I want to capture the usual flakes to its exact version so we're
         # making them available to our system. This will also prevent the

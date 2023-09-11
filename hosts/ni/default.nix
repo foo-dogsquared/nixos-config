@@ -35,6 +35,7 @@
     type = "ed25519";
   }];
 
+  # My portable music streaming server.
   services.gonic = {
     enable = true;
     settings = {
@@ -56,16 +57,22 @@
     "ssh-key" = { };
   };
 
+  # The keyfile required for the secrets to be decrypted.
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
+  # Get the latest kernel for the desktop experience.
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # Adding a bunch of emulated systems for cross-system building.
   boot.binfmt.emulatedSystems = [
     "aarch64-linux"
     "riscv64-linux"
   ];
 
+  # Wanna be a wannabe haxxor, kid?
   programs.wireshark.package = pkgs.wireshark;
 
+  # We're using some better filesystems so we're using it.
   boot.initrd.supportedFilesystems = [ "btrfs" ];
   boot.supportedFilesystems = [ "btrfs" ];
 
