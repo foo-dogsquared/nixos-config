@@ -17,7 +17,7 @@ pkgs.mkShell {
     # Language servers for various parts of the config that uses a language.
     lua-language-server
     pyright
-    rnix-lsp
+    nil
     terraform-ls
 
     # Formatters...
