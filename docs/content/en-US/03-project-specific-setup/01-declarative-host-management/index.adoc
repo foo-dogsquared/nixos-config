@@ -12,7 +12,7 @@ For example, you can build my personalized NixOS installer ISO with the followin
 
 [source, shell, subs=attributes]
 ----
-nix build {canonical-flake-url}#images.bootstrap
+nix build {canonical-flake-url}#images.x86_64-linux.bootstrap
 ----
 
 A host metadata has a certain schema which the following example is a complete version of it.
@@ -44,7 +44,6 @@ For a complete reference, here are the expected attributes.
 
 - `systems` contains a list of platforms of the host system.
 This is mainly used to indicate the platform used for the nixpkgs repository.
-Take note if `systems` contains more than one platform, the NixOS configurations will be renamed as `$NAME-$SYSTEM` (e.g., `plover` to `plover-x86_64-linux`, `plover-aarch64-linux`).
 
 - `format` is the image output format for the host.
 It expects an accepted value from github:nix-community/nixos-generators[opts=repo] project.

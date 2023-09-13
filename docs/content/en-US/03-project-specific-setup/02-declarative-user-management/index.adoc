@@ -33,7 +33,6 @@ remote-build = true
 
 - `systems` contains a list of platforms of the home-manager user.
 This is mainly used to indicate the platform used for the nixpkgs repository.
-Take note if there's more than one platforms specified the home environment attribute name will change from `$HOSTNAME` to `$HOSTNAME-$SYSTEM` (e.g., `foo-dogsquared` to `foo-dogsquared-x86_64-linux`).
 
 - `nixpkgs-channel` indicates the branch of the nixpkgs to be used.
 By default, this uses the `nixpkgs` which follows the `nixos-unstable` branch.
