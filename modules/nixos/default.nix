@@ -18,6 +18,7 @@ let
   ];
   privateModules = [
     ./profiles/archiving.nix
+    ./profiles/browsers.nix
     ./profiles/desktop.nix
     ./profiles/dev.nix
     ./profiles/filesystem.nix
