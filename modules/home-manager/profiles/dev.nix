@@ -25,7 +25,7 @@ in {
         # Coreutils replacement.
         fd # Oh nice, a more reliable `find`.
         ripgrep # On nice, a more reliable `grep`.
-        exa # Oh nice, a shinier `ls`.
+        eza # Oh nice, a shinier `ls`.
       ];
 
       # Git interface for the lazy who cannot be asked to add hunks properly.

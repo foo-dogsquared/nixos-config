@@ -127,7 +127,7 @@ in {
         lazydocker # Git interface for the lazy.
         fd # Oh nice, a more reliable `find`.
         ripgrep # On nice, a more reliable `grep`.
-        exa # Oh nice, a shinier `ls`.
+        eza # Oh nice, a shinier `ls`.
         bat # dog > sky dog > cat
         fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
         gopass # An improved version of the password manager for hipsters.
