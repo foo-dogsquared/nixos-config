@@ -58,6 +58,11 @@ in
               extensions = {
                 "@contain-facebook".install_url = mozillaAddon "facebook-container";
                 "@testpilot-containers".install_url = mozillaAddon "multi-account-containers";
+                "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+                  install_url = mozillaAddon "bitwarden-password-manager";
+                  installation_mode = "force_installed";
+                  default_area = "navbar";
+                };
                 "firefox-translations-addon@mozilla.org".install_url = mozillaAddon "firefox-translations";
                 "jid1-MnnxcxisBPnSXQ@jetpack".install_url = mozillaAddon "privacy-badger17";
                 "uBlock0@raymondhill.net".install_url = mozillaAddon "ublock-origin";
