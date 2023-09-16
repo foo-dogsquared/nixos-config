@@ -63,8 +63,11 @@ in
                   installation_mode = "force_installed";
                   default_area = "navbar";
                 };
+                "ff2mpv@yossarian.net".install_url = mozillaAddon "ff2mpv";
                 "firefox-translations-addon@mozilla.org".install_url = mozillaAddon "firefox-translations";
+                "fx_cast@matt.tf".install_url = "https://github.com/hensm/fx_cast/releases/download/v0.3.1/fx_cast-0.3.1.xpi";
                 "jid1-MnnxcxisBPnSXQ@jetpack".install_url = mozillaAddon "privacy-badger17";
+                "tridactyl.vim@cmcaine.co.uk".install_url = mozillaAddon "tridactyl-vim";
                 "uBlock0@raymondhill.net".install_url = mozillaAddon "ublock-origin";
                 "wayback_machine@mozilla.org" = {
                   install_url = mozillaAddon "wayback-machine_new";
@@ -74,9 +77,9 @@ in
 
               applyInstallationMode = name: value:
                 lib.nameValuePair name (value //
-                  (lib.optionalAttrs (value.installation_mode != "") {
-                    installation_mode = "normal_installed";
-                  }));
+                  (lib.optionalAttrs
+                    (! (lib.hasAttrByPath [ "installation_mode" ] value))
+                    { installation_mode = "normal_installed"; }));
             in
             lib.mapAttrs' applyInstallationMode extensions;
 
