@@ -108,7 +108,7 @@
       defaultSystem = "x86_64-linux";
 
       # Just add systems here and it should add systems to the outputs.
-      systems = with inputs.flake-utils.lib.system; [
+      systems = [
         "x86_64-linux"
         "aarch64-linux"
         "riscv64-linux"
