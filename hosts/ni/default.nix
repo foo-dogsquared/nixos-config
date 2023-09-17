@@ -120,14 +120,18 @@
   # This is somewhat used for streaming games from it.
   programs.steam.remotePlay.openFirewall = true;
 
+  # Backup for the almighty archive, pls.
   tasks.backup-archive.enable = true;
-  workflows.workflows.a-happy-gnome.enable = true;
 
+  # The most extensible desktop environment with the greatest toolset of all
+  # time (arguably but it is great).
+  workflows.workflows.a-happy-gnome.enable = true;
 
   programs.wezterm.enable = true;
   programs.adb.enable = true;
 
-  environment.etc."nix/nixpkgs-config.nix".source = pkgs.writeText "nixpkgs-config" ''
+  # Basically, the most basic nixpkgs configuration.
+  environment.etc."nix/nixpkgs-config.nix".text = ''
     {
       allowUnfree = true;
     }
