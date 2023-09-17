@@ -70,9 +70,6 @@ This is especially applicable to programs I always use such as my text editor co
 The potential for it is pretty nice especially when seen with similar implementations such as Guix home environment.
 However, I don't want to rebuild it every time I change it.
 
-** Plus, most of my applications are now installed using link:https://flatpak.org/[Flatpak] anyways.
-It is a tad easier to manage configurations installed this way (e.g., just copy `~/.var` between your systems or make backups with it).
-
 * Migration of my link:https://github.com/foo-dogsquared/dotfiles[dotfiles].
 I still use it on other non-NixOS systems.
 
