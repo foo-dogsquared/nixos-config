@@ -87,6 +87,10 @@
   profiles = {
     i18n.enable = true;
     archiving.enable = true;
+    browsers = {
+      firefox.enable = true;
+      chromium.enable = true;
+    };
     desktop = {
       enable = true;
       audio.enable = true;
