@@ -123,13 +123,6 @@
   tasks.backup-archive.enable = true;
   workflows.workflows.a-happy-gnome.enable = true;
 
-  programs.pop-launcher = {
-    enable = true;
-    plugins = with pkgs; [
-      pop-launcher-plugin-duckduckgo-bangs
-      pop-launcher-plugin-brightness
-    ];
-  };
 
   programs.wezterm.enable = true;
   programs.adb.enable = true;
