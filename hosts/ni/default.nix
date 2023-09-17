@@ -117,6 +117,9 @@
     vpn.personal.enable = true;
   };
 
+  # This is somewhat used for streaming games from it.
+  programs.steam.remotePlay.openFirewall = true;
+
   tasks.backup-archive.enable = true;
   workflows.workflows.a-happy-gnome.enable = true;
 
