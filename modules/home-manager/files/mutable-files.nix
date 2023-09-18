@@ -68,6 +68,17 @@ let
         default = [ ];
         example = [ "--depth" "1" ];
       };
+
+      postScript = lib.mkOption {
+        type = lib.types.str;
+        description = ''
+          A shell script fragment to be executed after the download.
+        '';
+        default = "";
+        example = lib.literalExpression ''
+          $${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
+        '';
+      };
     };
   };
 in
@@ -139,6 +150,7 @@ in
                     [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
                   ''}
                   ${isFetchType "custom" "[ -e ${path} ] || ${extraArgs}"}
+                  ${value.postScript}
                 '')
               cfg;
 
