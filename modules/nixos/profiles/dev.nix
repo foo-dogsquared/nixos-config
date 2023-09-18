@@ -93,7 +93,6 @@ in {
         diffoscope # Oversized caffeine grinder.
         direnv # The power of local development environment.
         ipcalc # Calculate your IP without going to the web.
-        lsof # View every single open connections.
         gcc # The usual toolchain.
         gdb # The usual debugger.
         gnumake # The other poster boy for the hated build system.
@@ -106,6 +105,11 @@ in {
         # Measuring your bloated tanks power and bandwidth consumption.
         powertop
         nethogs
+
+        # Hardware and software diagnostics.
+        lsof # View every single open connections.
+        lshw # View your hardware.
+        pciutils # View your peripherals.
       ]
       # Finally, a local environment for testing out GitHub workflows without
       # embarassing yourself pushing a bunch of commits.
