@@ -43,11 +43,11 @@ let
 
           This accept only certain keywords.
 
-          - For `fetch`, the file will be fetched with `curl`.
-          - For `git`, it will be fetched with `git clone`.
-          - For `archive`, the file will be fetched with `curl` and extracted
-          before putting the file.
-          - For `gopass`, the file will be cloned with `gopass`.
+          - For `fetch`, the file will be fetched with {command}`curl`.
+          - For `git`, it will be fetched with {command}`git clone`.
+          - For `archive`, the file will be fetched with {command}`curl` and
+          extracted before putting the file.
+          - For `gopass`, the file will be cloned with {command}`gopass`.
           - For `custom`, the file will be passed with a user-given command.
           The `extraArgs` option is now assumed to be a list of a command and
           its arguments.
