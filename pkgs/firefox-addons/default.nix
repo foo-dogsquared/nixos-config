@@ -43,10 +43,10 @@
       };
     "simple-translate" = buildFirefoxXpiAddon {
       pname = "simple-translate";
-      version = "2.8.1";
+      version = "2.8.2";
       addonId = "simple-translate@sienori";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4072586/simple_translate-2.8.1.xpi";
-      sha256 = "23f1953d588d5d9943ab43845407b84a51bbcc1824b8c010ed56caa119711a27";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4165189/simple_translate-2.8.2.xpi";
+      sha256 = "8e8c3af0ffadfd3ff9928355e7be2292befe6c4f0e483f7c37c2d9a34a54f345";
       meta = with lib;
       {
         homepage = "https://simple-translate.sienori.com";
