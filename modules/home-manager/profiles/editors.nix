@@ -54,6 +54,17 @@ in {
         ];
       };
 
+      # Automatically install Doom Emacs from here.
+      home.mutableFile."${config.xdg.configHome}/emacs" = {
+        url = "https://github.com/doomemacs/doomemacs.git";
+        type = "git";
+        extraArgs = [ "--depth" "1" ];
+        postScript = ''
+          ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
+          ${config.xdg.configHome}/emacs/bin/doom sync
+        '';
+      };
+
       # Doom Emacs dependencies.
       home.packages = with pkgs; [
         # This is installed just to get Geiser to properly work.

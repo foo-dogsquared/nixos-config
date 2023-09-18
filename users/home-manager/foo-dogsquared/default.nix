@@ -144,13 +144,6 @@ in
       type = "git";
     };
 
-    # ...Doom Emacs,...
-    "${config.xdg.configHome}/emacs" = {
-      url = "https://github.com/doomemacs/doomemacs.git";
-      type = "git";
-      extraArgs = [ "--depth" "1" ];
-    };
-
     # ...my gopass secrets,...
     ".local/share/gopass/stores/personal" = {
       url = "gitea@code.foodogsquared.one:foodogsquared/gopass-secrets-personal.git";
@@ -162,17 +155,5 @@ in
       url = "https://github.com/foo-dogsquared/base16-bark-on-a-tree-scheme.git";
       type = "git";
     };
-  };
-
-  systemd.user.services.fetch-mutable-files = {
-    Service.ExecStartPost =
-      let
-        script = pkgs.writeShellScript "post-fetch-mutable-files" ''
-          # Automate installation of Doom Emacs.
-          ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
-          ${config.xdg.configHome}/emacs/bin/doom sync
-        '';
-      in
-      builtins.toString script;
   };
 }
