@@ -14,6 +14,10 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.chromium.enable {
+      environment.systemPackages = with pkgs; [
+        chromium
+      ];
+
       programs.chromium = {
         enable = true;
 
