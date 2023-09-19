@@ -102,6 +102,8 @@ in
       in
       pkgs.writeText "named.conf" ''
         include "/etc/bind/rndc.key";
+        include "${config.sops.secrets."dns/${domain}/rfc2136-key".path}";
+
         controls {
           inet 127.0.0.1 allow {localhost;} keys {"rndc-key";};
         };
@@ -115,70 +117,59 @@ in
           session-tickets no;
         };
 
+        acl trusted { ${lib.concatStringsSep "; " (clientNetworks ++ serverNetworks)}; localhost; };
         acl cachenetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.cacheNetworks} };
         acl badnetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.blockedNetworks} };
 
         options {
           listen-on { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOn} };
           listen-on-v6 { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOnIpv6} };
+          listen-on tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") cfg.listenOn} };
+          listen-on-v6 tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") cfg.listenOnIpv6} };
           allow-query { cachenetworks; };
           blackhole { badnetworks; };
           forward ${cfg.forward};
           forwarders { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.forwarders} };
           directory "${cfg.directory}";
           pid-file "/run/named/named.pid";
-          ${cfg.extraOptions}
         };
 
-        ${cfg.extraConfig}
-      '';
+        view internal {
+          match-clients { trusted; };
 
-    extraOptions = ''
-      listen-on tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") config.services.bind.listenOn} };
-      listen-on-v6 tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") config.services.bind.listenOnIpv6} };
-    '';
+          allow-query { any; };
+          allow-recursion { any; };
+          forwarders { 127.0.0.53 port 53; };
 
-    extraConfig = ''
-      include "${config.sops.secrets."dns/${domain}/rfc2136-key".path}";
+          zone "${fqdn}" {
+            type primary;
+            file "${zoneFile fqdn}";
+          };
 
-      acl trusted { ${lib.concatStringsSep "; " (clientNetworks ++ serverNetworks)}; localhost; };
+          zone "${domain}" {
+            type primary;
 
-      view internal {
-        match-clients { trusted; };
-
-        allow-query { any; };
-        allow-recursion { any; };
-        forwarders { 127.0.0.53 port 53; };
-
-        zone "${fqdn}" {
-          type primary;
-          file "${zoneFile fqdn}";
-        };
-
-        zone "${domain}" {
-          type primary;
-
-          file "${zoneFile domain}";
-          allow-transfer { ${lib.concatStringsSep "; " secondaryNameServersIPs}; };
-          update-policy {
-            grant rfc2136key.${domain}. zonesub TXT;
+            file "${zoneFile domain}";
+            allow-transfer { ${lib.concatStringsSep "; " secondaryNameServersIPs}; };
+            update-policy {
+              grant rfc2136key.${domain}. zonesub TXT;
+            };
           };
         };
-      };
 
-      view external {
-        match-clients { any; };
+        view external {
+          match-clients { any; };
 
-        forwarders { };
-        empty-zones-enable yes;
-        allow-query { any; };
-        allow-recursion { none; };
+          forwarders { };
+          empty-zones-enable yes;
+          allow-query { any; };
+          allow-recursion { none; };
 
-        zone "${domain}" {
-          in-view internal;
+          zone "${domain}" {
+            in-view internal;
+          };
         };
-      };
-    '';
+      '';
   };
 
   systemd.services.bind = {
