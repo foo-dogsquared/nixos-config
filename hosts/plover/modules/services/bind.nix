@@ -28,26 +28,6 @@ let
   zonesDir = "/etc/bind/zones";
   zoneFile = domain: "${zonesDir}/${domain}.zone";
 
-  localhostIP = [
-    "127.0.0.1"
-    "::1"
-  ];
-
-  allowedLANIPs = [
-    # Loopback address
-    "127.0.0.0/8"
-
-    # Private uses
-    "10.48.0.0/12"
-    "172.27.0.0/16" # The private subnet for our internal network.
-    "172.28.0.0/16" # The Wireguard subnet.
-  ];
-
-  allowedLANIPv6s = [
-    "::1" # Loopback
-    "${privateIPv6Prefix}::/48" # Private uses
-  ];
-
   dnsSubdomain = "ns1.${domain}";
 in
 {
