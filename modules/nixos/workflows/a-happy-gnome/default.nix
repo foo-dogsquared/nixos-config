@@ -1,14 +1,13 @@
 { config, options, lib, pkgs, ... }@attrs:
 
 let
-  name = "a-happy-gnome";
   cfg = config.workflows.workflows.a-happy-gnome;
 
   enabledExtensions = pkgs.writeTextFile {
     name = "a-happy-gnome-extensions";
     text = ''
       [org/gnome/shell]
-      enabled-extensions=[${ lib.concatStringsSep ", " (lib.concatMap (e: [ ("'" + e.extensionUuid + "'") ]) cfg.shellExtensions) }]
+      enabled-extensions=[${ lib.concatStringsSep ", " (lib.concatMap (e: [ ("'${e.extensionUuid}'") ]) cfg.shellExtensions) }]
     '';
   };
 
@@ -26,8 +25,8 @@ in
       type = with lib.types; listOf package;
       description = ''
         A list of GNOME Shell extensions to be included. Take note the package
-        contain `passthru.extensionUuid` to be used for
-        enabling the extensions.
+        contain `passthru.extensionUuid` to be used for enabling the
+        extensions.
       '';
       default = with pkgs.gnomeExtensions; [
         alphabetical-app-grid
