@@ -8,7 +8,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       anki # Rise, rinse, and repeat.
-      #archivebox # The ultimate archiving solution created by a pirate!
+      archivebox # The ultimate archiving solution created by a pirate!
       curl # The general purpose downloader.
       fanficfare # It's for the badly written fanfics.
       gallery-dl # More potential for your image collection.
