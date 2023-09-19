@@ -76,7 +76,7 @@ in
         } // {
         removableDevice = true;
         repo = "/mnt/archives/backups";
-        startAt = "daily";
+        startAt = "04:30";
       };
 
       local-external-drive = borgJobCommonSetting
@@ -90,7 +90,7 @@ in
         } // {
         removableDevice = true;
         repo = "/mnt/external-storage/backups";
-        startAt = "daily";
+        startAt = "04:30";
       };
 
       remote-backup-hetzner-box = borgJobCommonSetting
@@ -102,7 +102,7 @@ in
         } // {
         doInit = true;
         repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/desktop/ni";
-        startAt = "daily";
+        startAt = "04:30";
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."${pathPrefix}/ssh-key".path}";
       };
     };
