@@ -220,11 +220,11 @@ in
 
       # Granting and restricting its capabilities. Take note we're not using
       # syslog for this even if the application can so no syslog capability.
+      # Additionally, we're using omitting the program's ability to chroot and
+      # chown since the user and the directories are already configured.
       CapabilityBoundingSet = [
         "CAP_NET_BIND_SERVICE"
         "CAP_NET_RAW"
-        "CAP_CHOWN"
-        "CAP_SYS_CHROOT"
       ];
       AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
 
