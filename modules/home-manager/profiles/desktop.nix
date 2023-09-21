@@ -20,8 +20,8 @@ in {
         blender # 3D modelling wannabe tool.
         emulsion-palette # Manage your color palettes.
         eyedropper # Gotta keep your monitor moist.
-        inkscape # Illustration wannabe tool.
-        gimp # Photo editing wannabe tool.
+        inkscape-with-extensions # Illustration wannabe tool.
+        gimp-with-plugins # Photo editing wannabe tool.
         krita # Digital art wannabe tool.
 
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
