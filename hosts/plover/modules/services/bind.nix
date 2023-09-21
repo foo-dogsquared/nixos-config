@@ -79,7 +79,7 @@ in
     configFile =
       let
         cfg = config.services.bind;
-        certDir = path: "${config.security.acme.certs."${dnsSubdomain}".directory}/${path}";
+        certDir = path: "/run/credentials/bind.service/${path}";
         listenInterfaces = lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOn;
         listenInterfacesIpv6 = lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOnIpv6;
       in
@@ -196,6 +196,18 @@ in
       Group = config.users.users.named.group;
       UMask = "0037";
 
+      # Get the credentials into the service.
+      LoadCredential =
+        let
+          certDirectory = config.security.acme.certs."${dnsSubdomain}".directory;
+          certCredentialPath = path: "${path}:${certDirectory}/${path}";
+        in
+        [
+          (certCredentialPath "cert.pem")
+          (certCredentialPath "key.pem")
+          (certCredentialPath "fullchain.pem")
+        ];
+
       # Lock and protect various system components.
       LockPersonality = true;
       PrivateTmp = true;
@@ -299,9 +311,6 @@ in
       '';
     };
   };
-
-  # Setting up DNS-over-TLS by generating a certificate.
-  security.acme.certs."${dnsSubdomain}".group = config.users.users.named.group;
 
   # Then generate a DH parameter for the application.
   security.dhparams.params.bind.bits = 4096;
