@@ -13,6 +13,7 @@ in {
       fanficfare # It's for the badly written fanfics.
       gallery-dl # More potential for your image collection.
       internetarchive # All of the potential vintage collection of questionable materials at your fingertips.
+      kiwix # Offline reader for your fanon wiki.
       monolith # Archive webpages into a single file.
       newsboat # Reading news easily on the command line?
       qbittorrent # The pirate's toolkit for downloading Linux ISOs.
