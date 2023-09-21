@@ -113,7 +113,7 @@ in
           listen-on-v6 tls ${dnsSubdomain} { ${listenInterfacesIpv6} };
 
           # DNS-over-HTTPS.
-          https-port ${dnsOverHTTPSPort};
+          https-port ${builtins.toString dnsOverHTTPSPort};
           listen-on tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfaces} };
           listen-on-v6 tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfacesIpv6} };
 
@@ -284,7 +284,7 @@ in
       zone dns 64k;
     '';
     servers = {
-      "127.0.0.1:${dnsOverHTTPSPort}" = { };
+      "127.0.0.1:${builtins.toString dnsOverHTTPSPort}" = { };
     };
   };
 
