@@ -2,16 +2,11 @@
 
 let
   inherit (config.networking) domain fqdn;
-  inherit (import ../hardware/networks.nix) privateIPv6Prefix interfaces clientNetworks serverNetworks secondaryNameServers wireguardPeers;
-  secondaryNameServersIPv4 = lib.foldl'
-    (total: addresses: total ++ addresses.IPv4)
+  inherit (import ../hardware/networks.nix) interfaces clientNetworks serverNetworks secondaryNameServers;
+  secondaryNameServersIPs = lib.foldl'
+    (total: addresses: total ++ addresses.IPv4 ++ addresses.IPv6)
     [ ]
     (lib.attrValues secondaryNameServers);
-  secondaryNameServersIPv6 = lib.foldl'
-    (total: addresses: total ++ addresses.IPv6)
-    [ ]
-    (lib.attrValues secondaryNameServers);
-  secondaryNameServersIPs = secondaryNameServersIPv4 ++ secondaryNameServersIPv6;
 
   domainZone = pkgs.substituteAll {
     src = ../../config/dns/${domain}.zone;
