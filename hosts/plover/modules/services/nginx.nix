@@ -40,4 +40,7 @@
     nginx-botsearch.settings = { enabled = true; };
     nginx-bad-request.settings = { enabled = true; };
   };
+
+  # Generate a DH parameters for nginx-specific security configurations.
+  security.dhparams.params.nginx.bits = 4096;
 }
