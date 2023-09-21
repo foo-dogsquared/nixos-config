@@ -29,6 +29,7 @@ let
   zoneFile = domain: "${zonesDir}/${domain}.zone";
 
   dnsSubdomain = "ns1.${domain}";
+  dnsOverHTTPSPort = 8443;
 in
 {
   sops.secrets =
@@ -79,6 +80,8 @@ in
       let
         cfg = config.services.bind;
         certDir = path: "${config.security.acme.certs."${dnsSubdomain}".directory}/${path}";
+        listenInterfaces = lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOn;
+        listenInterfacesIpv6 = lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOnIpv6;
       in
       pkgs.writeText "named.conf" ''
         include "/etc/bind/rndc.key";
@@ -97,15 +100,28 @@ in
           session-tickets no;
         };
 
+        http ${dnsSubdomain} {
+          endpoints { "/dns-query"; };
+        };
+
         acl trusted { ${lib.concatStringsSep "; " (clientNetworks ++ serverNetworks)}; localhost; };
         acl cachenetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.cacheNetworks} };
         acl badnetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.blockedNetworks} };
 
         options {
-          listen-on { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOn} };
-          listen-on-v6 { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOnIpv6} };
-          listen-on tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") cfg.listenOn} };
-          listen-on-v6 tls ${dnsSubdomain} { ${lib.concatMapStrings (interface: "${interface}; ") cfg.listenOnIpv6} };
+          # Native DNS.
+          listen-on { ${listenInterfaces} };
+          listen-on-v6 { ${listenInterfacesIpv6} };
+
+          # DNS-over-TLS.
+          listen-on tls ${dnsSubdomain} { ${listenInterfaces} };
+          listen-on-v6 tls ${dnsSubdomain} { ${listenInterfacesIpv6} };
+
+          # DNS-over-HTTPS.
+          https-port ${dnsOverHTTPSPort};
+          listen-on tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfaces} };
+          listen-on-v6 tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfacesIpv6} };
+
           allow-query { cachenetworks; };
           blackhole { badnetworks; };
           forward ${cfg.forward};
@@ -242,13 +258,46 @@ in
     };
   };
 
-  # Set up the firewall.
-  networking.firewall = {
-    allowedUDPPorts = [
+  # Set up the firewall. Take note the ports with the transport layer being
+  # accepted in Bind.
+  networking.firewall = let
+    ports = [
       53 # DNS
       853 # DNS-over-TLS/DNS-over-QUIC
+      dnsOverHTTPSPort
     ];
-    allowedTCPPorts = [ 53 853 ];
+  in {
+    allowedUDPPorts = ports;
+    allowedTCPPorts = ports;
+  };
+
+  # Making this with nginx.
+  services.nginx.upstreams.local-dns = {
+    extraConfig = ''
+      zone dns 64k;
+    '';
+    servers = {
+      "127.0.0.1:${dnsOverHTTPSPort}" = { };
+    };
+  };
+
+  services.nginx.virtualHosts."${dnsSubdomain}" = {
+    forceSSL = true;
+    enableACME = true;
+    acmeRoot = null;
+    extraConfig = ''
+      add_header Strict-Transport-Security max-age=31536000;
+    '';
+    locations = {
+      "/".return = "404";
+      "/dns-query".extraConfig = ''
+        grpc_pass grpcs://local-dns;
+        grpc_socket_keepalive on;
+        grpc_connect_timeout 10s;
+        grpc_ssl_verify off;
+        grpc_ssl_protocols TLSv1.3 TLSv1.2;
+      '';
+    };
   };
 
   # Setting up DNS-over-TLS by generating a certificate.
