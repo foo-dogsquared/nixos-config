@@ -58,6 +58,7 @@ in {
     (lib.mkIf cfg.video.enable {
       home.packages = with pkgs; [
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
+        kdenlive # YOU! Edit this video and live in a den, 'k?
       ];
 
       # The one-stop shop for your broadcasting and recording needs. Not to be
