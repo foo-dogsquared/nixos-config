@@ -6,6 +6,7 @@
 
 let
   modules = [
+    ./programs/blender.nix
     ./programs/cardboard-wm.nix
     ./programs/kiwmi.nix
     ./programs/pop-launcher.nix
