@@ -10,6 +10,7 @@ in {
     shell.enable =
       lib.mkEnableOption "configuration of foo-dogsquared's shell of choice";
     extras.enable = lib.mkEnableOption "additional tools for development stuff";
+    shaders.enable = lib.mkEnableOption "tools for developing shaders";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -172,6 +173,14 @@ in {
         treefmt # I like the tagline of this tool: "One CLI for formatting your code tree." (It rhymes somewhat.)
         vhs # Declarative terminal tool demo.
         zenith # Very fanciful system dashboard.
+      ];
+    })
+
+    (lib.mkIf cfg.shaders.enable {
+      home.packages = with pkgs; [
+        bonzomatic # Shadertoys for desktop bozos.
+        shaderc # Make some seamless background loopy things.
+        shadered # Make YOUR OWN seamless background loopy things.
       ];
     })
   ]);
