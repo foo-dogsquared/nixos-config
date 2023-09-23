@@ -20,6 +20,30 @@
         platforms = platforms.all;
         };
       };
+    "google-container" = buildFirefoxXpiAddon {
+      pname = "google-container";
+      version = "1.5.4";
+      addonId = "@contain-google";
+      url = "https://addons.mozilla.org/firefox/downloads/file/3736912/google_container-1.5.4.xpi";
+      sha256 = "47a7c0e85468332a0d949928d8b74376192cde4abaa14280002b3aca4ec814d0";
+      meta = with lib;
+      {
+        homepage = "https://github.com/containers-everywhere/contain-google";
+        description = "THIS IS NOT AN OFFICIAL ADDON FROM MOZILLA!\nIt is a fork of the Facebook Container addon.\n\nPrevent Google from tracking you around the web. The Google Container extension helps you take control and isolate your web activity from Google.";
+        license = licenses.mpl20;
+        mozPermissions = [
+          "<all_urls>"
+          "contextualIdentities"
+          "cookies"
+          "management"
+          "tabs"
+          "webRequestBlocking"
+          "webRequest"
+          "storage"
+          ];
+        platforms = platforms.all;
+        };
+      };
     "regretsreporter" = buildFirefoxXpiAddon {
       pname = "regretsreporter";
       version = "2.1.2";
