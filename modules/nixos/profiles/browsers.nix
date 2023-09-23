@@ -61,6 +61,7 @@ in
               # considering the bare minimum set of preferred extensions.
               extensions = {
                 "@contain-facebook".install_url = mozillaAddon "facebook-container";
+                "@contain-google".install_url = mozillaAddon "google-container";
                 "@testpilot-containers".install_url = mozillaAddon "multi-account-containers";
                 "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
                   install_url = mozillaAddon "bitwarden-password-manager";
