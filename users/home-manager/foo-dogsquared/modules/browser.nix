@@ -163,4 +163,7 @@
       };
     };
   };
+
+  # Configuring Tridactyl.
+  xdg.configFile.tridactyl.source = ../config/tridactyl;
 }

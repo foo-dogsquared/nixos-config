@@ -1,0 +1,69 @@
+" Tridactyl settings.
+set viewsource default
+set auconcreatecontainer true
+set autocontainmode relaxed
+
+" Additional and modified keybindings.
+bind yt tabduplicate
+bind <C-Q> fillcmdline closecontainer
+
+bind gK elementunhide
+
+bind <C-F> fullscreen
+
+bind gR reader --tab
+
+" My default set of containers. Take note, we're assuming Facebook and Google
+" containers extension is already installed.
+containercreate Personal blue fingerprint
+containercreate Self-hosted pink fingerprint
+containercreate Work red briefcase
+containercreate Banking green dollar
+containercreate Shopping cart pink
+containercreate Gaming chill turquoise
+
+" Most of the MOOC are for personal purposes so it is in "Personal" container.
+autocontain -s coursera\.org Personal
+autocontain -s skillshare\.org Personal
+autocontain -s edx\.org Personal
+
+" Most of the news site I PERSONALLY visit are in "Personal" container, yes?
+" Ideally, I should visit via web subscriptions in my Thunderbird thingy.
+autocontain -s phoronix\.com Personal
+autocontain -s omgubuntu\.co\.uk Personal
+autocontain -s omglinux\.com Personal
+autocontain -s lwn\.net Personal
+
+" Ideally, this should be in Tangram or similar.
+autocontain -s discourse\.nixos\.org Personal
+autocontain -s discourse\.gohugo\.io Personal
+
+" My self-hosted instances and my personal domain.
+autocontain -s *\.local Self-hosted
+autocontain -s *\.theinternaltld Self-hosted
+autocontain -s foodogsquared.one Self-hosted
+
+" Most software forges should be separated.
+autocontain -s hetzner\.com Work
+autocontain -s digitalocean\.com Work
+autocontain -s github\.com Work
+autocontain -s gitlab\.com Work
+
+" So does most freelancing sites.
+autocontain -s upwork\.com Work
+autocontain -s monster\.com Work
+autocontain -s foundit\.com(\.ph?) Work
+
+" Shopping, shopping, shopping!
+autocontain -s yelp\.com Shopping
+autocontain -s shopee\.com Shopping
+autocontain -s lazada\.com Shopping
+autocontain -s amazon\.com Shopping
+autocontain -s ebay\.com Shopping
+autocontain -s foodpanda\.(com|ph) Shopping
+autocontain -s carousell\.ph Shopping
+
+" Potato gaming.
+autocontain -s gog\.com Gaming
+autocontain -s epicgames\.com Gaming
+autocontain -s steampowered\.com Gaming
