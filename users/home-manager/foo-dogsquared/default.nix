@@ -83,6 +83,7 @@ in
       enable = true;
       shell.enable = true;
       extras.enable = true;
+      shaders.enable = true;
     };
     editors = {
       emacs.enable = true;
