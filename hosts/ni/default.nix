@@ -131,11 +131,7 @@
   programs.adb.enable = true;
 
   # Basically, the most basic nixpkgs configuration.
-  environment.etc."nix/nixpkgs-config.nix".text = ''
-    {
-      allowUnfree = true;
-    }
-  '';
+  environment.variables.NIXPKGS_CONFIG = lib.mkForce ./config/nixpkgs/config.nix;
 
   environment.systemPackages = with pkgs; [
     # Some sysadmin thingamajigs.
