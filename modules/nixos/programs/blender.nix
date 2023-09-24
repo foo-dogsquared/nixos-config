@@ -38,7 +38,7 @@ in
     };
   };
 
-  cfg = lib.mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
 
     # Modify the search path of the Blender addons. Since the default path is
