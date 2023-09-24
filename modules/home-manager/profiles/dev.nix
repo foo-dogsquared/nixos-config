@@ -180,7 +180,6 @@ in {
       home.packages = with pkgs; [
         bonzomatic # Shadertoys for desktop bozos.
         shaderc # Make some seamless background loopy things.
-        shadered # Make YOUR OWN seamless background loopy things.
       ];
     })
   ]);
