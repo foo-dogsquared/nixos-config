@@ -75,6 +75,7 @@
         multi-account-containers
         privacy-badger
         tampermonkey
+        tridactyl
         ublock-origin
         vimium
         wayback-machine
@@ -85,6 +86,7 @@
         tineye-reverse-image-search
         updateswh
         zhongwen
+        google-container
       ]);
 
       settings = {
