@@ -1,7 +1,16 @@
+" This enforces Tridactyl to only have this file as the source of truth.
+sanitise tridactyllocal tridactylsync
+
 " Tridactyl settings.
 set viewsource default
 set auconcreatecontainer true
-set autocontainmode relaxed
+set autocontainmode strict
+set minincsearchlen 4
+
+" Disable update checks entirely. We're going to rely on the distro's
+" packaging (or on nixpkgs entirely) to install the native messenger.
+set update.nag false
+set update.nativeinstallcmd echo
 
 " Additional and modified keybindings.
 bind yt tabduplicate
@@ -14,13 +23,14 @@ bind <C-F> fullscreen
 bind gR reader --tab
 
 " My default set of containers. Take note, we're assuming Facebook and Google
-" containers extension is already installed.
+" containers extension is already installed and there's a reasonable set of
+" default containers that are already configured for us.
 containercreate Personal blue fingerprint
 containercreate Self-hosted pink fingerprint
 containercreate Work red briefcase
 containercreate Banking green dollar
-containercreate Shopping cart pink
-containercreate Gaming chill turquoise
+containercreate Shopping pink cart
+containercreate Gaming turquoise chill
 
 " Most of the MOOC are for personal purposes so it is in "Personal" container.
 autocontain -s coursera\.org Personal
@@ -41,7 +51,7 @@ autocontain -s discourse\.gohugo\.io Personal
 " My self-hosted instances and my personal domain.
 autocontain -s *\.local Self-hosted
 autocontain -s *\.theinternaltld Self-hosted
-autocontain -s foodogsquared.one Self-hosted
+autocontain -s foodogsquared\.one Self-hosted
 
 " Most software forges should be separated.
 autocontain -s hetzner\.com Work
@@ -67,3 +77,7 @@ autocontain -s carousell\.ph Shopping
 autocontain -s gog\.com Gaming
 autocontain -s epicgames\.com Gaming
 autocontain -s steampowered\.com Gaming
+autocontain -s gamejolt\.com Gaming
+autocontain -s itch\.io Gaming
+
+" vim: ft=vim
