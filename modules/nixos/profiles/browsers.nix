@@ -47,6 +47,21 @@ in
 
         policies = {
           AppAutoUpdate = false;
+
+          Containers.Default = let
+            mkContainer = name: color: icon: {
+              inherit name color icon;
+            };
+          in
+          [
+            (mkContainer "Personal" "blue" "fingerprint")
+            (mkContainer "Self-hosted" "pink" "fingerprint")
+            (mkContainer "Work" "red" "briefcase")
+            (mkContainer "Banking" "green" "dollar")
+            (mkContainer "Shopping" "pink" "cart")
+            (mkContainer "Gaming" "turquoise" "chill")
+          ];
+
           DisableAppUpdate = true;
           DisableMasterPasswordCreation = true;
           DisablePocket = true;
@@ -68,7 +83,10 @@ in
                   installation_mode = "force_installed";
                   default_area = "navbar";
                 };
-                "ff2mpv@yossarian.net".install_url = mozillaAddon "ff2mpv";
+                "ff2mpv@yossarian.net" = {
+                  install_url = mozillaAddon "ff2mpv";
+                  default_area = "navbar";
+                };
                 "firefox-translations-addon@mozilla.org".install_url = mozillaAddon "firefox-translations";
                 "fx_cast@matt.tf".install_url = "https://github.com/hensm/fx_cast/releases/download/v0.3.1/fx_cast-0.3.1.xpi";
                 "jid1-MnnxcxisBPnSXQ@jetpack".install_url = mozillaAddon "privacy-badger17";
@@ -101,6 +119,29 @@ in
           SanitizeOnShutdown = {
             FormData = true;
           };
+
+          SearchEngines = {
+            Add = [
+              {
+                Name = "Brave";
+                URLTemplate = "https://search.brave.com/search?q={searchTerms}";
+                Method = "GET";
+                IconURL = "https://brave.com/static-assets/images/brave-favicon.png";
+                Alias = "brave";
+                SuggestURLTemplate = "https://search.brave.com/api/suggest?q={searchTerms}";
+              }
+
+              {
+                Name = "nixpkgs";
+                URLTemplate = "https://search.nixos.org/packages?type=packages&query={searchTerms}";
+                Method = "GET";
+                IconURL = "file://${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+              }
+            ];
+            Default = "Brave";
+            Remove = [ "Bing" "Amazon" "Wikipedia (en)" ];
+          };
+
           UseSystemPrintDialog = true;
           UserMessaging = {
             ExtensionRecommendations = false;
