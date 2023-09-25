@@ -1,10 +1,19 @@
 " This enforces Tridactyl to only have this file as the source of truth.
+" Also the first time you open Firefox with this Tridactyl configuration, you
+" might want to restart immediately since the autocontainers are not in
+" effect.
 sanitise tridactyllocal tridactylsync
 
 " Tridactyl settings.
 set viewsource default
 set auconcreatecontainer true
-set autocontainmode strict
+
+" This is giving me the most trouble since I use multiple extensions that
+" makes use of contextual identities like Facebook and Google containers. If
+" this is in strict mode, it'll result in Tridactyl and the other container
+" extensions fighting for the control of the tab and infinitely reloading the
+" tab. Not the greatest experience.
+set autocontainmode relaxed
 set minincsearchlen 4
 
 " Disable update checks entirely. We're going to rely on the distro's
@@ -66,12 +75,23 @@ autocontain -s foundit\.com(\.ph?) Work
 
 " Shopping, shopping, shopping!
 autocontain -s yelp\.com Shopping
-autocontain -s shopee\.com Shopping
-autocontain -s lazada\.com Shopping
+autocontain -s shopee\.(com|ph) Shopping
+autocontain -s lazada\.com(\.ph?) Shopping
 autocontain -s amazon\.com Shopping
 autocontain -s ebay\.com Shopping
 autocontain -s foodpanda\.(com|ph) Shopping
 autocontain -s carousell\.ph Shopping
+autocontain -s slickdeals\.net Shopping
+
+" What's a shopping spree without your wallet.
+autocontain -s paypal\.com(\.ph?) Banking
+autocontain -s unionbankph\.com Banking
+autocontain -s bdo\.com\.ph Banking
+autocontain -s bpi\.com\.ph Banking
+autocontain -s gcash\.com Banking
+autocontain -s paymaya\.com Banking
+autocontain -s metamask\.io Banking
+autocontain -s uphold\.com Banking
 
 " Potato gaming.
 autocontain -s gog\.com Gaming
