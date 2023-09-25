@@ -1,0 +1,20 @@
+diff --git a/libavfilter/vf_gltransition.c b/libavfilter/vf_gltransition.c
+--- a/libavfilter/vf_gltransition.c
++++ b/libavfilter/vf_gltransition.c
+@@ -133,7 +133,6 @@ static const AVOption gltransition_options[] = {
+   { "duration", "transition duration in seconds", OFFSET(duration), AV_OPT_TYPE_DOUBLE, {.dbl=1.0}, 0, DBL_MAX, FLAGS },
+   { "offset", "delay before startingtransition in seconds", OFFSET(offset), AV_OPT_TYPE_DOUBLE, {.dbl=0.0}, 0, DBL_MAX, FLAGS },
+   { "source", "path to the gl-transition source file (defaults to basic fade)", OFFSET(source), AV_OPT_TYPE_STRING, {.str = NULL}, CHAR_MIN, CHAR_MAX, FLAGS },
+-  {NULL}
+ };
+ 
+ FRAMESYNC_DEFINE_CLASS(gltransition, GLTransitionContext, fs);
+@@ -570,7 +569,7 @@ AVFilter ff_vf_gltransition = {
+   .preinit       = gltransition_framesync_preinit,
+   .init          = init,
+   .uninit        = uninit,
+-  .query_formats = query_formats,
++  .query_formats = FILTER_QUERY_FUNC(query_formats),
+   .activate      = activate,
+   .inputs        = gltransition_inputs,
+   .outputs       = gltransition_outputs,
