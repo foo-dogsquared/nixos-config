@@ -3,10 +3,23 @@
 let
   cfg = config.programs.blender;
 
-  addons = pkgs.symlinkJoin {
-    name = "blender-${lib.majorMinor cfg.package.version}-addons";
-    paths = builtins.map (p: "${p}/share/blender") cfg.addons;
-  };
+  addons = let
+    blenderVersion = lib.versions.majorMinor cfg.package.version;
+  in
+  pkgs.runCommand "blender-system-resources" {
+    passAsFile = [ "paths" ];
+    paths = cfg.addons ++ [ cfg.package ];
+    nativeBuildInputs = with pkgs; [ outils ];
+  } ''
+    mkdir -p $out
+    for i in $(cat $pathsPath); do
+      resourcesPath="$i/share/blender"
+      if [ -d $i/share/blender/${blenderVersion} ]; then
+        resourcesPath="$i/share/blender/${blenderVersion}";
+      fi
+        lndir -silent $resourcesPath $out
+    done
+  '';
 in
 {
   options.programs.blender = {
@@ -16,7 +29,7 @@ in
       example = ''
         pkgs.blender-with-packages {
           name = "sample-studio-wrapped";
-          packages = with pkgs.pythonPackages; [ pandas ];
+          packages = with pkgs.python3Packages; [ pandas ];
         }
       '';
     };
@@ -25,7 +38,8 @@ in
       type = with lib.types; listOf package;
       description = lib.mdDoc ''
         List of packages to be added to Blender system resources. The addon
-        packages are expected to be in {file}`$out/share/blender`.
+        packages are expected to have Blender resources in
+        {file}`$out/share/blender`.
       '';
       default = [ ];
       defaultText = "[]";
@@ -45,9 +59,6 @@ in
     # on `/usr/share/blender/$MAJOR.$MINOR`, we'll have to modify it with an
     # environment variable. This means in a NixOS system, it is only expected
     # to have one instance of the system resources.
-    environment.sessionVariables.BLENDER_SYSTEM_RESOURCES = lib.mkIf (builtins.length cfg.addons > 0) "/etc/blender";
-
-    # It is acceptable to have this as a read-only directory, right?
-    environment.etc.blender.source = addons;
+    environment.sessionVariables.BLENDER_SYSTEM_RESOURCES = lib.mkIf (builtins.length cfg.addons > 0) addons;
   };
 }
