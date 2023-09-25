@@ -1,5 +1,5 @@
 # Enables all of my usual setup for desktop-oriented stuff.
-{ config, options, lib, pkgs, ... }:
+{ config, options, lib, pkgs, osConfig ? { }, ... }:
 
 let cfg = config.profiles.desktop;
 in {
@@ -17,7 +17,6 @@ in {
     (lib.mkIf cfg.graphics.enable {
       home.packages = with pkgs; [
         aseprite # Pixel art wannabe tool.
-        blender # 3D modelling wannabe tool.
         emulsion-palette # Manage your color palettes.
         eyedropper # Gotta keep your monitor moist.
         inkscape-with-extensions # Illustration wannabe tool.
@@ -27,7 +26,7 @@ in {
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         imagemagick # Ah yes, everyman's image manipulation tool.
         gmic # Don't let the gimmicks fool you, it's a magical image framework.
-      ];
+      ] ++ (lib.optional (osConfig ? programs.blender.enable && !osConfig.programs.blender.enable) blender);
     })
 
     (lib.mkIf cfg.audio.enable {
