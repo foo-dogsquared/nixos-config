@@ -16,6 +16,7 @@ nixos-config
 ├── hosts/
 ├── lib/
 ├── modules/
+├── overlays/
 ├── pkgs/
 ├── scripts/
 ├── secrets/
@@ -47,6 +48,9 @@ Host configurations are also exported in the flakes in `outputs.nixosConfigurati
 
 * `./modules/` contain my custom modules including NixOS and home-manager modules.
 For more information, see the github:{github-repo}[related documentation, path=./modules/README.adoc, rev=master].
+
+* `./overlays/` contain the overlays for several established packages.
+This is typically used exclusively for the project and advised to not use it if you're not foodogsquared.
 
 * `./pkgs/` contains my custom packages.
 It is exported in the flakes at `outputs.packages` compiled through various systems.
