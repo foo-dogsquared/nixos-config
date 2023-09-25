@@ -1,5 +1,5 @@
 # WHOA! Even browsers with extensions can be declarative!
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, osConfig ? { }, ... }:
 
 {
   home.packages = with pkgs; [
@@ -33,7 +33,7 @@
   };
 
   # Despite the name, it isn't a browser for furries.
-  programs.firefox = {
+  programs.firefox = lib.mkIf (osConfig ? programs.firefox.enable && !osConfig.programs.firefox.enable) {
     enable = true;
 
     package = with pkgs; wrapFirefox firefox-unwrapped {
