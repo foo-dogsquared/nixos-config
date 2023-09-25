@@ -87,9 +87,6 @@
 
       # The order here is important(?).
       overlays = [
-        # Put my custom packages to be available.
-        self.overlays.default
-
         (final: prev: {
           inherit (inputs.firefox-addons.lib.${defaultSystem}) buildFirefoxXpiAddon;
           firefox-addons = final.callPackage ./pkgs/firefox-addons { };
@@ -103,7 +100,7 @@
 
         # Access to NUR.
         inputs.nur.overlay
-      ];
+      ] ++ (lib'.attrValues self.overlays);
 
       defaultSystem = "x86_64-linux";
 
@@ -385,7 +382,9 @@
         lib'.importModules (lib'.filesToAttr ./modules/home-manager);
 
       # In case somebody wants to use my stuff to be included in nixpkgs.
-      overlays.default = final: prev: import ./pkgs { pkgs = prev; };
+      overlays = import ./overlays // {
+        default = final: prev: import ./pkgs { pkgs = prev; };
+      };
 
       # My custom packages, available in here as well. Though, I mainly support
       # "x86_64-linux". I just want to try out supporting other systems.
