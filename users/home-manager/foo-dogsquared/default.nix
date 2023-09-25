@@ -29,7 +29,6 @@ in
   home.packages = with pkgs; [
     vscodium-fhs # Visual Studio-lite and for those who suffer from Visual Studio withdrawal.
     hledger # Trying to be a good accountant.
-    hledger-utils # For extra trying to be a better accountant.
   ];
 
   fonts.fontconfig.enable = true;
@@ -130,11 +129,11 @@ in
 
   # All of the personal configurations.
   xdg.configFile = {
-    "doom".source = getDotfiles "emacs";
-    "kitty".source = getDotfiles "kitty";
-    "nvim".source = getDotfiles "nvim";
-    "nyxt".source = getDotfiles "nyxt";
-    "wezterm".source = getDotfiles "wezterm";
+    doom.source = getDotfiles "emacs";
+    kitty.source = getDotfiles "kitty";
+    nvim.source = getDotfiles "nvim";
+    nyxt.source = getDotfiles "nyxt";
+    wezterm.source = getDotfiles "wezterm";
   };
 
   # Automating some files to be fetched on activation.
