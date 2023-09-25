@@ -26,7 +26,7 @@ in {
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         imagemagick # Ah yes, everyman's image manipulation tool.
         gmic # Don't let the gimmicks fool you, it's a magical image framework.
-      ] ++ (lib.optional (osConfig ? programs.blender.enable && !osConfig.programs.blender.enable) blender);
+      ] ++ (lib.optional (osConfig ? programs.blender.enable -> !osConfig.programs.blender.enable) blender);
     })
 
     (lib.mkIf cfg.audio.enable {

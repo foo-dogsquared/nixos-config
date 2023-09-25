@@ -33,7 +33,7 @@
   };
 
   # Despite the name, it isn't a browser for furries.
-  programs.firefox = lib.mkIf (osConfig ? programs.firefox.enable && !osConfig.programs.firefox.enable) {
+  programs.firefox = lib.mkIf (osConfig ? programs.firefox.enable -> !osConfig.programs.firefox.enable) {
     enable = true;
 
     package = with pkgs; wrapFirefox firefox-unwrapped {
