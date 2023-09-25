@@ -37,6 +37,13 @@
     enable = true;
 
     package = with pkgs; wrapFirefox firefox-unwrapped {
+      cfg = {
+        enableBrowserpass = true;
+        enableBukubrow = true;
+        enableTridactylNative = true;
+        enableFxCastBridge = true;
+      };
+
       extraPolicies = {
         AppAutoUpdate = false;
         DisableAppUpdate = true;
