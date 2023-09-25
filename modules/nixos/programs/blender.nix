@@ -17,7 +17,7 @@ let
       if [ -d $i/share/blender/${blenderVersion} ]; then
         resourcesPath="$i/share/blender/${blenderVersion}";
       fi
-        lndir -silent $resourcesPath $out
+      lndir -silent $resourcesPath $out
     done
   '';
 in
@@ -37,9 +37,8 @@ in
     addons = lib.mkOption {
       type = with lib.types; listOf package;
       description = lib.mdDoc ''
-        List of packages to be added to Blender system resources. The addon
-        packages are expected to have Blender resources in
-        {file}`$out/share/blender`.
+        List of packages providing Blender system resources at
+        {file}`/share/blender` or at {file}`/share/blender/$MAJORMINORVERSION`.
       '';
       default = [ ];
       defaultText = "[]";
