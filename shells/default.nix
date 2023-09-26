@@ -2,6 +2,7 @@
 
 with pkgs; {
   cloud = callPackage ./cloud.nix { };
+  creatives = callPackage ./creatives.nix { };
   flatpak = callPackage ./flatpak.nix { };
   gnu = callPackage ./gnu.nix { };
   gnome = callPackage ./gnome.nix { };
