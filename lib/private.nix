@@ -61,5 +61,5 @@ rec {
         "profiles"
       ];
     in
-    lib.filterAttrs (n: v: !lib.elem n blocklist) (lib.mapAttrsRecursive (_: sopsFile: import sopsFile) attrs);
+    lib.attrsets.removeAttrs (lib.mapAttrsRecursive (_: sopsFile: import sopsFile) attrs) blocklist;
 }
