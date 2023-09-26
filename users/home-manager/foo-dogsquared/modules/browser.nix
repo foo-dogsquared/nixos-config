@@ -44,6 +44,8 @@
         enableFxCastBridge = true;
       };
 
+      extraNativeMessagingHosts = lib.optional config.programs.mpv.enable pkgs.ff2mpv;
+
       extraPolicies = {
         AppAutoUpdate = false;
         DisableAppUpdate = true;
@@ -74,6 +76,7 @@
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
         aw-watcher-web
         bitwarden
+        browserpass
         facebook-container
         firefox-color
         firefox-translations
