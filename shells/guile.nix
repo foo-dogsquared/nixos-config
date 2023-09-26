@@ -1,5 +1,9 @@
 { mkShell
 , lib
+, gcc
+, gettext
+, pkg-config
+, texinfo
 , guile
 , guile-hall
 }:
@@ -10,17 +14,12 @@ in
 mkShell {
   inherit guileVersion;
   packages = [
+    gettext
     guile
     guile-hall
+    pkg-config
+    texinfo
   ];
 
-  # This is already properly exported through setup hooks but to make
-  # intentions clearer.
-  shellHook = ''
-    export GUILE_LOAD_PATH GUILE_LOAD_COMPILED_PATH
-
-    if test $guileVersion == "3.0"; then
-      export GUILE_EXTENSIONS_PATH
-    fi
-  '';
+  inputsFrom = [ gcc guile ];
 }
