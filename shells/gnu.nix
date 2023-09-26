@@ -26,10 +26,15 @@ mkShell {
     coreutils
     gettext
     gcc
+    gnumake
     help2man
     texinfo
     pkg-config
   ];
 
-  inputsFrom = [ gcc ];
+  inputsFrom = [
+    gcc
+    coreutils
+    gnumake
+  ];
 }
