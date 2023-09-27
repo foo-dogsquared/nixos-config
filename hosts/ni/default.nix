@@ -120,6 +120,18 @@
   # This is somewhat used for streaming games from it.
   programs.steam.remotePlay.openFirewall = true;
 
+  programs.blender = {
+    enable = true;
+    package = pkgs.blender-with-packages {
+      name = "foodogsquared-wrapped";
+      packages = with pkgs.python3Packages; [ pandas ];
+    };
+    addons = with pkgs; [
+      blender-blendergis
+      blender-machin3tools
+    ];
+  };
+
   # Backup for the almighty archive, pls.
   tasks.backup-archive.enable = true;
 
