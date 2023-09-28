@@ -130,6 +130,8 @@ in
 
           allow-query { any; };
           allow-recursion { any; };
+
+          // We'll use systemd-resolved as our forwarder.
           forwarders { 127.0.0.53 port 53; };
 
           zone "${fqdn}" {
@@ -184,9 +186,8 @@ in
       '';
 
     serviceConfig = {
-      # Additional service hardening. You can see most of the options
-      # from systemd.exec(5) manual.
-      # Run it as an unprivileged user.
+      # Additional service hardening. You can see most of the options from
+      # systemd.exec(5) manual. Run it as an unprivileged user.
       User = config.users.users.named.name;
       Group = config.users.users.named.group;
       UMask = "0037";

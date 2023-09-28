@@ -87,6 +87,12 @@
 
       # The order here is important(?).
       overlays = [
+        # My own set of Firefox addons. They're not included in the packages
+        # output since they'll be a pain in the ass to set up for others when
+        # this is also included. If I set this up to be easily included in
+        # others' flake, it'll have a potential conflict for NUR users
+        # (including myself) that also relies on rycee's NUR instance. Overall,
+        # it's a pain to setup so I'm not including this.
         (final: prev: {
           inherit (inputs.firefox-addons.lib.${defaultSystem}) buildFirefoxXpiAddon;
           firefox-addons = final.callPackage ./pkgs/firefox-addons { };
