@@ -32,3 +32,7 @@ docs-serve:
 .PHONY: docs-build
 docs-build:
 	nix develop '.#docs' --impure -c hugo -s ./docs/
+
+.PHONY: deploy
+deploy:
+	nix develop --impure -c deploy '.#nixos-${HOST}' --skip-checks
