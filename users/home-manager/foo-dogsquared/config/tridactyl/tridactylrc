@@ -23,13 +23,19 @@ set update.nativeinstallcmd echo
 
 " Additional and modified keybindings.
 bind yt tabduplicate
-bind <C-Q> fillcmdline closecontainer
+bind <C-Q> fillcmdline containerclose
 
 bind gK elementunhide
 
 bind <C-F> fullscreen
 
 bind gR reader --tab
+
+" Recontaining them nicefully.
+bind qQ recontain Personal
+bind qW recontain Work
+bind qr recontain Banking
+bind qR recontain Shopping
 
 " My default set of containers. Take note, we're assuming Facebook and Google
 " containers extension is already installed and there's a reasonable set of
