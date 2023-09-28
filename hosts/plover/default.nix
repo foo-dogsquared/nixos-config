@@ -36,8 +36,8 @@ in
     # configuring it here will make it too big.
     ./modules/services/atuin.nix
     ./modules/services/gitea.nix
-    ./modules/services/keycloak.nix
     ./modules/services/portunus.nix
+    ./modules/services/kanidm.nix
     ./modules/services/vaultwarden.nix
     ./modules/services/wireguard.nix
     ./modules/services/wezterm-mux-server.nix
