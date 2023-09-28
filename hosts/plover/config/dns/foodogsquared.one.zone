@@ -4,7 +4,7 @@ $TTL 12h
 $ORIGIN foodogsquared.one.
 
 @	3600	IN	SOA	ns1 hostmaster (
-				2023092001 	; serial number
+				2023092301 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -63,8 +63,6 @@ pass	IN	CNAME	plover
 code	IN	CNAME	plover
 vpn	IN	CNAME	plover
 mux	IN	CNAME	plover
-
-ns1	IN	CNAME	plover
 
 postgres	IN	CNAME	plover
 
