@@ -87,10 +87,7 @@
   profiles = {
     i18n.enable = true;
     archiving.enable = true;
-    browsers = {
-      firefox.enable = true;
-      chromium.enable = true;
-    };
+    browsers.chromium.enable = true;
     desktop = {
       enable = true;
       audio.enable = true;
@@ -180,7 +177,6 @@
   programs.mtr.enable = true;
 
   services.auto-cpufreq.enable = true;
-  services.thermald.enable = true;
   services.avahi.enable = true;
 
   # We'll go with a software firewall. We're mostly configuring it as if we're
