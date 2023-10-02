@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, modulesPath, ... }:
 
 let
   inherit (builtins) toString;

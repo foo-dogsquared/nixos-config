@@ -1,5 +1,5 @@
 # The module for anything dev-related.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let cfg = config.profiles.dev;
 in {

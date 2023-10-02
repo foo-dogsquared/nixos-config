@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, ... }@attrs:
+{ config, lib, pkgs, ... }@attrs:
 
 let
   cfg = config.workflows.workflows.mosey-branch;

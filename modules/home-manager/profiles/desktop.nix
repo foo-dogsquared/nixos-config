@@ -1,5 +1,5 @@
 # Enables all of my usual setup for desktop-oriented stuff.
-{ config, options, lib, pkgs, osConfig ? { }, ... }:
+{ config, lib, pkgs, osConfig ? { }, ... }:
 
 let cfg = config.profiles.desktop;
 in {

@@ -1,7 +1,7 @@
 # This is where extra desktop goodies can be found.
 # As a note, this is not where you set the aesthetics of your graphical sessions.
 # That can be found in the `themes` module.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let cfg = config.profiles.desktop;
 in {

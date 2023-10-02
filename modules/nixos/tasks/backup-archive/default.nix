@@ -1,5 +1,5 @@
 # It's a setup for my backup.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.tasks.backup-archive;

@@ -6,7 +6,7 @@
 # Much of the filesystem setups are taking advantage of systemd's fstab
 # extended options which you can refer to at systemd.mount(5), mount(5), and
 # the filesystems' respective manual pages.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.profiles.filesystem;

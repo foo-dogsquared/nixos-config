@@ -5,7 +5,7 @@
 #
 # As much as I want 100% reproducibility with Nix, 5% of the remaining stuff
 # for me is not worth to maintain.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let cfg = config.profiles.editors;
 in {

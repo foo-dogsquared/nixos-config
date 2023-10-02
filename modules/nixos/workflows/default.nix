@@ -1,7 +1,7 @@
 # Themes are your graphical sessions.
 # It also contains your aesthetics even specific workflow and whatnots.
 # You can also show your desktop being modularized like this.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let cfg = config.workflows;
 in {

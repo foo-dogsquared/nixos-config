@@ -1,6 +1,6 @@
 # Arsenal for development (which is rare nowadays). ;p
 # If you're looking for text editors, go to `./editors.nix`.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let cfg = config.profiles.dev;
 in {

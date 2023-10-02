@@ -1,5 +1,5 @@
 # Instant setup for using internationalized languages.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let cfg = config.profiles.i18n;
 in {

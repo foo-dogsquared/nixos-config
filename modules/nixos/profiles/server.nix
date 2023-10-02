@@ -1,7 +1,7 @@
 # All of the settings related to server systems. Take note they cannot be used
 # alongside the desktop profile since there are conflicting configurations
 # between them.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.profiles.server;

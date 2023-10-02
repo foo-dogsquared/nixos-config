@@ -1,7 +1,7 @@
 # Browsers for your enterprise needs (seriously though, they're configured
 # differently and typically for "enterprise" use cases in mind and what I mean
 # "enterprise" is for all of the users which is me, myself, and I).
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.profiles.browsers;

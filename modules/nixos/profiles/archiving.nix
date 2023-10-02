@@ -1,5 +1,5 @@
 # All of your embarrassing moments, marked here forever.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let cfg = config.profiles.archiving;
 in {

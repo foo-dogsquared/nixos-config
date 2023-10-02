@@ -1,7 +1,7 @@
 # System-wide i18n options. This is primarily used for desktop installations.
 # Unless there is really good reasons for setting i18n options on the server,
 # this module will stay aiming for desktop.
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.profiles.i18n;
