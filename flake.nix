@@ -356,6 +356,11 @@
               path = ./users/home-manager/${name};
               extraModules = [
                 ({ pkgs, config, ... }: {
+                  # Don't create the user directories since they are assumed to
+                  # be already created by a pre-installed system (which should
+                  # already handle them).
+                  xdg.userDirs.createDirectories = false;
+
                   # To be able to use the most of our config as possible, we want
                   # both to use the same overlays.
                   nixpkgs.overlays = overlays;
