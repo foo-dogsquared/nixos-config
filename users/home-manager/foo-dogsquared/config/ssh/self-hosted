@@ -1,0 +1,14 @@
+Host plover.foodogsquared.one
+  IdentityFile ~/.ssh/work
+  User plover
+
+Host woodcock.foodogsquared.one
+  IdentityFile ~/.ssh/woodcock.foodogsquared.one
+  User woodcock
+
+Host quail.foodogsquared.one
+  IdentityFile ~/.ssh/quail.foodogsquared.one
+  User quail
+
+Host code.foodogsquared.one
+  IdentityFile ~/.ssh/code.foodogsquared.one-foodogsquared

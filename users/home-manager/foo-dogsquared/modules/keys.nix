@@ -14,6 +14,14 @@
     '';
   };
 
+  # Make all of the initial SSH identities configuration here. It should assume
+  # I have other SSH identities configuration that are not committed here for
+  # whatever reason.
+  home.file.".ssh/config.d" = {
+    source = ../config/ssh;
+    recursive = true;
+  };
+
   # My GPG client. It has to make sure the keys are not generated and has to be
   # backed up somewhere.
   #
