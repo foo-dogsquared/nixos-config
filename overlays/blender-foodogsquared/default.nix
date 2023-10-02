@@ -6,6 +6,8 @@ final: prev:
     packages = with prev.python3Packages; [
       pandas
       scipy
+      imageio
+      pillow
     ];
   };
 }
