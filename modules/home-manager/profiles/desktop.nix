@@ -80,10 +80,18 @@ in {
         enable = true;
         config = {
           ytdl-format = "(webm,mkv,mp4)[height<=?1280]";
+          ytdl-raw-options-append = let
+            options = {
+              yes-playlist = "";
+            };
+            options' = lib.mapAttrsToList (n: v: "${n}=${v}") options;
+            in lib.concatStringsSep "," options';
           ordered-chapters = true;
           ab-loop-count = "inf";
           chapter-seek-threshold = 15.0;
-          no-osc = true;
+          osc = false;
+          sub-auto = "fuzzy";
+          hwdec= "auto";
         };
 
         bindings = {
@@ -112,11 +120,24 @@ in {
             alang = vlang;
             slang = with lib; concatStringsSep "," (reverseList (splitString "," vlang));
           };
+
+          "extension.gif" = {
+            osc = false;
+            loop-file = true;
+          };
+
+          "protocol.https" = {
+            keep-open = true;
+            loop-file = "inf";
+          };
+
+          "protocol.http".profile = "protocol.https";
         };
 
         scripts = with pkgs.mpvScripts; [
           mpris
           mpvacious
+          mpv-playlistmanager
           thumbnail
           quality-menu
         ];
