@@ -14,16 +14,16 @@ rec {
         isNormalUser = lib.mkForce true;
       };
     in
-    {
-      imports = [
-        { users.users."${user}" = defaultUserConfig; }
-      ];
-
+    ({ lib, ... }: {
       home-manager.users."${user}" = { ... }: {
         imports = [ (getUser "home-manager" user) ];
       };
-      users.users."${user}" = settings;
-    };
+
+      users.users."${user}" = lib.mkMerge [
+        defaultUserConfig
+        settings
+      ];
+    });
 
   getSecret = path: ../secrets/${path};
 
@@ -44,8 +44,7 @@ rec {
       (r: r)
       users';
 
-  getUser = type: user:
-    lib.getAttr user (getUsers type [ user ]);
+  getUser = type: user:  ../users/${type}/${user};
 
   # Import modules with a set blocklist.
   importModules = attrs:
