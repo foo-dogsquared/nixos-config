@@ -17,10 +17,25 @@
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
+    proxyCachePath.apps = {
+      enable = true;
+      keysZoneName = "apps";
+    };
+
+    appendConfig = ''
+      worker_processes auto;
+    '';
+
     # We're avoiding any service to be the default server especially that it
     # could be used for enter a service with unencrypted HTTP. So we're setting
     # up one with an unresponsive server response.
     appendHttpConfig = ''
+      # https://docs.nginx.com/nginx/admin-guide/content-cache/content-caching/
+      proxy_cache_min_uses 5;
+      proxy_cache_valid 200 302 10m;
+      proxy_cache_valid 404 1m;
+      proxy_no_cache $http_pragma $http_authorization;
+
       server {
         listen 80 default_server;
         listen [::]:80 default_server;

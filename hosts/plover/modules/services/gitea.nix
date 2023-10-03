@@ -174,6 +174,9 @@ in
     locations."/" = {
       proxyPass = "http://localhost:${toString config.services.gitea.settings.server.HTTP_PORT}";
     };
+    extraConfig = ''
+      proxy_cache ${config.services.nginx.proxyCachePath.apps.keysZoneName};
+    '';
   };
 
   # Configuring fail2ban for this service which thankfully has a dedicated page
