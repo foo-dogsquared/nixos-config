@@ -132,6 +132,7 @@ in
     forceSSL = true;
     enableACME = true;
     acmeRoot = null;
+    kTLS = true;
     locations =
       let
         address = config.services.vaultwarden.config.ROCKET_ADDRESS;

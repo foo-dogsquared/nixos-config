@@ -171,6 +171,7 @@ in
     forceSSL = true;
     enableACME = true;
     acmeRoot = null;
+    kTLS = true;
     locations."/" = {
       proxyPass = "http://localhost:${toString config.services.gitea.settings.server.HTTP_PORT}";
     };
@@ -213,8 +214,6 @@ in
     in
     [
       "L+ ${giteaCustomDir}/templates/home.tmpl - - - - ${../../files/gitea/home.tmpl}"
-      "L+ ${giteaCustomDir}/public/img/logo.svg - - - - ${../../files/gitea/logo.svg}"
-      "L+ ${giteaCustomDir}/public/img/logo.png - - - - ${../../files/gitea/logo.png}"
     ];
 
   # Add the following files to be backed up.

@@ -296,6 +296,7 @@ in
     extraConfig = ''
       add_header Strict-Transport-Security max-age=31536000;
     '';
+    kTLS = true;
     locations = {
       "/".return = "404";
       "/dns-query".extraConfig = ''

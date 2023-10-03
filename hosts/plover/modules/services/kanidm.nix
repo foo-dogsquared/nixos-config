@@ -44,6 +44,7 @@ in
     forceSSL = true;
     enableACME = true;
     acmeRoot = null;
+    kTLS = true;
     locations."/".proxyPass = "https://${config.services.kanidm.serverSettings.bindaddress}";
   };
 
