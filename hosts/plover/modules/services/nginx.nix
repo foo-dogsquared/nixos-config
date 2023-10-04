@@ -11,11 +11,14 @@
 
     package = pkgs.nginxMainline;
 
-    recommendedBrotliSettings = true;
-    recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
+
+    # Some more server-sided compressions.
+    recommendedBrotliSettings = true;
+    recommendedGzipSettings = true;
+    recommendedZstdSettings = true;
 
     proxyCachePath.apps = {
       enable = true;
