@@ -3,12 +3,9 @@
 # Take note this service is heavily based on the hardware networking setup of
 # this host so better stay focused on the hardware configuration on this host.
 let
-  acmeName = "wireguard.${config.networking.domain}";
-  inherit (builtins) toString;
   inherit (import ../hardware/networks.nix) interfaces wireguardPort wireguardPeers;
 
   wireguardIFName = interfaces.wireguard0.ifname;
-  lanIFName = interfaces.lan.ifname;
 
   desktopPeerAddresses = with wireguardPeers.desktop; [ "${IPv4}/32" "${IPv6}/128" ];
   phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
