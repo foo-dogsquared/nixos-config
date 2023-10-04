@@ -172,7 +172,7 @@ in
           ];
           repo = borgRepo "services";
           passCommand = "cat ${config.sops.secrets."borg/repos/services/password".path}";
-        } // { startAt = "weekly"; };
+        } // { startAt = "daily"; };
     };
 
   programs.ssh.extraConfig = ''
