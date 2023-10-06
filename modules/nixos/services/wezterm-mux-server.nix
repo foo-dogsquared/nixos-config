@@ -2,8 +2,6 @@
 
 let
   cfg = config.services.wezterm-mux-server;
-
-  defaultUser = "wezterm";
 in
 {
   options.services.wezterm-mux-server = {
@@ -28,43 +26,10 @@ in
       defaultText = "null";
       example = lib.literalExpression "./wezterm-mux-server.lua";
     };
-
-    user = lib.mkOption {
-      type = lib.types.str;
-      default = defaultUser;
-      defaultText = defaultUser;
-      description = ''
-        User account of the Wezterm mux server. It is recommended to change
-        this with a dedicated user account intended to be accessed through SSH.
-      '';
-    };
-
-    group = lib.mkOption {
-      type = lib.types.str;
-      default = defaultUser;
-      defaultText = defaultUser;
-      description = ''
-        The group which the Wezterm mux server runs under. It is recommended to
-        change this with a dedicated user group intended to be accessed through
-        SSH.
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
-    users.users = lib.mkIf (cfg.user == defaultUser) {
-      "${defaultUser}" = {
-        description = "Wezterm mux service";
-        home = "/home/wezterm";
-        useDefaultShell = true;
-        group = cfg.group;
-        isSystemUser = true;
-      };
-    };
-
-    users.groups = lib.mkIf (cfg.group == defaultUser) {
-      "${defaultUser}" = { };
-    };
+    environment.systemPackages = [ cfg.package ];
 
     systemd.services.wezterm-mux-server = {
       description = "Wezterm mux server";
@@ -74,8 +39,9 @@ in
 
       # Give it some tough love.
       serviceConfig = {
-        User = cfg.user;
-        Group = cfg.group;
+        User = "wezterm";
+        Group = "wezterm";
+        DynamicUser = true;
 
         LockPersonality = true;
         NoNewPrivileges = true;
@@ -95,7 +61,7 @@ in
         StateDirectory = "wezterm";
 
         # Restricting what capabilities this service has.
-        CapabilityBoundingSet = [ "" ];
+        CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
         AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
 
         # Restrict what address families this service can interact with.
