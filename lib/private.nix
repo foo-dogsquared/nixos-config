@@ -34,7 +34,7 @@ rec {
       userModules = lib.filesToAttr ../users/${type};
       invalidUsernames = [ "config" "modules" ];
 
-      users' = lib.filterAttrs (n: _: !lib.elem n invalidUsernames && lib.elem n users) userModules;
+      users' = lib.removeAttrs userModules invalidUsernames;
       userList = lib.attrNames users';
 
       nonExistentUsers = lib.filter (name: !lib.elem name userList) users;
