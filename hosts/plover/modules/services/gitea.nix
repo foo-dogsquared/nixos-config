@@ -140,26 +140,25 @@ in
 
   # Setting up Gitea for PostgreSQL secure schema usage.
   systemd.services.gitea = {
-    path = [ config.services.postgresql.package ];
-
     # Gitea service module will have to set up certain things first which is
     # why we have to go first.
     preStart =
       let
-        giteaBin = "${lib.getBin config.services.gitea.package}/bin/gitea";
+        gitea = lib.getExe' config.services.gitea.package "gitea";
         giteaAdminUsername = lib.escapeShellArg "foodogsquared";
+        psql = lib.getExe' config.services.postgresql.package "psql";
       in
       lib.mkMerge [
         (lib.mkBefore ''
           # Setting up the appropriate schema for PostgreSQL secure schema usage.
-          psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${giteaDatabaseUser}';" \
-            grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${giteaDatabaseUser};"
+          ${psql} -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${giteaDatabaseUser}';" \
+            grep -q 1 || ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${giteaDatabaseUser};"
         '')
 
         (lib.mkAfter ''
           # Setting up the administrator account automated.
-          ${giteaBin} admin user list --admin | grep -q ${giteaAdminUsername} \
-            || ${giteaBin} admin user create \
+          ${gitea} admin user list --admin | grep -q ${giteaAdminUsername} \
+            || ${gitea} admin user create \
               --username ${giteaAdminUsername} --email foodogsquared@${config.networking.domain} \
               --random-password --random-password-length 76 --admin
         '')
