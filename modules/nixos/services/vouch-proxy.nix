@@ -3,7 +3,6 @@
 let
   cfg = config.services.vouch-proxy;
   settingsFormat = pkgs.formats.yaml { };
-  settingsFile = settingsFormat.generate "vouch-proxy-settings" cfg.settings;
 in
 {
   options.services.vouch-proxy = {
@@ -49,11 +48,11 @@ in
     };
 
     settingsFile = lib.mkOption {
-      type = lib.types.path;
-      default = settingsFile;
+      type = with lib.types; nullOr path;
+      default = null;
       defaultText = lib.literalExpression "settingsFile";
       description = ''
-        The path of the configuration file. By default, it uses the
+        The path of the configuration file. If `null`, it uses the
         filepath from NixOS-generated settings.
       '';
       example = lib.literalExpression "/etc/vouch-proxy/config.yml";
@@ -65,7 +64,7 @@ in
       settingsFile' = "/var/lib/vouch-proxy/config.yml";
     in
     {
-      preStart = if (cfg.settings != { })
+      preStart = if (cfg.settings != { } && cfg.settingsFile == null)
         then ''
           ${pkgs.writeScript
             "vouch-proxy-replace-secrets"
