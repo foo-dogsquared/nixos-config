@@ -28,6 +28,9 @@ in
     # The reverse proxy of choice.
     ./modules/services/nginx.nix
 
+    # The monitoring stack.
+    ./modules/services/grafana.nix
+
     # The database of choice which is used by most self-managed services on
     # this server.
     ./modules/services/postgresql.nix
