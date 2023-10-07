@@ -33,6 +33,7 @@ in
     ./modules/services/vouch-proxy.nix
 
     # The monitoring stack.
+    ./modules/services/prometheus.nix
     ./modules/services/grafana.nix
 
     # The database of choice which is used by most self-managed services on
