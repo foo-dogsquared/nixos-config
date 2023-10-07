@@ -1,3 +1,6 @@
+# The DNS server for my domains. Take note it uses a hidden master setup with
+# the secondary nameservers of the service (as of 2023-10-05, we're using
+# Hetzner's secondary nameservers).
 { config, lib, pkgs, ... }:
 
 let
@@ -162,6 +165,8 @@ in
             in-view internal;
           };
         };
+
+        ${cfg.extraConfig}
       '';
   };
 
@@ -298,7 +303,7 @@ in
     '';
     kTLS = true;
     locations = {
-      "/".return = "404";
+      "/".return = "444";
       "/dns-query".extraConfig = ''
         grpc_pass grpcs://local-dns;
         grpc_socket_keepalive on;
