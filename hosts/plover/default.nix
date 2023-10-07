@@ -28,6 +28,10 @@ in
     # The reverse proxy of choice.
     ./modules/services/nginx.nix
 
+    # The single-sign on setup.
+    ./modules/services/kanidm.nix
+    ./modules/services/vouch-proxy.nix
+
     # The monitoring stack.
     ./modules/services/grafana.nix
 
@@ -39,7 +43,6 @@ in
     # configuring it here will make it too big.
     ./modules/services/atuin.nix
     ./modules/services/gitea.nix
-    ./modules/services/kanidm.nix
     ./modules/services/vaultwarden.nix
     ./modules/services/wireguard.nix
     ./modules/services/wezterm-mux-server.nix
