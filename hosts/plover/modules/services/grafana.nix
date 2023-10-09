@@ -102,8 +102,16 @@ in
         '';
       };
 
+      # Make Grafana as the default to be redirected.
+      "= /".return = "/grafana";
+
       # Serving Grafana with a subpath.
-      "/grafana".proxyPass = "http://${settings.server.http_addr}:${builtins.toString settings.server.http_port}";
+      "/grafana" = {
+        proxyPass = "http://${settings.server.http_addr}:${builtins.toString settings.server.http_port}";
+        extraConfig = ''
+          proxy_set_header X-Vouch-User $auth_resp_x_vouch_user;
+        '';
+      };
     };
   };
 
@@ -120,8 +128,14 @@ in
     '';
   };
 
-  sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
-    "grafana/database/password" = { };
-    "grafana/users/admin/password" = { };
+  sops.secrets = let
+    grafanaFileAttributes = {
+      owner = config.users.users.grafana.name;
+      group = config.users.users.grafana.group;
+      mode = "0400";
+    };
+  in lib.getSecrets ../../secrets/secrets.yaml {
+    "grafana/database/password" = grafanaFileAttributes;
+    "grafana/users/admin/password" = grafanaFileAttributes;
   };
 }
