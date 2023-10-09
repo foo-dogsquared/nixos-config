@@ -143,6 +143,7 @@ in {
     (lib.mkIf cfg.virtualization.enable {
       environment.systemPackages = with pkgs; [
         distrobox # I heard you like Linux...
+        dive # Dive into container images.
         virt-manager # An interface for those who are lazy to read a reference manual and create a 1000-line configuration per machine.
       ];
 
