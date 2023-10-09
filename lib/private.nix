@@ -44,7 +44,7 @@ rec {
       (r: r)
       users';
 
-  getUser = type: user:  ../users/${type}/${user};
+  getUser = type: user: ../users/${type}/${user};
 
   # Import modules with a set blocklist.
   importModules = attrs:

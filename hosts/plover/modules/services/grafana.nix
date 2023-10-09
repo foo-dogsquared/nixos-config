@@ -117,7 +117,8 @@ in
 
   # Setting up with secure schema usage pattern.
   systemd.services.grafana = {
-    preStart = let
+    preStart =
+      let
         grafanaDatabaseUser = config.services.grafana.settings.database.user;
         psql = lib.getExe' config.services.postgresql.package "psql";
       in
@@ -125,17 +126,19 @@ in
         # Setting up the appropriate schema for PostgreSQL secure schema usage.
         ${psql} -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${grafanaDatabaseUser}';" \
           grep -q 1 || ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${grafanaDatabaseUser};"
-    '';
+      '';
   };
 
-  sops.secrets = let
-    grafanaFileAttributes = {
-      owner = config.users.users.grafana.name;
-      group = config.users.users.grafana.group;
-      mode = "0400";
+  sops.secrets =
+    let
+      grafanaFileAttributes = {
+        owner = config.users.users.grafana.name;
+        group = config.users.users.grafana.group;
+        mode = "0400";
+      };
+    in
+    lib.getSecrets ../../secrets/secrets.yaml {
+      "grafana/database/password" = grafanaFileAttributes;
+      "grafana/users/admin/password" = grafanaFileAttributes;
     };
-  in lib.getSecrets ../../secrets/secrets.yaml {
-    "grafana/database/password" = grafanaFileAttributes;
-    "grafana/users/admin/password" = grafanaFileAttributes;
-  };
 }

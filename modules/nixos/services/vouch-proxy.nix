@@ -64,7 +64,8 @@ let
       settingsFile' = "/var/lib/vouch-proxy/${name}-config.yml";
     in
     lib.nameValuePair "vouch-proxy-${name}" {
-      preStart = if (settings != { } && settingsFile == null)
+      preStart =
+        if (settings != { } && settingsFile == null)
         then ''
           ${pkgs.writeScript
             "vouch-proxy-replace-secrets"

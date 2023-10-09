@@ -3,23 +3,25 @@
 let
   cfg = config.programs.blender;
 
-  addons = let
-    blenderVersion = lib.versions.majorMinor cfg.package.version;
-  in
-  pkgs.runCommand "blender-system-resources" {
-    passAsFile = [ "paths" ];
-    paths = cfg.addons ++ [ cfg.package ];
-    nativeBuildInputs = with pkgs; [ outils ];
-  } ''
-    mkdir -p $out
-    for i in $(cat $pathsPath); do
-      resourcesPath="$i/share/blender"
-      if [ -d $i/share/blender/${blenderVersion} ]; then
-        resourcesPath="$i/share/blender/${blenderVersion}";
-      fi
-      lndir -silent $resourcesPath $out
-    done
-  '';
+  addons =
+    let
+      blenderVersion = lib.versions.majorMinor cfg.package.version;
+    in
+    pkgs.runCommand "blender-system-resources"
+      {
+        passAsFile = [ "paths" ];
+        paths = cfg.addons ++ [ cfg.package ];
+        nativeBuildInputs = with pkgs; [ outils ];
+      } ''
+      mkdir -p $out
+      for i in $(cat $pathsPath); do
+        resourcesPath="$i/share/blender"
+        if [ -d $i/share/blender/${blenderVersion} ]; then
+          resourcesPath="$i/share/blender/${blenderVersion}";
+        fi
+        lndir -silent $resourcesPath $out
+      done
+    '';
 in
 {
   options.programs.blender = {

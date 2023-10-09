@@ -80,18 +80,20 @@ in {
         enable = true;
         config = {
           ytdl-format = "(webm,mkv,mp4)[height<=?1280]";
-          ytdl-raw-options-append = let
-            options = {
-              yes-playlist = "";
-            };
-            options' = lib.mapAttrsToList (n: v: "${n}=${v}") options;
-            in lib.concatStringsSep "," options';
+          ytdl-raw-options-append =
+            let
+              options = {
+                yes-playlist = "";
+              };
+              options' = lib.mapAttrsToList (n: v: "${n}=${v}") options;
+            in
+            lib.concatStringsSep "," options';
           ordered-chapters = true;
           ab-loop-count = "inf";
           chapter-seek-threshold = 15.0;
           osc = false;
           sub-auto = "fuzzy";
-          hwdec= "auto";
+          hwdec = "auto";
         };
 
         bindings = {

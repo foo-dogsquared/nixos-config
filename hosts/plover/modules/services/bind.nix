@@ -273,16 +273,18 @@ in
 
   # Set up the firewall. Take note the ports with the transport layer being
   # accepted in Bind.
-  networking.firewall = let
-    ports = [
-      53 # DNS
-      853 # DNS-over-TLS/DNS-over-QUIC
-      dnsOverHTTPSPort
-    ];
-  in {
-    allowedUDPPorts = ports;
-    allowedTCPPorts = ports;
-  };
+  networking.firewall =
+    let
+      ports = [
+        53 # DNS
+        853 # DNS-over-TLS/DNS-over-QUIC
+        dnsOverHTTPSPort
+      ];
+    in
+    {
+      allowedUDPPorts = ports;
+      allowedTCPPorts = ports;
+    };
 
   # Making this with nginx.
   services.nginx.upstreams.local-dns = {

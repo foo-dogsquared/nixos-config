@@ -48,19 +48,20 @@ in
         policies = {
           AppAutoUpdate = false;
 
-          Containers.Default = let
-            mkContainer = name: color: icon: {
-              inherit name color icon;
-            };
-          in
-          [
-            (mkContainer "Personal" "blue" "fingerprint")
-            (mkContainer "Self-hosted" "pink" "fingerprint")
-            (mkContainer "Work" "red" "briefcase")
-            (mkContainer "Banking" "green" "dollar")
-            (mkContainer "Shopping" "pink" "cart")
-            (mkContainer "Gaming" "turquoise" "chill")
-          ];
+          Containers.Default =
+            let
+              mkContainer = name: color: icon: {
+                inherit name color icon;
+              };
+            in
+            [
+              (mkContainer "Personal" "blue" "fingerprint")
+              (mkContainer "Self-hosted" "pink" "fingerprint")
+              (mkContainer "Work" "red" "briefcase")
+              (mkContainer "Banking" "green" "dollar")
+              (mkContainer "Shopping" "pink" "cart")
+              (mkContainer "Gaming" "turquoise" "chill")
+            ];
 
           DisableAppUpdate = true;
           DisableMasterPasswordCreation = true;
