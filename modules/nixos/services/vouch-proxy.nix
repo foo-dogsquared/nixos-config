@@ -84,7 +84,12 @@ let
         StartLimitInterval = "60s";
         StartLimitBurst = 3;
 
+        PrivateUsers = true;
+        PrivateTmp = true;
+        PrivateDevices = true;
+
         LockPersonality = true;
+        MemoryDenyWriteExecute = true;
         NoNewPrivileges = true;
         RestrictSUIDSGID = true;
         RestrictRealtime = true;
@@ -97,7 +102,14 @@ let
         ProtectProc = "invisible";
         ProcSubset = "pid";
 
-        SystemCallFilter = [ "@system-service" ];
+        SystemCallFilter = [
+          "@system-service"
+          "~@cpu-emulation"
+          "~@keyring"
+          "~@module"
+          "~@privileged"
+          "~@reboot"
+        ];
         SystemCallErrorNumber = "EPERM";
         SystemCallArchitectures = "native";
 
@@ -111,13 +123,9 @@ let
         # Limit this service to Unix sockets and IPs.
         RestrictAddressFamilies = [
           "AF_LOCAL"
-
-          # The internet class families.
           "AF_INET"
           "AF_INET6"
         ];
-
-        # Restrict what namespaces it can create which is none.
         RestrictNamespaces = true;
       };
     };
