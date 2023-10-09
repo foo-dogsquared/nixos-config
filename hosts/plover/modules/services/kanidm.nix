@@ -15,6 +15,7 @@ in
       domain = authDomain;
       origin = "https://${authDomain}:${builtins.toString port}";
       bindaddress = "127.0.0.1:${builtins.toString port}";
+      ldapbindaddress = "127.0.0.1:3636";
       role = "WriteReplica";
       trust_x_forward_for = true;
 
