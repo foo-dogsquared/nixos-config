@@ -16,7 +16,7 @@
     }];
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_6_1;
 
   # Assume that this will be used for remote installations.
   services.openssh = {
