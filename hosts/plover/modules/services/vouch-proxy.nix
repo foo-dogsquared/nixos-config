@@ -24,12 +24,13 @@ in
 
       oauth = rec {
         provider = "oidc";
-        client_id = "kanidm";
+        client_id = "vouch";
         client_secret._secret = config.sops.secrets."vouch-proxy/client/secret".path;
+        code_challenge_method = "S256";
         auth_url = "${authDomain}/ui/oauth2";
         token_url = "${authDomain}/oauth2/token";
         user_info_url = "${authDomain}/oauth2/openid/${client_id}/userinfo";
-        scopes = [ "login" ];
+        scopes = [ "login" "email" ];
         callback_url = "https://${vouchDomain}/auth";
       };
     };
