@@ -79,6 +79,11 @@ in
         User = "vouch-proxy";
         Group = "vouch-proxy";
 
+        Restart = "on-failure";
+        RestartSec = 5;
+        StartLimitInterval = "60s";
+        StartLimitBurst = 3;
+
         LockPersonality = true;
         NoNewPrivileges = true;
         RestrictSUIDSGID = true;
