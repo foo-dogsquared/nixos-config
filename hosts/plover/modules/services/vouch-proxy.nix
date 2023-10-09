@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (config.services.vouch-proxy) settings;
+  inherit (config.services.vouch-proxy.instances."${vouchDomain}") settings;
   vouchDomain = "vouch.${config.networking.domain}";
   authDomain = config.services.kanidm.serverSettings.domain;
 in
@@ -13,7 +13,7 @@ in
 
   services.vouch-proxy = {
     enable = true;
-    settings = {
+    instances."${vouchDomain}".settings = {
       vouch = {
         listen = "127.0.0.1";
         port = 19900;

@@ -6,7 +6,7 @@ let
   authSubpath = path: "${authDomain}/${path}";
 
   vouchDomain = "vouch.${config.networking.domain}";
-  vouchSettings = config.services.vouch-proxy.settings;
+  vouchSettings = config.services.vouch-proxy.instances."${vouchDomain}".settings;
 
   certDir = file: "${config.security.acme.certs."${monitoringDomain}".directory}/${file}";
   inherit (config.services.grafana) settings;
