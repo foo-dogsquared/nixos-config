@@ -42,6 +42,23 @@ There are also some additional prerequisites such as partitioning which is alrea
 
 
 
+== Using the flake
+
+If you want to use the flake as part of the flake inputs, you can simply include it in `flake.nix`.
+
+[source, nix]
+----
+{
+    inputs.foodogsquared-flake.url = "github:foo-dogsquared/nixos-config";
+}
+----
+
+For a better experience, I recommend using https://flakehub.com/flake/foo-dogsquared/nixos-config[FlakeHub] (with available instructions in the linked page).
+The FlakeHub flake follows a rolling release model so all of the releases are under 0.x.
+
+
+
+
 == TODO
 
 In order of priority:
