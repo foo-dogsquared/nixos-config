@@ -33,11 +33,12 @@ in
         token_url = authSubpath "oauth2/token";
       };
 
-      database = {
+      database = rec {
         host = "127.0.0.1:${builtins.toString config.services.postgresql.port}";
         password = "$_file{${config.sops.secrets."grafana/database/password".path}}";
         type = "postgres";
-        user = config.services.grafana.database.name;
+        name = "grafana";
+        user = name;
       };
 
       log = {
