@@ -104,7 +104,7 @@ in
       };
 
       # Make Grafana as the default to be redirected.
-      "= /".return = "/grafana";
+      "= /".return = "301 /grafana";
 
       # Serving Grafana with a subpath.
       "/grafana" = {
