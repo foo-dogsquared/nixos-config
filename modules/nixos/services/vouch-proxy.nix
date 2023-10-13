@@ -82,8 +82,6 @@ let
 
         Restart = "on-failure";
         RestartSec = 5;
-        StartLimitInterval = "60s";
-        StartLimitBurst = 3;
 
         PrivateUsers = true;
         PrivateTmp = true;
