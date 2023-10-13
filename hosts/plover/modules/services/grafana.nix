@@ -108,11 +108,20 @@ in
 
       # Serving Grafana with a subpath.
       "/grafana" = {
-        proxyPass = "http://${settings.server.http_addr}:${builtins.toString settings.server.http_port}";
+        proxyPass = "http://grafana";
         extraConfig = ''
           proxy_set_header X-Vouch-User $auth_resp_x_vouch_user;
         '';
       };
+    };
+  };
+
+  services.nginx.upstreams."grafana" = {
+    extraConfig = ''
+      zone apps;
+    '';
+    servers = {
+      "localhost:${builtins.toString config.services.grafana.settings.server.http_port}" = { };
     };
   };
 

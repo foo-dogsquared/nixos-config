@@ -136,12 +136,11 @@ in
     locations =
       let
         address = config.services.vaultwarden.config.ROCKET_ADDRESS;
-        port = config.services.vaultwarden.config.ROCKET_PORT;
         websocketPort = config.services.vaultwarden.config.WEBSOCKET_PORT;
       in
       {
         "/" = {
-          proxyPass = "http://${address}:${toString port}";
+          proxyPass = "http://vaultwarden";
           proxyWebsockets = true;
         };
 
@@ -151,13 +150,26 @@ in
         };
 
         "/notifications/hub/negotiate" = {
-          proxyPass = "http://${address}:${toString port}";
+          proxyPass = "http://vaultwarden";
           proxyWebsockets = true;
         };
       };
     extraConfig = ''
       proxy_cache ${config.services.nginx.proxyCachePath.apps.keysZoneName};
     '';
+  };
+
+  services.nginx.upstreams."vaultwarden" = {
+    extraConfig = ''
+      zone apps;
+    '';
+    servers = let
+      address = config.services.vaultwarden.config.ROCKET_ADDRESS;
+      port = config.services.vaultwarden.config.ROCKET_PORT;
+    in
+    {
+      "${address}:${builtins.toString port}" = { };
+    };
   };
 
   # Configuring fail2ban for this service which thankfully has a dedicated page

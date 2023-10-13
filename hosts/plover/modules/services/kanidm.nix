@@ -46,7 +46,16 @@ in
     enableACME = true;
     acmeRoot = null;
     kTLS = true;
-    locations."/".proxyPass = "https://${config.services.kanidm.serverSettings.bindaddress}";
+    locations."/".proxyPass = "https://kanidm";
+  };
+
+  services.nginx.upstreams."kanidm" = {
+    extraConfig = ''
+      zone apps;
+    '';
+    servers = {
+      "localhost:${builtins.toString port}" = { };
+    };
   };
 
   # Add the following to be backed up.

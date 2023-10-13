@@ -172,11 +172,20 @@ in
     acmeRoot = null;
     kTLS = true;
     locations."/" = {
-      proxyPass = "http://localhost:${toString config.services.gitea.settings.server.HTTP_PORT}";
+      proxyPass = "http://gitea";
     };
     extraConfig = ''
       proxy_cache ${config.services.nginx.proxyCachePath.apps.keysZoneName};
     '';
+  };
+
+  services.nginx.upstreams."gitea" = {
+    extraConfig = ''
+      zone apps;
+    '';
+    servers = {
+      "localhost:${builtins.toString config.services.gitea.settings.server.HTTP_PORT}" = { };
+    };
   };
 
   # Configuring fail2ban for this service which thankfully has a dedicated page

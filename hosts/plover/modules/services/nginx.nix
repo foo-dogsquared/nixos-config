@@ -45,6 +45,11 @@
         return 444;
       }
     '';
+
+    # This is defined for other services.
+    upstreams."apps".extraConfig = ''
+      zone apps 64k;
+    '';
   };
 
   networking.firewall.allowedTCPPorts = [

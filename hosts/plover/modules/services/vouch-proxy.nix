@@ -42,11 +42,20 @@ in
     acmeRoot = null;
     kTLS = true;
     locations."/" = {
-      proxyPass = "http://${settings.vouch.listen}:${builtins.toString settings.vouch.port}";
+      proxyPass = "http://vouch-proxy";
       extraConfig = ''
         proxy_set_header  Host  ${vouchDomain};
         proxy_set_header  X-Forwarded-Proto https;
       '';
+    };
+  };
+
+  services.nginx.upstreams."vouch-proxy" = {
+    extraConfig = ''
+      zone apps;
+    '';
+    servers = {
+      "${settings.vouch.listen}:${builtins.toString settings.vouch.port}" = { };
     };
   };
 }
