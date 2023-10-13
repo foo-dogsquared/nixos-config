@@ -9,7 +9,7 @@ pkgs.mkShell {
     sops
 
     bind
-    terraform
+    opentofu
 
     jq
     wl-clipboard

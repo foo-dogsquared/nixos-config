@@ -29,6 +29,6 @@
     # It's here since Google Cloud SDK needs it.
     python3
 
-    terraform # The declarative thingy for cloud.
+    opentofu # The declarative thingy for cloud.
   ]);
 }).env
