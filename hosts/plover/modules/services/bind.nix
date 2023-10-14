@@ -317,6 +317,18 @@ in
     };
   };
 
+  services.nginx.streamConfig = ''
+    upstream dns_servers {
+      server localhost:53;
+    }
+
+    server {
+      listen 53 udp reuseport;
+      proxy_timeout 20s;
+      proxy_pass dns_servers;
+    }
+  '';
+
   # Then generate a DH parameter for the application.
   security.dhparams.params.bind.bits = 4096;
 
