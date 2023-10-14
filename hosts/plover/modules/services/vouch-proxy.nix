@@ -6,9 +6,15 @@ let
   authDomain = config.services.kanidm.serverSettings.domain;
 in
 {
-  sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
-    "vouch-proxy/jwt/secret" = { };
-    "vouch-proxy/client/secret" = { };
+  sops.secrets = let
+    vouchPermissions = rec {
+      owner = "vouch-proxy";
+      group = owner;
+      mode = "0400";
+    };
+  in lib.getSecrets ../../secrets/secrets.yaml {
+    "vouch-proxy/jwt/secret" = vouchPermissions;
+    "vouch-proxy/client/secret" = vouchPermissions;
   };
 
   services.vouch-proxy = {
@@ -30,7 +36,7 @@ in
         auth_url = "${authDomain}/ui/oauth2";
         token_url = "${authDomain}/oauth2/token";
         user_info_url = "${authDomain}/oauth2/openid/${client_id}/userinfo";
-        scopes = [ "login" "email" ];
+        scopes = [ "openid" "email" "profile" ];
         callback_url = "https://${vouchDomain}/auth";
       };
     };
