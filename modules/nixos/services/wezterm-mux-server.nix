@@ -39,9 +39,8 @@ in
 
       # Give it some tough love.
       serviceConfig = {
-        User = "wezterm";
-        Group = "wezterm";
-        DynamicUser = true;
+        User = config.users.users.wezterm.name;
+        Group = config.users.groups.wezterm.name;
 
         LockPersonality = true;
         NoNewPrivileges = true;
@@ -80,5 +79,15 @@ in
         RestrictNamespaces = true;
       };
     };
+
+    users.users.wezterm = {
+      description = "Wezterm system user";
+      home = "/var/lib/wezterm";
+      createHome = true;
+      group = config.users.groups.wezterm.name;
+      isSystemUser = true;
+    };
+
+    users.groups.wezterm = { };
   };
 }
