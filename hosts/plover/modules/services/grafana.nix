@@ -28,7 +28,7 @@ in
       "auth.generic_oauth" = {
         api_url = authSubpath "oauth2/authorise";
         client_id = "grafana";
-        client_secret = "$_file{${config.sops.secrets."vouch-proxy/client/secret".path}";
+        client_secret = "$__file{${config.sops.secrets."vouch-proxy/client/secret".path}";
         enabled = true;
         name = "Kanidm";
         oauth_url = authSubpath "ui/oauth2";
@@ -38,7 +38,7 @@ in
 
       database = rec {
         host = "127.0.0.1:${builtins.toString config.services.postgresql.port}";
-        password = "$_file{${config.sops.secrets."grafana/database/password".path}}";
+        password = "$__file{${config.sops.secrets."grafana/database/password".path}}";
         type = "postgres";
         name = "grafana";
         user = name;
@@ -51,7 +51,7 @@ in
 
       security = {
         admin_email = config.security.acme.defaults.email;
-        admin_password = "$_file{${config.sops.secrets."grafana/users/admin/password".path}}";
+        admin_password = "$__file{${config.sops.secrets."grafana/users/admin/password".path}}";
         cookie_secure = true;
         csrf_trusted_origins = [
           vouchDomain
