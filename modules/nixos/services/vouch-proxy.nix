@@ -70,6 +70,7 @@ let
           ${pkgs.writeScript
             "vouch-proxy-replace-secrets"
             (utils.genJqSecretsReplacementSnippet settings settingsFile')}
+          chmod 0600 "${settingsFile'}"
         ''
         else ''
           install -Dm0600 "${settingsFile}" "${settingsFile'}"
