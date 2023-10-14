@@ -22,7 +22,7 @@ jobs:
       - env:
           NIXPKGS_ALLOW_UNFREE: "1"
         run: nix develop --impure -c mozilla-addons-to-nix pkgs/firefox-addons/firefox-addons.json pkgs/firefox-addons/default.nix
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "firefox-addons: update as of ${{ steps.metadata.outputs.DATE }}"
           file_pattern: pkgs/firefox-addons/
