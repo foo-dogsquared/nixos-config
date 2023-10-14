@@ -47,9 +47,14 @@
     '';
 
     # This is defined for other services.
-    upstreams."apps".extraConfig = ''
-      zone apps 64k;
-    '';
+    upstreams."nginx" = {
+      extraConfig = ''
+        zone services 64k;
+      '';
+      servers = {
+        "localhost:80" = { };
+      };
+    };
   };
 
   networking.firewall.allowedTCPPorts = [

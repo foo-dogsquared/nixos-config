@@ -51,7 +51,7 @@ in
 
   services.nginx.upstreams."kanidm" = {
     extraConfig = ''
-      zone apps;
+      zone services;
     '';
     servers = {
       "localhost:${builtins.toString port}" = { };

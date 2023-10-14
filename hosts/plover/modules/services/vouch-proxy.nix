@@ -52,7 +52,7 @@ in
 
   services.nginx.upstreams."vouch-proxy" = {
     extraConfig = ''
-      zone apps;
+      zone services;
     '';
     servers = {
       "${settings.vouch.listen}:${builtins.toString settings.vouch.port}" = { };

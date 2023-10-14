@@ -181,7 +181,7 @@ in
 
   services.nginx.upstreams."gitea" = {
     extraConfig = ''
-      zone apps;
+      zone services;
     '';
     servers = {
       "localhost:${builtins.toString config.services.gitea.settings.server.HTTP_PORT}" = { };

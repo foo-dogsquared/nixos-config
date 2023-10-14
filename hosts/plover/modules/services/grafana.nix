@@ -121,7 +121,7 @@ in
 
   services.nginx.upstreams."grafana" = {
     extraConfig = ''
-      zone apps;
+      zone services;
     '';
     servers = {
       "localhost:${builtins.toString config.services.grafana.settings.server.http_port}" = { };
