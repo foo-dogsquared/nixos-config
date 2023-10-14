@@ -76,14 +76,12 @@ let
         '';
       script = "${lib.getExe' instance.package "vouch-proxy"} -config ${settingsFile'}";
       serviceConfig = {
-        DynamicUser = true;
-        User = "vouch-proxy";
-        Group = "vouch-proxy";
+        User = config.users.users.vouch-proxy.name;
+        Group = config.users.groups.vouch-proxy.name;
 
         Restart = "on-failure";
         RestartSec = 5;
 
-        PrivateUsers = true;
         PrivateTmp = true;
         PrivateDevices = true;
 
@@ -167,5 +165,13 @@ in
 
   config = lib.mkIf cfg.enable {
     systemd.services = lib.mapAttrs' mkVouchInstance cfg.instances;
+
+    users.users.vouch-proxy = {
+      description = "Vouch Proxy user";
+      group = config.users.groups.vouch-proxy.name;
+      isSystemUser = true;
+    };
+
+    users.groups.vouch-proxy = { };
   };
 }
