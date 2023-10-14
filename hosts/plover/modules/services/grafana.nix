@@ -2,6 +2,9 @@
 
 let
   monitoringDomain = "monitoring.${config.networking.domain}";
+  grafanaDatabaseUser = config.services.grafana.settings.database.user;
+  grafanaDatabaseName = config.services.grafana.settings.database.name;
+
   authDomain = "auth.${config.networking.domain}";
   authSubpath = path: "${authDomain}/${path}";
 
@@ -129,14 +132,24 @@ in
   systemd.services.grafana = {
     preStart =
       let
-        grafanaDatabaseUser = config.services.grafana.settings.database.user;
         psql = lib.getExe' config.services.postgresql.package "psql";
       in
       lib.mkBefore ''
         # Setting up the appropriate schema for PostgreSQL secure schema usage.
-        ${psql} -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${grafanaDatabaseUser}';" \
-          grep -q 1 || ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${grafanaDatabaseUser};"
+        ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${grafanaDatabaseUser};"
       '';
+  };
+
+  # Setting up PostgreSQL with secure schema.
+  services.postgresql = {
+    ensureDatabases = [ grafanaDatabaseName ];
+    ensureUsers = [{
+      name = grafanaDatabaseName;
+      ensurePermissions = {
+        "DATABASE ${grafanaDatabaseName}" = "ALL PRIVILEGES";
+        "SCHEMA ${grafanaDatabaseUser}" = "ALL PRIVILEGES";
+      };
+    }];
   };
 
   sops.secrets =
