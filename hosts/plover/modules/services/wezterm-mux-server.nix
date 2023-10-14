@@ -4,7 +4,7 @@
 let
   weztermDomain = "mux.${config.networking.domain}";
   port = 9801;
-  listenAddress = "127.0.0.1:${builtins.toString port}";
+  listenAddress = "localhost:${builtins.toString port}";
 
   configFile = pkgs.substituteAll {
     src = ../../config/wezterm/config.lua;
@@ -16,8 +16,6 @@ in
     enable = true;
     inherit configFile;
   };
-
-  networking.firewall.allowedTCPPorts = [ port ];
 
   systemd.services.wezterm-mux-server = {
     requires = [ "acme-finished-${weztermDomain}.target" ];
@@ -38,5 +36,16 @@ in
 
   security.acme.certs."${weztermDomain}".postRun = ''
     systemctl restart wezterm-mux-server.service
+  '';
+
+  services.nginx.streamConfig = ''
+    upstream wezterm {
+      server ${listenAddress};
+    }
+
+    server {
+      listen ${builtins.toString port};
+      proxy_pass wezterm;
+    }
   '';
 }
