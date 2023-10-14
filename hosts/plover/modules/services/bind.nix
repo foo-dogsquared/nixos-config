@@ -209,6 +209,11 @@ in
           (certCredentialPath "fullchain.pem")
         ];
 
+      LogFilterPatterns = [
+        # systemd-resolved doesn't have DNS cookie support, it seems.
+        "~missing expected cookie from 127.0.0.53#53"
+      ];
+
       # Lock and protect various system components.
       LockPersonality = true;
       PrivateTmp = true;
@@ -251,10 +256,7 @@ in
       # syslog for this even if the application can so no syslog capability.
       # Additionally, we're using omitting the program's ability to chroot and
       # chown since the user and the directories are already configured.
-      CapabilityBoundingSet = [
-        "CAP_NET_BIND_SERVICE"
-        "CAP_NET_RAW"
-      ];
+      CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
       AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
 
       # Restrict what address families can it access.
@@ -278,7 +280,6 @@ in
       ports = [
         53 # DNS
         853 # DNS-over-TLS/DNS-over-QUIC
-        dnsOverHTTPSPort
       ];
     in
     {
