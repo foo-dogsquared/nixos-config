@@ -29,35 +29,51 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ];
-
     systemd.services.wezterm-mux-server = {
       description = "Wezterm mux server";
       after = [ "network.target" ];
+      path = [ cfg.package ];
+
       wantedBy = [ "multi-user.target" ];
-      script = "${lib.getExe' cfg.package "wezterm-mux-server"} ${lib.optionalString (cfg.configFile != null) "--config-file ${cfg.configFile}"}";
+      script = ''
+        wezterm-mux-server ${lib.optionalString (cfg.configFile != null) "--config-file ${cfg.configFile}"}
+      '';
 
       # Give it some tough love.
       serviceConfig = {
         User = config.users.users.wezterm.name;
         Group = config.users.groups.wezterm.name;
+        UMask = "0077";
+
+        Restart = "on-failure";
 
         LockPersonality = true;
         NoNewPrivileges = true;
-        RestrictSUIDSGID = true;
-        RestrictRealtime = true;
-        ProtectClock = true;
-        ProtectKernelLogs = true;
-        ProtectKernelTunables = true;
-        ProtectKernelModules = true;
-        ProtectHostname = true;
-        ProtectControlGroups = true;
-        ProtectProc = "invisible";
+        PrivateTmp = true;
         ProcSubset = "pid";
+        ProtectClock = true;
+        ProtectControlGroups = true;
+        ProtectHostname = true;
+        ProtectKernelLogs = true;
+        ProtectKernelModules = true;
+        ProtectKernelTunables = true;
+        ProtectProc = "invisible";
+        ProtectSystem = "strict";
+        SystemCallFilter = [
+          "@system-service"
+          "~@cpu-emulation"
+          "~@keyring"
+          "~@module"
+          "~@privileged"
+        ];
+        SystemCallErrorNumber = "EPERM";
+        SystemCallArchitectures = "native";
+        RestrictRealtime = true;
+        RestrictSUIDSGID = true;
 
-        RuntimeDirectory = "wezterm";
-        CacheDirectory = "wezterm";
+        WorkingDirectory = config.users.users.wezterm.home;
         StateDirectory = "wezterm";
+        RuntimeDirectory = "wezterm";
 
         # Restricting what capabilities this service has.
         CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
