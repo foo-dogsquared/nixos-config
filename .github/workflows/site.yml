@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/magic-nix-cache-action@v2
-      - uses: DeterminateSystems/nix-installer-action@v5
+      - uses: DeterminateSystems/nix-installer-action@v6
       - env:
           NIXPKGS_ALLOW_UNFREE: "1"
         run: nix develop .#docs --impure -c hugo -s ./docs/
