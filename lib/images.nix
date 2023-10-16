@@ -9,12 +9,7 @@
       # The system of the NixOS system.
       inherit system lib;
       specialArgs = extraArgs;
-      modules =
-        # Append with our custom NixOS modules from the modules folder.
-        (import ../modules/nixos { inherit lib; isInternal = true; })
-
-        # Our own modules.
-        ++ extraModules;
+      modules = extraModules;
     };
 
   # A wrapper around the home-manager configuration function.
@@ -22,12 +17,7 @@
     inputs."${home-manager-channel}".lib.homeManagerConfiguration {
       inherit lib pkgs;
       extraSpecialArgs = extraArgs;
-      modules =
-        # Importing our custom home-manager modules.
-        (import ../modules/home-manager { inherit lib; isInternal = true; })
-
-        # Plus our own.
-        ++ extraModules;
+      modules = extraModules;
     };
 
   # A wrapper around the nixos-generators `nixosGenerate` function.
@@ -35,12 +25,7 @@
     inputs.nixos-generators.nixosGenerate {
       inherit pkgs system format lib;
       specialArgs = extraArgs;
-      modules =
-        # Import all of the NixOS modules.
-        (import ../modules/nixos { inherit lib; isInternal = true; })
-
-        # Our own modules.
-        ++ extraModules;
+      modules = extraModules;
     };
 
   listImagesWithSystems = data:

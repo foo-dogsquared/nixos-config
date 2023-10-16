@@ -144,13 +144,18 @@
         # Only use imports as minimally as possible with the absolute
         # requirements of a host. On second thought, only on flakes with
         # optional NixOS modules.
-        imports = [
-          inputs.home-manager.nixosModules.home-manager
-          inputs.nur.nixosModules.nur
-          inputs.sops-nix.nixosModules.sops
-          inputs.guix-overlay.nixosModules.guix
-          inputs.disko.nixosModules.disko
-        ];
+        imports =
+          # Append with our custom NixOS modules from the modules folder.
+          import ./modules/nixos { inherit lib; isInternal = true; }
+
+          # Then, make the most with the modules from the flake inputs.
+          ++ [
+            inputs.home-manager.nixosModules.home-manager
+            inputs.nur.nixosModules.nur
+            inputs.sops-nix.nixosModules.sops
+            inputs.guix-overlay.nixosModules.guix
+            inputs.disko.nixosModules.disko
+          ];
 
         # BOOOOOOOOOOOOO! Somebody give me a tomato!
         services.xserver.excludePackages = with pkgs; [ xterm ];
@@ -178,12 +183,7 @@
         # The global configuration for the home-manager module.
         home-manager.useUserPackages = lib.mkDefault true;
         home-manager.useGlobalPkgs = lib.mkDefault true;
-        home-manager.sharedModules =
-          (import ./modules/home-manager {
-            inherit lib;
-            isInternal = true;
-          })
-          ++ [ userSharedConfig ];
+        home-manager.sharedModules = [ userSharedConfig ];
         home-manager.extraSpecialArgs = extraArgs;
 
         # Enabling some things for sops.
@@ -204,10 +204,15 @@
       # configurations with `nixpkgs.useGlobalPkgs` set to `true` so avoid
       # setting nixpkgs-related options here.
       userSharedConfig = { pkgs, config, lib, ... }: {
-        imports = [
-          inputs.nur.hmModules.nur
-          inputs.sops-nix.homeManagerModules.sops
-        ];
+        imports =
+          # Import our own custom modules from here..
+          import ./modules/home-manager { inherit lib; isInternal = true; }
+
+          # ...plus a bunch of third-party modules.
+          ++ [
+            inputs.nur.hmModules.nur
+            inputs.sops-nix.homeManagerModules.sops
+          ];
 
         # Hardcoding this is not really great especially if you consider using
         # other locales but its default values are already hardcoded so what
