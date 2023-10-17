@@ -4,5 +4,6 @@
 # simply have to append them as a list (i.e., `lib.attrValues`).
 {
   ffmpeg-foodogsquared = import ./ffmpeg-foodogsquared;
+  firefox-foodogsquared = import ./firefox-foodogsquared;
   blender-foodogsquared = import ./blender-foodogsquared;
 }
