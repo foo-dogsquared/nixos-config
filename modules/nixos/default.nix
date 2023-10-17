@@ -8,6 +8,7 @@ let
   modules = [
     ./programs/blender.nix
     ./programs/cardboard-wm.nix
+    ./programs/distrobox.nix
     ./programs/kiwmi.nix
     ./programs/pop-launcher.nix
     ./programs/wezterm.nix
