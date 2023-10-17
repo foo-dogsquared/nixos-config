@@ -98,6 +98,7 @@ in
       shell.enable = true;
       extras.enable = true;
       shaders.enable = true;
+      servers.enable = true;
     };
     editors = {
       emacs.enable = true;
