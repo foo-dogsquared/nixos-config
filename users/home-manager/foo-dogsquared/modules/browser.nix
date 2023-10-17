@@ -57,6 +57,7 @@
             DisablePocket = true;
             DisableSetDesktopBackground = true;
             DontCheckDefaultBrowser = true;
+            EnableTrackingProtection = true;
             FirefoxHome = {
               Highlights = false;
               Pocket = false;
@@ -107,20 +108,12 @@
             # Disable the UI tour.
             "browser.uitour.enabled" = false;
 
-            # Don't tease me with the updates, man.
-            "apps.update.auto" = false;
-
-            # Some inconveniences of life (at least for me).
-            "extensions.pocket.enabled" = false;
-            "signon.rememberSignons" = false;
-
             # Some quality of lifes.
             "browser.search.widget.inNavBar" = true;
             "browser.search.openintab" = true;
 
             # Some privacy settings...
             "privacy.donottrackheader.enabled" = true;
-            "privacy.trackingprotection.enabled" = true;
 
             # Burn our own fingers.
             "privacy.resistFingerprinting" = true;
