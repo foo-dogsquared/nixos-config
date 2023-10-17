@@ -144,6 +144,7 @@ in
 
   # All of the personal configurations.
   xdg.configFile = {
+    distrobox.source = ./config/distrobox;
     doom.source = getDotfiles "emacs";
     kanidm.source = ./config/kanidm;
     kitty.source = getDotfiles "kitty";
