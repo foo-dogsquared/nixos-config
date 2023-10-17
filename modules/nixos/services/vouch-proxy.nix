@@ -63,7 +63,7 @@ let
       inherit (instance) settings settingsFile;
       settingsFile' = "/var/lib/vouch-proxy/${name}-config.yml";
     in
-    lib.nameValuePair "vouch-proxy-${name}" {
+    lib.nameValuePair "vouch-proxy-${utils.escapeSystemdPath name}" {
       preStart =
         if (settings != { } && settingsFile == null)
         then ''
