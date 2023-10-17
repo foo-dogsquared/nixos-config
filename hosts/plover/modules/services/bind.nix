@@ -177,17 +177,19 @@ in
         domainZone' = zoneFile domain;
         fqdnZone' = zoneFile fqdn;
         secretPath = path: config.sops.secrets."dns/${path}".path;
+        rndc = lib.getExe' config.services.bind.package "rndc";
       in
       lib.mkAfter ''
-        [ -f '${domainZone'}' ] || {
+        # Install the domain zone.
+        {
           install -Dm0600 '${domainZone}' '${domainZone'}'
           replace-secret '#mailboxSecurityKey#' '${secretPath "${domain}/mailbox-security-key"}' '${domainZone'}'
           replace-secret '#mailboxSecurityKeyRecord#' '${secretPath "${domain}/mailbox-security-key-record"}' '${domainZone'}'
+          #${rndc} sync "${domain}" IN external
         }
 
-        [ -f '${fqdnZone'}' ] || {
-          install -Dm0600 '${fqdnZone}' '${fqdnZone'}'
-        }
+        # Install the internal DNS zones.
+        install -Dm0600 '${fqdnZone}' '${fqdnZone'}'
       '';
 
     serviceConfig = {

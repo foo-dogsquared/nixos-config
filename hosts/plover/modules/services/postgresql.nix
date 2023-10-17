@@ -39,7 +39,7 @@ in
       in
       {
         # Still doing the secure schema usage pattern.
-        search_path = "\"$user\"";
+        search_path = ''"$user"'';
 
         ssl_cert_file = credsDir "cert.pem";
         ssl_key_file = credsDir "key.pem";

@@ -151,8 +151,7 @@ in
       lib.mkMerge [
         (lib.mkBefore ''
           # Setting up the appropriate schema for PostgreSQL secure schema usage.
-          ${psql} -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='${giteaDatabaseUser}';" \
-            grep -q 1 || ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${giteaDatabaseUser};"
+          ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${giteaDatabaseUser};"
         '')
 
         (lib.mkAfter ''

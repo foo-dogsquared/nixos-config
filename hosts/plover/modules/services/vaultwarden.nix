@@ -162,6 +162,7 @@ in
   services.nginx.upstreams."vaultwarden" = {
     extraConfig = ''
       zone services;
+      keepalive 2;
     '';
     servers = let
       address = config.services.vaultwarden.config.ROCKET_ADDRESS;
