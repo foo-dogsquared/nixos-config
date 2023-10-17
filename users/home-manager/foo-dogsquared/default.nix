@@ -145,6 +145,7 @@ in
   # All of the personal configurations.
   xdg.configFile = {
     doom.source = getDotfiles "emacs";
+    kanidm.source = ./config/kanidm;
     kitty.source = getDotfiles "kitty";
     nvim.source = getDotfiles "nvim";
     nyxt.source = getDotfiles "nyxt";
