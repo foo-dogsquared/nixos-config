@@ -11,6 +11,7 @@ in {
       lib.mkEnableOption "configuration of foo-dogsquared's shell of choice";
     extras.enable = lib.mkEnableOption "additional tools for development stuff";
     shaders.enable = lib.mkEnableOption "tools for developing shaders";
+    servers.enable = lib.mkEnableOption "toolkit for managing servers from your home";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -180,6 +181,17 @@ in {
       home.packages = with pkgs; [
         bonzomatic # Shadertoys for desktop bozos.
         shaderc # Make some seamless background loopy things.
+      ];
+    })
+
+    (lib.mkIf cfg.servers.enable {
+      home.packages = with pkgs; [
+        bind.dnsutils # Make DNS a little less fun.
+        kanidm # What is you?
+        ipcalc # Calculate how many stars are there in space.
+        geoip # Know where the spam came from.
+        sshfs # Intrude others' home, why don't 'ya?
+        whois # Doctor, are you not?
       ];
     })
   ]);
