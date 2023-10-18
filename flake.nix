@@ -197,6 +197,11 @@
         # This is to prevent problems setting with overlays as much as I like
         # using them.
         services.guix.package = inputs.guix-overlay.packages.${config.nixpkgs.system}.guix;
+
+        # It's following the 'nixpkgs' flake input which should be in unstable
+        # branches. Not to mention, most of the system configurations should
+        # have this attribute set explicitly by default.
+        system.stateVersion = lib.mkDefault "23.11";
       };
 
       # The default config for our home-manager configurations. This is also to
