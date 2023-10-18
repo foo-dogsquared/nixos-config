@@ -38,7 +38,10 @@ let
 
   settingsFormat = distroboxConf { };
 
-  settingsFile = settingsFormat.generate "distrobox-settings" cfg.settings;
+  settingsFile = pkgs.writeText "distrobox-settings" ''
+    ${toDistroboxConf cfg.settings}
+    ${cfg.extraConfig}
+  '';
 in
 {
   options.programs.distrobox = {
@@ -77,11 +80,20 @@ in
         }
       '';
     };
+
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
+      default = "";
+      description = ''
+        Extra configuration to be appended to
+        {file}`/etc/distrobox/distrobox.conf`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
 
-    environment.etc."distrobox/distrobox.conf".source = lib.mkIf (cfg.settings != { }) settingsFile;
+    environment.etc."distrobox/distrobox.conf".source = settingsFile;
   };
 }
