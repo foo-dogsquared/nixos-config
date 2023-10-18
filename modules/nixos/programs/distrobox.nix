@@ -91,14 +91,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [{
-      assertion = config.virtualisation.podman.enable || config.virtualisation.docker.enable;
-      message = ''
-        Neither Podman nor Docker is enabled. You need to use enable either to
-        be able to use this program.
-      '';
-    }];
-
     environment.systemPackages = [ cfg.package ];
 
     environment.etc."distrobox/distrobox.conf".source = lib.mkIf (cfg.settings != { }) settingsFile;
