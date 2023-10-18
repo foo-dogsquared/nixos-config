@@ -98,6 +98,7 @@ in {
         gnumake # The other poster boy for the hated build system.
         man-pages # Extra manpages.
         moreutils # Less is more but more utilities, the merrier.
+        sshfs # Make others' home your own.
         quilt # Patching right up yer' alley.
         whois # Doctor, are you not?
         valgrind # Making sure your applications don't pee as much.
