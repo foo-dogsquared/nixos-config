@@ -142,10 +142,21 @@ in {
     # !!! Please add your user to the "libvirtd" group.
     (lib.mkIf cfg.virtualization.enable {
       environment.systemPackages = with pkgs; [
-        distrobox # I heard you like Linux...
         dive # Dive into container images.
         virt-manager # An interface for those who are lazy to read a reference manual and create a 1000-line configuration per machine.
       ];
+
+      programs.distrobox = {
+        enable = true;
+        settings = {
+          container_additional_volumes = [
+            "/nix/store:/nix/store:r"
+            "/etc/profiles/per-user:/etc/profiles/per-user:r"
+          ];
+          container_image_default = "registry.opensuse.org/opensuse/distrobox-packaging:latest";
+          container_command = "sh -norc";
+        };
+      };
 
       # Podman with Docker compatibility which is not 100% but still better
       # than nothing.
