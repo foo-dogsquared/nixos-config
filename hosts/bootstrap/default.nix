@@ -23,4 +23,7 @@
     enable = true;
     allowSFTP = true;
   };
+
+  documentation.nixos.options.splitBuild = false;
+  system.stateVersion = "23.11";
 }
