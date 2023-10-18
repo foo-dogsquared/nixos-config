@@ -77,17 +77,6 @@ in
         }
       '';
     };
-
-    settingsFile = lib.mkOption {
-      type = lib.types.path;
-      default = settingsFile;
-      description = lib.mdDoc ''
-        The path to the settings file for Distrobox to be put at
-        {file}`/etc/distrobox/distrobox.conf`. By default, it will use a
-        Nix-generated file configured with
-        {option}`programs.distrobox.settings`.
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
