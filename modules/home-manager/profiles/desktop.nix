@@ -125,7 +125,7 @@ in {
 
           "extension.gif" = {
             osc = false;
-            loop-file = true;
+            loop-file = "inf";
           };
 
           "protocol.https" = {
