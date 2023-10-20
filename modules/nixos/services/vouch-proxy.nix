@@ -126,6 +126,7 @@ let
         ];
         RestrictNamespaces = true;
       };
+      wantedBy = [ "multi-user.target" ];
     };
 in
 {
