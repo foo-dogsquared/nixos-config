@@ -165,6 +165,7 @@
               };
 
               "Bing".metaData.hidden = true;
+              "Duckduckgo".metaData.hidden = true;
               "Google".metaData.alias = "@g";
             };
           };
