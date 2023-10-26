@@ -48,6 +48,10 @@ bind dW containerclose Work
 bind de containerclose Banking
 bind dE containerclose Shopping
 
+" Assuming the Google and Facebook containers extensions are installed.
+bind dF containerclose Facebook
+bind dG containerclose Google
+
 " My default set of containers. Take note, we're assuming Facebook and Google
 " containers extension is already installed and there's a reasonable set of
 " default containers that are already configured for us.
