@@ -12,6 +12,7 @@ in {
     extras.enable = lib.mkEnableOption "additional tools for development stuff";
     shaders.enable = lib.mkEnableOption "tools for developing shaders";
     servers.enable = lib.mkEnableOption "toolkit for managing servers from your home";
+    funsies.enable = lib.mkEnableOption "installation of command-line applications for funsies";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -192,6 +193,16 @@ in {
         geoip # Know where the spam came from.
         sshfs # Intrude others' home, why don't 'ya?
         whois # Doctor, are you not?
+      ];
+    })
+
+    (lib.mkIf cfg.funsies.enable {
+      home.packages = with pkgs; [
+        fastfetch # Fetch, fast!
+        asciiquarium-transparent # The closest thing to an actual aquarium (without the responsibility, of course).
+        cowsay # Cow say "WHUT?"
+        krabby # Kapture them Pikachus, bruh.
+        lavat # Where the lava at?
       ];
     })
   ]);
