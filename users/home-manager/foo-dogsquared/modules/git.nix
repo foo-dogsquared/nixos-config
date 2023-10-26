@@ -16,6 +16,7 @@
       alias = {
         unstage = "reset HEAD --";
         quick-rebase = "rebase --interactive --autostash --committer-date-is-author-date";
+        quick-clone = "clone --depth=1 --recurse-submodules --shallow-submodules";
       };
 
       init.defaultBranch = "main";
@@ -30,6 +31,13 @@
         "https://git.sr.ht/".insteadOf = [ "sh:" "sourcehut:" ];
         "https://git.savannah.nongnu.org/git/".insteadOf = [ "sv:" "savannah:" ];
       };
+
+      status = {
+        showPatch = true;
+        showStash = true;
+      };
+
+      submodule.fetchJobs = 0;
     };
   };
 
