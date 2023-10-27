@@ -11,7 +11,6 @@ let
       aw-watcher-window-wayland = callPackage ./aw-watcher-window-wayland { };
       blender-blendergis = python3Packages.callPackage ./blender-blendergis { };
       blender-machin3tools = python3Packages.callPackage ./blender-machin3tools { };
-      decker = callPackage ./decker { };
       cosmic-launcher = callPackage ./cosmic-launcher { };
       clidle = callPackage ./clidle.nix { };
       domterm = libsForQt5.callPackage ./domterm { };
