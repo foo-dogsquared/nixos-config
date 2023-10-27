@@ -35,17 +35,6 @@ let
         example = "*-*-3/4";
       };
 
-      persistent = lib.mkOption {
-        type = lib.types.bool;
-        description = ''
-          Indicates whether the job should be persistent, starting the service
-          if missed.
-        '';
-        default = false;
-        defaultText = "false";
-        example = "true";
-      };
-
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description =
@@ -170,7 +159,7 @@ in
       (name: value:
         lib.nameValuePair (jobUnitName name) {
           timerConfig = {
-            Persistent = value.persistent;
+            Persistent = true;
             RandomizedDelaySec = "2min";
           };
         })
