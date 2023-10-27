@@ -37,17 +37,6 @@ let
         example = "*-*-3/4";
       };
 
-      persistent = lib.mkOption {
-        type = lib.types.bool;
-        description = ''
-          Indicates whether job is persistent, starting the service despite the
-          timer missed.
-        '';
-        default = false;
-        defaultText = "false";
-        example = "true";
-      };
-
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description = ''
@@ -162,7 +151,7 @@ in
           description = "gallery-dl archive job for group '${name}'";
           documentation = [ "man:gallery-dl(1)" ];
           enable = true;
-          path = with pkgs; [ brotli coreutils ffmpeg cfg.package ];
+          path = with pkgs; [ brotli ffmpeg cfg.package ];
           preStart = ''
             mkdir -p ${lib.escapeShellArg cfg.archivePath}
           '';
@@ -215,7 +204,7 @@ in
       (name: value:
         lib.nameValuePair (jobUnitName name) {
           timerConfig = {
-            Persistent = value.persistent;
+            Persistent = true;
             RandomizedDelaySec = "2min";
           };
         })
