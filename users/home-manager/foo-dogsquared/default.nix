@@ -28,22 +28,6 @@ in
 
   home.packages = with pkgs; [
     hledger # Trying to be a good accountant.
-
-    # For now, it is not possible to easily play YouTube playlists until it
-    # is fixed in mpv (or yt-dlp). Ideally, this would be a Python script
-    # but I don't know jack using yt-dlp as a Python module.
-    (pkgs.writeShellApplication {
-      name = "play-mpv-playlist-from-youtube-playlist";
-      runtimeInputs = with pkgs; [
-        config.programs.mpv.package
-        yt-dlp
-      ];
-      text = ''
-        yt-dlp --print id "$1" \
-          | xargs -I{} echo "https://www.youtube.com/watch?v={}" \
-          | mpv --playlist=-
-      '';
-    })
   ];
 
   fonts.fontconfig.enable = true;
