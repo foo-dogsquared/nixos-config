@@ -85,7 +85,6 @@ in
                   extraArgs = extraArgs ++ jobExtraArgs;
                   urls = builtins.map (subscription: subscription.url) category.data.subscriptions;
                   startAt = lib.elemAt days (lib.mod category.index (lib.length days));
-                  persistent = true;
                 };
               })
             categories;
@@ -144,7 +143,6 @@ in
               "https://simblob.blogspot.com/feeds/posts/default"
             ];
             startAt = "weekly";
-            persistent = true;
           };
         };
       };
@@ -200,7 +198,6 @@ in
               (newgrounds "hyperjerk") # HyperJerk
             ];
             startAt = "weekly";
-            persistent = true;
           };
         };
       };
