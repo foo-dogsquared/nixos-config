@@ -35,6 +35,12 @@
     type = "ed25519";
   }];
 
+  networking.timeServers = lib.mkBefore [
+    "ntp.nict.jp"
+    "time.nist.gov"
+    "time.facebook.com"
+  ];
+
   # My portable music streaming server.
   services.gonic = {
     enable = true;
@@ -146,12 +152,6 @@
     # Some sysadmin thingamajigs.
     openldap
     wireguard-tools
-    (swh.swh-core.overrideAttrs (attrs: {
-      pythonPath = with pkgs.swh; [
-        swh-model
-        swh-fuse
-      ];
-    }))
 
     # For debugging build environments in Nix packages.
     cntr

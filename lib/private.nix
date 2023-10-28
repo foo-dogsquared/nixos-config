@@ -16,7 +16,14 @@ rec {
     in
     ({ lib, ... }: {
       home-manager.users."${user}" = { ... }: {
-        imports = [ (getUser "home-manager" user) ];
+        imports = [
+          {
+            home.username = user;
+            home.homeDirectory = homeDirectory;
+          }
+
+          (getUser "home-manager" user)
+        ];
       };
 
       users.users."${user}" = lib.mkMerge [
