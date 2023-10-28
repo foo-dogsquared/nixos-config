@@ -41,6 +41,13 @@ in
     # service.
     useDHCP = false;
     dhcpcd.enable = false;
+
+    # We'll make use of their timeservers.
+    timeServers = lib.mkBefore [
+      "ntp1.hetzner.de"
+      "ntp2.hetzner.com"
+      "ntp3.hetzner.net"
+    ];
   };
 
   # The local DNS resolver. This should be used in conjunction with an
