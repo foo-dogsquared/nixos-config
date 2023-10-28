@@ -3,16 +3,11 @@ final: prev:
 
 {
   firefox-foodogsquared = with prev; wrapFirefox firefox-unwrapped {
-    cfg = {
-      enableBrowserpass = true;
-      enableBukubrow = true;
-      enableGnomeExtensions = true;
-      enableTridactylNative = true;
-      enableFxCastBridge = true;
-    };
-
-    extraNativeMessagingHosts = [
+    nativeMessagingHosts = [
       ff2mpv
+      bukubrow
+      tridactyl-native
+      fxcast-bridge
     ];
 
     extraPolicies = {
