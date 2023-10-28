@@ -41,14 +41,11 @@
         enable = true;
 
         package = with pkgs; wrapFirefox firefox-unwrapped {
-          cfg = {
-            enableBrowserpass = true;
-            enableBukubrow = true;
-            enableTridactylNative = true;
-            enableFxCastBridge = true;
-          };
-
-          extraNativeMessagingHosts = lib.optional config.programs.mpv.enable pkgs.ff2mpv;
+          nativeMessagingHosts = with pkgs; [
+            bukubrow
+            tridactyl-native
+            fx-cast-bridge
+          ] ++ lib.optional config.programs.mpv.enable pkgs.ff2mpv;
 
           extraPolicies = {
             AppAutoUpdate = false;
