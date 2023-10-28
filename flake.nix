@@ -137,7 +137,7 @@
       # The shared configuration for the entire list of hosts for this cluster.
       # Take note to only set as minimal configuration as possible since we're
       # also using this with the stable version of nixpkgs.
-      hostSharedConfig = { config, lib, pkgs, ... }: {
+      hostSharedConfig = { options, config, lib, pkgs, ... }: {
         # Some defaults for evaluating modules.
         _module.check = true;
 
@@ -159,6 +159,14 @@
 
         # BOOOOOOOOOOOOO! Somebody give me a tomato!
         services.xserver.excludePackages = with pkgs; [ xterm ];
+
+        # Append with the default time servers. It is becoming more unresponsive as
+        # of 2023-10-28.
+        networking.timeServers = [
+          "europe.pool.ntp.org"
+          "asia.pool.ntp.org"
+          "time.cloudflare.com"
+        ] ++ options.networking.timeServers.default;
 
         # Set several paths for the traditional channels.
         nix.nixPath =
