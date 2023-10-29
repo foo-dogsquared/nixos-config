@@ -153,9 +153,9 @@ in {
 
     (lib.mkIf cfg.documents.enable {
       home.packages = with pkgs; [
-        dino # Some modern chat client featuring a dinosaur for what could be considered a dinosaur.
-        foliate # The prettier PDF viewer.
-        thunderbird # Email checks.
+        dino # Some modern chat client featuring a dinosaur mascot for what could be considered a dinosaur.
+        foliate # The prettier PDF viewer (if you're OK with a mixed bag of GTK3+GTK4 apps).
+        thunderbird # Email and web feed checks.
         languagetool # You're personal assistant for proper grammar,
         vale # Elevate your fanfics to an arguably higher caliber!
       ];

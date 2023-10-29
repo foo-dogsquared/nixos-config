@@ -68,7 +68,7 @@ in
         minetest # Dwarf Fortress but with voxels.
         openra # Dwarf Fortress but with futuristic armed civilizations.
         superTuxKart # Dwarf Fortress but with racing carts.
-        starsector # Dwarf Fortress but in space and in the far future.
+        starsector # My cocaine replacement.
         the-powder-toy # Microscopic Dwarf Fortress.
         wesnoth # Dwarf Fortress but with dwarves and fortresses.
         zeroad # Dwarf Fortress but with ancient armed civilizations.
