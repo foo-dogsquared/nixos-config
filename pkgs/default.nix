@@ -8,7 +8,6 @@ let
     in rec {
       ags = callPackage ./ags { };
       awesome-cli = callPackage ./awesome-cli { };
-      aw-watcher-window-wayland = callPackage ./aw-watcher-window-wayland { };
       blender-blendergis = python3Packages.callPackage ./blender-blendergis { };
       blender-machin3tools = python3Packages.callPackage ./blender-machin3tools { };
       cosmic-launcher = callPackage ./cosmic-launcher { };
