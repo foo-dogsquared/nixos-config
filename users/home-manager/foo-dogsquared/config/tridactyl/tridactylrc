@@ -40,6 +40,8 @@ bind qQ recontain Personal
 bind qW recontain Work
 bind qe recontain Banking
 bind qE recontain Shopping
+bind qC recontain Chat
+bind qq recontain
 
 bind <C-Q> fillcmdline containerclose
 
@@ -47,10 +49,14 @@ bind dQ containerclose Personal
 bind dW containerclose Work
 bind de containerclose Banking
 bind dE containerclose Shopping
+bind dg containerclose Gaming
+bind dC containerclose Chat
 
 " Assuming the Google and Facebook containers extensions are installed.
 bind dF containerclose Facebook
 bind dG containerclose Google
+bind dA containerclose Amazon
+bind dM containerclose Microsoft
 
 " My default set of containers. Take note, we're assuming Facebook and Google
 " containers extension is already installed and there's a reasonable set of
@@ -61,6 +67,7 @@ containercreate Work red briefcase
 containercreate Banking green dollar
 containercreate Shopping pink cart
 containercreate Gaming turquoise chill
+containercreate Chat blue chill
 
 " Most of the MOOC are for personal purposes so it is in "Personal" container.
 autocontain -s coursera\.org Personal
@@ -80,6 +87,14 @@ autocontain -s discourse\.gohugo\.io Personal
 autocontain -s *\.github\.io Personal
 autocontain -s *\.gitlab\.io Personal
 
+" My communication chat apps. Facebook Messenger should be in its own
+" container.
+autocontain -s discord\.com Chat
+autocontain -s *\.zulipchat\.com Chat
+autocontain -s element\.io Chat
+autocontain -s rocket\.chat Chat
+autocontain -s revolt\.chat Chat
+
 " My self-hosted instances and my personal domain.
 autocontain -s *\.local Self-hosted
 autocontain -s *\.theinternaltld Self-hosted
@@ -96,6 +111,7 @@ autocontain -s archive\.softwareheritage\.com Work
 autocontain -s upwork\.com Work
 autocontain -s monster\.com Work
 autocontain -s foundit\.com(\.ph?) Work
+autocontain -s fiverr\.com Work
 
 " Shopping, shopping, shopping!
 autocontain -s yelp\.com Shopping
@@ -123,5 +139,14 @@ autocontain -s epicgames\.com Gaming
 autocontain -s steampowered\.com Gaming
 autocontain -s gamejolt\.com Gaming
 autocontain -s itch\.io Gaming
+
+" My word games. THIS IS WHAT PURE UNADULTERATED GAMING LOOKS LIKE!
+autocontain -s nytimes\.com/games Gaming
+autocontain -s merriam-webster\.com/games Gaming
+autocontain -s britannica\.com/games Gaming
+
+seturl nytimes\.com/games disable true
+seturl merriam-webster\.com/games disable true
+seturl britannica\.com/games disable true
 
 " vim: ft=vim
