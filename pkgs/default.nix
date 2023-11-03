@@ -10,7 +10,6 @@ let
       awesome-cli = callPackage ./awesome-cli { };
       blender-blendergis = python3Packages.callPackage ./blender-blendergis { };
       blender-machin3tools = python3Packages.callPackage ./blender-machin3tools { };
-      cosmic-launcher = callPackage ./cosmic-launcher { };
       clidle = callPackage ./clidle.nix { };
       domterm = libsForQt5.callPackage ./domterm { };
       fastn = callPackage ./fastn { };
