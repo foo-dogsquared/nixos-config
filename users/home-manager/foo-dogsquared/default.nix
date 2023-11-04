@@ -112,7 +112,6 @@ in
     ];
     withChatCleanup = true;
     withBrowserCleanup = true;
-    persistent = true;
   };
 
   systemd.user.sessionVariables = {

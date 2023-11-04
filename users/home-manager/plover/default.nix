@@ -34,7 +34,6 @@
       "vim.history"
     ];
     startAt = "daily";
-    persistent = true;
   };
 
   home.stateVersion = "23.05";

@@ -70,15 +70,6 @@ in
       default = pkgs.bleachbit;
     };
 
-    persistent = lib.mkOption {
-      type = lib.types.bool;
-      description =
-        "Whether to enable persistence for the cleanup, allowing it to activate the next time it boots when missed.";
-      default = true;
-      defaultText = "true";
-      example = false;
-    };
-
     cleaners = lib.mkOption {
       type = with lib.types; listOf str;
       description = "List of cleaners to be used when cleaning.";
@@ -127,7 +118,7 @@ in
 
       Timer = {
         OnCalendar = cfg.startAt;
-        Persistent = cfg.persistent;
+        Persistent = true;
       };
     };
   };
