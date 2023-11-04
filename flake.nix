@@ -162,6 +162,11 @@
             inputs.nix-index-database.nixosModules.nix-index
           ];
 
+        # Find Nix files with these! Even if nix-index is already enabled, it
+        # is better to make it explicit.
+        programs.command-not-found.enable = false;
+        programs.nix-index.enable = true;
+
         # BOOOOOOOOOOOOO! Somebody give me a tomato!
         services.xserver.excludePackages = with pkgs; [ xterm ];
 
@@ -292,6 +297,11 @@
         # Parallel downloads! PARALLEL DOWNLOADS! It's like Pacman 6.0 all over
         # again.
         nix.package = pkgs.nixUnstable;
+
+        # Find Nix files with these! Even if nix-index is already enabled, it
+        # is better to make it explicit.
+        programs.command-not-found.enable = false;
+        programs.nix-index.enable = true;
 
         # Set the configurations for the package manager.
         nix.settings =

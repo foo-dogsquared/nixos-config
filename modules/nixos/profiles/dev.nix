@@ -73,10 +73,6 @@ in {
       # Convenience!
       environment.localBinInPath = true;
 
-      # Find Nix files with these!
-      programs.command-not-found.enable = false;
-      programs.nix-index.enable = true;
-
       # Additional settings for developing with nix.
       nix.settings = {
         keep-outputs = true;
@@ -90,7 +86,7 @@ in {
         cachix # Compile no more by using someone's binary cache!
         curl # Our favorite network client.
         cmake # The poster boy for the hated build system.
-        diffoscope # Oversized caffeine grinder.
+        #diffoscope # Oversized caffeine grinder.
         direnv # The power of local development environment.
         ipcalc # Calculate your IP without going to the web.
         gcc # The usual toolchain.
@@ -128,9 +124,11 @@ in {
     (lib.mkIf cfg.shell.enable {
       environment.systemPackages = with pkgs; [
         bandwhich # Sniffing your packets.
+        dt # Get that functional gawk.
         lazygit # Git interface for the lazy.
         lazydocker # Git interface for the lazy.
         fd # Oh nice, a more reliable `find`.
+        recode # Convert between different encodings.
         ripgrep # On nice, a more reliable `grep`.
         eza # Oh nice, a shinier `ls`.
         bat # dog > sky dog > cat
@@ -138,6 +136,9 @@ in {
         gopass # An improved version of the password manager for hipsters.
         zoxide # Gain teleportation abilities!
       ];
+
+      # A modern version of the SSH.
+      programs.mosh.enable = true;
     })
 
     # !!! Please add your user to the "libvirtd" group.
@@ -187,7 +188,6 @@ in {
       # foreign environments.
       virtualisation.libvirtd = {
         enable = true;
-        qemu.package = pkgs.qemu_full;
         qemu.ovmf.enable = true;
       };
     })
