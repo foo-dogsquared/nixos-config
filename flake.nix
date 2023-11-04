@@ -67,6 +67,10 @@
     deploy.url = "github:serokell/deploy-rs";
     deploy.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Add a bunch of pre-compiled indices since mine are always crashing.
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
     # Someone has already solved downloading Firefox addons so we'll use it.
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
@@ -155,6 +159,7 @@
             inputs.sops-nix.nixosModules.sops
             inputs.guix-overlay.nixosModules.guix
             inputs.disko.nixosModules.disko
+            inputs.nix-index-database.nixosModules.nix-index
           ];
 
         # BOOOOOOOOOOOOO! Somebody give me a tomato!
@@ -225,6 +230,7 @@
           ++ [
             inputs.nur.hmModules.nur
             inputs.sops-nix.homeManagerModules.sops
+            inputs.nix-index-database.hmModules.nix-index
           ];
 
         # Hardcoding this is not really great especially if you consider using
