@@ -167,6 +167,11 @@
             };
           };
         };
+
+        profiles.guest = {
+          search.default = "Google";
+          id = 1;
+        };
       };
 
       # Configuring Tridactyl.
