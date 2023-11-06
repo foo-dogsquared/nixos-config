@@ -25,6 +25,7 @@ in
   # be used anywhere, we're configuring Wireguard here as a "client".
   config = lib.mkMerge [
     {
+      environment.systemPackages = with pkgs; [ wireguard-tools ];
       networking.firewall.allowedUDPPorts = [ wireguardPort ];
       sops.secrets = lib.getSecrets ../secrets/secrets.yaml {
         "wireguard/private-key" = { };

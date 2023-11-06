@@ -135,7 +135,6 @@
   environment.systemPackages = with pkgs; [
     # Some sysadmin thingamajigs.
     openldap
-    wireguard-tools
 
     # For debugging build environments in Nix packages.
     cntr
