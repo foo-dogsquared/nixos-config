@@ -86,7 +86,7 @@ in {
         cachix # Compile no more by using someone's binary cache!
         curl # Our favorite network client.
         cmake # The poster boy for the hated build system.
-        #diffoscope # Oversized caffeine grinder.
+        diffoscope # Oversized caffeine grinder.
         direnv # The power of local development environment.
         ipcalc # Calculate your IP without going to the web.
         gcc # The usual toolchain.
@@ -188,6 +188,7 @@ in {
       # foreign environments.
       virtualisation.libvirtd = {
         enable = true;
+        qemu.package = pkgs.qemu_full;
         qemu.ovmf.enable = true;
       };
     })

@@ -5,6 +5,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
+    ./modules/networking.nix
     ./modules/wireguard.nix
 
     (lib.mapHomeManagerUser "foo-dogsquared" {
@@ -74,9 +75,6 @@
     "aarch64-linux"
     "riscv64-linux"
   ];
-
-  # Wanna be a wannabe haxxor, kid?
-  programs.wireshark.package = pkgs.wireshark;
 
   # We're using some better filesystems so we're using it.
   boot.initrd.supportedFilesystems = [ "btrfs" ];
@@ -172,30 +170,6 @@
     longitude = 121.0;
   };
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  programs.mtr.enable = true;
-
   services.auto-cpufreq.enable = true;
-  services.avahi.enable = true;
-
-  # We'll go with a software firewall. We're mostly configuring it as if we're
-  # using a server even though the chances of that is pretty slim.
-  networking = {
-    nftables.enable = true;
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [
-        22 # Secure Shells.
-      ];
-    };
-  };
-
-  services.resolved.domains = [
-    "~plover.foodogsquared.one"
-    "~0.27.172.in-addr.arpa"
-    "~0.28.172.in-addr.arpa"
-  ];
-
   system.stateVersion = "23.11"; # Yes! I read the comment!
 }
