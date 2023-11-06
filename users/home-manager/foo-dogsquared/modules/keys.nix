@@ -11,6 +11,7 @@
     extraConfig = ''
       AddKeysToAgent confirm 15m
       ForwardAgent no
+      VisualHostKey yes
     '';
   };
 

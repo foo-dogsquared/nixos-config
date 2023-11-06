@@ -1,5 +1,5 @@
 Host plover.foodogsquared.one
-  IdentityFile ~/.ssh/keys/work
+  IdentityFile ~/.ssh/keys/plover.foodogsquared.one
   User plover
 
 Host woodcock.foodogsquared.one
