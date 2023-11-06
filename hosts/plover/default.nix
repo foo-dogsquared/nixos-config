@@ -80,6 +80,8 @@ in
     };
   };
 
+  # Offline SSH!?!
+  programs.mosh.enable = true;
 
   sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
     "ssh-key" = { };
