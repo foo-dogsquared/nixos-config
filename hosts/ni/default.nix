@@ -67,25 +67,11 @@
   # The keyfile required for the secrets to be decrypted.
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
-  # Get the latest kernel for the desktop experience.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
   # Adding a bunch of emulated systems for cross-system building.
   boot.binfmt.emulatedSystems = [
     "aarch64-linux"
     "riscv64-linux"
   ];
-
-  # We're using some better filesystems so we're using it.
-  boot.initrd.supportedFilesystems = [ "btrfs" ];
-  boot.supportedFilesystems = [ "btrfs" ];
-
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = [
-      "/mnt/archives"
-    ];
-  };
 
   # My custom configuration with my custom modules starts here.
   profiles = {
@@ -170,6 +156,5 @@
     longitude = 121.0;
   };
 
-  services.auto-cpufreq.enable = true;
   system.stateVersion = "23.11"; # Yes! I read the comment!
 }

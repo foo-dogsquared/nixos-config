@@ -6,6 +6,9 @@
     ./modules/hardware/traditional-networking.nix
   ];
 
+  # Get the latest kernel for the desktop experience.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   boot.initrd.availableKernelModules =
     [ "xhci_pci" "ahci" "nvme" "usb_storage" "uas" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
@@ -45,6 +48,17 @@
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
 
+  # We're using some better filesystems so we're using it.
+  boot.initrd.supportedFilesystems = [ "btrfs" ];
+  boot.supportedFilesystems = [ "btrfs" ];
+
+  services.btrfs.autoScrub = {
+    enable = true;
+    fileSystems = [
+      "/mnt/archives"
+    ];
+  };
+
   # Set up printers.
   services.printing = {
     enable = true;
@@ -55,6 +69,9 @@
       splix
     ];
   };
+
+  # Make your CPU more useful.
+  services.auto-cpufreq.enable = true;
 
   # Extend the life of an SSD.
   services.fstrim.enable = true;
