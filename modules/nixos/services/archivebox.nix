@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, utils, ... }:
 
 let
   cfg = config.services.archivebox;
-  jobUnitName = name: "archivebox-job-${name}";
+  jobUnitName = name: "archivebox-job-${utils.escapeSystemdPath name}";
   jobType = { name, options, ... }: {
     options = {
       urls = lib.mkOption {
