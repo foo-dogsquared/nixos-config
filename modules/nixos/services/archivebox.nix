@@ -102,33 +102,31 @@ in
       description = "A map of archiving tasks for the service.";
       default = { };
       defaultText = lib.literalExpression "{}";
-      example = lib.literalExpression ''
-        {
-          illustration = {
-            urls = [
-              "https://www.davidrevoy.com/"
-              "https://www.youtube.com/c/ronillust"
-            ];
-            startAt = "weekly";
-          };
+      example = {
+        illustration = {
+          urls = [
+            "https://www.davidrevoy.com/"
+            "https://www.youtube.com/c/ronillust"
+          ];
+          startAt = "weekly";
+        };
 
-          research = {
-            urls = [
-              "https://arxiv.org/rss/cs"
-              "https://distill.pub/"
-            ];
-            extraArgs = [ "--depth 1" ];
-            startAt = "daily";
-          };
-        }
-      '';
+        research = {
+          urls = [
+            "https://arxiv.org/rss/cs"
+            "https://distill.pub/"
+          ];
+          extraArgs = [ "--depth 1" ];
+          startAt = "daily";
+        };
+      };
     };
 
     withDependencies =
       lib.mkEnableOption "additional dependencies to be installed";
 
     webserver = {
-      enable = lib.mkEnableOption "web UI for Archivebox";
+      enable = lib.mkEnableOption "ArchiveBox web server";
 
       port = lib.mkOption {
         type = lib.types.port;
