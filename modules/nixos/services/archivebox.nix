@@ -74,7 +74,8 @@ let
           ProtectKernelTunables = true;
           SystemCallFilter = "@system-service";
           SystemCallErrorNumber = "EPERM";
-          WorkingDirectory = cfg.archivePath;
+
+          StateDirectory = "archivebox";
         };
       };
 
@@ -95,14 +96,6 @@ in
 {
   options.services.archivebox = {
     enable = lib.mkEnableOption "Archivebox service";
-
-    archivePath = lib.mkOption {
-      type = with lib.types; either path str;
-      description = ''
-        The path of the Archivebox archive. Must be an absolute path.
-      '';
-      example = "/var/archives/archivebox-service";
-    };
 
     jobs = lib.mkOption {
       type = with lib.types; attrsOf (submodule jobType);
@@ -175,7 +168,7 @@ in
           ProtectKernelTunables = true;
           SystemCallFilter = "@system-service";
           SystemCallErrorNumber = "EPERM";
-          WorkingDirectory = cfg.archivePath;
+          StateDirectory = "archivebox";
         };
       };
     })
