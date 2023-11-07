@@ -58,6 +58,9 @@ let
         | archivebox add ${lib.concatStringsSep " " value.extraArgs}
         '';
         serviceConfig = {
+          User = "archivebox";
+          Group = "archivebox";
+
           LockPersonality = true;
           NoNewPrivileges = true;
           PrivateTmp = true;
@@ -158,6 +161,12 @@ in
     {
       systemd.services = lib.mapAttrs' mkJobService cfg.jobs;
       systemd.timers = lib.mapAttrs' mkTimerUnit cfg.jobs;
+
+      users.users.archivebox = {
+        group = config.users.groups.archivebox.name;
+        isNormalUser = true;
+        home = "/var/lib/archivebox";
+      };
     }
 
     (lib.mkIf cfg.webserver.enable {
@@ -167,6 +176,8 @@ in
         documentation = [ "https://docs.archivebox.io/" ];
         wantedBy = [ "graphical-session.target" ];
         serviceConfig = {
+          User = "archivebox";
+          Group = "archivebox";
           ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${
             toString cfg.webserver.port
           }";
