@@ -42,10 +42,6 @@ let
   };
 
   mkJobService = name: value:
-    let
-      pkgSet = [ pkgs.archivebox ] ++ (lib.optionals cfg.withDependencies
-        (with pkgs; [ chromium nodejs_latest wget curl youtube-dl ]));
-    in
     lib.nameValuePair
       (jobUnitName name)
       {
@@ -53,10 +49,10 @@ let
           "Archivebox archive group '${name}' for ${cfg.archivePath}";
         after = [ "network.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
-        path = with pkgs; [ ripgrep coreutils ] ++ pkgSet ++ [ config.programs.git.package ];
         preStart = ''
                   mkdir -p ${lib.escapeShellArg cfg.archivePath}
         '';
+        path = [ cfg.package ] ++ cfg.extraPackages;
         script = ''
         echo "${lib.concatStringsSep "\n" value.urls}" \
         | archivebox add ${lib.concatStringsSep " " value.extraArgs}
@@ -97,6 +93,8 @@ in
   options.services.archivebox = {
     enable = lib.mkEnableOption "Archivebox service";
 
+    package = lib.mkPackageOption pkgs "archivebox" { };
+
     jobs = lib.mkOption {
       type = with lib.types; attrsOf (submodule jobType);
       description = "A map of archiving tasks for the service.";
@@ -122,8 +120,27 @@ in
       };
     };
 
-    withDependencies =
-      lib.mkEnableOption "additional dependencies to be installed";
+    extraPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+      description = ''
+        A list of additional packages to be set within the download jobs. By
+        default, it sets the optional dependencies of ArchiveBox for additional
+        download formats and capabilities.
+      '';
+      default = with pkgs; [
+        chromium
+        nodejs_latest
+        wget
+        curl
+        yt-dlp
+      ] ++ lib.optional config.programs.git.enable config.programs.git.package;
+      example = lib.literalExpression ''
+        with pkgs; [
+          curl
+          yt-dlp
+        ]
+      '';
+    };
 
     webserver = {
       enable = lib.mkEnableOption "ArchiveBox web server";
