@@ -124,7 +124,6 @@
 
       extraArgs = {
         inherit (inputs) nix-colors;
-        inherit inputs;
 
         # This is a variable that is used to check whether the module is
         # exported or not. Useful for configuring parts of the configuration

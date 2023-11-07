@@ -1,4 +1,4 @@
-{ lib, config, pkgs, inputs, modulesPath, ... }:
+{ lib, config, pkgs, ... }:
 
 # Since this will be exported as an installer ISO, you'll have to keep in mind
 # about the added imports from nixos-generators. In this case, it simply adds
@@ -11,7 +11,7 @@
 
     # Store the source code in a easy-to-locate path.
     contents = [{
-      source = inputs.self;
+      source = ../..;
       target = "/etc/nixos/";
     }];
   };
