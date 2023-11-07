@@ -45,8 +45,7 @@ let
     lib.nameValuePair
       (jobUnitName name)
       {
-        description =
-          "Archivebox archive group '${name}' for ${cfg.archivePath}";
+        description = "Archivebox download group '${name}'";
         after = [ "network.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
         preStart = ''
@@ -54,8 +53,8 @@ let
         '';
         path = [ cfg.package ] ++ cfg.extraPackages;
         script = ''
-        echo "${lib.concatStringsSep "\n" value.urls}" \
-        | archivebox add ${lib.concatStringsSep " " value.extraArgs}
+          echo "${lib.concatStringsSep "\n" value.urls}" \
+            | archivebox add ${lib.concatStringsSep " " value.extraArgs}
         '';
         serviceConfig = {
           User = "archivebox";
@@ -63,15 +62,30 @@ let
 
           LockPersonality = true;
           NoNewPrivileges = true;
+
+          CapabilityBoundingSet = [ ];
+          AmbientCapabilities = [ ];
+
           PrivateTmp = true;
-          PrivateUsers = true;
           PrivateDevices = true;
+
           ProtectControlGroups = true;
           ProtectClock = true;
           ProtectKernelLogs = true;
           ProtectKernelModules = true;
           ProtectKernelTunables = true;
-          SystemCallFilter = "@system-service";
+          ProtectProc = "invisible";
+          ProtectHome = true;
+          ProtectSystem = "strict";
+
+          RestrictAddressFamilies = [
+            "AF_LOCAL"
+            "AF_INET"
+            "AF_INET6"
+          ];
+          RestrictNamespaces = true;
+
+          SystemCallFilter = [ "@system-service" ];
           SystemCallErrorNumber = "EPERM";
 
           StateDirectory = "archivebox";
@@ -171,19 +185,24 @@ in
 
     (lib.mkIf cfg.webserver.enable {
       systemd.services.archivebox-server = {
-        description = "Archivebox server for ${cfg.archivePath}";
+        description = "Archivebox web server";
         after = [ "network.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
         wantedBy = [ "graphical-session.target" ];
         serviceConfig = {
           User = "archivebox";
           Group = "archivebox";
+
           ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${
             toString cfg.webserver.port
           }";
+
+          CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
+
           Restart = "on-failure";
           LockPersonality = true;
           NoNewPrivileges = true;
+
           PrivateTmp = true;
           PrivateUsers = true;
           PrivateDevices = true;
@@ -192,7 +211,15 @@ in
           ProtectKernelLogs = true;
           ProtectKernelModules = true;
           ProtectKernelTunables = true;
-          SystemCallFilter = "@system-service";
+
+          RestrictAddressFamilies = [
+            "AF_LOCAL"
+            "AF_INET"
+            "AF_INET6"
+          ];
+          RestrictNamespaces = true;
+
+          SystemCallFilter = [ "@system-service" ];
           SystemCallErrorNumber = "EPERM";
           StateDirectory = "archivebox";
         };
