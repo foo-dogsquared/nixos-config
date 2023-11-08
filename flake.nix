@@ -12,7 +12,7 @@
     # I know NixOS can be stable but we're going cutting edge, baybee! While
     # `nixpkgs-unstable` branch could be faster delivering updates, it is
     # looser when it comes to stability for the entirety of this configuration.
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.follows = "nixos-unstable";
 
     # Here are the nixpkgs variants used for creating the system configuration
     # in `mkHost`.
