@@ -54,7 +54,7 @@ let
         path = [ cfg.package ] ++ cfg.extraPackages;
         script = ''
           echo "${lib.concatStringsSep "\n" value.urls}" \
-            | archivebox add ${lib.concatStringsSep " " value.extraArgs}
+            | archivebox add ${lib.escapeShellArgs value.extraArgs}
         '';
         serviceConfig = {
           User = "archivebox";
@@ -131,7 +131,7 @@ in
             "https://arxiv.org/rss/cs"
             "https://distill.pub/"
           ];
-          extraArgs = [ "--depth 1" ];
+          extraArgs = [ "--depth" "1" ];
           startAt = "daily";
         };
       };
