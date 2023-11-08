@@ -297,11 +297,6 @@
         # again.
         nix.package = pkgs.nixUnstable;
 
-        # Find Nix files with these! Even if nix-index is already enabled, it
-        # is better to make it explicit.
-        programs.command-not-found.enable = false;
-        programs.nix-index.enable = true;
-
         # Set the configurations for the package manager.
         nix.settings =
           let
@@ -400,6 +395,10 @@
 
                   # Stallman-senpai will be disappointed. :/
                   nixpkgs.config.allowUnfree = true;
+
+                  # Find Nix files with these! Even if nix-index is already enabled, it
+                  # is better to make it explicit.
+                  programs.nix-index.enable = true;
 
                   # Setting the homely options.
                   home.username = name;
