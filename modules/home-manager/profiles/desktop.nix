@@ -97,6 +97,7 @@ in {
         };
 
         bindings = {
+          "Ctrl+s" = "playlist-shuffle";
           "Alt+h" = "seek -5";
           "Alt+l" = "seek 5";
           "Alt+H" = "add chapter -1";
@@ -111,7 +112,6 @@ in {
           # Ehhh, they're more getting in the way than just existing...
           "f" = "ignore";
           "T" = "ignore";
-          "Ctrl+s" = "ignore";
           "Alt+s" = "ignore";
         };
 
