@@ -378,9 +378,7 @@
             let
               name = metadata._name;
               system = metadata._system;
-              pkgs = import inputs."${metadata.nixpkgs-channel or "nixpkgs"}" {
-                inherit system overlays;
-              };
+              pkgs = inputs."${metadata.nixpkgs-channel or "nixpkgs"}".legacyPackages."${system}";
               path = ./users/home-manager/${name};
               extraModules = [
                 ({ pkgs, config, ... }: {
