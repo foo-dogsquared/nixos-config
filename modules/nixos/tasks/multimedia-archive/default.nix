@@ -121,8 +121,6 @@ in
 
       services.archivebox = {
         enable = true;
-        archivePath = "${mountName}/archivebox-service";
-        withDependencies = true;
         webserver.enable = true;
 
         jobs = mkJobs
