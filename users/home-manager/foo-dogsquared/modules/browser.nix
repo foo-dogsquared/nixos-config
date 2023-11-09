@@ -5,7 +5,7 @@
   config = lib.mkMerge [
     {
       home.packages = with pkgs; [
-        google-chrome-dev
+        google-chrome
         nyxt
       ];
 
