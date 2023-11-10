@@ -109,10 +109,7 @@
 
   programs.blender = {
     enable = true;
-    package = pkgs.blender-with-packages {
-      name = "foodogsquared-wrapped";
-      packages = with pkgs.python3Packages; [ pandas ];
-    };
+    package = pkgs.blender-foodogsquared;
     addons = with pkgs; [
       blender-blendergis
       blender-machin3tools
