@@ -1,13 +1,11 @@
 final: prev:
 
 {
-  blender-foodogsquared = prev.blender-with-packages {
-    name = "foodogsquared-wrapped";
-    packages = with prev.python3Packages; [
+  blender-foodogsquared = prev.blender.withPackages (p:
+    with p; [
       pandas
       scipy
       imageio
       pillow
-    ];
-  };
+    ]);
 }
