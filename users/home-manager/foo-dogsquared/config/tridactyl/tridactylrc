@@ -26,8 +26,6 @@ bind yt tabduplicate
 
 bind gK elementunhide
 
-bind <C-F> fullscreen
-
 bind gR reader --tab
 
 " Make it closer to Vim, I guess since we're going to use closer functions
@@ -84,27 +82,30 @@ autocontain -s lwn\.net Personal
 " Ideally, this should be in Tangram or similar.
 autocontain -s discourse\.nixos\.org Personal
 autocontain -s discourse\.gohugo\.io Personal
-autocontain -s *\.github\.io Personal
-autocontain -s *\.gitlab\.io Personal
+autocontain -s .+\.github\.io Personal
+autocontain -s .+\.gitlab\.io Personal
 
 " My communication chat apps. Facebook Messenger should be in its own
 " container.
 autocontain -s discord\.com Chat
-autocontain -s *\.zulipchat\.com Chat
+autocontain -s .+\.zulipchat\.com Chat
 autocontain -s element\.io Chat
 autocontain -s rocket\.chat Chat
 autocontain -s revolt\.chat Chat
 
 " My self-hosted instances and my personal domain.
-autocontain -s *\.local Self-hosted
-autocontain -s *\.theinternaltld Self-hosted
+autocontain -s .+\.local Self-hosted
+autocontain -s .+\.internal Self-hosted
+autocontain -s .+\.theinternaltld Self-hosted
 autocontain -s foodogsquared\.one Self-hosted
 
 " Most software forges should be separated.
 autocontain -s hetzner\.com Work
 autocontain -s digitalocean\.com Work
+autocontain -s aws\.amazon\.com Work
 autocontain -s github\.com Work
 autocontain -s gitlab\.com Work
+autocontain -s app\.netlify\.com Work
 autocontain -s archive\.softwareheritage\.com Work
 
 " So does most freelancing sites.
