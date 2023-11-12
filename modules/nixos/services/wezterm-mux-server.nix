@@ -102,6 +102,7 @@ in
       createHome = true;
       group = config.users.groups.wezterm.name;
       isSystemUser = true;
+      shell = pkgs.runtimeShell;
     };
 
     users.groups.wezterm = { };
