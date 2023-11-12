@@ -136,9 +136,6 @@ in {
         gopass # An improved version of the password manager for hipsters.
         zoxide # Gain teleportation abilities!
       ];
-
-      # A modern version of the SSH.
-      programs.mosh.enable = true;
     })
 
     # !!! Please add your user to the "libvirtd" group.
