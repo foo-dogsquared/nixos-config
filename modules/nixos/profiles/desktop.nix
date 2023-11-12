@@ -137,6 +137,7 @@ in {
           noto-fonts-cjk
           noto-fonts-cjk-sans
           noto-fonts-cjk-serif
+          noto-fonts-lgc-plus
           noto-fonts-extra
           noto-fonts-emoji
           noto-fonts-emoji-blob-bin
