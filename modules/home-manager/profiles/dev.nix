@@ -1,6 +1,6 @@
 # Arsenal for development (which is rare nowadays). ;p
 # If you're looking for text editors, go to `./editors.nix`.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, osConfig ? { } ,... }:
 
 let cfg = config.profiles.dev;
 in {
@@ -108,6 +108,9 @@ in {
           pane_frames = false;
         };
       };
+
+      # Echolocation.
+      programs.nix-index.enable = lib.mkIf (osConfig ? programs.nix-index.enable -> !osConfig.programs.nix-index.enable) true;
     })
 
     (lib.mkIf cfg.shell.enable {
