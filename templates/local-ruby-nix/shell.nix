@@ -1,19 +1,12 @@
-{ pkgs ? import <nixpkgs> { }, ruby-nix }:
+{ pkgs ? import <nixpkgs> { }
+, extraBuildInputs ? [ ]
+, extraPackages ? [ ]
+}:
 
 with pkgs;
 
-let
-  gems = ruby-nix.lib pkgs {
-    name = "ruby-nix-env";
-    ruby = ruby_3_1;
-    gemset = ./gemset.nix;
-  };
-in
 mkShell {
-  buildInputs = [
-    gems.env
-    gems.ruby
-  ];
+  buildInputs = extraBuildInputs;
 
   packages = [
     # Formatters
@@ -21,5 +14,5 @@ mkShell {
 
     # Language servers
     rnix-lsp
-  ];
+  ] ++ extraPackages;
 }
