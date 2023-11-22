@@ -23,6 +23,7 @@ let
   };
 
   settingsFormat = ploverIniFormat { };
+  settingsFile = settingsFormat.generate "plover-config-${config.home.username}" cfg.settings;
 in
 {
   options.services.plover = {
@@ -41,17 +42,15 @@ in
       description = "Configuration to be used for the application.";
       default = { };
       defaultText = lib.literalExpression "{}";
-      example = lib.literalExpression ''
-        {
-          "Output Configuration" = {
-            undo_levels = 100;
-          };
+      example = {
+        "Output Configuration" = {
+          undo_levels = 100;
+        };
 
-          "Stroke Display" = {
-            show = true;
-          };
-        }
-      '';
+        "Stroke Display" = {
+          show = true;
+        };
+      };
     };
 
     extraOptions = lib.mkOption {
@@ -74,9 +73,7 @@ in
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."plover/plover.cfg".source =
-      settingsFormat.generate "plover-config-${config.home.username}"
-        cfg.settings;
+    xdg.configFile."plover/plover.cfg".source = lib.mkIf (cfg.settings != { }) settingsFile;
 
     systemd.user.services.plover = {
       Unit = {
@@ -85,11 +82,7 @@ in
         PartOf = "default.target";
       };
 
-      Service = {
-        ExecStart = "${cfg.package}/bin/plover ${
-            lib.concatStringsSep " " cfg.extraOptions
-          }";
-      };
+      Service.ExecStart = "${lib.getExe' cfg.package "plover"} ${lib.concatStringsSep " " cfg.extraOptions}";
 
       Install.WantedBy = [ "default.target" ];
     };
