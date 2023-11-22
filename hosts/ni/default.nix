@@ -140,8 +140,12 @@
     exploitdb
   ];
 
-  # Enable Guix service.
-  services.guix.enable = true;
+  # Installing Guix within NixOS. Now that's some OTP rarepair material right
+  # there.
+  services.guix = {
+    enable = true;
+    package = pkgs.guix;
+  };
 
   # Set your time zone.
   time.timeZone = "Asia/Manila";
