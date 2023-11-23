@@ -22,14 +22,16 @@ let
   distroboxConf = { }: {
     type = with lib.types;
       let
-        valueType = oneOf [
+        valueType = (oneOf [
           bool
           float
           int
           path
           str
           (listOf valueType)
-        ];
+        ]) // {
+          description = "Distrobox settings value";
+        };
       in
       attrsOf valueType;
 
