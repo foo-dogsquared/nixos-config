@@ -38,11 +38,9 @@ in
         gsconnect
         just-perfection
         kimpanel
-        mpris-indicator-button
         paperwm
         pop-shell
         runcat
-        x11-gestures
       ];
       example = lib.literalExpression ''
         with pkgs.gnomeExtensions; [
