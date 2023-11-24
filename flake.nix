@@ -37,6 +37,10 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
+    # NixOS in Windows.
+    nixos-wsl.url = "github:nix-community/NixOS-WSL";
+    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
+
     # Easy access to development environments.
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
@@ -159,6 +163,7 @@
             inputs.guix-overlay.nixosModules.guix
             inputs.disko.nixosModules.disko
             inputs.nix-index-database.nixosModules.nix-index
+            inputs.nixos-wsl.nixosModules.default
           ];
 
         # Find Nix files with these! Even if nix-index is already enabled, it
