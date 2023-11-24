@@ -215,6 +215,11 @@
         };
         services.openssh.enable = lib.mkDefault true;
 
+        # We're setting Guix service package with the flake-provided package.
+        # This is to prevent problems setting with overlays as much as I like
+        # using them.
+        services.guix.package = inputs.guix-overlay.packages.${config.nixpkgs.system}.guix;
+
         # It's following the 'nixpkgs' flake input which should be in unstable
         # branches. Not to mention, most of the system configurations should
         # have this attribute set explicitly by default.

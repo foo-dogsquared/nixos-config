@@ -142,10 +142,7 @@
 
   # Installing Guix within NixOS. Now that's some OTP rarepair material right
   # there.
-  services.guix = {
-    enable = true;
-    package = pkgs.guix;
-  };
+  services.guix.enable = true;
 
   # Set your time zone.
   time.timeZone = "Asia/Manila";
