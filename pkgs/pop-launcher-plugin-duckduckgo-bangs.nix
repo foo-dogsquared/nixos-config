@@ -19,7 +19,7 @@ rustPlatform.buildRustPackage rec {
     mv $out/bin/* $out/share/pop-launcher/plugins/bangs
   '';
 
-  cargoSha256 = "sha256-qzlZ0dbdfZwEBuQXIUndVFye6RdX8aI39D/UCagMfZg=";
+  cargoHash = "sha256-qzlZ0dbdfZwEBuQXIUndVFye6RdX8aI39D/UCagMfZg=";
   meta = with lib; {
     description = "Pop launcher for searching with Duckduckgo bangs";
     homepage =

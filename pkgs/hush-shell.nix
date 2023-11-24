@@ -16,7 +16,7 @@ rustPlatform.buildRustPackage rec {
     hash = "sha256-MH7Qb5FgAvfgfuYihomYDHA456/WU1zf5P9mneB5Og4=";
   };
 
-  cargoSha256 = "sha256-iN8qOZoTJwvxKQT0Plm0SjwaBUE+vSM0r9FERr4smeo=";
+  cargoHash = "sha256-iN8qOZoTJwvxKQT0Plm0SjwaBUE+vSM0r9FERr4smeo=";
 
   postPatch = ''
     patchShebangs ./src/runtime/tests/data/stdout-stderr.sh

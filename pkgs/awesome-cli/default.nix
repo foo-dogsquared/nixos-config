@@ -11,7 +11,7 @@ buildGoModule rec {
     sha256 = "sha256-gZNJVeFRGSDFHFjJ4KSSugsa6rR8YDMujg6PlRm2d7Q=";
   };
 
-  vendorSha256 = "sha256-bqvcmIWy2fLpItE71LhGwuRK2+KPxNqMZalrFSCCSN0=";
+  vendorHash = "sha256-bqvcmIWy2fLpItE71LhGwuRK2+KPxNqMZalrFSCCSN0=";
 
   meta = with lib; {
     description = "Fancy terminal interface for navigating awesome lists";
