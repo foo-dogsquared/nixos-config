@@ -22,6 +22,19 @@ in
     };
   };
 
+  # My user shell of choice because I'm not a hipster.
+  programs.bash = {
+    enable = true;
+    historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
+    historyIgnore = [
+      "cd"
+      "exit"
+      "lf"
+      "ls"
+      "nvim"
+    ];
+  };
+
   # Set nixpkgs config both outside and inside of home-manager.
   nixpkgs.config = import ./config/nixpkgs/config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./config/nixpkgs/config.nix;

@@ -13,6 +13,19 @@
     jq
   ];
 
+  # My user shell of choice because I'm not a hipster.
+  programs.bash = {
+    enable = true;
+    historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
+    historyIgnore = [
+      "cd"
+      "exit"
+      "lf"
+      "ls"
+      "nvim"
+    ];
+  };
+
   profiles = {
     dev = {
       enable = true;
@@ -33,8 +46,8 @@
       "bash.history"
       "vim.history"
     ];
-    startAt = "daily";
+    startAt = "weekly";
   };
 
-  home.stateVersion = "23.05";
+  home.stateVersion = "23.11";
 }
