@@ -166,15 +166,11 @@ in {
     (lib.mkIf cfg.extras.enable {
       home.packages = with pkgs; [
         act # Test your CI without embarrassing yourself repeatedly pushing into GitHub repos.
-        github-cli # So you don't have to use much of GitHub on the site, I guess.
         gum # The fancy shell script toolkit.
-        hut # So you don't have to see much of Sourcehut's brutalist design, I guess.
         hyperfine # Making sure your apps are not just fine but REEEEEEAAAAALY fine.
-        irssi # Communicate in the terminal like a normal person.
         license-cli # A nice generator template for license files.
         quilt # Patching right up yer' alley.
         tokei # Stroking your programming ego by how many lines of C you've written.
-        tree-sitter # The modern way of text highlighting.
         treefmt # I like the tagline of this tool: "One CLI for formatting your code tree." (It rhymes somewhat.)
         vhs # Declarative terminal tool demo.
         zenith # Very fanciful system dashboard.
