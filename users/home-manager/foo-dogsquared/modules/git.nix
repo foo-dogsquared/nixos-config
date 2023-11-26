@@ -1,6 +1,11 @@
 { config, lib, pkgs, ... }:
 
 {
+  home.packages = with pkgs; [
+    tea # So you don't have to see some teas, I guess.
+    hut # So you don't have to see Sourcehut's brutalist design, I guess.
+  ];
+
   # My Git credentials.
   programs.git = {
     enable = true;
