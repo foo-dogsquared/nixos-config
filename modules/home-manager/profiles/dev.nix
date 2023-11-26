@@ -114,18 +114,6 @@ in {
     })
 
     (lib.mkIf cfg.shell.enable {
-      programs.bash = {
-        enable = true;
-        historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
-        historyIgnore = [
-          "cd"
-          "exit"
-          "lf"
-          "ls"
-          "nvim"
-        ];
-      };
-
       # Supercharging your shell history. Just don't forget to flush them out
       # before doing questionable things.
       programs.atuin = {
