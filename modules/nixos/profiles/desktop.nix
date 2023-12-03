@@ -130,6 +130,7 @@ in {
         packages = with pkgs; [
           # Some monospace fonts.
           iosevka
+          monaspace
           jetbrains-mono
 
           # Noto font family
