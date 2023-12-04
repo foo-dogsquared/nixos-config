@@ -19,6 +19,7 @@
     nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # We're using these libraries for other functions.
     flake-utils.url = "github:numtide/flake-utils";
