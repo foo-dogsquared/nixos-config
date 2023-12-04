@@ -1,0 +1,8 @@
+= Winnowing
+:toc:
+
+
+This is the NixOS configuration for the WSL environment.
+Basically, it's a comfort setup in case I use Windows especially that I can easily bring my development setup in there which is very very nice.
+The main power comes from https://github.com/nix-community/NixOS-WSL/[NixOS-WSL] project.
+It is expected to be used with WSL2.
