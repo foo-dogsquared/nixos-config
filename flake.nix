@@ -158,9 +158,11 @@
           # Append with our custom NixOS modules from the modules folder.
           import ./modules/nixos { inherit lib; isInternal = true; }
 
-          # Then, make the most with the modules from the flake inputs.
+          # Then, make the most with the modules from the flake inputs. Take
+          # note importing some modules such as home-manager are as part of the
+          # declarative host config so be sure to check out nixosConfigurations
+          # output as well.
           ++ [
-            inputs.home-manager.nixosModules.home-manager
             inputs.nur.nixosModules.nur
             inputs.sops-nix.nixosModules.sops
             inputs.guix-overlay.nixosModules.guix
@@ -354,6 +356,10 @@
               path = ./hosts/${filename};
               extraModules = [
                 ({ lib, ... }: {
+                  imports = [
+                    inputs.${host.home-manager-channel or "home-manager"}.nixosModules.home-manager
+                  ];
+
                   config = lib.mkMerge [
                     { networking.hostName = lib.mkForce host._name; }
 
