@@ -25,7 +25,9 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     # Managing home configurations.
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager.follows = "home-manager-unstable";
+    home-manager-stable.url = "github:nix-community/home-manager/release-23.11";
+    home-manager-unstable.url = "github:nix-community/home-manager";
 
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
