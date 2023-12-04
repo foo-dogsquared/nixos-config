@@ -16,7 +16,7 @@
 
     # Here are the nixpkgs variants used for creating the system configuration
     # in `mkHost`.
-    nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
