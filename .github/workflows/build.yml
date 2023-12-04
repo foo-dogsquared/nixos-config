@@ -15,7 +15,7 @@ jobs:
           extra-conf: |
             keep-going = true
       - name: Prepare push to binary cache
-        uses: cachix/cachix-action@v12
+        uses: cachix/cachix-action@v13
         if: ${{ github.ref == 'refs/heads/master' }}
         with:
           name: foo-dogsquared
