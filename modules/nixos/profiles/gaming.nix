@@ -28,6 +28,9 @@ in
         gamescopeSession.enable = true;
       };
 
+      # Get your game on, go play...
+      programs.gamemode.enable = true;
+
       # Enable them controllers in case you have one.
       hardware.steam-hardware.enable = true;
       hardware.xone.enable = true;
