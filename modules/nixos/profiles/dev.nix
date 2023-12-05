@@ -93,6 +93,7 @@ in {
         gdb # The usual debugger.
         gnumake # The other poster boy for the hated build system.
         man-pages # Extra manpages.
+        man-pages-posix # More POSIX manpages.
         moreutils # Less is more but more utilities, the merrier.
         sshfs # Make others' home your own.
         quilt # Patching right up yer' alley.
