@@ -30,6 +30,7 @@ format = "iso"
 hostname = "ploverrific"
 domain = "foodogsquared.one"
 nixpkgs-channel = "nixos-unstable-small"
+home-manager-channel = "home-manager-unstable"
 
 [plover.deploy]
 hostname = "plover.foodogsquared.one"
@@ -58,6 +59,10 @@ It is set for `networking.domain` in NixOS configuration.
 - `nixpkgs-channel` is the nixpkgs channel to be used for the host.
 The value could be any one of the nixpkgs flake inputs imported into this flake.
 By default, it uses `nixpkgs` flake input which points to the `nixos-unstable` channel.
+
+- `home-manager-channel` is the home-manager channel to be used for the host.
+The value could be any one of the home-manager flake inputs imported into this flake.
+By default, it uses `home-manager` flake input which follows the `home-manager-unstable` channel.
 
 - `deploy` is a table containing arguments from github:serokell/deploy-rs[opts=repo].
 Only a few arguments are accepted (i.e., `hostname`, `fast-connection`, `remote-build`, `magic-rollback`, and `auto-rollback`).
