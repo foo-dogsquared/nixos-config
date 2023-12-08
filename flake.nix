@@ -59,9 +59,6 @@
     helix-editor.url = "github:helix-editor/helix";
     helix-editor.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Guix in NixOS?!
-    guix-overlay.url = "github:foo-dogsquared/nix-overlay-guix";
-
     # Generating an entire flavored themes with Nix?
     nix-colors.url = "github:misterio77/nix-colors";
 
@@ -218,11 +215,6 @@
           enableSSHSupport = true;
         };
         services.openssh.enable = lib.mkDefault true;
-
-        # We're setting Guix service package with the flake-provided package.
-        # This is to prevent problems setting with overlays as much as I like
-        # using them.
-        services.guix.package = inputs.guix-overlay.packages.${config.nixpkgs.system}.guix;
 
         # It's following the 'nixpkgs' flake input which should be in unstable
         # branches. Not to mention, most of the system configurations should

@@ -340,24 +340,6 @@
         "type": "github"
       }
     },
-    "guix-overlay": {
-      "inputs": {
-        "nixpkgs": "nixpkgs"
-      },
-      "locked": {
-        "lastModified": 1701658398,
-        "narHash": "sha256-6FLVX4bjpIxYc/MRTR0dKX4CODGZJS8ZKLyeWMLCgvc=",
-        "owner": "foo-dogsquared",
-        "repo": "nix-overlay-guix",
-        "rev": "67b3ddc7ccc0eda4cc095e59d56861309316277a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "foo-dogsquared",
-        "repo": "nix-overlay-guix",
-        "type": "github"
-      }
-    },
     "helix-editor": {
       "inputs": {
         "crane": "crane",
@@ -405,7 +387,7 @@
     },
     "home-manager-stable": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
         "lastModified": 1700814205,
@@ -424,7 +406,7 @@
     },
     "home-manager-unstable": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
         "lastModified": 1701728041,
@@ -635,16 +617,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1665763903,
-        "narHash": "sha256-znGWY4x688cZ3Ii01qLnhl+mSKpQ9iCufGxfdV6oBOc=",
+        "lastModified": 1700204040,
+        "narHash": "sha256-xSVcS5HBYnD3LTer7Y2K8ZQCDCXMa3QUD1MzRjHzuhI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "78a37aa630faa41944060a966607d4f1128ea94b",
+        "rev": "c757e9bd77b16ca2e03c89bf8bc9ecb28e0c06ad",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-22.05",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -714,22 +696,6 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1700204040,
-        "narHash": "sha256-xSVcS5HBYnD3LTer7Y2K8ZQCDCXMa3QUD1MzRjHzuhI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "c757e9bd77b16ca2e03c89bf8bc9ecb28e0c06ad",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
-      "locked": {
         "lastModified": 1701253981,
         "narHash": "sha256-ztaDIyZ7HrTAfEEUt9AtTDNoCYxUdSd6NrRHaYOIxtk=",
         "owner": "NixOS",
@@ -767,7 +733,6 @@
         "emacs-overlay": "emacs-overlay",
         "firefox-addons": "firefox-addons",
         "flake-utils": "flake-utils_3",
-        "guix-overlay": "guix-overlay",
         "helix-editor": "helix-editor",
         "home-manager": [
           "home-manager-unstable"
