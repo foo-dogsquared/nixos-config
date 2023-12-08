@@ -88,10 +88,10 @@
       # A set of images with their metadata that is usually built for usual
       # purposes. The format used here is whatever formats nixos-generators
       # support.
-      images = listImagesWithSystems (lib'.importTOML ./images.toml);
+      images = lib'.importTOML ./images.toml;
 
       # A set of users with their metadata to be deployed with home-manager.
-      users = listImagesWithSystems (lib'.importTOML ./users.toml);
+      users = lib'.importTOML ./users.toml;
 
       # A set of image-related utilities for the flake outputs.
       inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage listImagesWithSystems;
@@ -160,12 +160,11 @@
 
           # Then, make the most with the modules from the flake inputs. Take
           # note importing some modules such as home-manager are as part of the
-          # declarative host config so be sure to check out nixosConfigurations
-          # output as well.
+          # declarative host config so be sure to check out
+          # `hostSpecificModule` function as well.
           ++ [
             inputs.nur.nixosModules.nur
             inputs.sops-nix.nixosModules.sops
-            inputs.guix-overlay.nixosModules.guix
             inputs.disko.nixosModules.disko
             inputs.nix-index-database.nixosModules.nix-index
             inputs.nixos-wsl.nixosModules.default
@@ -341,6 +340,25 @@
         # here.
         nixpkgs.overlays = overlays;
       };
+
+      # A function that generates a Nix module from host metadata.
+      hostSpecificModule = host: metadata:
+        { lib, ... }: {
+          imports = [
+            inputs.${metadata.home-manager-channel or "home-manager"}.nixosModules.home-manager
+
+            hostSharedConfig
+            nixSettingsSharedConfig
+            ./hosts/${host}
+          ];
+
+          config = lib.mkMerge [
+            { networking.hostName = lib.mkForce metadata.hostname or host; }
+
+            (lib.mkIf (metadata ? domain)
+              { networking.domain = lib.mkForce metadata.domain; })
+          ];
+        };
     in
     {
       # Exposes only my library with the custom functions to make it easier to
@@ -351,34 +369,14 @@
       # some sensible default configurations.
       nixosConfigurations =
         lib'.mapAttrs
-          (filename: host:
-            let
-              path = ./hosts/${filename};
-              extraModules = [
-                ({ lib, ... }: {
-                  imports = [
-                    inputs.${host.home-manager-channel or "home-manager"}.nixosModules.home-manager
-                  ];
-
-                  config = lib.mkMerge [
-                    { networking.hostName = lib.mkForce host._name; }
-
-                    (lib.mkIf (host ? domain)
-                      { networking.domain = lib.mkForce host.domain; })
-                  ];
-                })
-
-                hostSharedConfig
-                nixSettingsSharedConfig
-                path
-              ];
-            in
+          (host: metadata:
             mkHost {
-              inherit extraModules extraArgs;
-              system = host._system;
-              nixpkgs-channel = host.nixpkgs-channel or "nixpkgs";
+              inherit extraArgs;
+              extraModules = [(hostSpecificModule host metadata)];
+              system = metadata._system;
+              nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
             })
-          (lib'.filterAttrs (_: host: (host.format or "iso") == "iso") images);
+          (listImagesWithSystems images);
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
@@ -392,7 +390,7 @@
             let
               name = metadata._name;
               system = metadata._system;
-              pkgs = inputs."${metadata.nixpkgs-channel or "nixpkgs"}".legacyPackages."${system}";
+              pkgs = inputs.${metadata.nixpkgs-channel or "nixpkgs"}.legacyPackages.${system};
               path = ./users/home-manager/${name};
               extraModules = [
                 ({ pkgs, config, ... }: {
@@ -454,31 +452,19 @@
       images =
         forAllSystems (system:
           let
-            images' = lib'.filterAttrs (host: metadata: system == metadata._system) images;
+            images' = lib'.filterAttrs (host: metadata: system == metadata._system) (listImagesWithSystems images);
           in
           lib'.mapAttrs'
             (host: metadata:
               let
-                inherit system;
                 name = metadata._name;
                 nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-                pkgs = import inputs."${nixpkgs-channel}" { inherit system overlays; };
+                pkgs = import inputs.${nixpkgs-channel} { inherit system overlays; };
                 format = metadata.format or "iso";
               in
               lib'.nameValuePair name (mkImage {
                 inherit format system pkgs extraArgs;
-                extraModules = [
-                  ({ lib, ... }: {
-                    config = lib.mkMerge [
-                      { networking.hostName = lib.mkForce metadata.hostname or name; }
-
-                      (lib.mkIf (metadata ? domain)
-                        { networking.domain = lib.mkForce metadata.domain; })
-                    ];
-                  })
-                  hostSharedConfig
-                  ./hosts/${name}
-                ];
+                extraModules = [(hostSpecificModule host metadata)];
               }))
             images');
 
