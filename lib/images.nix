@@ -7,9 +7,9 @@
   mkHost = { system, extraModules ? [ ], extraArgs ? { }, nixpkgs-channel ? "nixpkgs" }:
     (lib.makeOverridable inputs."${nixpkgs-channel}".lib.nixosSystem) {
       # The system of the NixOS system.
-      inherit system lib;
+      inherit lib;
       specialArgs = extraArgs;
-      modules = extraModules;
+      modules = extraModules ++ [{ nixpkgs.hostPlatform = system; }];
     };
 
   # A wrapper around the home-manager configuration function.
