@@ -74,7 +74,6 @@ in
   services.mopidy = {
     enable = true;
     extensionPackages = with pkgs; [
-      mopidy-beets
       mopidy-funkwhale
       mopidy-internetarchive
       mopidy-iris
