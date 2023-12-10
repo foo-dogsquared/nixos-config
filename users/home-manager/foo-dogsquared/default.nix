@@ -132,7 +132,7 @@ in
     EDITOR = "nvim";
   };
 
-  home.stateVersion = "23.05";
+  home.stateVersion = "23.11";
 
   xdg.userDirs = {
     enable = true;
