@@ -384,31 +384,31 @@
               pkgs = import nixpkgs { inherit overlays; };
               path = ./users/home-manager/${name};
               extraModules = [
-                ({ pkgs, config, ... }: {
+                ({ lib, pkgs, config, ... }: {
                   # Don't create the user directories since they are assumed to
                   # be already created by a pre-installed system (which should
                   # already handle them).
-                  xdg.userDirs.createDirectories = false;
+                  xdg.userDirs.createDirectories = lib.mkDefault false;
 
                   # To be able to use the most of our config as possible, we want
                   # both to use the same overlays.
                   nixpkgs.overlays = overlays;
 
                   # Stallman-senpai will be disappointed. :/
-                  nixpkgs.config.allowUnfree = true;
+                  nixpkgs.config.allowUnfree = lib.mkDefault true;
 
                   # Find Nix files with these! Even if nix-index is already enabled, it
                   # is better to make it explicit.
-                  programs.nix-index.enable = true;
+                  programs.nix-index.enable = lib.mkDefault true;
 
                   # Setting the homely options.
-                  home.username = name;
-                  home.homeDirectory = metadata.home-directory or "/home/${config.home.username}";
+                  home.username = lib.mkForce name;
+                  home.homeDirectory = lib.mkForce metadata.home-directory or "/home/${config.home.username}";
 
                   # home-manager configurations are expected to be deployed on
                   # non-NixOS systems so it is safe to set this.
-                  programs.home-manager.enable = true;
-                  targets.genericLinux.enable = true;
+                  programs.home-manager.enable = lib.mkDefault true;
+                  targets.genericLinux.enable = lib.mkDefault true;
                 })
                 userSharedConfig
                 nixSettingsSharedConfig
