@@ -1,5 +1,5 @@
 # WHOA! Even browsers with extensions can be declarative!
-{ config, lib, pkgs, osConfig ? { }, ... }:
+{ config, lib, pkgs, ... }@attrs:
 
 {
   config = lib.mkMerge [
@@ -35,7 +35,7 @@
       };
     }
 
-    (lib.mkIf (osConfig ? programs.firefox.enable -> !osConfig.programs.firefox.enable) {
+    (lib.mkIf (attrs ? osConfig -> !attrs.osConfig.programs.firefox.enable) {
       # Despite the name, it isn't a browser for furries.
       programs.firefox = {
         enable = true;
