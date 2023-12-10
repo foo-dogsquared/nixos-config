@@ -65,6 +65,8 @@ in {
         '';
       };
 
+      home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
+
       # Doom Emacs dependencies.
       home.packages = with pkgs; [
         # This is installed just to get Geiser to properly work.
