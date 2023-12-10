@@ -13,7 +13,7 @@
     };
 
   # A wrapper around the home-manager configuration function.
-  mkHome = { pkgs, system, extraModules ? [ ], extraArgs ? { }, home-manager-channel ? "home-manager" }:
+  mkHome = { pkgs, extraModules ? [ ], extraArgs ? { }, home-manager-channel ? "home-manager" }:
     inputs."${home-manager-channel}".lib.homeManagerConfiguration {
       inherit lib pkgs;
       extraSpecialArgs = extraArgs;

@@ -380,9 +380,8 @@
         lib'.mapAttrs
           (filename: metadata:
             let
-              name = metadata._name;
-              system = metadata._system;
-              pkgs = inputs.${metadata.nixpkgs-channel or "nixpkgs"}.legacyPackages.${system};
+              name = metadata.username or filename;
+              pkgs = import nixpkgs { inherit overlays; };
               path = ./users/home-manager/${name};
               extraModules = [
                 ({ pkgs, config, ... }: {
@@ -417,7 +416,7 @@
               ];
             in
             mkHome {
-              inherit pkgs system extraModules extraArgs;
+              inherit pkgs extraModules extraArgs;
               home-manager-channel = metadata.home-manager-channel or "home-manager";
             })
           users;
