@@ -153,5 +153,5 @@
     longitude = 121.0;
   };
 
-  system.stateVersion = "23.11"; # Yes! I read the comment!
+  system.stateVersion = "24.05"; # Yes! I read the comment!
 }
