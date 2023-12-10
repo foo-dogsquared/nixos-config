@@ -53,7 +53,9 @@ in
     };
   };
 
-  home.sessionVariables.PATH = "${config.home.mutableFile."library/dotfiles".path}/bin\${PATH:+:$PATH}";
+  home.sessionPath = [
+    "${config.home.mutableFile."library/dotfiles".path}/bin"
+  ];
 
   # Making my favorite terminal multiplexer right now.
   programs.zellij.settings = {
