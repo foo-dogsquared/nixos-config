@@ -5,7 +5,7 @@
     # Since this will be rarely configured, make sure to import the appropriate
     # hardware modules depending on the hosting provider (and even just the
     # server).
-    ./modules/hardware/hetzner-cloud-cx21.nix
+    ./modules/profiles/hetzner-cloud-cx21.nix
 
     # The users for this host.
     (lib.getUser "nixos" "admin")
