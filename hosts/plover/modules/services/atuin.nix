@@ -4,36 +4,49 @@
 { config, lib, pkgs, ... }:
 
 let
+  hostCfg = config.hosts.plover;
+  cfg = hostCfg.services.atuin;
+
   inherit (import ../hardware/networks.nix) interfaces;
 
   atuinInternalDomain = "atuin.${config.networking.fqdn}";
   host = interfaces.lan.IPv4.address;
 in
 {
-  # Atuin sync server because why not.
-  services.atuin = {
-    enable = true;
-    openRegistration = true;
+  options.hosts.plover.services.atuin.enable = lib.mkEnableOption "Atuin sync server setup";
 
-    inherit host;
-    port = 8965;
-  };
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
+      # Atuin sync server because why not.
+      services.atuin = {
+        enable = true;
+        openRegistration = true;
 
-  # Putting a neat little script to create the appropriate schema since we're
-  # using secure schema usage pattern as encouraged from PostgreSQL
-  # documentation.
-  systemd.services.atuin = {
-    path = [ config.services.postgresql.package ];
-    preStart = ''
-      psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='atuin';" \
-        grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS atuin;"
-    '';
-  };
+        inherit host;
+        port = 8965;
+      };
+    }
 
-  # Putting it altogether in the reverse proxy of choice.
-  services.nginx.virtualHosts."${atuinInternalDomain}" = {
-    locations."/" = {
-      proxyPass = "http://${host}:${toString config.services.atuin.port}";
-    };
-  };
+    (lib.mkIf hostCfg.services.reverse-proxy.enable {
+      # Putting it altogether in the reverse proxy of choice.
+      services.nginx.virtualHosts."${atuinInternalDomain}" = {
+        locations."/" = {
+          proxyPass = "http://${host}:${toString config.services.atuin.port}";
+        };
+      };
+    })
+
+    (lib.mkIf hostCfg.services.database.enable {
+      # Putting a neat little script to create the appropriate schema since we're
+      # using secure schema usage pattern as encouraged from PostgreSQL
+      # documentation.
+      systemd.services.atuin = {
+        path = [ config.services.postgresql.package ];
+        preStart = ''
+          psql -tAc "SELECT 1 FROM information_schema.schemata WHERE schema_name='atuin';" \
+            grep -q 1 || psql -tAc "CREATE SCHEMA IF NOT EXISTS atuin;"
+        '';
+      };
+    })
+  ]);
 }

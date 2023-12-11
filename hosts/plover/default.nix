@@ -1,8 +1,5 @@
 { config, lib, pkgs, modulesPath, ... }:
 
-let
-  inherit (import ./modules/hardware/networks.nix) interfaces;
-in
 {
   imports = [
     # Since this will be rarely configured, make sure to import the appropriate
@@ -17,67 +14,32 @@ in
     # Hardened profile from nixpkgs.
     "${modulesPath}/profiles/hardened.nix"
 
-    # Of course, what is a server without a backup? A professionally-handled
-    # production system. However, we're not professionals so we do have
-    # backups.
-    ./modules/services/borgbackup.nix
-
-    # The primary DNS server that is completely hidden.
-    ./modules/services/bind.nix
-
-    # The reverse proxy of choice.
-    ./modules/services/nginx.nix
-
-    # The single-sign on setup.
-    ./modules/services/kanidm.nix
-    ./modules/services/vouch-proxy.nix
-
-    # The monitoring stack.
-    ./modules/services/prometheus.nix
-    ./modules/services/grafana.nix
-
-    # The database of choice which is used by most self-managed services on
-    # this server.
-    ./modules/services/postgresql.nix
-
-    # The application services for this server. They are modularized since
-    # configuring it here will make it too big.
-    ./modules/services/atuin.nix
-    ./modules/services/gitea.nix
-    ./modules/services/vaultwarden.nix
-    ./modules/services/wireguard.nix
-    ./modules/services/wezterm-mux-server.nix
+    ./modules
   ];
+
+  # Host-specific modules structuring.
+  hosts.plover.services = {
+    # The essential services.
+    backup.enable = true;
+    database.enable = true;
+    firewall.enable = true;
+    dns-server.enable = true;
+    idm.enable = true;
+    monitoring.enable = true;
+    reverse-proxy.enable = true;
+    fail2ban.enable = true;
+
+    # The self-hosted services.
+    atuin.enable = true;
+    gitea.enable = true;
+    grafana.enable = true;
+    vaultwarden.enable = true;
+    wireguard.enable = true;
+  };
 
   # Automatic format and partitioning.
   disko.devices = import ./disko.nix {
     disks = [ "/dev/sda" ];
-  };
-
-  networking = {
-    nftables.enable = true;
-    domain = "foodogsquared.one";
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [
-        22 # Secure Shells.
-      ];
-    };
-  };
-
-  services.fail2ban = {
-    ignoreIP = [
-      # VPN clients.
-      "${interfaces.wireguard0.IPv4.address}/13"
-      "${interfaces.wireguard0.IPv6.address}/64"
-    ];
-
-    # We're going to be unforgiving with this one since we only have key
-    # authentication and password authentication is disabled anyways.
-    jails.sshd.settings = {
-      enabled = true;
-      maxretry = 1;
-    };
   };
 
   # Offline SSH!?!
