@@ -18,6 +18,7 @@
 ** link:{{< relref "./04-nixos-modules/01-profiles" >}}[Profiles]
 ** link:{{< relref "./04-nixos-modules/02-workflows" >}}[Workflows]
 ** link:{{< relref "./04-nixos-modules/03-disko" >}}[disko]
+** link:{{< relref "./04-nixos-modules/04-host-specific-modules" >}}[Host-specific modules]
 
 * link:{{< relref "./05-using-parts-of-my-configuration" >}}[Using parts of my configuration]
 

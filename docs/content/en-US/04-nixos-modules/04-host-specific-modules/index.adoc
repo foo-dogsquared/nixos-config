@@ -1,0 +1,87 @@
+---
+title: "Host-specific modules"
+---
+= Host-specific modules
+
+Some systems need more attention than others such as your homelab server and your personal desktop.
+While it is tempting to create a shared module, it's not suitable to just dump them into their respective modules directory where it is expected to be used by at least more than two hosts.
+Some of them are applicable for that host and that host only.
+This is where you could structure host-specific modules.
+
+Simply put, these are just modules that are under the `hosts.$HOSTNAME` option namespace in your NixOS configuration.
+For example, here's how a decently-sized NixOS configuration for our imaginary homelab server is structured.
+
+[source, tree]
+----
+hosts/$HOSTNAME/
+├── modules/
+│   ├── services/
+│   │   ├── backup.nix
+│   │   ├── database.nix
+│   │   ├── dns-server.nix
+│   │   ├── firewall.nix
+│   │   ├── mail-server.nix
+│   │   ├── reverse-proxy.nix
+│   │   ├── vaultwarden.nix
+│   │   └── wireguard.nix
+│   └── default.nix
+├── secrets/
+│   └── secrets.yaml
+├── default.nix
+└── README.adoc
+----
+
+In this structure, it is expected that...
+
+* `modules/services/mail-server.nix` should have an option `hosts.$HOSTNAME.services.mail-server` where we can simply set and forget our preferred mailserver service.
+
+* `modules/services/reverse-proxy.nix` should have an option `hosts.$HOSTNAME.services.reverse-proxy` where we can enable our preferred reverse proxy service.
+
+* `modules/services/gitea.nix` should have an option `hosts.$HOSTNAME.services.gitea` where we can simply enable parts of Gitea service.
+In turn, we could also configure our Gitea service relying on certain parts such as when the preferred reverse proxy service or the monitoring service is enabled.
+
+* `default.nix` may contain trivial settings (i.e., timeservers, nameservers) and imports all of the modules (however you structure it which in this case, we assume it's from `modules/default.nix`) and simply compose the entire server with our host-specific modules.
+
+Now, we could have our host setup like in the following code.
+
+[source, nix]
+----
+{ config, lib, pkgs, ... }
+
+{
+  # ...
+
+  hosts.$HOSTNAME.services = {
+    # Essential services.
+    backup.enable = true;
+    mail-server.enable = true;
+    dns-server.enable = true;
+    monitoring.enable = true;
+
+    # Self-hosted applications.
+    gitea.enable = true;
+    vaultwarden.enable = true;
+  };
+}
+----
+
+You could even structure it further by combining all of the essential services into a module, say in `modules/core-services.nix` and enable them in a switch with `hosts.$HOSTNAME.core-services.enable`.
+The possibilities are only limited in how you imagine.
+
+[chat, Ezran, state=curious, role=reversed]
+====
+Why set it up like this when you could just set conditionals in the config?
+====
+
+[chat, foodogsquared]
+====
+You could do that but it's just easier for me to think and compose about the state of the host in this way.
+Why set conditional config for `services.dovecot.enable` when I could just think about `hosts.$HOSTNAME.services.mail-server.enable` where I could replace the underlying mailserver service and its related config.
+
+Pretty nitfy, right?
+====
+
+[chat, Ezran, role=reversed]
+====
+If only you could check other hosts' configuration in some way with those modules, it'll be niftier.
+====
