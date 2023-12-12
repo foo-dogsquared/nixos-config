@@ -13,6 +13,7 @@ in {
     shaders.enable = lib.mkEnableOption "tools for developing shaders";
     servers.enable = lib.mkEnableOption "toolkit for managing servers from your home";
     funsies.enable = lib.mkEnableOption "installation of command-line applications for funsies";
+    coreutils-replacement.enable = lib.mkEnableOption "replacement of coreutils with sane default options";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -25,10 +26,6 @@ in {
         perlPackages.vidir # Bulk rename for your organizing needs in the terminal.
         tealdeer # An easy cop-out for basic help.
 
-        # Coreutils replacement.
-        fd # Oh nice, a more reliable `find`.
-        ripgrep # On nice, a more reliable `grep`.
-        eza # Oh nice, a shinier `ls`.
       ];
 
       # Git interface for the lazy who cannot be asked to add hunks properly.
@@ -87,15 +84,6 @@ in {
         '';
       };
 
-      # dog > sky dog > cat.
-      programs.bat = {
-        enable = true;
-        config = {
-          pager = "${lib.getBin pkgs.moar}/bin/moar";
-          theme = "base16";
-          style = "plain";
-        };
-      };
 
       # Modern tmux? Yeah, modern tmux! For layout configurations, they are
       # more individualized so just set your home-manager users individually
@@ -148,6 +136,40 @@ in {
             trim_at = "";
           };
         };
+      };
+    })
+
+    (lib.mkIf cfg.coreutils-replacement.enable {
+      home.packages = with pkgs; [
+        fd # Welp, a reliable find.
+      ];
+
+      # dog > sky dog > cat.
+      programs.bat = {
+        enable = true;
+        config = {
+          pager = "${lib.getBin pkgs.moar}/bin/moar";
+          theme = "base16";
+          style = "plain";
+        };
+      };
+
+      # Your E last to the A.
+      programs.eza = {
+        enable = true;
+        extraOptions = [
+          "--group-directories-first"
+          "--header"
+        ];
+      };
+
+      # RIP indeed to grep.
+      programs.ripgrep = {
+        enable = true;
+        arguments = [
+          "--max-columns-preview"
+          "--colors=line:style:bold"
+        ];
       };
     })
 
