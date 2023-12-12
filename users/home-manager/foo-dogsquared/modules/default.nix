@@ -2,6 +2,7 @@
 {
   imports = [
     ./music-setup.nix
+    ./dotfiles.nix
 
     ./programs/browsers.nix
     ./programs/email.nix

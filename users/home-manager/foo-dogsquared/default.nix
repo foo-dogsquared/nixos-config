@@ -1,15 +1,12 @@
 { config, lib, pkgs, ... }:
 
-let
-  dotfilesAsStorePath = config.lib.file.mkOutOfStoreSymlink config.home.mutableFile."library/dotfiles".path;
-  getDotfiles = path: "${dotfilesAsStorePath}/${path}";
-in
 {
   imports = [ ./modules ];
 
   # All of the home-manager-user-specific setup are here.
   users.foo-dogsquared = {
     music.enable = true;
+    dotfiles.enable = false;
 
     programs = {
       browsers.brave.enable = true;
@@ -62,10 +59,6 @@ in
       sync_frequency = "10m";
     };
   };
-
-  home.sessionPath = [
-    "${config.home.mutableFile."library/dotfiles".path}/bin"
-  ];
 
   # Making my favorite terminal multiplexer right now.
   programs.zellij.settings = {
@@ -151,25 +144,13 @@ in
     createDirectories = true;
   };
 
-  # All of the personal configurations.
   xdg.configFile = {
     distrobox.source = ./config/distrobox;
-    doom.source = getDotfiles "emacs";
     kanidm.source = ./config/kanidm;
-    kitty.source = getDotfiles "kitty";
-    nvim.source = getDotfiles "nvim";
-    nyxt.source = getDotfiles "nyxt";
-    wezterm.source = getDotfiles "wezterm";
   };
 
   # Automating some files to be fetched on activation.
   home.mutableFile = {
-    # Fetching my dotfiles,...
-    "library/dotfiles" = {
-      url = "https://github.com/foo-dogsquared/dotfiles.git";
-      type = "git";
-    };
-
     # ...my gopass secrets,...
     ".local/share/gopass/stores/personal" = {
       url = "gitea@code.foodogsquared.one:foodogsquared/gopass-secrets-personal.git";
