@@ -1,15 +1,20 @@
 # WHOA! Even browsers with extensions can be declarative!
 { config, lib, pkgs, ... }@attrs:
 
+let
+  userCfg = config.users.foo-dogsquared;
+  cfg = userCfg.programs.browsers;
+in
 {
-  config = lib.mkMerge [
-    {
-      home.packages = with pkgs; [
-        google-chrome
-        nyxt
-      ];
+  options.users.foo-dogsquared.programs.browsers = {
+    firefox.enable = lib.mkEnableOption "foo-dogsquared's Firefox setup";
+    brave.enable = lib.mkEnableOption "foo-dogsquared's Brave setup";
+    misc.enable = lib.mkEnableOption "foo-dogsquared's miscellaneous browsers setup";
+  };
 
-      # The only browser to give me money.
+  config = lib.mkMerge [
+    # The only browser to give me money.
+    (lib.mkIf cfg.brave.enable {
       programs.brave = {
         enable = true;
         commandLineArgs = [
@@ -33,10 +38,10 @@
           { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
         ];
       };
-    }
+    })
 
+    # Despite the name, it isn't a browser for furries.
     (lib.mkIf (attrs ? osConfig -> !attrs.osConfig.programs.firefox.enable) {
-      # Despite the name, it isn't a browser for furries.
       programs.firefox = {
         enable = true;
 
@@ -175,7 +180,15 @@
       };
 
       # Configuring Tridactyl.
-      xdg.configFile.tridactyl.source = ../config/tridactyl;
+      xdg.configFile.tridactyl.source = ../../config/tridactyl;
+    })
+
+    # Goes with whatever you want to.
+    (lib.mkIf cfg.misc.enable {
+      home.packages = with pkgs; [
+        google-chrome
+        nyxt
+      ];
     })
   ];
 }

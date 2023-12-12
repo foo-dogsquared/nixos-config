@@ -5,13 +5,23 @@ let
   getDotfiles = path: "${dotfilesAsStorePath}/${path}";
 in
 {
-  imports = [
-    ./modules/browser.nix
-    ./modules/email.nix
-    ./modules/keys.nix
-    ./modules/git.nix
-    ./modules/music.nix
-  ];
+  imports = [ ./modules ];
+
+  # All of the home-manager-user-specific setup are here.
+  users.foo-dogsquared = {
+    music.enable = true;
+
+    programs = {
+      browsers.brave.enable = true;
+      browsers.firefox.enable = true;
+      browsers.misc.enable = true;
+      email.enable = true;
+      email.thunderbird.enable = true;
+      git.enable = true;
+      keys.gpg.enable = true;
+      keys.ssh.enable = true;
+    };
+  };
 
   # The keyfile required to decrypt the secrets.
   sops.age.keyFile = "${config.xdg.configHome}/age/user";
