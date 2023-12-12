@@ -18,6 +18,8 @@
       keys.gpg.enable = true;
       keys.ssh.enable = true;
     };
+
+    services.desktop.enable = true;
   };
 
   # The keyfile required to decrypt the secrets.
@@ -65,34 +67,6 @@
     default_layout = "editor";
     layout_dir = builtins.toString ./config/zellij/layouts;
   };
-
-  # Self-inflicted telemetry.
-  services.activitywatch = {
-    enable = true;
-    watchers = {
-      aw-watcher-afk.package = pkgs.activitywatch;
-      aw-watcher-window.package = pkgs.activitywatch;
-    };
-  };
-
-  # My preferred file indexing service.
-  services.recoll = {
-    enable = true;
-    startAt = "daily";
-    settings = {
-      topdirs = "~/Downloads ~/Documents ~/library";
-      "skippedNames+" = "node_modules";
-
-      "~/library/projects" = {
-        "skippedNames+" = ".editorconfig .gitignore result flake.lock go.sum";
-      };
-
-      "~/library/projects/software" = {
-        "skippedNames+" = "target result";
-      };
-    };
-  };
-
   # My custom modules.
   profiles = {
     dev = {
@@ -115,22 +89,6 @@
     research.enable = true;
   };
 
-  services.bleachbit = {
-    enable = true;
-    cleaners = [
-      "bash.history"
-      "winetricks.temporary_files"
-      "wine.tmp"
-      "discord.history"
-      "google_earth.temporary_files"
-      "google_toolbar.search_history"
-      "thumbnails.cache"
-      "zoom.logs"
-      "vim.history"
-    ];
-    withChatCleanup = true;
-    withBrowserCleanup = true;
-  };
 
   systemd.user.sessionVariables = {
     MANPAGER = "nvim +Man!";

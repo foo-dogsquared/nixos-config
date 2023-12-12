@@ -8,5 +8,7 @@
     ./programs/email.nix
     ./programs/git.nix
     ./programs/keys.nix
+
+    ./services/desktop.nix
   ];
 }
