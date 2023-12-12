@@ -38,6 +38,17 @@ in
           { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
         ];
       };
+
+      services.bleachbit.cleaners = [
+        "brave.cookies"
+        "brave.dom"
+        "brave.form_history"
+        "brave.history"
+        "brave.passwords"
+        "brave.session"
+        "brave.sync"
+        "brave.vacuum"
+      ];
     })
 
     # Despite the name, it isn't a browser for furries.
@@ -181,6 +192,19 @@ in
 
       # Configuring Tridactyl.
       xdg.configFile.tridactyl.source = ../../config/tridactyl;
+
+      # Configuring Bleachbit for Firefox cleaning.
+      services.bleachbit.cleaners = [
+        "firefox.backup"
+        "firefox.cookies"
+        "firefox.crash_reports"
+        "firefox.dom"
+        "firefox.forms"
+        "firefox.passwords"
+        "firefox.site_preferences"
+        "firefox.url_history"
+        "firefox.vacuum"
+      ];
     })
 
     # Goes with whatever you want to.
