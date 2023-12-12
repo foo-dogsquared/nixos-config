@@ -98,6 +98,12 @@ in {
         anystyle-cli
       ];
 
+      # Enable Emacs server for them quicknotes.
+      services.emacs = {
+        enable = true;
+        socketActivation.enable = true;
+      };
+
       xdg.mimeApps.defaultApplications = {
         "application/json" = [ "emacs.desktop" ];
         "text/org" = [ "emacs.desktop" ];
