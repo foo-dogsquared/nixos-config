@@ -3,7 +3,7 @@
 let
   cfg = config.services.bleachbit;
 
-  cleaners = cfg.cleaners ++ lib.optionals cfg.withBrowserCleanup [
+  cleaners = lib.lists.unique (cfg.cleaners ++ lib.optionals cfg.withBrowserCleanup [
     "brave.cache"
     "brave.form_history"
     "brave.history"
@@ -46,7 +46,7 @@ let
     "thunderbird.index"
     "thunderbird.passwords"
     "thunderbird.sessionjson"
-  ];
+  ]);
 in
 {
   options.services.bleachbit = {
