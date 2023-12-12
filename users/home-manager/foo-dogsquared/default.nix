@@ -17,6 +17,7 @@
       git.enable = true;
       keys.gpg.enable = true;
       keys.ssh.enable = true;
+      shell.enable = true;
     };
 
     services.desktop.enable = true;
@@ -29,19 +30,6 @@
     davfs2-credentials = {
       path = "${config.home.homeDirectory}/.davfs2/davfs2.conf";
     };
-  };
-
-  # My user shell of choice because I'm not a hipster.
-  programs.bash = {
-    enable = true;
-    historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
-    historyIgnore = [
-      "cd"
-      "exit"
-      "lf"
-      "ls"
-      "nvim"
-    ];
   };
 
   # Set nixpkgs config both outside and inside of home-manager.
@@ -69,13 +57,6 @@
   };
   # My custom modules.
   profiles = {
-    dev = {
-      enable = true;
-      shell.enable = true;
-      extras.enable = true;
-      shaders.enable = true;
-      servers.enable = true;
-    };
     editors = {
       emacs.enable = true;
       vscode.enable = true;
@@ -87,12 +68,6 @@
       documents.enable = true;
     };
     research.enable = true;
-  };
-
-
-  systemd.user.sessionVariables = {
-    MANPAGER = "nvim +Man!";
-    EDITOR = "nvim";
   };
 
   home.stateVersion = "23.11";
