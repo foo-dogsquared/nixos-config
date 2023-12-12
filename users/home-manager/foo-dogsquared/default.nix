@@ -18,6 +18,7 @@
       keys.gpg.enable = true;
       keys.ssh.enable = true;
       shell.enable = true;
+      terminal-multiplexer.enable = true;
     };
 
     services.desktop.enable = true;
@@ -50,11 +51,6 @@
     };
   };
 
-  # Making my favorite terminal multiplexer right now.
-  programs.zellij.settings = {
-    default_layout = "editor";
-    layout_dir = builtins.toString ./config/zellij/layouts;
-  };
   # My custom modules.
   profiles = {
     editors = {

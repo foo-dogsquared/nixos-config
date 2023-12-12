@@ -9,6 +9,7 @@
     ./programs/git.nix
     ./programs/keys.nix
     ./programs/shell.nix
+    ./programs/terminal-multiplexer.nix
 
     ./services/desktop.nix
   ];
