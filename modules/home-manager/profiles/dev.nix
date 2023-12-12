@@ -84,23 +84,11 @@ in {
         '';
       };
 
-
-      # Modern tmux? Yeah, modern tmux! For layout configurations, they are
-      # more individualized so just set your home-manager users individually
-      # with those. pls?
-      programs.zellij = {
-        enable = true;
-        settings = {
-          mouse_mode = false;
-          copy_on_select = false;
-          pane_frames = false;
-        };
-      };
-
       # Echolocation.
       programs.nix-index.enable = lib.mkIf (attrs ? osConfig -> !attrs.osConfig.programs.nix-index.enable) true;
     })
 
+    # Level up your terminal-dwelling skills with these.
     (lib.mkIf cfg.shell.enable {
       # Supercharging your shell history. Just don't forget to flush them out
       # before doing questionable things.
