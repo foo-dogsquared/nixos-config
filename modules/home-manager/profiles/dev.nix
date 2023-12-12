@@ -24,8 +24,6 @@ in {
         gopass # An improved version of the password manager for hipsters.
         moar # More 'more'.
         perlPackages.vidir # Bulk rename for your organizing needs in the terminal.
-        tealdeer # An easy cop-out for basic help.
-
       ];
 
       # Git interface for the lazy who cannot be asked to add hunks properly.
@@ -82,6 +80,19 @@ in {
           cmap <tab> cmd-menu-complete
           cmap <backtab> cmd-menu-complete-back
         '';
+      };
+
+      programs.tealdeer = {
+        enable = true;
+        settings = {
+          display.use_pager = true;
+          description = {
+            foreground = "green";
+            background = "black";
+          };
+          command.underline = true;
+          updates.auto_update = false;
+        };
       };
 
       # Echolocation.
