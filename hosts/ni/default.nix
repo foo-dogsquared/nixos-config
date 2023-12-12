@@ -26,6 +26,7 @@
   ];
 
   hosts.ni = {
+    hardware.qol.enable = true;
     networking.setup = "networkmanager";
     networking.wireguard.enable = true;
   };

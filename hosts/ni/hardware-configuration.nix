@@ -47,31 +47,10 @@
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
 
-  # We're using some better filesystems so we're using it.
-  boot.initrd.supportedFilesystems = [ "btrfs" ];
-  boot.supportedFilesystems = [ "btrfs" ];
-
   services.btrfs.autoScrub = {
     enable = true;
     fileSystems = [
       "/mnt/archives"
     ];
   };
-
-  # Set up printers.
-  services.printing = {
-    enable = true;
-    browsing = true;
-    drivers = with pkgs; [
-      gutenprint
-      hplip
-      splix
-    ];
-  };
-
-  # Make your CPU more useful.
-  services.auto-cpufreq.enable = true;
-
-  # Extend the life of an SSD.
-  services.fstrim.enable = true;
 }
