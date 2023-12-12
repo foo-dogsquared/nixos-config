@@ -52,7 +52,7 @@ in
     })
 
     # Despite the name, it isn't a browser for furries.
-    (lib.mkIf (attrs ? osConfig -> !attrs.osConfig.programs.firefox.enable) {
+    (lib.mkIf cfg.firefox.enable {
       programs.firefox = {
         enable = true;
 
