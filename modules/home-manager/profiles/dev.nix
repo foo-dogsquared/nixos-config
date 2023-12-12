@@ -21,7 +21,6 @@ in {
       home.packages = with pkgs; [
         cookiecutter # Cookiecutter templates for your mama (which is you).
         dasel # Universal version of jq.
-        gopass # An improved version of the password manager for hipsters.
         moar # More 'more'.
         perlPackages.vidir # Bulk rename for your organizing needs in the terminal.
       ];

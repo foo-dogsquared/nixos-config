@@ -3,7 +3,6 @@
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    ./modules/hardware/traditional-networking.nix
   ];
 
   # Get the latest kernel for the desktop experience.

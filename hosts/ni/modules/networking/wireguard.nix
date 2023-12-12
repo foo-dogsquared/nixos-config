@@ -1,9 +1,13 @@
 { config, lib, pkgs, ... }:
 
 let
-  network = import ../../plover/modules/hardware/networks.nix;
+  hostCfg = config.hosts.ni;
+  cfg = hostCfg.networking.wireguard;
+
+  networkSetup = hostCfg.networking.setup;
+
   inherit (builtins) toString;
-  inherit (network)
+  inherit (import ../../../plover/modules/hardware/networks.nix)
     interfaces
     wireguardPort
     wireguardPeers;
@@ -21,20 +25,20 @@ let
   ];
 in
 {
-  # Setting up Wireguard as a VPN tunnel. Since this is a laptop that meant to
-  # be used anywhere, we're configuring Wireguard here as a "client".
-  config = lib.mkMerge [
+  options.hosts.ni.networking.wireguard.enable = lib.mkEnableOption "Wireguard setup";
+
+  config = lib.mkIf (hostCfg.networking.enable && cfg.enable) (lib.mkMerge [
     {
       environment.systemPackages = with pkgs; [ wireguard-tools ];
       networking.firewall.allowedUDPPorts = [ wireguardPort ];
-      sops.secrets = lib.getSecrets ../secrets/secrets.yaml {
+      sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
         "wireguard/private-key" = { };
         "wireguard/preshared-keys/plover" = { };
         "wireguard/preshared-keys/phone" = { };
       };
     }
 
-    (lib.mkIf config.networking.networkmanager.enable {
+    (lib.mkIf (networkSetup == "networkmanager") {
       networking.wg-quick.interfaces.wireguard0 = {
         privateKeyFile = config.sops.secrets."wireguard/private-key".path;
         listenPort = wireguardPort;
@@ -57,7 +61,7 @@ in
         peers = [
           # The "server" peer.
           {
-            publicKey = lib.removeSuffix "\n" (lib.readFile ../../plover/files/wireguard/wireguard-public-key-plover);
+            publicKey = lib.removeSuffix "\n" (lib.readFile ../../../plover/files/wireguard/wireguard-public-key-plover);
             presharedKeyFile = config.sops.secrets."wireguard/preshared-keys/plover".path;
             allowedIPs = wireguardAllowedIPs;
             endpoint = "${interfaces.wan.IPv4.address}:${toString wireguardPort}";
@@ -66,7 +70,7 @@ in
 
           # The "phone" peer.
           {
-            publicKey = lib.removeSuffix "\n" (lib.readFile ../../plover/files/wireguard/wireguard-public-key-phone);
+            publicKey = lib.removeSuffix "\n" (lib.readFile ../../../plover/files/wireguard/wireguard-public-key-phone);
             presharedKeyFile = config.sops.secrets."wireguard/preshared-keys/phone".path;
             allowedIPs = wireguardAllowedIPs;
           }
@@ -74,7 +78,7 @@ in
       };
     })
 
-    (lib.mkIf config.systemd.network.enable {
+    (lib.mkIf (networkSetup == "networkd") {
       # Just apply the appropriate permissions for systemd-networkd.
       sops.secrets =
         let
@@ -108,7 +112,7 @@ in
           wireguardPeers = [
             # The "server" peer.
             {
-              PublicKey = lib.readFile ../../plover/files/wireguard/wireguard-public-key-plover;
+              PublicKey = lib.readFile ../../../plover/files/wireguard/wireguard-public-key-plover;
               PresharedKeyFile = config.sops.secrets."wireguard/preshared-keys/plover".path;
               AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
               Endpoint = "${interfaces.wan.IPv4.address}:${toString wireguardPort}";
@@ -117,7 +121,7 @@ in
 
             # The "phone" peer.
             {
-              PublicKey = lib.readFile ../../plover/files/wireguard/wireguard-public-key-phone;
+              PublicKey = lib.readFile ../../../plover/files/wireguard/wireguard-public-key-phone;
               PresharedKeyFile = config.sops.secrets."wireguard/preshared-keys/phone".path;
               AllowedIPs = lib.concatStringsSep "," wireguardAllowedIPs;
             }
@@ -137,5 +141,5 @@ in
         };
       };
     })
-  ];
+  ]);
 }

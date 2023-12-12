@@ -4,9 +4,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-
-    ./modules/networking.nix
-    ./modules/wireguard.nix
+    ./modules
 
     (lib.mapHomeManagerUser "foo-dogsquared" {
       extraGroups = [
@@ -26,6 +24,11 @@
       description = "Gabriel Arazas";
     })
   ];
+
+  hosts.ni = {
+    networking.setup = "networkmanager";
+    networking.wireguard.enable = true;
+  };
 
   disko.devices = import ./disko.nix {
     disks = [ "/dev/nvme0n1" ];
