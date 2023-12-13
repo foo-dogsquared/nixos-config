@@ -17,6 +17,7 @@
       git.enable = true;
       keys.gpg.enable = true;
       keys.ssh.enable = true;
+      research.enable = true;
       shell.enable = true;
       terminal-multiplexer.enable = true;
     };
@@ -63,7 +64,6 @@
       video.enable = true;
       documents.enable = true;
     };
-    research.enable = true;
   };
 
   home.stateVersion = "23.11";

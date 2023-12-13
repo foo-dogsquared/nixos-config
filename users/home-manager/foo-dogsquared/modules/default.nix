@@ -8,6 +8,7 @@
     ./programs/email.nix
     ./programs/git.nix
     ./programs/keys.nix
+    ./programs/research.nix
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
 

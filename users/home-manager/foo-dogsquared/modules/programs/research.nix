@@ -1,21 +1,22 @@
 { config, lib, pkgs, ... }:
 
-let cfg = config.profiles.research;
+let
+  userCfg = config.users.foo-dogsquared;
+  cfg = userCfg.programs.research;
 in {
-  options.profiles.research.enable =
-    lib.mkEnableOption "my usual toolbelt for research";
+  options.users.foo-dogsquared.programs.research.enable =
+    lib.mkEnableOption "foo-dogsquared's usual toolbelt for research";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       anki # Rise, rinse, and repeat.
-      archivebox # The ultimate archiving solution created by a pirate!
+      #archivebox # The ultimate archiving solution created by a pirate!
       curl # The general purpose downloader.
       fanficfare # It's for the badly written fanfics.
       gallery-dl # More potential for your image collection.
       internetarchive # All of the potential vintage collection of questionable materials at your fingertips.
       kiwix # Offline reader for your fanon wiki.
       monolith # Archive webpages into a single file.
-      newsboat # Reading news easily on the command line?
       qbittorrent # The pirate's toolkit for downloading Linux ISOs.
       sherlock # Make a profile of your *target*.
       wget # Who would've think a simple tool can be made for this purpose?

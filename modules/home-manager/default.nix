@@ -22,7 +22,6 @@ let
     ./profiles/dev.nix
     ./profiles/editors.nix
     ./profiles/i18n.nix
-    ./profiles/research.nix
   ];
 in
 modules
