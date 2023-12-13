@@ -5,6 +5,7 @@ pkgs.mkShell {
     age
     asciidoctor
     deploy-rs
+    home-manager
     git
     sops
 
