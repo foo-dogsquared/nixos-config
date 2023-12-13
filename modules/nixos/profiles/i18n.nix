@@ -9,20 +9,19 @@ in
 {
   options.profiles.i18n = {
     enable = lib.mkEnableOption "main i18n config";
-    ibus.enable = lib.mkEnableOption "i18n config with ibus";
-    fcitx5.enable = lib.mkEnableOption "i18n config with fcitx5";
+    setup = lib.mkOption {
+      type = lib.types.enum [ "fcitx5" "ibus" ];
+      description = ''
+        The primary input method engine to be used and its related
+        configuration and setup.
+      '';
+      default = "fcitx5";
+      example = "ibus";
+    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      assertions = let enabledi18nConfigs = lib.countAttrs (_: setup: lib.isAttrs setup && setup.enable) cfg; in
-        [{
-          assertion = enabledi18nConfigs <= 1;
-          message = ''
-            Only one i18n setup should be enabled at any given time.
-          '';
-        }];
-
       # I don't speak all of the languages. It's just nice to have some
       # additional language packs for it. ;p
       i18n.supportedLocales = lib.mkForce [ "all" ];
@@ -47,7 +46,7 @@ in
       ];
     }
 
-    (lib.mkIf cfg.ibus.enable {
+    (lib.mkIf (cfg.setup == "ibus") {
       i18n.inputMethod = {
         enabled = "ibus";
         ibus.engines = with pkgs.ibus-engines; [
@@ -62,7 +61,7 @@ in
       };
     })
 
-    (lib.mkIf cfg.fcitx5.enable {
+    (lib.mkIf (cfg.setup == "fcitx5") {
       i18n.inputMethod = {
         enabled = "fcitx5";
         fcitx5.addons = with pkgs; [

@@ -183,10 +183,7 @@ in
     # of the flake input, this shouldn't be applied nor be used in the first
     # place.
     (lib.mkIf (attrs ? _isfoodogsquaredcustom && attrs._isfoodogsquaredcustom) {
-      profiles.i18n = {
-        enable = true;
-        ibus.enable = true;
-      };
+      profiles.i18n.setup = "ibus";
     })
   ]);
 }
