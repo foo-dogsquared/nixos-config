@@ -393,7 +393,7 @@
           (filename: metadata:
             let
               name = metadata.username or filename;
-              pkgs = import nixpkgs { inherit overlays; };
+              pkgs = import inputs.${metadata.nixpkgs-channel or "nixpkgs"} { inherit overlays; };
               path = ./users/home-manager/${name};
               extraModules = [
                 ({ lib, pkgs, config, ... }: {
