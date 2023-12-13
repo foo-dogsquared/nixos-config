@@ -177,13 +177,14 @@ in
           zone services;
           keepalive 2;
         '';
-        servers = let
-          address = config.services.vaultwarden.config.ROCKET_ADDRESS;
-          port = config.services.vaultwarden.config.ROCKET_PORT;
-        in
-        {
-          "${address}:${builtins.toString port}" = { };
-        };
+        servers =
+          let
+            address = config.services.vaultwarden.config.ROCKET_ADDRESS;
+            port = config.services.vaultwarden.config.ROCKET_PORT;
+          in
+          {
+            "${address}:${builtins.toString port}" = { };
+          };
       };
     })
 

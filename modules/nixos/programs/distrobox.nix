@@ -8,18 +8,19 @@ let
   # values with shell expansions.
   toDistroboxConf = lib.generators.toKeyValue {
     listsAsDuplicateKeys = false;
-    mkKeyValue = lib.generators.mkKeyValueDefault {
-      mkValueString = v:
-        if v == true then "1"
-        else if v == false then "0"
-        else if lib.isString v then ''"${v}"''
-        else if lib.isPath v then lib.escapeShellArg v
-        else if lib.isList v then ''"${lib.concatStringsSep " " v}"''
-        else lib.generators.mkValueStringDefault { } v;
-    } "=";
+    mkKeyValue = lib.generators.mkKeyValueDefault
+      {
+        mkValueString = v:
+          if v == true then "1"
+          else if v == false then "0"
+          else if lib.isString v then ''"${v}"''
+          else if lib.isPath v then lib.escapeShellArg v
+          else if lib.isList v then ''"${lib.concatStringsSep " " v}"''
+          else lib.generators.mkValueStringDefault { } v;
+      } "=";
   };
 
-  distroboxConf = { }: {
+  distroboxConf = {}: {
     type = with lib.types;
       let
         valueType = (oneOf [

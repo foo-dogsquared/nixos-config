@@ -376,7 +376,7 @@
         lib'.mapAttrs
           (host: metadata:
             mkHost {
-              extraModules = [(hostSpecificModule host metadata)];
+              extraModules = [ (hostSpecificModule host metadata) ];
               system = metadata._system;
               nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
             })
@@ -454,7 +454,7 @@
               in
               lib'.nameValuePair name (mkImage {
                 inherit format system pkgs;
-                extraModules = [(hostSpecificModule host metadata)];
+                extraModules = [ (hostSpecificModule host metadata) ];
               }))
             images');
 

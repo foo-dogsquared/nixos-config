@@ -49,7 +49,7 @@ let
         after = [ "network.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
         preStart = ''
-                  mkdir -p ${lib.escapeShellArg cfg.archivePath}
+          mkdir -p ${lib.escapeShellArg cfg.archivePath}
         '';
         path = [ cfg.package ] ++ cfg.extraPackages;
         script = ''
@@ -96,14 +96,14 @@ let
     lib.nameValuePair (jobUnitName name) {
       description =
         "Archivebox download job '${name}'";
-        after = [ "network.target" ];
-        documentation = [ "https://docs.archivebox.io/" ];
-        timerConfig = {
-          Persistent = true;
-          OnCalendar = value.startAt;
-          RandomizedDelaySec = 120;
-        };
-        wantedBy = [ "timers.target" ];
+      after = [ "network.target" ];
+      documentation = [ "https://docs.archivebox.io/" ];
+      timerConfig = {
+        Persistent = true;
+        OnCalendar = value.startAt;
+        RandomizedDelaySec = 120;
+      };
+      wantedBy = [ "timers.target" ];
     };
 in
 {

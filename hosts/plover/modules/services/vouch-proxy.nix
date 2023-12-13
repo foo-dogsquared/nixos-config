@@ -13,16 +13,18 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      sops.secrets = let
-        vouchPermissions = rec {
-          owner = "vouch-proxy";
-          group = owner;
-          mode = "0400";
+      sops.secrets =
+        let
+          vouchPermissions = rec {
+            owner = "vouch-proxy";
+            group = owner;
+            mode = "0400";
+          };
+        in
+        lib.getSecrets ../../secrets/secrets.yaml {
+          "vouch-proxy/jwt/secret" = vouchPermissions;
+          "vouch-proxy/client/secret" = vouchPermissions;
         };
-      in lib.getSecrets ../../secrets/secrets.yaml {
-        "vouch-proxy/jwt/secret" = vouchPermissions;
-        "vouch-proxy/client/secret" = vouchPermissions;
-      };
 
       services.vouch-proxy = {
         enable = true;
