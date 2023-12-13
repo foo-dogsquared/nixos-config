@@ -27,6 +27,7 @@
 
   hosts.ni = {
     hardware.qol.enable = true;
+    networking.enable = true;
     networking.setup = "networkmanager";
     networking.wireguard.enable = true;
   };
@@ -105,7 +106,6 @@
       tools.enable = true;
       setups.personal-webstorage.enable = true;
     };
-    vpn.personal.enable = true;
   };
 
   # This is somewhat used for streaming games from it.
