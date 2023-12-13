@@ -27,13 +27,17 @@
 
   hosts.ni = {
     hardware.qol.enable = true;
-    networking.enable = true;
-    networking.setup = "networkmanager";
-    networking.wireguard.enable = true;
-    setups.desktop.enable = true;
-    setups.development.enable = true;
-    setups.music.enable = true;
-    setups.gaming.enable = true;
+    networking = {
+      enable = true;
+      setup = "networkmanager";
+      wireguard.enable = true;
+    };
+    setups = {
+      desktop.enable = true;
+      development.enable = true;
+      music.enable = true;
+      gaming.enable = true;
+    };
   };
 
   disko.devices = import ./disko.nix {
@@ -62,6 +66,8 @@
   # Basically, the most basic nixpkgs configuration.
   environment.variables.NIXPKGS_CONFIG = lib.mkForce ./config/nixpkgs/config.nix;
 
+  # Some more experimentals for Nix.
+  nix.settings.experimental-features = [ "auto-allocate-uids" "configurable-impure-env" ];
 
   system.stateVersion = "24.05"; # Yes! I read the comment!
 }
