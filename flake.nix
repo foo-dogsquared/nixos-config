@@ -175,6 +175,9 @@
             inputs.nixos-wsl.nixosModules.default
           ];
 
+        # Set some extra, yeah?
+        _module.args = extraArgs;
+
         # Find Nix files with these! Even if nix-index is already enabled, it
         # is better to make it explicit.
         programs.command-not-found.enable = false;
@@ -215,7 +218,6 @@
         home-manager.useUserPackages = lib.mkDefault true;
         home-manager.useGlobalPkgs = lib.mkDefault true;
         home-manager.sharedModules = [ userSharedConfig ];
-        home-manager.extraSpecialArgs = extraArgs;
 
         # Enabling some things for sops.
         programs.gnupg.agent = lib.mkDefault {
@@ -245,6 +247,9 @@
             inputs.sops-nix.homeManagerModules.sops
             inputs.nix-index-database.hmModules.nix-index
           ];
+
+        # Set some extra, yeah?
+        _module.args = extraArgs;
 
         # Hardcoding this is not really great especially if you consider using
         # other locales but its default values are already hardcoded so what
@@ -371,7 +376,6 @@
         lib'.mapAttrs
           (host: metadata:
             mkHost {
-              inherit extraArgs;
               extraModules = [(hostSpecificModule host metadata)];
               system = metadata._system;
               nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
@@ -411,7 +415,7 @@
               ];
             in
             mkHome {
-              inherit pkgs extraModules extraArgs;
+              inherit pkgs extraModules;
               home-manager-channel = metadata.home-manager-channel or "home-manager";
             })
           users;
@@ -449,7 +453,7 @@
                 format = metadata.format or "iso";
               in
               lib'.nameValuePair name (mkImage {
-                inherit format system pkgs extraArgs;
+                inherit format system pkgs;
                 extraModules = [(hostSpecificModule host metadata)];
               }))
             images');

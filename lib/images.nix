@@ -4,27 +4,24 @@
 
 {
   # A wrapper around the NixOS configuration function.
-  mkHost = { system, extraModules ? [ ], extraArgs ? { }, nixpkgs-channel ? "nixpkgs" }:
+  mkHost = { system, extraModules ? [ ], nixpkgs-channel ? "nixpkgs" }:
     (lib.makeOverridable inputs."${nixpkgs-channel}".lib.nixosSystem) {
       # The system of the NixOS system.
       inherit lib;
-      specialArgs = extraArgs;
       modules = extraModules ++ [{ nixpkgs.hostPlatform = system; }];
     };
 
   # A wrapper around the home-manager configuration function.
-  mkHome = { pkgs, extraModules ? [ ], extraArgs ? { }, home-manager-channel ? "home-manager" }:
+  mkHome = { pkgs, extraModules ? [ ], home-manager-channel ? "home-manager" }:
     inputs."${home-manager-channel}".lib.homeManagerConfiguration {
       inherit lib pkgs;
-      extraSpecialArgs = extraArgs;
       modules = extraModules;
     };
 
   # A wrapper around the nixos-generators `nixosGenerate` function.
-  mkImage = { system, pkgs ? null, extraModules ? [ ], extraArgs ? { }, format ? "iso" }:
+  mkImage = { system, pkgs ? null, extraModules ? [ ], format ? "iso" }:
     inputs.nixos-generators.nixosGenerate {
       inherit pkgs system format lib;
-      specialArgs = extraArgs;
       modules = extraModules;
     };
 
