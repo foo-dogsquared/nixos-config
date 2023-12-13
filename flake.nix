@@ -404,7 +404,7 @@
 
                   # Setting the homely options.
                   home.username = lib.mkForce name;
-                  home.homeDirectory = lib.mkForce metadata.home-directory or "/home/${config.home.username}";
+                  home.homeDirectory = lib.mkForce (metadata.home-directory or "/home/${config.home.username}");
 
                   programs.home-manager.enable = lib.mkForce true;
                   targets.genericLinux.enable = true;
