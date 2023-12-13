@@ -13,6 +13,7 @@ in
     profiles.dev = {
       enable = true;
       extras.enable = true;
+      coreutils-replacement.enable = true;
       shell.enable = true;
       servers.enable = true;
     };
