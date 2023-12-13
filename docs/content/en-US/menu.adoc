@@ -20,10 +20,12 @@
 ** link:{{< relref "./04-nixos-modules/03-disko" >}}[disko]
 ** link:{{< relref "./04-nixos-modules/04-host-specific-modules" >}}[Host-specific modules]
 
-* link:{{< relref "./05-using-parts-of-my-configuration" >}}[Using parts of my configuration]
+* link:{{< relref "./05-home-manager" >}}[home-manager]
 
-* link:{{< relref "./06-faq" >}}[Frequently asked questions]
+* link:{{< relref "./06-using-parts-of-my-configuration" >}}[Using parts of my configuration]
 
-* link:{{< relref "./07-acknowledgement" >}}[Acknowledgement]
+* link:{{< relref "./07-faq" >}}[Frequently asked questions]
 
-* link:{{< relref "./08-copyright" >}}[Copyright]
+* link:{{< relref "./08-acknowledgement" >}}[Acknowledgement]
+
+* link:{{< relref "./09-copyright" >}}[Copyright]

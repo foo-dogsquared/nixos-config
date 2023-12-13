@@ -1,0 +1,104 @@
+---
+title: "home-manager"
+---
+= home-manager
+
+This NixOS configuration uses github:nix-community/home-manager[opts=repo] extensively for home environment configuration.
+Each of the home-manager users are placed in `users/home-manager` at the project root.
+Furthermore, they are typically deployed as part of the NixOS configuration and as stand-alone home-manager configuration.
+For more information, see xref:../03-project-specific-setup/01-declarative-host-management/index.adoc[Declarative host management] and xref:../03-project-specific-setup/02-declarative-user-management/index.adoc[Declarative user management].
+
+
+== Importing a home-manager config on NixOS
+
+[chat, foodogsquared, role=full]
+====
+For NixOS systems, we do prefer deploying home-manager configurations as part of the whole system.
+This allows us to easily configure more than one home-manager user.
+====
+
+For NixOS systems, there are multiple ways to impart a home-manager user.
+The simplest way is to have it as a NixOS user and import it from there.
+Here's an example of a NixOS user with a home-manager config.
+
+[source, nix]
+----
+include::../../../../users/nixos/plover/default.nix[]
+----
+
+On the host configuration, you can then import it like so.
+
+[source, nix]
+----
+{ config, lib, pkgs, ... }: {
+  imports = [ (lib.getUser "nixos" "plover") ]
+}
+----
+
+But creating a dedicated NixOS user onto a file then importing the module just to use a home-manager is more of a hassle.
+It shouldn't require much boilerplate.
+This is why this NixOS config has created a function for it: `mapHomeManagerUser`.
+
+.An example of how to use it
+[source, nix]
+----
+lib.mapHomeManagerUser "foo-dogsquared" {
+  extraGroups = [
+    "adbusers"
+    "wheel"
+    "audio"
+    "docker"
+    "podman"
+    "networkmanager"
+    "wireshark"
+  ];
+  hashedPassword =
+    "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
+  isNormalUser = true;
+  createHome = true;
+  home = "/home/foo-dogsquared";
+  description = "Gabriel Arazas";
+}
+----
+
+It just takes the home-manager user from `users/home-manager` and a config of the user at `users.users.<name>` for the NixOS user.
+
+
+== User-specific modules
+
+home-manager users may have user-specific modules structured similarly to xref:../04-nixos-modules/04-host-specific-modules/index.adoc[Host-specific modules].
+The only difference is the namespace is expected at `users.$USERNAME`.
+
+Here's one example of how one would configure their user with this convention.
+
+[source, nix]
+----
+{
+  users.foo-dogsquared = {
+    dotfiles.enable = false;
+
+    programs = {
+      browsers.brave.enable = true;
+      browsers.firefox.enable = true;
+      browsers.misc.enable = true;
+      email.enable = true;
+      email.thunderbird.enable = true;
+      git.enable = true;
+      keys.gpg.enable = true;
+      keys.ssh.enable = true;
+      research.enable = true;
+      shell.enable = true;
+      terminal-multiplexer.enable = true;
+    };
+
+    setups = {
+      desktop.enable = true;
+      fonts.enable = true;
+      music.enable = true;
+    };
+  };
+}
+----
+
+Like host-specific modules, you could structure it in whatever arbitrary criteria you deem necessary.
+This allows us to think about the specific state and purpose of the user while configuring it all the same as any other module rather than dumping it all and adapting it on a shared home-manager module.
