@@ -32,6 +32,7 @@
     networking.wireguard.enable = true;
     setups.desktop.enable = true;
     setups.music.enable = true;
+    setups.gaming.enable = true;
   };
 
   disko.devices = import ./disko.nix {
@@ -71,11 +72,6 @@
       shell.enable = true;
       virtualization.enable = true;
       neovim.enable = true;
-    };
-    gaming = {
-      enable = true;
-      emulators.enable = true;
-      retro-computing.enable = true;
     };
     filesystem = {
       tools.enable = true;

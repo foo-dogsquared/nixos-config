@@ -5,6 +5,7 @@
     ./networking/setup.nix
     ./networking/wireguard.nix
     ./setups/desktop.nix
+    ./setups/gaming.nix
     ./setups/music.nix
   ];
 }
