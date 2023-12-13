@@ -30,6 +30,7 @@
     networking.enable = true;
     networking.setup = "networkmanager";
     networking.wireguard.enable = true;
+    setups.music.enable = true;
   };
 
   disko.devices = import ./disko.nix {
@@ -46,24 +47,6 @@
     "time.nist.gov"
     "time.facebook.com"
   ];
-
-  # My portable music streaming server.
-  services.gonic = {
-    enable = true;
-    settings = {
-      listen-addr = "127.0.0.1:4747";
-      cache-path = "/var/cache/gonic";
-      music-path = [
-        "/srv/music"
-      ];
-      podcast-path = "/var/cache/gonic/podcasts";
-
-      jukebox-enabled = true;
-
-      scan-interval = 1;
-      scan-at-start-enabled = true;
-    };
-  };
 
   sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
     "ssh-key" = { };
