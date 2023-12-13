@@ -30,6 +30,7 @@
     networking.enable = true;
     networking.setup = "networkmanager";
     networking.wireguard.enable = true;
+    setups.desktop.enable = true;
     setups.music.enable = true;
   };
 
@@ -63,17 +64,8 @@
 
   # My custom configuration with my custom modules starts here.
   profiles = {
-    i18n.enable = true;
     archiving.enable = true;
     browsers.chromium.enable = true;
-    desktop = {
-      enable = true;
-      audio.enable = true;
-      fonts.enable = true;
-      hardware.enable = true;
-      cleanup.enable = true;
-      wine.enable = true;
-    };
     dev = {
       enable = true;
       shell.enable = true;
@@ -93,22 +85,6 @@
 
   # This is somewhat used for streaming games from it.
   programs.steam.remotePlay.openFirewall = true;
-
-  programs.blender = {
-    enable = true;
-    package = pkgs.blender-foodogsquared;
-    addons = with pkgs; [
-      blender-blendergis
-      blender-machin3tools
-    ];
-  };
-
-  # Backup for the almighty archive, pls.
-  tasks.backup-archive.enable = true;
-
-  # The most extensible desktop environment with the greatest toolset of all
-  # time (arguably but it is great).
-  workflows.workflows.a-happy-gnome.enable = true;
 
   programs.wezterm.enable = true;
   programs.adb.enable = true;
