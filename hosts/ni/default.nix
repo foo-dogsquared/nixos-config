@@ -62,10 +62,7 @@
   profiles = {
     archiving.enable = true;
     browsers.chromium.enable = true;
-    filesystem = {
-      tools.enable = true;
-      setups.personal-webstorage.enable = true;
-    };
+    filesystem.setups.personal-webstorage.enable = true;
   };
 
   # Basically, the most basic nixpkgs configuration.

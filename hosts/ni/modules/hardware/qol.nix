@@ -9,6 +9,9 @@ in
   options.hosts.ni.hardware.qol.enable = lib.mkEnableOption "quality-of-life hardware features";
 
   config = lib.mkIf cfg.enable {
+    # Bring in some of them good tools.
+    profiles.filesystem.tools.enable = true;
+
     # We're using some better filesystems so we're using it.
     boot.initrd.supportedFilesystems = [ "btrfs" ];
     boot.supportedFilesystems = [ "btrfs" ];
