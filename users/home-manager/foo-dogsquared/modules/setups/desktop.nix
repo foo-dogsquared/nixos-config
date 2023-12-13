@@ -9,6 +9,20 @@ in
   options.users.foo-dogsquared.setups.desktop.enable = lib.mkEnableOption "a set of usual desktop productivity services";
 
   config = lib.mkIf cfg.enable {
+    # Install all of the desktop stuff.
+    profiles.desktop = {
+      enable = true;
+      graphics.enable = true;
+      video.enable = true;
+      documents.enable = true;
+    };
+
+    # Make it rain with fonts.
+    fonts.fontconfig.enable = true;
+
+    # Forcibly set the user directories.
+    xdg.userDirs.enable = true;
+
     # Self-inflicted telemetry.
     services.activitywatch = {
       enable = true;

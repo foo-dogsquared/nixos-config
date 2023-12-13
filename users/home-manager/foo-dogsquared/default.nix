@@ -44,8 +44,6 @@
     hledger # Trying to be a good accountant.
   ];
 
-  fonts.fontconfig.enable = true;
-
   programs.atuin = {
     settings = {
       auto_sync = true;
@@ -60,20 +58,9 @@
       emacs.enable = true;
       vscode.enable = true;
     };
-    desktop = {
-      enable = true;
-      graphics.enable = true;
-      video.enable = true;
-      documents.enable = true;
-    };
   };
 
   home.stateVersion = "23.11";
-
-  xdg.userDirs = {
-    enable = true;
-    createDirectories = true;
-  };
 
   xdg.configFile = {
     distrobox.source = ./config/distrobox;
