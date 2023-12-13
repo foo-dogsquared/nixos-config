@@ -12,6 +12,7 @@
     ./programs/terminal-multiplexer.nix
 
     ./setups/desktop.nix
+    ./setups/fonts.nix
     ./setups/music.nix
   ];
 }

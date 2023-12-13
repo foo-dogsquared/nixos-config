@@ -23,6 +23,7 @@
 
     setups = {
       desktop.enable = true;
+      fonts.enable = true;
       music.enable = true;
     };
   };
