@@ -2,7 +2,7 @@
 
 let
   userCfg = config.users.foo-dogsquared;
-  cfg = userCfg.music;
+  cfg = userCfg.setups.music;
 
   ytdlpAudio = pkgs.writeScriptBin "yt-dlp-audio" ''
     ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${../../config/yt-dlp-audio.conf}" $@
@@ -12,7 +12,7 @@ let
   playlistsDir = "${musicDir}/playlists";
 in
 {
-  options.users.foo-dogsquared.music = {
+  options.users.foo-dogsquared.setups.music = {
     enable = lib.mkEnableOption "foo-dogsquared's music setup";
     mpd.enable = lib.mkEnableOption "foo-dogsquared's MPD server setup";
   };

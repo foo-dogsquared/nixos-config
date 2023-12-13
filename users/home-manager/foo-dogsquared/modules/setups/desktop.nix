@@ -3,10 +3,10 @@
 
 let
   userCfg = config.users.foo-dogsquared;
-  cfg = userCfg.services.desktop;
+  cfg = userCfg.setups.desktop;
 in
 {
-  options.users.foo-dogsquared.services.desktop.enable = lib.mkEnableOption "a set of usual desktop productivity services";
+  options.users.foo-dogsquared.setups.desktop.enable = lib.mkEnableOption "a set of usual desktop productivity services";
 
   config = lib.mkIf cfg.enable {
     # Self-inflicted telemetry.

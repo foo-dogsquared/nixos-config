@@ -5,7 +5,6 @@
 
   # All of the home-manager-user-specific setup are here.
   users.foo-dogsquared = {
-    music.enable = true;
     dotfiles.enable = false;
 
     programs = {
@@ -22,7 +21,10 @@
       terminal-multiplexer.enable = true;
     };
 
-    services.desktop.enable = true;
+    setups = {
+      desktop.enable = true;
+      music.enable = true;
+    };
   };
 
   # The keyfile required to decrypt the secrets.

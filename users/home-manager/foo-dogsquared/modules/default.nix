@@ -1,7 +1,6 @@
 # Only optional modules should be imported here.
 {
   imports = [
-    ./music-setup.nix
     ./dotfiles.nix
 
     ./programs/browsers.nix
@@ -12,6 +11,7 @@
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
 
-    ./services/desktop.nix
+    ./setups/desktop.nix
+    ./setups/music.nix
   ];
 }
