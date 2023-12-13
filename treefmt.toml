@@ -16,6 +16,6 @@ command = "black"
 includes = [ "*.py" ]
 
 [formatter.terraform]
-command = "terraform"
+command = "tofu"
 options = [ "fmt" ]
 includes = [ "*.tf" ]
