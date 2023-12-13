@@ -148,6 +148,14 @@
         # Some defaults for evaluating modules.
         _module.check = true;
 
+        # Initialize some of the XDG base directories ourselves since it is used by NIX_PROFILES to properly link some of them.
+        environment.sessionVariables = {
+          XDG_CACHE_HOME = "$HOME/.cache";
+          XDG_CONFIG_HOME = "$HOME/.config";
+          XDG_DATA_HOME = "$HOME/.local/share";
+          XDG_STATE_HOME = "$HOME/.local/state";
+        };
+
         # Only use imports as minimally as possible with the absolute
         # requirements of a host. On second thought, only on flakes with
         # optional NixOS modules.
