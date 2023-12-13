@@ -45,12 +45,6 @@
     type = "ed25519";
   }];
 
-  networking.timeServers = lib.mkBefore [
-    "ntp.nict.jp"
-    "time.nist.gov"
-    "time.facebook.com"
-  ];
-
   sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
     "ssh-key" = { };
   };
@@ -68,14 +62,6 @@
   # Basically, the most basic nixpkgs configuration.
   environment.variables.NIXPKGS_CONFIG = lib.mkForce ./config/nixpkgs/config.nix;
 
-  # Set your time zone.
-  time.timeZone = "Asia/Manila";
-
-  # Doxxing myself.
-  location = {
-    latitude = 15.0;
-    longitude = 121.0;
-  };
 
   system.stateVersion = "24.05"; # Yes! I read the comment!
 }

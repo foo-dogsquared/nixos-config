@@ -26,6 +26,22 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
+      # Set your time zone.
+      time.timeZone = "Asia/Manila";
+
+      # Doxxing myself.
+      location = {
+        latitude = 15.0;
+        longitude = 121.0;
+      };
+
+      # Add these timeservers.
+      networking.timeServers = lib.mkBefore [
+        "ntp.nict.jp"
+        "time.nist.gov"
+        "time.facebook.com"
+      ];
+
       # Put on your cloak, kid.
       profiles.vpn.personal.enable = true;
 
