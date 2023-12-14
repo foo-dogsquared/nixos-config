@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }@attrs:
+{ config, lib, pkgs, _isfoodogsquaredcustom ? false, ... }:
 
 let
   cfg = config.workflows.workflows.mosey-branch;
@@ -182,7 +182,7 @@ in
     # my setup. If you're not foodogsquared and you're using my project as one
     # of the flake input, this shouldn't be applied nor be used in the first
     # place.
-    (lib.mkIf (attrs ? _isfoodogsquaredcustom && attrs._isfoodogsquaredcustom) {
+    (lib.mkIf _isfoodogsquaredcustom {
       profiles.i18n.setup = "ibus";
     })
   ]);
