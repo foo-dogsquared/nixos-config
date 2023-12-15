@@ -32,6 +32,7 @@
       setup = "networkmanager";
       wireguard.enable = true;
     };
+    services.backup.enable = true;
     setups = {
       desktop.enable = true;
       development.enable = true;

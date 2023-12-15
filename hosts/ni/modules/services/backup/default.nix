@@ -2,7 +2,8 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.tasks.backup-archive;
+  hostCfg = config.hosts.ni;
+  cfg = hostCfg.services.backup;
 
   borgJobCommonSetting = { patterns ? [ ], passCommand }: {
     compression = "zstd,12";
@@ -42,12 +43,12 @@ let
   pathPrefix = "borg-backup";
 in
 {
-  options.tasks.backup-archive.enable =
+  options.hosts.ni.services.backup.enable =
     lib.mkEnableOption "backup setup with BorgBackup";
 
   config = lib.mkIf cfg.enable {
     sops.secrets = lib.getSecrets
-      (lib.getSecret "backup-archive.yaml")
+      ./secrets.yaml
       (lib.attachSopsPathPrefix pathPrefix {
         "patterns/home" = { };
         "patterns/etc" = { };
