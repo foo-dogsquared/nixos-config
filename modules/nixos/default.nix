@@ -29,7 +29,6 @@ let
     ./profiles/i18n.nix
     ./profiles/server.nix
     ./profiles/vpn.nix
-    ./tasks/multimedia-archive
   ];
 in
 modules

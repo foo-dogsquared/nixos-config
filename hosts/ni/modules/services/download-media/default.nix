@@ -1,18 +1,19 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.tasks.multimedia-archive;
+  hostCfg = config.hosts.ni;
+  cfg = hostCfg.services.download-media;
   mountName = "/mnt/archives";
 
   deviantArt = name: "https://deviantart.com/${name}";
   artStation = name: "https://www.artstation.com/${name}";
   newgrounds = name: "https://${name}.newgrounds.com";
 
-  pathPrefix = "multimedia-archive";
+  pathPrefix = "download-media";
 in
 {
-  options.tasks.multimedia-archive.enable =
-    lib.mkEnableOption "multimedia archiving setup";
+  options.hosts.ni.services.download-media.enable =
+    lib.mkEnableOption "automated multimedia download services";
 
   config = lib.mkIf cfg.enable (
     let
@@ -94,7 +95,7 @@ in
     {
       environment.systemPackages = [ ytdlpArchiveVariant ];
 
-      sops.secrets = lib.getSecrets (lib.getSecret "multimedia-archive.yaml")
+      sops.secrets = lib.getSecrets ./secrets.yaml
         (lib.attachSopsPathPrefix pathPrefix {
           "secrets-config" = { };
         });
@@ -174,6 +175,7 @@ in
             urls = [
               (deviantArt "xezeno") # Xezeno
               (deviantArt "jenzee") # JenZee
+              (deviantArt "silverponteo") # hurrakka
               #"https://www.pixiv.net/en/users/60562229" # Ravioli
               (artStation "kuvshinov_ilya") # Ilya Kuvshinov
               (artStation "meiipng") # Meiiart
