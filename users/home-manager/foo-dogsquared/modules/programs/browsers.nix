@@ -213,6 +213,17 @@ in
         google-chrome
         nyxt
       ];
+
+      services.bleachbit.cleaners = [
+        "google_chrome.cookies"
+        "google_chrome.dom"
+        "google_chrome.form_history"
+        "google_chrome.history"
+        "google_chrome.passwords"
+        "google_chrome.session"
+        "google_chrome.sync"
+        "google_chrome.vacuum"
+      ];
     })
   ];
 }
