@@ -5,7 +5,8 @@ let
   cfg = userCfg.programs.git;
 in
 {
-  options.users.foo-dogsquared.programs.git.enable = lib.mkEnableOption "foo-dogsquared's Git setup";
+  options.users.foo-dogsquared.programs.git.enable =
+    lib.mkEnableOption "foo-dogsquared's Git setup";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

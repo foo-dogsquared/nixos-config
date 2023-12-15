@@ -15,7 +15,8 @@ let
   };
 in
 {
-  options.hosts.plover.services.wezterm-mux-server.enable = lib.mkEnableOption "Wezterm mux server setup";
+  options.hosts.plover.services.wezterm-mux-server.enable =
+    lib.mkEnableOption "Wezterm mux server setup";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

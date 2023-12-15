@@ -6,7 +6,8 @@ let
   cfg = hostCfg.hardware.qol;
 in
 {
-  options.hosts.ni.hardware.qol.enable = lib.mkEnableOption "quality-of-life hardware features";
+  options.hosts.ni.hardware.qol.enable =
+    lib.mkEnableOption "quality-of-life hardware features";
 
   config = lib.mkIf cfg.enable {
     # Bring in some of them good tools.

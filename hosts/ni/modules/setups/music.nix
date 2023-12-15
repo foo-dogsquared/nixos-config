@@ -5,7 +5,8 @@ let
   cfg = hostCfg.setups.music;
 in
 {
-  options.hosts.ni.setups.music.enable = lib.mkEnableOption "music streaming and organizing setup";
+  options.hosts.ni.setups.music.enable =
+    lib.mkEnableOption "music streaming and organizing setup";
 
   config = lib.mkIf cfg.enable {
     # My portable music streaming server.

@@ -8,7 +8,8 @@ let
   getDotfiles = path: "${dotfiles}/${path}";
 in
 {
-  options.users.foo-dogsquared.dotfiles.enable = lib.mkEnableOption "custom outside dotfiles for other programs";
+  options.users.foo-dogsquared.dotfiles.enable =
+    lib.mkEnableOption "custom outside dotfiles for other programs";
 
   config = lib.mkIf cfg.enable {
     # Fetching my dotfiles,...

@@ -13,7 +13,8 @@ let
   host = interfaces.lan.IPv4.address;
 in
 {
-  options.hosts.plover.services.atuin.enable = lib.mkEnableOption "Atuin sync server setup";
+  options.hosts.plover.services.atuin.enable =
+    lib.mkEnableOption "Atuin sync server setup";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

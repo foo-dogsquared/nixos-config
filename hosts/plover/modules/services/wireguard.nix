@@ -14,7 +14,8 @@ let
   phonePeerAddresses = with wireguardPeers.phone; [ "${IPv4}/32" "${IPv6}/128" ];
 in
 {
-  options.hosts.plover.services.wireguard.enable = lib.mkEnableOption "Wireguard VPN setup";
+  options.hosts.plover.services.wireguard.enable =
+    lib.mkEnableOption "Wireguard VPN setup";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

@@ -13,7 +13,8 @@ let
   giteaDatabaseUser = config.services.gitea.user;
 in
 {
-  options.hosts.plover.services.gitea.enable = lib.mkEnableOption "Gitea server for ${config.networking.domain}";
+  options.hosts.plover.services.gitea.enable =
+    lib.mkEnableOption "Gitea server for ${config.networking.domain}";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

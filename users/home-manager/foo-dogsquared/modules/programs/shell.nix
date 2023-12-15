@@ -6,7 +6,8 @@ let
   cfg = userCfg.programs.shell;
 in
 {
-  options.users.foo-dogsquared.programs.shell.enable = lib.mkEnableOption "configuration of foo-dogsquared's shell of choice and its toolbelt";
+  options.users.foo-dogsquared.programs.shell.enable =
+    lib.mkEnableOption "configuration of foo-dogsquared's shell of choice and its toolbelt";
 
   config = lib.mkIf cfg.enable {
     # Add the dev home-manager profiles to be more of a hipster.

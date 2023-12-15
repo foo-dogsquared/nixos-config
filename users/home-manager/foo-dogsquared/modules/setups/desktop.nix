@@ -6,7 +6,8 @@ let
   cfg = userCfg.setups.desktop;
 in
 {
-  options.users.foo-dogsquared.setups.desktop.enable = lib.mkEnableOption "a set of usual desktop productivity services";
+  options.users.foo-dogsquared.setups.desktop.enable =
+    lib.mkEnableOption "a set of usual desktop productivity services";
 
   config = lib.mkIf cfg.enable {
     # Install all of the desktop stuff.

@@ -3,7 +3,8 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.research;
-in {
+in
+{
   options.users.foo-dogsquared.programs.research.enable =
     lib.mkEnableOption "foo-dogsquared's usual toolbelt for research";
 

@@ -33,7 +33,8 @@ let
   dnsOverHTTPSPort = 8443;
 in
 {
-  options.hosts.plover.services.dns-server.enable = lib.mkEnableOption "preferred DNS server";
+  options.hosts.plover.services.dns-server.enable =
+    lib.mkEnableOption "preferred DNS server";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

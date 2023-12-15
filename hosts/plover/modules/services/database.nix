@@ -9,7 +9,8 @@ let
   postgresqlDomain = "postgres.${config.networking.domain}";
 in
 {
-  options.hosts.plover.services.database.enable = lib.mkEnableOption "preferred service SQL database";
+  options.hosts.plover.services.database.enable =
+    lib.mkEnableOption "preferred service SQL database";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

@@ -45,7 +45,8 @@ let
   };
 in
 {
-  options.hosts.plover.services.backup.enable = lib.mkEnableOption "backup service";
+  options.hosts.plover.services.backup.enable =
+    lib.mkEnableOption "backup service";
 
   config = lib.mkIf cfg.enable {
     sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {

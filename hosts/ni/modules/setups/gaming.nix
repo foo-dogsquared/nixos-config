@@ -5,7 +5,8 @@ let
   cfg = hostCfg.setups.gaming;
 in
 {
-  options.hosts.ni.setups.gaming.enable = lib.mkEnableOption "gaming setup";
+  options.hosts.ni.setups.gaming.enable =
+    lib.mkEnableOption "gaming setup";
 
   config = lib.mkIf cfg.enable {
     # Bring all of the goodies.

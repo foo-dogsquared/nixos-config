@@ -8,7 +8,8 @@ let
   prometheusExports = config.services.prometheus.exporters;
 in
 {
-  options.hosts.plover.services.monitoring.enable = lib.mkEnableOption "preferred monitoring stack";
+  options.hosts.plover.services.monitoring.enable =
+    lib.mkEnableOption "preferred monitoring stack";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

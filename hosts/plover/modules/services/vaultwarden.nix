@@ -15,7 +15,8 @@ let
   vaultwardenDbName = "vaultwarden";
 in
 {
-  options.hosts.plover.services.vaultwarden.enable = lib.mkEnableOption "Vaultwarden instance";
+  options.hosts.plover.services.vaultwarden.enable =
+    lib.mkEnableOption "Vaultwarden instance";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

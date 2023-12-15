@@ -6,7 +6,8 @@ let
   cfg = hostCfg.services.reverse-proxy;
 in
 {
-  options.hosts.plover.services.reverse-proxy.enable = lib.mkEnableOption "preferred public-facing reverse proxy";
+  options.hosts.plover.services.reverse-proxy.enable =
+    lib.mkEnableOption "preferred public-facing reverse proxy";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

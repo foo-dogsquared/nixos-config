@@ -9,7 +9,8 @@ let
   authDomain = config.services.kanidm.serverSettings.domain;
 in
 {
-  options.hosts.plover.services.vouch-proxy.enable = lib.mkEnableOption "Vouch proxy setup";
+  options.hosts.plover.services.vouch-proxy.enable =
+    lib.mkEnableOption "Vouch proxy setup";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {

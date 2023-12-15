@@ -15,7 +15,8 @@ let
   vouchSettings = config.services.vouch-proxy.instances."${vouchDomain}".settings;
 in
 {
-  options.hosts.plover.services.grafana.enable = lib.mkEnableOption "monitoring dashboard for ${config.networking.hostName}";
+  options.hosts.plover.services.grafana.enable =
+    lib.mkEnableOption "monitoring dashboard for ${config.networking.hostName}";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
