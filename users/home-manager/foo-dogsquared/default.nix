@@ -45,14 +45,6 @@
     hledger # Trying to be a good accountant.
   ];
 
-  programs.atuin = {
-    settings = {
-      auto_sync = true;
-      sync_address = "http://atuin.plover.foodogsquared.one";
-      sync_frequency = "10m";
-    };
-  };
-
   # My custom modules.
   profiles = {
     editors = {

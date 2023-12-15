@@ -31,6 +31,15 @@ in
       ];
     };
 
+    programs.atuin = {
+      enable = true;
+      settings = {
+        auto_sync = true;
+        sync_address = "http://atuin.plover.foodogsquared.one";
+        sync_frequency = "10m";
+      };
+    };
+
     # Set up with these variables.
     systemd.user.sessionVariables = {
       PAGER = "moar";
