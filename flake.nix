@@ -74,10 +74,6 @@
     # Add a bunch of pre-compiled indices since mine are always crashing.
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Someone has already solved downloading Firefox addons so we'll use it.
-    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-    firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
@@ -102,7 +98,7 @@
         # (including myself) that also relies on rycee's NUR instance. Overall,
         # it's a pain to setup so I'm not including this.
         (final: prev: {
-          inherit (inputs.firefox-addons.lib.${defaultSystem}) buildFirefoxXpiAddon;
+          inherit (final.nur.repos.rycee.firefox-addons) buildFirefoxXpiAddon;
           firefox-addons = final.callPackage ./pkgs/firefox-addons { };
         })
 
