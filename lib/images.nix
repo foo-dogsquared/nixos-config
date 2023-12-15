@@ -2,26 +2,33 @@
 # for use in flake.nix and nowhere else.
 { inputs, lib }:
 
+let
+  extendLib = self: super:
+    import ./. { lib = super; }
+    // import ./private.nix { lib = self; };
+in
 {
   # A wrapper around the NixOS configuration function.
   mkHost = { system, extraModules ? [ ], nixpkgs-channel ? "nixpkgs" }:
-    (lib.makeOverridable inputs."${nixpkgs-channel}".lib.nixosSystem) {
+    let lib' = inputs.${nixpkgs-channel}.lib.extend extendLib; in
+    (lib'.makeOverridable lib'.nixosSystem) {
       # The system of the NixOS system.
-      inherit lib;
       modules = extraModules ++ [{ nixpkgs.hostPlatform = system; }];
     };
 
   # A wrapper around the home-manager configuration function.
   mkHome = { pkgs, extraModules ? [ ], home-manager-channel ? "home-manager" }:
-    inputs."${home-manager-channel}".lib.homeManagerConfiguration {
-      inherit lib pkgs;
+    inputs.${home-manager-channel}.lib.homeManagerConfiguration {
+      inherit pkgs;
+      lib = pkgs.lib.extend extendLib;
       modules = extraModules;
     };
 
   # A wrapper around the nixos-generators `nixosGenerate` function.
   mkImage = { system, pkgs ? null, extraModules ? [ ], format ? "iso" }:
     inputs.nixos-generators.nixosGenerate {
-      inherit pkgs system format lib;
+      inherit pkgs system format;
+      lib = pkgs.lib.extend extendLib;
       modules = extraModules;
     };
 
