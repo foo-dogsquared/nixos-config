@@ -29,7 +29,6 @@
     hardware.qol.enable = true;
     networking = {
       enable = true;
-      setup = "networkmanager";
       wireguard.enable = true;
     };
     services.backup.enable = true;
