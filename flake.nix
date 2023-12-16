@@ -358,7 +358,10 @@
           ];
 
           config = lib.mkMerge [
-            { networking.hostName = lib.mkForce metadata.hostname or host; }
+            {
+              networking.hostName = lib.mkForce metadata.hostname or host;
+              nixpkgs.hostPlatform = metadata._system;
+            }
 
             (lib.mkIf (metadata ? domain)
               { networking.domain = lib.mkForce metadata.domain; })
@@ -377,7 +380,6 @@
           (host: metadata:
             mkHost {
               extraModules = [ (hostSpecificModule host metadata) ];
-              system = metadata._system;
               nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
             })
           (listImagesWithSystems images);
@@ -453,7 +455,7 @@
                 format = metadata.format or "iso";
               in
               lib'.nameValuePair name (mkImage {
-                inherit format system pkgs;
+                inherit format pkgs;
                 extraModules = [ (hostSpecificModule host metadata) ];
               }))
             images');

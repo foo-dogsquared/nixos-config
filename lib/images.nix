@@ -9,11 +9,10 @@ let
 in
 {
   # A wrapper around the NixOS configuration function.
-  mkHost = { system, extraModules ? [ ], nixpkgs-channel ? "nixpkgs" }:
+  mkHost = { extraModules ? [ ], nixpkgs-channel ? "nixpkgs" }:
     let lib' = inputs.${nixpkgs-channel}.lib.extend extendLib; in
     (lib'.makeOverridable lib'.nixosSystem) {
-      # The system of the NixOS system.
-      modules = extraModules ++ [{ nixpkgs.hostPlatform = system; }];
+      modules = extraModules;
     };
 
   # A wrapper around the home-manager configuration function.
@@ -25,9 +24,9 @@ in
     };
 
   # A wrapper around the nixos-generators `nixosGenerate` function.
-  mkImage = { system, pkgs ? null, extraModules ? [ ], format ? "iso" }:
+  mkImage = { pkgs ? null, extraModules ? [ ], format ? "iso" }:
     inputs.nixos-generators.nixosGenerate {
-      inherit pkgs system format;
+      inherit pkgs format;
       lib = pkgs.lib.extend extendLib;
       modules = extraModules;
     };
