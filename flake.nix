@@ -303,9 +303,8 @@
               lib.nameValuePair name' { inherit flake; })
             inputs;
 
-        # Parallel downloads! PARALLEL DOWNLOADS! It's like Pacman 6.0 all over
-        # again.
-        nix.package = pkgs.nixUnstable;
+        # Set the package for generating the configuration.
+        nix.package = lib.mkDefault pkgs.nixUnstable;
 
         # Set the configurations for the package manager.
         nix.settings =
