@@ -10,8 +10,18 @@ in
 {
   # A wrapper around the NixOS configuration function.
   mkHost = { extraModules ? [ ], nixpkgs-channel ? "nixpkgs" }:
-    let lib' = inputs.${nixpkgs-channel}.lib.extend extendLib; in
-    (lib'.makeOverridable lib'.nixosSystem) {
+    let
+      nixpkgs = inputs.${nixpkgs-channel};
+      lib' = nixpkgs.lib.extend extendLib;
+
+      # A modified version of `nixosSystem` from nixpkgs flake. There is a
+      # recent change at nixpkgs (at 039f73f134546e59ec6f1b56b4aff5b81d889f64)
+      # that prevents setting our own custom functions so we'll have to
+      # evaluate the NixOS system ourselves.
+      nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
+    in
+    (lib'.makeOverridable nixosSystem) {
+      lib = lib';
       modules = extraModules;
     };
 
