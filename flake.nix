@@ -382,7 +382,7 @@
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
-      nixosModules = lib'.importModules (lib'.filesToAttr ./modules/nixos);
+      nixosModules.default = import ./modules/nixos { lib = lib'; };
 
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
@@ -419,8 +419,7 @@
           users;
 
       # Extending home-manager with my custom modules, if anyone cares.
-      homeModules =
-        lib'.importModules (lib'.filesToAttr ./modules/home-manager);
+      homeModules.default = import ./modules/home-manager { lib = lib'; };
 
       # In case somebody wants to use my stuff to be included in nixpkgs.
       overlays = import ./overlays // {
