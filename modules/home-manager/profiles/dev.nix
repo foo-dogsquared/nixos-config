@@ -6,9 +6,9 @@ let cfg = config.profiles.dev;
 in {
   options.profiles.dev = {
     enable =
-      lib.mkEnableOption "foo-dogsquared's user-specific development setup";
+      lib.mkEnableOption "basic set of programs for development setup";
     shell.enable =
-      lib.mkEnableOption "configuration of foo-dogsquared's shell of choice";
+      lib.mkEnableOption "enhanced shell configuration";
     extras.enable = lib.mkEnableOption "additional tools for development stuff";
     shaders.enable = lib.mkEnableOption "tools for developing shaders";
     servers.enable = lib.mkEnableOption "toolkit for managing servers from your home";
@@ -41,17 +41,6 @@ in {
           notARepository = "skip";
         };
       };
-
-      # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
-      programs.fzf =
-        let
-          fd = "${lib.getBin pkgs.fd}/bin/fd";
-        in
-        {
-          enable = true;
-          changeDirWidgetCommand = "${fd} --type directory --unrestricted";
-          defaultCommand = "${fd} --type file --hidden";
-        };
 
       # The file manager of choice.
       programs.lf = {
@@ -94,12 +83,24 @@ in {
         };
       };
 
-      # Echolocation.
+      # Echolocation. Since you're using a home-manager configuration, you're
+      # most likely using Nix anyways.
       programs.nix-index.enable = lib.mkIf (attrs ? osConfig -> !attrs.osConfig.programs.nix-index.enable) true;
     })
 
     # Level up your terminal-dwelling skills with these.
     (lib.mkIf cfg.shell.enable {
+      # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
+      programs.fzf =
+        let
+          fd = "${lib.getBin pkgs.fd}/bin/fd";
+        in
+        {
+          enable = true;
+          changeDirWidgetCommand = "${fd} --type directory --unrestricted";
+          defaultCommand = "${fd} --type file --hidden";
+        };
+
       # Supercharging your shell history. Just don't forget to flush them out
       # before doing questionable things.
       programs.atuin = {
@@ -173,7 +174,6 @@ in {
 
     (lib.mkIf cfg.extras.enable {
       home.packages = with pkgs; [
-        act # Test your CI without embarrassing yourself repeatedly pushing into GitHub repos.
         gum # The fancy shell script toolkit.
         hyperfine # Making sure your apps are not just fine but REEEEEEAAAAALY fine.
         license-cli # A nice generator template for license files.
