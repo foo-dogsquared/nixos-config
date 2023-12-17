@@ -11,6 +11,7 @@
       browsers.brave.enable = true;
       browsers.firefox.enable = true;
       browsers.misc.enable = true;
+      doom-emacs.enable = true;
       email.enable = true;
       email.thunderbird.enable = true;
       git.enable = true;
@@ -48,7 +49,6 @@
   # My custom modules.
   profiles = {
     editors = {
-      emacs.enable = true;
       vscode.enable = true;
     };
   };
