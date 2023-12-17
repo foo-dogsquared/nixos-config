@@ -13,6 +13,8 @@ in
     # Install all of the desktop stuff.
     profiles.desktop = {
       enable = true;
+      audio.enable = true;
+      audio.pipewire.enable = true;
       graphics.enable = true;
       video.enable = true;
       documents.enable = true;
