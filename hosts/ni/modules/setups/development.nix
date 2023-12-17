@@ -14,7 +14,8 @@ in
       profiles.dev = {
         enable = true;
         extras.enable = true;
-        virtualization.enable = true;
+        containers.enable = true;
+        virtual-machines.enable = true;
         neovim.enable = true;
       };
 

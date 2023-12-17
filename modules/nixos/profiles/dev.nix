@@ -7,6 +7,7 @@ in {
     enable = lib.mkEnableOption "basic configuration for software development";
     extras.enable = lib.mkEnableOption "additional shell utilities";
     containers.enable = lib.mkEnableOption "containers setup";
+    virtual-machines.enable = lib.mkEnableOption "virtual machines setup";
     neovim.enable = lib.mkEnableOption "Neovim setup";
   };
 
@@ -122,7 +123,7 @@ in {
     })
 
     # !!! Please add your user to the "libvirtd" group.
-    (lib.mkIf cfg.virtualization.enable {
+    (lib.mkIf cfg.containers.enable {
       environment.systemPackages = with pkgs; [
         dive # Dive into container images.
       ];
@@ -163,6 +164,12 @@ in {
           "registry.opensuse.org"
         ];
       };
+    })
+
+    (lib.mkIf cfg.virtual-machines.enable {
+      environment.systemPackages = with pkgs; [
+        virt-manager # An interface for those who are lazy to read a reference manual and create a 1000-line configuration per machine.
+      ];
 
       # Virtual machines, son. They open in response to physical needs to
       # foreign environments.

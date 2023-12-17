@@ -33,5 +33,5 @@
 
   # Setting the development environment mainly for container-related work.
   profiles.dev.enable = true;
-  profiles.dev.virtualization.enable = true;
+  profiles.dev.containers.enable = true;
 }
