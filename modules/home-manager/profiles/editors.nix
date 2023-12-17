@@ -10,8 +10,8 @@
 let cfg = config.profiles.editors;
 in {
   options.profiles.editors = {
-    neovim.enable = lib.mkEnableOption "foo-dogsquared's Neovim setup with Nix";
-    vscode.enable = lib.mkEnableOption "foo-dogsquared's Visual Studio Code setup";
+    neovim.enable = lib.mkEnableOption "basic Neovim setup";
+    vscode.enable = lib.mkEnableOption "basic Visual Studio Code setup";
   };
 
   config = lib.mkMerge [
@@ -48,21 +48,7 @@ in {
           ms-vsliveshare.vsliveshare
           tailscale.vscode-tailscale
 
-          # Additional language support.
-          bbenoist.nix
-          graphql.vscode-graphql
-          ms-vscode.cmake-tools
-          ms-vscode.cpptools
-          ms-vscode.powershell
-
-          # Extra editor niceties.
-          eamodio.gitlens
-          mkhl.direnv
-          usernamehw.errorlens
-          vadimcn.vscode-lldb
-
           # The other niceties.
-          editorconfig.editorconfig
           vscode-icons-team.vscode-icons
         ];
 
