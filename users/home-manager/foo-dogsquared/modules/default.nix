@@ -11,6 +11,7 @@
     ./programs/research.nix
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
+    ./programs/vs-code.nix
 
     ./setups/desktop.nix
     ./setups/fonts.nix

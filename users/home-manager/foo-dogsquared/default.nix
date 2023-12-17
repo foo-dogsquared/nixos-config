@@ -20,6 +20,7 @@
       research.enable = true;
       shell.enable = true;
       terminal-multiplexer.enable = true;
+      vs-code.enable = true;
     };
 
     setups = {
@@ -45,13 +46,6 @@
   home.packages = with pkgs; [
     hledger # Trying to be a good accountant.
   ];
-
-  # My custom modules.
-  profiles = {
-    editors = {
-      vscode.enable = true;
-    };
-  };
 
   home.stateVersion = "23.11";
 
