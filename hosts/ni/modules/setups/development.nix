@@ -13,7 +13,7 @@ in
       # Bring all of the software development goodies.
       profiles.dev = {
         enable = true;
-        shell.enable = true;
+        extras.enable = true;
         virtualization.enable = true;
         neovim.enable = true;
       };
