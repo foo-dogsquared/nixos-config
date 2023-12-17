@@ -390,7 +390,7 @@
           (filename: metadata:
             let
               name = metadata.username or filename;
-              pkgs = import inputs.${metadata.nixpkgs-channel or "nixpkgs"} { inherit overlays; };
+              pkgs = import inputs.${metadata.nixpkgs-channel or "nixpkgs"} {};
               path = ./users/home-manager/${name};
               extraModules = [
                 ({ lib, pkgs, config, ... }: {
@@ -445,7 +445,7 @@
               let
                 name = metadata._name;
                 nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-                pkgs = import inputs.${nixpkgs-channel} { inherit system overlays; };
+                pkgs = import inputs.${nixpkgs-channel} {};
                 format = metadata.format or "iso";
               in
               lib'.nameValuePair name (mkImage {
