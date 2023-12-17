@@ -66,8 +66,14 @@
   # Basically, the most basic nixpkgs configuration.
   environment.variables.NIXPKGS_CONFIG = lib.mkForce ./config/nixpkgs/config.nix;
 
+  # Make Nix experimental.
+  nix.package = pkgs.nixUnstable;
+
   # Some more experimentals for Nix.
   nix.settings.experimental-features = [ "auto-allocate-uids" "configurable-impure-env" ];
+
+  # My poor achy-breaky desktop can't take it.
+  nix.daemonCPUSchedPolicy = "idle";
 
   system.stateVersion = "24.05"; # Yes! I read the comment!
 }
