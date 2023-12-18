@@ -78,5 +78,8 @@
     type = "ed25519";
   }];
 
+  # Make Nix experimental.
+  nix.package = pkgs.nixUnstable;
+
   system.stateVersion = "23.11";
 }
