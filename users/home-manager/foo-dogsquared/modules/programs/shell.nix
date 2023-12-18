@@ -10,14 +10,7 @@ in
     lib.mkEnableOption "configuration of foo-dogsquared's shell of choice and its toolbelt";
 
   config = lib.mkIf cfg.enable {
-    # Add the dev home-manager profiles to be more of a hipster.
-    profiles.dev = {
-      enable = true;
-      extras.enable = true;
-      coreutils-replacement.enable = true;
-      shell.enable = true;
-      servers.enable = true;
-    };
+    profiles.dev.shell.enable = lib.mkDefault true;
 
     programs.bash = {
       enable = true;
