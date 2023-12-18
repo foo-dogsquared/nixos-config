@@ -45,23 +45,6 @@ rec {
     lib.filterAttrs (name: value: value != { })
       (lib.mapAttrs' collect files);
 
-  /* Collect all modules (results from `filesToAttr`) into a list.
-
-     Signature:
-       attrs -> [ function ]
-     Where:
-       - `attrs` is the set of modules and their path.
-     Returns:
-       - A list of imported modules.
-
-     Example:
-       modulesToList (filesToAttr ../modules)
-       => [ <lambda> <lambda> <lambda> ]
-  */
-  modulesToList = attrs:
-    let paths = lib.collect builtins.isPath attrs;
-    in builtins.map (path: import path) paths;
-
   /* Count the attributes with the given predicate.
 
      Examples:
