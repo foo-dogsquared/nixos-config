@@ -1,13 +1,29 @@
 # Enables all of my usual setup for desktop-oriented stuff.
 { config, lib, pkgs, ... }@attrs:
 
-let cfg = config.profiles.desktop;
+let
+  cfg = config.profiles.desktop;
+  nixosCfg = attrs.osConfig;
+  nixosPipewireCfg = nixosCfg.services.pipewire;
+  hasNixOSPipewireService = attrs ? osConfig -> nixosPipewireCfg.enable;
 in {
   options.profiles.desktop = {
     enable = lib.mkEnableOption "installations of desktop apps";
     graphics.enable =
       lib.mkEnableOption "installations of graphics-related apps";
-    audio.enable = lib.mkEnableOption "installations of audio-related apps";
+    audio = {
+      enable = lib.mkEnableOption "installations of audio-related apps";
+      pipewire.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = hasNixOSPipewireService;
+        description = ''
+          Enable whether to install Pipewire-related applications.
+
+          This module is implicitly enabled if used as part of the NixOS
+          configuration and has Pipewire service enabled.
+        '';
+      };
+    };
     video.enable = lib.mkEnableOption "installations of video-related apps";
     documents.enable =
       lib.mkEnableOption "installations for document-related apps";
@@ -42,16 +58,20 @@ in {
         yabridgectl # The bridge controller.
 
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
-        helvum # The Pipewire Patchbay.
-        carla # The Carla Carla.
       ];
 
+    (lib.mkIf cfg.audio.pipewire.enable {
       # This is assuming you're using Pipewire, yes?
       services.easyeffects.enable = true;
       services.fluidsynth = {
         enable = true;
-        soundService = "pipewire-pulse";
+        soundService = lib.mkIf nixosPipewireCfg.pulse.enable "pipewire-pulse";
       };
+
+      home.packages = with pkgs; [
+        helvum # The Pipewire Patchbay.
+        carla # The Carla Carla.
+      ];
     })
 
     (lib.mkIf cfg.video.enable {

@@ -26,7 +26,10 @@ in
       ];
 
       # Enable the desktop audio profile for extra auditorial goodies.
-      profiles.desktop.audio.enable = lib.mkDefault true;
+      profiles.desktop.audio = {
+        enable = lib.mkDefault true;
+        pipewire.enable = lib.mkDefault true;
+      };
 
       # My music player setup, completely configured with Nix!
       programs.beets = {
