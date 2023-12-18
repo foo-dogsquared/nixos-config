@@ -14,17 +14,15 @@
       doom-emacs.enable = true;
       email.enable = true;
       email.thunderbird.enable = true;
-      git.enable = true;
       keys.gpg.enable = true;
       keys.ssh.enable = true;
       research.enable = true;
-      shell.enable = true;
-      terminal-multiplexer.enable = true;
       vs-code.enable = true;
     };
 
     setups = {
       desktop.enable = true;
+      development.enable = true;
       fonts.enable = true;
       music.enable = true;
     };

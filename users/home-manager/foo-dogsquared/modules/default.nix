@@ -14,6 +14,7 @@
     ./programs/vs-code.nix
 
     ./setups/desktop.nix
+    ./setups/development.nix
     ./setups/fonts.nix
     ./setups/music.nix
   ];
