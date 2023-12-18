@@ -3,7 +3,7 @@ title: Declarative user management
 ---
 = Declarative user management
 
-Similarly to xref:../02-declarative-host-management/index.adoc[Declarative host management], this project also provides a way to declare home-manager users.
+Similarly to xref:../01-declarative-host-management/index.adoc[Declarative host management], this project also provides a way to declare home-manager users.
 The `users.toml` sits in the project root expecting certain data.
 Similar to `images.toml`, it expects a table of users with each representing one of the users from github:{github-repo}[`./users/home-manager/`, path=./users/home-manager/, rev=master].
 These are then included as part of `homeConfigurations` for easier installation with the standalone home-manager tool.

@@ -18,8 +18,6 @@ nixos-config
 ├── modules/
 ├── overlays/
 ├── pkgs/
-├── scripts/
-├── secrets/
 ├── shells/
 ├── templates/
 ├── users/
@@ -54,13 +52,6 @@ This is typically used exclusively for the project and advised to not use it if 
 
 * `./pkgs/` contains my custom packages.
 It is exported in the flakes at `outputs.packages` compiled through various systems.
-
-* `./scripts/` contains various scripts for various purposes.
-Should be self-explanatory.
-
-* `./secrets/` contains my cluster-wide secrets managed with github:mozilla/sops[opts=repo] and github:Mic92/sops-nix[opts=repo].
-Take note, each component (e.g., hosts, modules, users) could have their own specific secrets.
-For more information, see xref:../../03-project-specific-setup/03-secrets-management/index.adoc[Secrets management].
 
 * `./shells/` contains my development shells for interacting with the usual type of projects.
 Setting this up can bring benefits outside of NixOS (unless you're interacting with projects with any OpenGL-related stuff).
