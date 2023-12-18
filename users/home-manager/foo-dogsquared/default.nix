@@ -25,6 +25,7 @@
       development.enable = true;
       fonts.enable = true;
       music.enable = true;
+      music.mpd.enable = true;
     };
   };
 
@@ -42,6 +43,7 @@
   xdg.configFile."nixpkgs/config.nix".source = ./config/nixpkgs/config.nix;
 
   home.packages = with pkgs; [
+    gopass # An improved version of the password manager for hipsters.
     hledger # Trying to be a good accountant.
   ];
 
