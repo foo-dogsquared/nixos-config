@@ -5,11 +5,6 @@
   home.packages = with pkgs; [
     glances
     wireshark-cli
-    bind.dnsutils
-    inetutils
-    iputils
-    bat
-    fd
     jq
   ];
 
@@ -30,6 +25,8 @@
     dev = {
       enable = true;
       shell.enable = true;
+      coreutils-replacement.enable = true;
+      servers.enable = true;
     };
 
     editors.neovim.enable = true;
