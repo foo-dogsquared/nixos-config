@@ -53,12 +53,6 @@ in {
       # Profile your whole system.
       services.sysprof.enable = true;
 
-      # Make shebangs even more magical.
-      services.envfs.enable = true;
-
-      # Convenience!
-      environment.localBinInPath = true;
-
       # Additional settings for developing with nix.
       nix.settings = {
         keep-outputs = true;
@@ -66,7 +60,6 @@ in {
       };
 
       # This is set as our system packages for the sake of convenience.
-      services.lorri.enable = true;
       environment.systemPackages = with pkgs; [
         bind.dnsutils # A bunch of things to make sense with DNS.
         curl # Our favorite network client.
@@ -120,6 +113,15 @@ in {
         github-cli # ...in the GitHub CLI.
         git-filter-repo # History is written by the victors (and force-pushers which are surely not victors).
       ]));
+
+      # Make per-project devenvs more of a living thing.
+      services.lorri.enable = true;
+
+      # Make shebangs even more magical.
+      services.envfs.enable = true;
+
+      # Convenience!
+      environment.localBinInPath = true;
     })
 
     # !!! Please add your user to the "libvirtd" group.
