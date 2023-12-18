@@ -42,7 +42,7 @@ in {
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         imagemagick # Ah yes, everyman's image manipulation tool.
         gmic # Don't let the gimmicks fool you, it's a magical image framework.
-      ] ++ (lib.optional (attrs ? osConfig -> !attrs.osConfig.programs.blender.enable) blender);
+      ] ++ (lib.optional (attrs ? osConfig -> !nixosCfg.programs.blender.enable) blender);
     })
 
     (lib.mkIf cfg.audio.enable {
@@ -53,12 +53,14 @@ in {
         supercollider # Not to be confused with the other Super Collider.
         sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
 
-        # !!! Be sure to install Wine for this one.
-        yabridge # Building bridges to Windows and Linux audio tools.
-        yabridgectl # The bridge controller.
-
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
-      ];
+      ] ++ (lib.optionals
+        (attrs ? osConfig -> nixosCfg.profiles.desktop.wine.enable)
+        (with pkgs; [
+          yabridge # Building bridges to Windows and Linux audio tools.
+          yabridgectl # The bridge controller.
+        ]));
+    })
 
     (lib.mkIf cfg.audio.pipewire.enable {
       # This is assuming you're using Pipewire, yes?
