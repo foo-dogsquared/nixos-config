@@ -16,11 +16,12 @@ in
       retro-computing.enable = true;
     };
 
+    # Bring more of them games.
     environment.systemPackages = with pkgs; [
-      dwarf-fortress
-      mindustry
-      minetest
-      the-powder-toy
+      dwarf-fortress # Losing only means more possibilities to play.
+      mindustry # Not a Minecraft industry simulator.
+      minetest # Free Minecraft.
+      the-powder-toy # Free micro-Minecraft.
     ];
 
     # This is somewhat used for streaming games from it.

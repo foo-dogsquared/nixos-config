@@ -63,7 +63,7 @@ in
       environment.systemPackages = with pkgs; [
         cataclysm-dda # Dwarf Fortress but in the future.
         dwarf-fortress # Dwarf Fortress.
-        endless-sky # Dwarf Fortress but in space and in the far future.
+        endless-sky # My other cocaine replacement.
         mindustry # Dwarf Fortress but with machineries.
         minetest # Dwarf Fortress but with voxels.
         openra # Dwarf Fortress but with futuristic armed civilizations.

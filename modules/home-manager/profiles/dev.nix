@@ -138,6 +138,7 @@ in {
       };
     })
 
+    # Modern problems require modern tools.
     (lib.mkIf cfg.coreutils-replacement.enable {
       home.packages = with pkgs; [
         fd # Welp, a reliable find.
@@ -172,6 +173,7 @@ in {
       };
     })
 
+    # Extra extras.
     (lib.mkIf cfg.extras.enable {
       home.packages = with pkgs; [
         gum # The fancy shell script toolkit.
@@ -179,12 +181,13 @@ in {
         license-cli # A nice generator template for license files.
         quilt # Patching right up yer' alley.
         tokei # Stroking your programming ego by how many lines of C you've written.
-        treefmt # I like the tagline of this tool: "One CLI for formatting your code tree." (It rhymes somewhat.)
+        treefmt # I like the rhyming tagline of this tool which is why it's here.
         vhs # Declarative terminal tool demo.
         zenith # Very fanciful system dashboard.
       ];
     })
 
+    # Abuncha' shady tools.
     (lib.mkIf cfg.shaders.enable {
       home.packages = with pkgs; [
         bonzomatic # Shadertoys for desktop bozos.
@@ -198,7 +201,7 @@ in {
         kanidm # What is you?
         ipcalc # Calculate how many stars are there in space.
         geoip # Know where the spam came from.
-        sshfs # Intrude others' home, why don't 'ya?
+        sshfs # Intrude others' home and steal their shit, why don't 'ya?
         whois # Doctor, are you not?
       ];
     })

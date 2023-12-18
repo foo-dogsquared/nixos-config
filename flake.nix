@@ -144,7 +144,8 @@
         # Some defaults for evaluating modules.
         _module.check = true;
 
-        # Initialize some of the XDG base directories ourselves since it is used by NIX_PROFILES to properly link some of them.
+        # Initialize some of the XDG base directories ourselves since it is
+        # used by NIX_PROFILES to properly link some of them.
         environment.sessionVariables = {
           XDG_CACHE_HOME = "$HOME/.cache";
           XDG_CONFIG_HOME = "$HOME/.config";
