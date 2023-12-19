@@ -22,7 +22,7 @@ in
             mode = "0400";
           };
         in
-        lib.getSecrets ../../secrets/secrets.yaml {
+        lib.private.getSecrets ../../secrets/secrets.yaml {
           "vouch-proxy/jwt/secret" = vouchPermissions;
           "vouch-proxy/client/secret" = vouchPermissions;
         };

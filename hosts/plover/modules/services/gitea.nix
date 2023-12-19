@@ -18,7 +18,7 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
+      sops.secrets = lib.private.getSecrets ../../secrets/secrets.yaml {
         "gitea/db/password".owner = giteaUser;
         "gitea/smtp/password".owner = giteaUser;
       };

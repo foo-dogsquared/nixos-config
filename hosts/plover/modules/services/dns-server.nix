@@ -46,7 +46,7 @@ in
             mode = "0400";
           };
         in
-        lib.getSecrets ../../secrets/secrets.yaml {
+        lib.private.getSecrets ../../secrets/secrets.yaml {
           "dns/${domain}/mailbox-security-key" = dnsFileAttribute;
           "dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
           "dns/${domain}/keybase-verification-key" = dnsFileAttribute;

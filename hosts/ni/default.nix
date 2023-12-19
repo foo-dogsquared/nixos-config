@@ -6,7 +6,7 @@
     ./hardware-configuration.nix
     ./modules
 
-    (lib.mapHomeManagerUser "foo-dogsquared" {
+    (lib.private.mapHomeManagerUser "foo-dogsquared" {
       extraGroups = [
         "adbusers"
         "wheel"
@@ -49,7 +49,7 @@
     type = "ed25519";
   }];
 
-  sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
+  sops.secrets = lib.private.getSecrets ./secrets/secrets.yaml {
     "ssh-key" = { };
   };
 

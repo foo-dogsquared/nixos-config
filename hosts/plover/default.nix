@@ -45,7 +45,7 @@
   # Offline SSH!?!
   programs.mosh.enable = true;
 
-  sops.secrets = lib.getSecrets ./secrets/secrets.yaml {
+  sops.secrets = lib.private.getSecrets ./secrets/secrets.yaml {
     "ssh-key" = { };
     "lego/env" = { };
   };

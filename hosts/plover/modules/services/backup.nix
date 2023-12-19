@@ -49,7 +49,7 @@ in
     lib.mkEnableOption "backup service";
 
   config = lib.mkIf cfg.enable {
-    sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
+    sops.secrets = lib.private.getSecrets ../../secrets/secrets.yaml {
       "borg/repos/host/patterns/keys" = { };
       "borg/repos/host/password" = { };
       "borg/repos/services/password" = { };

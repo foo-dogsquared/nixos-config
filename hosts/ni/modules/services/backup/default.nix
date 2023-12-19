@@ -47,9 +47,9 @@ in
     lib.mkEnableOption "backup setup with BorgBackup";
 
   config = lib.mkIf cfg.enable {
-    sops.secrets = lib.getSecrets
+    sops.secrets = lib.private.getSecrets
       ./secrets.yaml
-      (lib.attachSopsPathPrefix pathPrefix {
+      (lib.private.attachSopsPathPrefix pathPrefix {
         "patterns/home" = { };
         "patterns/etc" = { };
         "patterns/keys" = { };

@@ -31,7 +31,7 @@ in
     {
       environment.systemPackages = with pkgs; [ wireguard-tools ];
       networking.firewall.allowedUDPPorts = [ wireguardPort ];
-      sops.secrets = lib.getSecrets ../../secrets/secrets.yaml {
+      sops.secrets = lib.private.getSecrets ../../secrets/secrets.yaml {
         "wireguard/private-key" = { };
         "wireguard/preshared-keys/plover" = { };
         "wireguard/preshared-keys/phone" = { };

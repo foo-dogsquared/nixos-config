@@ -28,7 +28,7 @@ in
             mode = "0400";
           };
         in
-        lib.getSecrets ../../secrets/secrets.yaml {
+        lib.private.getSecrets ../../secrets/secrets.yaml {
           "grafana/database/password" = grafanaFileAttributes;
           "grafana/users/admin/password" = grafanaFileAttributes;
         };

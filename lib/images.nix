@@ -3,9 +3,16 @@
 { inputs, lib }:
 
 let
-  extendLib = self: super:
-    import ./. { lib = super; }
-    // import ./private.nix { lib = self; };
+  # A function that generates a lambda suitable for `lib.extend`.
+  extendLib = self: super: let
+    publicLib = import ./. { lib = super; };
+  in
+  {
+    inherit (publicLib) filesToAttr countAttrs getSecrets
+      attachSopsPathPrefix;
+    private = publicLib
+              // import ./private.nix { lib = self; };
+  };
 in
 {
   # A thin wrapper around the NixOS configuration function.
@@ -43,10 +50,7 @@ in
   mkImage = { pkgs ? null, extraModules ? [ ], format ? "iso" }:
     inputs.nixos-generators.nixosGenerate {
       inherit pkgs format;
-      lib = pkgs.lib.extend (self: super:
-        import ./. { lib = super; }
-        // import ./private.nix { lib = self; }
-        // import ./home-manager.nix { lib = self; });
+      lib = pkgs.lib.extend extendLib;
       modules = extraModules;
     };
 

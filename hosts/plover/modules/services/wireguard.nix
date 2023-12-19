@@ -29,7 +29,7 @@ in
             mode = "0640";
           };
         in
-        lib.getSecrets ../../secrets/secrets.yaml {
+        lib.private.getSecrets ../../secrets/secrets.yaml {
           "wireguard/private-key" = systemdNetworkdPermission;
           "wireguard/preshared-keys/ni" = systemdNetworkdPermission;
           "wireguard/preshared-keys/phone" = systemdNetworkdPermission;

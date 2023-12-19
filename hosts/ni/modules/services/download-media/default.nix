@@ -95,7 +95,7 @@ in
     {
       environment.systemPackages = [ ytdlpArchiveVariant ];
 
-      sops.secrets = lib.getSecrets ./secrets.yaml
+      sops.secrets = lib.private.getSecrets ./secrets.yaml
         (lib.attachSopsPathPrefix pathPrefix {
           "secrets-config" = { };
         });

@@ -4,7 +4,7 @@
   imports = [
     "${modulesPath}/profiles/minimal.nix"
 
-    (lib.mapHomeManagerUser "foo-dogsquared" {
+    (lib.private.mapHomeManagerUser "foo-dogsquared" {
       extraGroups = [
         "adbusers"
         "wheel"
