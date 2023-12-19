@@ -28,7 +28,7 @@ in
         editorconfig.editorconfig
       ];
 
-      settings = {
+      userSettings = {
         "extensions.ignoreRecommendations" = true;
       };
     };
