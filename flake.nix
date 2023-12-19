@@ -382,8 +382,10 @@
         lib'.mapAttrs
           (filename: metadata:
             let
-              name = metadata.username or filename;
-              pkgs = import inputs.${metadata.nixpkgs-channel or "nixpkgs"} {};
+              name = metadata.username or metadata._name or filename;
+              pkgs = import inputs.${metadata.nixpkgs-channel or "nixpkgs"} {
+                system = metadata._system;
+              };
               extraModules = [
                 ({ lib, pkgs, config, ... }: {
                   # Don't create the user directories since they are assumed to
@@ -407,7 +409,7 @@
               inherit pkgs extraModules;
               home-manager-channel = metadata.home-manager-channel or "home-manager";
             })
-          users;
+          (listImagesWithSystems users);
 
       # Extending home-manager with my custom modules, if anyone cares.
       homeModules.default = import ./modules/home-manager { lib = lib'; };
