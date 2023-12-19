@@ -25,6 +25,10 @@ in
     (lib'.makeOverridable nixosSystem) {
       lib = lib';
       modules = extraModules;
+
+      # Since we're setting it through nixpkgs.hostPlatform, we'll have to pass
+      # this as null.
+      system = null;
     };
 
   # A thin wrapper around the home-manager configuration function.
