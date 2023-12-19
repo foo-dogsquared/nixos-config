@@ -43,7 +43,10 @@ in
   mkImage = { pkgs ? null, extraModules ? [ ], format ? "iso" }:
     inputs.nixos-generators.nixosGenerate {
       inherit pkgs format;
-      lib = pkgs.lib.extend extendLib;
+      lib = pkgs.lib.extend (self: super:
+        import ./. { lib = super; }
+        // import ./private.nix { lib = self; }
+        // import ./home-manager.nix { lib = self; });
       modules = extraModules;
     };
 
