@@ -3,9 +3,6 @@
 
 let
   cfg = config.profiles.desktop;
-  nixosCfg = attrs.osConfig;
-  nixosPipewireCfg = nixosCfg.services.pipewire;
-  hasNixOSPipewireService = attrs ? osConfig -> nixosPipewireCfg.enable;
 in {
   options.profiles.desktop = {
     enable = lib.mkEnableOption "installations of desktop apps";
@@ -15,7 +12,7 @@ in {
       enable = lib.mkEnableOption "installations of audio-related apps";
       pipewire.enable = lib.mkOption {
         type = lib.types.bool;
-        default = hasNixOSPipewireService;
+        default = attrs ? osConfig && lib.attrByPath [ "services" "pipewire" "enable" ] false attrs.osConfig;
         description = ''
           Enable whether to install Pipewire-related applications.
 
@@ -42,7 +39,10 @@ in {
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         imagemagick # Ah yes, everyman's image manipulation tool.
         gmic # Don't let the gimmicks fool you, it's a magical image framework.
-      ] ++ (lib.optional (attrs ? osConfig -> !nixosCfg.programs.blender.enable) blender);
+      ]
+      ++ (let
+        hasBlenderNixOSModule = attrs ? osConfig && lib.attrByPath [ "programs" "blender" "enable" ] false attrs.osConfig;
+      in lib.optional (!hasBlenderNixOSModule) pkgs.blender);
     })
 
     (lib.mkIf cfg.audio.enable {
@@ -54,9 +54,11 @@ in {
         sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
 
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
-      ] ++ (lib.optionals
-        (attrs ? osConfig -> nixosCfg.profiles.desktop.wine.enable)
-        (with pkgs; [
+      ]
+      ++ (let
+        hasWineProfile = attrs ? osConfig && lib.attrByPath [ "profiles" "desktop" "wine" "enable" ] false attrs.osConfig;
+      in
+        lib.optionals hasWineProfile (with pkgs; [
           yabridge # Building bridges to Windows and Linux audio tools.
           yabridgectl # The bridge controller.
         ]));
@@ -67,7 +69,10 @@ in {
       services.easyeffects.enable = true;
       services.fluidsynth = {
         enable = true;
-        soundService = lib.mkIf nixosPipewireCfg.pulse.enable "pipewire-pulse";
+        soundService = let
+          hasNixOSPipewirePulseEnabled = attrs ? osConfig && lib.attrByPath [ "services" "pipewire" "pulse" "enable" ] false attrs.osConfig;
+        in
+          lib.mkIf hasNixOSPipewirePulseEnabled "pipewire-pulse";
       };
 
       home.packages = with pkgs; [
