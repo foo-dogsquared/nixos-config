@@ -188,6 +188,10 @@
           "time.cloudflare.com"
         ] ++ options.networking.timeServers.default;
 
+        # Disable channel state files. This shouldn't break any existing
+        # programs as long as we manage them NIX_PATH ourselves.
+        nix.channel.enable = lib.mkDefault false;
+
         # Set several paths for the traditional channels.
         nix.nixPath =
           lib.mapAttrsToList
