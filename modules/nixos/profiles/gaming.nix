@@ -43,9 +43,6 @@ in
       # Enable the Wine setup for Linux gaming with Windows games.
       profiles.desktop.wine.enable = lib.mkDefault true;
 
-      # Virtualize everything.
-      profiles.dev.virtualization.enable = lib.mkDefault true;
-
       # Yes... Play your Brawl Stars and Clash Royale in NixOS. :)
       virtualisation.waydroid.enable = lib.mkDefault true;
     }
