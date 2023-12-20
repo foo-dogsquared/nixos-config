@@ -73,6 +73,9 @@ in {
 
       # Enable running GNOME apps outside GNOME.
       programs.dconf.enable = true;
+
+      # Enable virtual camera.
+      boot.kernelModules = [ "v4l2loopback" ];
     })
 
     (lib.mkIf cfg.audio.enable {
