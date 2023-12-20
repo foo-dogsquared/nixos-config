@@ -5,11 +5,11 @@ keys:
   - &ni age1dm9xugju4q5gx0zty8ckw655ea904c64gv9qw9fn3lu507ck8uzsag59y8
   - &plover age1sj497yr895335rk77qqnrqyx9f7462ma3lz0a0x3w5cnla5uqgpspgggtz
 creation_rules:
-  - path_regex: hosts/ni/(modules/\w+/secret|secrets/[^/]+)\.(yaml|json)$
+  - path_regex: hosts/ni/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|ini|env)$
     age: *ni
-  - path_regex: hosts/plover/(modules/\w+/secret|secrets/[^/]+)\.(yaml|json)$
+  - path_regex: hosts/plover/(modules/.+/secret|secrets/[^/]+)\.(yaml|json|ini|env)$
     age: *plover
-  - path_regex: users/home-manager/foo-dogsquared/[^/]+\.(yaml|json)$
+  - path_regex: users/home-manager/foo-dogsquared/(modules/.+/secret|secrets/[^/]+)\.(yaml|json|inienv)$
     key_groups:
       - age:
         - *foo-dogsquared-age
