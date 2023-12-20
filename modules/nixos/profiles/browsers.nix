@@ -89,7 +89,6 @@ in
                   default_area = "navbar";
                 };
                 "firefox-translations-addon@mozilla.org".install_url = mozillaAddon "firefox-translations";
-                "fx_cast@matt.tf".install_url = "https://github.com/hensm/fx_cast/releases/download/v0.3.1/fx_cast-0.3.1.xpi";
                 "jid1-MnnxcxisBPnSXQ@jetpack".install_url = mozillaAddon "privacy-badger17";
                 "tridactyl.vim@cmcaine.co.uk".install_url = mozillaAddon "tridactyl-vim";
                 "uBlock0@raymondhill.net".install_url = mozillaAddon "ublock-origin";
@@ -154,7 +153,6 @@ in
         # be used.
         nativeMessagingHosts = {
           ff2mpv = true;
-          fxCast = true;
           tridactyl = true;
         };
 

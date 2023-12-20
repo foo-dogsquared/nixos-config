@@ -7,7 +7,6 @@ final: prev:
       ff2mpv
       bukubrow
       tridactyl-native
-      fxcast-bridge
     ];
 
     extraPolicies = {
@@ -59,7 +58,6 @@ final: prev:
             };
             "FirefoxColor@mozilla.com".install_url = mozillaAddon "firefox-color";
             "firefox-translations-addon@mozilla.org".install_url = mozillaAddon "firefox-translations";
-            "fx_cast@matt.tf".install_url = "https://github.com/hensm/fx_cast/releases/download/v0.3.1/fx_cast-0.3.1.xpi";
             "jid1-MnnxcxisBPnSXQ@jetpack".install_url = mozillaAddon "privacy-badger17";
             "regrets-reporter@mozillafoundation.org".install_url = mozillaAddon "regretsreporter";
             "tridactyl.vim@cmcaine.co.uk".install_url = mozillaAddon "tridactyl-vim";

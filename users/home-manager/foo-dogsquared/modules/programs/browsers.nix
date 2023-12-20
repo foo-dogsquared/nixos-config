@@ -60,7 +60,6 @@ in
           nativeMessagingHosts = with pkgs; [
             bukubrow
             tridactyl-native
-            fx-cast-bridge
           ] ++ lib.optional config.programs.mpv.enable pkgs.ff2mpv;
 
           extraPolicies = {
