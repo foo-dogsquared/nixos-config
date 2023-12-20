@@ -53,7 +53,7 @@ in
       # Just supporting local systems, businesses, and business systems.
       services.avahi = {
         enable = true;
-        nssmdns = true;
+        nssmdns4 = true;
         publish = {
           enable = true;
           userServices = true;
