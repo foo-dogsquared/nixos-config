@@ -92,19 +92,17 @@ in
       missing.
     '';
     default = { };
-    example = lib.literalExpression ''
-      {
-        "library/dotfiles" = {
-          url = "https://github.com/foo-dogsquared/dotfiles.git";
-          type = "git";
-        };
+    example = {
+      "library/dotfiles" = {
+        url = "https://github.com/foo-dogsquared/dotfiles.git";
+        type = "git";
+      };
 
-        "library/projects/keys" = {
-          url = "https://example.com/file.zip";
-          type = "archive";
-        };
-      }
-    '';
+      "library/projects/keys" = {
+        url = "https://example.com/file.zip";
+        type = "archive";
+      };
+    };
   };
 
   config = lib.mkIf (cfg != { }) {
