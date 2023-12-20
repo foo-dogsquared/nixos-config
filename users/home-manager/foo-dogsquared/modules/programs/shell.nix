@@ -30,6 +30,8 @@ in
         auto_sync = true;
         sync_address = "http://atuin.plover.foodogsquared.one";
         sync_frequency = "10m";
+        update_check = false;
+        workspaces = true;
       };
     };
 
