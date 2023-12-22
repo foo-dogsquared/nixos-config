@@ -6,7 +6,7 @@ let
 in
 {
   options.profiles.gaming = {
-    enable = lib.mkEnableOption "foodogsquared's gaming setup";
+    enable = lib.mkEnableOption "basic gaming setup";
     emulators.enable = lib.mkEnableOption "installation of individual game emulators";
     retro-computing.enable = lib.mkEnableOption "installation of retro computer systems";
     games.enable = lib.mkEnableOption "installation of certain FOSS games for funsies";
@@ -39,12 +39,6 @@ in
       # Enabling all hardware settings for the desktop (unless the user
       # explicitly disabled it).
       profiles.desktop.hardware.enable = lib.mkDefault true;
-
-      # Enable the Wine setup for Linux gaming with Windows games.
-      profiles.desktop.wine.enable = lib.mkDefault true;
-
-      # Yes... Play your Brawl Stars and Clash Royale in NixOS. :)
-      virtualisation.waydroid.enable = lib.mkDefault true;
     }
 
     (lib.mkIf cfg.emulators.enable {
