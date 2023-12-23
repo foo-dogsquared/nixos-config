@@ -1,13 +1,13 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
-  lib' = pkgs.lib.extend (import ./lib/extras/extend-lib.nix);
+  lib = pkgs.lib.extend (import ./lib/extras/extend-lib.nix);
 in
 {
   lib = import ./lib { lib = pkgs.lib; };
-  modules = lib'.importModules (lib'.filesToAttr ./modules/nixos);
+  modules.default.imports = import ./modules/nixos { inherit lib; };
   overlays = import ./overlays // {
     foo-dogsquared-pkgs = final: prev: import ./pkgs { pkgs = prev; };
   };
-  hmModules = lib'.importModules (lib'.filesToAttr ./modules/home-manager);
+  hmModules.default.imports = import ./modules/home-manager { inherit lib; };
 } // (import ./pkgs { inherit pkgs; })
