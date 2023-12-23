@@ -3,6 +3,37 @@
 let
   cfg = config.home.mutableFile;
 
+  # An attribute set to be used to get the fetching script.
+  fetchScript = path: value: let
+    url = lib.escapeShellArg value.url;
+    path = lib.escapeShellArg value.path;
+    extraArgs = lib.escapeShellArgs value.extraArgs;
+  in {
+    git = ''
+      [ -d ${path} ] || git clone ${extraArgs} ${url} ${path}
+    '';
+    fetch = ''
+      [ -e ${path} ] || curl ${extraArgs} ${url} --output ${path}"
+    '';
+    archive = let
+      extractScript =
+        if (value.extractPath == null) then
+            ''arc unarchive "/tmp/$filename" ${path}''
+        else
+            ''arc extract "/tmp/$filename" ${lib.escapeShellArg value.extractPath} ${path}'';
+    in
+    ''
+      [ -e ${path} ] || {
+        filename=$(curl ${extraArgs} --output-dir /tmp --silent --show-error --write-out '%{filename_effective}' --remote-name --remote-header-name --location ${url})
+        ${extractScript}
+      }
+    '';
+    gopass = ''
+      [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
+    '';
+    custom = "[ -e ${path} ] || ${extraArgs}";
+  };
+
   fileType = baseDir: { name, config, options, ... }: {
     options = {
       url = lib.mkOption {
@@ -124,30 +155,11 @@ in
         ExecStart =
           let
             mutableFilesCmds = lib.mapAttrsToList
-              (path: value:
-                let
-                  url = lib.escapeShellArg value.url;
-                  path = lib.escapeShellArg value.path;
-                  extraArgs = lib.escapeShellArgs value.extraArgs;
-                  isFetchType = type: lib.optionalString (value.type == type);
-                in
+              (path: value: let
+                fetchScript' = (fetchScript path value).${value.type};
+              in
                 ''
-                  ${isFetchType "git" "[ -d ${path} ] || git clone ${extraArgs} ${url} ${path}"}
-                  ${isFetchType "fetch" "[ -e ${path} ] || curl ${extraArgs} ${url} --output ${path}"}
-                  ${isFetchType "archive" ''
-                    [ -e ${path} ] || {
-                      filename=$(curl ${extraArgs} --output-dir /tmp --silent --show-error --write-out '%{filename_effective}' --remote-name --remote-header-name --location ${url})
-                      ${if (value.extractPath != null) then
-                          ''arc extract "/tmp/$filename" ${lib.escapeShellArg value.extractPath} ${path}''
-                        else
-                          ''arc unarchive "/tmp/$filename" ${path}''
-                      }
-                    }
-                  ''}
-                  ${isFetchType "gopass" ''
-                    [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
-                  ''}
-                  ${isFetchType "custom" "[ -e ${path} ] || ${extraArgs}"}
+                  ${fetchScript'}
                   ${value.postScript}
                 '')
               cfg;
