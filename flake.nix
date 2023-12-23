@@ -338,9 +338,11 @@
       };
 
       # A function that generates a Nix module from host metadata.
-      hostSpecificModule = host: metadata:
+      hostSpecificModule = host: metadata: let
+        modules = metadata.modules or [];
+      in
         { lib, ... }: {
-          imports = [
+          imports = modules ++ [
             inputs.${metadata.home-manager-channel or "home-manager"}.nixosModules.home-manager
 
             hostSharedConfig
@@ -357,6 +359,32 @@
             (lib.mkIf (metadata ? domain)
               { networking.domain = lib.mkForce metadata.domain; })
           ];
+        };
+
+      # A function that generates a home-manager module from a given user
+      # metadata.
+      userSpecificModule = user: metadata: let
+        name = metadata.username or metadata._name or user;
+        modules = metadata.modules or [];
+      in
+        { lib, pkgs, config, ... }: {
+          imports = modules ++ [
+            userSharedConfig
+            nixSettingsSharedConfig
+            ./users/home-manager/${name}
+          ];
+
+          # Don't create the user directories since they are assumed to
+          # be already created by a pre-installed system (which should
+          # already handle them).
+          xdg.userDirs.createDirectories = lib.mkForce false;
+
+          # Setting the homely options.
+          home.username = lib.mkForce name;
+          home.homeDirectory = lib.mkForce (metadata.home-directory or "/home/${config.home.username}");
+
+          programs.home-manager.enable = lib.mkForce true;
+          targets.genericLinux.enable = true;
         };
     in
     {
@@ -383,33 +411,12 @@
       # NICE!
       homeConfigurations =
         lib'.mapAttrs
-          (filename: metadata:
-            let
-              name = metadata.username or metadata._name or filename;
+          (user: metadata:
+            mkHome {
               pkgs = import inputs.${metadata.nixpkgs-channel or "nixpkgs"} {
                 system = metadata._system;
               };
-              extraModules = [
-                ({ lib, pkgs, config, ... }: {
-                  # Don't create the user directories since they are assumed to
-                  # be already created by a pre-installed system (which should
-                  # already handle them).
-                  xdg.userDirs.createDirectories = lib.mkForce false;
-
-                  # Setting the homely options.
-                  home.username = lib.mkForce name;
-                  home.homeDirectory = lib.mkForce (metadata.home-directory or "/home/${config.home.username}");
-
-                  programs.home-manager.enable = lib.mkForce true;
-                  targets.genericLinux.enable = true;
-                })
-                userSharedConfig
-                nixSettingsSharedConfig
-                ./users/home-manager/${name}
-              ];
-            in
-            mkHome {
-              inherit pkgs extraModules;
+              extraModules = [(userSpecificModule user metadata)];
               home-manager-channel = metadata.home-manager-channel or "home-manager";
             })
           (listImagesWithSystems users);
