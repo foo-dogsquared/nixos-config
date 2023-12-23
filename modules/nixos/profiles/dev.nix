@@ -170,6 +170,7 @@ in {
 
     (lib.mkIf cfg.virtual-machines.enable {
       environment.systemPackages = with pkgs; [
+        virt-top # Monitoring your virtual machines on a terminal, yeah.
         virt-manager # An interface for those who are lazy to read a reference manual and create a 1000-line configuration per machine.
       ];
 
