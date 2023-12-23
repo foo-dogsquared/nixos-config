@@ -11,6 +11,23 @@
   ni = {
     systems = [ "x86_64-linux" ];
     format = "iso";
+    modules = [
+      inputs.nur.nixosModules.nur
+      inputs.nix-index-database.nixosModules.nix-index
+
+      {
+        nixpkgs.overlays = [
+          # Neovim nightly!
+          inputs.neovim-nightly-overlay.overlays.default
+
+          # Emacs unstable version!
+          inputs.emacs-overlay.overlays.default
+
+          # Access to NUR.
+          inputs.nur.overlay
+        ];
+      }
+    ];
   };
 
   plover = {
@@ -43,5 +60,8 @@
   winnowing = {
     systems = [ "x86_64-linux" ];
     format = "iso";
+    modules = [
+      inputs.nixos-wsl.nixosModules.default
+    ];
   };
 }

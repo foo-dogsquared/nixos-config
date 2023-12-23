@@ -101,15 +101,6 @@
           inherit (final.nur.repos.rycee.firefox-addons) buildFirefoxXpiAddon;
           firefox-addons = final.callPackage ./pkgs/firefox-addons { };
         })
-
-        # Neovim nightly!
-        inputs.neovim-nightly-overlay.overlays.default
-
-        # Emacs unstable version!
-        inputs.emacs-overlay.overlays.default
-
-        # Access to NUR.
-        inputs.nur.overlay
       ] ++ (lib'.attrValues self.overlays);
 
       defaultSystem = "x86_64-linux";
@@ -159,13 +150,10 @@
           # Then, make the most with the modules from the flake inputs. Take
           # note importing some modules such as home-manager are as part of the
           # declarative host config so be sure to check out
-          # `hostSpecificModule` function as well.
+          # `hostSpecificModule` function as well as the declarative host setup.
           ++ [
-            inputs.nur.nixosModules.nur
             inputs.sops-nix.nixosModules.sops
             inputs.disko.nixosModules.disko
-            inputs.nix-index-database.nixosModules.nix-index
-            inputs.nixos-wsl.nixosModules.default
           ];
 
         # Set some extra, yeah?
