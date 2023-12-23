@@ -90,18 +90,7 @@
       inherit (import ./lib/extras/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage listImagesWithSystems;
 
       # The order here is important(?).
-      overlays = [
-        # My own set of Firefox addons. They're not included in the packages
-        # output since they'll be a pain in the ass to set up for others when
-        # this is also included. If I set this up to be easily included in
-        # others' flake, it'll have a potential conflict for NUR users
-        # (including myself) that also relies on rycee's NUR instance. Overall,
-        # it's a pain to setup so I'm not including this.
-        (final: prev: {
-          inherit (final.nur.repos.rycee.firefox-addons) buildFirefoxXpiAddon;
-          firefox-addons = final.callPackage ./pkgs/firefox-addons { };
-        })
-      ] ++ (lib'.attrValues self.overlays);
+      overlays = lib'.attrValues self.overlays;
 
       defaultSystem = "x86_64-linux";
 
@@ -415,6 +404,10 @@
       # In case somebody wants to use my stuff to be included in nixpkgs.
       overlays = import ./overlays // {
         default = final: prev: import ./pkgs { pkgs = prev; };
+        firefox-addons = final: prev: {
+          inherit (final.nur.repos.rycee.firefox-addons) buildFirefoxXpiAddon;
+          firefox-addons = final.callPackage ./pkgs/firefox-addons { };
+        };
       };
 
       # My custom packages, available in here as well. Though, I mainly support
