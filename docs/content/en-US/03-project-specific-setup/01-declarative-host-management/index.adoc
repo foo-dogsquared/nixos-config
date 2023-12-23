@@ -4,8 +4,8 @@ title: Declarative host management
 = Declarative host management
 
 This project uses a custom setup for declarative host management.
-Specifically, it is done with a simple file at github:{github-repo}[`./images.toml`, path=./images.toml, rev=master] where it expects a table of the hosts' metadata.
-Each host in the table represents one of the hosts at github:{github-repo}[`./hosts/`, path=./hosts/, rev=master].
+Specifically, it is done with a simple file at github:{github-repo}[`./setups/nixos.nix`, path=./setups/nixos.nix, rev=master] where it expects an attribute set of the hosts' metadata.
+Each host in the set represents one of the hosts at github:{github-repo}[`./hosts/`, path=./hosts/, rev=master].
 
 Each of declared hosts are then exported as part of the `images` flake output attribute where each is a derivation for building them as an image output.
 For example, you can build my personalized NixOS installer ISO with the following command.
@@ -19,26 +19,30 @@ A host metadata has a certain schema which the following example is a complete v
 The data is then used for certain functions in the flake definition file (i.e., `flake.nix`).
 
 [#lst:images-metadata-example]
-[source, toml]
+[source, nix]
 ----
-[plover]
-systems = [
-  "aarch64-linux",
-  "x86_64-linux",
-]
-format = "iso"
-hostname = "ploverrific"
-domain = "foodogsquared.one"
-nixpkgs-channel = "nixos-unstable-small"
-home-manager-channel = "home-manager-unstable"
-
-[plover.deploy]
-hostname = "plover.foodogsquared.one"
-ssh-user = "admin"
-fast-connection = true
-auto-rollback = true
-magic-rollback = true
-remote-build = true
+{
+  plover = {
+    systems = [ "x86_64-linux" "aarch64-linux" ];
+    format = "iso";
+    domain = "foodogsquared.one";
+    nixpkgs-channel = "nixos-unstable-small";
+    home-manager-channel = "home-manager-unstable";
+    modules = [
+      ({ config, lib, ... }: {
+        services.foo.enable = true;
+      })
+    ];
+    deploy = {
+      hostname = "plover.foodogsquared.one";
+      ssh-user = "admin";
+      fast-connection = true;
+      auto-rollback = true;
+      magic-rollback = true;
+      remote-build = true;
+    };
+  };
+}
 ----
 
 For a complete reference, here are the expected attributes.
@@ -63,6 +67,8 @@ By default, it uses `nixpkgs` flake input which points to the `nixos-unstable` c
 - `home-manager-channel` is the home-manager channel to be used for the host.
 The value could be any one of the home-manager flake inputs imported into this flake.
 By default, it uses `home-manager` flake input which follows the `home-manager-unstable` channel.
+
+- `modules` is an extra list of modules to be imported with the configuration.
 
 - `deploy` is a table containing arguments from github:serokell/deploy-rs[opts=repo].
 Only a few arguments are accepted (i.e., `hostname`, `fast-connection`, `remote-build`, `magic-rollback`, and `auto-rollback`).

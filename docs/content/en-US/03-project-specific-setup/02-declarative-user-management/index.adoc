@@ -4,31 +4,39 @@ title: Declarative user management
 = Declarative user management
 
 Similarly to xref:../01-declarative-host-management/index.adoc[Declarative host management], this project also provides a way to declare home-manager users.
-The `users.toml` sits in the project root expecting certain data.
-Similar to `images.toml`, it expects a table of users with each representing one of the users from github:{github-repo}[`./users/home-manager/`, path=./users/home-manager/, rev=master].
+The `./setups/home-manager.nix` sits in the project root expecting certain data.
+Similar to the declarative NixOS setup, it expects an attribute set of users with each representing one of the users from github:{github-repo}[`./users/home-manager/`, path=./users/home-manager/, rev=master].
 These are then included as part of `homeConfigurations` for easier installation with the standalone home-manager tool.
 Of which they are then included as part of deploy nodes for deploy-rs (also for easier deployment).
 
 Here's an example user with complete schema.
 
 .A user with complete schema
-[source, toml]
+[source, nix]
 ----
-[foo-dogsquared]
-systems = [ "x86_64-linux" ]
-nixpkgs-channel = "nixos-stable"
-home-manager-channel = "home-manager-23.05"
-home-directory = "/home/foo-dogsquared"
-username = "foodogsquared"
-
-[foo-dogsquared.deploy]
-hostname = "local.foodogsquared.one"
-ssh-user = "admin"
-profile = "foodogsquared"
-fast-connection = true
-auto-rollback = true
-magic-rollback = true
-remote-build = true
+{
+  foo-dogsquared = {
+    systems = [ "x86_64-linux" ];
+    nixpkgs-channel = "nixos-stable";
+    home-manager-channel = "home-manager-23.05";
+    home-directory = "/home/foo-dogsquared";
+    username = "foodogsquared";
+    modules = [
+      ({ config, lib, ... }: {
+        services.foo.enable = true;
+      })
+    ];
+    deploy = {
+      hostname = "local.foodogsquared.one";
+      ssh-user = "admin";
+      profile = "foodogsquared";
+      fast-connection = true;
+      auto-rollback = true;
+      magic-rollback = true;
+      remote-build = true;
+    };
+  };
+}
 ----
 
 - `systems` contains a list of platforms of the home-manager user.
@@ -48,5 +56,7 @@ By default, it will be set at `/home/$USERNAME`.
 - `username` is the username of the home-manager user to be used for `config.home.username` at the home-manager configuration.
 If unset, it will use the table key.
 In the above example, the unset value would be `foo-dogsquared`.
+
+- `modules` is an extra list of modules to be imported with the configuration.
 
 - `deploy` is pretty similar to the previous configuration setting that it sets certain options for deploy-rs.
