@@ -25,7 +25,7 @@
 
   wsl = {
     enable = true;
-    defaultUser = "winnow";
+    defaultUser = "foo-dogsquared";
     nativeSystemd = true;
   };
 
