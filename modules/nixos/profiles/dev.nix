@@ -189,9 +189,6 @@ in {
         defaultEditor = true;
         withNodeJs = true;
         withRuby = true;
-
-        # I want the BLEEDING EDGE!
-        package = pkgs.neovim-nightly;
       };
 
       environment.systemPackages = with pkgs; [
