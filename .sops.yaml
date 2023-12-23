@@ -7,9 +7,9 @@ keys:
 creation_rules:
   - path_regex: hosts/ni/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|ini|env)$
     age: *ni
-  - path_regex: hosts/plover/(modules/.+/secret|secrets/[^/]+)\.(yaml|json|ini|env)$
+  - path_regex: hosts/plover/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|ini|env)$
     age: *plover
-  - path_regex: users/home-manager/foo-dogsquared/(modules/.+/secret|secrets/[^/]+)\.(yaml|json|inienv)$
+  - path_regex: users/home-manager/foo-dogsquared/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|inienv)$
     key_groups:
       - age:
         - *foo-dogsquared-age
