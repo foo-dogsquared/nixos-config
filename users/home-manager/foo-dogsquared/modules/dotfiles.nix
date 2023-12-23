@@ -25,11 +25,16 @@ in
 
     # All of the personal configurations.
     xdg.configFile = {
-      doom.source = getDotfiles "emacs";
-      kitty.source = getDotfiles "kitty";
-      nvim.source = getDotfiles "nvim";
-      nyxt.source = getDotfiles "nyxt";
-      wezterm.source = getDotfiles "wezterm";
+      doom.source =
+        lib.mkIf userCfg.programs.doom-emacs.enable (getDotfiles "emacs");
+      kitty.source =
+        lib.mkIf userCfg.setups.development.enable (getDotfiles "kitty");
+      nvim.source =
+        lib.mkIf userCfg.setups.development.enable (getDotfiles "nvim");
+      nyxt.source =
+        lib.mkIf userCfg.programs.browsers.misc.enable (getDotfiles "nyxt");
+      wezterm.source =
+        lib.mkIf userCfg.setups.development.enable (getDotfiles "wezterm");
     };
   };
 }
