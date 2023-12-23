@@ -70,7 +70,10 @@
   nix.package = pkgs.nixUnstable;
 
   # Some more experimentals for Nix.
-  nix.settings.experimental-features = [ "auto-allocate-uids" "configurable-impure-env" ];
+  nix.settings = {
+    auto-allocate-uids = true;
+    experimental-features = [ "auto-allocate-uids" "configurable-impure-env" ];
+  };
 
   # My poor achy-breaky desktop can't take it.
   nix.daemonCPUSchedPolicy = "idle";
