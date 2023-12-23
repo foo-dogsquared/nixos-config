@@ -15,15 +15,16 @@ in
   config = lib.mkIf cfg.enable {
     programs.emacs = {
       enable = true;
-      package = pkgs.emacs-unstable;
+      package = pkgs.emacs;
       extraPackages = epkgs: with epkgs; [
-        vterm
-        pdf-tools
+        all-the-icons-nerd-fonts
+        org-noter-pdftools
         org-pdftools
         org-roam
-        org-roam-ui
         org-roam-bibtex
-        org-noter-pdftools
+        org-roam-ui
+        pdf-tools
+        vterm
       ];
     };
 
@@ -44,16 +45,6 @@ in
     home.packages = with pkgs; [
       # This is installed just to get Geiser to properly work.
       guile_3_0
-
-      # Required dependencies.
-      ripgrep
-      gnutls
-      emacs-all-the-icons-fonts
-
-      # Optional dependencies.
-      fd
-      imagemagick
-      zstd
 
       # Module dependencies.
       ## :checkers spell
