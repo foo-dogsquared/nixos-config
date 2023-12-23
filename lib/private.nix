@@ -32,36 +32,5 @@ rec {
       ];
     });
 
-  getUsers = type: users:
-    let
-      userModules = lib.filesToAttr ../users/${type};
-      invalidUsernames = [ "config" "modules" ];
-
-      users' = lib.removeAttrs userModules invalidUsernames;
-      userList = lib.attrNames users';
-
-      nonExistentUsers = lib.filter (name: !lib.elem name userList) users;
-    in
-    lib.trivial.throwIfNot ((lib.length nonExistentUsers) == 0)
-      "there are no users ${lib.concatMapStringsSep ", " (u: "'${u}'") nonExistentUsers} from ${type}"
-      (r: r)
-      users';
-
   getUser = type: user: ../users/${type}/${user};
-
-  # Import modules with a set blocklist.
-  importModules = attrs:
-    let
-      blocklist = [
-        # The modules under this attribute are often incomplete and needing
-        # very specific requirements that is 99% going to be absent from the
-        # outside so we're not going to export it.
-        "tasks"
-
-        # Profiles are often specific to this project so there's not much point
-        # in exporting these.
-        "profiles"
-      ];
-    in
-    lib.attrsets.removeAttrs (lib.mapAttrsRecursive (_: sopsFile: import sopsFile) attrs) blocklist;
 }
