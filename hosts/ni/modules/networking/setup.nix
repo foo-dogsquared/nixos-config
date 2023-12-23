@@ -60,12 +60,16 @@ in
         };
       };
 
-      # Your internal network.
-      services.resolved.domains = [
-        "~plover.foodogsquared.one"
-        "~0.27.172.in-addr.arpa"
-        "~0.28.172.in-addr.arpa"
-      ];
+      # Set resolved for DNS resolutions.
+      services.resolved = {
+        enable = true;
+        llmnr = "true";
+        domains = [
+          "~plover.foodogsquared.one"
+          "~0.27.172.in-addr.arpa"
+          "~0.28.172.in-addr.arpa"
+        ];
+      };
     }
 
     (lib.mkIf (cfg.setup == "networkd") {
@@ -79,14 +83,7 @@ in
         dhcpcd.enable = false;
       };
 
-      # Enable systemd-resolved. This is mostly setup by `systemd.network.enable`
-      # by we're being explicit just to be safe.
-      services.resolved = {
-        enable = true;
-        llmnr = "true";
-      };
-
-      # Combining my ethernet and wireless network interfaces.
+      # Setting up our network manager of choice.
       systemd.network.enable = true;
 
       # Setting up the bond devices.
