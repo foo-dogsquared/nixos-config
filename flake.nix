@@ -193,8 +193,8 @@
         nix.channel.enable = lib.mkDefault false;
 
         # Set several paths for the traditional channels.
-        nix.nixPath =
-          lib.mapAttrsToList
+        nix.nixPath = lib.mkIf config.nix.channel.enable
+          (lib.mapAttrsToList
             (name: source:
               let
                 name' = if (name == "self") then "config" else name;
@@ -203,7 +203,7 @@
             inputs
           ++ [
             "/nix/var/nix/profiles/per-user/root/channels"
-          ];
+          ]);
 
         # Please clean your temporary crap.
         boot.tmp.cleanOnBoot = lib.mkDefault true;
