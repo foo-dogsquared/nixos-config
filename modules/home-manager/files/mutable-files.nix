@@ -101,7 +101,7 @@ let
       };
 
       postScript = lib.mkOption {
-        type = lib.types.str;
+        type = lib.types.lines;
         description = ''
           A shell script fragment to be executed after the download.
         '';
