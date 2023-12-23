@@ -81,10 +81,10 @@
       # A set of images with their metadata that is usually built for usual
       # purposes. The format used here is whatever formats nixos-generators
       # support.
-      images = lib'.importTOML ./images.toml;
+      images = import ./setups/nixos.nix { lib = lib'; inherit inputs; };
 
       # A set of users with their metadata to be deployed with home-manager.
-      users = lib'.importTOML ./users.toml;
+      users = import ./setups/home-manager.nix { lib = lib'; inherit inputs; };
 
       # A set of image-related utilities for the flake outputs.
       inherit (import ./lib/extras/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage listImagesWithSystems;
