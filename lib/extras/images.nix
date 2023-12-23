@@ -4,15 +4,7 @@
 
 let
   # A function that generates a lambda suitable for `lib.extend`.
-  extendLib = self: super: let
-    publicLib = import ./. { lib = super; };
-  in
-  {
-    inherit (publicLib) filesToAttr countAttrs getSecrets
-      attachSopsPathPrefix;
-    private = publicLib
-              // import ./private.nix { lib = self; };
-  };
+  extendLib = import ./extend-lib.nix;
 in
 {
   # A thin wrapper around the NixOS configuration function.

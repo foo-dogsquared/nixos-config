@@ -87,7 +87,7 @@
       users = lib'.importTOML ./users.toml;
 
       # A set of image-related utilities for the flake outputs.
-      inherit (import ./lib/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage listImagesWithSystems;
+      inherit (import ./lib/extras/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage listImagesWithSystems;
 
       # The order here is important(?).
       overlays = [

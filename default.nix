@@ -1,8 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
-  lib' = pkgs.lib.extend (final: prev:
-    import ./lib { lib = prev; } // import ./lib/private.nix { lib = final; });
+  lib' = pkgs.lib.extend (import ./lib/extras/extend-lib.nix);
 in
 {
   lib = import ./lib { lib = pkgs.lib; };
