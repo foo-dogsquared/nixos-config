@@ -440,8 +440,13 @@
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
       # configuration (or even home environment).
-      devShells = forAllSystems (system:
-        let pkgs = import nixpkgs { inherit system overlays; };
+      devShells = forAllSystems (system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = overlays ++ [
+            inputs.nur.overlay
+          ];
+        };
         in {
           default = import ./shell.nix { inherit pkgs; };
           docs = import ./docs/shell.nix { inherit pkgs; };
