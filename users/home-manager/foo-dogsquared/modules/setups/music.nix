@@ -33,7 +33,7 @@ in
 
       # My music player setup, completely configured with Nix!
       programs.beets = {
-        enable = true;
+        #enable = true;
         settings = {
           library = "${musicDir}/library.db";
           plugins = [
