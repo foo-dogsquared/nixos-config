@@ -1,7 +1,7 @@
 # This is where extra desktop goodies can be found.
 # As a note, this is not where you set the aesthetics of your graphical sessions.
 # That can be found in the `themes` module.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, options, ... }:
 
 let cfg = config.profiles.desktop;
 in {
@@ -65,7 +65,41 @@ in {
       fonts.fontconfig.enable = true;
 
       # Run unpatched binaries with these!
-      programs.nix-ld.enable = true;
+      programs.nix-ld = {
+        enable = true;
+        libraries = let
+          xorgLibs = with pkgs.xorg; [
+            libX11
+            libXScrnSaver
+            libXcomposite
+            libXcursor
+            libXdamage
+            libXext
+            libXfixes
+            libXi
+            libXrandr
+            libXrender
+            libXtst
+            libxcb
+            libxkbfile
+            libxshmfence
+          ];
+          commonLibs = with pkgs; [
+            alsa-lib
+            cairo
+            freetype
+            dbus
+            icu
+            libGL
+            libnotify
+            mesa
+            nss
+            pango
+            pipewire
+          ];
+        in
+          commonLibs ++ xorgLibs ++ options.programs.nix-ld.libraries.default;
+      };
 
       environment.systemPackages = with pkgs; [
         steam-run # For the heathens that still uses FHS.
