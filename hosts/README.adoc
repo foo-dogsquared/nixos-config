@@ -27,14 +27,15 @@ For managing users, there are multiple ways to manage them with this config:
 * If you intend to import users from the link:../users/nixos/[`../users/nixos/`], you can simply import them through `imports` in the system module.
 +
 --
-For a convenient option, there is the function `getUsers` defined from the link:../lib/private.nix[private custom library].
+For a convenient option, there is the function `getUser` defined from the link:../lib/private.nix[private custom library].
 You can use it as follows:
 
 [source, nix]
 ----
-imports = [ # Your modules ]
-    # Import the following NixOS users.
-    ++ (lib.attrValues (lib.getUsers "nixos" [ "foo-dogsquared" "polski" ]));
+imports = [
+  (lib.private.getUser "nixos" "foo-dogsquared")
+  (lib.private.getUser "nixos" "polaski")
+];
 ----
 --
 
