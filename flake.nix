@@ -81,16 +81,16 @@
       # A set of images with their metadata that is usually built for usual
       # purposes. The format used here is whatever formats nixos-generators
       # support.
-      images = import ./setups/nixos.nix { lib = lib'; inherit inputs; };
+      images = import ./setups/nixos.nix { inherit lib inputs; };
 
       # A set of users with their metadata to be deployed with home-manager.
-      users = import ./setups/home-manager.nix { lib = lib'; inherit inputs; };
+      users = import ./setups/home-manager.nix { inherit lib inputs; };
 
       # A set of image-related utilities for the flake outputs.
-      inherit (import ./lib/extras/images.nix { inherit inputs; lib = lib'; }) mkHost mkHome mkImage listImagesWithSystems;
+      inherit (import ./lib/extras/images.nix { inherit lib inputs; }) mkHost mkHome mkImage listImagesWithSystems;
 
       # The order here is important(?).
-      overlays = lib'.attrValues self.overlays;
+      overlays = lib.attrValues self.overlays;
 
       defaultSystem = "x86_64-linux";
 
@@ -112,9 +112,7 @@
 
       # We're considering this as the variant since we'll export the custom
       # library as `lib` in the output attribute.
-      lib' = nixpkgs.lib.extend (final: prev:
-        import ./lib { lib = prev; }
-        // import ./lib/private.nix { lib = final; });
+      lib = nixpkgs.lib.extend (import ./lib/extras/extend-lib.nix);
 
       # The shared configuration for the entire list of hosts for this cluster.
       # Take note to only set as minimal configuration as possible since we're
@@ -372,7 +370,7 @@
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
       nixosConfigurations =
-        lib'.mapAttrs
+        lib.mapAttrs
           (host: metadata:
             mkHost {
               extraModules = [ (hostSpecificModule host metadata) ];
@@ -382,12 +380,12 @@
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
-      nixosModules.default = import ./modules/nixos { lib = lib'; };
+      nixosModules.default = import ./modules/nixos { inherit lib; };
 
       # I can now install home-manager users in non-NixOS systems.
       # NICE!
       homeConfigurations =
-        lib'.mapAttrs
+        lib.mapAttrs
           (user: metadata:
             mkHome {
               pkgs = import inputs.${metadata.nixpkgs-channel or "nixpkgs"} {
@@ -399,7 +397,7 @@
           (listImagesWithSystems users);
 
       # Extending home-manager with my custom modules, if anyone cares.
-      homeModules.default = import ./modules/home-manager { lib = lib'; };
+      homeModules.default = import ./modules/home-manager { inherit lib; };
 
       # In case somebody wants to use my stuff to be included in nixpkgs.
       overlays = import ./overlays // {
@@ -423,9 +421,9 @@
       images =
         forAllSystems (system:
           let
-            images' = lib'.filterAttrs (host: metadata: system == metadata._system) (listImagesWithSystems images);
+            images' = lib.filterAttrs (host: metadata: system == metadata._system) (listImagesWithSystems images);
           in
-          lib'.mapAttrs'
+          lib.mapAttrs'
             (host: metadata:
               let
                 name = metadata._name;
@@ -433,7 +431,7 @@
                 pkgs = import inputs.${nixpkgs-channel} {};
                 format = metadata.format or "iso";
               in
-              lib'.nameValuePair name (mkImage {
+              lib.nameValuePair name (mkImage {
                 inherit format pkgs;
                 extraModules = [ (hostSpecificModule host metadata) ];
               }))
@@ -484,12 +482,12 @@
       # command-line shells have support for (e.g., Bash, zsh, fish).
       deploy.nodes =
         let
-          nixosConfigurations = lib'.mapAttrs'
+          nixosConfigurations = lib.mapAttrs'
             (name: value:
               let
                 metadata = images.${name};
               in
-              lib'.nameValuePair "nixos-${name}" {
+              lib.nameValuePair "nixos-${name}" {
                 hostname = metadata.deploy.hostname or name;
                 autoRollback = metadata.deploy.auto-rollback or true;
                 magicRollback = metadata.deploy.magic-rollback or true;
@@ -502,13 +500,13 @@
                 };
               })
             self.nixosConfigurations;
-          homeConfigurations = lib'.mapAttrs'
+          homeConfigurations = lib.mapAttrs'
             (name: value:
               let
                 metadata = users.${name};
                 username = metadata.deploy.username or name;
               in
-              lib'.nameValuePair "home-manager-${name}" {
+              lib.nameValuePair "home-manager-${name}" {
                 hostname = metadata.deploy.hostname or name;
                 autoRollback = metadata.deploy.auto-rollback or true;
                 magicRollback = metadata.deploy.magic-rollback or true;
@@ -526,7 +524,7 @@
 
       # How to make yourself slightly saner than before. So far the main checks
       # are for deploy nodes.
-      checks = lib'.mapAttrs
+      checks = lib.mapAttrs
         (system: deployLib: deployLib.deployChecks self.deploy)
         inputs.deploy.lib;
 
