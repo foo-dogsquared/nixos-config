@@ -154,13 +154,6 @@ in {
             osc = false;
             loop-file = "inf";
           };
-
-          "protocol.https" = {
-            keep-open = true;
-            loop-file = "inf";
-          };
-
-          "protocol.http".profile = "protocol.https";
         };
 
         scripts = with pkgs.mpvScripts; [
