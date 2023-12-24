@@ -36,11 +36,7 @@ in
     };
 
     # Set up with these variables.
-    systemd.user.sessionVariables = {
-      PAGER = "moar";
-      MANPAGER = "nvim +Man!";
-      EDITOR = "nvim";
-    };
+    systemd.user.sessionVariables.PAGER = "moar";
 
     # Add it to the laundry list.
     services.bleachbit.cleaners = [ "bash.history" ];

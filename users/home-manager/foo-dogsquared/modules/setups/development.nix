@@ -24,6 +24,22 @@ in
           servers.enable = true;
         };
 
+        programs.neovim = {
+          enable = true;
+          package = pkgs.neovim-nightly;
+          vimAlias = true;
+          vimdiffAlias = true;
+
+          withNodeJs = true;
+          withPython3 = true;
+          withRuby = true;
+        };
+
+        systemd.user.sessionVariables = {
+          MANPAGER = "nvim +Man!";
+          EDITOR = "nvim";
+        };
+
         home.packages = with pkgs; [
           cachix # Compile no more by using someone's binary cache!
           diffoscope # Oversized caffeine grinder.
