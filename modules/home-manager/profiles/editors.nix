@@ -18,7 +18,6 @@ in {
     (lib.mkIf cfg.neovim.enable {
       programs.neovim = {
         enable = true;
-        package = pkgs.neovim-nightly;
         withPython3 = true;
         withRuby = true;
         withNodeJs = true;
