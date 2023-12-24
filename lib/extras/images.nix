@@ -39,12 +39,23 @@ in
     };
 
   # A thin wrapper around the nixos-generators `nixosGenerate` function.
-  mkImage = { pkgs ? null, extraModules ? [ ], format ? "iso" }:
-    inputs.nixos-generators.nixosGenerate {
-      inherit pkgs format;
-      lib = pkgs.lib.extend extendLib;
-      modules = extraModules;
+  mkImage = { nixpkgs-channel ? "nixpkgs", extraModules ? [ ], format ? "iso" }: let
+    nixpkgs = inputs.${nixpkgs-channel};
+
+    # A modified version of `nixosSystem` from nixpkgs flake similar to the
+    # one found in mkHost.
+    nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
+
+    image = nixosSystem {
+      lib = nixpkgs.lib.extend extendLib;
+      modules = extraModules ++ [ inputs.nixos-generators.nixosModules.${format} ];
+
+      # We're also setting this up modularly so we'll have to pass these as
+      # null.
+      system = null;
     };
+  in
+    image.config.system.build.${image.config.formatAttr};
 
   # A function to modify the given table of declarative setups (i.e., hosts,
   # users) to have its own system attribute and its name.

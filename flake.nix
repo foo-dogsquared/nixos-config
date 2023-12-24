@@ -315,6 +315,7 @@
       # A function that generates a Nix module from host metadata.
       hostSpecificModule = host: metadata: let
         modules = metadata.modules or [];
+        host = metadata._name or host;
       in
         { lib, ... }: {
           imports = modules ++ [
@@ -421,18 +422,17 @@
       images =
         forAllSystems (system:
           let
-            images' = lib.filterAttrs (host: metadata: system == metadata._system) (listImagesWithSystems images);
+            images' = lib.filterAttrs (host: metadata: (system == metadata._system) && (metadata.format != null)) (listImagesWithSystems images);
           in
           lib.mapAttrs'
             (host: metadata:
               let
                 name = metadata._name;
                 nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-                pkgs = import inputs.${nixpkgs-channel} {};
                 format = metadata.format or "iso";
               in
               lib.nameValuePair name (mkImage {
-                inherit format pkgs;
+                inherit nixpkgs-channel format;
                 extraModules = [ (hostSpecificModule host metadata) ];
               }))
             images');
