@@ -3,7 +3,7 @@
 
 let
   user = "plover";
-  homeManagerUser = lib.getUser "home-manager" user;
+  homeManagerUser = lib.private.getUser "home-manager" user;
 in
 {
   users.users.${user} = {

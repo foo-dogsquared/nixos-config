@@ -8,8 +8,8 @@
     ./modules/profiles/hetzner-cloud-cx21.nix
 
     # The users for this host.
-    (lib.getUser "nixos" "admin")
-    (lib.getUser "nixos" "plover")
+    (lib.private.getUser "nixos" "admin")
+    (lib.private.getUser "nixos" "plover")
 
     # Hardened profile from nixpkgs.
     "${modulesPath}/profiles/hardened.nix"
@@ -81,5 +81,5 @@
   # Make Nix experimental.
   nix.package = pkgs.nixUnstable;
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "23.05";
 }

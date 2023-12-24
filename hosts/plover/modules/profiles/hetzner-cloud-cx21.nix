@@ -5,7 +5,7 @@
 # from nixos-generators.
 let
   inherit (builtins) toString;
-  inherit (import ./networks.nix) interfaces;
+  inherit (import ../hardware/networks.nix) interfaces;
 
   # This is just referring to the same interface just with alternative names.
   mainEthernetInterfaceNames = [ "ens3" "enp0s3" ];
