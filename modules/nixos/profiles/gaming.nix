@@ -18,7 +18,16 @@ in
       environment.systemPackages = with pkgs; [
         # All-around emulator. Also what I'm mainly using for quickly
         # initializing sessions.
-        retroarchFull
+        (retroarch.override {
+          cores = with libretro; [
+            bsnes-hd
+            desmume
+            dolphin
+            dosbox-pure
+            pcsx2
+            ppsspp
+          ];
+        })
       ];
 
       # Setup the go-to platform for Linux gaming. Most of the
