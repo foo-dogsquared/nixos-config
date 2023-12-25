@@ -82,6 +82,7 @@
       # purposes. The format used here is whatever formats nixos-generators
       # support.
       images = import ./setups/nixos.nix { inherit lib inputs; };
+      images' = listImagesWithSystems images;
 
       # A set of users with their metadata to be deployed with home-manager.
       users = import ./setups/home-manager.nix { inherit lib inputs; };
@@ -370,14 +371,17 @@
 
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
-      nixosConfigurations =
+      nixosConfigurations = let
+        validImages = lib.filterAttrs (name: metadata:
+          metadata.format == null || metadata ? deploy) images;
+      in
         lib.mapAttrs
           (host: metadata:
             mkHost {
               extraModules = [ (hostSpecificModule host metadata) ];
               nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
             })
-          (listImagesWithSystems images);
+          (listImagesWithSystems validImages);
 
       # We're going to make our custom modules available for our flake. Whether
       # or not this is a good thing is debatable, I just want to test it.
@@ -419,23 +423,22 @@
       # This contains images that are meant to be built and distributed
       # somewhere else including those NixOS configurations that are built as
       # an ISO.
-      images =
-        forAllSystems (system:
+      images = forAllSystems (system: let
+        validImages = lib.filterAttrs (host: metadata:
+          system == metadata._system && metadata.format != null) images';
+      in
+      lib.mapAttrs'
+        (host: metadata:
           let
-            images' = lib.filterAttrs (host: metadata: (system == metadata._system) && (metadata.format != null)) (listImagesWithSystems images);
+            name = metadata._name;
+            nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
+            format = metadata.format or "iso";
           in
-          lib.mapAttrs'
-            (host: metadata:
-              let
-                name = metadata._name;
-                nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-                format = metadata.format or "iso";
-              in
-              lib.nameValuePair name (mkImage {
-                inherit nixpkgs-channel format;
-                extraModules = [ (hostSpecificModule host metadata) ];
-              }))
-            images');
+          lib.nameValuePair name (mkImage {
+            inherit nixpkgs-channel format;
+            extraModules = [ (hostSpecificModule host metadata) ];
+          }))
+        validImages);
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system

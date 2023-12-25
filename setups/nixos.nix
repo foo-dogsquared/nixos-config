@@ -10,7 +10,7 @@
 {
   ni = {
     systems = [ "x86_64-linux" ];
-    format = "iso";
+    format = null;
     modules = [
       inputs.nur.nixosModules.nur
       inputs.nix-index-database.nixosModules.nix-index
@@ -35,7 +35,7 @@
 
   plover = {
     systems = [ "x86_64-linux" ];
-    format = "iso";
+    format = null;
     domain = "foodogsquared.one";
     deploy = {
       hostname = "plover.foodogsquared.one";
@@ -62,7 +62,7 @@
 
   winnowing = {
     systems = [ "x86_64-linux" ];
-    format = "iso";
+    format = null;
     modules = [
       inputs.nixos-wsl.nixosModules.default
     ];
