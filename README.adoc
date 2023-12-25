@@ -19,9 +19,9 @@ This time, it is configured with the link:./users.toml[./users.toml] file which 
 * Unify https://github.com/nix-community/nixos-generators[home-manager] and NixOS configuration (and maybe other environments such as nix-darwin and system-manager in case I have use cases for those) into one flake.
 
 * Take full advantage of Nix module system with the cluster-wide custom modules footnote:[Most of them are patterned similarly from nixpkgs which made easy to be upstreamed just in case.].
-This design bleeds into configuring the NixOS systems and home-manager users by designing {doc-site}/04-nixos-modules/04-host-specific-modules/[host-specific modules] and {doc-site}/05-home-manager/#_user_specific_modules[user-specific modules], respectively.
+This design bleeds into configuring the NixOS systems and home-manager users by designing link:{doc-site}/04-nixos-modules/04-host-specific-modules/[host-specific modules] and link:{doc-site}/05-home-manager/#_user_specific_modules[user-specific modules], respectively.
 
-* It has its own {doc-site}[website].
+* It has its own link:{doc-site}[website].
 Which means that it's cool (or over-the-top, whichever you prefer).
 
 It's basically my personal version of nixpkgs: a monorepo of everything I need for Nix-related things (unless it sprung into life as its own project).
