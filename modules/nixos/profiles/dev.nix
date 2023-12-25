@@ -6,6 +6,7 @@ in {
   options.profiles.dev = {
     enable = lib.mkEnableOption "basic configuration for software development";
     extras.enable = lib.mkEnableOption "additional shell utilities";
+    hardware.enable = lib.mkEnableOption "additional hardware-related dev utilities";
     containers.enable = lib.mkEnableOption "containers setup";
     virtual-machines.enable = lib.mkEnableOption "virtual machines setup";
     neovim.enable = lib.mkEnableOption "Neovim setup";
@@ -41,18 +42,6 @@ in {
         package = pkgs.gitFull;
       };
 
-      # It's a given at life to have a GPG key.
-      programs.gnupg.agent.enable = true;
-
-      # Instrumentate your instrument.
-      programs.systemtap.enable = true;
-
-      # Search around sharks for wires.
-      programs.wireshark.enable = true;
-
-      # Profile your whole system.
-      services.sysprof.enable = true;
-
       # Additional settings for developing with nix.
       nix.settings = {
         keep-outputs = true;
@@ -71,15 +60,6 @@ in {
         sshfs # Make others' home your own.
         whois # Doctor, are you not?
         valgrind # Making sure your applications don't pee as much.
-
-        # Measuring your bloated tanks power and bandwidth consumption.
-        powertop
-        nethogs
-
-        # Hardware and software diagnostics.
-        lsof # View every single open connections.
-        lshw # View your hardware.
-        pciutils # View your peripherals.
 
         # All of the documentation.
         man-pages # Extra manpages.
@@ -122,6 +102,31 @@ in {
 
       # Convenience!
       environment.localBinInPath = true;
+
+      # It's a given at life to have a GPG key.
+      programs.gnupg.agent.enable = true;
+    })
+
+    (lib.mkIf cfg.hardware.enable {
+      environment.systemPackages = with pkgs; [
+        # Measuring your bloated tanks power and bandwidth consumption.
+        powertop
+        nethogs
+
+        # Hardware and software diagnostics.
+        lsof # View every single open connections.
+        lshw # View your hardware.
+        pciutils # View your peripherals.
+      ];
+
+      # Instrumentate your instrument.
+      programs.systemtap.enable = true;
+
+      # Search around sharks for wires.
+      programs.wireshark.enable = true;
+
+      # Profile your whole system.
+      services.sysprof.enable = true;
     })
 
     # !!! Please add your user to the "libvirtd" group.
