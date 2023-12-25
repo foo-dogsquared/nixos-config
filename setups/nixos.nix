@@ -39,9 +39,8 @@
     format = null;
     modules = [
       inputs.nur.nixosModules.nur
-      inputs.nix-index-database.nixosModules.nix-index
 
-      {
+      ({ config, ... }: {
         nixpkgs.overlays = [
           # Neovim nightly!
           inputs.neovim-nightly-overlay.overlays.default
@@ -55,7 +54,7 @@
           # Access to NUR.
           inputs.nur.overlay
         ];
-      }
+      })
     ];
   };
 

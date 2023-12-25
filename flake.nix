@@ -140,6 +140,7 @@
           # declarative host config so be sure to check out
           # `hostSpecificModule` function as well as the declarative host setup.
           ++ [
+            inputs.nix-index-database.nixosModules.nix-index
             inputs.sops-nix.nixosModules.sops
             inputs.disko.nixosModules.disko
           ];
