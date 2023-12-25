@@ -2,49 +2,6 @@
 { lib }:
 
 rec {
-  /* Create an attribute set that represents the structure of the modules
-     inside of a directory.  While it can recurse into directories, it will
-     stop once it detects `default.nix` inside.
-
-     Signature:
-       path -> attrset
-     Where:
-       - `path` is the starting point.
-     Returns:
-       An attribute set. The keys are the basename of the file or the directory
-       and the values are the filepath to the Nix file.
-
-     !!! Implementation detail is based from
-     https://github.com/divnix/digga/blob/main/src/importers.nix looking at it
-     multiple times for the purpose of familiarizing myself to coding in Nix
-     and functional programming shtick.
-
-     Example:
-       filesToAttr ./hosts
-       => { ni = ./hosts/ni/default.nix; zilch = ./hosts/zilch/default.nix }
-  */
-  filesToAttr = dirPath:
-    let
-      isModule = file: type:
-        (type == "regular" && lib.hasSuffix ".nix" file)
-        || (type == "directory");
-
-      collect = file: type: {
-        name = lib.removeSuffix ".nix" file;
-        value =
-          let path = dirPath + "/${file}";
-          in if (type == "regular")
-            || (type == "directory" && lib.pathExists (path + "/default.nix")) then
-            path
-          else
-            filesToAttr path;
-      };
-
-      files = lib.filterAttrs isModule (builtins.readDir dirPath);
-    in
-    lib.filterAttrs (name: value: value != { })
-      (lib.mapAttrs' collect files);
-
   /* Count the attributes with the given predicate.
 
      Examples:

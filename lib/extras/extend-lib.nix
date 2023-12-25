@@ -3,8 +3,7 @@ self: super: let
   publicLib = import ../. { lib = super; };
 in
 {
-  inherit (publicLib) filesToAttr countAttrs getSecrets
-    attachSopsPathPrefix;
+  inherit (publicLib) countAttrs getSecrets attachSopsPathPrefix;
 
   # Until I figure out how to properly add them only for their respective
   # environment, this is the working solution for now. Not really perfect
