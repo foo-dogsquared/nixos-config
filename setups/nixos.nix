@@ -23,6 +23,9 @@
           # Emacs unstable version!
           inputs.emacs-overlay.overlays.default
 
+          # Helix master!
+          inputs.helix-editor.overlays.default
+
           # Access to NUR.
           inputs.nur.overlay
         ];
