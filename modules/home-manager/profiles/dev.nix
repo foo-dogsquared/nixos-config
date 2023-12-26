@@ -95,7 +95,7 @@ in {
       # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
       programs.fzf =
         let
-          fd = "${lib.getBin pkgs.fd}/bin/fd";
+          fd = lib.getExe' pkgs.fd "fd";
         in
         {
           enable = true;

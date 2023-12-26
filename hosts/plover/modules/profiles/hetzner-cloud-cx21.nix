@@ -4,7 +4,6 @@
 # settings of whatever image format configuration this host system will import
 # from nixos-generators.
 let
-  inherit (builtins) toString;
   inherit (import ../hardware/networks.nix) interfaces;
 
   # This is just referring to the same interface just with alternative names.

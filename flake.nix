@@ -11,11 +11,12 @@
   inputs = {
     # I know NixOS can be stable but we're going cutting edge, baybee! While
     # `nixpkgs-unstable` branch could be faster delivering updates, it is
-    # looser when it comes to stability for the entirety of this configuration.
+    # looser when it comes to stability for the entirety of this
+    # configuration...
     nixpkgs.follows = "nixos-unstable";
 
-    # Here are the nixpkgs variants used for creating the system configuration
-    # in `mkHost`.
+    # ...except we allow other configurations to use other nixpkgs branch so
+    # that may not matter anyways.
     nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
@@ -220,6 +221,7 @@
             inputs.nur.hmModules.nur
             inputs.sops-nix.homeManagerModules.sops
             inputs.nix-index-database.hmModules.nix-index
+            inputs.nix-colors.homeManagerModules.default
           ];
 
         # Set some extra, yeah?
@@ -451,10 +453,10 @@
             inputs.nur.overlay
           ];
         };
-        in {
+        in import ./shells { inherit pkgs; } // {
           default = import ./shell.nix { inherit pkgs; };
           docs = import ./docs/shell.nix { inherit pkgs; };
-        } // (import ./shells { inherit pkgs; }));
+        });
 
       # Cookiecutter templates for your mama.
       templates = {
