@@ -15,6 +15,12 @@ For example, you can build my personalized NixOS installer ISO with the followin
 nix build {canonical-flake-url}#images.x86_64-linux.bootstrap
 ----
 
+[NOTE]
+====
+Not every image listed here is not meant to be built as a certain output but rather deployed somewhere else.
+We'll see to specify it in the following section.
+====
+
 A host metadata has a certain schema which the following example is a complete version of it.
 The data is then used for certain functions in the flake definition file (i.e., `flake.nix`).
 
@@ -24,7 +30,7 @@ The data is then used for certain functions in the flake definition file (i.e., 
 {
   plover = {
     systems = [ "x86_64-linux" "aarch64-linux" ];
-    format = "iso";
+    format = null;
     domain = "foodogsquared.one";
     nixpkgs-channel = "nixos-unstable-small";
     home-manager-channel = "home-manager-unstable";
@@ -52,6 +58,7 @@ This is mainly used to indicate the platform used for the nixpkgs repository.
 
 - `format` is the image output format for the host.
 It expects an accepted value from github:nix-community/nixos-generators[opts=repo] project.
+To include a host as part of `nixosConfigurations`, you'll have to set this as `null`.
 
 - `hostname` is the canonical hostname for the host.
 If unset, the hostname is the name of the table key.
@@ -72,6 +79,7 @@ By default, it uses `home-manager` flake input which follows the `home-manager-u
 
 - `deploy` is a table containing arguments from github:serokell/deploy-rs[opts=repo].
 Only a few arguments are accepted (i.e., `hostname`, `fast-connection`, `remote-build`, `magic-rollback`, and `auto-rollback`).
+Once this attribute is present, it will be included as part of `nixosConfigurations` flake output no matter what `format` is given.
 
 Those imported NixOS configurations are also exported as part of the deploy nodes for deploy-rs with the `nixos` prefix.
 For example, here's the command to deploy my Plover server.
