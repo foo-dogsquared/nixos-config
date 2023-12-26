@@ -5,7 +5,7 @@
 This is Plover, a configuration meant to be used in a low-powered general-purpose machine.
 It isn't much of an instance to be seriously used yet but hopefully it is getting there.
 
-This configuration is expected to be deployed in a Google Compute instance.
+This configuration is expected to be deployed as a Hetzner Cloud instance.
 
 It has a reasonable set of assumptions to keep in mind when modifying this configuration:
 
