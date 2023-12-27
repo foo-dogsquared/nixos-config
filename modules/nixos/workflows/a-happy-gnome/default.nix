@@ -1,4 +1,4 @@
-{ config, lib, pkgs, _isfoodogsquaredcustom ? false, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.workflows.workflows.a-happy-gnome;
@@ -94,69 +94,62 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      # Enable GNOME and GDM.
-      services.xserver = {
-        enable = true;
-        displayManager.gdm.enable = true;
-        desktopManager.gnome.enable = true;
+  config = lib.mkIf cfg.enable {
+    # Enable GNOME and GDM.
+    services.xserver = {
+      enable = true;
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+    };
+
+    # All GNOME-related additional options.
+    services.gnome = {
+      core-os-services.enable = true;
+      core-shell.enable = true;
+      core-utilities.enable = true;
+
+      # It doesn't need to since we're not first-timers, yeah?
+      gnome-initial-setup.enable = false;
+    };
+
+    # It makes Nix store directory read/write so no...
+    services.packagekit.enable = false;
+
+    # Setting up split DNS with systemd-resolved. The domains should already
+    # be configured somewhere else.
+    services.resolved.enable = true;
+    networking.networkmanager.dns = "systemd-resolved";
+
+    # Since we're using KDE Connect, we'll have to use gsconnect.
+    programs.kdeconnect = {
+      enable = true;
+      package = pkgs.gnomeExtensions.gsconnect;
+    };
+
+    # Bring all of the dconf keyfiles in there.
+    programs.dconf = {
+      enable = true;
+      packages = [ dconfConfig ];
+    };
+
+    xdg.mime = {
+      enable = true;
+      defaultApplications = {
+        # Default application for web browser.
+        "text/html" = "re.sonny.Junction.desktop";
+
+        # Default handler for all files. Not all applications will
+        # respect it, though.
+        "x-scheme-handler/file" = "re.sonny.Junction.desktop";
+
+        # Default handler for directories.
+        "inode/directory" = "re.sonny.Junction.desktop";
       };
+    };
 
-      # All GNOME-related additional options.
-      services.gnome = {
-        core-os-services.enable = true;
-        core-shell.enable = true;
-        core-utilities.enable = true;
-
-        # It doesn't need to since we're not first-timers, yeah?
-        gnome-initial-setup.enable = false;
-      };
-
-      # It makes Nix store directory read/write so no...
-      services.packagekit.enable = false;
-
-      # Setting up split DNS with systemd-resolved. The domains should already
-      # be configured somewhere else.
-      services.resolved.enable = true;
-      networking.networkmanager.dns = "systemd-resolved";
-
-      # Since we're using KDE Connect, we'll have to use gsconnect.
-      programs.kdeconnect = {
-        enable = true;
-        package = pkgs.gnomeExtensions.gsconnect;
-      };
-
-      # Bring all of the dconf keyfiles in there.
-      programs.dconf = {
-        enable = true;
-        packages = [ dconfConfig ];
-      };
-
-      xdg.mime = {
-        enable = true;
-        defaultApplications = {
-          # Default application for web browser.
-          "text/html" = "re.sonny.Junction.desktop";
-
-          # Default handler for all files. Not all applications will
-          # respect it, though.
-          "x-scheme-handler/file" = "re.sonny.Junction.desktop";
-
-          # Default handler for directories.
-          "inode/directory" = "re.sonny.Junction.desktop";
-        };
-      };
-
-      environment.systemPackages = with pkgs; [
-        # The application menu.
-        junction
-      ] ++ cfg.shellExtensions ++ cfg.extraApps;
-    }
-
-    # Check whether this is inside of my personal configuration or nah.
-    (lib.mkIf _isfoodogsquaredcustom {
-      profiles.i18n.setup = "ibus";
-    })
-  ]);
+    environment.systemPackages = with pkgs; [
+      # The application menu.
+      junction
+    ] ++ cfg.shellExtensions ++ cfg.extraApps;
+  };
 }

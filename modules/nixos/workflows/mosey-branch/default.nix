@@ -1,4 +1,4 @@
-{ config, lib, pkgs, _isfoodogsquaredcustom ? false, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.workflows.workflows.mosey-branch;
@@ -109,81 +109,71 @@ in
     debug = lib.mkEnableOption "gnome-session debug messages";
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      environment.systemPackages = cfg.extraApps ++ requiredPackages;
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = cfg.extraApps ++ requiredPackages;
 
-      # Install all of the required systemd units.
-      systemd.packages = with pkgs.gnome; [
-        customDesktopSession
-        gnome-session
+    # Install all of the required systemd units.
+    systemd.packages = with pkgs.gnome; [
+      customDesktopSession
+      gnome-session
+    ];
+
+    # We'll have to include them for gnome-session to recognize it in NixOS
+    # systems.
+    environment.pathsToLink = [ "/share/gnome-session" ];
+
+    environment.sessionVariables.GNOME_SESSION_DEBUG = lib.mkIf cfg.debug "1";
+
+    # Our preferred display manager.
+    services.xserver = {
+      enable = true;
+      displayManager = {
+        gdm.enable = lib.mkDefault true;
+        sessionPackages = [ customDesktopSession ];
+      };
+      updateDbusEnvironment = true;
+    };
+
+    # Setting up some hardware settings.
+    hardware.opengl.enable = true;
+    hardware.bluetooth.enable = true;
+    services.udisks2.enable = true;
+    services.upower.enable = true;
+    services.power-profiles-daemon.enable = true;
+    services.colord.enable = true;
+    services.system-config-printer.enable = config.services.printing.enable;
+
+    # Setting up some more core services.
+    security.polkit.enable = true;
+    services.accounts-daemon.enable = true;
+    services.dleyna-renderer.enable = true;
+    services.dleyna-server.enable = true;
+    programs.dconf.enable = true;
+    programs.xwayland.enable = true;
+
+    fonts.enableDefaultPackages = true;
+
+    # The phone sync component which is handy.
+    programs.kdeconnect = {
+      enable = true;
+      package = pkgs.valent;
+    };
+
+    # Harmonious themes. Since we're making this very similar to GNOME
+    # appearance-wise, layout-wise, and setup-wise, we may as well make it
+    # similar.
+    qt = {
+      enable = true;
+      platformTheme = "gnome";
+      style = "adwaita";
+    };
+
+    xdg.portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gtk
       ];
-
-      # We'll have to include them for gnome-session to recognize it in NixOS
-      # systems.
-      environment.pathsToLink = [ "/share/gnome-session" ];
-
-      environment.sessionVariables.GNOME_SESSION_DEBUG = lib.mkIf cfg.debug "1";
-
-      # Our preferred display manager.
-      services.xserver = {
-        enable = true;
-        displayManager = {
-          gdm.enable = lib.mkDefault true;
-          sessionPackages = [ customDesktopSession ];
-        };
-        updateDbusEnvironment = true;
-      };
-
-      # Setting up some hardware settings.
-      hardware.opengl.enable = true;
-      hardware.bluetooth.enable = true;
-      services.udisks2.enable = true;
-      services.upower.enable = true;
-      services.power-profiles-daemon.enable = true;
-      services.colord.enable = true;
-      services.system-config-printer.enable = config.services.printing.enable;
-
-      # Setting up some more core services.
-      security.polkit.enable = true;
-      services.accounts-daemon.enable = true;
-      services.dleyna-renderer.enable = true;
-      services.dleyna-server.enable = true;
-      programs.dconf.enable = true;
-      programs.xwayland.enable = true;
-
-      fonts.enableDefaultPackages = true;
-
-      # The phone sync component which is handy.
-      programs.kdeconnect = {
-        enable = true;
-        package = pkgs.valent;
-      };
-
-      # Harmonious themes. Since we're making this very similar to GNOME
-      # appearance-wise, layout-wise, and setup-wise, we may as well make it
-      # similar.
-      qt = {
-        enable = true;
-        platformTheme = "gnome";
-        style = "adwaita";
-      };
-
-      xdg.portal = {
-        enable = true;
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-hyprland
-          xdg-desktop-portal-gtk
-        ];
-      };
-    }
-
-    # Setting up my project-specific profiles. This is only to be applied for
-    # my setup. If you're not foodogsquared and you're using my project as one
-    # of the flake input, this shouldn't be applied nor be used in the first
-    # place.
-    (lib.mkIf _isfoodogsquaredcustom {
-      profiles.i18n.setup = "ibus";
-    })
-  ]);
+    };
+  };
 }
