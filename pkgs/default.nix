@@ -25,6 +25,7 @@ let
       mopidy-funkwhale = callPackage ./mopidy-funkwhale.nix { };
       mopidy-internetarchive = callPackage ./mopidy-internetarchive.nix { };
       nautilus-annotations = callPackage ./nautilus-annotations { };
+      niri = callPackage ./niri { };
       pop-launcher-plugin-brightness = callPackage ./pop-launcher-plugin-brightness { };
       pop-launcher-plugin-duckduckgo-bangs =
         callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
