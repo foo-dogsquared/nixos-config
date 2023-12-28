@@ -35,11 +35,11 @@ in
         burn-my-windows
         caffeine
         desktop-cube
+        fly-pie
         gsconnect
         just-perfection
         kimpanel
         paperwm
-        pop-shell
         runcat
       ];
       example = lib.literalExpression ''
