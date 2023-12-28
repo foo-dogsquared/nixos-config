@@ -2,20 +2,6 @@
 
 let
   cfg = config.workflows.workflows.a-happy-gnome;
-
-  enabledExtensions = pkgs.writeTextFile {
-    name = "a-happy-gnome-extensions";
-    text = ''
-      [org/gnome/shell]
-      enabled-extensions=[${ lib.concatStringsSep ", " (lib.concatMap (e: [ ("'${e.extensionUuid}'") ]) cfg.shellExtensions) }]
-    '';
-  };
-
-  # We're combining all of the custom dconf database into a package to be installed.
-  dconfConfig = pkgs.runCommand "install-a-happy-gnome-dconf-keyfiles" { } ''
-    mkdir -p $out/etc/dconf && cp --no-preserve=mode -r ${./config/dconf}/* $out/etc/dconf/
-    install -Dm644 ${enabledExtensions} $out/etc/dconf/db/a-happy-gnome-conf.d/90-enabled-extensions.conf
-  '';
 in
 {
   options.workflows.workflows.a-happy-gnome = {
@@ -129,7 +115,44 @@ in
     # Bring all of the dconf keyfiles in there.
     programs.dconf = {
       enable = true;
-      packages = [ dconfConfig ];
+      profiles = {
+        user.databases = lib.singleton {
+          # Get them keyfiles.
+          keyfiles = [ ./config/dconf ];
+
+          settings = lib.mkMerge [
+            {
+              "org/gnome/desktop/search-providers" = {
+                disabled = [
+                  "org.gnome.seahorse.Application.desktop"
+                  "org.gnome.Photos.desktop"
+                  "org.gnome.Epiphany.desktop"
+                  "app.drey.Dialect.desktop"
+                  "com.belmoussaoui.Authenticator.desktop"
+                ];
+              };
+              "org/gnome/shell" = {
+                enabled-extensions = builtins.map (p: p.extensionUuid) cfg.shellExtensions;
+              };
+            }
+
+            # Disable all of the messenger's notification (only the annoying
+            # ones).
+            (lib.listToAttrs
+              (builtins.map (app:
+                lib.nameValuePair
+                  "org/gnome/desktop/notifications/application/${app}"
+                  { show-banners = false; })
+                [
+                  "re-sonny-tangram"
+                  "org-gnome-polari"
+                  "io-github-hexchat"
+                  "org-gnome-evolution-alarm-notify"
+                  "thunderbird"
+                ]))
+          ];
+        };
+      };
     };
 
     xdg.mime = {
