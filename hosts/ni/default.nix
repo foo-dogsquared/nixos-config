@@ -66,6 +66,9 @@
   # Basically, the most basic nixpkgs configuration.
   environment.variables.NIXPKGS_CONFIG = lib.mkForce ./config/nixpkgs/config.nix;
 
+  # Enable Nix channels.
+  nix.channel.enable = true;
+
   # Make Nix experimental.
   nix.package = pkgs.nixUnstable;
 
