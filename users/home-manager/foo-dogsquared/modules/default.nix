@@ -4,6 +4,7 @@
     ./dotfiles.nix
 
     ./programs/browsers.nix
+    ./programs/dconf.nix
     ./programs/doom-emacs.nix
     ./programs/email.nix
     ./programs/git.nix

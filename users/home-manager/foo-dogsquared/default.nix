@@ -8,6 +8,7 @@
     dotfiles.enable = false;
 
     programs = {
+      dconf.enable = true;
       browsers.brave.enable = true;
       browsers.firefox.enable = true;
       browsers.misc.enable = true;
