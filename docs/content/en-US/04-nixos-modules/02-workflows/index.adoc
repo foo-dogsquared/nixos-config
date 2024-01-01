@@ -56,3 +56,15 @@ Whether those rices are worth posting to Unix ricing communities is up to you th
 ====
 Whippersnappers with your "riced"-up systems...
 ====
+
+There are a few guidelines to designing a workflow module which is already laid out in its respective README but as a reminder, let's list it here.
+
+* All workflow modules should be under `workflows.workflows.<name>` namespace with an `enable` option.
+
+* No usage of the private modules.
+It is a public module, after all so it'll make things messier.
+While we can conditionally set the configuration, it is pretty useless since we have the host-specific module structure.
+
+* No locale-related settings.
+Each user may have its own set of preferred locales and their setup so it is pretty much prohibited from setting any.
+The only related parts a workflow module can set is their preferred input method engine (IME) of choice.
