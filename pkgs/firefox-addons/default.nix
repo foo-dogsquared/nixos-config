@@ -117,10 +117,10 @@
       };
     "zhongwen" = buildFirefoxXpiAddon {
       pname = "zhongwen";
-      version = "5.14.1";
+      version = "5.15";
       addonId = "{dedb3663-6f13-4c6c-bf0f-5bd111cb2c79}";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4060172/zhongwen-5.14.1.xpi";
-      sha256 = "108a358040bfb096b600337f6699d46ce7f48f2f88f51be7e8bd3d308c59c70b";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4215189/zhongwen-5.15.xpi";
+      sha256 = "db14741def1bdfe2d4deba2e16bf55876fdc1b35a3060dabb425d08285f5d468";
       meta = with lib;
       {
         homepage = "https://github.com/cschiller/zhongwen";
