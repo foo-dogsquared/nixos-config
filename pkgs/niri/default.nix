@@ -11,7 +11,7 @@
 , mesa
 , seatd
 
-# Session script dependencies.
+  # Session script dependencies.
 , makeBinaryWrapper
 , coreutils
 , dbus

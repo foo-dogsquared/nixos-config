@@ -4,35 +4,38 @@ let
   cfg = config.home.mutableFile;
 
   # An attribute set to be used to get the fetching script.
-  fetchScript = path: value: let
-    url = lib.escapeShellArg value.url;
-    path = lib.escapeShellArg value.path;
-    extraArgs = lib.escapeShellArgs value.extraArgs;
-  in {
-    git = ''
-      [ -d ${path} ] || git clone ${extraArgs} ${url} ${path}
-    '';
-    fetch = ''
-      [ -e ${path} ] || curl ${extraArgs} ${url} --output ${path}"
-    '';
-    archive = let
-      extractScript =
-        if (value.extractPath == null) then
-            ''arc unarchive "/tmp/$filename" ${path}''
-        else
-            ''arc extract "/tmp/$filename" ${lib.escapeShellArg value.extractPath} ${path}'';
+  fetchScript = path: value:
+    let
+      url = lib.escapeShellArg value.url;
+      path = lib.escapeShellArg value.path;
+      extraArgs = lib.escapeShellArgs value.extraArgs;
     in
-    ''
-      [ -e ${path} ] || {
-        filename=$(curl ${extraArgs} --output-dir /tmp --silent --show-error --write-out '%{filename_effective}' --remote-name --remote-header-name --location ${url})
-        ${extractScript}
-      }
-    '';
-    gopass = ''
-      [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
-    '';
-    custom = "[ -e ${path} ] || ${extraArgs}";
-  };
+    {
+      git = ''
+        [ -d ${path} ] || git clone ${extraArgs} ${url} ${path}
+      '';
+      fetch = ''
+        [ -e ${path} ] || curl ${extraArgs} ${url} --output ${path}"
+      '';
+      archive =
+        let
+          extractScript =
+            if (value.extractPath == null) then
+              ''arc unarchive "/tmp/$filename" ${path}''
+            else
+              ''arc extract "/tmp/$filename" ${lib.escapeShellArg value.extractPath} ${path}'';
+        in
+        ''
+          [ -e ${path} ] || {
+            filename=$(curl ${extraArgs} --output-dir /tmp --silent --show-error --write-out '%{filename_effective}' --remote-name --remote-header-name --location ${url})
+            ${extractScript}
+          }
+        '';
+      gopass = ''
+        [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
+      '';
+      custom = "[ -e ${path} ] || ${extraArgs}";
+    };
 
   fileType = baseDir: { name, config, options, ... }: {
     options = {
@@ -155,9 +158,10 @@ in
         ExecStart =
           let
             mutableFilesCmds = lib.mapAttrsToList
-              (path: value: let
-                fetchScript' = (fetchScript path value).${value.type};
-              in
+              (path: value:
+                let
+                  fetchScript' = (fetchScript path value).${value.type};
+                in
                 ''
                   ${fetchScript'}
                   ${value.postScript}
@@ -167,7 +171,7 @@ in
             script = pkgs.writeShellApplication {
               name = "fetch-mutable-files";
               runtimeInputs = with pkgs; [ archiver curl git gopass ];
-              text = "${lib.concatStringsSep "\n" mutableFilesCmds}";
+              text = lib.concatStringsSep "\n" mutableFilesCmds;
             };
           in
           "${script}/bin/fetch-mutable-files";

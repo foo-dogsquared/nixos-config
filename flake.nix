@@ -317,10 +317,11 @@
       };
 
       # A function that generates a Nix module from host metadata.
-      hostSpecificModule = host: metadata: let
-        modules = metadata.modules or [];
-        host = metadata._name or host;
-      in
+      hostSpecificModule = host: metadata:
+        let
+          modules = metadata.modules or [ ];
+          host = metadata._name or host;
+        in
         { lib, ... }: {
           imports = modules ++ [
             inputs.${metadata.home-manager-channel or "home-manager"}.nixosModules.home-manager
@@ -343,10 +344,11 @@
 
       # A function that generates a home-manager module from a given user
       # metadata.
-      userSpecificModule = user: metadata: let
-        name = metadata.username or metadata._name or user;
-        modules = metadata.modules or [];
-      in
+      userSpecificModule = user: metadata:
+        let
+          name = metadata.username or metadata._name or user;
+          modules = metadata.modules or [ ];
+        in
         { lib, pkgs, config, ... }: {
           imports = modules ++ [
             userSharedConfig
@@ -374,10 +376,13 @@
 
       # A list of NixOS configurations from the `./hosts` folder. It also has
       # some sensible default configurations.
-      nixosConfigurations = let
-        validImages = lib.filterAttrs (name: metadata:
-          metadata.format == null || metadata ? deploy) images;
-      in
+      nixosConfigurations =
+        let
+          validImages = lib.filterAttrs
+            (name: metadata:
+              metadata.format == null || metadata ? deploy)
+            images;
+        in
         lib.mapAttrs
           (host: metadata:
             mkHost {
@@ -399,7 +404,7 @@
               pkgs = import inputs.${metadata.nixpkgs-channel or "nixpkgs"} {
                 system = metadata._system;
               };
-              extraModules = [(userSpecificModule user metadata)];
+              extraModules = [ (userSpecificModule user metadata) ];
               home-manager-channel = metadata.home-manager-channel or "home-manager";
             })
           (listImagesWithSystems users);
@@ -426,34 +431,39 @@
       # This contains images that are meant to be built and distributed
       # somewhere else including those NixOS configurations that are built as
       # an ISO.
-      images = forAllSystems (system: let
-        validImages = lib.filterAttrs (host: metadata:
-          system == metadata._system && metadata.format != null) images';
-      in
-      lib.mapAttrs'
-        (host: metadata:
-          let
-            name = metadata._name;
-            nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-            format = metadata.format or "iso";
-          in
-          lib.nameValuePair name (mkImage {
-            inherit nixpkgs-channel format;
-            extraModules = [ (hostSpecificModule host metadata) ];
-          }))
-        validImages);
+      images = forAllSystems (system:
+        let
+          validImages = lib.filterAttrs
+            (host: metadata:
+              system == metadata._system && metadata.format != null)
+            images';
+        in
+        lib.mapAttrs'
+          (host: metadata:
+            let
+              name = metadata._name;
+              nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
+              format = metadata.format or "iso";
+            in
+            lib.nameValuePair name (mkImage {
+              inherit nixpkgs-channel format;
+              extraModules = [ (hostSpecificModule host metadata) ];
+            }))
+          validImages);
 
       # My several development shells for usual type of projects. This is much
       # more preferable than installing all of the packages at the system
       # configuration (or even home environment).
-      devShells = forAllSystems (system: let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = overlays ++ [
-            inputs.nur.overlay
-          ];
-        };
-        in import ./shells { inherit pkgs; } // {
+      devShells = forAllSystems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = overlays ++ [
+              inputs.nur.overlay
+            ];
+          };
+        in
+        import ./shells { inherit pkgs; } // {
           default = import ./shell.nix { inherit pkgs; };
           docs = import ./docs/shell.nix { inherit pkgs; };
         });

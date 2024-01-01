@@ -3,7 +3,8 @@
 
 let
   cfg = config.profiles.desktop;
-in {
+in
+{
   options.profiles.desktop = {
     enable = lib.mkEnableOption "installations of desktop apps";
     graphics.enable =
@@ -40,9 +41,12 @@ in {
         imagemagick # Ah yes, everyman's image manipulation tool.
         gmic # Don't let the gimmicks fool you, it's a magical image framework.
       ]
-      ++ (let
-        hasBlenderNixOSModule = attrs ? osConfig && lib.attrByPath [ "programs" "blender" "enable" ] false attrs.osConfig;
-      in lib.optional (!hasBlenderNixOSModule) pkgs.blender);
+      ++ (
+        let
+          hasBlenderNixOSModule = attrs ? osConfig && lib.attrByPath [ "programs" "blender" "enable" ] false attrs.osConfig;
+        in
+        lib.optional (!hasBlenderNixOSModule) pkgs.blender
+      );
     })
 
     (lib.mkIf cfg.audio.enable {
@@ -55,13 +59,15 @@ in {
 
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
       ]
-      ++ (let
-        hasWineProfile = attrs ? osConfig && lib.attrByPath [ "profiles" "desktop" "wine" "enable" ] false attrs.osConfig;
-      in
+      ++ (
+        let
+          hasWineProfile = attrs ? osConfig && lib.attrByPath [ "profiles" "desktop" "wine" "enable" ] false attrs.osConfig;
+        in
         lib.optionals hasWineProfile (with pkgs; [
           yabridge # Building bridges to Windows and Linux audio tools.
           yabridgectl # The bridge controller.
-        ]));
+        ])
+      );
     })
 
     (lib.mkIf cfg.audio.pipewire.enable {
@@ -69,9 +75,10 @@ in {
       services.easyeffects.enable = true;
       services.fluidsynth = {
         enable = true;
-        soundService = let
-          hasNixOSPipewirePulseEnabled = attrs ? osConfig && lib.attrByPath [ "services" "pipewire" "pulse" "enable" ] false attrs.osConfig;
-        in
+        soundService =
+          let
+            hasNixOSPipewirePulseEnabled = attrs ? osConfig && lib.attrByPath [ "services" "pipewire" "pulse" "enable" ] false attrs.osConfig;
+          in
           lib.mkIf hasNixOSPipewirePulseEnabled "pipewire-pulse";
       };
 
@@ -85,6 +92,7 @@ in {
       home.packages = with pkgs; [
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         kdenlive # YOU! Edit this video and live in a den, 'k?
+        gnome-video-effects # A bunch of stock video effects.
       ];
 
       # The one-stop shop for your broadcasting and recording needs. Not to be

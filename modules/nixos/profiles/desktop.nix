@@ -67,37 +67,38 @@ in {
       # Run unpatched binaries with these!
       programs.nix-ld = {
         enable = true;
-        libraries = let
-          xorgLibs = with pkgs.xorg; [
-            libX11
-            libXScrnSaver
-            libXcomposite
-            libXcursor
-            libXdamage
-            libXext
-            libXfixes
-            libXi
-            libXrandr
-            libXrender
-            libXtst
-            libxcb
-            libxkbfile
-            libxshmfence
-          ];
-          commonLibs = with pkgs; [
-            alsa-lib
-            cairo
-            freetype
-            dbus
-            icu
-            libGL
-            libnotify
-            mesa
-            nss
-            pango
-            pipewire
-          ];
-        in
+        libraries =
+          let
+            xorgLibs = with pkgs.xorg; [
+              libX11
+              libXScrnSaver
+              libXcomposite
+              libXcursor
+              libXdamage
+              libXext
+              libXfixes
+              libXi
+              libXrandr
+              libXrender
+              libXtst
+              libxcb
+              libxkbfile
+              libxshmfence
+            ];
+            commonLibs = with pkgs; [
+              alsa-lib
+              cairo
+              freetype
+              dbus
+              icu
+              libGL
+              libnotify
+              mesa
+              nss
+              pango
+              pipewire
+            ];
+          in
           commonLibs ++ xorgLibs ++ options.programs.nix-ld.libraries.default;
       };
 

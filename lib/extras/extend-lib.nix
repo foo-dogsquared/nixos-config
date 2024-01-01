@@ -1,5 +1,6 @@
 # A lambda suitable to be used for `pkgs.lib.extend`.
-self: super: let
+self: super:
+let
   publicLib = import ../. { lib = super; };
 in
 {
@@ -10,6 +11,6 @@ in
   # since we use one nixpkgs instance for each configuration (home-manager or
   # otherwise).
   private = publicLib
-            // import ../private.nix { lib = self; }
-            // import ../home-manager.nix { lib = self; };
+    // import ../private.nix { lib = self; }
+    // import ../home-manager.nix { lib = self; };
 }

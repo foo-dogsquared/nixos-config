@@ -139,10 +139,11 @@ in
             # Disable all of the messenger's notification (only the annoying
             # ones).
             (lib.listToAttrs
-              (builtins.map (app:
-                lib.nameValuePair
-                  "org/gnome/desktop/notifications/application/${app}"
-                  { show-banners = false; })
+              (builtins.map
+                (app:
+                  lib.nameValuePair
+                    "org/gnome/desktop/notifications/application/${app}"
+                    { show-banners = false; })
                 [
                   "re-sonny-tangram"
                   "org-gnome-polari"
