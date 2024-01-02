@@ -102,7 +102,7 @@ let
           The identifier of the component used in generating filenames for its
           `.desktop` files and as part of systemd unit names.
         '';
-        defaultText = "\${session.name}.\${name}";
+        defaultText = "\${session-name}.\${name}";
         readOnly = true;
       };
 
@@ -127,7 +127,7 @@ let
     };
 
     config = {
-      id = "${session.prefix}.${name}";
+      id = "${session.name}.${name}";
 
       # Make with the default configurations.
       desktopConfig = {
@@ -147,7 +147,7 @@ let
       # Setting some recommendation and requirements for systemd-managed
       # gnome-session components.
       serviceConfig = {
-        script = lib.mkAfter "${config.scriptPackage}/bin/${session.prefix}-${name}-script";
+        script = lib.mkAfter "${config.scriptPackage}/bin/${session.name}-${name}-script";
         description = lib.mkDefault config.description;
         before = [ "${config.id}.target" ];
         partOf = [ "${config.id}.target" ];
@@ -181,7 +181,7 @@ let
       };
 
       scriptPackage = pkgs.writeShellApplication {
-        name = "${session.prefix}-${name}-script";
+        name = "${session.name}-${name}-script";
         runtimeInputs = [ cfg.package pkgs.dbus ];
         text = ''
           DESKTOP_AUTOSTART_ID="''${DESKTOP_AUTOSTART_ID:-}"
@@ -210,15 +210,6 @@ let
         example = "Mosey Branch";
       };
 
-      prefix = lib.mkOption {
-        type = lib.types.str;
-        description = ''
-          The identifier of the desktop environment. While it can be in any
-          style, it is encouraged to use a reverse DNS-like scheme.
-        '';
-        example = "com.example.MoseyBranch";
-      };
-
       description = lib.mkOption {
         type = lib.types.str;
         description = ''
@@ -232,7 +223,7 @@ let
       components = lib.mkOption {
         type = with lib.types; attrsOf (submoduleWith {
           specialArgs.session = {
-            inherit (config) fullName prefix description;
+            inherit (config) fullName description;
             inherit name;
           };
           modules = [ componentsType ];
@@ -457,12 +448,16 @@ in
         {manpage}`gnome-session(1)`. This gnome-session configuration generates
         both the `.desktop` file and systemd units to be able to support both
         the built-in and the systemd-managed GNOME session.
+
+        Each of the attribute name will be used as the identifier of the
+        desktop environment. While you can make identifiers in any way, it is
+        encouraged to follow a reverse DNS-like scheme (e.g.,
+        `com.example.MoseyBranch`).
       '';
       default = { };
       example = lib.literalExpression ''
         {
-          simple-way = {
-            prefix = "one.foodogsquared.SimpleWay";
+          "one.foodogsquared.SimpleWay" = {
             components = {
               window-manager = {
                 script = '''
