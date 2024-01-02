@@ -196,7 +196,10 @@ let
 
       components = lib.mkOption {
         type = with lib.types; attrsOf (submoduleWith {
-          specialArgs.session = config;
+          specialArgs.session = {
+            inherit (config) fullName prefix description;
+            inherit name;
+          };
           modules = [ componentsType ];
         });
         description = ''
