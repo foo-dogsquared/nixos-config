@@ -22,7 +22,7 @@ let
       };
 
       desktopConfig = lib.mkOption {
-        type = lib.types.attrs;
+        type = with lib.types; attrsOf anything;
         description = ''
           The configuration for the gnome-session desktop file. For more
           information, look into `makeDesktopItem` nixpkgs builder.
@@ -100,6 +100,21 @@ let
     config = {
       id = "${session.prefix}.${name}";
 
+      # Make with the default configurations.
+      desktopConfig = {
+        name = lib.mkForce config.id;
+        desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
+        exec = lib.mkForce config.scriptPackage;
+        noDisplay = lib.mkForce true;
+        onlyShowIn = [ "X-${session.fullName}" ];
+        extraConfig = {
+          X-GNOME-AutoRestart = lib.mkDefault "false";
+          X-GNOME-Autostart-Notify = lib.mkDefault "true";
+          X-GNOME-Autostart-Phase = lib.mkDefault "Application";
+          X-GNOME-HiddenUnderSystemd = lib.mkDefault "true";
+        };
+      };
+
       # Setting some recommendation and requirements for systemd-managed
       # gnome-session components.
       serviceConfig = {
@@ -147,31 +162,7 @@ let
         '';
       };
 
-      desktopPackage =
-        let
-          defaultDesktopConfig = config.desktopConfig // {
-            name = config.id;
-            desktopName = "${session.fullName} - ${config.description}";
-            exec = config.scriptPackage;
-            noDisplay = true;
-            onlyShowIn = [ "X-${session.fullName}" ];
-          };
-
-          # Basically, more default desktop configuration.
-          applicableDesktopConfig = {
-            # More information can be found in gnome-session(1) manual page.
-            extraConfig = {
-              X-GNOME-AutoRestart = "false";
-              X-GNOME-Autostart-Notify = "true";
-              X-GNOME-Autostart-Phase = "Application";
-              X-GNOME-HiddenUnderSystemd = "true";
-            };
-          };
-        in
-        pkgs.makeDesktopItem
-          (lib.attrsets.recursiveUpdate
-            applicableDesktopConfig
-            defaultDesktopConfig);
+      desktopPackage = pkgs.makeDesktopItem config.desktopConfig;
     };
   };
 
