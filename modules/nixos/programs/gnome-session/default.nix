@@ -1,9 +1,9 @@
 { config, lib, pkgs, utils, ... }:
 
-# TODO: Generate the systemd units and place them in the desktop session package.
 let
   cfg = config.programs.gnome-session;
 
+  # TODO: Modularize these types, it's getting too big.
   componentsType = { name, config, options, session, ... }: {
     options = {
       description = lib.mkOption {
@@ -16,8 +16,8 @@ let
       script = lib.mkOption {
         type = lib.types.lines;
         description = ''
-          The script of the component. Take note this will be wrapped in a
-          script for proper integration with `gnome-session`.
+          Shell script fragment of the component. Take note this will be
+          wrapped in a script for proper integration with `gnome-session`.
         '';
       };
 
@@ -45,24 +45,53 @@ let
         };
       };
 
+      # Most of the systemd config types are trying to eliminate as much of the
+      # NixOS systemd extensions as much as possible. For more details, see
+      # `config` attribute of the `sessionType`.
       serviceConfig = lib.mkOption {
-        type = lib.types.attrsOf utils.systemdUtils.unitOptions.unitOption;
+        type =
+          let
+            inherit (utils.systemdUtils.lib) unitConfig serviceConfig;
+            inherit (utils.systemdUtils.unitOptions) commonUnitOptions serviceOptions;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            serviceOptions
+            serviceConfig
+            unitConfig
+          ];
         description = ''
-          systemd service configuration to be used in
-          {option}`systemd.user.services.<name>`.
+          systemd service configuration to be generated. This should be
+          configured if the session is managed by systemd.
 
-          This should be configured if the session is managed by systemd.
+          :::{.note}
+          This has the same options as {option}`systemd.user.services.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
+          :::
         '';
         default = {};
       };
 
       targetConfig = lib.mkOption {
-        type = lib.types.attrsOf utils.systemdUtils.unitOptions.unitOption;
+        type =
+          let
+            inherit (utils.systemdUtils.lib) unitConfig;
+            inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            unitConfig
+          ];
         description = ''
-          systemd target configuration to be used in
-          {option}`systemd.user.target.<name>`.
+          systemd target configuration to be generated. This should be
+          configured if the session is managed by systemd.
 
-          This should be configured if the session is managed by systemd.
+          :::{.note}
+          This has the same options as {option}`systemd.user.targets.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
+          :::
         '';
         default = {};
       };
@@ -73,7 +102,7 @@ let
           The identifier of the component used in generating filenames for its
           `.desktop` files and as part of systemd unit names.
         '';
-        defaultText = "$${session.name}.$${name}";
+        defaultText = "\${session.name}.\${name}";
         readOnly = true;
       };
 
@@ -120,23 +149,29 @@ let
       serviceConfig = {
         script = lib.mkAfter "${config.scriptPackage}/bin/${session.prefix}-${name}-script";
         description = lib.mkDefault config.description;
+        before = [ "${config.id}.target" ];
+        partOf = [ "${config.id}.target" ];
 
-        path = [ cfg.package ];
         serviceConfig = {
           Slice = lib.mkDefault "session.slice";
           Restart = lib.mkDefault "on-failure";
           TimeoutStopSec = lib.mkDefault 5;
         };
+
         unitConfig = {
           # Units managed by gnome-session are required to have CollectMode=
           # set to this value.
           CollectMode = lib.mkForce "inactive-or-failed";
+
+          # Some sane unit configurations for systemd-managed desktop
+          # components.
           RefuseManualStart = lib.mkDefault true;
           RefuseManualStop = lib.mkDefault true;
         };
       };
 
       targetConfig = {
+        wants = [ "${config.id}.service" ];
         description = lib.mkDefault config.description;
         documentation = [
           "man:gnome-session(1)"
@@ -190,7 +225,7 @@ let
           A one-sentence description of the desktop environment.
         '';
         default = "${config.fullName} desktop environment";
-        defaultText = lib.literalExpression "$${<name>.fullName} desktop environment";
+        defaultText = lib.literalExpression "\${<name>.fullName} desktop environment";
         example = "A desktop environment featuring a scrolling compositor.";
       };
 
@@ -211,13 +246,13 @@ let
           {
             window-manager = {
               script = '''
-                $${lib.getExe' config.programs.sway.package "sway"}
+                ''${lib.getExe' config.programs.sway.package "sway"}
               ''';
               description = "An i3 clone for Wayland.";
             };
 
             desktop-widgets.script = '''
-              $${lib.getExe' pkgs.ags "ags"} --config $${./config.js}
+              ''${lib.getExe' pkgs.ags "ags"} --config ''${./config.js}
             ''';
           }
         '';
@@ -241,22 +276,29 @@ let
       };
 
       targetConfig = lib.mkOption {
-        type = lib.types.attrsOf utils.systemdUtils.unitOptions.unitOption;
+        type =
+          let
+            inherit (utils.systemdUtils.lib) unitConfig;
+            inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            unitConfig
+          ];
         description = ''
-          systemd target configuration to be used in
-          {option}`systemd.user.target."gnome-session@<name>"`.
+          systemd target configuration to be generated. This should be
+          configured if the session is managed by systemd and you want to
+          control the session further (which is recommended since this module
+          don't know what components are more important, etc.).
 
-          This should be configured if the session is managed by systemd and
-          you want to control the session further (which is recommended since
-          this module don't know what components are more important, etc.).
+          :::{.note}
+          This has the same options as {option}`systemd.user.targets.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
+          :::
         '';
-        default = {
-          description = "${config.fullName} desktop environment";
-          wants = lib.mapAttrsToList (_: component: "${component.id}.target") config.components;
-        };
         defaultText = ''
           {
-            description = "$${config.fullName} desktop environment";
             wants = ... # All of the components.
           }
         '';
@@ -265,9 +307,21 @@ let
       sessionPackage = lib.mkOption {
         type = lib.types.package;
         description = ''
-          The collective package containing everything (except the systemd
-          units) desktop-related files such as the Wayland session file,
-          gnome-session `.session` file, and the components `.desktop` file.
+          The collective package containing everything desktop-related
+          such as:
+
+          * The Wayland session file.
+          * gnome-session `.session` file.
+          * The components `.desktop` file.
+          * The components' systemd unit files.
+        '';
+        readOnly = true;
+      };
+
+      systemdUserUnits = lib.mkOption {
+        type = utils.systemdUtils.types.units;
+        description = ''
+          A set of systemd user units to be generated.
         '';
         internal = true;
         readOnly = true;
@@ -275,14 +329,39 @@ let
     };
 
     config = {
+      # Append the session argument.
+      extraArgs = [ "--session=${name}" ];
+
+      # While it is tempting to have this delegated to `systemd.user.services`
+      # and the like, it does have a future problem regarding how the generated
+      # units will handle reload on change since NixOS systemd units lets you
+      # have that option. Restricting it ourselves prevent it from doing so.
+      #
+      # As a (HUGE) bonus, it also leads to a more elegant solution of making
+      # an entire package of the desktop environment and simply linking them
+      # with various NixOS options like `systemd.packages` and the like.
+      systemdUserUnits =
+        let
+          inherit (utils.systemdUtils.lib) serviceToUnit targetToUnit;
+          componentsUnits =
+            lib.foldlAttrs (acc: name: component:
+              acc // {
+                "${component.id}.service" = serviceToUnit component.id component.serviceConfig;
+                "${component.id}.target" = targetToUnit component.id component.targetConfig;
+              })
+              {} config.components;
+        in
+          componentsUnits // {
+            "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" config.targetConfig;
+          };
+
+      targetConfig = {
+        overrideStrategy = lib.mkForce "asDropin";
+        wants = lib.mkDefault (lib.mapAttrsToList (_: component: "${component.id}.target") config.components);
+      };
+
       sessionPackage =
         let
-          installDesktops = lib.mapAttrsToList
-            (_: p: ''
-              install -Dm0644 ${p.desktopPackage}/share/applications/*.desktop -t $out/share/applications
-            '')
-            config.components;
-
           requiredComponents = lib.mapAttrsToList
             (_: component: component.id)
             config.components;
@@ -312,6 +391,23 @@ let
 
             ${lib.getExe' cfg.package "gnome-session"} ${lib.escapeShellArgs config.extraArgs}
           '';
+
+          installSystemdUserUnits = lib.mapAttrsToList (n: v:
+            if (v ? overrideStrategy && v.overrideStrategy == "asDropin") then ''
+              (
+                unit="${v.unit}/${n}"
+                unit_filename=$(basename "$unit")
+                install -Dm0644 "$unit" "$out/share/systemd/user/''${unit_filename}.d/session.conf"
+              )
+            '' else ''
+              install -Dm0644 "${v.unit}/${n}" -t "$out/share/systemd/user"
+            '') config.systemdUserUnits;
+
+          installDesktops = lib.mapAttrsToList
+            (_: p: ''
+              install -Dm0644 ${p.desktopPackage}/share/applications/*.desktop -t $out/share/applications
+            '')
+            config.components;
         in
         pkgs.runCommandLocal "${name}-desktop-session-files"
           {
@@ -332,6 +428,9 @@ let
 
             install -Dm0644 "$waylandSessionPath" "$WAYLAND_SESSION_FILE"
             substituteAllInPlace "$WAYLAND_SESSION_FILE"
+
+            ${lib.concatStringsSep "\n" installSystemdUserUnits}
+            mkdir -p "$out/lib/systemd" && ln -sfn "$out/share/systemd/user" "$out/lib/systemd/user"
 
             ${lib.concatStringsSep "\n" installDesktops}
           '';
@@ -367,21 +466,21 @@ in
             components = {
               window-manager = {
                 script = '''
-                  $${lib.getExe' config.programs.sway.package "sway"}
+                  ''${lib.getExe' config.programs.sway.package "sway"}
                 ''';
                 description = "An i3 clone for Wayland.";
               };
 
               desktop-widgets = {
                 script = '''
-                  $${lib.getExe' pkgs.ags "ags"} --config $${./config.js}
+                  ''${lib.getExe' pkgs.ags "ags"} --config ''${./config.js}
                 ''';
                 description = "A desktop widget system using layer-shell protocol.";
               };
 
               auth-agent = {
                 script = '''
-                  $${lib.getExe' pkgs.polkit_gnome "polkit-gnome-authentication-agent-1"}
+                  ''${lib.getExe' pkgs.polkit_gnome "polkit-gnome-authentication-agent-1"}
                 ''';
                 description = "Polkit authentication agent";
               };
@@ -399,49 +498,6 @@ in
           (_: session:
             session.sessionPackage)
           cfg.sessions;
-
-        generateServiceBundle = acc: name: session:
-          let
-            services =
-              lib.mapAttrs'
-                generateComponentService
-                session.components;
-
-            generateComponentService = name: component:
-              let
-                serviceConfig = lib.mkMerge [
-                  {
-                    before = [ "${component.id}.target" ];
-                    partOf = [ "${component.id}.target" ];
-                  }
-                  component.serviceConfig
-                ];
-              in
-              lib.nameValuePair component.id serviceConfig;
-          in
-          acc // services;
-
-        generateTargetBundle = acc: name: session:
-          let
-            targets =
-              lib.mapAttrs'
-                generateComponentTarget
-                session.components;
-
-            generateComponentTarget = name: component:
-              let
-                targetConfig = lib.mkMerge [
-                  {
-                    wants = [ "${component.id}.service" ];
-                  }
-                  component.targetConfig
-                ];
-              in
-              lib.nameValuePair component.id targetConfig;
-          in
-          acc // targets // {
-            "gnome-session@${name}" = session.targetConfig;
-          };
       in
       {
         # Install all of the desktop session files.
@@ -452,12 +508,7 @@ in
         environment.pathsToLink = [ "/share/gnome-session" ];
 
         # Import those systemd units from gnome-session as well.
-        systemd.packages = [ cfg.package ]; #++ sessionPackages;
-
-        # Most importantly for systemd-managed gnome-session sessions, generate
-        # those services.
-        systemd.user.services = lib.foldlAttrs generateServiceBundle { } cfg.sessions;
-        systemd.user.targets = lib.foldlAttrs generateTargetBundle { } cfg.sessions;
+        systemd.packages = [ cfg.package ] ++ sessionPackages;
       }
     );
 }
