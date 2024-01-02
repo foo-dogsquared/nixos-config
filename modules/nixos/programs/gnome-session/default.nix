@@ -293,13 +293,13 @@ let
             (_: component: component.id)
             config.components;
 
-          gnomeSession = pkgs.writeText "${name}-gnome-session" ''
+          gnomeSession = ''
             [GNOME Session]
             Name=${config.fullName} session
             RequiredComponents=${lib.concatStringsSep ";" requiredComponents};
           '';
 
-          waylandSession = pkgs.writeText "${name}-wayland-session" ''
+          waylandSession = ''
             [Desktop Entry]
             Name=${config.fullName}
             Comment=${config.description}
@@ -307,30 +307,36 @@ let
             Type=Application
           '';
 
-          sessionScript = pkgs.writeShellScript "${name}-session" ''
+          sessionScript = ''
+            #!${pkgs.runtimeShell}
+
             # gnome-session is also looking for RequiredComponents in here.
-            XDG_CONFIG_DIRS=@out@/etc/xdg$${XDG_CONFIG_DIRS:-:$XDG_CONFIG_DIRS}
+            XDG_CONFIG_DIRS=@out@/etc/xdg''${XDG_CONFIG_DIRS:-:$XDG_CONFIG_DIRS}
 
             # We'll have to force gnome-session to detect our session.
-            XDG_DATA_DIRS=@out@/share$${XDG_DATA_DIRS:-:$XDG_DATA_DIRS}
+            XDG_DATA_DIRS=@out@/share''${XDG_DATA_DIRS:-:$XDG_DATA_DIRS}
 
-            ${lib.getExe' cfg.package "gnome-session"} ${lib.escapeShellArgs config.extraArgs} --session=${name}
+            ${lib.getExe' cfg.package "gnome-session"} ${lib.escapeShellArgs config.extraArgs}
           '';
         in
-        pkgs.runCommandLocal "${name}-gnome-session"
-          { passthru.providedSessions = [ name ]; }
+        pkgs.runCommandLocal "${name}-desktop-session-files"
+          {
+            inherit waylandSession gnomeSession sessionScript;
+            passAsFile = [ "waylandSession" "gnomeSession" "sessionScript" ];
+            passthru.providedSessions = [ name ];
+          }
           ''
             SESSION_SCRIPT="$out/libexec/${name}-session"
             GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${name}.session"
             WAYLAND_SESSION_FILE="$out/share/wayland-sessions/${name}.desktop"
 
-            install -Dm0755 "${sessionScript}" "$SESSION_SCRIPT"
+            install -Dm0755 "$sessionScriptPath" "$SESSION_SCRIPT"
             substituteAllInPlace "$SESSION_SCRIPT"
 
-            install -Dm0644 "${gnomeSession}" "$GNOME_SESSION_FILE"
+            install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
             substituteAllInPlace "$GNOME_SESSION_FILE"
 
-            install -Dm0644 "${waylandSession}" "$WAYLAND_SESSION_FILE"
+            install -Dm0644 "$waylandSessionPath" "$WAYLAND_SESSION_FILE"
             substituteAllInPlace "$WAYLAND_SESSION_FILE"
 
             ${lib.concatStringsSep "\n" installDesktops}
