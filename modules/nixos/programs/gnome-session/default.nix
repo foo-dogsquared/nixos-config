@@ -48,7 +48,7 @@ let
       # Most of the systemd config types are trying to eliminate as much of the
       # NixOS systemd extensions as much as possible. For more details, see
       # `config` attribute of the `sessionType`.
-      serviceConfig = lib.mkOption {
+      serviceUnit = lib.mkOption {
         type =
           let
             inherit (utils.systemdUtils.lib) unitConfig serviceConfig;
@@ -78,7 +78,7 @@ let
         default = {};
       };
 
-      targetConfig = lib.mkOption {
+      targetUnit = lib.mkOption {
         type =
           let
             inherit (utils.systemdUtils.lib) unitConfig;
@@ -177,7 +177,7 @@ let
         to easily compose their own desktop environment. THIS MODULE ALREADY
         DOES A LOT, ALRIGHT! CUT ME SOME SLACK!
       */
-      serviceConfig = {
+      serviceUnit = {
         script = lib.mkAfter "${config.scriptPackage}/bin/${session.name}-${name}-script";
         description = lib.mkDefault config.description;
 
@@ -216,7 +216,7 @@ let
         painful experience to configure this by a first-timer. For now, this is
         on the user to know.
       */
-      targetConfig = {
+      targetUnit = {
         wants = [ "${config.id}.service" ];
         description = lib.mkDefault config.description;
         documentation = [
@@ -312,7 +312,7 @@ let
         ];
       };
 
-      targetConfig = lib.mkOption {
+      targetUnit = lib.mkOption {
         type =
           let
             inherit (utils.systemdUtils.lib) unitConfig;
@@ -383,16 +383,16 @@ let
           componentsUnits =
             lib.foldlAttrs (acc: name: component:
               acc // {
-                "${component.id}.service" = serviceToUnit component.id component.serviceConfig;
-                "${component.id}.target" = targetToUnit component.id component.targetConfig;
+                "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
+                "${component.id}.target" = targetToUnit component.id component.targetUnit;
               })
               {} config.components;
         in
           componentsUnits // {
-            "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" config.targetConfig;
+            "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" config.targetUnit;
           };
 
-      targetConfig = {
+      targetUnit = {
         overrideStrategy = lib.mkForce "asDropin";
         wants = lib.mkDefault (lib.mapAttrsToList (_: component: "${component.id}.target") config.components);
       };
