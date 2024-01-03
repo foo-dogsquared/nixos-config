@@ -68,6 +68,11 @@ let
           This has the same options as {option}`systemd.user.services.<name>`
           but without certain options from stage 2 counterparts such as
           `reloadTriggers` and `restartTriggers`.
+
+          On a typical case, you shouldn't mess with much of the dependency
+          ordering of the service unit. By default, this module sets the
+          service unit as part of the respective target unit (i.e.,
+          `PartOf=$COMPONENTID.target`).
           :::
         '';
         default = {};
@@ -91,6 +96,9 @@ let
           This has the same options as {option}`systemd.user.targets.<name>`
           but without certain options from stage 2 counterparts such as
           `reloadTriggers` and `restartTriggers`.
+
+          This module doesn't set the typical dependency ordering relative to
+          gnome-session targets. This is on the user to manually set them.
           :::
         '';
         default = {};
@@ -121,7 +129,7 @@ let
         readOnly = true;
         description = ''
           A package containing the desktop item set with
-          {option}`desktopSessions.gnome-session.sessions.<name>.components.<name>.desktopConfig`.
+          {option}`$SESSION.components.<name>.desktopConfig`.
         '';
       };
     };
@@ -129,7 +137,8 @@ let
     config = {
       id = "${session.name}.${name}";
 
-      # Make with the default configurations.
+      # Make with the default configurations for the built-in-managed
+      # components.
       desktopConfig = {
         name = lib.mkForce config.id;
         desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
@@ -144,14 +153,41 @@ let
         };
       };
 
-      # Setting some recommendation and requirements for systemd-managed
-      # gnome-session components.
+      /*
+        Setting some recommendation and requirements for systemd-managed
+        gnome-session components. Note there are the missing directives that
+        COULD include some sane defaults here.
+
+        * The `Unit.OnFailure=` and `Unit.OnFailureJobMode=` directives. Since
+        different components don't have the same priority and don't handle
+        failures the same way, we didn't set it here. This is on the user to
+        know how different desktop components interact with each other
+        especially if one of them failed.
+
+        TODO: Is `Type=notify` a good default?
+        * `Service.Type=` is obviously not included since not all desktop
+        components are the same either. Some of them could a D-Bus service,
+        some of them are oneshots, etc. Not to mention, this is already implied
+        to be `Type=simple` by systemd anyways.
+
+        * `Service.OOMScoreAdjust=` have different values for different
+        components so it isn't included.
+
+        As you can tell, this module does not provide a framework for the user
+        to easily compose their own desktop environment. THIS MODULE ALREADY
+        DOES A LOT, ALRIGHT! CUT ME SOME SLACK!
+      */
       serviceConfig = {
         script = lib.mkAfter "${config.scriptPackage}/bin/${session.name}-${name}-script";
         description = lib.mkDefault config.description;
+
+        # The typical workflow for service units to have them set as part of
+        # the respective target unit.
+        requisite = [ "${config.id}.target" ];
         before = [ "${config.id}.target" ];
         partOf = [ "${config.id}.target" ];
 
+        # Some sane service configuration for a desktop component.
         serviceConfig = {
           Slice = lib.mkDefault "session.slice";
           Restart = lib.mkDefault "on-failure";
@@ -170,6 +206,16 @@ let
         };
       };
 
+      /*
+        Similarly, there are things that COULD make it here but didn't for a
+        variety of reasons.
+
+        * `Unit.PartOf=`, `Unit.Requisite=`, and the like since some components
+        require starting up earlier than the others. We could include it here
+        if we make it clear in the documentation or if it proves to be a
+        painful experience to configure this by a first-timer. For now, this is
+        on the user to know.
+      */
       targetConfig = {
         wants = [ "${config.id}.service" ];
         description = lib.mkDefault config.description;
@@ -369,6 +415,7 @@ let
             Comment=${config.description}
             Exec=@out@/libexec/${name}-session
             Type=Application
+            DesktopNames=${config.fullName};
           '';
 
           sessionScript = ''
@@ -451,14 +498,18 @@ in
 
         Each of the attribute name will be used as the identifier of the
         desktop environment. While you can make identifiers in any way, it is
-        encouraged to follow a reverse DNS-like scheme (e.g.,
-        `com.example.MoseyBranch`).
+        encouraged to stick to a naming scheme. Here's two common ways to name
+        a desktop environment.
+
+        * Reverse DNS-like scheme (e.g., `com.example.MoseyBranch`).
+        * Kebab-case (e.g., `mosey-branch`).
       '';
       default = { };
       example = lib.literalExpression ''
         {
           "one.foodogsquared.SimpleWay" = {
             components = {
+              # This unit is intended to start with gnome-session.
               window-manager = {
                 script = '''
                   ''${lib.getExe' config.programs.sway.package "sway"}
