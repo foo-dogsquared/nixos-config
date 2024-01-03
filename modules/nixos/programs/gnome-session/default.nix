@@ -548,7 +548,7 @@ in
       {
         # Install all of the desktop session files.
         services.xserver.displayManager.sessionPackages = sessionPackages;
-        environment.systemPackages = sessionPackages;
+        environment.systemPackages = [ cfg.package ] ++ sessionPackages;
 
         # Make sure it is searchable within gnome-session.
         environment.pathsToLink = [ "/share/gnome-session" ];
