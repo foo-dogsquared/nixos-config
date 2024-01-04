@@ -104,6 +104,78 @@ let
         default = {};
       };
 
+      timerUnit = lib.mkOption {
+        type =
+          let
+            inherit (utils.systemdUtils.unitOptions) timerOptions commonUnitOptions;
+            inherit (utils.systemdUtils.lib) unitConfig;
+          in
+            with lib.types; nullOr (submodule [
+              commonUnitOptions
+              timerOptions
+              unitConfig
+            ]);
+        description = ''
+          An optional systemd timer configuration to be generated. This should
+          be configured if the session is managed by systemd.
+
+          :::{.note}
+          This has the same options as {option}`systemd.user.timers.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
+          :::
+        '';
+        default = null;
+      };
+
+      socketUnit = lib.mkOption {
+        type =
+          let
+            inherit (utils.systemdUtils.unitOptions) socketOptions commonUnitOptions;
+            inherit (utils.systemdUtils.lib) unitConfig;
+          in
+            with lib.types; nullOr (submodule [
+              commonUnitOptions
+              socketOptions
+              unitConfig
+            ]);
+        description = ''
+          An optional systemd socket configuration to be generated. This should
+          be configured if the session is managed by systemd.
+
+          :::{.note}
+          This has the same options as {option}`systemd.user.sockets.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
+          :::
+        '';
+        default = null;
+      };
+
+      pathUnit = lib.mkOption {
+        type =
+          let
+            inherit (utils.systemdUtils.unitOptions) pathOptions commonUnitOptions;
+            inherit (utils.systemdUtils.lib) unitConfig;
+          in
+            with lib.types; nullOr (submodule [
+              commonUnitOptions
+              pathOptions
+              unitConfig
+            ]);
+        description = ''
+          An optional systemd path configuration to be generated. This should
+          be configured if the session is managed by systemd.
+
+          :::{.note}
+          This has the same options as {option}`systemd.user.paths.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
+          :::
+        '';
+        default = null;
+      };
+
       id = lib.mkOption {
         type = lib.types.str;
         description = ''
@@ -379,12 +451,19 @@ let
       # with various NixOS options like `systemd.packages` and the like.
       systemdUserUnits =
         let
-          inherit (utils.systemdUtils.lib) serviceToUnit targetToUnit;
+          inherit (utils.systemdUtils.lib)
+            pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
           componentsUnits =
             lib.foldlAttrs (acc: name: component:
               acc // {
                 "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
                 "${component.id}.target" = targetToUnit component.id component.targetUnit;
+              } // lib.optionalAttrs (component.socketUnit != null) {
+                "${component.id}.socket" = socketToUnit component.id component.socketUnit;
+              } // lib.optionalAttrs (component.timerUnit != null) {
+                "${component.id}.timer" = timerToUnit component.id component.timerUnit;
+              } // lib.optionalAttrs (component.pathUnit != null) {
+                "${component.id}.path" = pathToUnit component.id component.pathUnit;
               })
               {} config.components;
         in
