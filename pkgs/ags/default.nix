@@ -1,5 +1,4 @@
-{ stdenv
-, lib
+{ lib
 , buildNpmPackage
 , fetchFromGitHub
 , meson
@@ -7,8 +6,14 @@
 , pkg-config
 , gobject-introspection
 , gjs
-, gtk3
+, glib-networking
+, gnome
+, gtk-layer-shell
 , libpulseaudio
+, libsoup_3
+, networkmanager
+, upower
+, wrapGAppsHook
 }:
 
 buildNpmPackage rec {
@@ -29,14 +34,21 @@ buildNpmPackage rec {
     meson
     ninja
     pkg-config
-    gobject-introspection
     gjs
+    gobject-introspection
+    wrapGAppsHook
   ];
 
+  # Most of the build inputs here are basically needed for their typelibs.
   buildInputs = [
     gjs
-    gtk3
+    glib-networking
+    gnome.gnome-bluetooth
+    gtk-layer-shell
     libpulseaudio
+    libsoup_3
+    networkmanager
+    upower
   ];
 
   # TODO: I have no idea how to properly make use of the binaries from
@@ -51,6 +63,7 @@ buildNpmPackage rec {
     description = "A EWW-inspired widget system as a GJS library";
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ foo-dogsquared ];
+    mainProgram = "ags";
     platforms = platforms.linux;
   };
 }
