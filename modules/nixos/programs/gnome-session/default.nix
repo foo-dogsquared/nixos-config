@@ -7,7 +7,7 @@ let
   componentsType = { name, config, options, session, ... }: {
     options = {
       description = lib.mkOption {
-        type = lib.types.str;
+        type = lib.types.nonEmptyStr;
         description = "One-sentence description of the component.";
         default = "";
         example = "Desktop widgets";
@@ -250,14 +250,14 @@ let
   sessionType = { name, config, options, ... }: {
     options = {
       fullName = lib.mkOption {
-        type = lib.types.str;
+        type = lib.types.nonEmptyStr;
         description = "The (formal) name of the desktop environment.";
         default = name;
         example = "Mosey Branch";
       };
 
       description = lib.mkOption {
-        type = lib.types.str;
+        type = lib.types.nonEmptyStr;
         description = ''
           A one-sentence description of the desktop environment.
         '';
