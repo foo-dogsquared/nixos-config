@@ -18,17 +18,17 @@
 
 buildNpmPackage rec {
   pname = "ags";
-  version = "1.5.5-beta";
+  version = "1.6.3-beta";
 
   src = fetchFromGitHub {
     owner = "Aylur";
     repo = "ags";
     rev = "v${version}";
-    hash = "sha256-xYwB5V9jlAxftJvy40WH42vM5iSf95c5bE72NLhWVsg=";
+    hash = "sha256-SflyLMJyp9mtivTHGMpvdhSfVp3p8gVznsCvt61vLUk=";
     fetchSubmodules = true;
   };
 
-  npmDepsHash = "sha256-y5kIMnZSU4IV2oCitcXFc6y7oVJxnLCzkA1lvSOrc/k=";
+  npmDepsHash = "sha256-xTeidwd9VTpuAXoKo8zp26JSV1e9KPJElHztS8DpTvQ=";
 
   nativeBuildInputs = [
     meson
