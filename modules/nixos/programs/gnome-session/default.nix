@@ -270,6 +270,9 @@ let
           TimeoutStopSec = lib.mkDefault 5;
         };
 
+        startLimitBurst = lib.mkDefault 3;
+        startLimitIntervalSec = lib.mkDefault 15;
+
         unitConfig = {
           # Units managed by gnome-session are required to have CollectMode=
           # set to this value.
