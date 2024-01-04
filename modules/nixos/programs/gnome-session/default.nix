@@ -332,6 +332,15 @@ let
         example = "Mosey Branch";
       };
 
+      display = lib.mkOption {
+        type = lib.types.enum [ "wayland" "xorg" ];
+        description = ''
+          The display server protocol of the desktop environment.
+        '';
+        default = "wayland";
+        example = "xorg";
+      };
+
       description = lib.mkOption {
         type = lib.types.nonEmptyStr;
         description = ''
@@ -492,7 +501,7 @@ let
             RequiredComponents=${lib.concatStringsSep ";" requiredComponents};
           '';
 
-          waylandSession = ''
+          displaySession = ''
             [Desktop Entry]
             Name=${config.fullName}
             Comment=${config.description}
@@ -532,14 +541,18 @@ let
         in
         pkgs.runCommandLocal "${name}-desktop-session-files"
           {
-            inherit waylandSession gnomeSession sessionScript;
-            passAsFile = [ "waylandSession" "gnomeSession" "sessionScript" ];
+            inherit displaySession gnomeSession sessionScript;
+            passAsFile = [ "displaySession" "gnomeSession" "sessionScript" ];
             passthru.providedSessions = [ name ];
           }
           ''
             SESSION_SCRIPT="$out/libexec/${name}-session"
             GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${name}.session"
-            WAYLAND_SESSION_FILE="$out/share/wayland-sessions/${name}.desktop"
+            ${if config.display == "xorg" then ''
+              DISPLAY_SESSION_FILE="$out/share/xsessions/${name}.desktop"
+            '' else ''
+              DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${name}.desktop"
+            ''}
 
             install -Dm0755 "$sessionScriptPath" "$SESSION_SCRIPT"
             substituteAllInPlace "$SESSION_SCRIPT"
@@ -547,8 +560,8 @@ let
             install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
             substituteAllInPlace "$GNOME_SESSION_FILE"
 
-            install -Dm0644 "$waylandSessionPath" "$WAYLAND_SESSION_FILE"
-            substituteAllInPlace "$WAYLAND_SESSION_FILE"
+            install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
+            substituteAllInPlace "$DISPLAY_SESSION_FILE"
 
             ${lib.concatStringsSep "\n" installSystemdUserUnits}
             mkdir -p "$out/lib/systemd" && ln -sfn "$out/share/systemd/user" "$out/lib/systemd/user"
