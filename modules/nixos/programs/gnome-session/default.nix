@@ -206,7 +206,11 @@ let
       };
     };
 
-    config = {
+    config = let
+      scriptName = "${session.name}-${name}-script";
+      script = "${config.scriptPackage}/bin/${scriptName}";
+    in
+    {
       id = "${session.name}.${name}";
 
       # Make with the default configurations for the built-in-managed
@@ -214,7 +218,7 @@ let
       desktopConfig = {
         name = lib.mkForce config.id;
         desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
-        exec = lib.mkForce config.scriptPackage;
+        exec = lib.mkForce script;
         noDisplay = lib.mkForce true;
         onlyShowIn = [ "X-${session.fullName}" ];
         extraConfig = {
@@ -250,7 +254,7 @@ let
         DOES A LOT, ALRIGHT! CUT ME SOME SLACK!
       */
       serviceUnit = {
-        script = lib.mkAfter "${config.scriptPackage}/bin/${session.name}-${name}-script";
+        script = lib.mkAfter script;
         description = lib.mkDefault config.description;
 
         # The typical workflow for service units to have them set as part of
@@ -299,7 +303,7 @@ let
       };
 
       scriptPackage = pkgs.writeShellApplication {
-        name = "${session.name}-${name}-script";
+        name = scriptName;
         runtimeInputs = [ cfg.package pkgs.dbus ];
         text = ''
           DESKTOP_AUTOSTART_ID="''${DESKTOP_AUTOSTART_ID:-}"
