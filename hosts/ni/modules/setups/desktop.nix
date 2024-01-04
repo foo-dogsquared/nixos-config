@@ -43,6 +43,7 @@ in
 
     (lib.mkIf (hasAnyWorkflowEnabled [ "a-happy-gnome" "knome" "mosey-branch" ]) {
       hosts.ni.networking.setup = "networkmanager";
+      profiles.i18n.setup = "ibus";
     })
   ]);
 }
