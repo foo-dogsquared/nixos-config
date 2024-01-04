@@ -1,0 +1,9 @@
+= Alice, test user
+:toc:
+
+This is a user primarily included in test systems.
+Despite this being only a test user, it follows a certain design:
+
+* This user should include a nice-looking terminal prompt configuration for screenshotting test systems.
+* A nifty editor configuration as a closer representative of the usual systems I manage here.
+* This user should be portable enough for deployment in actual systems.
