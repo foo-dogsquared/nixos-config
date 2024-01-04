@@ -249,9 +249,17 @@ let
         * `Service.OOMScoreAdjust=` have different values for different
         components so it isn't included.
 
+        * Most sandboxing options. Aside from the fact we're dealing with a
+        systemd user unit, much of them are unnecessary and rarely needed (if
+        ever like `Service.PrivateTmp=`?) so we didn't set such defaults here.
+
         As you can tell, this module does not provide a framework for the user
         to easily compose their own desktop environment. THIS MODULE ALREADY
         DOES A LOT, ALRIGHT! CUT ME SOME SLACK!
+
+        Take note that the default service configuration is leaning on the
+        desktop component being a simple type of service like how most NixOS
+        service modules are deployed.
       */
       serviceUnit = {
         script = lib.mkAfter script;
@@ -278,8 +286,7 @@ let
           # set to this value.
           CollectMode = lib.mkForce "inactive-or-failed";
 
-          # Some sane unit configurations for systemd-managed desktop
-          # components.
+          # We leave those up to the target units to start the services.
           RefuseManualStart = lib.mkDefault true;
           RefuseManualStop = lib.mkDefault true;
         };
@@ -386,16 +393,16 @@ let
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description = ''
-          A list of arguments to be added for the session script.
+          A list of arguments from {program}`gnome-session` to be added for the session
+          script.
 
           ::: {.note}
           An argument `--session=<name>` will always be appended into the
           script.
           :::
         '';
-        default = [ "--systemd" ];
         example = [
-          "--builtin"
+          "--systemd"
           "--disable-acceleration-check"
         ];
       };
@@ -607,6 +614,8 @@ in
       example = lib.literalExpression ''
         {
           "one.foodogsquared.SimpleWay" = {
+            fullName = "Simple Way";
+            description = "A desktop environment featuring Sway window manager.";
             components = {
               # This unit is intended to start with gnome-session.
               window-manager = {
