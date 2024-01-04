@@ -30,11 +30,8 @@ Here are the module namespaces with their guidelines for setting them profiles.
 [#lst:profile-namespace-guidelines]
 * `services` and `programs` shouldn't use any profiles at all since they are small in scope that they are more likely to be combined with other modules.
 
-* Any modules under `workflows` are not exactly prohibited to use profiles since they are all-encompassing modules that creates a desktop that may be composed of multiple modules.
-However, it is heavily discouraged.
-If used, be sure to put it under a check with `{check-variable}` which is an extra argument passed to various environments (e.g., NixOS, home-manager) as an optional part of the configuration.
-Take note that workflows are also exported in the flake output.
-footnote:[Overall, I don't think it's not much of a threat to set profiles in the workflow unless users that is not me have conspicuously similar setup to mine. It's just discouraged to minimize stepping on as less as configurations as possible.]
+* Workflow modules (`workflows`) are prohibited to use profiles to discourage very customized configurations that are otherwise more suitable in the host, user, etc.
+We have host- and user-specific modules for those purpose.
 
 * Really, anything that is being exported in the flake outputs (i.e., look for the attributes in `nix flake show`) unless explicitly stated like the case for `workflows`.
 
@@ -60,44 +57,4 @@ digga github:divnix/digga[was considered to be a dead project, issue=503] which 
 When I was grokking flakes, I used their example extensively and eventually understood a lot about flakes and Nix modules overall.
 But the project is really big and overwhelming to use it for someone who only started using flakes so I just went through the project piece by piece and only used a small subset of it.
 I think link:https://github.com/divnix/digga/issues/503#issuecomment-1546359287[this comment sums up the problems of the project].
-====
-
-
-== Setting profiles conditionally
-
-In case of making modules that are intended to be used somewhere else but also needing a part of my profiles to be applied, there are ways to get around this.
-The main way is through checking a certain variable, `{check-variable}`, which is intended for this configuration and only for this configuration.
-
-As noted from the <<lst:profile-namespace-guidelines, guidelines>>, this is mainly used for certain types of modules such as the xref:../02-workflows/index.adoc[workflow modules] where it is used by me as well as (potentially) by others.
-
-Here's a snippet of conditionally setting a profile within the module.
-
-[source, nix, subs=attributes]
-----
-{ config, options, pkgs, lib, ... }@attrs:
-
-{
-  # ...
-
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      # Some required parts here.
-    }
-
-    (lib.mkIf (attrs ? {check-variable} && attrs.{check-variable}) {
-      # Set profiles here.
-    })
-  ];
-}
-----
-
-[chat, Ezran, role=reversed]
-====
-Why not just set a separate module that contains all of the setup-specific checks with their settings?
-====
-
-[chat, foodogsquared]
-====
-Convenience and better organization.
-But yeah, ideally these checks should be in a separate module especially for workflow modules at the cost of organization (and also needing to update it separately since it's on a separate file).
 ====

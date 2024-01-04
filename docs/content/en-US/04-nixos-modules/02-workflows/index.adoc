@@ -3,12 +3,12 @@ title: Workflows
 ---
 = Workflows
 
-Workflows are an all-encompassing NixOS module for dictating how you interact with your computer/device/whatever.
+Workflows are all-encompassing NixOS modules for dictating how you interact with your computer/device/whatever.
 Basically, this is where certain things are set such as your GNOME desktop environment settings, your dolled up standalone window manager setup, or an oddball audio-only desktop interface.
 They are located in `./nixos/modules/workflows` at the project root.
 
-Workflows are defined under the namespace `workflows` where each workflow module is set to be declared and to be enabled at `workflows.workflows.<name>`.
-For example, here's how I would enable my (hypothetical) GNOME desktop workflow.
+Workflows are defined under the namespace `workflows` where each workflow module is set to be declared and to be enabled at `workflows.workflows.<name>.enable`.
+For example, here's how I would enable my imaginary GNOME desktop workflow.
 
 [source, nix]
 ----
@@ -39,7 +39,7 @@ However, this shouldn't be taken lightly as workflow modules are very vast in sc
 
 * Enabling (and/or disabling) system services such as the preferred network manager.
 * Modifying the list of installed applications.
-* Setting up programs with custom configurations which could cause conflicts with the defaults (upstream or from nixpkgs).
+* Setting up programs with custom configurations which could cause conflicts with the defaults (upstream or from nixpkgs) or with another workflow module.
 
 [chat, foodogsquared]
 ====
@@ -57,14 +57,20 @@ Whether those rices are worth posting to Unix ricing communities is up to you th
 Whippersnappers with your "riced"-up systems...
 ====
 
+
+
+
+== Designing a workflow module
+
 There are a few guidelines to designing a workflow module which is already laid out in its respective README but as a reminder, let's list it here.
 
 * All workflow modules should be under `workflows.workflows.<name>` namespace with an `enable` option.
 
 * No usage of the private modules.
 It is a public module, after all so it'll make things messier.
-While we can conditionally set the configuration, it is pretty useless since we have the host-specific module structure.
+While we can conditionally set the configuration, it is pretty useless since we have the xref:../03-disko/index.adoc[host-specific module structure].
 
 * No locale-related settings.
 Each user may have its own set of preferred locales and their setup so it is pretty much prohibited from setting any.
 The only related parts a workflow module can set is their preferred input method engine (IME) of choice.
+The rest of the locale settings is best configured from the host or its individual users.
