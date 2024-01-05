@@ -1,0 +1,5 @@
+option('inputs',
+  type: 'array',
+  value: [],
+  description: 'A list of inputs to be included in NIX_PATH.'
+)

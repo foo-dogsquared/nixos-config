@@ -365,6 +365,29 @@
         };
     in
     {
+      apps = forAllSystems (system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        run-workflow-with-vm =
+          let
+            inputsArgs = lib.mapAttrsToList
+              (name: source:
+                let
+                  name' = if (name == "self") then "config" else name;
+                in
+                "'${name'}=${source}'")
+              inputs;
+            script = pkgs.callPackage ./apps/run-workflow-with-vm {
+              inputs = inputsArgs;
+            };
+          in
+          {
+            type = "app";
+            program = "${script}/bin/run-workflow-with-vm";
+          };
+      });
+
       # Exposes only my library with the custom functions to make it easier to
       # include in other flakes for whatever reason may be.
       lib = import ./lib { lib = nixpkgs.lib; };
