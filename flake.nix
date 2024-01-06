@@ -79,6 +79,21 @@
 
   outputs = inputs@{ self, nixpkgs, ... }:
     let
+      # A set of image-related utilities for the flake outputs.
+      inherit (import ./lib/extras/images.nix { inherit lib inputs; }) mkHost mkHome mkImage listImagesWithSystems;
+
+      # We're considering this as the variant since we'll export the custom
+      # library as `lib` in the output attribute.
+      lib = nixpkgs.lib.extend (import ./lib/extras/extend-lib.nix);
+
+      # Just add systems here and it should add systems to the outputs.
+      defaultSystem = "x86_64-linux";
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
+
       # A set of images with their metadata that is usually built for usual
       # purposes. The format used here is whatever formats nixos-generators
       # support.
@@ -88,28 +103,12 @@
       # A set of users with their metadata to be deployed with home-manager.
       users = import ./setups/home-manager.nix { inherit lib inputs; };
 
-      # A set of image-related utilities for the flake outputs.
-      inherit (import ./lib/extras/images.nix { inherit lib inputs; }) mkHost mkHome mkImage listImagesWithSystems;
-
       # The order here is important(?).
       overlays = lib.attrValues self.overlays;
-
-      defaultSystem = "x86_64-linux";
-
-      # Just add systems here and it should add systems to the outputs.
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
       extraArgs = {
         inherit (inputs) nix-colors;
       };
-
-      # We're considering this as the variant since we'll export the custom
-      # library as `lib` in the output attribute.
-      lib = nixpkgs.lib.extend (import ./lib/extras/extend-lib.nix);
 
       # The shared configuration for the entire list of hosts for this cluster.
       # Take note to only set as minimal configuration as possible since we're
@@ -365,28 +364,29 @@
         };
     in
     {
-      apps = forAllSystems (system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        run-workflow-with-vm =
-          let
-            inputsArgs = lib.mapAttrsToList
-              (name: source:
-                let
-                  name' = if (name == "self") then "config" else name;
-                in
-                "'${name'}=${source}'")
-              inputs;
-            script = pkgs.callPackage ./apps/run-workflow-with-vm {
-              inputs = inputsArgs;
+      apps = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          run-workflow-with-vm =
+            let
+              inputsArgs = lib.mapAttrsToList
+                (name: source:
+                  let
+                    name' = if (name == "self") then "config" else name;
+                  in
+                  "'${name'}=${source}'")
+                inputs;
+              script = pkgs.callPackage ./apps/run-workflow-with-vm {
+                inputs = inputsArgs;
+              };
+            in
+            {
+              type = "app";
+              program = "${script}/bin/run-workflow-with-vm";
             };
-          in
-          {
-            type = "app";
-            program = "${script}/bin/run-workflow-with-vm";
-          };
-      });
+        });
 
       # Exposes only my library with the custom functions to make it easier to
       # include in other flakes for whatever reason may be.

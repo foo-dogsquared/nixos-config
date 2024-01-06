@@ -75,7 +75,7 @@ let
           `PartOf=$COMPONENTID.target`).
           :::
         '';
-        default = {};
+        default = { };
       };
 
       targetUnit = lib.mkOption {
@@ -101,7 +101,7 @@ let
           gnome-session targets. This is on the user to manually set them.
           :::
         '';
-        default = {};
+        default = { };
       };
 
       timerUnit = lib.mkOption {
@@ -110,11 +110,11 @@ let
             inherit (utils.systemdUtils.unitOptions) timerOptions commonUnitOptions;
             inherit (utils.systemdUtils.lib) unitConfig;
           in
-            with lib.types; nullOr (submodule [
-              commonUnitOptions
-              timerOptions
-              unitConfig
-            ]);
+          with lib.types; nullOr (submodule [
+            commonUnitOptions
+            timerOptions
+            unitConfig
+          ]);
         description = ''
           An optional systemd timer configuration to be generated. This should
           be configured if the session is managed by systemd.
@@ -134,11 +134,11 @@ let
             inherit (utils.systemdUtils.unitOptions) socketOptions commonUnitOptions;
             inherit (utils.systemdUtils.lib) unitConfig;
           in
-            with lib.types; nullOr (submodule [
-              commonUnitOptions
-              socketOptions
-              unitConfig
-            ]);
+          with lib.types; nullOr (submodule [
+            commonUnitOptions
+            socketOptions
+            unitConfig
+          ]);
         description = ''
           An optional systemd socket configuration to be generated. This should
           be configured if the session is managed by systemd.
@@ -158,11 +158,11 @@ let
             inherit (utils.systemdUtils.unitOptions) pathOptions commonUnitOptions;
             inherit (utils.systemdUtils.lib) unitConfig;
           in
-            with lib.types; nullOr (submodule [
-              commonUnitOptions
-              pathOptions
-              unitConfig
-            ]);
+          with lib.types; nullOr (submodule [
+            commonUnitOptions
+            pathOptions
+            unitConfig
+          ]);
         description = ''
           An optional systemd path configuration to be generated. This should
           be configured if the session is managed by systemd.
@@ -206,30 +206,31 @@ let
       };
     };
 
-    config = let
-      scriptName = "${session.name}-${name}-script";
-      script = "${config.scriptPackage}/bin/${scriptName}";
-    in
-    {
-      id = "${session.name}.${name}";
+    config =
+      let
+        scriptName = "${session.name}-${name}-script";
+        script = "${config.scriptPackage}/bin/${scriptName}";
+      in
+      {
+        id = "${session.name}.${name}";
 
-      # Make with the default configurations for the built-in-managed
-      # components.
-      desktopConfig = {
-        name = lib.mkForce config.id;
-        desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
-        exec = lib.mkForce script;
-        noDisplay = lib.mkForce true;
-        onlyShowIn = [ "X-${session.fullName}" ];
-        extraConfig = {
-          X-GNOME-AutoRestart = lib.mkDefault "false";
-          X-GNOME-Autostart-Notify = lib.mkDefault "true";
-          X-GNOME-Autostart-Phase = lib.mkDefault "Application";
-          X-GNOME-HiddenUnderSystemd = lib.mkDefault "true";
+        # Make with the default configurations for the built-in-managed
+        # components.
+        desktopConfig = {
+          name = lib.mkForce config.id;
+          desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
+          exec = lib.mkForce script;
+          noDisplay = lib.mkForce true;
+          onlyShowIn = [ "X-${session.fullName}" ];
+          extraConfig = {
+            X-GNOME-AutoRestart = lib.mkDefault "false";
+            X-GNOME-Autostart-Notify = lib.mkDefault "true";
+            X-GNOME-Autostart-Phase = lib.mkDefault "Application";
+            X-GNOME-HiddenUnderSystemd = lib.mkDefault "true";
+          };
         };
-      };
 
-      /*
+        /*
         Setting some recommendation and requirements for systemd-managed
         gnome-session components. Note there are the missing directives that
         COULD include some sane defaults here.
@@ -260,39 +261,39 @@ let
         Take note that the default service configuration is leaning on the
         desktop component being a simple type of service like how most NixOS
         service modules are deployed.
-      */
-      serviceUnit = {
-        script = lib.mkAfter script;
-        description = lib.mkDefault config.description;
+        */
+        serviceUnit = {
+          script = lib.mkAfter script;
+          description = lib.mkDefault config.description;
 
-        # The typical workflow for service units to have them set as part of
-        # the respective target unit.
-        requisite = [ "${config.id}.target" ];
-        before = [ "${config.id}.target" ];
-        partOf = [ "${config.id}.target" ];
+          # The typical workflow for service units to have them set as part of
+          # the respective target unit.
+          requisite = [ "${config.id}.target" ];
+          before = [ "${config.id}.target" ];
+          partOf = [ "${config.id}.target" ];
 
-        # Some sane service configuration for a desktop component.
-        serviceConfig = {
-          Slice = lib.mkDefault "session.slice";
-          Restart = lib.mkDefault "on-failure";
-          TimeoutStopSec = lib.mkDefault 5;
+          # Some sane service configuration for a desktop component.
+          serviceConfig = {
+            Slice = lib.mkDefault "session.slice";
+            Restart = lib.mkDefault "on-failure";
+            TimeoutStopSec = lib.mkDefault 5;
+          };
+
+          startLimitBurst = lib.mkDefault 3;
+          startLimitIntervalSec = lib.mkDefault 15;
+
+          unitConfig = {
+            # Units managed by gnome-session are required to have CollectMode=
+            # set to this value.
+            CollectMode = lib.mkForce "inactive-or-failed";
+
+            # We leave those up to the target units to start the services.
+            RefuseManualStart = lib.mkDefault true;
+            RefuseManualStop = lib.mkDefault true;
+          };
         };
 
-        startLimitBurst = lib.mkDefault 3;
-        startLimitIntervalSec = lib.mkDefault 15;
-
-        unitConfig = {
-          # Units managed by gnome-session are required to have CollectMode=
-          # set to this value.
-          CollectMode = lib.mkForce "inactive-or-failed";
-
-          # We leave those up to the target units to start the services.
-          RefuseManualStart = lib.mkDefault true;
-          RefuseManualStop = lib.mkDefault true;
-        };
-      };
-
-      /*
+        /*
         Similarly, there are things that COULD make it here but didn't for a
         variety of reasons.
 
@@ -301,36 +302,36 @@ let
         if we make it clear in the documentation or if it proves to be a
         painful experience to configure this by a first-timer. For now, this is
         on the user to know.
-      */
-      targetUnit = {
-        wants = [ "${config.id}.service" ];
-        description = lib.mkDefault config.description;
-        documentation = [
-          "man:gnome-session(1)"
-          "man:systemd.special(7)"
-        ];
-        unitConfig.CollectMode = lib.mkForce "inactive-or-failed";
+        */
+        targetUnit = {
+          wants = [ "${config.id}.service" ];
+          description = lib.mkDefault config.description;
+          documentation = [
+            "man:gnome-session(1)"
+            "man:systemd.special(7)"
+          ];
+          unitConfig.CollectMode = lib.mkForce "inactive-or-failed";
+        };
+
+        scriptPackage = pkgs.writeShellApplication {
+          name = scriptName;
+          runtimeInputs = [ cfg.package pkgs.dbus ];
+          text = ''
+            DESKTOP_AUTOSTART_ID="''${DESKTOP_AUTOSTART_ID:-}"
+            echo "$DESKTOP_AUTOSTART_ID"
+            test -n "$DESKTOP_AUTOSTART_ID" && {
+              dbus-send --print-reply --session \
+                --dest=org.gnome.SessionManager "/org/gnome/SessionManager" \
+                org.gnome.SessionManager.RegisterClient \
+                "string:${name}" "string:$DESKTOP_AUTOSTART_ID"
+            }
+
+            ${config.script}
+          '';
+        };
+
+        desktopPackage = pkgs.makeDesktopItem config.desktopConfig;
       };
-
-      scriptPackage = pkgs.writeShellApplication {
-        name = scriptName;
-        runtimeInputs = [ cfg.package pkgs.dbus ];
-        text = ''
-          DESKTOP_AUTOSTART_ID="''${DESKTOP_AUTOSTART_ID:-}"
-          echo "$DESKTOP_AUTOSTART_ID"
-          test -n "$DESKTOP_AUTOSTART_ID" && {
-            dbus-send --print-reply --session \
-              --dest=org.gnome.SessionManager "/org/gnome/SessionManager" \
-              org.gnome.SessionManager.RegisterClient \
-              "string:${name}" "string:$DESKTOP_AUTOSTART_ID"
-          }
-
-          ${config.script}
-        '';
-      };
-
-      desktopPackage = pkgs.makeDesktopItem config.desktopConfig;
-    };
   };
 
   sessionType = { name, config, options, ... }: {
@@ -508,22 +509,24 @@ let
           inherit (utils.systemdUtils.lib)
             pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
           componentsUnits =
-            lib.foldlAttrs (acc: name: component:
-              acc // {
-                "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
-                "${component.id}.target" = targetToUnit component.id component.targetUnit;
-              } // lib.optionalAttrs (component.socketUnit != null) {
-                "${component.id}.socket" = socketToUnit component.id component.socketUnit;
-              } // lib.optionalAttrs (component.timerUnit != null) {
-                "${component.id}.timer" = timerToUnit component.id component.timerUnit;
-              } // lib.optionalAttrs (component.pathUnit != null) {
-                "${component.id}.path" = pathToUnit component.id component.pathUnit;
-              })
-              {} config.components;
+            lib.foldlAttrs
+              (acc: name: component:
+                acc // {
+                  "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
+                  "${component.id}.target" = targetToUnit component.id component.targetUnit;
+                } // lib.optionalAttrs (component.socketUnit != null) {
+                  "${component.id}.socket" = socketToUnit component.id component.socketUnit;
+                } // lib.optionalAttrs (component.timerUnit != null) {
+                  "${component.id}.timer" = timerToUnit component.id component.timerUnit;
+                } // lib.optionalAttrs (component.pathUnit != null) {
+                  "${component.id}.path" = pathToUnit component.id component.pathUnit;
+                })
+              { }
+              config.components;
         in
-          componentsUnits // {
-            "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" config.targetUnit;
-          };
+        componentsUnits // {
+          "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" config.targetUnit;
+        };
 
       # By default. set the required components from the given desktop
       # components.
@@ -585,19 +588,23 @@ let
               '';
             };
 
-          installDesktopSessions = builtins.map (display:
-            displayScripts.${display}) config.display;
+          installDesktopSessions = builtins.map
+            (display:
+              displayScripts.${display})
+            config.display;
 
-          installSystemdUserUnits = lib.mapAttrsToList (n: v:
-            if (v ? overrideStrategy && v.overrideStrategy == "asDropin") then ''
-              (
-                unit="${v.unit}/${n}"
-                unit_filename=$(basename "$unit")
-                install -Dm0644 "$unit" "$out/share/systemd/user/''${unit_filename}.d/session.conf"
-              )
-            '' else ''
-              install -Dm0644 "${v.unit}/${n}" -t "$out/share/systemd/user"
-            '') config.systemdUserUnits;
+          installSystemdUserUnits = lib.mapAttrsToList
+            (n: v:
+              if (v ? overrideStrategy && v.overrideStrategy == "asDropin") then ''
+                (
+                  unit="${v.unit}/${n}"
+                  unit_filename=$(basename "$unit")
+                  install -Dm0644 "$unit" "$out/share/systemd/user/''${unit_filename}.d/session.conf"
+                )
+              '' else ''
+                install -Dm0644 "${v.unit}/${n}" -t "$out/share/systemd/user"
+              '')
+            config.systemdUserUnits;
 
           installDesktops = lib.mapAttrsToList
             (_: p: ''

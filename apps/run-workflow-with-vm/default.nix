@@ -3,7 +3,7 @@
 , meson
 , ninja
 , makeWrapper
-, inputs ? []
+, inputs ? [ ]
 }:
 
 stdenv.mkDerivation {
