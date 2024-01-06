@@ -408,6 +408,30 @@ let
         ];
       };
 
+      requiredComponents = lib.mkOption {
+        type = with lib.types; listOf str;
+        description = ''
+          A list of desktop components as part of `RequiredComponents=` for the
+          gnome-session configuration.
+
+          ::: {.note}
+          For the most part, this shouldn't require manually configuring it if
+          you set {option}`<session>.components` as this module already sets
+          them for you.
+
+          The only time you manually set this if you want to require components
+          from other desktop such as when creating a customized version of
+          GNOME.
+          :::
+        '';
+        example = [
+          "org.gnome.Shell"
+          "org.gnome.SettingsDaemon.A11ySettings"
+          "org.gnome.SettingsDaemon.Power"
+          "org.gnome.SettingsDaemon.Wacom"
+        ];
+      };
+
       targetUnit = lib.mkOption {
         type =
           let
@@ -419,10 +443,16 @@ let
             unitConfig
           ];
         description = ''
-          systemd target configuration to be generated. This should be
-          configured if the session is managed by systemd and you want to
-          control the session further (which is recommended since this module
-          don't know what components are more important, etc.).
+          systemd target configuration to be generated for
+          `gnome-session@<name>.target`. This should be configured if the
+          session is managed by systemd and you want to control the session
+          further (which is recommended since this module don't know what
+          components are more important, etc.).
+
+          By default, the session target will have all of its components from
+          {option}`<session>.requiredComponents` under `Wants=` directive. It
+          also assumes all of them have a target unit at
+          `''${requiredComponent}.target`.
 
           :::{.note}
           This has the same options as {option}`systemd.user.targets.<name>`
@@ -432,7 +462,7 @@ let
         '';
         defaultText = ''
           {
-            wants = ... # All of the components.
+            wants = ... # All of the required components as a target unit.
           }
         '';
       };
@@ -495,21 +525,22 @@ let
             "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" config.targetUnit;
           };
 
+      # By default. set the required components from the given desktop
+      # components.
+      requiredComponents = lib.mapAttrsToList (_: component: component.id) config.components;
+
       targetUnit = {
         overrideStrategy = lib.mkForce "asDropin";
-        wants = lib.mkDefault (lib.mapAttrsToList (_: component: "${component.id}.target") config.components);
+        wants = lib.mkDefault (builtins.map (c: "${c}.target") config.requiredComponents);
       };
 
+      # The bulk of the work. Pretty much the main purpose of this module.
       sessionPackage =
         let
-          requiredComponents = lib.mapAttrsToList
-            (_: component: component.id)
-            config.components;
-
           gnomeSession = ''
             [GNOME Session]
             Name=${config.fullName} session
-            RequiredComponents=${lib.concatStringsSep ";" requiredComponents};
+            RequiredComponents=${lib.concatStringsSep ";" config.requiredComponents};
           '';
 
           displaySession = ''
