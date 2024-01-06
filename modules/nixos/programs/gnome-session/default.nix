@@ -343,12 +343,13 @@ let
       };
 
       display = lib.mkOption {
-        type = lib.types.enum [ "wayland" "xorg" ];
+        type = with lib.types; listOf (enum [ "wayland" "xorg" ]);
         description = ''
-          The display server protocol of the desktop environment.
+          A list of display server protocols supported by the desktop
+          environment.
         '';
-        default = "wayland";
-        example = "xorg";
+        default = [ "wayland" ];
+        example = [ "wayland" "xorg" ];
       };
 
       description = lib.mkOption {
@@ -513,7 +514,7 @@ let
 
           displaySession = ''
             [Desktop Entry]
-            Name=${config.fullName}
+            Name=@fullName@
             Comment=${config.description}
             Exec=@out@/libexec/${name}-session
             Type=Application
@@ -531,6 +532,30 @@ let
 
             ${lib.getExe' cfg.package "gnome-session"} ${lib.escapeShellArgs config.extraArgs}
           '';
+
+          displayScripts =
+            let
+              hasMoreDisplays = protocol: lib.optionalString (lib.length config.display > 1) "fullName='${config.fullName} (${protocol})'";
+            in
+            {
+              wayland = ''
+                (
+                  DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${name}.desktop"
+                  install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
+                  ${hasMoreDisplays "Wayland"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
+                )
+              '';
+              xorg = ''
+                (
+                  DISPLAY_SESSION_FILE="$out/share/xsessions/${name}.desktop"
+                  install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
+                  ${hasMoreDisplays "X11"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
+                )
+              '';
+            };
+
+          installDesktopSessions = builtins.map (display:
+            displayScripts.${display}) config.display;
 
           installSystemdUserUnits = lib.mapAttrsToList (n: v:
             if (v ? overrideStrategy && v.overrideStrategy == "asDropin") then ''
@@ -551,27 +576,23 @@ let
         in
         pkgs.runCommandLocal "${name}-desktop-session-files"
           {
+            env = {
+              inherit (config) fullName;
+            };
             inherit displaySession gnomeSession sessionScript;
             passAsFile = [ "displaySession" "gnomeSession" "sessionScript" ];
             passthru.providedSessions = [ name ];
           }
           ''
             SESSION_SCRIPT="$out/libexec/${name}-session"
-            GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${name}.session"
-            ${if config.display == "xorg" then ''
-              DISPLAY_SESSION_FILE="$out/share/xsessions/${name}.desktop"
-            '' else ''
-              DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${name}.desktop"
-            ''}
-
             install -Dm0755 "$sessionScriptPath" "$SESSION_SCRIPT"
             substituteAllInPlace "$SESSION_SCRIPT"
 
+            GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${name}.session"
             install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
             substituteAllInPlace "$GNOME_SESSION_FILE"
 
-            install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
-            substituteAllInPlace "$DISPLAY_SESSION_FILE"
+            ${lib.concatStringsSep "\n" installDesktopSessions}
 
             ${lib.concatStringsSep "\n" installSystemdUserUnits}
             mkdir -p "$out/lib/systemd" && ln -sfn "$out/share/systemd/user" "$out/lib/systemd/user"
