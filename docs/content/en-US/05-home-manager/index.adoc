@@ -31,18 +31,18 @@ On the host configuration, you can then import it like so.
 [source, nix]
 ----
 { config, lib, pkgs, ... }: {
-  imports = [ (lib.getUser "nixos" "plover") ]
+  imports = [ (lib.private.getUser "nixos" "plover") ]
 }
 ----
 
 But creating a dedicated NixOS user onto a file then importing the module just to use a home-manager is more of a hassle.
 It shouldn't require much boilerplate.
-This is why this NixOS config has created a function for it: `mapHomeManagerUser`.
+This is why this project has created a function for it: `mapHomeManagerUser`.
 
 .An example of how to use it
 [source, nix]
 ----
-lib.mapHomeManagerUser "foo-dogsquared" {
+lib.private.mapHomeManagerUser "foo-dogsquared" {
   extraGroups = [
     "adbusers"
     "wheel"
