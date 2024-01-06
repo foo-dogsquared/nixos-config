@@ -371,8 +371,7 @@ let
           modules = [ componentsType ];
         });
         description = ''
-          The individual components to be launched with the desktop session. It
-          is heavily patterned after gnome-session.
+          The individual components to be launched with the desktop session.
         '';
         default = { };
         example = lib.literalExpression ''
@@ -399,7 +398,7 @@ let
 
           ::: {.note}
           An argument `--session=<name>` will always be appended into the
-          script.
+          configuration.
           :::
         '';
         example = [
@@ -473,8 +472,9 @@ let
           The collective package containing everything desktop-related
           such as:
 
-          * The Wayland session file.
+          * The display session (`<name>.desktop`) files.
           * gnome-session `.session` file.
+          * The gnome-session systemd target drop-in file.
           * The components `.desktop` file.
           * The components' systemd unit files.
         '';
@@ -641,7 +641,7 @@ in
       defaultText = "pkgs.gnome.gnome-session";
       description = ''
         The package containing gnome-session binary and systemd units. This
-        also contains the `gnome-session` executable used for the generated
+        module will use the `gnome-session` executable for the generated
         session script.
       '';
     };
@@ -665,30 +665,114 @@ in
       default = { };
       example = lib.literalExpression ''
         {
+          "gnome-minimal" = let
+            sessionCfg = config.programs.gnome-session.sessions."gnome-minimal";
+          in
+          {
+            fullName = "GNOME (minimal)";
+            description = "Minimal GNOME session";
+            display = [ "wayland" "xorg" ];
+            extraArgs = [ "--systemd" ];
+
+            requiredComponents =
+              let
+                gsdComponents =
+                  builtins.map
+                    (gsdc: "org.gnome.SettingsDaemon.''${gsdc}")
+                    [
+                      "A11ySettings"
+                      "Color"
+                      "Housekeeping"
+                      "Power"
+                      "Keyboard"
+                      "Sound"
+                      "Wacom"
+                      "XSettings"
+                    ];
+              in
+              gsdComponents ++ [ "org.gnome.Shell" ];
+
+            targetUnit = {
+              requires = [ "org.gnome.Shell.target" ];
+              wants = builtins.map (c: "''${c}.target") (lib.lists.remove "org.gnome.Shell" sessionCfg.requiredComponents);
+            };
+          };
+
           "one.foodogsquared.SimpleWay" = {
             fullName = "Simple Way";
             description = "A desktop environment featuring Sway window manager.";
+            display = [ "wayland" ];
+            extraArgs = [ "--systemd" ];
+
             components = {
               # This unit is intended to start with gnome-session.
               window-manager = {
                 script = '''
-                  ''${lib.getExe' config.programs.sway.package "sway"}
+                  ''${lib.getExe' config.programs.sway.package "sway"} --config ''${./config/sway/config}
                 ''';
                 description = "An i3 clone for Wayland.";
+
+                serviceUnit = {
+                  serviceConfig = {
+                    Type = "notify";
+                    NotifyAccess = "all";
+                    OOMScoreAdjust = -1000;
+                  };
+
+                  unitConfig = {
+                    OnFailure = [ "gnome-session-shutdown.target" ];
+                    OnFailureJobMode = "replace-irreversibly";
+                  };
+                };
+
+                targetUnit = {
+                  requisite = [ "gnome-session-initialized.target" ];
+                  partOf = [ "gnome-session-initialized.target" ];
+                  before = [ "gnome-session-initialized.target" ];
+                };
               };
 
               desktop-widgets = {
                 script = '''
-                  ''${lib.getExe' pkgs.ags "ags"} --config ''${./config.js}
+                  ''${lib.getExe' pkgs.ags "ags"} --config ''${./config/ags/config.js}
                 ''';
                 description = "A desktop widget system using layer-shell protocol.";
+
+                serviceUnit = {
+                  serviceConfig = {
+                    OOMScoreAdjust = -1000;
+                  };
+
+                  path = with pkgs; [ ags ];
+
+                  startLimitBurst = 5;
+                  startLimitIntervalSec = 15;
+                };
+
+                targetUnit = {
+                  requisite = [ "gnome-session-initialized.target" ];
+                  partOf = [ "gnome-session-initialized.target" ];
+                  before = [ "gnome-session-initialized.target" ];
+                };
               };
 
               auth-agent = {
-                script = '''
-                  ''${lib.getExe' pkgs.polkit_gnome "polkit-gnome-authentication-agent-1"}
-                ''';
-                description = "Polkit authentication agent";
+                script = "''${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+                description = "Authentication agent";
+
+                serviceUnit = {
+                  startLimitBurst = 5;
+                  startLimitIntervalSec = 15;
+                };
+
+                targetUnit = {
+                  partOf = [
+                    "gnome-session.target"
+                    "graphical-session.target"
+                  ];
+                  requisite = [ "gnome-session.target" ];
+                  after = [ "gnome-session.target" ];
+                };
               };
             };
           };
