@@ -115,44 +115,42 @@ in
     # Bring all of the dconf keyfiles in there.
     programs.dconf = {
       enable = true;
-      profiles = {
-        user.databases = lib.singleton {
-          # Get them keyfiles.
-          keyfiles = [ ./config/dconf ];
+      profiles.user.databases = lib.singleton {
+        # Get them keyfiles.
+        keyfiles = [ ./config/dconf ];
 
-          settings = lib.mkMerge [
-            {
-              "org/gnome/desktop/search-providers" = {
-                disabled = [
-                  "org.gnome.seahorse.Application.desktop"
-                  "org.gnome.Photos.desktop"
-                  "org.gnome.Epiphany.desktop"
-                  "app.drey.Dialect.desktop"
-                  "com.belmoussaoui.Authenticator.desktop"
-                ];
-              };
-              "org/gnome/shell" = {
-                enabled-extensions = builtins.map (p: p.extensionUuid) cfg.shellExtensions;
-              };
-            }
+        settings = lib.mkMerge [
+          {
+            "org/gnome/desktop/search-providers" = {
+              disabled = [
+                "org.gnome.seahorse.Application.desktop"
+                "org.gnome.Photos.desktop"
+                "org.gnome.Epiphany.desktop"
+                "app.drey.Dialect.desktop"
+                "com.belmoussaoui.Authenticator.desktop"
+              ];
+            };
+            "org/gnome/shell" = {
+              enabled-extensions = builtins.map (p: p.extensionUuid) cfg.shellExtensions;
+            };
+          }
 
-            # Disable all of the messenger's notification (only the annoying
-            # ones).
-            (lib.listToAttrs
-              (builtins.map
-                (app:
-                  lib.nameValuePair
-                    "org/gnome/desktop/notifications/application/${app}"
-                    { show-banners = false; })
-                [
-                  "re-sonny-tangram"
-                  "org-gnome-polari"
-                  "io-github-hexchat"
-                  "org-gnome-evolution-alarm-notify"
-                  "thunderbird"
-                ]))
-          ];
-        };
+          # Disable all of the messenger's notification (only the annoying
+          # ones).
+          (lib.listToAttrs
+            (builtins.map
+              (app:
+                lib.nameValuePair
+                  "org/gnome/desktop/notifications/application/${app}"
+                  { show-banners = false; })
+              [
+                "re-sonny-tangram"
+                "org-gnome-polari"
+                "io-github-hexchat"
+                "org-gnome-evolution-alarm-notify"
+                "thunderbird"
+              ]))
+        ];
       };
     };
 
