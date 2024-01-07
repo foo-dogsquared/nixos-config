@@ -1,6 +1,5 @@
 = Profiles
 :toc:
-:check_variable: _isfoodogsquaredcustom
 
 
 We're defining profiles after how link:https://digga.divnix.com/concepts/profiles.html[digga library from divnix defines it].
@@ -30,41 +29,7 @@ As future reference, here's an exhaustive list of namespaces you should avoid us
 
 * `services` and `programs` shouldn't use any profiles at all since they are small in scope that they are more likely to be combined with other modules.
 
-* Any modules under `workflows` are not exactly prohibited to use profiles since they are all-encompassing modules that creates a desktop that may be composed of multiple modules.
-However, it is heavily discouraged.
-If used, be sure to put it under a check with `{check_variable}` which is an extra argument passed to various profiles (e.g., NixOS, home-manager) as an optional part of the configuration.
-Take note that workflows are also exported in the flake output.
-footnote:[Overall, I don't think it's not much of a threat to set profiles in the workflow unless users that is not me have conspicuously similar setup to mine. It's just discouraged to minimize stepping on as less as configurations as possible.]
+* Workflow modules (`workflows`) are prohibited to use profiles to discourage very customized configurations that are otherwise more suitable in the host, user, etc.
+We have host- and user-specific modules for those purpose.
 
-* Really, anything that is being exported in the flake outputs (i.e., look for the attributes in `nix flake show`) unless explicitly stated like the case for `workflows`.
-
-
-
-
-== Setting profiles conditionally
-
-Because the way how profiles are exported in the flakes (which is not at all), we cannot easily export modules that make use of them.
-For this, we have the `{check_variable}` attribute passed as part of `specialArgs` (or something similar) to the NixOS configuration.
-The attribute is a boolean value and only used for checking if it's going to be included as part of the holistic system.
-Take note it should be only enabled in this flake, outsiders shouldn't set this variable in any way.
-
-Here's one way how to do it as shown in the following snippet of a NixOS module.
-
-[source, nix, subs=attributes]
-----
-{ config, options, pkgs, lib, ... }@attrs:
-
-{
-  # ...
-
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      # Some required parts here.
-    }
-
-    (lib.mkIf (attrs ? {check_variable} && attrs.{check_variable}) {
-      # Set profiles here.
-    })
-  ];
-}
-----
+* Really, anything that is being exported in the flake outputs (i.e., look for the attributes in `nix flake show`).
