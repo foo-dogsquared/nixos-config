@@ -70,12 +70,12 @@
   nix.channel.enable = true;
 
   # Make Nix experimental.
-  nix.package = pkgs.nixUnstable;
+  nix.package = pkgs.nixStable;
 
   # Some more experimentals for Nix.
   nix.settings = {
     auto-allocate-uids = true;
-    experimental-features = [ "auto-allocate-uids" "configurable-impure-env" ];
+    experimental-features = [ "auto-allocate-uids" ];
   };
 
   # My poor achy-breaky desktop can't take it.
