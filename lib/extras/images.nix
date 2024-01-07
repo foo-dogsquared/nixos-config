@@ -5,6 +5,11 @@
 let
   # A function that generates a lambda suitable for `lib.extend`.
   extendLib = import ./extend-lib.nix;
+
+  # For NixOS systems.
+  specialArgs = {
+    foodogsquaredModulesPath = builtins.toString ../../modules/nixos;
+  };
 in
 {
   # A thin wrapper around the NixOS configuration function.
@@ -22,6 +27,7 @@ in
       nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
     in
     (lib'.makeOverridable nixosSystem) {
+      inherit specialArgs;
       lib = lib';
       modules = extraModules;
 
@@ -33,6 +39,10 @@ in
   # A thin wrapper around the home-manager configuration function.
   mkHome = { pkgs, extraModules ? [ ], home-manager-channel ? "home-manager" }:
     inputs.${home-manager-channel}.lib.homeManagerConfiguration {
+      specialArgs = {
+        foodogsquaredModulesPath = builtins.toString ../../modules/home-manager;
+      };
+
       inherit pkgs;
       lib = pkgs.lib.extend extendLib;
       modules = extraModules;
@@ -48,6 +58,7 @@ in
       nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
 
       image = nixosSystem {
+        inherit specialArgs;
         lib = nixpkgs.lib.extend extendLib;
         modules = extraModules ++ [ inputs.nixos-generators.nixosModules.${format} ];
 
