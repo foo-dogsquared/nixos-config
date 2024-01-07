@@ -278,7 +278,7 @@
             inputs;
 
         # Set the package for generating the configuration.
-        nix.package = lib.mkDefault pkgs.nixUnstable;
+        nix.package = lib.mkDefault pkgs.nixStable;
 
         # Set the configurations for the package manager.
         nix.settings = {
