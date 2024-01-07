@@ -183,11 +183,6 @@
         # have to go with it.
         i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
-        # The global configuration for the home-manager module.
-        home-manager.useUserPackages = lib.mkDefault true;
-        home-manager.useGlobalPkgs = lib.mkDefault true;
-        home-manager.sharedModules = [ userSharedConfig ];
-
         # Enabling some things for sops.
         programs.gnupg.agent = lib.mkDefault {
           enable = true;
@@ -329,6 +324,11 @@
             {
               networking.hostName = lib.mkForce metadata.hostname or host;
               nixpkgs.hostPlatform = metadata._system;
+
+              # The global configuration for the home-manager module.
+              home-manager.useUserPackages = lib.mkDefault true;
+              home-manager.useGlobalPkgs = lib.mkDefault true;
+              home-manager.sharedModules = [ userSharedConfig ];
             }
 
             (lib.mkIf (metadata ? domain)
