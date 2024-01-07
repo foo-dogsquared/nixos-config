@@ -550,9 +550,9 @@ let
             [Desktop Entry]
             Name=@fullName@
             Comment=${config.description}
-            Exec=@out@/libexec/${name}-session
+            Exec="@out@/libexec/${name}-session"
             Type=Application
-            DesktopNames=${config.fullName};
+            DesktopNames=X-${config.fullName};
           '';
 
           sessionScript = ''
