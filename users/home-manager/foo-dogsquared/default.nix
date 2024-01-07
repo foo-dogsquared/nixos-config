@@ -5,7 +5,7 @@
 
   # All of the home-manager-user-specific setup are here.
   users.foo-dogsquared = {
-    dotfiles.enable = false;
+    dotfiles.enable = true;
 
     programs = {
       dconf.enable = true;
