@@ -1,4 +1,0 @@
-[Unit]
-@session_wants@
-
-Requires=one.foodogsquared.MoseyBranch.target

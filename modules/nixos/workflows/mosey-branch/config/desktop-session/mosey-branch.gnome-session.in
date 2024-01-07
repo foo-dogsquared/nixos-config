@@ -1,4 +1,0 @@
-[GNOME Session]
-Name=Mosey Branch session
-# Must be in sync with gnome-session@mosey-branch.target.d/session.conf drop-in.
-RequiredComponents=@required_components@

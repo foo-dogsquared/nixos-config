@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Mosey Branch
-Comment=foodogsquared's Hyprland-based desktop environment setup
-Exec=@libexecdir@/mosey-branch-session
-Type=Application

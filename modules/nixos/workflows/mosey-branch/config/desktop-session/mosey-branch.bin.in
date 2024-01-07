@@ -1,9 +1,0 @@
-#!/bin/bash
-
-# gnome-session is also looking for RequiredComponents in here.
-export XDG_CONFIG_DIRS=@prefix@/etc/xdg${XDG_CONFIG_DIRS:-:$XDG_CONFIG_DIRS}
-
-# We'll have to force gnome-session to detect our session.
-export XDG_DATA_DIRS=@prefix@/share${XDG_DATA_DIRS:-:$XDG_DATA_DIRS}
-
-gnome-session --session=mosey-branch --systemd --disable-acceleration-check
