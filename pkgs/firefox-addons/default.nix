@@ -103,10 +103,10 @@
       };
     "updateswh" = buildFirefoxXpiAddon {
       pname = "updateswh";
-      version = "0.6.7";
+      version = "0.6.8";
       addonId = "{157eb9f0-9814-4fcc-b0b7-586b3093c641}";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4169557/updateswh-0.6.7.xpi";
-      sha256 = "053e7d069c1632a586844fd6c55cd9f3a91ad1c94ef55b13b1a647a5e17477f0";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4217887/updateswh-0.6.8.xpi";
+      sha256 = "ad91373253a4b24b48ca8c409195bb4e3674f574e142a6fe917524823c9c9644";
       meta = with lib;
       {
         description = "Check archival state of a source code repository and propose to update it if needed.";
