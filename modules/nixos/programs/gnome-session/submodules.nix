@@ -2,6 +2,31 @@
 
 let
   cfg = config.programs.gnome-session;
+
+  # For an updated list, see `menu/menu-spec.xml` from
+  # https://gitlab.freedesktop.org/xdg/xdg-specs.
+  validDesktopNames = [
+    "GNOME"
+    "GNOME-Classic"
+    "GNOME-Flashback"
+    "KDE"
+    "LXDE"
+    "LXQt"
+    "MATE"
+    "Razor"
+    "ROX"
+    "TDE"
+    "Unity"
+    "XFCE"
+    "EDE"
+    "Cinnamon"
+    "Pantheon"
+    "Budgie"
+    "Enlightenment"
+    "DDE"
+    "Endless"
+    "Old"
+  ];
 in
 rec {
   componentsType = { name, config, options, session, ... }: {
@@ -221,7 +246,7 @@ rec {
           desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
           exec = lib.mkForce script;
           noDisplay = lib.mkForce true;
-          onlyShowIn = [ "X-${session.fullName}" ];
+          onlyShowIn = session.desktopNames;
           extraConfig = {
             X-GNOME-AutoRestart = lib.mkDefault "false";
             X-GNOME-Autostart-Notify = lib.mkDefault "true";
@@ -338,9 +363,36 @@ rec {
     options = {
       fullName = lib.mkOption {
         type = lib.types.nonEmptyStr;
-        description = "The (formal) name of the desktop environment.";
+        description = "The display name of the desktop environment.";
         default = name;
         example = "Mosey Branch";
+      };
+
+      desktopNames = lib.mkOption {
+        type = with lib.types; listOf nonEmptyStr;
+        description = ''
+          Names to be used as `DesktopNames=` entry of the session `.desktop`
+          file. Useful if you're creating a customized version of an already
+          existing desktop session.
+
+          ::: {.note}
+          This module sanitizes the values by prepending the given names with
+          `X-` if they aren't part of the registered values from XDG spec. This
+          is because the desktop components' `.desktop` file are being
+          validated with `desktop-file-validate` from xdg-file-utils.
+          :::
+        '';
+        default = [ config.fullName ];
+        defaultText = "[ <session>.fullName ]";
+        apply = names:
+          builtins.map
+            (name:
+              if (lib.elem name validDesktopNames) || (lib.hasPrefix "X-" name) then
+                name
+              else
+              "X-${name}")
+            names;
+        example = [ "GNOME" "Garden" ];
       };
 
       display = lib.mkOption {
@@ -366,7 +418,7 @@ rec {
       components = lib.mkOption {
         type = with lib.types; attrsOf (submoduleWith {
           specialArgs.session = {
-            inherit (config) fullName description;
+            inherit (config) fullName desktopNames description;
             inherit name;
           };
           modules = [ componentsType ];
@@ -552,7 +604,7 @@ rec {
             Comment=${config.description}
             Exec="@out@/libexec/${name}-session"
             Type=Application
-            DesktopNames=X-${config.fullName};
+            DesktopNames=${lib.concatStringsSep ";" config.desktopNames};
           '';
 
           sessionScript = ''
