@@ -19,13 +19,13 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "niri";
-  version = "0.1.0-alpha.2";
+  version = "0.1.0-alpha.3";
 
   src = fetchFromGitHub {
     owner = "YaLTeR";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-eNzmQCgOUCX0RT/9ilhf1RXWorHM9SOVSP1brKevkjs=";
+    hash = "sha256-X3n8Mt3M5+Z8YDvYZOVCgKSHLTQJtBdbMBl0c5O/tt0=";
   };
 
   nativeBuildInputs = [
@@ -48,7 +48,7 @@ rustPlatform.buildRustPackage rec {
   cargoLock = {
     lockFile = "${src}/Cargo.lock";
     outputHashes = {
-      "smithay-0.3.0" = "sha256-Eqs4wqogdld6MHOXQ2NRFCgJH4RHf4mYWFdjRVUVxsk=";
+      "smithay-0.3.0" = "sha256-+VIKgdonZScAb38QcSatyoYGPSV3Q7lscd3U5jajdbM=";
     };
   };
 
