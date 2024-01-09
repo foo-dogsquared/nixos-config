@@ -529,7 +529,6 @@ rec {
           * gnome-session `.session` file.
           * The gnome-session systemd target drop-in file.
           * The components `.desktop` file.
-          * The components' systemd unit files.
         '';
         readOnly = true;
       };
@@ -645,19 +644,6 @@ rec {
               displayScripts.${display})
             config.display;
 
-          installSystemdUserUnits = lib.mapAttrsToList
-            (n: v:
-              if (v ? overrideStrategy && v.overrideStrategy == "asDropin") then ''
-                (
-                  unit="${v.unit}/${n}"
-                  unit_filename=$(basename "$unit")
-                  install -Dm0644 "$unit" "$out/share/systemd/user/''${unit_filename}.d/session.conf"
-                )
-              '' else ''
-                install -Dm0644 "${v.unit}/${n}" -t "$out/share/systemd/user"
-              '')
-            config.systemdUserUnits;
-
           installDesktops = lib.mapAttrsToList
             (_: p: ''
               install -Dm0644 ${p.desktopPackage}/share/applications/*.desktop -t $out/share/applications
@@ -683,9 +669,6 @@ rec {
             substituteAllInPlace "$GNOME_SESSION_FILE"
 
             ${lib.concatStringsSep "\n" installDesktopSessions}
-
-            ${lib.concatStringsSep "\n" installSystemdUserUnits}
-            mkdir -p "$out/lib/systemd" && ln -sfn "$out/share/systemd/user" "$out/lib/systemd/user"
 
             ${lib.concatStringsSep "\n" installDesktops}
           '';

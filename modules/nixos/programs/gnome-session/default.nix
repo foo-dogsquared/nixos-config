@@ -159,6 +159,11 @@ in
           (_: session:
             session.sessionPackage)
           cfg.sessions;
+
+        sessionSystemdUnits = lib.mapAttrsToList
+          (_: session:
+            session.systemdUserUnits)
+          cfg.sessions;
       in
       {
         # Install all of the desktop session files.
@@ -169,7 +174,8 @@ in
         environment.pathsToLink = [ "/share/gnome-session" ];
 
         # Import those systemd units from gnome-session as well.
-        systemd.packages = [ cfg.package ] ++ sessionPackages;
+        systemd.packages = [ cfg.package ];
+        systemd.user.units = lib.mkMerge sessionSystemdUnits;
       }
     );
 }
