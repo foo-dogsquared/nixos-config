@@ -63,17 +63,24 @@ rustPlatform.buildRustPackage rec {
 
   postPatch = ''
     patchShebangs ./resources/niri-session
+    substituteInPlace ./resources/niri.service \
+      --replace '/usr/bin' "$out/bin"
   '';
 
   postInstall = ''
-    install -Dm0755 resources/niri-session -t $out/libexec
-    makeWrapper $out/libexec/niri-session \
+    install -Dm0755 resources/niri-session -t $out/bin
+
+    # This session script is used as a system component so we may as well fully
+    # wrap this with nixpkgs' dependencies.
+    wrapProgram $out/bin/niri-session \
       --prefix PATH ':' '${lib.makeBinPath [ coreutils systemd dbus ]}'
 
-    install -Dm0644 resources/niri.desktop -t $out/share/applications
+    install -Dm0644 resources/niri.desktop -t $out/share/wayland-sessions
     install -Dm0644 resources/niri-portals.conf -t $out/share/xdg-desktop-portal
-    install -Dm0644 resources/niri{-shutdown.target,.service} -t $out/share/systemd
+    install -Dm0644 resources/niri{-shutdown.target,.service} -t $out/lib/systemd/user
   '';
+
+  passthru.providedSessions = [ "niri" ];
 
   meta = with lib; {
     homepage = "https://github.com/YaLTeR/niri";
