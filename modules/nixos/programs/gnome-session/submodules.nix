@@ -207,6 +207,7 @@ rec {
           The identifier of the component used in generating filenames for its
           `.desktop` files and as part of systemd unit names.
         '';
+        default = "${session.name}.${name}";
         defaultText = "\${session-name}.\${name}";
         readOnly = true;
       };
@@ -237,8 +238,6 @@ rec {
         script = "${config.scriptPackage}/bin/${scriptName}";
       in
       {
-        id = "${session.name}.${name}";
-
         # Make with the default configurations for the built-in-managed
         # components.
         desktopConfig = {
