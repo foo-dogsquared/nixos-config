@@ -98,6 +98,13 @@
     modules = [
       # Well, well, well...
       inputs.nixos-wsl.nixosModules.default
+
+      ({ config, ... }: {
+        nixpkgs.overlays = [
+          # Make the most of it.
+          inputs.neovim-nightly-overlay.overlays.default
+        ];
+      })
     ];
   };
 }
