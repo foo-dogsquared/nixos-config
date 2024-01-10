@@ -6,6 +6,7 @@
 , udev
 , libxkbcommon
 , libinput
+, libglvnd
 , systemd
 , wayland
 , mesa
@@ -37,6 +38,7 @@ rustPlatform.buildRustPackage rec {
   buildInputs = [
     libinput
     libxkbcommon
+    libglvnd
     mesa
     pipewire
     seatd
@@ -51,6 +53,13 @@ rustPlatform.buildRustPackage rec {
       "smithay-0.3.0" = "sha256-+VIKgdonZScAb38QcSatyoYGPSV3Q7lscd3U5jajdbM=";
     };
   };
+
+  RUSTFLAGS = builtins.map (arg: "-C link-arg=${arg}") [
+    "-Wl,--push-state,--no-as-needed"
+    "-lEGL"
+    "-lwayland-client"
+    "-Wl,--pop-state"
+  ];
 
   postPatch = ''
     patchShebangs ./resources/niri-session
