@@ -396,13 +396,13 @@ rec {
       };
 
       display = lib.mkOption {
-        type = with lib.types; listOf (enum [ "wayland" "xorg" ]);
+        type = with lib.types; listOf (enum [ "wayland" "x11" ]);
         description = ''
           A list of display server protocols supported by the desktop
           environment.
         '';
         default = [ "wayland" ];
-        example = [ "wayland" "xorg" ];
+        example = [ "wayland" "x11" ];
       };
 
       description = lib.mkOption {
@@ -630,7 +630,7 @@ rec {
                   ${hasMoreDisplays "Wayland"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
                 )
               '';
-              xorg = ''
+              x11 = ''
                 (
                   DISPLAY_SESSION_FILE="$out/share/xsessions/${name}.desktop"
                   install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
