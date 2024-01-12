@@ -24,21 +24,16 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
     <nixos-generators/format-module.nix>
     ({ config, lib, pkgs, ... }: {
       imports = [
-        (
-          let
-            password = "nixos";
-          in
-          lib.private.mapHomeManagerUser "alice" {
-            inherit password;
-            extraGroups = [
-              "wheel"
-            ];
-            description = "The password is '${password}'";
-            isNormalUser = true;
-            createHome = true;
-            home = "/home/alice";
-          }
-        )
+        (lib.private.mapHomeManagerUser "alice" {
+          password = "";
+          extraGroups = [
+            "wheel"
+          ];
+          description = "There is no password";
+          isNormalUser = true;
+          createHome = true;
+          home = "/home/alice";
+        })
       ];
 
       config = {
@@ -46,6 +41,7 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
           <sops-nix/modules/home-manager/sops.nix>
           ({ config, lib, ... }: {
             _module.args = extraArgs;
+            xdg.userDirs.createDirectories = lib.mkForce true;
 
             nixpkgs.overlays = [
               config'.overlays.default
@@ -54,11 +50,6 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
         ];
 
         _module.args = extraArgs;
-
-        virtualisation.qemu.options = [
-          "-vga virtio"
-          "-display gtk,gl=on"
-        ];
 
         workflows.workflows.${workflow}.enable = true;
 
