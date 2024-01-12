@@ -92,6 +92,8 @@ autocontain -s .+\.zulipchat\.com Chat
 autocontain -s element\.io Chat
 autocontain -s rocket\.chat Chat
 autocontain -s revolt\.chat Chat
+autocontain -s slack\.com Chat
+autocontain -s telegram\.com Chat
 
 " My self-hosted instances and my personal domain.
 autocontain -s .+\.local Self-hosted
@@ -145,6 +147,8 @@ autocontain -s itch\.io Gaming
 autocontain -s nytimes\.com/games Gaming
 autocontain -s merriam-webster\.com/games Gaming
 autocontain -s britannica\.com/games Gaming
+autocontain -s wafflegame\.net Gaming
+autocontain -s duotrigordle\.com Gaming
 
 seturl nytimes\.com/games disable true
 seturl merriam-webster\.com/games disable true
