@@ -75,6 +75,9 @@
     # Add a bunch of pre-compiled indices since mine are always crashing.
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Make a default.nix compatible stuff.
+    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
