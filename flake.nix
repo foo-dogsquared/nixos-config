@@ -77,7 +77,7 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     # Make a default.nix compatible stuff.
-    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
+    flake-compat-fds.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
