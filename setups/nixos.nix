@@ -4,7 +4,7 @@
   for servers and desktops to installers.
 
   The data is then used for the image creation functions found in `flake.nix`.
-  Each of the entry should correspond to one of the hosts in `./hosts/`
+  Each of the entry should correspond to one of the hosts in `./configs/nixos/`
   directory.
 
   Schema:

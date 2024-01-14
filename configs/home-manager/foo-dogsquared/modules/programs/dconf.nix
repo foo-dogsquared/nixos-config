@@ -10,6 +10,7 @@ in
 
   config = lib.mkIf cfg.enable {
     dconf.settings = {
+      # My GNOME Shell and programs configuration.
       "org/gnome/shell" = {
         favorite-apps =
           lib.optional userCfg.programs.browsers.firefox.enable "firefox.desktop"

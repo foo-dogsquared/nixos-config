@@ -320,7 +320,7 @@
 
             hostSharedConfig
             nixSettingsSharedConfig
-            ./hosts/${host}
+            ./configs/nixos/${host}
           ];
 
           config = lib.mkMerge [
@@ -350,7 +350,7 @@
           imports = modules ++ [
             userSharedConfig
             nixSettingsSharedConfig
-            ./users/home-manager/${name}
+            ./configs/home-manager/${name}
           ];
 
           # Don't create the user directories since they are assumed to
@@ -395,8 +395,8 @@
       # include in other flakes for whatever reason may be.
       lib = import ./lib { lib = nixpkgs.lib; };
 
-      # A list of NixOS configurations from the `./hosts` folder. It also has
-      # some sensible default configurations.
+      # A list of NixOS configurations from the `./configs/nixos` folder. It
+      # also has some sensible default configurations.
       nixosConfigurations =
         let
           validImages = lib.filterAttrs

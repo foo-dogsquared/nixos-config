@@ -1,7 +1,7 @@
 /*
   This is project data for deploying home-manager users with this flake. Each
   of the users defined here should correspond to one of the home-manager users
-  at `./users/home-manager/`.
+  at `./configs/home-manager/`.
 
   Schema:
 

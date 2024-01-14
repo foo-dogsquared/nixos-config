@@ -22,7 +22,7 @@ rec {
             home.homeDirectory = homeDirectory;
           }
 
-          (getUser "home-manager" user)
+          (getConfig "home-manager" user)
         ];
       };
 
@@ -32,5 +32,7 @@ rec {
       ];
     });
 
-  getUser = type: user: ../users/${type}/${user};
+  getConfig = type: config: ../configs/${type}/${config};
+
+  getUser = type: user: ../configs/${type}/_users/${user};
 }

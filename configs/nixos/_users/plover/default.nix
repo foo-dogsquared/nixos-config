@@ -3,7 +3,7 @@
 
 let
   user = "plover";
-  homeManagerUser = lib.private.getUser "home-manager" user;
+  homeManagerUser = lib.private.getConfig "home-manager" user;
 in
 {
   users.users.${user} = {
@@ -15,9 +15,9 @@ in
     description = "The go-to user for server systems.";
 
     openssh.authorizedKeys.keyFiles = [
-      ../../home-manager/foo-dogsquared/files/ssh-key.pub
-      ../../home-manager/foo-dogsquared/files/ssh-key-2.pub
-      ../../../hosts/ni/files/ssh-key.pub
+      ../../../home-manager/foo-dogsquared/files/ssh-key.pub
+      ../../../home-manager/foo-dogsquared/files/ssh-key-2.pub
+      ../../ni/files/ssh-key.pub
     ];
   };
 
