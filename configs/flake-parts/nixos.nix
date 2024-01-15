@@ -10,6 +10,8 @@
 }:
 
 let
+  inherit (import ../../lib/extras/flake-helpers.nix { inherit lib inputs; }) mkHost mkImage listImagesWithSystems;
+
   nixosConfigs = import ../../setups/nixos.nix { inherit lib inputs; };
 
   # A function that generates a NixOS module setting up the baseline
@@ -138,9 +140,6 @@ in
     # A list of NixOS configurations from the `./configs/nixos` folder starting
     # from project root. It also has some sensible default configurations.
     nixosConfigurations =
-      let
-        inherit (import ../../lib/extras/flake-helpers.nix { inherit lib inputs; }) mkHost listImagesWithSystems;
-      in
       lib.mapAttrs
         (user: metadata:
           mkHost {
@@ -172,6 +171,39 @@ in
             };
           })
         inputs.self.nixosConfigurations;
+  };
+
+  perSystem = { system, lib, ... }: {
+    # This contains images that are meant to be built and distributed
+    # somewhere else including those NixOS configurations that are built as
+    # an ISO.
+    images =
+      let
+        validImages = lib.filterAttrs
+          (host: metadata:
+             metadata.format != null && (lib.elem system metadata.systems))
+          nixosConfigs;
+      in
+      lib.mapAttrs'
+        (host: metadata:
+          let
+            name = metadata.hostname or host;
+            nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
+          in
+          lib.nameValuePair name (mkImage {
+            inherit (metadata) format;
+            inherit nixpkgs-channel;
+            extraModules = [
+              (hostSpecificModule host metadata)
+
+              # Forcing the host platform set by the host (if there's any).
+              # Ideally, there shouldn't be.
+              ({ lib, ... }: {
+                nixpkgs.hostPlatform = lib.mkForce system;
+              })
+            ];
+          }))
+        validImages;
   };
 
   _module.args = {

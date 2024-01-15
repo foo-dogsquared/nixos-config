@@ -92,6 +92,7 @@
       ];
 
       imports = [
+        ./modules/flake-parts
         ./configs/flake-parts
       ];
     };
