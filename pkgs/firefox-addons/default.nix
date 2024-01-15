@@ -16,10 +16,10 @@
           "https://*/*"
           "notifications"
           "<all_urls>"
-          ];
+        ];
         platforms = platforms.all;
-        };
       };
+    };
     "google-container" = buildFirefoxXpiAddon {
       pname = "google-container";
       version = "1.5.4";
@@ -40,10 +40,10 @@
           "webRequestBlocking"
           "webRequest"
           "storage"
-          ];
+        ];
         platforms = platforms.all;
-        };
       };
+    };
     "regretsreporter" = buildFirefoxXpiAddon {
       pname = "regretsreporter";
       version = "2.1.2";
@@ -61,10 +61,10 @@
           "storage"
           "alarms"
           "webRequest"
-          ];
+        ];
         platforms = platforms.all;
-        };
       };
+    };
     "simple-translate" = buildFirefoxXpiAddon {
       pname = "simple-translate";
       version = "2.8.2";
@@ -82,10 +82,10 @@
           "contextMenus"
           "http://*/*"
           "https://*/*"
-          ];
+        ];
         platforms = platforms.all;
-        };
       };
+    };
     "tineye-reverse-image-search" = buildFirefoxXpiAddon {
       pname = "tineye-reverse-image-search";
       version = "2.0.4";
@@ -99,8 +99,8 @@
         license = licenses.mit;
         mozPermissions = [ "contextMenus" "storage" ];
         platforms = platforms.all;
-        };
       };
+    };
     "updateswh" = buildFirefoxXpiAddon {
       pname = "updateswh";
       version = "0.6.8";
@@ -113,8 +113,8 @@
         license = licenses.mit;
         mozPermissions = [ "<all_urls>" "storage" "tabs" "activeTab" ];
         platforms = platforms.all;
-        };
       };
+    };
     "zhongwen" = buildFirefoxXpiAddon {
       pname = "zhongwen";
       version = "5.15";
@@ -128,6 +128,6 @@
         license = licenses.gpl2;
         mozPermissions = [ "contextMenus" "tabs" "<all_urls>" ];
         platforms = platforms.all;
-        };
       };
-    }
+    };
+  }
