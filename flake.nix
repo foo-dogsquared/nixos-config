@@ -83,7 +83,7 @@
   outputs = inputs@{ self, nixpkgs, ... }:
     let
       # A set of image-related utilities for the flake outputs.
-      inherit (import ./lib/extras/images.nix { inherit lib inputs; }) mkHost mkHome mkImage listImagesWithSystems;
+      inherit (import ./lib/extras/flake-helpers.nix { inherit lib inputs; }) mkHost mkHome mkImage listImagesWithSystems;
 
       # We're considering this as the variant since we'll export the custom
       # library as `lib` in the output attribute.
