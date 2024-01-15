@@ -14,9 +14,11 @@
       source = ../..;
       target = "/etc/nixos/";
     }];
+
+    squashFsCompression = "zstd -Xcompression-level 8";
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_6_1;
+  boot.kernelPackages = pkgs.linuxPackages_6_6;
 
   # Assume that this will be used for remote installations.
   services.openssh = {
@@ -24,6 +26,5 @@
     allowSFTP = true;
   };
 
-  documentation.nixos.options.splitBuild = false;
   system.stateVersion = "23.11";
 }
