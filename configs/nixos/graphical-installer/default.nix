@@ -16,7 +16,11 @@
       source = ../..;
       target = "/etc/nixos";
     }];
+
+    squashFsCompression = "zstd -Xcompression-level 10";
   };
+
+  boot.kernelPackages = pkgs.linuxPackages_6_6;
 
   # Use my desktop environment configuration without the apps just to make the
   # closure size smaller.
@@ -38,4 +42,6 @@
       user = "nixos";
     };
   };
+
+  system.stateVersion = "23.11";
 }
