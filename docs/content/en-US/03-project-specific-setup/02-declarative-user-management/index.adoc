@@ -4,10 +4,9 @@ title: Declarative user management
 = Declarative user management
 
 Similarly to xref:../01-declarative-host-management/index.adoc[Declarative host management], this project also provides a way to declare home-manager users.
-The `./setups/home-manager.nix` sits in the project root expecting certain data.
-Similar to the declarative NixOS setup, it expects an attribute set of users with each representing one of the users from github:{github-repo}[`./users/home-manager/`, path=./users/home-manager/, rev=master].
-These are then included as part of `homeConfigurations` for easier installation with the standalone home-manager tool.
-Of which they are then included as part of deploy nodes for deploy-rs (also for easier deployment).
+This is also presented as a custom flake-parts module as well, ready to be configured at `setups.home-manager` namespace of the flake-parts config.
+
+This module is a bit simpler that it only makes configured users to be added to `homeConfigurations` and `deploy.nodes`.
 
 Here's an example user with complete schema.
 
@@ -15,10 +14,15 @@ Here's an example user with complete schema.
 [source, nix]
 ----
 {
-  foo-dogsquared = {
-    systems = [ "x86_64-linux" ];
-    nixpkgs-channel = "nixos-stable";
-    home-manager-channel = "home-manager-23.05";
+  setups.home-manager.sharedModules = [
+    inputs.your-mom.homeModules.default
+  ];
+
+  # Here is the meat, what you're likely going to do.
+  setups.home-manager.configs.foo-dogsquared = {
+    systems = [ "x86_64-linux" "aarch64-linux" ];
+    nixpkgs-branch = "nixos-stable";
+    home-manager-branch = "home-manager-23.05";
     home-directory = "/home/foo-dogsquared";
     username = "foodogsquared";
     modules = [
@@ -26,37 +30,16 @@ Here's an example user with complete schema.
         services.foo.enable = true;
       })
     ];
+    overlays = [
+      inputs.neovim-nightly-overlay.overlays.default
+    ];
     deploy = {
       hostname = "local.foodogsquared.one";
-      ssh-user = "admin";
-      profile = "foodogsquared";
-      fast-connection = true;
-      auto-rollback = true;
-      magic-rollback = true;
-      remote-build = true;
+      fastConnection = true;
+      autoRollback = true;
+      magicRollback = true;
+      remoteBuild = true;
     };
   };
 }
 ----
-
-- `systems` contains a list of platforms of the home-manager user.
-This is mainly used to indicate the platform used for the nixpkgs repository.
-
-- `nixpkgs-channel` indicates the branch of the nixpkgs to be used.
-By default, this uses the `nixpkgs` which follows the `nixos-unstable` branch.
-
-- `home-manager-channel` contains the home-manager channel to be used.
-The value should be one of the home-manager channel that is imported into this flake.
-By default, it sets the home-manager channel at `home-manager` which is pointed at the unstable channel.
-
-- `home-directory` is the associated home directory of the home-manager.
-It is set for `config.home.directory` at the home-manager configuration.
-By default, it will be set at `/home/$USERNAME`.
-
-- `username` is the username of the home-manager user to be used for `config.home.username` at the home-manager configuration.
-If unset, it will use the table key.
-In the above example, the unset value would be `foo-dogsquared`.
-
-- `modules` is an extra list of modules to be imported with the configuration.
-
-- `deploy` is pretty similar to the previous configuration setting that it sets certain options for deploy-rs.

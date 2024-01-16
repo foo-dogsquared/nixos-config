@@ -15,21 +15,5 @@ The entry point is found at github:{github-repo}[`./default.nix`, path=./default
 include::../../../../../default.nix[]
 ----
 
-However, you have to keep some limitations and guidelines in mind.
-
-* It exports an attribute based from the github:nix-community/NUR/[NUR template].
-+
---
-Several exports includes...
-
-* My custom library at `lib`.
-* Custom NixOS modules at `modules`.
-* Custom home-manager modules at `hmModules`.
-* An overlay of my custom packages at `overlays.foo-dogsquared-pkgs`.
-* My packages as the rest of the top-level attributes from the attrset.
---
-
-* Keep in mind it doesn't export the NixOS hosts and home-manager user configurations.
-It would be pointless as it is duplicating effort plus **I really like managing my NixOS config more with the flakes way** compared to setting up channels.
-It has a lot of advantages such as the ease of provisioning and updating your setups along with its dependencies, enforcing certain values in a certain attribute that can be seen in the revised Nix CLI, and nicer interface overall.
-While possible with channels, this is just better experience overall and I have no interest in maintaining setups in both ways.
+As you can tell, it is made with github:edolstra/flake-compat[opts=repo].
+This is to support both use cases easily at the expense of making the traditional method a bit more tedious such as the Nix project being completely locked in with its dependencies (thus you can't configure it with your own nixpkgs version). footnote:[Then again, the way it used to be before flakes already has a host of problems. This is the least of them.]

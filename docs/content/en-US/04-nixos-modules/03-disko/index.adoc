@@ -13,7 +13,7 @@ Here's an example configuration for my desktop workstation.
 .`./hosts/ni/disko.nix`
 [source, nix]
 ----
-include::../../../../../hosts/ni/disko.nix[]
+include::../../../../../configs/nixos/ni/disko.nix[]
 ----
 
 Take note the disko NixOS module already handles NixOS filesystem configuration (i.e., `fileSystems.<name>`) so if you have already have an existing hardware configuration, you have to delete it to prevent conflicting fstab configuration.

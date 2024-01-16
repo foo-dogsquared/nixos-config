@@ -4,87 +4,62 @@ title: Declarative host management
 = Declarative host management
 
 This project uses a custom setup for declarative host management.
-Specifically, it is done with a simple file at github:{github-repo}[`./setups/nixos.nix`, path=./setups/nixos.nix, rev=master] where it expects an attribute set of the hosts' metadata.
-Each host in the set represents one of the hosts at github:{github-repo}[`./hosts/`, path=./hosts/, rev=master].
+It is a custom github:hercules-ci/flake-parts[opts=repo] module that allows you to easily initialize NixOS systems of multiple platforms (with multiple images output) while making it purely-built as much as possible.
 
-Each of declared hosts are then exported as part of the `images` flake output attribute where each is a derivation for building them as an image output.
+This custom flake-parts modules integrates the following projects:
+
+* It automatically adds github:serokell/deploy-rs[opts=repo] nodes ready to be deployed with `deploy` CLI tool.
+* Mandatory inclusion of github:nix-community/home-manager[opts=repo].
+* Image output generation made easy with github:nix-community/nixos-generators[opts=repo].
+
+Each of the declared hosts are then exported either as part of the `images` or `nixosConfigurations` (or both) flake output attribute.
+The `images` flake output attribute contains a per-system set of packages of the NixOS systems as the indicated package format.
 For example, you can build my personalized NixOS installer ISO with the following command.
 
 [source, shell, subs=attributes]
 ----
-nix build {canonical-flake-url}#images.x86_64-linux.bootstrap
+nix build {canonical-flake-url}#images.x86_64-linux.bootstrap-iso
 ----
 
-[NOTE]
-====
-Not every image listed here is not meant to be built as a certain output but rather deployed somewhere else.
-We'll see to specify it in the following section.
-====
+This is an example of a declarative NixOS setup.
+The following configuration should have the following effects in the flake output:
 
-A host metadata has a certain schema which the following example is a complete version of it.
-The data is then used for certain functions in the flake definition file (i.e., `flake.nix`).
+* Two additional NixOS configurations to be deployed at `nixosConfigurations.plover-{x86_64-linux,aarch64-linux}`.
+By default, declarative NixOS setups are not added automatically to `nixosConfigurations` output unless we have `configs.<config>.formats = null;` but we did configure `configs.<config>.deploy` so that makes it even.
+
+* Four additional derivations added in `images` flake output (since there's 2 formats and 2 platforms) at `images.{x86_64-linux,aarch64-linux}.plover-{do,gce}`.
 
 [#lst:images-metadata-example]
 [source, nix]
 ----
 {
-  plover = {
+  setups.nixos.configs.plover = {
     systems = [ "x86_64-linux" "aarch64-linux" ];
-    format = null;
+    formats = [ "do" "gce" ];
     domain = "foodogsquared.one";
-    nixpkgs-channel = "nixos-unstable-small";
-    home-manager-channel = "home-manager-unstable";
+    nixpkgs-branch = "nixos-unstable-small";
+    home-manager-branch = "home-manager-unstable";
     modules = [
       ({ config, lib, ... }: {
         services.foo.enable = true;
       })
     ];
+    overlays = [
+      inputs.neovim-nightly-overlay.overlays.default
+    ];
     deploy = {
-      hostname = "plover.foodogsquared.one";
-      ssh-user = "admin";
-      fast-connection = true;
-      auto-rollback = true;
-      magic-rollback = true;
-      remote-build = true;
+      fastConnection = true;
+      autoRollback = true;
+      magicRollback = true;
+      remoteBuild = true;
+      profiles = os: {
+        system = {
+          sshUser = "root";
+          user = "admin";
+          path = inputs.deploy.lib.${os.system}.activate.nixos os.config;
+        };
+      };
     };
   };
 }
-----
-
-For a complete reference, here are the expected attributes.
-
-- `systems` contains a list of platforms of the host system.
-This is mainly used to indicate the platform used for the nixpkgs repository.
-
-- `format` is the image output format for the host.
-It expects an accepted value from github:nix-community/nixos-generators[opts=repo] project.
-To include a host as part of `nixosConfigurations`, you'll have to set this as `null`.
-
-- `hostname` is the canonical hostname for the host.
-If unset, the hostname is the name of the table key.
-In the <<lst:images-metadata-example, previous example>>, if `plover.hostname` is unset, the value would be `plover` instead of `ploverrific`.
-
-- `domain` is the domain used for networking configuration.
-It is set for `networking.domain` in NixOS configuration.
-
-- `nixpkgs-channel` is the nixpkgs channel to be used for the host.
-The value could be any one of the nixpkgs flake inputs imported into this flake.
-By default, it uses `nixpkgs` flake input which points to the `nixos-unstable` channel.
-
-- `home-manager-channel` is the home-manager channel to be used for the host.
-The value could be any one of the home-manager flake inputs imported into this flake.
-By default, it uses `home-manager` flake input which follows the `home-manager-unstable` channel.
-
-- `modules` is an extra list of modules to be imported with the configuration.
-
-- `deploy` is a table containing arguments from github:serokell/deploy-rs[opts=repo].
-Only a few arguments are accepted (i.e., `hostname`, `fast-connection`, `remote-build`, `magic-rollback`, and `auto-rollback`).
-Once this attribute is present, it will be included as part of `nixosConfigurations` flake output no matter what `format` is given.
-
-Those imported NixOS configurations are also exported as part of the deploy nodes for deploy-rs with the `nixos` prefix.
-For example, here's the command to deploy my Plover server.
-
-[source, shell, subs=attributes]
-----
-deploy {canonical-flake-url}#nixos-plover
 ----

@@ -56,9 +56,7 @@ In that case, you can simply plop them into your list of imports for your NixOS 
 ----
 {
   imports = [
-    inputs.foo-dogsquared-nixos-config.nixosModules.programs
-    inputs.foo-dogsquared-nixos-config.nixosModules.services
-    inputs.foo-dogsquared-nixos-config.nixosModules.workflows
+    inputs.foo-dogsquared-nixos-config.nixosModules.default
   ];
 
   # Use my GNOME desktop configuration for some reason.
@@ -87,22 +85,20 @@ nix-channel --update
 
 [source, nix]
 ----
-import <foo-dogsquared-nixos-config> { inherit pkgs; }
+import <foo-dogsquared-nixos-config> { }
 ----
 
-You can see github:{github-repo}[`./default.nix`, path=default.nix, rev=master] to see more details but there are general guidelines to the attributes that is contained in this file which is outlined in xref:../02-lay-of-the-land/04-channels-support/index.adoc[Channels support] section.
+This is made with flake-compat flake which can have conflicts with the traditional method of using it.
 
 Here's an example snippet in a NixOS config making use of my configuration without flakes:
 
 [source, nix]
 ----
 let
-  foo-dogsquared-nixos-config = import <foo-dogsquared-nixos-config> { inherit pkgs; };
+  foo-dogsquared-nixos-config = import <foo-dogsquared-nixos-config> { };
 in {
   imports = [
-    foo-dogsquared-nixos-config.modules.programs
-    foo-dogsquared-nixos-config.modules.services
-    foo-dogsquared-nixos-config.modules.workflows
+    foo-dogsquared-nixos-config.nixosModules.default
   ];
 
   # Still using my GNOME desktop configuration for some reason.
@@ -122,15 +118,13 @@ Here's a snippet of using it as part of a NixOS configuration.
 [source, nix]
 ----
 let
-  foo-dogsquared-nixos-config = import (fetchTarball "{canonical-flake-url-tarball-specific}") { inherit pkgs; };
+  foo-dogsquared-nixos-config = import (fetchTarball "{canonical-flake-url-tarball-specific}") { };
 in {
   imports = [
-    foo-dogsquared-nixos-config.modules.programs
-    foo-dogsquared-nixos-config.modules.services
-    foo-dogsquared-nixos-config.modules.workflows
+    foo-dogsquared-nixos-config.nixosModules.default
   ];
 
-  # Still using my GNOME desktop configuration for some reason.
+  # GNOME4LIFE!!!
   workflows.workflows.a-happy-gnome.enable = true;
 }
 ----

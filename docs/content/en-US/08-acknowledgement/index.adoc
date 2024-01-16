@@ -20,4 +20,4 @@ I may have to use this at some point. footnote:[Unfortunately, digga is consider
 
 * github:hlissner/dotfiles/[hlissner's dotfiles], the original inspiration for this functional abomination of a configuration.
 The very reason why I'm using NixOS after seeing their configuration and what it can be setup with one command.
-Very nice.
+Anyways, screw you for bringing me into this [.line-through]#hell# rabbit hole.
