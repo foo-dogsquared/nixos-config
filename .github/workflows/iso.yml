@@ -18,7 +18,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v9
       - name: Build ISO
         run: |
-          nix build .#images.${{ matrix.arch }}.bootstrap --impure --out-link build-iso-result
+          nix build .#images.${{ matrix.arch }}.bootstrap-install-iso --impure --out-link build-iso-result
         env:
           NIXPKGS_ALLOW_BROKEN: "1"
           NIXPKGS_ALLOW_UNFREE: "1"
