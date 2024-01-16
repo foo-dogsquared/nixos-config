@@ -356,20 +356,27 @@ in
         let
           validImages = lib.filterAttrs
             (host: metadata:
-              metadata.formats != null && (lib.elem system metadata.systems))
+               metadata.formats != null && (lib.elem system metadata.systems))
             cfg.configs;
-        in
-        lib.mapAttrs'
-          (host: metadata:
+
+          generateImages = name: metadata:
             let
-              name = metadata.hostname or host;
-              nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
+              images =
+                builtins.map
+                  (format:
+                    lib.nameValuePair
+                      "${name}-${format}"
+                      (mkImage {
+                        inherit (metadata) nixpkgs-branch;
+                        inherit system format;
+                        extraModules = cfg.sharedModules ++ metadata.modules;
+                      }))
+                  metadata.formats;
             in
-            lib.nameValuePair name (mkImage {
-              inherit (metadata) format;
-              inherit nixpkgs-channel system;
-              extraModules = cfg.sharedModules ++ metadata.modules;
-            }))
+              lib.listToAttrs images;
+        in
+        lib.concatMapAttrs
+          (name: metadata: generateImages name metadata)
           validImages;
     };
   };
