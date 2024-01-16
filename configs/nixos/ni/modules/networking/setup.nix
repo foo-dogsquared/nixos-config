@@ -115,10 +115,16 @@ in
       networking.usePredictableInterfaceNames = true;
 
       # Enable and configure NetworkManager.
-      networking.networkmanager = {
-        enable = true;
-        dhcp = lib.mkIf (config.networking.dhcpcd.enable) "dhcpcd";
-      };
+      networking.networkmanager = lib.mkMerge [
+        {
+          enable = true;
+          dhcp = lib.mkIf (config.networking.dhcpcd.enable) "dhcpcd";
+        }
+
+        (lib.mkIf config.services.resolved.enable {
+          dns = "systemd-resolved";
+        })
+      ];
 
       # We'll configure individual network interfaces to use DHCP since it can
       # fail wait-online-interface.service.
