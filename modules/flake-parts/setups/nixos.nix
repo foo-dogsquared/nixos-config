@@ -59,15 +59,19 @@ let
       profiles = lib.mkOption {
         type = with lib.types; functionTo (attrsOf anything);
         default = os: {
-          sshUser = "root";
-          user = "admin";
-          path = inputs.deploy.lib.${os.system}.activate.nixos os.config;
+          system = {
+            sshUser = "root";
+            user = "admin";
+            path = inputs.deploy.lib.${os.system}.activate.nixos os.config;
+          };
         };
         defaultText = lib.literalExpression ''
           os: {
-            sshUser = "root";
-            user = "admin";
-            path = inputs.deploy-rs.lib.''${os.system}.activate.nixos os.config;
+            system = {
+              sshUser = "root";
+              user = "admin";
+              path = <deploy-rs>.lib.''${os.system}.activate.nixos os.config;
+            };
           }
         '';
         description = ''
@@ -178,7 +182,10 @@ let
         type = with lib.types; nullOr (submodule deployNodeType);
         default = null;
         description = ''
-          deploy-rs node settings for the resulting NixOS configuration.
+          deploy-rs node settings for the resulting NixOS configuration. When
+          this attribute is given with a non-null value, it will be included in
+          `nixosConfigurations` even if
+          {option}`setups.nixos.configs.<config>.formats` is set.
         '';
         example = {
           hostname = "work1.example.com";
@@ -327,7 +334,19 @@ in
             (name: configs:
               lib.mapAttrs'
                 (system: config: lib.nameValuePair "nixos-${name}-${system}"
-                  (cfg.configs.${name}.deploy.profiles { inherit name config system; }))
+                  (
+                    let
+                      deployConfig = cfg.configs.${name}.deploy;
+                      deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
+                    in
+                      deployConfig'
+                      // {
+                        profiles =
+                          cfg.configs.${name}.deploy.profiles {
+                            inherit name config system;
+                          };
+                      }
+                  ))
                 configs)
             validConfigs;
       };

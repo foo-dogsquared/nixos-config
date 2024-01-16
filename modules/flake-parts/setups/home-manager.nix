@@ -19,7 +19,7 @@ let
       modules = extraModules;
     };
 
-  deploySettingsType = { config, lib, ... }: {
+  deploySettingsType = { config, lib, username, ... }: {
     freeformType = with lib.types; attrsOf anything;
 
     options = {
@@ -30,26 +30,30 @@ let
       profiles = lib.mkOption {
         type = with lib.types; functionTo (attrsOf anything);
         default = os: {
-          sshUser = "root";
-          user = "admin";
-          path = inputs.deploy-rs.lib.${os.system}.activate.nixos os.config;
+          home = {
+            sshUser = username;
+            user = username;
+            path = inputs.deploy.lib.${os.system}.activate.home-manager os.config;
+          };
         };
         defaultText = lib.literalExpression ''
           os: {
-            sshUser = "root";
-            user = "admin";
-            path = inputs.deploy-rs.lib.''${os.system}.activate.nixos os.config;
+            home = {
+              sshUser = "$USERNAME";
+              user = "$USERNAME";
+              path = <deploy-rs>.lib.''${os.system}.activate.home-manager os.config;
+            };
           }
         '';
         description = ''
           A set of profiles for the resulting deploy node.
 
-          Since each config can result in more than one NixOS system, it has to
-          be a function where the passed argument is an attribute set with the
-          following values:
+          Since each config can result in more than one home-manager
+          environment, it has to be a function where the passed argument is an
+          attribute set with the following values:
 
           * `name` is the attribute name from `configs`.
-          * `config` is the NixOS configuration itself.
+          * `config` is the home-manager configuration itself.
           * `system` is a string indicating the platform of the NixOS system.
 
           If unset, it will create a deploy-rs node profile called `home`
@@ -129,10 +133,16 @@ let
       };
 
       deploy = lib.mkOption {
-        type = with lib.types; nullOr (submodule deploySettingsType);
+        type = with lib.types; nullOr (submoduleWith {
+          specialArgs = {
+            username = name;
+          };
+          modules = [ deploySettingsType ];
+        });
         default = null;
         description = ''
-          deploy-rs settings to be passed onto the home-manager configuration node.
+          deploy-rs settings to be passed onto the home-manager configuration
+          node.
         '';
       };
     };
@@ -218,10 +228,7 @@ in
               lib.listToAttrs
                 (builtins.map
                   (system:
-                    let
-                      name = "${username}-${system}";
-                    in
-                    lib.nameValuePair name (mkHome {
+                    lib.nameValuePair system (mkHome {
                       inherit (metadata) nixpkgs-branch home-manager-branch;
                       inherit system;
                       extraModules =
@@ -257,7 +264,20 @@ in
             (name: configs:
               lib.mapAttrs'
                 (system: config: lib.nameValuePair "home-manager-${name}-${system}"
-                  (cfg.configs.${name}.deploy.profiles { inherit name config system; })))
+                  (
+                    let
+                      deployConfig = cfg.configs.${name}.deploy;
+                      deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
+                    in
+                      deployConfig'
+                      // {
+                        profiles =
+                          cfg.configs.${name}.deploy.profiles {
+                            inherit name config system;
+                          };
+                      }
+                  ))
+                  configs)
             validConfigs;
       };
   };
