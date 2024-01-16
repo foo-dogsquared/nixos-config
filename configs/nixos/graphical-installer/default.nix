@@ -17,7 +17,7 @@
       target = "/etc/nixos";
     }];
 
-    squashFsCompression = "zstd -Xcompression-level 10";
+    squashfsCompression = "zstd -Xcompression-level 10";
   };
 
   boot.kernelPackages = pkgs.linuxPackages_6_6;
