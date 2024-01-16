@@ -9,9 +9,9 @@ let
   cfg = config.setups.nixos;
 
   # A thin wrapper around the NixOS configuration function.
-  mkHost = { extraModules ? [ ], nixpkgs-branch ? "nixpkgs", system }:
+  mkHost = { extraModules ? [ ], nixpkgsBranch ? "nixpkgs", system }:
     let
-      nixpkgs = inputs.${nixpkgs-branch};
+      nixpkgs = inputs.${nixpkgsBranch};
 
       # Just to be sure, we'll use everything with the given nixpkgs' stdlib.
       lib' = nixpkgs.lib.extend (import ../../../lib/extras/extend-lib.nix);
@@ -37,12 +37,12 @@ let
     };
 
   # A very very thin wrapper around `mkHost` to build with the given format.
-  mkImage = { system, nixpkgs-branch ? "nixpkgs", extraModules ? [ ], format ? "iso" }:
+  mkImage = { system, nixpkgsBranch ? "nixpkgs", extraModules ? [ ], format ? "iso" }:
     let
       extraModules' =
         extraModules ++ [ inputs.nixos-generators.nixosModules.${format} ];
       image = mkHost {
-        inherit nixpkgs-branch system;
+        inherit nixpkgsBranch system;
         extraModules = extraModules';
       };
     in
@@ -152,7 +152,7 @@ let
         description = "The domain of the NixOS system.";
       };
 
-      nixpkgs-branch = lib.mkOption {
+      nixpkgsBranch = lib.mkOption {
         type = lib.types.str;
         default = "nixpkgs";
         description = ''
@@ -168,7 +168,7 @@ let
         example = "nixos-unstable-small";
       };
 
-      home-manager-branch = lib.mkOption {
+      homeManagerBranch = lib.mkOption {
         type = lib.types.str;
         default = "home-manager";
         example = "home-manager-stable";
@@ -199,7 +199,7 @@ let
 
     config = {
       modules = [
-        inputs.${config.home-manager-branch}.nixosModules.home-manager
+        inputs.${config.homeManagerBranch}.nixosModules.home-manager
         ../../../configs/nixos/${name}
 
         {
@@ -266,7 +266,7 @@ in
             systems = [ "x86_64-linux" "aarch64-linux" ];
             domain = "work.example.com";
             formats = [ "do" "linode" ];
-            nixpkgs-branch = "nixos-unstable-small";
+            nixpkgsBranch = "nixos-unstable-small";
             deploy = {
             };
           };
@@ -302,7 +302,7 @@ in
                 (builtins.map
                   (system:
                     lib.nameValuePair system (mkHost {
-                      nixpkgs-branch = metadata.nixpkgs-branch;
+                      nixpkgsBranch = metadata.nixpkgsBranch;
                       extraModules = cfg.sharedModules ++ metadata.modules;
                       inherit system;
                     })
@@ -367,7 +367,7 @@ in
                     lib.nameValuePair
                       "${name}-${format}"
                       (mkImage {
-                        inherit (metadata) nixpkgs-branch;
+                        inherit (metadata) nixpkgsBranch;
                         inherit system format;
                         extraModules = cfg.sharedModules ++ metadata.modules;
                       }))

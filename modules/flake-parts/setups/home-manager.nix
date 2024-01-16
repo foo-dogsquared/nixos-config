@@ -5,11 +5,11 @@ let
   cfg = config.setups.home-manager;
 
   # A thin wrapper around the home-manager configuration function.
-  mkHome = { system, nixpkgs-branch ? "nixpkgs", home-manager-branch ? "home-manager", extraModules ? [ ] }:
+  mkHome = { system, nixpkgsBranch ? "nixpkgs", homeManagerBranch ? "home-manager", extraModules ? [ ] }:
     let
-      pkgs = inputs.${nixpkgs-branch}.legacyPackages.${system};
+      pkgs = inputs.${nixpkgsBranch}.legacyPackages.${system};
     in
-    inputs.${home-manager-branch}.lib.homeManagerConfiguration {
+    inputs.${homeManagerBranch}.lib.homeManagerConfiguration {
       extraSpecialArgs = {
         foodogsquaredModulesPath = builtins.toString ../../home-manager;
       };
@@ -97,7 +97,7 @@ let
         '';
       };
 
-      nixpkgs-branch = lib.mkOption {
+      nixpkgsBranch = lib.mkOption {
         type = lib.types.str;
         default = "nixpkgs";
         example = "nixos-unstable-small";
@@ -113,7 +113,7 @@ let
         '';
       };
 
-      home-manager-branch = lib.mkOption {
+      homeManagerBranch = lib.mkOption {
         type = lib.types.str;
         default = "home-manager";
         example = "home-manager-stable";
@@ -123,7 +123,7 @@ let
         '';
       };
 
-      home-directory = lib.mkOption {
+      homeDirectory = lib.mkOption {
         type = lib.types.path;
         default = "/home/${name}";
         example = "/var/home/public-user";
@@ -154,7 +154,7 @@ let
         {
           nixpkgs.overlays = config.overlays;
           home.username = lib.mkForce name;
-          home.homeDirectory = lib.mkForce config.home-directory;
+          home.homeDirectory = lib.mkForce config.homeDirectory;
         }
       ];
     };
@@ -229,7 +229,7 @@ in
                 (builtins.map
                   (system:
                     lib.nameValuePair system (mkHome {
-                      inherit (metadata) nixpkgs-branch home-manager-branch;
+                      inherit (metadata) nixpkgsBranch homeManagerBranch;
                       inherit system;
                       extraModules =
                         cfg.sharedModules
