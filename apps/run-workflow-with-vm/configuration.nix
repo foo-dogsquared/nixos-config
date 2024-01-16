@@ -5,7 +5,7 @@
 
 let
   pkgs = import <nixpkgs> { };
-  config' = import <config>;
+  config' = import <config> { };
   lib = pkgs.lib.extend (import <config/lib/extras/extend-lib.nix>);
 
   modules = import <config/modules/nixos> { inherit lib; isInternal = true; };
