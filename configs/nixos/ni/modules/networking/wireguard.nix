@@ -39,6 +39,23 @@ in
     }
 
     (lib.mkIf (networkSetup == "networkmanager") {
+      networking.networkmanager.ensureProfiles.profiles = {
+        personal-vpn = {
+          connection = {
+            id = "Plover VPN";
+            type = "wireguard";
+            interface-name = "wireguard0";
+
+            autoconnect = false;
+            dns-over-tls = "opportunistic";
+          };
+          wireguard = {
+            peer-routes = true;
+            listen-port = wireguardPort;
+          };
+        };
+      };
+
       networking.wg-quick.interfaces.wireguard0 = {
         privateKeyFile = config.sops.secrets."wireguard/private-key".path;
         listenPort = wireguardPort;
