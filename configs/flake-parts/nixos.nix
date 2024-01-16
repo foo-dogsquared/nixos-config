@@ -1,52 +1,13 @@
 { inputs
 , lib
 
-, defaultSystem
 , defaultExtraArgs
 , defaultNixConf
-, defaultHomeManagerConfig
 
 , ...
 }:
 
 let
-  inherit (import ../../lib/extras/flake-helpers.nix { inherit lib inputs; }) mkHost mkImage listImagesWithSystems;
-
-  nixosConfigs = import ../../setups/nixos.nix { inherit lib inputs; };
-
-  # A function that generates a NixOS module setting up the baseline
-  # configuration for this project (or at least for this subset of NixOS
-  # configurations).
-  hostSpecificModule = host: metadata:
-    let
-      modules = metadata.modules or [ ];
-      name = metadata._name or host;
-    in
-    { lib, ... }: {
-      imports = modules ++ [
-        inputs.${metadata.home-manager-channel or "home-manager"}.nixosModules.home-manager
-
-        defaultNixOSConfig
-        defaultNixConf
-        ../nixos/${host}
-      ];
-
-      config = lib.mkMerge [
-        {
-          networking.hostName = lib.mkForce metadata.hostname or name;
-          nixpkgs.hostPlatform = metadata._system or defaultSystem;
-
-          # The global configuration for the home-manager module.
-          home-manager.useUserPackages = lib.mkDefault true;
-          home-manager.useGlobalPkgs = lib.mkDefault true;
-          home-manager.sharedModules = [ defaultHomeManagerConfig ];
-        }
-
-        (lib.mkIf (metadata ? domain)
-          { networking.domain = lib.mkForce metadata.domain; })
-      ];
-    };
-
   # The shared configuration for the entire list of hosts for this cluster.
   # Take note to only set as minimal configuration as possible since we're
   # also using this with the stable version of nixpkgs.
@@ -59,23 +20,6 @@ let
       XDG_DATA_HOME = "$HOME/.local/share";
       XDG_STATE_HOME = "$HOME/.local/state";
     };
-
-    # Only use imports as minimally as possible with the absolute
-    # requirements of a host. On second thought, only on flakes with
-    # optional NixOS modules.
-    imports =
-      # Append with our custom NixOS modules from the modules folder.
-      import ../../modules/nixos { inherit lib; isInternal = true; }
-
-      # Then, make the most with the modules from the flake inputs. Take
-      # note importing some modules such as home-manager are as part of the
-      # declarative host config so be sure to check out
-      # `hostSpecificModule` function as well as the declarative host setup.
-      ++ [
-        inputs.nix-index-database.nixosModules.nix-index
-        inputs.sops-nix.nixosModules.sops
-        inputs.disko.nixosModules.disko
-      ];
 
     _module.args = defaultExtraArgs;
 
@@ -133,80 +77,100 @@ let
   };
 in
 {
+  setups.nixos = {
+    configs = {
+      # The main desktop.
+      ni = {
+        systems = [ "x86_64-linux" ];
+        formats = null;
+        overlays = [
+          # Neovim nightly!
+          inputs.neovim-nightly-overlay.overlays.default
+
+          # Emacs unstable version!
+          inputs.emacs-overlay.overlays.default
+
+          # Helix master!
+          inputs.helix-editor.overlays.default
+
+          # Access to NUR.
+          inputs.nur.overlay
+        ];
+        modules = [
+          inputs.nur.nixosModules.nur
+        ];
+      };
+
+      # A remote server.
+      plover = {
+        systems = [ "x86_64-linux" ];
+        formats = null;
+        domain = "foodogsquared.one";
+        deploy = {
+          hostname = "plover.foodogsquared.one";
+          auto-rollback = true;
+          magic-rollback = true;
+        };
+      };
+
+      # TODO: Remove extra newlines that are here for whatever reason.
+      #{{{
+      void = {
+        systems = [ "x86_64-linux" ];
+        formats = [ "vm" ];
+      };
+      #}}}
+
+      # The barely customized non-graphical installer.
+      bootstrap = {
+        systems = [ "aarch64-linux" "x86_64-linux" ];
+        formats = [ "install-iso" ];
+        nixpkgs-branch = "nixos-unstable-small";
+      };
+
+      # The barely customized graphical installer.
+      graphical-installer = {
+        systems = [ "aarch64-linux" "x86_64-linux" ];
+        formats = [ "install-iso" ];
+      };
+
+      # The WSL system (that is yet to be used).
+      winnowing = {
+        systems = [ "x86_64-linux" ];
+        formats = null;
+        overlays = [
+          inputs.neovim-nightly-overlay.overlays.default
+        ];
+        modules = [
+          # Well, well, well...
+          inputs.nixos-wsl.nixosModules.default
+        ];
+      };
+    };
+
+    # Only use imports as minimally as possible with the absolute
+    # requirements of a host. On second thought, only on flakes with
+    # optional NixOS modules.
+    sharedModules =
+      # Append with our custom NixOS modules from the modules folder.
+      import ../../modules/nixos { inherit lib; isInternal = true; }
+
+      # Then, make the most with the modules from the flake inputs. Take
+      # note importing some modules such as home-manager are as part of the
+      # declarative host config so be sure to check out
+      # `hostSpecificModule` function as well as the declarative host setup.
+      ++ [
+        inputs.nix-index-database.nixosModules.nix-index
+        inputs.sops-nix.nixosModules.sops
+        inputs.disko.nixosModules.disko
+
+        defaultNixConf
+        defaultNixOSConfig
+      ];
+  };
+
   flake = {
     # Listing my public NixOS modules if anyone cares.
     nixosModules.default = import ../../modules/nixos { inherit lib; };
-
-    # A list of NixOS configurations from the `./configs/nixos` folder starting
-    # from project root. It also has some sensible default configurations.
-    nixosConfigurations =
-      lib.mapAttrs
-        (user: metadata:
-          mkHost {
-            nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-            extraModules = [ (hostSpecificModule user metadata) ];
-          })
-        (listImagesWithSystems nixosConfigs);
-
-    # Deploy them server configs like a lazy bum-bum.
-    #
-    # Anyways, don't forget to flush out your shell history regularly or make
-    # it ignored which is a more ergonomic option.
-    deploy.nodes =
-      lib.mapAttrs'
-        (name: value:
-          let
-            metadata = nixosConfigs.${name};
-          in
-          lib.nameValuePair "nixos-${name}" {
-            hostname = metadata.deploy.hostname or name;
-            autoRollback = metadata.deploy.auto-rollback or true;
-            magicRollback = metadata.deploy.magic-rollback or true;
-            fastConnection = metadata.deploy.fast-connection or true;
-            remoteBuild = metadata.deploy.remote-build or false;
-            profiles.system = {
-              sshUser = metadata.deploy.ssh-user or "admin";
-              user = "root";
-              path = inputs.deploy.lib.${metadata.system or defaultSystem}.activate.nixos value;
-            };
-          })
-        inputs.self.nixosConfigurations;
-  };
-
-  perSystem = { system, lib, ... }: {
-    # This contains images that are meant to be built and distributed
-    # somewhere else including those NixOS configurations that are built as
-    # an ISO.
-    images =
-      let
-        validImages = lib.filterAttrs
-          (host: metadata:
-             metadata.format != null && (lib.elem system metadata.systems))
-          nixosConfigs;
-      in
-      lib.mapAttrs'
-        (host: metadata:
-          let
-            name = metadata.hostname or host;
-            nixpkgs-channel = metadata.nixpkgs-channel or "nixpkgs";
-          in
-          lib.nameValuePair name (mkImage {
-            inherit (metadata) format;
-            inherit nixpkgs-channel;
-            extraModules = [
-              (hostSpecificModule host metadata)
-
-              # Forcing the host platform set by the host (if there's any).
-              # Ideally, there shouldn't be.
-              ({ lib, ... }: {
-                nixpkgs.hostPlatform = lib.mkForce system;
-              })
-            ];
-          }))
-        validImages;
-  };
-
-  _module.args = {
-    inherit defaultNixOSConfig nixosConfigs;
   };
 }

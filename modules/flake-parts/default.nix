@@ -7,5 +7,7 @@
 {
   imports = [
     ./images.nix
+    ./deploy-rs-nodes.nix
+    ./setups
   ];
 }

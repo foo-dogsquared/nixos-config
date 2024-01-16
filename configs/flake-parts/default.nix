@@ -57,7 +57,6 @@
       nixpkgs.overlays = lib.attrValues inputs.self.overlays;
     };
 
-    defaultSystem = "x86_64-linux";
     defaultOverlays = lib.attrValues inputs.self.overlays;
     defaultExtraArgs = {
       inherit (inputs) nix-colors;
@@ -66,6 +65,8 @@
 
   perSystem = { lib, system, ... }: {
     _module.args = {
+      # nixpkgs for this module should be used as less as possible especially
+      # for building NixOS and home-manager systems.
       pkgs = import inputs.nixpkgs {
         inherit system;
         overlays = lib.attrValues inputs.self.overlays ++ [
