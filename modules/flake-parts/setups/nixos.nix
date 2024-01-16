@@ -52,9 +52,16 @@ let
     freeformType = with lib.types; attrsOf anything;
 
     options = {
-      fastConnection = lib.mkEnableOption "deploy-rs to assume the target machine is considered fast";
-      autoRollback = lib.mkEnableOption "deploy-rs auto-rollback feature";
-      magicRollback = lib.mkEnableOption "deploy-rs magic rollback feature";
+      fastConnection =
+        lib.mkEnableOption "deploy-rs to assume the target machine is considered fast";
+      autoRollback =
+        lib.mkEnableOption "deploy-rs auto-rollback feature" // {
+          default = true;
+        };
+      magicRollback =
+        lib.mkEnableOption "deploy-rs magic rollback feature" // {
+          default = true;
+        };
       remoteBuild = lib.mkEnableOption "pass the build process to the remote machine";
       profiles = lib.mkOption {
         type = with lib.types; functionTo (attrsOf anything);
