@@ -9,11 +9,11 @@ Ideally, it should be made minimal as much as possible considering you also have
 
 == Integrating with custom modules
 
-The host configurations placed here most likely use the link:../modules/nixos[custom NixOS modules].
-The custom modules shouldn't be imported manually from the host as this is already taken care of from the link:../flake.nix[flake definition].
+The host configurations placed here most likely use the link:../../modules/nixos[custom NixOS modules].
+The custom modules shouldn't be imported manually from the host as this is already taken care of from the link:../../flake.nix[flake definition].
 
-It is best practice to assume the host configurations make use of the link:../modules/nixos[custom NixOS modules], link:../pkgs[custom packages], and the flake inputs.
-In other words, always pay attention to link:../flake.nix[`../flake.nix`].
+It is best practice to assume the host configurations make use of the link:../modules/nixos[custom NixOS modules], link:../../pkgs[custom packages], and the flake inputs.
+In other words, always pay attention to link:../../flake.nix[`../../flake.nix`].
 
 
 
@@ -24,10 +24,10 @@ For managing users, there are multiple ways to manage them with this config:
 
 * The usual `users.users.${user}` from system configuration (see `man configuration.nix.5`).
 
-* If you intend to import users from the link:../users/nixos/[`../users/nixos/`], you can simply import them through `imports` in the system module.
+* If you intend to import users from the link:./_users[`./_users`], you can simply import them through `imports` in the system module.
 +
 --
-For a convenient option, there is the function `getUser` defined from the link:../lib/private.nix[private custom library].
+For a convenient option, there is the function `getUser` defined from the link:../../lib/private.nix[private custom library].
 You can use it as follows:
 
 [source, nix]
@@ -39,14 +39,14 @@ imports = [
 ----
 --
 
-* You could also easily map link:../users/home-manager[one of my home-manager configurations] into one of the users for a NixOS system with `lib.mapHomeManagerUser` which accepts two arguments: a name from of the home-manager user folder and the user config as if configuration with `users.users.<name>`.
+* You could also easily map link:../home-manager[one of my home-manager configurations] into one of the users for a NixOS system with `lib.private.mapHomeManagerUser` which accepts two arguments: a name from of the home-manager user folder and the user config as if configuration with `users.users.<name>`.
 +
 --
 Here's an example to easily get my main home-manager config to be one of the users of the system.
 
 [source, nix]
 ----
-lib.mapHomeManagerUser "foo-dogsquared" {
+lib.private.mapHomeManagerUser "foo-dogsquared" {
   extraGroups = [ "audio" "docker" ];
   password = "what";
   createHome = true;
