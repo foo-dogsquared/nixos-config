@@ -73,7 +73,7 @@ let
 
       modules = lib.mkOption {
         type = with lib.types; listOf raw;
-        default = [];
+        default = [ ];
         description = ''
           A list of NixOS modules specific for that host.
         '';
@@ -81,7 +81,7 @@ let
 
       overlays = lib.mkOption {
         type = with lib.types; listOf (functionTo raw);
-        default = [];
+        default = [ ];
         example = lib.literalExpression ''
           [
             inputs.neovim-nightly-overlay.overlays.default
@@ -154,7 +154,7 @@ in
   options.setups.home-manager = {
     sharedModules = lib.mkOption {
       type = with lib.types; listOf raw;
-      default = [];
+      default = [ ];
       description = ''
         A list of modules to be shared by all of the declarative home-manager
         setups.
@@ -168,7 +168,7 @@ in
 
     standaloneConfigModules = lib.mkOption {
       type = with lib.types; listOf raw;
-      default = [];
+      default = [ ];
       internal = true;
       description = ''
         A list of modules to be added alongside the shared home-manager modules
@@ -182,7 +182,7 @@ in
 
     configs = lib.mkOption {
       type = with lib.types; attrsOf (submodule configType);
-      default = {};
+      default = { };
       description = ''
         An attribute set of metadata for the declarative home-manager setups.
       '';
@@ -208,7 +208,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.configs != {}) {
+  config = lib.mkIf (cfg.configs != { }) {
     flake =
       let
         # A quick data structure we can pass through multiple build pipelines.
@@ -221,14 +221,14 @@ in
                     let
                       name = "${username}-${system}";
                     in
-                      lib.nameValuePair name (mkHome {
-                        inherit (metadata) nixpkgs-branch home-manager-branch;
-                        inherit system;
-                        extraModules =
-                          cfg.sharedModules
-                          ++ cfg.standaloneConfigModules
-                          ++ metadata.modules;
-                      })
+                    lib.nameValuePair name (mkHome {
+                      inherit (metadata) nixpkgs-branch home-manager-branch;
+                      inherit system;
+                      extraModules =
+                        cfg.sharedModules
+                        ++ cfg.standaloneConfigModules
+                        ++ metadata.modules;
+                    })
                   )
                   metadata.systems);
           in
@@ -238,27 +238,27 @@ in
             cfg.configs;
       in
       {
-      homeConfigurations =
-        lib.concatMapAttrs
-          (name: configs:
-            lib.mapAttrs'
-              (system: config: lib.nameValuePair "${name}-${system}" config)
-              configs)
-          pureHomeManagerConfigs;
+        homeConfigurations =
+          lib.concatMapAttrs
+            (name: configs:
+              lib.mapAttrs'
+                (system: config: lib.nameValuePair "${name}-${system}" config)
+                configs)
+            pureHomeManagerConfigs;
 
-      deploy.nodes =
-        let
-          validConfigs =
-            lib.filterAttrs
-              (name: _: cfg.configs.${name}.deploy != null)
-              pureHomeManagerConfigs;
-        in
-        lib.concatMapAttrs
-          (name: configs:
-            lib.mapAttrs'
-              (system: config: lib.nameValuePair "home-manager-${name}-${system}"
-                (cfg.configs.${name}.deploy.profiles { inherit name config system; })))
-          validConfigs;
-    };
+        deploy.nodes =
+          let
+            validConfigs =
+              lib.filterAttrs
+                (name: _: cfg.configs.${name}.deploy != null)
+                pureHomeManagerConfigs;
+          in
+          lib.concatMapAttrs
+            (name: configs:
+              lib.mapAttrs'
+                (system: config: lib.nameValuePair "home-manager-${name}-${system}"
+                  (cfg.configs.${name}.deploy.profiles { inherit name config system; })))
+            validConfigs;
+      };
   };
 }

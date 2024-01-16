@@ -1,7 +1,7 @@
 # A very basic NixOS VM configuration intended for testing out the given
 # workflow module. It's a good thing the baseline for the configuration is not
 # tedious to set up for simpler configs like this.
-{ workflow, extraModules ? [] }:
+{ workflow, extraModules ? [ ] }:
 
 let
   pkgs = import <nixpkgs> { };

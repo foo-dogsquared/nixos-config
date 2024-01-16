@@ -46,7 +46,7 @@ let
         extraModules = extraModules';
       };
     in
-      image.config.system.build.${image.config.formatAttr};
+    image.config.system.build.${image.config.formatAttr};
 
   deployNodeType = { config, lib, ... }: {
     freeformType = with lib.types; attrsOf anything;
@@ -114,7 +114,7 @@ let
 
       modules = lib.mkOption {
         type = with lib.types; listOf raw;
-        default = [];
+        default = [ ];
         description = ''
           A list of NixOS modules specific for that host.
         '';
@@ -122,7 +122,7 @@ let
 
       overlays = lib.mkOption {
         type = with lib.types; listOf (functionTo raw);
-        default = [];
+        default = [ ];
         example = lib.literalExpression ''
           [
             inputs.neovim-nightly-overlay.overlays.default
@@ -211,7 +211,7 @@ in
   options.setups.nixos = {
     sharedModules = lib.mkOption {
       type = with lib.types; listOf raw;
-      default = [];
+      default = [ ];
       description = ''
         A list of modules to be shared by all of the declarative NixOS setups.
       '';
@@ -219,7 +219,7 @@ in
 
     configs = lib.mkOption {
       type = with lib.types; attrsOf (submodule configType);
-      default = {};
+      default = { };
       description = ''
         An attribute set of metadata for the declarative NixOS setups. This
         will then be used for related flake outputs such as
@@ -273,7 +273,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.configs != {}) {
+  config = lib.mkIf (cfg.configs != { }) {
     setups.nixos.sharedModules = [
       {
         home-manager.useUserPackages = lib.mkDefault true;
@@ -294,11 +294,11 @@ in
               lib.listToAttrs
                 (builtins.map
                   (system:
-                      lib.nameValuePair system (mkHost {
-                        nixpkgs-branch = metadata.nixpkgs-branch;
-                        extraModules = cfg.sharedModules ++ metadata.modules;
-                        inherit system;
-                      })
+                    lib.nameValuePair system (mkHost {
+                      nixpkgs-branch = metadata.nixpkgs-branch;
+                      extraModules = cfg.sharedModules ++ metadata.modules;
+                      inherit system;
+                    })
                   )
                   metadata.systems);
           in
@@ -337,7 +337,7 @@ in
         let
           validImages = lib.filterAttrs
             (host: metadata:
-               metadata.formats != null && (lib.elem system metadata.systems))
+              metadata.formats != null && (lib.elem system metadata.systems))
             cfg.configs;
         in
         lib.mapAttrs'

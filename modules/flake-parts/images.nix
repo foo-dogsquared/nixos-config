@@ -25,7 +25,7 @@ in
       options = {
         images = lib.mkOption {
           type = with lib.types; attrsOf package;
-          default = {};
+          default = { };
           description = ''
             An attribute set of NixOS configurations built as an image output
             supported by
@@ -41,7 +41,7 @@ in
       lib.mapAttrs
         (k: v: v.images)
         (lib.filterAttrs
-          (k: v: v.images != {})
+          (k: v: v.images != { })
           config.allSystems
         );
 

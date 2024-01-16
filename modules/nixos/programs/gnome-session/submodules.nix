@@ -389,7 +389,7 @@ rec {
               if (lib.elem name validDesktopNames) || (lib.hasPrefix "X-" name) then
                 name
               else
-              "X-${name}")
+                "X-${name}")
             names;
         example = [ "GNOME" "Garden" ];
       };
