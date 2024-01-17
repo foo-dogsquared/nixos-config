@@ -8,6 +8,7 @@
   imports = [
     ./images.nix
     ./deploy-rs-nodes.nix
+    ./home-modules.nix
     ./setups
   ];
 }
