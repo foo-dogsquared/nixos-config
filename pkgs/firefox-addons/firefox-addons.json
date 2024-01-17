@@ -25,5 +25,9 @@
 
   {
     "slug": "google-container"
+  },
+
+  {
+    "slug": "sourcegraph-for-firefox"
   }
 ]
