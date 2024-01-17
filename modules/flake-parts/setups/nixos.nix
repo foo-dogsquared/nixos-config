@@ -99,109 +99,113 @@ let
     };
   };
 
-  configType = { config, name, lib, ... }: {
-    options = {
-      systems = lib.mkOption {
-        type = with lib.types; listOf str;
-        default = config.systems;
-        defaultText = "config.systems";
-        example = [ "x86_64-linux" "aarch64-linux" ];
-        description = ''
-          A list of platforms that the NixOS configuration is supposed to be
-          deployed on.
-        '';
-      };
-
-      formats = lib.mkOption {
-        type = with lib.types; nullOr (listOf str);
-        default = [ "iso" ];
-        description = ''
-          The image formats to be generated from nixos-generators. When given
-          as `null`, it is listed as part of `nixosConfigurations` and excluded
-          from `images` flake output which is often the case for desktop NixOS
-          systems.
-        '';
-      };
-
-      modules = lib.mkOption {
-        type = with lib.types; listOf raw;
-        default = [ ];
-        description = ''
-          A list of NixOS modules specific for that host.
-        '';
-      };
-
-      overlays = lib.mkOption {
-        type = with lib.types; listOf (functionTo raw);
-        default = [ ];
-        example = lib.literalExpression ''
-          [
-            inputs.neovim-nightly-overlay.overlays.default
-            inputs.emacs-overlay.overlays.default
-          ]
-        '';
-        description = ''
-          A list of overlays to be applied for that host.
-        '';
-      };
-
-      hostname = lib.mkOption {
-        type = lib.types.nonEmptyStr;
-        default = name;
-        example = "MyWhatNow";
-        description = "The hostname of the NixOS configuration.";
-      };
-
-      domain = lib.mkOption {
-        type = with lib.types; nullOr nonEmptyStr;
-        default = null;
-        example = "work.example.com";
-        description = "The domain of the NixOS system.";
-      };
-
-      nixpkgsBranch = lib.mkOption {
-        type = lib.types.str;
-        default = "nixpkgs";
-        description = ''
-          The nixpkgs branch to be used for evaluating the NixOS configuration.
-          By default, it will use the `nixpkgs` flake input.
-
-          ::: {.note}
-          This is based from your flake inputs and not somewhere else. If you
-          want to have support for multiple nixpkgs branch, simply add them as
-          a flake input.
-          :::
-        '';
-        example = "nixos-unstable-small";
-      };
-
-      homeManagerBranch = lib.mkOption {
-        type = lib.types.str;
-        default = "home-manager";
-        example = "home-manager-stable";
-        description = ''
-          The home-manager branch to be used for the NixOS module. By default,
-          it will use the `home-manager` flake input.
-        '';
-      };
-
-      deploy = lib.mkOption {
-        type = with lib.types; nullOr (submodule deployNodeType);
-        default = null;
-        description = ''
-          deploy-rs node settings for the resulting NixOS configuration. When
-          this attribute is given with a non-null value, it will be included in
-          `nixosConfigurations` even if
-          {option}`setups.nixos.configs.<config>.formats` is set.
-        '';
-        example = {
-          hostname = "work1.example.com";
-          fastConnection = true;
-          autoRollback = true;
-          magicRollback = true;
-          remoteBuild = true;
+  configType =
+    let
+      partsConfig = config;
+    in
+    { config, name, lib, ... }: {
+      options = {
+        systems = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = partsConfig.systems;
+          defaultText = "config.systems";
+          example = [ "x86_64-linux" "aarch64-linux" ];
+          description = ''
+            A list of platforms that the NixOS configuration is supposed to be
+            deployed on.
+          '';
         };
-      };
+
+        formats = lib.mkOption {
+          type = with lib.types; nullOr (listOf str);
+          default = [ "iso" ];
+          description = ''
+            The image formats to be generated from nixos-generators. When given
+            as `null`, it is listed as part of `nixosConfigurations` and excluded
+            from `images` flake output which is often the case for desktop NixOS
+            systems.
+          '';
+        };
+
+        modules = lib.mkOption {
+          type = with lib.types; listOf raw;
+          default = [ ];
+          description = ''
+            A list of NixOS modules specific for that host.
+          '';
+        };
+
+        overlays = lib.mkOption {
+          type = with lib.types; listOf (functionTo raw);
+          default = [ ];
+          example = lib.literalExpression ''
+            [
+              inputs.neovim-nightly-overlay.overlays.default
+              inputs.emacs-overlay.overlays.default
+            ]
+          '';
+          description = ''
+            A list of overlays to be applied for that host.
+          '';
+        };
+
+        hostname = lib.mkOption {
+          type = lib.types.nonEmptyStr;
+          default = name;
+          example = "MyWhatNow";
+          description = "The hostname of the NixOS configuration.";
+        };
+
+        domain = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          default = null;
+          example = "work.example.com";
+          description = "The domain of the NixOS system.";
+        };
+
+        nixpkgsBranch = lib.mkOption {
+          type = lib.types.str;
+          default = "nixpkgs";
+          description = ''
+            The nixpkgs branch to be used for evaluating the NixOS configuration.
+            By default, it will use the `nixpkgs` flake input.
+
+            ::: {.note}
+            This is based from your flake inputs and not somewhere else. If you
+            want to have support for multiple nixpkgs branch, simply add them as
+            a flake input.
+            :::
+          '';
+          example = "nixos-unstable-small";
+        };
+
+        homeManagerBranch = lib.mkOption {
+          type = lib.types.str;
+          default = "home-manager";
+          example = "home-manager-stable";
+          description = ''
+            The home-manager branch to be used for the NixOS module. By default,
+            it will use the `home-manager` flake input.
+          '';
+        };
+
+        deploy = lib.mkOption {
+          type = with lib.types; nullOr (submodule deployNodeType);
+          default = null;
+          description = ''
+            deploy-rs node settings for the resulting NixOS configuration. When
+            this attribute is given with a non-null value, it will be included in
+            `nixosConfigurations` even if
+            {option}`setups.nixos.configs.<config>.formats` is set.
+          '';
+          example = {
+            hostname = "work1.example.com";
+            fastConnection = true;
+            autoRollback = true;
+            magicRollback = true;
+            remoteBuild = true;
+          };
+        };
     };
 
     config = {
@@ -213,14 +217,14 @@ let
           let
             setupConfig = config;
           in
-          { lib, ... }: {
+          { config, lib, ... }: {
             config = lib.mkMerge [
               {
                 nixpkgs.overlays = setupConfig.overlays;
                 networking.hostName = lib.mkDefault setupConfig.hostname;
               }
 
-              (lib.mkIf (config.domain != null) {
+              (lib.mkIf (setupConfig.domain != null) {
                 networking.domain = lib.mkForce setupConfig.domain;
               })
             ];
