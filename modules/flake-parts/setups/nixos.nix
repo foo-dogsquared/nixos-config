@@ -284,6 +284,8 @@ in
             formats = [ "do" "linode" ];
             nixpkgsBranch = "nixos-unstable-small";
             deploy = {
+              autoRollback = true;
+              magicRollback = true;
             };
           };
 

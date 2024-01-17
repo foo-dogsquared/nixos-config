@@ -36,19 +36,19 @@ let
       remoteBuild = lib.mkEnableOption "pass the build process to the remote machine";
       profiles = lib.mkOption {
         type = with lib.types; functionTo (attrsOf anything);
-        default = os: {
+        default = homeenv: {
           home = {
             sshUser = username;
             user = username;
-            path = inputs.deploy.lib.${os.system}.activate.home-manager os.config;
+            path = inputs.deploy.lib.${homeenv.system}.activate.home-manager homeenv.config;
           };
         };
         defaultText = lib.literalExpression ''
-          os: {
+          homeenv: {
             home = {
               sshUser = "$USERNAME";
               user = "$USERNAME";
-              path = <deploy-rs>.lib.''${os.system}.activate.home-manager os.config;
+              path = <deploy-rs>.lib.''${homeenv.system}.activate.home-manager homeenv.config;
             };
           }
         '';
