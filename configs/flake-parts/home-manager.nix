@@ -29,6 +29,10 @@
           inputs.nix-colors.homeManagerModules.default
           inputs.nur.hmModules.nur
         ];
+        deploy = {
+          autoRollback = true;
+          magicRollback = true;
+        };
       };
 
       plover.systems = [ "x86_64-linux" ];

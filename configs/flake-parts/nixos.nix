@@ -39,8 +39,8 @@
         domain = "foodogsquared.one";
         deploy = {
           hostname = "plover.foodogsquared.one";
-          auto-rollback = true;
-          magic-rollback = true;
+          autoRollback = true;
+          magicRollback = true;
         };
       };
 
@@ -56,7 +56,7 @@
       bootstrap = {
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso" ];
-        nixpkgs-branch = "nixos-unstable-small";
+        nixpkgsBranch = "nixos-unstable-small";
       };
 
       # The barely customized graphical installer.
