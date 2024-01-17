@@ -25,8 +25,10 @@ in
         gsconnect
         just-perfection
         kimpanel
+        light-style
         paperwm
         runcat
+        windownavigator
       ];
       example = lib.literalExpression ''
         with pkgs.gnomeExtensions; [
