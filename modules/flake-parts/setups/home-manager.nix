@@ -158,11 +158,16 @@ let
       modules = [
         ../../../configs/home-manager/${name}
 
-        {
-          nixpkgs.overlays = config.overlays;
-          home.username = lib.mkForce name;
-          home.homeDirectory = lib.mkForce config.homeDirectory;
-        }
+        (
+          let
+            setupConfig = config;
+          in
+          { config, lib, ... }: {
+            nixpkgs.overlays = setupConfig.overlays;
+            home.username = lib.mkForce name;
+            home.homeDirectory = lib.mkForce setupConfig.homeDirectory;
+          }
+        )
       ];
     };
   };

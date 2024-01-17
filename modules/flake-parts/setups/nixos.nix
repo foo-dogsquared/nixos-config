@@ -209,14 +209,23 @@ let
         inputs.${config.homeManagerBranch}.nixosModules.home-manager
         ../../../configs/nixos/${name}
 
-        {
-          nixpkgs.overlays = config.overlays;
-          networking.hostName = lib.mkDefault config.hostname;
-        }
+        (
+          let
+            setupConfig = config;
+          in
+          { lib, ... }: {
+            config = lib.mkMerge [
+              {
+                nixpkgs.overlays = setupConfig.overlays;
+                networking.hostName = lib.mkDefault setupConfig.hostname;
+              }
 
-        (lib.mkIf (config.domain != null) {
-          networking.domain = lib.mkForce config.domain;
-        })
+              (lib.mkIf (config.domain != null) {
+                networking.domain = lib.mkForce setupConfig.domain;
+              })
+            ];
+          }
+        )
       ];
     };
   };
@@ -289,11 +298,16 @@ in
 
   config = lib.mkIf (cfg.configs != { }) {
     setups.nixos.sharedModules = [
-      {
-        home-manager.useUserPackages = lib.mkDefault true;
-        home-manager.useGlobalPkgs = lib.mkDefault true;
-        home-manager.sharedModules = config.setups.home-manager.sharedModules;
-      }
+      (
+        let
+          osConfig = config;
+        in
+        { lib, ... }: {
+          home-manager.useUserPackages = lib.mkDefault true;
+          home-manager.useGlobalPkgs = lib.mkDefault true;
+          home-manager.sharedModules = osConfig.setups.home-manager.sharedModules;
+        }
+      )
     ];
 
     flake =
