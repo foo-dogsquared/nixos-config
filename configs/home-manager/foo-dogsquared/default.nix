@@ -15,8 +15,6 @@
       doom-emacs.enable = true;
       email.enable = true;
       email.thunderbird.enable = true;
-      keys.gpg.enable = true;
-      keys.ssh.enable = true;
       research.enable = true;
       vs-code.enable = true;
     };
