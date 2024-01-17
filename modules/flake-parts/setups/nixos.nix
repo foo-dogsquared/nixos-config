@@ -103,8 +103,8 @@ let
     options = {
       systems = lib.mkOption {
         type = with lib.types; listOf str;
-        default = lib.lists.take 1 config.systems;
-        defaultText = "The first system listed from `config.systems`.";
+        default = config.systems;
+        defaultText = "config.systems";
         example = [ "x86_64-linux" "aarch64-linux" ];
         description = ''
           A list of platforms that the NixOS configuration is supposed to be
