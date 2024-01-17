@@ -12,8 +12,8 @@ My NixOS config should look like the following:
 [source, tree]
 ----
 nixos-config
+├── configs/
 ├── docs/
-├── hosts/
 ├── lib/
 ├── modules/
 ├── overlays/
@@ -24,8 +24,6 @@ nixos-config
 ├── default.nix
 ├── flake.lock
 ├── flake.nix
-├── images.toml
-├── users.toml
 └── README.adoc
 ----
 
@@ -40,9 +38,8 @@ Most of the said folders are related to a flake output attribute, see xref:../03
 * `./docs/` contain the source code for the website.
 Currently, it uses link:https://gohugo.io/[Hugo] for statically generating the website.
 
-* `./hosts/` contain machine-specific configuration.
-This usually configures like the hardware setup, timezone, and users.
-Host configurations are also exported in the flakes in `outputs.nixosConfigurations`.
+* `./configs/` contain several configurations for several environments including NixOS, home-manager, and flake-parts.
+Typically, these are anything that are configured by Nix modules.
 
 * `./modules/` contain my custom modules including NixOS and home-manager modules.
 For more information, see the github:{github-repo}[related documentation, path=./modules/README.adoc, rev=master].
@@ -58,7 +55,3 @@ Setting this up can bring benefits outside of NixOS (unless you're interacting w
 footnote:[Since packages brought from Nix shells can only work with the store, a container might be better at some situations.]
 
 * `./templates/` contains my custom templates handy for quickly initializing for various types of projects.
-
-* `./users/` contains my github:nix-community/home-manager[opts=repo] configurations.
-It is exported in the flakes at `outputs.homeConfigurations`.
-For more information, see the github:{github-repo}[related documentation, path=./users/README.adoc, rev=master].

@@ -1,7 +1,7 @@
 = Homepage
 
 Hey there!
-This is my NixOS configuration abomination documentation "book" called "foodogsquared's NixOS config" book or "f(a)Nc(y)" config book for short.
+This is my documentation for my abomination of a NixOS configuration called "foodogsquared's NixOS config" book or "f(a)Nc(y)" config book for short.
 
 .This St. Nixolas's reindeer cosplay is made with a tight budget but it's functionally identical, right?
 image::./nix-snowflake-with-fds.svg[width=256px]
