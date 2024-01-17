@@ -357,13 +357,13 @@ in
                     deployConfig = cfg.configs.${name}.deploy;
                     deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
                   in
-                    deployConfig'
-                    // {
-                      profiles =
-                        cfg.configs.${name}.deploy.profiles {
-                          inherit name config system;
-                        };
-                    }
+                  deployConfig'
+                  // {
+                    profiles =
+                      cfg.configs.${name}.deploy.profiles {
+                        inherit name config system;
+                      };
+                  }
                 );
           in
           lib.concatMapAttrs
@@ -377,7 +377,7 @@ in
         let
           validImages = lib.filterAttrs
             (host: metadata:
-               metadata.formats != null && (lib.elem system metadata.systems))
+              metadata.formats != null && (lib.elem system metadata.systems))
             cfg.configs;
 
           generateImages = name: metadata:
@@ -394,7 +394,7 @@ in
               images =
                 builtins.map buildImage metadata.formats;
             in
-              lib.listToAttrs images;
+            lib.listToAttrs images;
         in
         lib.concatMapAttrs generateImages validImages;
     };

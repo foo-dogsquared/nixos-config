@@ -278,13 +278,13 @@ in
                   deployConfig = cfg.configs.${name}.deploy;
                   deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
                 in
-                  deployConfig'
-                  // {
-                    profiles =
-                      cfg.configs.${name}.deploy.profiles {
-                        inherit name config system;
-                      };
-                  }
+                deployConfig'
+                // {
+                  profiles =
+                    cfg.configs.${name}.deploy.profiles {
+                      inherit name config system;
+                    };
+                }
               );
           in
           lib.concatMapAttrs
