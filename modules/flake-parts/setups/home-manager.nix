@@ -251,18 +251,17 @@ in
                   )
                   metadata.systems);
           in
-          lib.mapAttrs
-            (hostname: metadata:
-              generatePureConfigs hostname metadata)
-            cfg.configs;
+          lib.mapAttrs generatePureConfigs cfg.configs;
       in
       {
         homeConfigurations =
+          let
+            renameSystems = name: system: config:
+              lib.nameValuePair "${name}-${system}" config;
+          in
           lib.concatMapAttrs
             (name: configs:
-              lib.mapAttrs'
-                (system: config: lib.nameValuePair "${name}-${system}" config)
-                configs)
+              lib.mapAttrs' (renameSystems name) configs)
             pureHomeManagerConfigs;
 
         deploy.nodes =
@@ -271,25 +270,25 @@ in
               lib.filterAttrs
                 (name: _: cfg.configs.${name}.deploy != null)
                 pureHomeManagerConfigs;
+
+            generateDeployNode = name: system: config:
+              lib.nameValuePair "home-manager-${name}-${system}" (
+                let
+                  deployConfig = cfg.configs.${name}.deploy;
+                  deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
+                in
+                  deployConfig'
+                  // {
+                    profiles =
+                      cfg.configs.${name}.deploy.profiles {
+                        inherit name config system;
+                      };
+                  }
+              );
           in
           lib.concatMapAttrs
             (name: configs:
-              lib.mapAttrs'
-                (system: config: lib.nameValuePair "home-manager-${name}-${system}"
-                  (
-                    let
-                      deployConfig = cfg.configs.${name}.deploy;
-                      deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
-                    in
-                      deployConfig'
-                      // {
-                        profiles =
-                          cfg.configs.${name}.deploy.profiles {
-                            inherit name config system;
-                          };
-                      }
-                  ))
-                  configs)
+              lib.mapAttrs' (generateDeployNode name) configs)
             validConfigs;
       };
   };

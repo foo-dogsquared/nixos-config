@@ -330,18 +330,17 @@ in
                   )
                   metadata.systems);
           in
-          lib.mapAttrs
-            (hostname: metadata:
-              generatePureConfigs hostname metadata)
-            validConfigs;
+          lib.mapAttrs generatePureConfigs validConfigs;
       in
       {
         nixosConfigurations =
+          let
+            renameSystems = name: system: config:
+              lib.nameValuePair "${name}-${system}" config;
+          in
           lib.concatMapAttrs
             (name: configs:
-              lib.mapAttrs'
-                (system: config: lib.nameValuePair "${name}-${system}" config)
-                configs)
+              lib.mapAttrs' (renameSystems name) configs)
             pureNixosConfigs;
 
         deploy.nodes =
@@ -350,25 +349,26 @@ in
               lib.filterAttrs
                 (name: _: cfg.configs.${name}.deploy != null)
                 pureNixosConfigs;
+
+            generateDeployNode = name: system: config:
+              lib.nameValuePair "nixos-${name}-${system}"
+                (
+                  let
+                    deployConfig = cfg.configs.${name}.deploy;
+                    deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
+                  in
+                    deployConfig'
+                    // {
+                      profiles =
+                        cfg.configs.${name}.deploy.profiles {
+                          inherit name config system;
+                        };
+                    }
+                );
           in
           lib.concatMapAttrs
             (name: configs:
-              lib.mapAttrs'
-                (system: config: lib.nameValuePair "nixos-${name}-${system}"
-                  (
-                    let
-                      deployConfig = cfg.configs.${name}.deploy;
-                      deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
-                    in
-                      deployConfig'
-                      // {
-                        profiles =
-                          cfg.configs.${name}.deploy.profiles {
-                            inherit name config system;
-                          };
-                      }
-                  ))
-                configs)
+              lib.mapAttrs' (generateDeployNode name) configs)
             validConfigs;
       };
 
@@ -382,23 +382,21 @@ in
 
           generateImages = name: metadata:
             let
+              buildImage = format:
+                lib.nameValuePair
+                  "${name}-${format}"
+                  (mkImage {
+                    inherit (metadata) nixpkgsBranch;
+                    inherit system format;
+                    extraModules = cfg.sharedModules ++ metadata.modules;
+                  });
+
               images =
-                builtins.map
-                  (format:
-                    lib.nameValuePair
-                      "${name}-${format}"
-                      (mkImage {
-                        inherit (metadata) nixpkgsBranch;
-                        inherit system format;
-                        extraModules = cfg.sharedModules ++ metadata.modules;
-                      }))
-                  metadata.formats;
+                builtins.map buildImage metadata.formats;
             in
               lib.listToAttrs images;
         in
-        lib.concatMapAttrs
-          (name: metadata: generateImages name metadata)
-          validImages;
+        lib.concatMapAttrs generateImages validImages;
     };
   };
 }
