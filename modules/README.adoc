@@ -6,9 +6,21 @@ These are various modules ranging from link:https://nixos.org/manual/nixos/stabl
 
 
 
-== Flake outputs
+[#design-constraints]
+== Design constraints
 
-Various modules are then exported to the project flake as the following output:
+While there are different environments we can make modules with, there are commonalities between these custom modules.
+It's better that we lay this out with a list of guidelines.
 
-* `nixosModules` exports modules from link:./nixos/[`./nixos/`].
-* `homeManagerModules` exports modules from link:./home-manager/[`./home-manager/`].
+* Absolutely no reliance on third-party modules.
+This makes the custom modules easier to import whether it's used with flakes or not.
+Instead I recommend to make full use of environment-specific module structuring (such as host-specific modules on NixOS, user-specific modules on home-manager) on their respective environment configurations.
+As a bonus, this makes it easier to upstream them if we want to.
+
+* That said, custom modules can rely on other custom modules.
+Otherwise, we're just limiting ourselves by forcing the modules to be standalone.
+Plus we could fix encountered issues with our own solution (and even upstream them if possible).
+
+* Follow the upstream module design as much as possible.
+This makes it easier to design custom module extensions around them.
+(Also a bonus for easier time upstreaming the module if I want to.)
