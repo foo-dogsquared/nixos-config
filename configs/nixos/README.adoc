@@ -3,6 +3,7 @@
 
 These are NixOS configurations that are specific to a machine (e.g., desktop, servers, VMs, containers, installation media).
 Ideally, it should be made minimal as much as possible considering you also have to manage your users.
+It is expected that all (if not most) of the configurations here are defined in the declarative hosts (from link:../flake-parts/nixos.nix[`../flake-parts/nixos.nix`]) applied on top of a baseline configuration (which should be seen in the previously linked file).
 
 
 
@@ -12,7 +13,7 @@ Ideally, it should be made minimal as much as possible considering you also have
 The host configurations placed here most likely use the link:../../modules/nixos[custom NixOS modules].
 The custom modules shouldn't be imported manually from the host as this is already taken care of from the link:../../flake.nix[flake definition].
 
-It is best practice to assume the host configurations make use of the link:../modules/nixos[custom NixOS modules], link:../../pkgs[custom packages], and the flake inputs.
+It is best practice to assume the host configurations make use of the link:../../modules/nixos[custom NixOS modules], link:../../pkgs[custom packages], and the flake inputs.
 In other words, always pay attention to link:../../flake.nix[`../../flake.nix`].
 
 
@@ -20,7 +21,7 @@ In other words, always pay attention to link:../../flake.nix[`../../flake.nix`].
 
 == User management
 
-For managing users, there are multiple ways to manage them with this config:
+For managing users, there are multiple ways to manage them within this project:
 
 * The usual `users.users.${user}` from system configuration (see `man configuration.nix.5`).
 
@@ -40,6 +41,7 @@ imports = [
 --
 
 * You could also easily map link:../home-manager[one of my home-manager configurations] into one of the users for a NixOS system with `lib.private.mapHomeManagerUser` which accepts two arguments: a name from of the home-manager user folder and the user config as if configuration with `users.users.<name>`.
+However, this is only acceptable if the imported home-manager configuration only requires the baseline home-manager configuration and nothing else.
 +
 --
 Here's an example to easily get my main home-manager config to be one of the users of the system.
@@ -54,3 +56,75 @@ lib.private.mapHomeManagerUser "foo-dogsquared" {
 }
 ----
 --
+
+* For more comprehensive home-manager users that requires additional home-manager modules outside of the baseline home-manager configuration, you'll have to use `setups.nixos.configs.<name>.homeManagerUsers.users` from the declarative hosts config.
+Similar to `mapHomeManagerUser` library function, this takes care to map the home-manager user into a NixOS user with a home-manager configuration but it does more.
+It also imports all of the overlays and modules from the declarative home-manager user config.
++
+--
+Here's an example of my desktop system configuration with a home-manager user on it.
+Take note, it requires `foo-dogsquared` to be defined in `setups.home-manager.configs` for this to work.
+
+[source, nix]
+----
+{
+  setups.nixos.ni = {
+    systems = [ "x86_64-linux" ];
+    formats = null;
+    homeManagerUsers = {
+      nixpkgsInstance = "global";
+      users.foo-dogsquared = {
+        userConfig = {
+          extraGroups = [
+            "adbusers"
+            "wheel"
+            "audio"
+            "docker"
+            "podman"
+            "networkmanager"
+            "wireshark"
+          ];
+          hashedPassword =
+            "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
+          isNormalUser = true;
+          createHome = true;
+          home = "/home/foo-dogsquared";
+          description = "Gabriel Arazas";
+        };
+      };
+    };
+  };
+}
+----
+
+Points of interests include:
+
+* `homeManagerUsers.nixpkgsInstance = "global";` option where it enforces the system to use the same nixpkgs instance throughout all of the home-manager users.
+As an effect, it will apply of the home-manager users' overlays into the nixpkgs instance of the NixOS system instead.
+
+* `homeManagerUsers.users.<name>.userConfig` where it simply maps the home-manager user into a NixOS system by applying `users.users.<name>` with the given `userConfig` value.
+
+While this method makes for an incomplete system declaration in the config file and fully relies on the declarative host module to handle it, it isn't that much of a problem especially that you have to import third-party modules somewhere, regardless if it's with flakes or not. footnote:[Similar to the <<design-constraints, following design constraints for NixOS systems>>, home-manager configurations also don't allow for `inputs` to be part of the module arguments.]
+--
+
+
+
+
+[#design-constraints]
+== Design constraints
+
+This set of NixOS configuration have some constraints mainly for consistency (easier to remember -> easier to use -> easier to maintain over a long time).
+
+* All NixOS configurations are expected to be made with the baseline NixOS configuration from the declarative host config (in the `setups.nixos.configs` flake-parts module).
+If you want to add home-manager users to it, make sure the included home-manager user is only buildable with the baseline home-manager configuration.
+Otherwise, you'll have to use the `setups.nixos.configs.<name>.homeManagerUsers.users.<name>` interface for that.
+
+* Private libraries and modules are allowed to be used here.
+Both custom-made libraries and modules are easy to setup both with flake and non-flake way so it isn't limiting us to lean one over the other.
+
+* No flake inputs (i.e., `inputs`) are passed into the configuration.
+This is to make setting up with these configurations a little bit easier with a non-flake setup. footnote:[There are some flakes that are not easy to import as a non-flake but it is what it is.]
+
+* Host-specific module structuring is used at its fullest.
+This type of modules are simply NixOS modules with `hosts.$HOSTNAME` as its options namespace.
+It is encouraged to design custom modules with these as much as possible.
