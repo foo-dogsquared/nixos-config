@@ -108,12 +108,13 @@ in
             wayback-machine
           ] ++ (with pkgs.firefox-addons; [
             get-rss-feed-url
+            google-container
             regretsreporter
             simple-translate
+            sourcegraph-for-firefox
             tineye-reverse-image-search
             updateswh
             zhongwen
-            google-container
           ]);
 
           settings = {
