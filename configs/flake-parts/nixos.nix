@@ -14,22 +14,28 @@
       ni = {
         systems = [ "x86_64-linux" ];
         formats = null;
-        overlays = [
-          # Neovim nightly!
-          inputs.neovim-nightly-overlay.overlays.default
-
-          # Emacs unstable version!
-          inputs.emacs-overlay.overlays.default
-
-          # Helix master!
-          inputs.helix-editor.overlays.default
-
-          # Access to NUR.
-          inputs.nur.overlay
-        ];
-        modules = [
-          inputs.nur.nixosModules.nur
-        ];
+        homeManagerUsers = {
+          nixpkgsInstance = "global";
+          users.foo-dogsquared = {
+            userConfig = {
+              extraGroups = [
+                "adbusers"
+                "wheel"
+                "audio"
+                "docker"
+                "podman"
+                "networkmanager"
+                "wireshark"
+              ];
+              hashedPassword =
+                "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
+              isNormalUser = true;
+              createHome = true;
+              home = "/home/foo-dogsquared";
+              description = "Gabriel Arazas";
+            };
+          };
+        };
       };
 
       # A remote server.
