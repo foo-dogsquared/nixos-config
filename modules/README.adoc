@@ -12,15 +12,23 @@ These are various modules ranging from link:https://nixos.org/manual/nixos/stabl
 While there are different environments we can make modules with, there are commonalities between these custom modules.
 It's better that we lay this out with a list of guidelines.
 
+* Custom modules are typically classified as private and public modules.
+Private (or internal) modules are simply modules meant to be used in this project and nowhere else.
+Public modules are meant to be used by others (but not necessarily mean we have to support or maintain these for them).
+
+* As such, public modules are not allowed to use the private library and modules.
+Only the private modules can.
+Public modules should strive to be usable without additional dependencies from this project at all.
+
 * Absolutely no reliance on third-party modules.
 This makes the custom modules easier to import whether it's used with flakes or not.
-Instead I recommend to make full use of environment-specific module structuring (such as host-specific modules on NixOS, user-specific modules on home-manager) on their respective environment configurations.
+Instead, I recommend to make full use of environment-specific module structuring (such as host-specific modules on NixOS, user-specific modules on home-manager) on their respective environment configurations.
 As a bonus, this makes it easier to upstream them if we want to.
 
 * That said, custom modules can rely on other custom modules.
 Otherwise, we're just limiting ourselves by forcing the modules to be standalone.
 Plus we could fix encountered issues with our own solution (and even upstream them if possible).
 
-* Follow the upstream module design as much as possible.
+* Follow the upstream module design as much as possible even for private modules.
 This makes it easier to design custom module extensions around them.
 (Also a bonus for easier time upstreaming the module if I want to.)
