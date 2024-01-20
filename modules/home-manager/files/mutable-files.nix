@@ -155,17 +155,12 @@ in
 
         Type = "oneshot";
         RemainAfterExit = true;
+
         ExecStart =
           let
             mutableFilesCmds = lib.mapAttrsToList
               (path: value:
-                let
-                  fetchScript' = (fetchScript path value).${value.type};
-                in
-                ''
-                  ${fetchScript'}
-                  ${value.postScript}
-                '')
+                (fetchScript path value).${value.type})
               cfg;
 
             script = pkgs.writeShellApplication {
@@ -175,6 +170,20 @@ in
             };
           in
           "${script}/bin/fetch-mutable-files";
+
+        ExecStartPost =
+          let
+            mutableFilesCmds = lib.mapAttrsToList
+              (path: value: value.postScript)
+              cfg;
+
+            script = pkgs.writeShellApplication {
+              name = "fetch-mutable-files-post-script";
+              runtimeInputs = with pkgs; [ archiver curl git gopass ];
+              text = lib.concatStringsSep "\n" mutableFilesCmds;
+            };
+          in
+          "${script}/bin/fetch-mutable-files-post-script";
       };
 
       Install.WantedBy = [ "default.target" ];
