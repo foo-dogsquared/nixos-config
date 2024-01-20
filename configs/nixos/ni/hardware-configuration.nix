@@ -9,7 +9,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.initrd.availableKernelModules =
-    [ "xhci_pci" "ahci" "nvme" "usb_storage" "uas" "sd_mod" ];
+    [ "xhci_pci" "ahci" "nvme" "usbhid" "uas" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -22,7 +22,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   services.btrfs.autoScrub = {
     enable = true;

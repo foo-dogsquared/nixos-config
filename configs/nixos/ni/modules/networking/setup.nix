@@ -128,10 +128,7 @@ in
 
       # We'll configure individual network interfaces to use DHCP since it can
       # fail wait-online-interface.service.
-      networking.useDHCP = false;
-      networking.dhcpcd.enable = false;
-      networking.interfaces.enp1s0.useDHCP = true;
-      networking.interfaces.wlp2s0.useDHCP = true;
+      networking.useDHCP = lib.mkDefault true;
 
       # Configure the networking bonds.
       networking.bonds.bond0 = {
