@@ -337,6 +337,9 @@ rec {
           unitConfig.CollectMode = lib.mkForce "inactive-or-failed";
         };
 
+        # Luckily, this script can be flexible both for built-in and
+        # systemd-managed sessions by checking `DESKTOP_AUTOSTART_ID` envvar
+        # that is initialized with the built-in-managed session.
         scriptPackage = pkgs.writeShellApplication {
           name = scriptName;
           runtimeInputs = [ cfg.package pkgs.dbus ];
@@ -526,7 +529,6 @@ rec {
 
           * The display session (`<name>.desktop`) files.
           * gnome-session `.session` file.
-          * The gnome-session systemd target drop-in file.
           * The components `.desktop` file.
         '';
         readOnly = true;
@@ -546,14 +548,6 @@ rec {
       # Append the session argument.
       extraArgs = [ "--session=${name}" ];
 
-      # While it is tempting to have this delegated to `systemd.user.services`
-      # and the like, it does have a future problem regarding how the generated
-      # units will handle reload on change since NixOS systemd units lets you
-      # have that option. Restricting it ourselves prevent it from doing so.
-      #
-      # As a (HUGE) bonus, it also leads to a more elegant solution of making
-      # an entire package of the desktop environment and simply linking them
-      # with various NixOS options like `systemd.packages` and the like.
       systemdUserUnits =
         let
           inherit (utils.systemdUtils.lib)

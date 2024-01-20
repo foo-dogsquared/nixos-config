@@ -26,12 +26,16 @@ in
         the built-in and the systemd-managed GNOME session.
 
         Each of the attribute name will be used as the identifier of the
-        desktop environment. While you can make identifiers in any way, it is
+        desktop environment.
+
+        ::: {.tip}
+        While you can make identifiers in any way, it is
         encouraged to stick to a naming scheme. Here's two common ways to name
         a desktop environment.
 
         * Reverse DNS-like scheme (e.g., `com.example.MoseyBranch`).
         * Kebab-case (e.g., `mosey-branch`).
+        :::
       '';
       default = { };
       example = lib.literalExpression ''

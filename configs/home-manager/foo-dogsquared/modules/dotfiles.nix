@@ -12,18 +12,15 @@ in
     lib.mkEnableOption "custom outside dotfiles for other programs";
 
   config = lib.mkIf cfg.enable {
-    # Fetching my dotfiles,...
     home.mutableFile."library/dotfiles" = {
       url = "https://github.com/foo-dogsquared/dotfiles.git";
       type = "git";
     };
 
-    # Add the custom scripts here.
     home.sessionPath = [
       "${config.home.mutableFile."library/dotfiles".path}/bin"
     ];
 
-    # All of the personal configurations.
     xdg.configFile = {
       doom.source =
         lib.mkIf userCfg.programs.doom-emacs.enable (getDotfiles "emacs");

@@ -10,6 +10,7 @@
 {
   setups.home-manager = {
     configs = {
+      # The typical user in desktop environments.
       foo-dogsquared = {
         systems = [ "aarch64-linux" "x86_64-linux" ];
         overlays = [
@@ -35,6 +36,7 @@
         };
       };
 
+      # The typical user in server environments.
       plover.systems = [ "x86_64-linux" ];
     };
 

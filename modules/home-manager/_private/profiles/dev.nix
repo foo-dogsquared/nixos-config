@@ -215,7 +215,7 @@ in {
       home.packages = with pkgs; [
         fastfetch # Fetch, fast!
         asciiquarium-transparent # The closest thing to an actual aquarium (without the responsibility, of course).
-        cowsay # Cow say "WHUT?"
+        cowsay # "WHUUUUUUUUUUUUUUUUUUUUUT?"
         krabby # Kapture them Pikachus, bruh.
         lavat # Where the lava at?
       ];
