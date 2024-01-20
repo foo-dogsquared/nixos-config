@@ -69,6 +69,7 @@
       # for building NixOS and home-manager systems.
       pkgs = import inputs.nixpkgs {
         inherit system;
+        config.allowUnfree = true;
         overlays = lib.attrValues inputs.self.overlays ++ [
           inputs.nur.overlay
         ];
