@@ -1,5 +1,4 @@
 { inputs
-, lib
 
 , defaultExtraArgs
 , defaultNixConf
@@ -29,9 +28,6 @@
               ];
               hashedPassword =
                 "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
-              isNormalUser = true;
-              createHome = true;
-              home = "/home/foo-dogsquared";
               description = "Gabriel Arazas";
             };
           };
