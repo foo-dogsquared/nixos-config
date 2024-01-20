@@ -11,11 +11,11 @@
 
     # Store the source code in a easy-to-locate path.
     contents = [{
-      source = ../..;
+      source = ../../..;
       target = "/etc/nixos/";
     }];
 
-    squashfsCompression = "zstd -Xcompression-level 8";
+    squashfsCompression = "zstd -Xcompression-level 11";
   };
 
   boot.kernelPackages = pkgs.linuxPackages_6_6;
