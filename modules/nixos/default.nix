@@ -4,7 +4,6 @@
     ./programs/cardboard-wm.nix
     ./programs/distrobox.nix
     ./programs/gnome-session
-    ./programs/kiwmi.nix
     ./programs/pop-launcher.nix
     ./programs/wezterm.nix
     ./services/archivebox.nix
