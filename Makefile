@@ -16,8 +16,7 @@ test:
 .PHONY: update
 update:
 	git checkout -- flake.lock
-	nix flake update \
-		--commit-lock-file --commit-lockfile-summary "flake.lock: update inputs"
+	nix flake update --commit-lock-file
 
 .PHONY: update_with_forked_inputs
 update_with_forked_inputs:
