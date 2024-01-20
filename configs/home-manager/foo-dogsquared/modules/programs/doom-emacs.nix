@@ -17,7 +17,6 @@ in
       enable = true;
       package = pkgs.emacs;
       extraPackages = epkgs: with epkgs; [
-        all-the-icons-nerd-fonts
         org-noter-pdftools
         org-pdftools
         org-roam
@@ -41,21 +40,23 @@ in
 
     home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
 
-    # Doom Emacs dependencies.
+    # Doom Emacs dependencies for the usual modules.
     home.packages = with pkgs; [
-      # This is installed just to get Geiser to properly work.
-      guile_3_0
+      # :ui doom
+      (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
 
-      # Module dependencies.
-      ## :checkers spell
+      # :checkers spell
       aspell
       aspellDicts.en
       aspellDicts.en-computers
 
-      ## :tools lookup
+      # :tools lookup
       wordnet
 
-      ## :lang org +roam2
+      # :lang common-lisp
+      guile_3_0
+
+      # :lang org +roam2
       texlive.combined.scheme-medium
       (python3.withPackages (ps: with ps; [ jupyter ]))
       sqlite
