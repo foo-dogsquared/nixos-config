@@ -37,6 +37,10 @@
     };
   };
 
+  # Add our own projects directory since most programs can't decide where it is
+  # properly.
+  xdg.userDirs.extraConfig.XDG_PROJECTS_DIR = "${config.home.homeDirectory}/Projects";
+
   # Set nixpkgs config both outside and inside of home-manager.
   nixpkgs.config = import ./config/nixpkgs/config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./config/nixpkgs/config.nix;
