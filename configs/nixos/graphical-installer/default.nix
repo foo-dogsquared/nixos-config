@@ -13,11 +13,11 @@
 
     # Put the source code somewhere easy to see.
     contents = [{
-      source = ../..;
+      source = ../../..;
       target = "/etc/nixos";
     }];
 
-    squashfsCompression = "zstd -Xcompression-level 10";
+    squashfsCompression = "zstd -Xcompression-level 12";
   };
 
   boot.kernelPackages = pkgs.linuxPackages_6_6;
