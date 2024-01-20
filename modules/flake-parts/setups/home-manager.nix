@@ -157,25 +157,25 @@ let
             node.
           '';
         };
-    };
+      };
 
-    config = {
-      modules = [
-        ../../../configs/home-manager/${name}
+      config = {
+        modules = [
+          ../../../configs/home-manager/${name}
 
-        (
-          let
-            setupConfig = config;
-          in
-          { config, lib, ... }: {
-            nixpkgs.overlays = setupConfig.overlays;
-            home.username = lib.mkForce name;
-            home.homeDirectory = lib.mkForce setupConfig.homeDirectory;
-          }
-        )
-      ];
+          (
+            let
+              setupConfig = config;
+            in
+            { config, lib, ... }: {
+              nixpkgs.overlays = setupConfig.overlays;
+              home.username = lib.mkForce name;
+              home.homeDirectory = lib.mkForce setupConfig.homeDirectory;
+            }
+          )
+        ];
+      };
     };
-  };
 in
 {
   options.setups.home-manager = {
