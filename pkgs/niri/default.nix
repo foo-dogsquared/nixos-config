@@ -4,6 +4,9 @@
 , pkg-config
 , pipewire
 , udev
+, glib
+, cairo
+, pango
 , libxkbcommon
 , libinput
 , libglvnd
@@ -20,13 +23,13 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "niri";
-  version = "0.1.0-alpha.3";
+  version = "0.1.0-beta.1";
 
   src = fetchFromGitHub {
     owner = "YaLTeR";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-X3n8Mt3M5+Z8YDvYZOVCgKSHLTQJtBdbMBl0c5O/tt0=";
+    hash = "sha256-jU1scXkl/HP4mMXFsTFGBZtEfHU6m+n7wxkNeLU53xs=";
   };
 
   nativeBuildInputs = [
@@ -36,10 +39,13 @@ rustPlatform.buildRustPackage rec {
   ];
 
   buildInputs = [
+    cairo
+    glib
     libinput
     libxkbcommon
     libglvnd
     mesa
+    pango
     pipewire
     seatd
     systemd
@@ -50,7 +56,7 @@ rustPlatform.buildRustPackage rec {
   cargoLock = {
     lockFile = "${src}/Cargo.lock";
     outputHashes = {
-      "smithay-0.3.0" = "sha256-+VIKgdonZScAb38QcSatyoYGPSV3Q7lscd3U5jajdbM=";
+      "smithay-0.3.0" = "sha256-hRTA8Qb0WF8qbmxl5BQjkWw2a1dRkIuy+/cYITnXvu8=";
     };
   };
 
