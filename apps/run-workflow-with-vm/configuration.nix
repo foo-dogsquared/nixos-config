@@ -8,15 +8,15 @@ let
   config' = import <config> { };
   lib = pkgs.lib.extend (import <config/lib/extras/extend-lib.nix>);
 
-  modules = import <config/modules/nixos> { inherit lib; isInternal = true; };
-  hmModules = import <config/modules/home-manager> { inherit lib; isInternal = true; };
   extraArgs = {
     nix-colors = import <nix-colors> { };
   };
 in
 import <nixpkgs/nixos/lib/eval-config.nix> {
   inherit lib;
-  modules = modules ++ extraModules ++ [
+  modules = extraModules ++ [
+    <config/modules/nixos>
+    <config/modules/nixos/_private>
     <home-manager/nixos>
     <disko/module.nix>
     <sops-nix/modules/sops>
@@ -37,7 +37,9 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
       ];
 
       config = {
-        home-manager.sharedModules = hmModules ++ [
+        home-manager.sharedModules = [
+          <config/modules/home-manager>
+          <config/modules/home-manager/_private>
           <sops-nix/modules/home-manager/sops.nix>
           ({ config, lib, ... }: {
             _module.args = extraArgs;

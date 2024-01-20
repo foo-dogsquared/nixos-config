@@ -1,11 +1,5 @@
-{ lib
-
-  # Include the private modules.
-, isInternal ? false
-}:
-
-let
-  modules = [
+{
+  imports = [
     ./programs/blender.nix
     ./programs/cardboard-wm.nix
     ./programs/distrobox.nix
@@ -20,17 +14,4 @@ let
     ./services/yt-dlp.nix
     ./workflows
   ];
-  privateModules = [
-    ./profiles/archiving.nix
-    ./profiles/browsers.nix
-    ./profiles/desktop.nix
-    ./profiles/dev.nix
-    ./profiles/filesystem.nix
-    ./profiles/gaming.nix
-    ./profiles/i18n.nix
-    ./profiles/server.nix
-    ./profiles/vpn.nix
-  ];
-in
-modules
-++ (lib.optionals isInternal privateModules)
+}

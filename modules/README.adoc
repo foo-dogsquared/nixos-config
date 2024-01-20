@@ -15,6 +15,7 @@ It's better that we lay this out with a list of guidelines.
 * Custom modules are typically classified as private and public modules.
 Private (or internal) modules are simply modules meant to be used in this project and nowhere else.
 Public modules are meant to be used by others (but not necessarily mean we have to support or maintain these for them).
+For convenience, these private modules are stored in `_private` folder of each environment.
 
 * As such, public modules are not allowed to use the private library and modules.
 Only the private modules can.

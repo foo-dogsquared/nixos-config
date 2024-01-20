@@ -39,32 +39,32 @@
     };
 
     # This is to be used by the NixOS `home-manager.sharedModules` anyways.
-    sharedModules =
+    sharedModules = [
       # Import our own custom modules from here..
-      import ../../modules/home-manager { inherit lib; isInternal = true; }
+      ../../modules/home-manager
+      ../../modules/home-manager/_private
 
       # ...plus a bunch of third-party modules.
-      ++ [
-        inputs.sops-nix.homeManagerModules.sops
-        inputs.nix-index-database.hmModules.nix-index
+      inputs.sops-nix.homeManagerModules.sops
+      inputs.nix-index-database.hmModules.nix-index
 
-        # The default shared config for our home-manager configurations. This
-        # is also to be used for sharing modules among home-manager users from
-        # NixOS configurations with `nixpkgs.useGlobalPkgs` set to `true` so
-        # avoid setting nixpkgs-related options here.
-        ({ pkgs, config, lib, ... }: {
-          # Set some extra, yeah?
-          _module.args = defaultExtraArgs;
+      # The default shared config for our home-manager configurations. This
+      # is also to be used for sharing modules among home-manager users from
+      # NixOS configurations with `nixpkgs.useGlobalPkgs` set to `true` so
+      # avoid setting nixpkgs-related options here.
+      ({ pkgs, config, lib, ... }: {
+        # Set some extra, yeah?
+        _module.args = defaultExtraArgs;
 
-          manual = lib.mkDefault {
-            html.enable = true;
-            json.enable = true;
-            manpages.enable = true;
-          };
+        manual = lib.mkDefault {
+          html.enable = true;
+          json.enable = true;
+          manpages.enable = true;
+        };
 
-          home.stateVersion = lib.mkDefault "23.11";
-        })
-      ];
+        home.stateVersion = lib.mkDefault "23.11";
+      })
+    ];
 
     standaloneConfigModules = [
       defaultNixConf
@@ -83,6 +83,6 @@
 
   flake = {
     # Extending home-manager with my custom modules, if anyone cares.
-    homeModules.default = import ../../modules/home-manager { inherit lib; };
+    homeModules.default = ../../modules/home-manager;
   };
 }
