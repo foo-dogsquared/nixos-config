@@ -110,7 +110,7 @@ let
         '';
         default = "";
         example = lib.literalExpression ''
-          $${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
+          ''${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
         '';
       };
     };
