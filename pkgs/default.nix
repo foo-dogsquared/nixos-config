@@ -18,7 +18,6 @@ let
       gnome-search-provider-recoll =
         callPackage ./gnome-search-provider-recoll.nix { };
       hush-shell = callPackage ./hush-shell.nix { };
-      kiwmi = callPackage ./kiwmi { };
       lwp = callPackage ./lwp { };
       moac = callPackage ./moac.nix { };
       mopidy-beets = callPackage ./mopidy-beets.nix { };
