@@ -20,20 +20,11 @@ nixos-config
 ├── pkgs/
 ├── shells/
 ├── templates/
-├── users/
 ├── default.nix
 ├── flake.lock
 ├── flake.nix
 └── README.adoc
 ----
-
-One of the more notable files here when first start looking is the `./images.toml` file where it contains a description of the images.
-For more details, see xref:../../03-project-specific-setup/01-declarative-host-management/index.adoc[Declarative host management].
-
-A similar file, `./users.toml`, contains the description for the home-manager users to be exported from this flake.
-For more details, see xref:../../03-project-specific-setup/02-declarative-user-management/index.adoc[Declarative user management].
-
-Most of the said folders are related to a flake output attribute, see xref:../03-whats-in-my-flake/index.adoc[What's in my flake?] for more details.
 
 * `./docs/` contain the source code for the website.
 Currently, it uses link:https://gohugo.io/[Hugo] for statically generating the website.

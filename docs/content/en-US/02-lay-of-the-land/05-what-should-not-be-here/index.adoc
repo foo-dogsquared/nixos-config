@@ -22,6 +22,3 @@ An example would be the github:{github-repo}[Borg backup task, path=./modules/ni
 - Certain components will be missing.
 Most notably, the associated SSH key for the hosts.
 You won't be able to connect to the host if you don't have the private key.
-
-- Not to mention not all modules listed committed here are up-to-date.
-Though this only applies to non-critical services like the github:{github-repo}[multimedia archiving service, path=./modules/nixos/tasks/multimedia-archive, rev=master].

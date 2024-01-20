@@ -8,7 +8,7 @@ It is a custom github:hercules-ci/flake-parts[opts=repo] module that allows you 
 
 This custom flake-parts modules integrates the following projects:
 
-* It automatically adds github:serokell/deploy-rs[opts=repo] nodes ready to be deployed with `deploy` CLI tool.
+* It automatically adds github:serokell/deploy-rs[opts=repo] nodes ready to be deployed with `deploy` CLI tool when given the right parameters.
 * Mandatory inclusion of github:nix-community/home-manager[opts=repo].
 * Image output generation made easy with github:nix-community/nixos-generators[opts=repo].
 
@@ -18,11 +18,11 @@ For example, you can build my personalized NixOS installer ISO with the followin
 
 [source, shell, subs=attributes]
 ----
-nix build {canonical-flake-url}#images.x86_64-linux.bootstrap-iso
+nix build {canonical-flake-url}#images.x86_64-linux.bootstrap-install-iso
 ----
 
-This is an example of a declarative NixOS setup.
-The following configuration should have the following effects in the flake output:
+The following code listing is an example of a declarative NixOS setup.
+It should have the following effects in the flake output:
 
 * Two additional NixOS configurations to be deployed at `nixosConfigurations.plover-{x86_64-linux,aarch64-linux}`.
 By default, declarative NixOS setups are not added automatically to `nixosConfigurations` output unless we have `configs.<config>.formats = null;` but we did configure `configs.<config>.deploy` so that makes it even.
@@ -37,8 +37,8 @@ By default, declarative NixOS setups are not added automatically to `nixosConfig
     systems = [ "x86_64-linux" "aarch64-linux" ];
     formats = [ "do" "gce" ];
     domain = "foodogsquared.one";
-    nixpkgs-branch = "nixos-unstable-small";
-    home-manager-branch = "home-manager-unstable";
+    nixpkgsBranch = "nixos-unstable-small";
+    homeManagerBranch = "home-manager-unstable";
     modules = [
       ({ config, lib, ... }: {
         services.foo.enable = true;

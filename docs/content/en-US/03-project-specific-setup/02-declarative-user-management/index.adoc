@@ -21,9 +21,9 @@ Here's an example user with complete schema.
   # Here is the meat, what you're likely going to do.
   setups.home-manager.configs.foo-dogsquared = {
     systems = [ "x86_64-linux" "aarch64-linux" ];
-    nixpkgs-branch = "nixos-stable";
-    home-manager-branch = "home-manager-23.05";
-    home-directory = "/home/foo-dogsquared";
+    nixpkgsBranch = "nixos-stable";
+    homeManagerBranch = "home-manager-23.05";
+    homeDirectory = "/home/foo-dogsquared";
     username = "foodogsquared";
     modules = [
       ({ config, lib, ... }: {
