@@ -34,6 +34,7 @@ let
       tic-80 = callPackage ./tic-80 { };
       smile = callPackage ./smile { };
       sessiond = callPackage ./sessiond { };
+      uwsm = callPackage ./uwsm { };
       vgc = qt6Packages.callPackage ./vgc { };
       watc = callPackage ./watc { };
       wzmach = callPackage ./wzmach { };
