@@ -1,0 +1,41 @@
+From 43e2977af8b89ff713b3043ee2d7f0c8ad11b50e Mon Sep 17 00:00:00 2001
+From: Gabriel Arazas <foodogsquared@foodogsquared.one>
+Date: Sun, 21 Jan 2024 17:04:11 +0800
+Subject: [PATCH 2/2] meson: Add python-sessiond installation
+
+---
+ meson.build                 |  1 +
+ python-sessiond/meson.build | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
+ create mode 100644 python-sessiond/meson.build
+
+diff --git a/meson.build b/meson.build
+index 20dd185..36ac465 100644
+--- a/meson.build
++++ b/meson.build
+@@ -131,3 +131,4 @@ foreach name, section : manpages
+ endforeach
+ 
+ subdir('test')
++subdir('python-sessiond')
+diff --git a/python-sessiond/meson.build b/python-sessiond/meson.build
+new file mode 100644
+index 0000000..bbf071f
+--- /dev/null
++++ b/python-sessiond/meson.build
+@@ -0,0 +1,12 @@
++python = import('python')
++
++python_sessiond_srcs = [
++  'sessiond.py'
++]
++
++py_installation = python.find_installation('python3', required: true)
++if not py_installation.found()
++  error('No python installation found')
++endif
++
++py_installation.install_sources(python_sessiond_srcs)
+-- 
+2.42.0
+
