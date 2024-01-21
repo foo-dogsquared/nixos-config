@@ -68,6 +68,8 @@ python3Packages.buildPythonPackage rec {
     homepage = "https://github.com/jcrd/sessiond";
     description = "Standalone session manager for X11 window managers";
     license = licenses.gpl3Plus;
+    mainProgram = "sessiond";
+    maintainers = with maintainers; [ foo-dogsquared ];
     platforms = platforms.linux;
   };
 }
