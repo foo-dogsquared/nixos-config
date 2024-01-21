@@ -337,24 +337,10 @@ rec {
           unitConfig.CollectMode = lib.mkForce "inactive-or-failed";
         };
 
-        # Luckily, this script can be flexible both for built-in and
-        # systemd-managed sessions by checking `DESKTOP_AUTOSTART_ID` envvar
-        # that is initialized with the built-in-managed session.
         scriptPackage = pkgs.writeShellApplication {
           name = scriptName;
           runtimeInputs = [ cfg.package pkgs.dbus ];
-          text = ''
-            DESKTOP_AUTOSTART_ID="''${DESKTOP_AUTOSTART_ID:-}"
-            echo "$DESKTOP_AUTOSTART_ID"
-            test -n "$DESKTOP_AUTOSTART_ID" && {
-              dbus-send --print-reply --session \
-                --dest=org.gnome.SessionManager "/org/gnome/SessionManager" \
-                org.gnome.SessionManager.RegisterClient \
-                "string:${name}" "string:$DESKTOP_AUTOSTART_ID"
-            }
-
-            ${config.script}
-          '';
+          text = config.script;
         };
 
         desktopPackage = pkgs.makeDesktopItem config.desktopConfig;
