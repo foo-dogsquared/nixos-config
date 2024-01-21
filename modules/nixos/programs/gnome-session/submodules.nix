@@ -265,12 +265,19 @@ rec {
           know how different desktop components interact with each other
           especially if one of them failed.
 
+          * Even if we have a way to limit starting desktop components with
+          `systemd-xdg-autostart-condition`, using `Service.ExecCondition=`
+          would severely limit possible reuse of desktop components with other
+          NixOS-module-generated gnome-session sessions so we're not bothering
+          with those.
+
           TODO: Is `Type=notify` a good default?
           * `Service.Type=` is obviously not included since not all desktop
           components are the same either. Some of them could a D-Bus service,
           some of them are oneshots, etc. Not to mention, this is already implied
           to be `Type=simple` by systemd anyways.
 
+          TODO: A good balance for this value, probably?
           * `Service.OOMScoreAdjust=` have different values for different
           components so it isn't included.
 
