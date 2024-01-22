@@ -87,7 +87,7 @@ in {
       # most likely using Nix anyways.
       programs.nix-index.enable =
         let
-          hasNixOSModuleEnabled = attrs ? osConfig && lib.attrByPath [ "programs" "nix-index" "enable" ] false attrs.osConfig;
+          hasNixOSModuleEnabled = attrs ? nixosConfig && lib.attrByPath [ "programs" "nix-index" "enable" ] false attrs.nixosConfig;
         in
           !hasNixOSModuleEnabled;
     })

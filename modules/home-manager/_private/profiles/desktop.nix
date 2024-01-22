@@ -13,7 +13,7 @@ in
       enable = lib.mkEnableOption "installations of audio-related apps";
       pipewire.enable = lib.mkOption {
         type = lib.types.bool;
-        default = attrs ? osConfig && lib.attrByPath [ "services" "pipewire" "enable" ] false attrs.osConfig;
+        default = attrs ? nixosConfig && lib.attrByPath [ "services" "pipewire" "enable" ] false attrs.nixosConfig;
         description = ''
           Enable whether to install Pipewire-related applications.
 
@@ -43,7 +43,7 @@ in
       ]
       ++ (
         let
-          hasBlenderNixOSModule = attrs ? osConfig && lib.attrByPath [ "programs" "blender" "enable" ] false attrs.osConfig;
+          hasBlenderNixOSModule = attrs ? nixosConfig && lib.attrByPath [ "programs" "blender" "enable" ] false attrs.nixosConfig;
         in
         lib.optional (!hasBlenderNixOSModule) pkgs.blender
       );
@@ -61,7 +61,7 @@ in
       ]
       ++ (
         let
-          hasWineProfile = attrs ? osConfig && lib.attrByPath [ "profiles" "desktop" "wine" "enable" ] false attrs.osConfig;
+          hasWineProfile = attrs ? nixosConfig && lib.attrByPath [ "profiles" "desktop" "wine" "enable" ] false attrs.nixosConfig;
         in
         lib.optionals hasWineProfile (with pkgs; [
           yabridge # Building bridges to Windows and Linux audio tools.
@@ -77,7 +77,7 @@ in
         enable = true;
         soundService =
           let
-            hasNixOSPipewirePulseEnabled = attrs ? osConfig && lib.attrByPath [ "services" "pipewire" "pulse" "enable" ] false attrs.osConfig;
+            hasNixOSPipewirePulseEnabled = attrs ? nixosConfig && lib.attrByPath [ "services" "pipewire" "pulse" "enable" ] false attrs.nixosConfig;
           in
           lib.mkIf hasNixOSPipewirePulseEnabled "pipewire-pulse";
       };
