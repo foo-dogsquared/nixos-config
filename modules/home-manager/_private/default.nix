@@ -1,8 +1,8 @@
 {
   imports = [
-    ./profiles/desktop.nix
-    ./profiles/dev.nix
-    ./profiles/editors.nix
-    ./profiles/i18n.nix
+    ./suites/desktop.nix
+    ./suites/dev.nix
+    ./suites/editors.nix
+    ./suites/i18n.nix
   ];
 }
