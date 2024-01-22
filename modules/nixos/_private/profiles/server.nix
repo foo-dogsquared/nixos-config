@@ -9,7 +9,6 @@ in
 {
   options.profiles.server = {
     enable = lib.mkEnableOption "server-related settings";
-    hardened-config.enable = lib.mkEnableOption "additional hardened configuration for NixOS systems";
     cleanup.enable = lib.mkEnableOption "cleanup service for the system";
     auto-upgrade.enable = lib.mkEnableOption "unattended system upgrades";
   };
@@ -68,32 +67,6 @@ in
       # We're only going to deal with servers in English.
       i18n.defaultLocale = lib.mkForce "en_US.UTF-8";
       i18n.supportedLocales = lib.mkForce [ "en_US.UTF-8/UTF-8" ];
-    })
-
-    # Most of the things here are based from the Securing Debian document.
-    (lib.mkIf cfg.hardened-config.enable {
-      # Don't replace it mid-way! DON'T TURN LEFT!!!!
-      security.protectKernelImage = true;
-
-      # Hardened config equals hardened kernel.
-      boot.kernelPackages = lib.mkDefault pkgs.linuxKernel.packages.linux_6_6_hardened;
-
-      # Be STRICT! MUAHAHAHAHA!!!!
-      services.fail2ban = {
-        enable = true;
-        bantime-increment = {
-          enable = true;
-          factor = "4";
-          maxtime = "24h";
-          overalljails = true;
-        };
-        extraPackages = with pkgs; [ ipset ];
-      };
-
-      boot.kernel.sysctl = {
-        # Disable system console entirely. We don't need it so get rid of it.
-        "kernel.sysrq" = 0;
-      };
     })
 
     (lib.mkIf cfg.auto-upgrade.enable {

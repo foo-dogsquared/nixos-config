@@ -55,7 +55,6 @@
 
   profiles.server = {
     enable = true;
-    hardened-config.enable = true;
     cleanup.enable = true;
   };
 
