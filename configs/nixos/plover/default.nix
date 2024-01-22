@@ -1,4 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, foodogsquaredModulesPath, ... }:
 
 {
   imports = [
@@ -11,8 +11,8 @@
     (lib.private.getUser "nixos" "admin")
     (lib.private.getUser "nixos" "plover")
 
-    # Hardened profile from nixpkgs.
-    "${modulesPath}/profiles/hardened.nix"
+    "${foodogsquaredModulesPath}/profiles/headless.nix"
+    "${foodogsquaredModulesPath}/profiles/hardened.nix"
 
     ./modules
   ];
