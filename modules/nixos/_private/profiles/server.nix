@@ -9,7 +9,6 @@ in
 {
   options.profiles.server = {
     enable = lib.mkEnableOption "server-related settings";
-    headless.enable = lib.mkEnableOption "configuration for headless servers";
     hardened-config.enable = lib.mkEnableOption "additional hardened configuration for NixOS systems";
     cleanup.enable = lib.mkEnableOption "cleanup service for the system";
     auto-upgrade.enable = lib.mkEnableOption "unattended system upgrades";
@@ -69,19 +68,6 @@ in
       # We're only going to deal with servers in English.
       i18n.defaultLocale = lib.mkForce "en_US.UTF-8";
       i18n.supportedLocales = lib.mkForce [ "en_US.UTF-8/UTF-8" ];
-    })
-
-    # We're only covering the most basic settings here.
-    (lib.mkIf cfg.headless.enable {
-      # So does sounds...
-      sound.enable = false;
-
-      # ...and Bluetooth because it's so insecure.
-      hardware.bluetooth.enable = false;
-
-      # And other devices...
-      hardware.opentabletdriver.enable = false;
-      services.printing.enable = false;
     })
 
     # Most of the things here are based from the Securing Debian document.
