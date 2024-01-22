@@ -101,6 +101,7 @@ in
             languagetool
             multi-account-containers
             privacy-badger
+            search-by-image
             tampermonkey
             tridactyl
             ublock-origin
