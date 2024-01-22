@@ -11,7 +11,7 @@ in
 
   config = lib.mkIf cfg.enable {
     # Install all of the desktop stuff.
-    profiles.desktop = {
+    suites.desktop = {
       enable = true;
       audio.enable = true;
       audio.pipewire.enable = true;

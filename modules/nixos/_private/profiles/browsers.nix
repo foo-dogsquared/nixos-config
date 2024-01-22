@@ -4,10 +4,10 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.profiles.browsers;
+  cfg = config.suites.browsers;
 in
 {
-  options.profiles.browsers = {
+  options.suites.browsers = {
     firefox.enable = lib.mkEnableOption "Firefox and its fixed configuration";
     chromium.enable = lib.mkEnableOption "Chromium and its fixed configuration";
   };

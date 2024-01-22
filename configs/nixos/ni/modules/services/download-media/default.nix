@@ -100,7 +100,7 @@ in
           "secrets-config" = { };
         });
 
-      profiles.filesystem.setups.archive.enable = true;
+      suites.filesystem.setups.archive.enable = true;
 
       services.yt-dlp = {
         enable = true;

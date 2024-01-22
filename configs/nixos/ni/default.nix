@@ -39,7 +39,7 @@
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
   # My custom configuration with my custom modules starts here.
-  profiles = {
+  suites = {
     archiving.enable = true;
     browsers.chromium.enable = true;
     filesystem.setups.personal-webstorage.enable = true;

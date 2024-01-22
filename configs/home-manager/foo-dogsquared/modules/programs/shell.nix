@@ -10,7 +10,7 @@ in
     lib.mkEnableOption "configuration of foo-dogsquared's shell of choice and its toolbelt";
 
   config = lib.mkIf cfg.enable {
-    profiles.dev.shell.enable = lib.mkDefault true;
+    suites.dev.shell.enable = lib.mkDefault true;
 
     programs.bash = {
       enable = true;

@@ -60,7 +60,7 @@ in
         "ssh-key" = { };
       });
 
-    profiles.filesystem.setups = {
+    suites.filesystem.setups = {
       archive.enable = true;
       external-hdd.enable = true;
     };

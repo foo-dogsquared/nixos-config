@@ -30,6 +30,6 @@
   programs.git.package = lib.mkForce pkgs.git;
 
   # Setting the development environment mainly for container-related work.
-  profiles.dev.enable = true;
-  profiles.dev.containers.enable = true;
+  suites.dev.enable = true;
+  suites.dev.containers.enable = true;
 }

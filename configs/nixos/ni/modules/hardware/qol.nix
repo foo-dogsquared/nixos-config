@@ -11,7 +11,7 @@ in
 
   config = lib.mkIf cfg.enable {
     # Bring in some of them good tools.
-    profiles.filesystem.tools.enable = true;
+    suites.filesystem.tools.enable = true;
 
     # We're using some better filesystems so we're using it.
     boot.initrd.supportedFilesystems = [ "btrfs" ];

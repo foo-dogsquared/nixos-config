@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       # Bring all of the software development goodies.
-      profiles.dev = {
+      suites.dev = {
         enable = true;
         extras.enable = true;
         hardware.enable = true;

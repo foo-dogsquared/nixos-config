@@ -10,7 +10,7 @@ in
 
   config = lib.mkIf cfg.enable {
     # Bring all of the goodies.
-    profiles.gaming = {
+    suites.gaming = {
       enable = true;
       emulators.enable = true;
       retro-computing.enable = true;
@@ -28,7 +28,7 @@ in
     programs.steam.remotePlay.openFirewall = true;
 
     # Enable the Wine setup for Linux gaming with Windows games.
-    profiles.desktop.wine.enable = true;
+    suites.desktop.wine.enable = true;
 
     # Yes... Play your Brawl Stars and Clash Royale in NixOS. :)
     virtualisation.waydroid.enable = true;

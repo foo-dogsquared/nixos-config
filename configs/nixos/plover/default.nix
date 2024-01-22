@@ -53,7 +53,7 @@
   # All of the keys required to deploy the secrets.
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
-  profiles.server = {
+  suites.server = {
     enable = true;
     cleanup.enable = true;
   };

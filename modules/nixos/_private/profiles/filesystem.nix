@@ -1,6 +1,6 @@
 # A bunch of predefined filesystem configurations for several devices. This is
 # nice for setting up shop for certain tasks with the flick of the switch to ON
-# (e.g., `config.profiles.filesystem.archive.enable = true`) and not have
+# (e.g., `config.suites.filesystem.archive.enable = true`) and not have
 # conflicting settings all throughout the configuration.
 #
 # Much of the filesystem setups are taking advantage of systemd's fstab
@@ -9,10 +9,10 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.profiles.filesystem;
+  cfg = config.suites.filesystem;
 in
 {
-  options.profiles.filesystem = {
+  options.suites.filesystem = {
     tools.enable = lib.mkEnableOption "filesystem-related settings";
     setups = {
       archive.enable = lib.mkEnableOption "automounting offline archive";

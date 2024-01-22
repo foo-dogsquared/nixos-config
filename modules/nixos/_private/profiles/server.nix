@@ -4,10 +4,10 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.profiles.server;
+  cfg = config.suites.server;
 in
 {
-  options.profiles.server = {
+  options.suites.server = {
     enable = lib.mkEnableOption "server-related settings";
     cleanup.enable = lib.mkEnableOption "cleanup service for the system";
     auto-upgrade.enable = lib.mkEnableOption "unattended system upgrades";
@@ -17,7 +17,7 @@ in
     ({
       assertions = [{
         assertion =
-          !config.profiles.desktop.enable || !config.profiles.server.enable;
+          !config.suites.desktop.enable || !config.suites.server.enable;
         message = ''
           Desktop profile is also enabled. The profiles `desktop` and `server`
           are mutually exclusive.

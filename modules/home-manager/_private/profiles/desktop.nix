@@ -2,10 +2,10 @@
 { config, lib, pkgs, ... }@attrs:
 
 let
-  cfg = config.profiles.desktop;
+  cfg = config.suites.desktop;
 in
 {
-  options.profiles.desktop = {
+  options.suites.desktop = {
     enable = lib.mkEnableOption "installations of desktop apps";
     graphics.enable =
       lib.mkEnableOption "installations of graphics-related apps";

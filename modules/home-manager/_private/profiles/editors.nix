@@ -7,9 +7,9 @@
 # for me is not worth to maintain.
 { config, lib, pkgs, ... }:
 
-let cfg = config.profiles.editors;
+let cfg = config.suites.editors;
 in {
-  options.profiles.editors = {
+  options.suites.editors = {
     neovim.enable = lib.mkEnableOption "basic Neovim setup";
     vscode.enable = lib.mkEnableOption "basic Visual Studio Code setup";
   };

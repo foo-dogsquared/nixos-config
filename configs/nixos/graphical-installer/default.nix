@@ -30,7 +30,7 @@
   };
 
   # Some niceties.
-  profiles.desktop.enable = true;
+  suites.desktop.enable = true;
 
   services.xserver.displayManager = {
     gdm = {

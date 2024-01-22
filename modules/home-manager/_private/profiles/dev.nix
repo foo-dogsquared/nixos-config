@@ -2,9 +2,9 @@
 # If you're looking for text editors, go to `./editors.nix`.
 { config, lib, pkgs, ... }@attrs:
 
-let cfg = config.profiles.dev;
+let cfg = config.suites.dev;
 in {
-  options.profiles.dev = {
+  options.suites.dev = {
     enable =
       lib.mkEnableOption "basic set of programs for development setup";
     shell.enable =

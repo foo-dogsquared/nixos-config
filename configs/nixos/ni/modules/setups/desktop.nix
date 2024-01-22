@@ -14,7 +14,7 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       # Bring all of the desktop goodies.
-      profiles.desktop = {
+      suites.desktop = {
         enable = true;
         audio.enable = true;
         fonts.enable = true;
@@ -35,7 +35,7 @@ in
 
       # Make it in multiple languages. Take note the input method engine is set
       # up by the workflow module of choice...
-      profiles.i18n.enable = true;
+      suites.i18n.enable = true;
 
       # ...which is by the way is this one.
       workflows.workflows.a-happy-gnome.enable = true;
@@ -43,7 +43,7 @@ in
 
     (lib.mkIf (hasAnyWorkflowEnabled [ "a-happy-gnome" "knome" "mosey-branch" ]) {
       hosts.ni.networking.setup = "networkmanager";
-      profiles.i18n.setup = "ibus";
+      suites.i18n.setup = "ibus";
     })
   ]);
 }

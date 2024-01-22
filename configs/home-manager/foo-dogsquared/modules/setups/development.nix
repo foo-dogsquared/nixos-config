@@ -18,7 +18,7 @@ in
         terminal-multiplexer.enable = lib.mkDefault true;
       };
 
-      profiles.dev = {
+      suites.dev = {
         enable = true;
         extras.enable = true;
         coreutils-replacement.enable = true;

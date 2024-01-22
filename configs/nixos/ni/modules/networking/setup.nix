@@ -43,7 +43,7 @@ in
       ];
 
       # Put on your cloak, kid.
-      profiles.vpn.personal.enable = true;
+      suites.vpn.personal.enable = true;
 
       # We'll go with a software firewall. We're mostly configuring it as if we're
       # using a server even though the chances of that is pretty slim.

@@ -26,7 +26,7 @@ in
       ];
 
       # Enable the desktop audio profile for extra auditorial goodies.
-      profiles.desktop.audio = {
+      suites.desktop.audio = {
         enable = lib.mkDefault true;
         pipewire.enable = lib.mkDefault true;
       };

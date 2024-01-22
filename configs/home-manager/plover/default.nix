@@ -21,7 +21,7 @@
     ];
   };
 
-  profiles = {
+  suites = {
     dev = {
       enable = true;
       shell.enable = true;

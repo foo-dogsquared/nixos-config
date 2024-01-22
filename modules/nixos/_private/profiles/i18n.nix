@@ -4,10 +4,10 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.profiles.i18n;
+  cfg = config.suites.i18n;
 in
 {
-  options.profiles.i18n = {
+  options.suites.i18n = {
     enable = lib.mkEnableOption "main i18n config";
     setup = lib.mkOption {
       type = lib.types.enum [ "fcitx5" "ibus" ];

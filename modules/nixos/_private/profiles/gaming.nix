@@ -2,10 +2,10 @@
 { lib, config, pkgs, ... }:
 
 let
-  cfg = config.profiles.gaming;
+  cfg = config.suites.gaming;
 in
 {
-  options.profiles.gaming = {
+  options.suites.gaming = {
     enable = lib.mkEnableOption "basic gaming setup";
     emulators.enable = lib.mkEnableOption "installation of individual game emulators";
     retro-computing.enable = lib.mkEnableOption "installation of retro computer systems";
