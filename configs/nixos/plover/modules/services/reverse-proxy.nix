@@ -75,7 +75,7 @@ in
       security.dhparams.params.nginx.bits = 4096;
     }
 
-    (lib.mkIf config.profiles.server.enable {
+    (lib.mkIf hostCfg.services.fail2ban.enable {
       # Some fail2ban policies to apply for nginx.
       services.fail2ban.jails = {
         nginx-http-auth.settings = { enabled = true; };

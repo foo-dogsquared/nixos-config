@@ -13,6 +13,13 @@ in
   config = lib.mkIf cfg.enable {
     services.fail2ban = {
       enable = true;
+      bantime-increment = {
+        enable = true;
+        factor = "4";
+        maxtime = "24h";
+        overalljails = true;
+      };
+      extraPackages = with pkgs; [ ipset ];
       ignoreIP = [
         # VPN clients.
         "${interfaces.wireguard0.IPv4.address}/13"
