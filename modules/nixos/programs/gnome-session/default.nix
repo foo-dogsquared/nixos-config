@@ -1,8 +1,141 @@
-{ config, lib, pkgs, utils, ... }@moduleArgs:
+{ config, lib, pkgs, utils, ... }:
 
 let
   cfg = config.programs.gnome-session;
-  inherit (import ./submodules.nix moduleArgs) sessionType;
+
+  # The bulk of the work. Pretty much the main purpose of this module.
+  sessionPackages = lib.mapAttrsToList
+    (name: session:
+      let
+        gnomeSession = ''
+          [GNOME Session]
+          Name=${session.fullName} session
+          RequiredComponents=${lib.concatStringsSep ";" session.requiredComponents};
+        '';
+
+        displaySession = ''
+          [Desktop Entry]
+          Name=@fullName@
+          Comment=${session.description}
+          Exec="@out@/libexec/${name}-session"
+          Type=Application
+          DesktopNames=${lib.concatStringsSep ";" session.desktopNames};
+        '';
+
+        sessionScript = ''
+          #!${pkgs.runtimeShell}
+
+          # gnome-session is also looking for RequiredComponents in here.
+          XDG_CONFIG_DIRS=@out@/etc/xdg''${XDG_CONFIG_DIRS:-:$XDG_CONFIG_DIRS}
+
+          # We'll have to force gnome-session to detect our session.
+          XDG_DATA_DIRS=@out@/share''${XDG_DATA_DIRS:-:$XDG_DATA_DIRS}
+
+          ${lib.getExe' cfg.package "gnome-session"} ${lib.escapeShellArgs session.extraArgs}
+        '';
+
+        displayScripts =
+          let
+            hasMoreDisplays = protocol: lib.optionalString (lib.length session.display > 1) "fullName='${session.fullName} (${protocol})'";
+          in
+          {
+            wayland = ''
+              (
+                DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${name}.desktop"
+                install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
+                ${hasMoreDisplays "Wayland"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
+              )
+            '';
+            x11 = ''
+              (
+                DISPLAY_SESSION_FILE="$out/share/xsessions/${name}.desktop"
+                install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
+                ${hasMoreDisplays "X11"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
+              )
+            '';
+          };
+
+        installDesktopSessions = builtins.map
+          (display:
+            displayScripts.${display})
+          session.display;
+
+        installDesktops =
+          let
+            sessionName = name;
+          in
+          lib.mapAttrsToList
+            (name: component:
+              let
+                scriptName = "${sessionName}-${name}-script";
+
+                # There's already a lot of bad bad things in this world, we don't to add
+                # more of it here (only a fraction of it, though).
+                scriptPackage = pkgs.writeShellApplication {
+                  name = scriptName;
+                  text = component.script;
+                };
+
+                script = "${scriptPackage}/bin/${scriptName}";
+                desktopConfig = lib.mergeAttrs component.desktopConfig { exec = script; };
+                desktopPackage = pkgs.makeDesktopItem desktopConfig;
+              in
+              ''
+                install -Dm0644 ${desktopPackage}/share/applications/*.desktop -t $out/share/applications
+              '')
+            session.components;
+      in
+      pkgs.runCommandLocal "${name}-desktop-session-files"
+        {
+          env = {
+            inherit (session) fullName;
+          };
+          inherit displaySession gnomeSession sessionScript;
+          passAsFile = [ "displaySession" "gnomeSession" "sessionScript" ];
+          passthru.providedSessions = [ name ];
+        }
+        ''
+          SESSION_SCRIPT="$out/libexec/${name}-session"
+          install -Dm0755 "$sessionScriptPath" "$SESSION_SCRIPT"
+          substituteAllInPlace "$SESSION_SCRIPT"
+
+          GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${name}.session"
+          install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
+          substituteAllInPlace "$GNOME_SESSION_FILE"
+
+          ${lib.concatStringsSep "\n" installDesktopSessions}
+
+          ${lib.concatStringsSep "\n" installDesktops}
+        ''
+    )
+    cfg.sessions;
+
+  sessionSystemdUnits = lib.mapAttrsToList
+    (name: session:
+      let
+        inherit (utils.systemdUtils.lib)
+          pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
+        componentsUnits =
+          lib.foldlAttrs
+            (acc: name: component:
+              acc // {
+                "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
+                "${component.id}.target" = targetToUnit component.id component.targetUnit;
+              } // lib.optionalAttrs (component.socketUnit != null) {
+                "${component.id}.socket" = socketToUnit component.id component.socketUnit;
+              } // lib.optionalAttrs (component.timerUnit != null) {
+                "${component.id}.timer" = timerToUnit component.id component.timerUnit;
+              } // lib.optionalAttrs (component.pathUnit != null) {
+                "${component.id}.path" = pathToUnit component.id component.pathUnit;
+              })
+            { }
+            session.components;
+      in
+      componentsUnits // {
+        "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" session.targetUnit;
+      }
+    )
+    cfg.sessions;
 in
 {
   options.programs.gnome-session = {
@@ -18,7 +151,10 @@ in
     };
 
     sessions = lib.mkOption {
-      type = with lib.types; attrsOf (submodule sessionType);
+      type = with lib.types; attrsOf (submoduleWith {
+        specialArgs = { inherit utils; };
+        modules = [ ./submodules/session-type.nix ];
+      });
       description = ''
         A set of desktop sessions to be created with
         {manpage}`gnome-session(1)`. This gnome-session configuration generates
@@ -156,30 +292,16 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.sessions != { })
-    (
-      let
-        sessionPackages = lib.mapAttrsToList
-          (_: session:
-            session.sessionPackage)
-          cfg.sessions;
+  config = lib.mkIf (cfg.sessions != { }) {
+    # Install all of the desktop session files.
+    services.xserver.displayManager.sessionPackages = sessionPackages;
+    environment.systemPackages = [ cfg.package ] ++ sessionPackages;
 
-        sessionSystemdUnits = lib.mapAttrsToList
-          (_: session:
-            session.systemdUserUnits)
-          cfg.sessions;
-      in
-      {
-        # Install all of the desktop session files.
-        services.xserver.displayManager.sessionPackages = sessionPackages;
-        environment.systemPackages = [ cfg.package ] ++ sessionPackages;
+    # Make sure it is searchable within gnome-session.
+    environment.pathsToLink = [ "/share/gnome-session" ];
 
-        # Make sure it is searchable within gnome-session.
-        environment.pathsToLink = [ "/share/gnome-session" ];
-
-        # Import those systemd units from gnome-session as well.
-        systemd.packages = [ cfg.package ];
-        systemd.user.units = lib.mkMerge sessionSystemdUnits;
-      }
-    );
+    # Import those systemd units from gnome-session as well.
+    systemd.packages = [ cfg.package ];
+    systemd.user.units = lib.mkMerge sessionSystemdUnits;
+  };
 }
