@@ -141,9 +141,9 @@ in
         you set {option}`<session>.components` as this module already sets
         them for you.
 
-        The only time you manually set this if you want to require components
-        from other desktop such as when creating a customized version of
-        GNOME.
+        The only time you manually set this if you want to require other
+        gnome-session components from other desktop such as when creating a
+        customized version of GNOME.
         :::
       '';
       example = [

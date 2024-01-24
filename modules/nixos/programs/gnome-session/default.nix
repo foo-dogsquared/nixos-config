@@ -1,3 +1,8 @@
+# This module supports both the built-in and systemd-managed desktop sessions
+# for simplicity's sake and it is up to the user to configure one or the other
+# (or both but in practice, the user will make use only one of them at a time
+# so it's pointless). It also requires a lot of boilerplate which explains its
+# size.
 { config, lib, pkgs, utils, ... }:
 
 let
@@ -69,8 +74,8 @@ let
               let
                 scriptName = "${sessionName}-${name}-script";
 
-                # There's already a lot of bad bad things in this world, we don't to add
-                # more of it here (only a fraction of it, though).
+                # There's already a lot of bad bad things in this world, we
+                # don't to add more of it here (only a fraction of it, though).
                 scriptPackage = pkgs.writeShellApplication {
                   name = scriptName;
                   text = component.script;
@@ -302,6 +307,11 @@ in
 
     # Import those systemd units from gnome-session as well.
     systemd.packages = [ cfg.package ];
+
+    # We could include the systemd units in the desktop session package (which
+    # is more elegant and surprisingly trivial) but this requires
+    # reimplementing parts of nixpkgs systemd-lib and we're lazy bastards so
+    # no.
     systemd.user.units = lib.mkMerge sessionSystemdUnits;
   };
 }

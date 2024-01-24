@@ -62,10 +62,12 @@
         but without certain options from stage 2 counterparts such as
         `reloadTriggers` and `restartTriggers`.
 
+        By default, this module sets the service unit as part of the respective
+        target unit (i.e., `PartOf=$COMPONENTID.target`).
+
         On a typical case, you shouldn't mess with much of the dependency
-        ordering of the service unit. By default, this module sets the
-        service unit as part of the respective target unit (i.e.,
-        `PartOf=$COMPONENTID.target`).
+        ordering of the service unit. You should configure `targetUnit` for
+        that instead.
         :::
       '';
       default = { };
@@ -216,9 +218,9 @@
 
       TODO: Is `Type=notify` a good default?
       * `Service.Type=` is obviously not included since not all desktop
-      components are the same either. Some of them could a D-Bus service,
+      components are the same either. Some of them could be a D-Bus service,
       some of them are oneshots, etc. Not to mention, this is already implied
-      to be `Type=simple` by systemd anyways.
+      to be `Type=simple` by systemd anyways which is enough for most cases.
 
       TODO: A good balance for this value, probably?
       * `Service.OOMScoreAdjust=` have different values for different
