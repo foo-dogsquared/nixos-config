@@ -47,7 +47,7 @@ in
 
       # Enabling all hardware settings for the desktop (unless the user
       # explicitly disabled it).
-      profiles.desktop.hardware.enable = lib.mkDefault true;
+      suites.desktop.hardware.enable = lib.mkDefault true;
     }
 
     (lib.mkIf cfg.emulators.enable {
