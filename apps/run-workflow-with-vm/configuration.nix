@@ -1,7 +1,7 @@
 # A very basic NixOS VM configuration intended for testing out the given
 # workflow module. It's a good thing the baseline for the configuration is not
 # tedious to set up for simpler configs like this.
-{ workflow, extraModules ? [ ] }:
+{ workflow, extraModules ? [ ], extraHomeModules ? [ ] }:
 
 let
   pkgs = import <nixpkgs> { };
@@ -26,9 +26,7 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
       imports = [
         (lib.private.mapHomeManagerUser "alice" {
           password = "";
-          extraGroups = [
-            "wheel"
-          ];
+          extraGroups = [ "wheel" ];
           description = "There is no password";
           isNormalUser = true;
           createHome = true;
@@ -37,17 +35,13 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
       ];
 
       config = {
-        home-manager.sharedModules = [
+        home-manager.sharedModules = extraHomeModules ++ [
           <config/modules/home-manager>
           <config/modules/home-manager/_private>
           <sops-nix/modules/home-manager/sops.nix>
           ({ config, lib, ... }: {
             _module.args = extraArgs;
             xdg.userDirs.createDirectories = lib.mkForce true;
-
-            nixpkgs.overlays = [
-              config'.overlays.default
-            ];
           })
         ];
 
