@@ -220,6 +220,7 @@ in
       after = [ "dbus.socket" ];
 
       serviceConfig = {
+        Slice = lib.mkForce "session.slice";
         Type = lib.mkForce "dbus";
         BusName = lib.mkForce "org.sessiond.session1";
         ExecStart = lib.mkForce "${lib.getExe' sessiondPkg "sessiond"} ${lib.concatStringsSep " " config.extraArgs}";
