@@ -112,5 +112,12 @@ in
       Host ${hetzner-boxes-server}
         IdentityFile ${config.sops.secrets."${pathPrefix}/ssh-key".path}
     '';
+
+    services.btrfs.autoScrub = {
+      enable = true;
+      fileSystems = [
+        "/mnt/archives"
+      ];
+    };
   };
 }
