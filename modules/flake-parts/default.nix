@@ -10,6 +10,7 @@
     ./deploy-rs-nodes.nix
     ./home-configurations.nix
     ./home-modules.nix
+    ./nixvim-modules.nix
     ./nixvim-configurations.nix
     ./setups
   ];
