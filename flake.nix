@@ -9,6 +9,11 @@
     commit-lockfile-summary = "flake.lock: update inputs";
   };
 
+  # Just take note we still set common flake inputs to our own version even if
+  # we just use the modules and its overlays just so we don't download more of
+  # them. Each flake update is like 100MB worth just from the multiple nixpkgs
+  # branches at the following section, that's edging on the "too-much" scale
+  # for my fragile internet bandwidth.
   inputs = {
     # I know NixOS can be stable but we're going cutting edge, baybee! While
     # `nixpkgs-unstable` branch could be faster delivering updates, it is
@@ -28,8 +33,12 @@
 
     # Managing home configurations.
     home-manager.follows = "home-manager-unstable";
+
     home-manager-stable.url = "github:nix-community/home-manager/release-23.11";
+    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
+
     home-manager-unstable.url = "github:nix-community/home-manager";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs";
 
     # Make a Neovim distro.
     nixvim.url = "github:nix-community/nixvim";
