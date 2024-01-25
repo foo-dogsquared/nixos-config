@@ -1,7 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, foodogsquaredModulesPath, ... }:
 
 {
   imports = [
+    "${foodogsquaredModulesPath}/profiles/desktop"
+
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./modules

@@ -16,12 +16,14 @@ in
       # Bring all of the desktop goodies.
       suites.desktop = {
         enable = true;
-        audio.enable = true;
-        fonts.enable = true;
-        hardware.enable = true;
         cleanup.enable = true;
-        wine.enable = true;
       };
+
+      environment.systemPackages = with pkgs; [
+        # Setup the WINE environment.
+        wineWowPackages.stable
+        bottles # The Windows environment package manager.
+      ];
 
       # Apparently the Emacs of 3D artists.
       programs.blender = {
