@@ -7,6 +7,7 @@
     # The environment configurations.
     ./home-manager.nix
     ./nixos.nix
+    ./nixvim.nix
   ];
 
   _module.args = {
