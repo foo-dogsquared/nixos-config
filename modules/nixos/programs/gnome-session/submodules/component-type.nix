@@ -1,4 +1,23 @@
-{ name, config, lib, utils, session, ... }: {
+{ name, config, lib, utils, session, ... }:
+
+let
+  optionalSystemdUnitOption = type: systemdModuleAttribute:
+    lib.mkOption {
+      description = ''
+        An optional systemd ${type} configuration to be generated. This should
+        be configured if the session is managed by systemd.
+
+        :::{.note}
+        This has the same options as
+        {option}`systemd.user.${systemdModuleAttribute}.<name>` but without
+        certain options from stage 2 counterparts such as `reloadTriggers` and
+        `restartTriggers`.
+        :::
+      '';
+      default = null;
+    };
+in
+{
   options = {
     description = lib.mkOption {
       type = lib.types.nonEmptyStr;
@@ -99,7 +118,7 @@
       default = { };
     };
 
-    timerUnit = lib.mkOption {
+    timerUnit = optionalSystemdUnitOption "timer" "timers" // {
       type =
         let
           inherit (utils.systemdUtils.unitOptions) timerOptions commonUnitOptions;
@@ -110,20 +129,9 @@
           timerOptions
           unitConfig
         ]);
-      description = ''
-        An optional systemd timer configuration to be generated. This should
-        be configured if the session is managed by systemd.
-
-        :::{.note}
-        This has the same options as {option}`systemd.user.timers.<name>`
-        but without certain options from stage 2 counterparts such as
-        `reloadTriggers` and `restartTriggers`.
-        :::
-      '';
-      default = null;
     };
 
-    socketUnit = lib.mkOption {
+    socketUnit = optionalSystemdUnitOption "socket" "sockets" // {
       type =
         let
           inherit (utils.systemdUtils.unitOptions) socketOptions commonUnitOptions;
@@ -134,20 +142,9 @@
           socketOptions
           unitConfig
         ]);
-      description = ''
-        An optional systemd socket configuration to be generated. This should
-        be configured if the session is managed by systemd.
+      };
 
-        :::{.note}
-        This has the same options as {option}`systemd.user.sockets.<name>`
-        but without certain options from stage 2 counterparts such as
-        `reloadTriggers` and `restartTriggers`.
-        :::
-      '';
-      default = null;
-    };
-
-    pathUnit = lib.mkOption {
+    pathUnit = optionalSystemdUnitOption "path" "paths" // {
       type =
         let
           inherit (utils.systemdUtils.unitOptions) pathOptions commonUnitOptions;
@@ -158,17 +155,6 @@
           pathOptions
           unitConfig
         ]);
-      description = ''
-        An optional systemd path configuration to be generated. This should
-        be configured if the session is managed by systemd.
-
-        :::{.note}
-        This has the same options as {option}`systemd.user.paths.<name>`
-        but without certain options from stage 2 counterparts such as
-        `reloadTriggers` and `restartTriggers`.
-        :::
-      '';
-      default = null;
     };
 
     id = lib.mkOption {
@@ -229,14 +215,6 @@
       * Most sandboxing options. Aside from the fact we're dealing with a
       systemd user unit, much of them are unnecessary and rarely needed (if
       ever like `Service.PrivateTmp=`?) so we didn't set such defaults here.
-
-      As you can tell, this module does not provide a framework for the user
-      to easily compose their own desktop environment. THIS MODULE ALREADY
-      DOES A LOT, ALRIGHT! CUT ME SOME SLACK!
-
-      Take note that the default service configuration is leaning on the
-      desktop component being a simple type of service like how most NixOS
-      service modules are deployed.
     */
     serviceUnit = {
       script = lib.mkAfter config.script;
@@ -270,14 +248,8 @@
     };
 
     /*
-      Similarly, there are things that COULD make it here but didn't for a
-      variety of reasons.
-
-      * `Unit.PartOf=`, `Unit.Requisite=`, and the like since some components
-      require starting up earlier than the others. We could include it here
-      if we make it clear in the documentation or if it proves to be a
-      painful experience to configure this by a first-timer. For now, this is
-      on the user to know.
+      Take note the session target unit already has `Wants=$COMPONENT.target`
+      so no need to set dependency ordering directives here.
     */
     targetUnit = {
       wants = [ "${config.id}.service" ];
