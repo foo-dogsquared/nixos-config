@@ -8,21 +8,8 @@ in {
   options.suites.desktop = {
     enable =
       lib.mkEnableOption "basic desktop-related services and default programs";
-    audio.enable =
-      lib.mkEnableOption "desktop audio-related configurations";
-    fonts.enable = lib.mkEnableOption "font-related configuration";
-    hardware.enable =
-      lib.mkEnableOption "the common hardware-related configuration";
     cleanup.enable = lib.mkEnableOption "activation of various cleanup services";
     autoUpgrade.enable = lib.mkEnableOption "auto-upgrade service with this system";
-    wine = {
-      enable = lib.mkEnableOption "Wine and Wine-related tools";
-      package = lib.mkOption {
-        type = lib.types.package;
-        description = "The Wine package to be used for related tools.";
-        default = pkgs.wineWowPackages.stable;
-      };
-    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -113,102 +100,6 @@ in {
       boot.kernelModules = [ "v4l2loopback" ];
     })
 
-    (lib.mkIf cfg.audio.enable {
-      # Enable the preferred audio workflow.
-      sound.enable = false;
-      hardware.pulseaudio.enable = false;
-      security.rtkit.enable = true;
-      services.pipewire = {
-        enable = true;
-
-        # This is enabled by default but I want to explicit since
-        # this is my preferred way of managing anyways.
-        wireplumber.enable = true;
-
-        # Enable all the bi-...bridges.
-        alsa.enable = true;
-        alsa.support32Bit = true;
-        pulse.enable = true;
-        jack.enable = true;
-      };
-
-      # This is based from https://jackaudio.org/faq/linux_rt_config.html.
-      security.pam.loginLimits = [
-        {
-          domain = "@audio";
-          type = "-";
-          item = "rtprio";
-          value = "95";
-        }
-        {
-          domain = "@audio";
-          type = "-";
-          item = "memlock";
-          value = "unlimited";
-        }
-      ];
-    })
-
-    (lib.mkIf cfg.fonts.enable {
-      fonts = {
-        enableDefaultPackages = true;
-        fontDir.enable = true;
-        fontconfig = {
-          enable = true;
-          includeUserConf = true;
-
-          defaultFonts = {
-            monospace = [ "Iosevka" "Jetbrains Mono" "Source Code Pro" ];
-            sansSerif = [ "Source Sans Pro" "Noto Sans" ];
-            serif = [ "Source Serif Pro" "Noto Serif" ];
-            emoji = [ "Noto Color Emoji" ];
-          };
-        };
-
-        packages = with pkgs; [
-          # Some monospace fonts.
-          iosevka
-          monaspace
-          jetbrains-mono
-
-          # Noto font family
-          noto-fonts
-          noto-fonts-cjk
-          noto-fonts-cjk-sans
-          noto-fonts-cjk-serif
-          noto-fonts-lgc-plus
-          noto-fonts-extra
-          noto-fonts-emoji
-          noto-fonts-emoji-blob-bin
-
-          # Adobe Source font family
-          source-code-pro
-          source-sans-pro
-          source-han-sans
-          source-serif-pro
-          source-han-serif
-          source-han-mono
-
-          # Math fonts
-          stix-two # Didn't know rivers can have sequels.
-          xits-math # NOTE TO SELF: I wouldn't consider to name the fork with its original project's name backwards.
-        ];
-      };
-    })
-
-    (lib.mkIf cfg.hardware.enable {
-      # Enable tablet support with OpenTabletDriver.
-      hardware.opentabletdriver.enable = true;
-
-      # Enable support for Bluetooth.
-      hardware.bluetooth.enable = true;
-
-      # Enable yer game controllers.
-      hardware.steam-hardware.enable = true;
-      hardware.xone.enable = true;
-      hardware.xpadneo.enable = true;
-    })
-
     (lib.mkIf cfg.cleanup.enable {
       # Weekly garbage collection of Nix store.
       nix.gc = {
@@ -249,15 +140,6 @@ in {
         ];
         randomizedDelaySec = "1min";
       };
-    })
-
-    # I try to avoid using Wine on NixOS because most of them uses FHS or
-    # something and I just want it to work but here goes.
-    (lib.mkIf cfg.wine.enable {
-      environment.systemPackages = with pkgs; [
-        cfg.wine.package # The star of the show.
-        bottles # The Windows environment package manager.
-      ];
     })
   ]);
 }

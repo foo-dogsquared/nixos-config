@@ -44,10 +44,6 @@ in
       hardware.steam-hardware.enable = true;
       hardware.xone.enable = true;
       hardware.xpadneo.enable = true;
-
-      # Enabling all hardware settings for the desktop (unless the user
-      # explicitly disabled it).
-      suites.desktop.hardware.enable = lib.mkDefault true;
     }
 
     (lib.mkIf cfg.emulators.enable {
