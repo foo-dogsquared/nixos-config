@@ -15,10 +15,9 @@
 ** link:{{< relref "./03-project-specific-setup/04-custom-firefox-addons" >}}[Custom Firefox addons]
 
 * NixOS modules
-** link:{{< relref "./04-nixos-modules/01-profiles" >}}[Profiles]
-** link:{{< relref "./04-nixos-modules/02-workflows" >}}[Workflows]
-** link:{{< relref "./04-nixos-modules/03-disko" >}}[disko]
-** link:{{< relref "./04-nixos-modules/04-host-specific-modules" >}}[Host-specific modules]
+** link:{{< relref "./04-nixos-modules/01-workflows" >}}[Workflows]
+** link:{{< relref "./04-nixos-modules/02-disko" >}}[disko]
+** link:{{< relref "./04-nixos-modules/03-host-specific-modules" >}}[Host-specific modules]
 
 * link:{{< relref "./05-home-manager" >}}[home-manager]
 

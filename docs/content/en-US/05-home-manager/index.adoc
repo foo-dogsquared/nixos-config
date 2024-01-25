@@ -5,7 +5,7 @@ title: "home-manager"
 
 This NixOS configuration uses github:nix-community/home-manager[opts=repo] extensively for home environment configuration.
 Each of the home-manager users are placed in `users/home-manager` at the project root.
-Furthermore, they are typically deployed as part of the NixOS configuration and as stand-alone home-manager configuration.
+Furthermore, they are typically deployed as part of the NixOS configuration and as stand-alone home-manager configuration (but not standalone configs in NixOS systems).
 For more information, see xref:../03-project-specific-setup/01-declarative-host-management/index.adoc[Declarative host management] and xref:../03-project-specific-setup/02-declarative-user-management/index.adoc[Declarative user management].
 
 
