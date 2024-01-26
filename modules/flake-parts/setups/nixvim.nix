@@ -41,16 +41,6 @@ let
 
   configType = { name, lib, config, ... }: {
     options = {
-      systems = lib.mkOption {
-        type = with lib.types; listOf str;
-        default = partsConfig.systems;
-        defaultText = "config.systems";
-        example = [ "x86_64-linux" "aarch64-linux" ];
-        description = ''
-          A list of systems the NixVim configuration will be built against.
-        '';
-      };
-
       nixpkgsBranches = lib.mkOption {
         type = with lib.types; listOf str;
         description = ''
@@ -61,14 +51,6 @@ let
           "nixos-unstable"
           "nixos-stable"
         ];
-      };
-
-      modules = lib.mkOption {
-        type = with lib.types; listOf raw;
-        default = [];
-        description = ''
-          Additional NixVim modules to use.
-        '';
       };
     };
 
@@ -82,7 +64,13 @@ in
 {
   options.setups.nixvim = {
     configs = lib.mkOption {
-      type = with lib.types; attrsOf (submodule configType);
+      type = with lib.types; attrsOf (submoduleWith {
+        specialArgs = { inherit (config) systems; };
+        modules = [
+          ./shared/config-options.nix
+          configType
+        ];
+      });
       default = {};
       description = ''
         A set of NixVim configurations to be integrated into the declarative

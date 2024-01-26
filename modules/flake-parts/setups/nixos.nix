@@ -54,19 +54,9 @@ let
 
   deployNodeType = { config, lib, ... }: {
     freeformType = with lib.types; attrsOf anything;
+    imports = [ ./shared/deploy-node-type.nix ];
 
     options = {
-      fastConnection =
-        lib.mkEnableOption "deploy-rs to assume the target machine is considered fast";
-      autoRollback =
-        lib.mkEnableOption "deploy-rs auto-rollback feature" // {
-          default = true;
-        };
-      magicRollback =
-        lib.mkEnableOption "deploy-rs magic rollback feature" // {
-          default = true;
-        };
-      remoteBuild = lib.mkEnableOption "pass the build process to the remote machine";
       profiles = lib.mkOption {
         type = with lib.types; functionTo (attrsOf anything);
         default = os: {
@@ -144,17 +134,6 @@ let
 
   configType = { config, name, lib, ... }: {
     options = {
-      systems = lib.mkOption {
-        type = with lib.types; listOf str;
-        default = partsConfig.systems;
-        defaultText = "config.systems";
-        example = [ "x86_64-linux" "aarch64-linux" ];
-        description = ''
-          A list of platforms that the NixOS configuration is supposed to be
-          deployed on.
-        '';
-      };
-
       formats = lib.mkOption {
         type = with lib.types; nullOr (listOf str);
         default = [ "iso" ];
@@ -163,14 +142,6 @@ let
           as `null`, it is listed as part of `nixosConfigurations` and excluded
           from `images` flake output which is often the case for desktop NixOS
           systems.
-        '';
-      };
-
-      modules = lib.mkOption {
-        type = with lib.types; listOf raw;
-        default = [ ];
-        description = ''
-          A list of NixOS modules specific for that host.
         '';
       };
 
@@ -302,37 +273,6 @@ let
           Import home-manager users from
           {option}`setups.home-manager.configs` and map them as a normal
           NixOS user.
-        '';
-      };
-
-      nixvim = lib.mkOption {
-        type = lib.types.submodule {
-          options = {
-            instance = lib.mkOption {
-              type = with lib.types; nullOr str;
-              default = null;
-              example = "fiesta";
-              description = ''
-                The name of the NixVim configuration from
-                {option}`setups.nixvim.configs.<name>` to be included as part
-                of the NixOS system.
-              '';
-            };
-
-            additionalModules = lib.mkOption {
-              type = with lib.types; listOf raw;
-              default = [ ];
-              description = ''
-                A list of additional NixVim modules to be included.
-              '';
-            };
-          };
-        };
-        default = { };
-        description = ''
-          An optional NixVim inclusion for the NixOS system. Take note, this
-          will override whatever Neovim configuration from your NixOS system so
-          be sure to only use this if you have none.
         '';
       };
 
@@ -499,7 +439,14 @@ in
     };
 
     configs = lib.mkOption {
-      type = with lib.types; attrsOf (submodule configType);
+      type = with lib.types; attrsOf (submoduleWith {
+        specialArgs = { inherit (config) systems; };
+        modules = [
+          ./shared/config-options.nix
+          ./shared/nixvim-instance-options.nix
+          configType
+        ];
+      });
       default = { };
       description = ''
         An attribute set of metadata for the declarative NixOS setups. This
