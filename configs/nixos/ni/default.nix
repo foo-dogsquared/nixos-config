@@ -62,8 +62,5 @@
     experimental-features = [ "auto-allocate-uids" ];
   };
 
-  # My poor achy-breaky desktop can't take it.
-  nix.daemonCPUSchedPolicy = "idle";
-
   system.stateVersion = "24.05"; # Yes! I read the comment!
 }

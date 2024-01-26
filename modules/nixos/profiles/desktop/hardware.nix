@@ -13,4 +13,8 @@
   hardware.steam-hardware.enable = lib.mkDefault true;
   hardware.xone.enable = lib.mkDefault true;
   hardware.xpadneo.enable = lib.mkDefault true;
+
+  # This is useful for not interrupting your desktop activity. Also most of my
+  # poor achy-breaky desktops can't take it.
+  nix.daemonCPUSchedPolicy = "idle";
 }
