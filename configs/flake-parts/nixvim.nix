@@ -9,4 +9,8 @@
       ];
     };
   };
+
+  flake = {
+    nixvimModules.default = ../../modules/nixvim;
+  };
 }
