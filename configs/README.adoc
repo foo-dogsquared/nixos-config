@@ -1,0 +1,18 @@
+= Configs
+:toc:
+
+
+This is the folder containing various configurations for various environments, typically the ones configured using the Nix module system such as NixOS, home-manager, and nixvim.
+Each of these configurations are assumed to use custom modules defined at link:../modules/[../modules/] (where it has similar folder structure).
+
+Furthermore, these configurations do have a certain "codename" in the commits for easier inspection of the history.
+Here is the following list of them used in the repo history:
+
+* `hosts` for NixOS systems (e.g., `hosts/ni`).
+* `users` for home-manager configurations (e.g., `users/foo-dogsquared`).
+* `nixvimConfigs` for NixVim configurations (e.g., `nixvimConfigs/fiesta`).
+* `flake` for flake-parts (seeing it only has one of them, it is constantly referred to as `flake`).
+
+These "codenames" are also used for their environment-specific module structuring (e.g., `hosts.ni.services.backup.enable` for NixOS, `nixvimConfigs.fiesta.setups.tree-sitter` for NixVim, `users.foo-dogsquared.setups.desktop.enable` for home-manager) with the exception of flake-parts where it is basically a free-for-all.
+
+Lastly, these modules are referred collectively in the commits as `modules`.

@@ -1,0 +1,10 @@
+= Fiesta, the main NixVim configuration
+:toc:
+
+
+It's the main NixVim configuration used for a variety of purposes.
+I don't use NixVim primarily so it is only used as a potential note-taking setup and a main development setup.
+Who knows?
+It might grow into one.
+
+For now, it's modelled after my Neovim configuration from https://github.com/foo-dogsquared/dotfiles[my dotfiles] which endangers my own Neovim configuration to be deprecated in favor of this NixVim config. :)
