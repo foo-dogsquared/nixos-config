@@ -2,9 +2,11 @@
 
 {
   colorschemes.kanagawa.enable = true;
+  imports = [ ./modules ];
 
-  clipboard.providers.wl-copy.enable = true;
-  clipboard.providers.xclip.enable = true;
+  nixvimConfigs.fiesta.setups = {
+    desktop-utils.enable = true;
+  };
 
   plugins.neorg.enable = true;
   plugins.nvim-autopairs.enable = true;
