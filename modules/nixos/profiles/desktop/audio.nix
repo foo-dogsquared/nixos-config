@@ -2,11 +2,12 @@
 { lib, ... }:
 
 {
+  hardware.pulseaudio.enable = false;
   security.rtkit.enable = lib.mkDefault true;
 
   # The main preferred setup of our audio system.
   services.pipewire = {
-    enable = lib.mkDefault true;
+    enable = true;
 
     # This is enabled by default but I want to explicit since
     # this is my preferred way of managing anyways.
