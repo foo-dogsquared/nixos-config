@@ -9,6 +9,7 @@
 let
   cfg = config.setups.nixvim;
   partsConfig = config;
+  nixvimModules = ../../nixvim;
 
   mkNixvimConfig = { system, nixpkgsBranch, modules ? [] }:
     let
@@ -21,6 +22,9 @@ let
       inherit pkgs;
       module = {
         imports = modules;
+      };
+      extraSpecialArgs = {
+        foodogsquaredModulesPath = builtins.toString nixvimModules;
       };
     };
 
@@ -97,6 +101,8 @@ in
   };
 
   config = lib.mkIf (cfg.configs != {}) {
+    setups.nixvim.sharedModules = [ nixvimModules ];
+
     perSystem = { system, config, lib, ... }:
       (
         let

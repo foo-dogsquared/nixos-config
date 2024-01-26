@@ -42,8 +42,7 @@
 
     # This is to be used by the NixOS `home-manager.sharedModules` anyways.
     sharedModules = [
-      # Import our own custom modules from here..
-      ../../modules/home-manager
+      # Import our private modules...
       ../../modules/home-manager/_private
 
       # ...plus a bunch of third-party modules.

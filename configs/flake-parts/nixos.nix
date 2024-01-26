@@ -85,8 +85,7 @@
     # requirements of a host. On second thought, only on flakes with
     # optional NixOS modules.
     sharedModules = [
-      # Import our custom modules.
-      ../../modules/nixos
+      # Import our private modules.
       ../../modules/nixos/_private
 
       inputs.nix-index-database.nixosModules.nix-index

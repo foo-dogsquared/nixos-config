@@ -3,6 +3,7 @@
 
 let
   cfg = config.setups.home-manager;
+  homeManagerModules = ../../home-manager;
 
   # A thin wrapper around the home-manager configuration function.
   mkHome = { system, nixpkgsBranch ? "nixpkgs", homeManagerBranch ? "home-manager", extraModules ? [ ] }:
@@ -11,7 +12,7 @@ let
     in
     inputs.${homeManagerBranch}.lib.homeManagerConfiguration {
       extraSpecialArgs = {
-        foodogsquaredModulesPath = builtins.toString ../../home-manager;
+        foodogsquaredModulesPath = builtins.toString homeManagerModules;
       };
 
       inherit pkgs;
@@ -236,6 +237,9 @@ in
   };
 
   config = lib.mkIf (cfg.configs != { }) {
+    # Import our own home-manager modules.
+    setups.home-manager.sharedModules = [ homeManagerModules ];
+
     flake =
       let
         # A quick data structure we can pass through multiple build pipelines.

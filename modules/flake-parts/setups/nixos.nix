@@ -7,6 +7,7 @@
 
 let
   cfg = config.setups.nixos;
+  nixosModules = ../../nixos;
 
   # This is used on a lot of the Nix modules below.
   partsConfig = config;
@@ -27,7 +28,7 @@ let
     in
     (lib'.makeOverridable nixosSystem) {
       specialArgs = {
-        foodogsquaredModulesPath = builtins.toString ../../nixos;
+        foodogsquaredModulesPath = builtins.toString nixosModules;
       };
       lib = lib';
       modules = extraModules ++ [{
@@ -494,6 +495,10 @@ in
 
   config = lib.mkIf (cfg.configs != { }) {
     setups.nixos.sharedModules = [
+      # Import our own public NixOS modules.
+      nixosModules
+
+      # Set the home-manager-related settings.
       ({ lib, ... }: {
         home-manager.sharedModules = partsConfig.setups.home-manager.sharedModules;
 
