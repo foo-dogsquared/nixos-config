@@ -5,7 +5,7 @@
     configs.fiesta = {
       nixpkgsBranches = [
         "nixos-unstable"
-        "nixos-stable"
+        "nixpkgs-unstable"
       ];
     };
   };

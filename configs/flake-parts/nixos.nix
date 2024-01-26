@@ -81,20 +81,20 @@
       };
     };
 
-    # Only use imports as minimally as possible with the absolute
-    # requirements of a host. On second thought, only on flakes with
-    # optional NixOS modules.
     sharedModules = [
       # Import our private modules.
       ../../modules/nixos/_private
 
+      # Only have third-party modules with optional NixOS modules.
       inputs.nix-index-database.nixosModules.nix-index
       inputs.sops-nix.nixosModules.sops
       inputs.disko.nixosModules.disko
 
+      # Bring our own teeny-tiny snippets of configurations.
       defaultNixConf
       ../../modules/nixos/profiles/generic.nix
 
+      # The NixOS module that came from flake-parts.
       ({ config, lib, ... }: {
         _module.args = defaultExtraArgs;
 
