@@ -305,6 +305,37 @@ let
         '';
       };
 
+      nixvim = lib.mkOption {
+        type = lib.types.submodule {
+          options = {
+            instance = lib.mkOption {
+              type = with lib.types; nullOr str;
+              default = null;
+              example = "fiesta";
+              description = ''
+                The name of the NixVim configuration from
+                {option}`setups.nixvim.configs.<name>` to be included as part
+                of the NixOS system.
+              '';
+            };
+
+            additionalModules = lib.mkOption {
+              type = with lib.types; listOf raw;
+              default = [ ];
+              description = ''
+                A list of additional NixVim modules to be included.
+              '';
+            };
+          };
+        };
+        default = { };
+        description = ''
+          An optional NixVim inclusion for the NixOS system. Take note, this
+          will override whatever Neovim configuration from your NixOS system so
+          be sure to only use this if you have none.
+        '';
+      };
+
       deploy = lib.mkOption {
         type = with lib.types; nullOr (submodule deployNodeType);
         default = null;
@@ -326,6 +357,7 @@ let
 
     config = {
       modules = [
+        # Bring in the required modules.
         inputs.${config.homeManagerBranch}.nixosModules.home-manager
         ../../../configs/nixos/${name}
 
@@ -414,6 +446,25 @@ let
                 })
               ];
             }))
+
+        # Next, we include the chosen NixVim configuration into NixOS.
+        (lib.mkIf (config.nixvim.instance != null)
+          (
+            let
+              setupConfig = config;
+            in
+            { config, lib, ... }: {
+              imports = [ inputs.nixvim.nixosModules.nixvim ];
+
+              programs.nixvim = {
+                enable = true;
+                imports =
+                  partsConfig.setups.nixvim.${config.nixvim.instance}.modules
+                  ++ partsConfig.setups.nixvim.sharedModules
+                  ++ setupConfig.nixvim.additionalModules;
+              };
+            }
+          ))
 
         # Setting up the typical configuration.
         (
