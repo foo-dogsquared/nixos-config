@@ -5,6 +5,7 @@
   imports = [ ./modules ];
 
   nixvimConfigs.fiesta.setups = {
+    treesitter.enable = true;
     desktop-utils.enable = true;
   };
 
