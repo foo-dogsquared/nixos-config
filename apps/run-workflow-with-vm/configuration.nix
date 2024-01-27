@@ -17,6 +17,8 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
   modules = extraModules ++ [
     <config/modules/nixos>
     <config/modules/nixos/_private>
+    <config/modules/nixos/profiles/generic.nix>
+    <config/modules/nixos/profiles/nix-conf.nix>
     <home-manager/nixos>
     <disko/module.nix>
     <sops-nix/modules/sops>
@@ -35,6 +37,8 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
       ];
 
       config = {
+        home-manager.useUserPackages = lib.mkDefault true;
+        home-manager.useGlobalPkgs = lib.mkDefault true;
         home-manager.sharedModules = extraHomeModules ++ [
           <config/modules/home-manager>
           <config/modules/home-manager/_private>
@@ -54,9 +58,6 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
         ];
 
         system.stateVersion = "23.11";
-
-        home-manager.useUserPackages = lib.mkDefault true;
-        home-manager.useGlobalPkgs = lib.mkDefault true;
       };
     })
   ];
