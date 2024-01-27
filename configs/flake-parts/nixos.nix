@@ -93,23 +93,11 @@
       # Bring our own teeny-tiny snippets of configurations.
       defaultNixConf
       ../../modules/nixos/profiles/generic.nix
+      ../../modules/nixos/profiles/nix-conf.nix
 
       # The NixOS module that came from flake-parts.
       ({ config, lib, ... }: {
         _module.args = defaultExtraArgs;
-
-        # Set several paths for the traditional channels.
-        nix.nixPath = lib.mkIf config.nix.channel.enable
-          (lib.mapAttrsToList
-            (name: source:
-              let
-                name' = if (name == "self") then "config" else name;
-              in
-              "${name'}=${source}")
-            inputs
-          ++ [
-            "/nix/var/nix/profiles/per-user/root/channels"
-          ]);
       })
     ];
   };

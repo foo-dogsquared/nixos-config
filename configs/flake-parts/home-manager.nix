@@ -69,6 +69,7 @@
 
     standaloneConfigModules = [
       defaultNixConf
+      ../../modules/home-manager/profiles/nix-conf.nix
 
       ({ config, lib, ... }: {
         # Don't create the user directories since they are assumed to
