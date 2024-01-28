@@ -6,6 +6,7 @@
 
   nixvimConfigs.fiesta.setups = {
     snippets.enable = true;
+    completion.enable = true;
     treesitter.enable = true;
     debugging.enable = true;
     desktop-utils.enable = true;
