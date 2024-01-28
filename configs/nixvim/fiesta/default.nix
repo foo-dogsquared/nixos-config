@@ -5,6 +5,7 @@
   imports = [ ./modules ];
 
   nixvimConfigs.fiesta.setups = {
+    snippets.enable = true;
     treesitter.enable = true;
     debugging.enable = true;
     desktop-utils.enable = true;
