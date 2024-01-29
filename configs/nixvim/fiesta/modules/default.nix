@@ -5,5 +5,6 @@
     ./setups/desktop-utils.nix
     ./setups/snippets
     ./setups/treesitter.nix
+    ./setups/ui.nix
   ];
 }
