@@ -18,10 +18,12 @@ in
       # want to.
       nixGrammars = true;
       ensureInstalled = "all";
+      nixvimInjections = true;
 
       # Enable all of its useful features.
       folding = true;
       indent = true;
+      incrementalSelection.enable = true;
     };
 
     # Enable some more context for me.
@@ -29,8 +31,17 @@ in
       enable = true;
       lineNumbers = true;
       maxLines = 10;
-      mode = "topline";
+      mode = "cursor";
       separator = "*";
+    };
+
+    # Some niceties for refactoring.
+    plugins.treesitter-refactor = {
+      enable = true;
+      highlightCurrentScope.enable = true;
+      highlightDefinitions.enable = true;
+      navigation.enable = true;
+      smartRename.enable = true;
     };
 
     # Show me your moves.
