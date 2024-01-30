@@ -9,6 +9,7 @@
       ui.enable = true;
       completion.enable = true;
       treesitter.enable = true;
+      fuzzy-finder.enable = true;
       debugging.enable = true;
       desktop-utils.enable = true;
       note-taking.enable = true;
