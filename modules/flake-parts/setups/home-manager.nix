@@ -224,7 +224,12 @@ in
 
   config = lib.mkIf (cfg.configs != { }) {
     # Import our own home-manager modules.
-    setups.home-manager.sharedModules = [ homeManagerModules ];
+    setups.home-manager.sharedModules = [
+      homeManagerModules
+
+      # Import our private modules...
+      ../../home-manager/_private
+    ];
 
     flake =
       let

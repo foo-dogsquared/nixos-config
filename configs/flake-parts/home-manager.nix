@@ -40,11 +40,9 @@
       plover.systems = [ "x86_64-linux" ];
     };
 
-    # This is to be used by the NixOS `home-manager.sharedModules` anyways.
+    # Pretty much the baseline home-manager configuration for the whole
+    # cluster.
     sharedModules = [
-      # Import our private modules...
-      ../../modules/home-manager/_private
-
       # ...plus a bunch of third-party modules.
       inputs.sops-nix.homeManagerModules.sops
       inputs.nix-index-database.hmModules.nix-index

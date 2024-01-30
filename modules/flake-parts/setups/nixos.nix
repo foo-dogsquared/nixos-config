@@ -508,6 +508,9 @@ in
       # Import our own public NixOS modules.
       nixosModules
 
+      # Import our private modules.
+      ../../nixos/_private
+
       # Set the home-manager-related settings.
       ({ lib, ... }: {
         home-manager.sharedModules = partsConfig.setups.home-manager.sharedModules;

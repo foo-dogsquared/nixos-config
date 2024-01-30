@@ -81,10 +81,8 @@
       };
     };
 
+    # Basically the baseline NixOS configuration of the whole cluster.
     sharedModules = [
-      # Import our private modules.
-      ../../modules/nixos/_private
-
       # Only have third-party modules with optional NixOS modules.
       inputs.nix-index-database.nixosModules.nix-index
       inputs.sops-nix.nixosModules.sops
