@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }@attrs:
 
 let
   userCfg = config.users.foo-dogsquared;
@@ -119,7 +119,11 @@ in
             media_dirs = [
               "$XDG_MUSIC_DIR|Music"
               "~/library/music|Library"
-            ];
+            ]
+            ++ lib.optional (attrs?nixosConfig.suites.filesystem.setups.external-hdd.enable)
+              "/mnt/external-storage/library/music|External storage"
+            ++ lib.optional (attrs?nixosConfig.suites.filesystem.setups.archive.enable)
+              "/mnt/archives/music|Archive";
           };
 
           internetarchive = {
