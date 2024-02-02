@@ -20,7 +20,6 @@ in
         arcmenu
         burn-my-windows
         caffeine
-        desktop-cube
         fly-pie
         gsconnect
         just-perfection
