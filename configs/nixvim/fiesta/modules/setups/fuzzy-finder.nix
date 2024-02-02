@@ -15,15 +15,15 @@ in
     keymaps =
       let
         bindingPrefix = "<leader>f";
-        mkTelescopeKeymap = acc: binding: settings:
-          acc ++ [
-            (lib.mergeAttrs {
+        mkTelescopeKeymap = binding: settings:
+          lib.mergeAttrs
+            {
               mode = "n";
               key = "${bindingPrefix}${binding}";
-            } settings)
-          ];
+            }
+            settings;
       in
-      lib.foldlAttrs mkTelescopeKeymap [ ] ({
+      lib.mapAttrsToList mkTelescopeKeymap ({
         "A" = {
           options.desc = "Resume from last use";
           action = "require('telescope.builtin').resume";
