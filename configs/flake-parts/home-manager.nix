@@ -30,6 +30,7 @@
           inputs.nix-colors.homeManagerModules.default
           inputs.nur.hmModules.nur
         ];
+        nixvim.instance = "fiesta";
         deploy = {
           autoRollback = true;
           magicRollback = true;
