@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, options, pkgs, ... }:
 
 {
   imports = [ ./modules ];
@@ -13,6 +13,7 @@
       browsers.firefox.enable = true;
       browsers.misc.enable = true;
       doom-emacs.enable = true;
+      nixvim.enable = options?programs.nixvim.enable;
       email.enable = true;
       email.thunderbird.enable = true;
       research.enable = true;

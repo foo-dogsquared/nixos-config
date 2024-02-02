@@ -11,27 +11,31 @@ in
   options.users.foo-dogsquared.dotfiles.enable =
     lib.mkEnableOption "custom outside dotfiles for other programs";
 
-  config = lib.mkIf cfg.enable {
-    home.mutableFile."library/dotfiles" = {
-      url = "https://github.com/foo-dogsquared/dotfiles.git";
-      type = "git";
-    };
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
+      home.mutableFile."library/dotfiles" = {
+        url = "https://github.com/foo-dogsquared/dotfiles.git";
+        type = "git";
+      };
 
-    home.sessionPath = [
-      "${config.home.mutableFile."library/dotfiles".path}/bin"
-    ];
+      home.sessionPath = [
+        "${config.home.mutableFile."library/dotfiles".path}/bin"
+      ];
 
-    xdg.configFile = {
-      doom.source =
-        lib.mkIf userCfg.programs.doom-emacs.enable (getDotfiles "emacs");
-      kitty.source =
-        lib.mkIf userCfg.setups.development.enable (getDotfiles "kitty");
-      nvim.source =
-        lib.mkIf userCfg.setups.development.enable (getDotfiles "nvim");
-      nyxt.source =
-        lib.mkIf userCfg.programs.browsers.misc.enable (getDotfiles "nyxt");
-      wezterm.source =
-        lib.mkIf userCfg.setups.development.enable (getDotfiles "wezterm");
-    };
-  };
+      xdg.configFile = {
+        doom.source =
+          lib.mkIf userCfg.programs.doom-emacs.enable (getDotfiles "emacs");
+        kitty.source =
+          lib.mkIf userCfg.setups.development.enable (getDotfiles "kitty");
+        nyxt.source =
+          lib.mkIf userCfg.programs.browsers.misc.enable (getDotfiles "nyxt");
+        wezterm.source =
+          lib.mkIf userCfg.setups.development.enable (getDotfiles "wezterm");
+      };
+    }
+
+    (lib.mkIf (!config.programs.nixvim.enable) {
+      xdg.configFile.nvim.source = getDotfiles "nvim";
+    })
+  ]);
 }

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, options, ... }:
 
 let
   userCfg = config.users.foo-dogsquared;
@@ -26,7 +26,7 @@ in
         servers.enable = true;
       };
 
-      programs.neovim = {
+      programs.neovim = lib.mkIf (!config.programs.nixvim.enable) {
         enable = true;
         package = pkgs.neovim-nightly;
         vimAlias = true;

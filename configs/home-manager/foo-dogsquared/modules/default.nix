@@ -9,6 +9,7 @@
     ./programs/email.nix
     ./programs/git.nix
     ./programs/keys.nix
+    ./programs/nixvim
     ./programs/research.nix
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
