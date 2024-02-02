@@ -142,7 +142,7 @@ in
           socketOptions
           unitConfig
         ]);
-      };
+    };
 
     pathUnit = optionalSystemdUnitOption "path" "paths" // {
       type =
@@ -205,8 +205,9 @@ in
       TODO: Is `Type=notify` a good default?
       * `Service.Type=` is obviously not included since not all desktop
       components are the same either. Some of them could be a D-Bus service,
-      some of them are oneshots, etc. Not to mention, this is already implied
-      to be `Type=simple` by systemd anyways which is enough for most cases.
+      some of them are oneshots, etc. Though, it might be better to have this
+      as an explicit option set by the user instead of setting `Type=notify` as
+      a default.
 
       TODO: A good balance for this value, probably?
       * `Service.OOMScoreAdjust=` have different values for different

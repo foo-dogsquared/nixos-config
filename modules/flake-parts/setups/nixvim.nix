@@ -11,7 +11,7 @@ let
   cfg = config.setups.nixvim;
   nixvimModules = ../../nixvim;
 
-  mkNixvimConfig = { system, pkgs, modules ? [] }:
+  mkNixvimConfig = { system, pkgs, modules ? [ ] }:
     inputs.nixvim.legacyPackages.${system}.makeNixvimWithModule {
       inherit pkgs;
       module = {
@@ -24,7 +24,7 @@ let
 
   modulesOption = lib.mkOption {
     type = with lib.types; listOf raw;
-    default = [];
+    default = [ ];
   };
   modulesOption' = configEnv: modulesOption // {
     description = ''
@@ -84,7 +84,7 @@ in
           configType
         ];
       });
-      default = {};
+      default = { };
       description = ''
         A set of NixVim configurations to be integrated into the declarative
         setups configuration. Each of them will be available as part of
@@ -101,14 +101,15 @@ in
     standaloneConfigModules = modulesOption' "standalone configuration";
   };
 
-  config = lib.mkIf (cfg.configs != {}) {
+  config = lib.mkIf (cfg.configs != { }) {
     setups.nixvim.sharedModules = [ nixvimModules ];
 
     perSystem = { system, config, lib, ... }:
       (
         let
           validConfigs = lib.filterAttrs
-            (_: metadata: lib.elem system metadata.systems) cfg.configs;
+            (_: metadata: lib.elem system metadata.systems)
+            cfg.configs;
 
           nixvimConfigurations =
             let
@@ -135,7 +136,7 @@ in
                               cfg.sharedModules
                               ++ cfg.standaloneConfigModules
                               ++ metadata.modules
-                              ++ [ { package = neovimPkg; } ];
+                              ++ [{ package = neovimPkg; }];
                           });
                     in
                     builtins.map mkNixvimConfig' neovimPackages;
@@ -157,8 +158,8 @@ in
                 lib.nameValuePair
                   "nixvim-check-${name}"
                   (inputs.nixvim.lib.${system}.check.mkTestDerivationFromNvim {
-                  inherit nvim;
-                  name = "${name} configuration";
+                    inherit nvim;
+                    name = "${name} configuration";
                   }))
               nixvimConfigurations;
         }

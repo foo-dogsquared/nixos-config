@@ -60,10 +60,10 @@ in
                 query = "@${query}.outer";
               };
           in
-            lib.mapAttrs' mkQueryMappings {
-              "function" = "f";
-              "class" = "F";
-            };
+          lib.mapAttrs' mkQueryMappings {
+            "function" = "f";
+            "class" = "F";
+          };
       };
       move = lib.mkMerge ([{
         enable = true;
@@ -100,8 +100,9 @@ in
 
             # A set of bindings to be used for each jump direction.
             bindings:
-              let
-                mappings = builtins.map (motion:
+            let
+              mappings = builtins.map
+                (motion:
                   let
                     inherit (motion) region jumpDirection variant;
                     jumpDirection' = lib.strings.toLower jumpDirection;
@@ -115,19 +116,21 @@ in
                         query = "@${query}.${variant}";
                       };
                     };
-                  }) motions;
-              in
-                acc ++ mappings;
+                  })
+                motions;
+            in
+            acc ++ mappings;
         in
         lib.foldlAttrs mkQueryMappings [ ] {
-          "function" = { previous = "M"; next  = "m"; };
+          "function" = { previous = "M"; next = "m"; };
           "block" = { previous = "B"; next = "b"; };
           "call" = { previous = "F"; next = "f"; };
           "class" = { previous = "C"; next = "c"; };
           "conditional" = { previous = "D"; next = "d"; };
           "statement" = { previous = "S"; next = "s"; };
           "loop" = { previous = "L"; next = "l"; };
-        }));
+        }
+      ));
       select = {
         enable = true;
         lookahead = true;
@@ -161,16 +164,17 @@ in
 
               let
                 mappingsList =
-                  builtins.map (variant:
-                    let
-                      prefixMap' = prefixMap.${variant};
-                    in
-                    lib.nameValuePair "${prefixMap'.key}${binding}" {
-                      query = "@${query}.${variant}";
-                      desc = prefixMap'.desc query;
-                    }) [ "outer" "inner" ];
+                  builtins.map
+                    (variant:
+                      let
+                        prefixMap' = prefixMap.${variant};
+                      in
+                      lib.nameValuePair "${prefixMap'.key}${binding}" {
+                        query = "@${query}.${variant}";
+                        desc = prefixMap'.desc query;
+                      }) [ "outer" "inner" ];
               in
-                lib.listToAttrs mappingsList;
+              lib.listToAttrs mappingsList;
           in
           lib.concatMapAttrs mkQueryMappings {
             "function" = "m";
@@ -203,29 +207,33 @@ in
 
             mkQueryMappings = acc: query: bindings:
               let
-                mappings = builtins.map (motion:
-                  let
-                    inherit (motion) jumpDirection variant;
-                    jumpDirection' = lib.strings.toLower jumpDirection;
-                    binding' = bindings.${jumpDirection'};
-                    bindingPrefix = motionMap."${variant}${jumpDirection}";
-                  in
-                  {
-                    "swap${jumpDirection}" = {
-                      "${bindingPrefix}${binding'}" = {
-                        desc = actionDesc variant jumpDirection' query;
-                        query = "@${query}.${variant}";
+                mappings = builtins.map
+                  (motion:
+                    let
+                      inherit (motion) jumpDirection variant;
+                      jumpDirection' = lib.strings.toLower jumpDirection;
+                      binding' = bindings.${jumpDirection'};
+                      bindingPrefix = motionMap."${variant}${jumpDirection}";
+                    in
+                    {
+                      "swap${jumpDirection}" = {
+                        "${bindingPrefix}${binding'}" = {
+                          desc = actionDesc variant jumpDirection' query;
+                          query = "@${query}.${variant}";
+                        };
                       };
-                    };
-                  }) motions;
+                    })
+                  motions;
               in
-                acc ++ mappings;
+              acc ++ mappings;
           in
-            lib.foldlAttrs mkQueryMappings [ ] {
-              "function" = { next = "f"; previous = "F"; };
-              "parameter" = { next = "a"; previous = "A"; };
-              "conditional" = { next = "d"; previous = "D"; };
-            }));
+          lib.foldlAttrs mkQueryMappings [ ] {
+            "function" = { next = "f"; previous = "F"; };
+            "parameter" = { next = "a"; previous = "A"; };
+            "conditional" = { next = "d"; previous = "D"; };
+          }
+        )
+      );
     };
   };
 }

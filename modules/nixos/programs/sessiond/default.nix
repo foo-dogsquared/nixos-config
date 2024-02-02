@@ -45,7 +45,7 @@ let
         inherit (utils.systemdUtils.lib)
           pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
 
-        sessionComponents = 
+        sessionComponents =
           lib.foldlAttrs
             (acc: name: component:
               acc // {
@@ -61,10 +61,10 @@ let
             { }
             session.components;
       in
-        sessionComponents // {
-          "${name}.service" = serviceToUnit name session.serviceUnit;
-          "${name}.target" = targetToUnit name session.targetUnit;
-        }
+      sessionComponents // {
+        "${name}.service" = serviceToUnit name session.serviceUnit;
+        "${name}.target" = targetToUnit name session.targetUnit;
+      }
     )
     cfg.sessions;
 in
@@ -173,12 +173,10 @@ in
         environment.
 
         ::: {.tip}
-        While you can make identifiers in any way, it is
-        encouraged to stick to a naming scheme. Here's two common ways to name
-        a desktop environment.
-
-        * Reverse DNS-like scheme (e.g., `com.example.MoseyBranch`).
-        * Kebab-case (e.g., `mosey-branch`).
+        While you can make identifiers in any way, it is encouraged to stick to
+        a naming scheme. The recommended method is a reverse DNS-like scheme
+        preferably with a domain name you own (e.g.,
+        `com.example.MoseyBranch`).
         :::
       '';
       default = { };

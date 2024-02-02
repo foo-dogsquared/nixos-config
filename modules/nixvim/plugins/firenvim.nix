@@ -9,7 +9,7 @@ in
     package = helpers.mkPackageOption "firenvim" pkgs.vimPlugins.firenvim;
     extraConfig = lib.mkOption {
       type = with lib.types; attrsOf anything;
-      default = {};
+      default = { };
       example = {
         globalSettings = { alt = "all"; };
         localSettings = {

@@ -3,7 +3,7 @@
 let
   cfg = config.keyunmaps;
 
-  keyunmapOption = { config, lib, ...}: {
+  keyunmapOption = { config, lib, ... }: {
     options = {
       key = lib.mkOption {
         type = lib.types.str;

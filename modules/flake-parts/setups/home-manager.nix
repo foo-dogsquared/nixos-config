@@ -7,7 +7,12 @@ let
   partsConfig = config;
 
   # A thin wrapper around the home-manager configuration function.
-  mkHome = { system, nixpkgsBranch ? "nixpkgs", homeManagerBranch ? "home-manager", extraModules ? [ ] }:
+  mkHome =
+    { system
+    , nixpkgsBranch ? "nixpkgs"
+    , homeManagerBranch ? "home-manager"
+    , extraModules ? [ ]
+    }:
     let
       pkgs = inputs.${nixpkgsBranch}.legacyPackages.${system};
     in

@@ -4,7 +4,7 @@
 {
   fonts.enableDefaultPackages = lib.mkDefault true;
   fonts.fontDir.enable = lib.mkDefault true;
-  
+
   fonts.fontconfig = {
     enable = lib.mkDefault true;
     includeUserConf = true;

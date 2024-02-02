@@ -41,7 +41,12 @@ let
     };
 
   # A very very thin wrapper around `mkHost` to build with the given format.
-  mkImage = { system, nixpkgsBranch ? "nixpkgs", extraModules ? [ ], format ? "iso" }:
+  mkImage =
+    { system
+    , nixpkgsBranch ? "nixpkgs"
+    , extraModules ? [ ]
+    , format ? "iso"
+    }:
     let
       extraModules' =
         extraModules ++ [ inputs.nixos-generators.nixosModules.${format} ];
@@ -295,72 +300,71 @@ let
       };
     };
 
-    config = {
-      modules = [
-        # Bring in the required modules.
-        inputs.${config.homeManagerBranch}.nixosModules.home-manager
-        ../../../configs/nixos/${name}
+    config.modules = [
+      # Bring in the required modules.
+      inputs.${config.homeManagerBranch}.nixosModules.home-manager
+      ../../../configs/nixos/${name}
 
-        # Mapping the declarative home-manager users (if it has one) into NixOS
-        # users.
-        (lib.mkIf (config.homeManagerUsers.users != { })
-          (
-            let
-              setupConfig = config;
-              hasHomeManagerUsers = config.homeManagerUsers.users != { };
-              inherit (config.homeManagerUsers) nixpkgsInstance;
-              isNixpkgs = state: hasHomeManagerUsers && nixpkgsInstance == state;
-            in
-            { config, lib, pkgs, ... }: {
-              config = lib.mkMerge [
-                (lib.mkIf hasHomeManagerUsers {
-                  users.users =
-                    lib.mkMerge
-                      (lib.mapAttrsToList
-                        (name: hmUser: { ${name} = hmUser.userConfig; })
-                        setupConfig.homeManagerUsers.users);
-
-                  home-manager.users = lib.mkMerge
+      # Mapping the declarative home-manager users (if it has one) into NixOS
+      # users.
+      (lib.mkIf (config.homeManagerUsers.users != { })
+        (
+          let
+            setupConfig = config;
+            hasHomeManagerUsers = config.homeManagerUsers.users != { };
+            inherit (config.homeManagerUsers) nixpkgsInstance;
+            isNixpkgs = state: hasHomeManagerUsers && nixpkgsInstance == state;
+          in
+          { config, lib, pkgs, ... }: {
+            config = lib.mkMerge [
+              (lib.mkIf hasHomeManagerUsers {
+                users.users =
+                  lib.mkMerge
                     (lib.mapAttrsToList
-                      (name: hmUser: {
-                        ${name} = { lib, ... }: {
-                          imports =
-                            partsConfig.setups.home-manager.configs.${name}.modules
-                            ++ hmUser.additionalModules;
+                      (name: hmUser: { ${name} = hmUser.userConfig; })
+                      setupConfig.homeManagerUsers.users);
+
+                home-manager.users = lib.mkMerge
+                  (lib.mapAttrsToList
+                    (name: hmUser: {
+                      ${name} = { lib, ... }: {
+                        imports =
+                          partsConfig.setups.home-manager.configs.${name}.modules
+                          ++ hmUser.additionalModules;
+                      };
+                    })
+                    setupConfig.homeManagerUsers.users);
+              })
+
+              (lib.mkIf (isNixpkgs "global") {
+                home-manager.useGlobalPkgs = lib.mkForce true;
+
+                # Disable all options that are going to be blocked once
+                # `home-manager.useGlobalPkgs` is used.
+                home-manager.users =
+                  lib.mkMerge
+                    (lib.mapAttrsToList
+                      (name: _: {
+                        ${name} = {
+                          nixpkgs.overlays = lib.mkForce null;
+                          nixpkgs.config = lib.mkForce null;
                         };
                       })
                       setupConfig.homeManagerUsers.users);
-                })
 
-                (lib.mkIf (isNixpkgs "global") {
-                  home-manager.useGlobalPkgs = lib.mkForce true;
+                # Then apply all of the user overlays into the nixpkgs instance
+                # of the NixOS system.
+                nixpkgs.overlays =
+                  let
+                    hmUsersOverlays =
+                      lib.mapAttrsToList
+                        (name: _:
+                          partsConfig.setups.home-manager.configs.${name}.overlays)
+                        setupConfig.homeManagerUsers.users;
 
-                  # Disable all options that are going to be blocked once
-                  # `home-manager.useGlobalPkgs` is used.
-                  home-manager.users =
-                    lib.mkMerge
-                      (lib.mapAttrsToList
-                        (name: _: {
-                          ${name} = {
-                            nixpkgs.overlays = lib.mkForce null;
-                            nixpkgs.config = lib.mkForce null;
-                          };
-                        })
-                        setupConfig.homeManagerUsers.users);
-
-                  # Then apply all of the user overlays into the nixpkgs instance
-                  # of the NixOS system.
-                  nixpkgs.overlays =
-                    let
-                      hmUsersOverlays =
-                        lib.mapAttrsToList
-                          (name: _:
-                            partsConfig.setups.home-manager.configs.${name}.overlays)
-                          setupConfig.homeManagerUsers.users;
-
-                      overlays = lib.lists.flatten hmUsersOverlays;
-                    in
-                    # Most of the overlays are going to be imported from a
+                    overlays = lib.lists.flatten hmUsersOverlays;
+                  in
+                  # Most of the overlays are going to be imported from a
                     # variable anyways. This should massively reduce the step
                     # needed for nixpkgs to do its thing.
                     #
@@ -368,64 +372,64 @@ let
                     # overlay list is constructed. However, this is much more
                     # preferable than letting a massive list with duplicated
                     # overlays from different home-manager users to be applied.
-                    lib.lists.unique overlays;
-                })
+                  lib.lists.unique overlays;
+              })
 
-                (lib.mkIf (isNixpkgs "separate") {
-                  home-manager.useGlobalPkgs = lib.mkForce false;
-                  home-manager.users =
-                    lib.mkMerge
-                      (lib.mapAttrsToList
-                        (name: _: {
-                          ${name} = {
-                            nixpkgs.overlays =
-                              partsConfig.setups.home-manager.configs.${name}.overlays;
-                          };
-                        })
-                        setupConfig.homeManagerUsers.users);
-                })
-              ];
-            }))
+              (lib.mkIf (isNixpkgs "separate") {
+                home-manager.useGlobalPkgs = lib.mkForce false;
+                home-manager.users =
+                  lib.mkMerge
+                    (lib.mapAttrsToList
+                      (name: _: {
+                        ${name} = {
+                          nixpkgs.overlays =
+                            partsConfig.setups.home-manager.configs.${name}.overlays;
+                        };
+                      })
+                      setupConfig.homeManagerUsers.users);
+              })
+            ];
+          }
+        ))
 
-        # Next, we include the chosen NixVim configuration into NixOS.
-        (lib.mkIf (config.nixvim.instance != null)
-          (
-            let
-              setupConfig = config;
-            in
-            { config, lib, ... }: {
-              imports = [ inputs.nixvim.nixosModules.nixvim ];
-
-              programs.nixvim = {
-                enable = true;
-                imports =
-                  partsConfig.setups.nixvim.${config.nixvim.instance}.modules
-                  ++ partsConfig.setups.nixvim.sharedModules
-                  ++ setupConfig.nixvim.additionalModules;
-              };
-            }
-          ))
-
-        # Setting up the typical configuration.
+      # Next, we include the chosen NixVim configuration into NixOS.
+      (lib.mkIf (config.nixvim.instance != null)
         (
           let
             setupConfig = config;
           in
           { config, lib, ... }: {
-            config = lib.mkMerge [
-              {
-                nixpkgs.overlays = setupConfig.overlays;
-                networking.hostName = lib.mkDefault setupConfig.hostname;
-              }
+            imports = [ inputs.nixvim.nixosModules.nixvim ];
 
-              (lib.mkIf (setupConfig.domain != null) {
-                networking.domain = lib.mkDefault setupConfig.domain;
-              })
-            ];
+            programs.nixvim = {
+              enable = true;
+              imports =
+                partsConfig.setups.nixvim.${config.nixvim.instance}.modules
+                ++ partsConfig.setups.nixvim.sharedModules
+                ++ setupConfig.nixvim.additionalModules;
+            };
           }
-        )
-      ];
-    };
+        ))
+
+      # Setting up the typical configuration.
+      (
+        let
+          setupConfig = config;
+        in
+        { config, lib, ... }: {
+          config = lib.mkMerge [
+            {
+              nixpkgs.overlays = setupConfig.overlays;
+              networking.hostName = lib.mkDefault setupConfig.hostname;
+            }
+
+            (lib.mkIf (setupConfig.domain != null) {
+              networking.domain = lib.mkDefault setupConfig.domain;
+            })
+          ];
+        }
+      )
+    ];
   };
 in
 {
