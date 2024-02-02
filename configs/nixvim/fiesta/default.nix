@@ -12,7 +12,6 @@
       fuzzy-finder.enable = true;
       debugging.enable = true;
       desktop-utils.enable = true;
-      note-taking.enable = true;
     };
 
     # Some general settings.
