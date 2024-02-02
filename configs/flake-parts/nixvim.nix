@@ -7,6 +7,9 @@
         "nixos-unstable"
         "nixpkgs-unstable"
       ];
+      neovimPackages = pkgs: with pkgs; [
+        neovim-nightly
+      ];
     };
   };
 
