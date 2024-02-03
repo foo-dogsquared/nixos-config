@@ -11,6 +11,9 @@ in
   config = lib.mkIf cfg.enable {
     plugins.telescope.enable = true;
 
+    plugins.project-nvim.enable = lib.mkDefault true;
+    plugins.telescope.extensions.project-nvim.enable = config.plugins.project-nvim.enable;
+
     # Configure all of the keymaps.
     keymaps =
       let
