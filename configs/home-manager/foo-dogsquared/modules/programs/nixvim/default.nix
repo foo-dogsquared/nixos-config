@@ -11,9 +11,11 @@ in
   config = lib.mkIf cfg.enable {
     programs.nixvim = {
       enable = true;
-      imports = [
-        ./note-taking.nix
-      ];
+      imports =
+        [
+          ./note-taking.nix
+        ]
+        ++ lib.optional userCfg.setups.development.enable ./lsp.nix;
     };
   };
 }
