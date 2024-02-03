@@ -25,6 +25,9 @@
     options = {
       encoding = "utf-8";
       completeopt = [ "menuone" "noselect" ];
+      expandtab = true;
+      shiftwidth = 4;
+      tabstop = 4;
     };
 
     keymaps = [
@@ -33,11 +36,15 @@
         key = "jk";
         action = "<Esc>";
       }
+
+      {
+        mode = "n";
+        key = "<leader>bd";
+        action = "vim.cmd.bdelete";
+        lua = true;
+      }
     ];
 
     plugins.nvim-autopairs.enable = true;
-    extraPlugins = with pkgs; [
-      decker
-    ];
   };
 }
