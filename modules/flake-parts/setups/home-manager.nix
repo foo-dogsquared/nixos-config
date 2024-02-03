@@ -150,7 +150,11 @@ let
 
         (lib.mkIf (config.nixvim.instance != null)
           ({ lib, ... }: {
-            programs.nixvim = {
+            imports = [
+              inputs.nixvim.homeManagerModules.nixvim
+            ];
+
+            config.programs.nixvim = { ... }: {
               enable = true;
               imports =
                 partsConfig.setups.nixvim.configs.${config.nixvim.instance}.modules

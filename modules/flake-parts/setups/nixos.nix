@@ -401,7 +401,7 @@ let
           { config, lib, ... }: {
             imports = [ inputs.nixvim.nixosModules.nixvim ];
 
-            programs.nixvim = {
+            programs.nixvim = { ... }: {
               enable = true;
               imports =
                 partsConfig.setups.nixvim.${config.nixvim.instance}.modules
