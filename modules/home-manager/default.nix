@@ -1,6 +1,7 @@
 {
   imports = [
     ./files/mutable-files.nix
+    ./programs/pipewire.nix
     ./programs/pop-launcher.nix
     ./services/archivebox.nix
     ./services/activitywatch.nix
