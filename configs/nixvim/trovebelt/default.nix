@@ -6,6 +6,7 @@
   config = {
     nixvimConfigs.trovebelt.setups = {
       lsp.enable = true;
+      treesitter.enable = true;
       ui.enable = true;
     };
 
