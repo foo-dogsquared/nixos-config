@@ -398,7 +398,7 @@ let
           let
             setupConfig = config;
           in
-          { config, lib, ... }: {
+          { lib, ... }: {
             imports = [ inputs.nixvim.nixosModules.nixvim ];
 
             programs.nixvim = { ... }: {
