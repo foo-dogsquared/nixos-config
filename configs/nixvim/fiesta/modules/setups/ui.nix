@@ -31,7 +31,6 @@ in
     # Show them hidden suckers.
     options.list = true;
     options.listchars = {
-      eol = "↵";
       tab = "↦ *";
       trail = "·";
       nbsp = "%";
@@ -55,7 +54,6 @@ in
 
       sections = {
         lualine_a = [ "mode" ];
-        lualine_b = [ "filename" ];
         lualine_z = [ "location" ];
       };
     };

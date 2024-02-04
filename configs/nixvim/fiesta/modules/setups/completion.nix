@@ -36,16 +36,14 @@ in
             groupIndex = 1;
           }
 
-          (lib.mkIf nixvimCfg.setups.snippets.enable {
-            name = "luasnip";
-            groupIndex = 2;
-          })
-
-          { name = "buffer"; }
-
           {
             name = "path";
             groupIndex = 3;
+          }
+
+          {
+            name = "buffer";
+            groupIndex = 4;
           }
         ];
       };
@@ -59,6 +57,19 @@ in
 
     (lib.mkIf nixvimCfg.setups.debugging.enable {
       plugins.cmp-dap.enable = true;
+    })
+
+    (lib.mkIf nixvimCfg.setups.snippets.enable {
+      plugins.nvim-cmp.extraOptions.snippet.expand.__raw = ''
+        function(args)
+          require('luasnip').lsp_expand(args.body)
+        end
+      '';
+
+      plugins.nvim-cmp.sources = [{
+        name = "luasnip";
+        groupIndex = 2;
+      }];
     })
 
     (lib.mkIf nixvimCfg.setups.treesitter.enable {

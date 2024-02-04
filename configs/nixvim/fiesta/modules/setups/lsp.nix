@@ -18,7 +18,7 @@ in
     plugins.lsp.enable = true;
 
     # Keymaps for moving around in the buffer.
-    plugins.keymaps.lspBuf = {
+    plugins.lsp.keymaps.lspBuf = {
       K = "hover";
       gD = "references";
       gd = "definition";
@@ -27,7 +27,7 @@ in
     };
 
     # Keymaps for moving around with the doctor.
-    plugins.keymaps.diagnostic = {
+    plugins.lsp.keymaps.diagnostic = {
       "<leader>j" = "goto_next";
       "<leader>k" = "goto_prev";
     };

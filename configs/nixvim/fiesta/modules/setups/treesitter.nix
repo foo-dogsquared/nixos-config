@@ -30,7 +30,7 @@ in
     plugins.treesitter-context = {
       enable = true;
       lineNumbers = true;
-      maxLines = 10;
+      maxLines = 7;
       mode = "cursor";
       separator = "*";
     };
