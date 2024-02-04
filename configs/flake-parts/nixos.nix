@@ -96,6 +96,11 @@
       # The NixOS module that came from flake-parts.
       ({ config, lib, ... }: {
         _module.args = defaultExtraArgs;
+
+        # Set the NixOS system at the time of evaluation for convenience. Take
+        # note, we assume that you develop your NixOS configuration somewhere
+        # not in `/etc/nixos`.
+        environment.etc.nixos.source = inputs.self;
       })
     ];
   };
