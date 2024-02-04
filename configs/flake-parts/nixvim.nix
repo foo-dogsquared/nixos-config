@@ -1,13 +1,23 @@
-{ lib, ... }:
+{ ... }:
 
 {
-  setups.nixvim = {
-    configs.fiesta = {
+  setups.nixvim.configs = {
+    fiesta = {
       nixpkgsBranches = [
         "nixos-unstable"
         "nixpkgs-unstable"
       ];
-      neovimPackages = pkgs: with pkgs; [
+      neovimPackages = p: with p; [
+        neovim-nightly
+      ];
+    };
+
+    trovebelt = {
+      nixpkgsBranches = [
+        "nixos-unstable"
+        "nixpkgs-unstable"
+      ];
+      neovimPackages = p: with p; [
         neovim-nightly
       ];
     };

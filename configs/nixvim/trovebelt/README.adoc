@@ -1,0 +1,6 @@
+= Trovebelt, the use-for-all-of-the-other-software-development-projects NixVim configuration
+:toc:
+
+
+A large NixVim configuration intended to be used for everything software development-related and a little bit of everything.
+This is mainly used for non-NixOS environments (including WSL) where installing additional dependencies such as language servers and tree-sitter language servers is a pain.
