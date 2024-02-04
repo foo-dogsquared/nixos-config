@@ -26,17 +26,6 @@ in
         servers.enable = true;
       };
 
-      programs.neovim = lib.mkIf (!config.programs.nixvim.enable) {
-        enable = true;
-        package = pkgs.neovim-nightly;
-        vimAlias = true;
-        vimdiffAlias = true;
-
-        withNodeJs = true;
-        withPython3 = true;
-        withRuby = true;
-      };
-
       systemd.user.sessionVariables = {
         MANPAGER = "nvim +Man!";
         EDITOR = "nvim";
@@ -49,6 +38,19 @@ in
         recode # Convert between different encodings.
       ];
     }
+
+    (lib.mkIf (!config.programs.nixvim.enable) {
+      programs.neovim = {
+        enable = true;
+        package = pkgs.neovim-nightly;
+        vimAlias = true;
+        vimdiffAlias = true;
+
+        withNodeJs = true;
+        withPython3 = true;
+        withRuby = true;
+      };
+    })
 
     (lib.mkIf userCfg.programs.git.enable {
       home.packages = with pkgs; [
