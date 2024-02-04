@@ -8,3 +8,11 @@ Who knows?
 It might grow into one.
 
 For now, it's modelled after my Neovim configuration from https://github.com/foo-dogsquared/dotfiles[my dotfiles] which endangers my own Neovim configuration to be deprecated in favor of this NixVim config. :)
+
+Take note this is basically the "main" NixVim configuration so there are some design constraints to be followed.
+
+* Colorschemes-related settings are set with `mkDefault` priority.
+This is to allow individual users personalize their NixVim configuration.
+
+* Several environment-specific modules for this NixVim config are not set by default.
+This makes it configurable for several users where they have different needs.
