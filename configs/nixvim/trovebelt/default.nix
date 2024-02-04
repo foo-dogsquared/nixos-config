@@ -6,6 +6,7 @@
   config = {
     nixvimConfigs.trovebelt.setups = {
       lsp.enable = true;
+      ui.enable = true;
     };
 
     # Some general settings.
