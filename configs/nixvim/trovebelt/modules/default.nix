@@ -1,0 +1,5 @@
+{
+  imports = [
+    ./setups/lsp.nix
+  ];
+}

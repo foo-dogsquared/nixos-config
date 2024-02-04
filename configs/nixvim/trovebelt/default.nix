@@ -1,7 +1,13 @@
 { config, lib, ... }:
 
 {
+  imports = [ ./modules ];
+
   config = {
+    nixvimConfigs.trovebelt.setups = {
+      lsp.enable = true;
+    };
+
     # Some general settings.
     globals = {
       mapleader = " ";
