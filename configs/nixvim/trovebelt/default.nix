@@ -5,6 +5,7 @@
 
   config = {
     nixvimConfigs.trovebelt.setups = {
+      debugging.enable = true;
       lsp.enable = true;
       treesitter.enable = true;
       ui.enable = true;
