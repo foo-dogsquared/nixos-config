@@ -9,7 +9,7 @@ in
     lib.mkEnableOption "NixVim setup";
 
   config = lib.mkIf cfg.enable {
-    programs.nixvim = {
+    programs.nixvim = { ... }: {
       enable = true;
       imports =
         [
