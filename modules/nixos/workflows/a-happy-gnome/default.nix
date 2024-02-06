@@ -102,11 +102,6 @@ in
     # It makes Nix store directory read/write so no...
     services.packagekit.enable = false;
 
-    # Setting up split DNS with systemd-resolved. The domains should already
-    # be configured somewhere else.
-    services.resolved.enable = true;
-    networking.networkmanager.dns = "systemd-resolved";
-
     # Since we're using KDE Connect, we'll have to use gsconnect.
     programs.kdeconnect = {
       enable = true;
