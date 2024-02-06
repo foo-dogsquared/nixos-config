@@ -15,7 +15,10 @@ in
         [
           ./note-taking.nix
         ]
-        ++ lib.optional userCfg.setups.development.enable ./lsp.nix;
+        ++ lib.optionals userCfg.setups.development.enable [
+          ./lsp.nix
+          ./dap.nix
+        ];
     };
   };
 }
