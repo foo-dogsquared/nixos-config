@@ -4,9 +4,10 @@ let
   cfg = config.programs.pipewire;
   settingsFormat = pkgs.formats.json { };
 
-  generatePipewireConfig = name: settings: {
-    "pipewire/pipewire.conf.d/${name}.conf" = settingsFormat.generate "hm-pipewire-override-settings-${name}" settings;
-  };
+  generatePipewireConfig = name: settings:
+    lib.nameValuePair "pipewire/pipewire.conf.d/${name}.conf" {
+      source = settingsFormat.generate "hm-pipewire-override-settings-${name}" settings;
+    };
 in
 {
   options.programs.pipewire = {
@@ -41,6 +42,6 @@ in
       lib.optionalAttrs (cfg.settings != { }) {
         "pipewire/pipewire.conf" = settingsFormat.generate "hm-pipewire-settings" cfg.settings;
       }
-      // lib.mapAttrs generatePipewireConfig cfg.overrides;
+      // lib.mapAttrs' generatePipewireConfig cfg.overrides;
   };
 }
