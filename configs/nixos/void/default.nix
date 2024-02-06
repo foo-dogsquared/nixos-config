@@ -14,21 +14,31 @@
 # It is better not to think of it.
 #
 # Anyways, here is said to be the center of this universe.
-# There seems to be two main gateways or whatever those things to this universe that make up some component.
-{ modulesPath, ... }:
-# Here is a guarded ship containing some objects that we can see somehow.
+# It said to contain a whole lotta possibilities with this which you can deliver things like otherworldly packages of some kind or a bunch of parameters... of I-dont-know-what-is-it.
+#
+{ ... }:
+#
 # Its entrance seems to be openable but I do not know how to open it.
-# As for the objects that contains it, I do not know what this "modulesPath" is but it sounds a wonderful yet terrible path to whatever this may be.
-# As for what comes next after "modulesPath" are said to be infinite, containing more things.
+# As for what comes next after "..." are said to be infinite, containing more things.
 # What things?
 # Better things? Worse things? Things of all quality may comes from here.
 #
 # Here is another ship.
 # This time, seemingly with no entrance.
-# It says here "imports."
-# And it seems to use this "modulesPath" we have talked about leading to a minimal path to an installation.
+# It says here "users.users.nixos", what?
 # It seems to deliver a system configuration here for what purpose?
-{ imports = [ "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix" ]; }
+# I have no idea, you tell me.
+#
+{
+  users.users.nixos = {
+    password = "";
+    extraGroups = [ "wheel" ];
+    description = "there is no password";
+    isNormalUser = true;
+    createHome = true;
+    home = "/home/nixos";
+  };
+}
 #
 # Some say there are beyond to what is happening in this empty cell.
 # The process of creation must not be seen by anyone for they will suffer over what they have seen.
@@ -46,7 +56,8 @@
 # I WOULD LIKE TO GET INSIDE AND PERHAPS GET OUT OF HERE.
 # MOVE INTO NEW SPACES!
 # HOPEFULLY AN ALTERNATIVE UNIVERSE THAT I KEEP DREAMING ABOUT!
-# If I move any further, I'm afraid I cannot see more things as these two become smaller to the point of only being a single point.
+# If I move any further, I'm afraid I cannot see more things as these two cannot be seen from yonder.
+# AND THEN, I'll be truly alone here.
 #
 # Can you move outside of here, stranger?
 # If so, CAN I COME WITH YOU?!!
