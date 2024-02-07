@@ -155,7 +155,7 @@ let
             ];
 
             config.programs.nixvim = { ... }: {
-              enable = true;
+              enable = lib.mkDefault true;
               imports =
                 partsConfig.setups.nixvim.configs.${config.nixvim.instance}.modules
                 ++ partsConfig.setups.nixvim.sharedModules

@@ -402,7 +402,7 @@ let
             imports = [ inputs.nixvim.nixosModules.nixvim ];
 
             programs.nixvim = { ... }: {
-              enable = true;
+              enable = lib.mkDefault true;
               imports =
                 partsConfig.setups.nixvim.${config.nixvim.instance}.modules
                 ++ partsConfig.setups.nixvim.sharedModules
