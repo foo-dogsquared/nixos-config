@@ -39,9 +39,10 @@ in
 
   config = lib.mkIf cfg.enable {
     xdg.configFile =
-      lib.optionalAttrs (cfg.settings != { }) {
-        "pipewire/pipewire.conf" = settingsFormat.generate "hm-pipewire-settings" cfg.settings;
-      }
+      lib.optionalAttrs (cfg.settings != { })
+        {
+          "pipewire/pipewire.conf" = settingsFormat.generate "hm-pipewire-settings" cfg.settings;
+        }
       // lib.mapAttrs' generatePipewireConfig cfg.overrides;
   };
 }

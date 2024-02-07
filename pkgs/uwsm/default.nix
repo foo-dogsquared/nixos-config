@@ -5,7 +5,7 @@
 , ninja
 , pkg-config
 
-# This is for substituting shebangs in its plugins.
+  # This is for substituting shebangs in its plugins.
 , coreutils
 }:
 
@@ -31,7 +31,7 @@ python311Packages.buildPythonPackage rec {
     pkg-config
   ];
 
-  propagatedBuildInputs  = with python311Packages; [
+  propagatedBuildInputs = with python311Packages; [
     pyxdg
     dbus-python
   ];
