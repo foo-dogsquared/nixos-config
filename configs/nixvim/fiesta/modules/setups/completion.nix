@@ -20,6 +20,16 @@ in
           "<C-d>" = "cmp.mapping.scroll_docs(-4)";
           "<C-u>" = "cmp.mapping.scroll_docs(4)";
           "<C-g>" = "cmp.mapping.close()";
+
+          "<C-n>" = {
+            action = "cmp.mapping.select_next_item()";
+            modes = [ "i" "s" ];
+          };
+          "<C-p>" = {
+            action = "cmp.mapping.select_prev_item()";
+            modes = [ "i" "s" ];
+          };
+
           "<Tab>" = {
             action = "cmp.mapping.select_next_item()";
             modes = [ "i" "s" ];
