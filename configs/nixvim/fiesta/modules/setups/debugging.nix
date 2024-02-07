@@ -11,6 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     plugins.dap.enable = true;
     plugins.dap.extensions.dap-ui.enable = true;
+    plugins.dap.extensions.dap-virtual-text.enable = true;
     plugins.debugprint = {
       enable = true;
       ignoreTreesitter = false;
