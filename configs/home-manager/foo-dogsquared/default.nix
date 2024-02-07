@@ -13,7 +13,7 @@
       browsers.firefox.enable = true;
       browsers.misc.enable = true;
       doom-emacs.enable = true;
-      nixvim.enable = options?programs.nixvim.enable;
+      nixvim.enable = true;
       email.enable = true;
       email.thunderbird.enable = true;
       research.enable = true;
