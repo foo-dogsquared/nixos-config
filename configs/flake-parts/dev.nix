@@ -31,7 +31,14 @@
     # more preferable than installing all of the packages at the system
     # configuration (or even home environment).
     devShells = import ../../shells { inherit pkgs; } // {
-      default = import ../../shell.nix { inherit pkgs; };
+      default = import ../../shell.nix {
+        inherit pkgs;
+        extraPackages = with pkgs; [
+          # Mozilla addons-specific tooling. Unfortunately, only available with
+          # flakes-based setups.
+          nur.repos.rycee.mozilla-addons-to-nix
+        ];
+      };
       docs = import ../../docs/shell.nix { inherit pkgs; };
     };
   };
