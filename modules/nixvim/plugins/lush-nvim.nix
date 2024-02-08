@@ -5,7 +5,7 @@ let
 
   schemeType = { config, lib, ... }: {
     options = {
-      lushInit = lib.mkOption {
+      extraConfigLua = lib.mkOption {
         type = lib.types.lines;
         default = "";
         description = ''
@@ -37,8 +37,8 @@ let
     # This is based from rktjmp/lush-template. We'll improve on things from
     # here whenever necessary.
     lib.nameValuePair "colors/${name}.lua" ''
-      ${cfg.lushInit}
-      ${theme.lushInit}
+      ${cfg.extraConfigLua}
+      ${theme.extraConfigLua}
 
       local theme = lush(
         function(injected_functions)
@@ -56,7 +56,7 @@ in
 
     package = helpers.mkPackageOption "lush.nvim" pkgs.vimPlugins.lush-nvim;
 
-    lushInit = lib.mkOption {
+    extraConfigLua = lib.mkOption {
       type = lib.types.lines;
       default = ''
         local lush = require('lush')
