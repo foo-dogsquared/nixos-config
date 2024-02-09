@@ -27,7 +27,6 @@
           inputs.nur.overlay
         ];
         modules = [
-          inputs.nix-colors.homeManagerModules.default
           inputs.nur.hmModules.nur
         ];
         nixvim.instance = "fiesta";

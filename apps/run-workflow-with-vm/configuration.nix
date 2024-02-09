@@ -7,10 +7,6 @@ let
   pkgs = import <nixpkgs> { };
   config' = import <config> { };
   lib = pkgs.lib.extend (import <config/lib/extras/extend-lib.nix>);
-
-  extraArgs = {
-    nix-colors = import <nix-colors> { };
-  };
 in
 import <nixpkgs/nixos/lib/eval-config.nix> {
   inherit lib;
@@ -44,12 +40,9 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
           <config/modules/home-manager/_private>
           <sops-nix/modules/home-manager/sops.nix>
           ({ config, lib, ... }: {
-            _module.args = extraArgs;
             xdg.userDirs.createDirectories = lib.mkForce true;
           })
         ];
-
-        _module.args = extraArgs;
 
         workflows.workflows.${workflow}.enable = true;
 

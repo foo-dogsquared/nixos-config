@@ -43,9 +43,6 @@
     };
 
     defaultOverlays = lib.attrValues inputs.self.overlays;
-    defaultExtraArgs = {
-      inherit (inputs) nix-colors;
-    };
   };
 
   perSystem = { lib, system, ... }: {

@@ -71,9 +71,6 @@
     helix-editor.url = "github:helix-editor/helix";
     helix-editor.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Generating an entire flavored themes with Nix?
-    nix-colors.url = "github:misterio77/nix-colors";
-
     # Removing the manual partitioning part with a little boogie.
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
