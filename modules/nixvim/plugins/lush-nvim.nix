@@ -40,14 +40,20 @@ let
       ${cfg.extraConfigLua}
       ${theme.extraConfigLua}
 
-      local theme = lush(
-        function(injected_functions)
-          local sym = injected_functions.sym
-          return { ${lib.concatStringsSep "," highlightList} }
-        end
-      )
+      vim.g.colors_name = '${name}'
+      vim.o.termguicolors = true
 
-      return theme
+      -- This needs to be parsed twice: once to generate the Lush spec
+      -- and the other to actually apply the spec.
+      --
+      -- @diagnostic disable: undefined-global
+      local spec = lush(function(injected_functions)
+        local sym = injected_functions.sym
+        return { ${lib.concatStringsSep "," highlightList} }
+      end)
+
+      -- We then apply the theme.
+      lush(spec)
     '';
 in
 {
