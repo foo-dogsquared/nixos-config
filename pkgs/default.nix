@@ -4,6 +4,7 @@ with pkgs;
 lib.makeScope newScope (self: {
   ags = callPackage ./ags { };
   awesome-cli = callPackage ./awesome-cli { };
+  base16-builder-go = callPackage ./base16-builder-go { };
   blender-blendergis = python3Packages.callPackage ./blender-blendergis { };
   blender-machin3tools = python3Packages.callPackage ./blender-machin3tools { };
   clidle = callPackage ./clidle.nix { };
