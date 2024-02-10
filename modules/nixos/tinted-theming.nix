@@ -94,6 +94,27 @@ let
 in
 {
   options.tinted-theming = {
+    templates = lib.mkOption {
+      type = with lib.types; attrsOf path;
+      default = { };
+      example = lib.literalExpression ''
+        {
+          vim = pkgs.fetchFromGitHub {
+            owner = "tinted-theming";
+            repo = "base16-vim";
+            rev = "tinted-theming/base16-vim";
+            hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          };
+
+          helix = ./templates/helix;
+        }
+      '';
+      description = ''
+        A set of templates for the specified builder to generate the
+        configuration files.
+      '';
+    };
+
     schemes = lib.mkOption {
       type = with lib.types; attrsOf (submodule schemeType);
       default = { };
