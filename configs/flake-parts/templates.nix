@@ -6,6 +6,10 @@
       path = ../../templates/basic-devshell;
       description = "Basic development shell template";
     };
+    basic-nix-module-flake = {
+      path = ../../templates/basic-nix-module-flake;
+      description = "Basic Nix module flake template";
+    };
     basic-overlay-flake = {
       path = ../../templates/basic-overlay-flake;
       description = "Basic overlay as a flake";
