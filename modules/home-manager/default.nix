@@ -12,5 +12,6 @@
     ./services/matcha.nix
     ./services/plover.nix
     ./services/yt-dlp.nix
+    ./tinted-theming.nix
   ];
 }
