@@ -1,7 +1,6 @@
 { inputs
 , lib
 
-, defaultExtraArgs
 , defaultNixConf
 
 , ...
@@ -52,9 +51,6 @@
       # NixOS configurations with `nixpkgs.useGlobalPkgs` set to `true` so
       # avoid setting nixpkgs-related options here.
       ({ pkgs, config, lib, ... }: {
-        # Set some extra, yeah?
-        _module.args = defaultExtraArgs;
-
         manual = lib.mkDefault {
           html.enable = true;
           json.enable = true;
