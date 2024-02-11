@@ -14,21 +14,26 @@
 , networkmanager
 , upower
 , wrapGAppsHook
+, linux-pam
 }:
 
 buildNpmPackage rec {
   pname = "ags";
-  version = "1.6.3-beta";
+  version = "1.7.4";
 
   src = fetchFromGitHub {
     owner = "Aylur";
     repo = "ags";
     rev = "v${version}";
-    hash = "sha256-SflyLMJyp9mtivTHGMpvdhSfVp3p8gVznsCvt61vLUk=";
+    hash = "sha256-n/NHEME+kCUIsvQhwEqqtIi14qd+/QsKFz+Bw7bEr8w=";
     fetchSubmodules = true;
   };
 
-  npmDepsHash = "sha256-xTeidwd9VTpuAXoKo8zp26JSV1e9KPJElHztS8DpTvQ=";
+  npmDepsHash = "sha256-ucWdADdMqAdLXQYKGOXHNRNM9bhjKX4vkMcQ8q/GZ20=";
+
+  mesonFlags = [
+    (lib.mesonBool "build_types" true)
+  ];
 
   nativeBuildInputs = [
     meson
@@ -47,6 +52,7 @@ buildNpmPackage rec {
     gtk-layer-shell
     libpulseaudio
     libsoup_3
+    linux-pam
     networkmanager
     upower
   ];
@@ -56,6 +62,10 @@ buildNpmPackage rec {
   # doing this?). :(
   preConfigure = ''
     addToSearchPath PATH $PWD/node_modules/.bin
+  '';
+
+  postPatch = ''
+    chmod u+x ./post_install.sh && patchShebangs ./post_install.sh
   '';
 
   meta = with lib; {
