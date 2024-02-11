@@ -3,6 +3,7 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.nixvim;
+  hmCfg = config;
 in
 {
   options.users.foo-dogsquared.programs.nixvim.enable =
@@ -10,15 +11,19 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.nixvim = { ... }: {
-      enable = true;
       imports =
         [
+          ./colorschemes.nix
           ./note-taking.nix
         ]
         ++ lib.optionals userCfg.setups.development.enable [
           ./lsp.nix
           ./dap.nix
         ];
+      config = {
+        enable = true;
+        inherit (hmCfg) tinted-theming;
+      };
     };
   };
 }
