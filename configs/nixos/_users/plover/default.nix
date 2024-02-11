@@ -1,9 +1,9 @@
 # This is the user that is often used for servers.
-{ lib, pkgs, ... }:
+{ lib, pkgs, foodogsquaredLib, ... }:
 
 let
   user = "plover";
-  homeManagerUser = lib.private.getConfig "home-manager" user;
+  homeManagerUser = foodogsquaredLib.getConfig "home-manager" user;
 in
 {
   users.users.${user} = {

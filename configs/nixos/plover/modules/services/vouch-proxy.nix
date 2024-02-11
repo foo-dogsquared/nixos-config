@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.plover;
@@ -22,7 +22,7 @@ in
             mode = "0400";
           };
         in
-        lib.private.getSecrets ../../secrets/secrets.yaml {
+        foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
           "vouch-proxy/jwt/secret" = vouchPermissions;
           "vouch-proxy/client/secret" = vouchPermissions;
         };

@@ -1,10 +1,10 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, modulesPath, foodogsquaredLib, ... }:
 
 {
   imports = [
     "${modulesPath}/profiles/minimal.nix"
 
-    (lib.private.mapHomeManagerUser "winnow" {
+    (foodogsquaredLib.mapHomeManagerUser "winnow" {
       extraGroups = [
         "wheel"
         "docker"

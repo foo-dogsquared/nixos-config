@@ -2,7 +2,7 @@
 # feature in particular to see how this plays out. It might not be toppling
 # over the popular services but it is interesting to see new spaces for this
 # one.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.plover;
@@ -18,7 +18,7 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      sops.secrets = lib.private.getSecrets ../../secrets/secrets.yaml {
+      sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
         "gitea/db/password".owner = giteaUser;
         "gitea/smtp/password".owner = giteaUser;
       };

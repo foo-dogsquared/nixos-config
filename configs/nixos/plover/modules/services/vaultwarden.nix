@@ -1,6 +1,6 @@
 # An alternative implementation of Bitwarden written in Rust. The project
 # being written in Rust is a insta-self-hosting material right there.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.plover;
@@ -20,7 +20,7 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      sops.secrets = lib.private.getSecrets ../../secrets/secrets.yaml {
+      sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
         "vaultwarden/env".owner = vaultwardenUser;
       };
 

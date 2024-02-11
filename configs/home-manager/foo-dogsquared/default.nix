@@ -1,4 +1,4 @@
-{ config, lib, options, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 {
   imports = [ ./modules ];
@@ -32,7 +32,7 @@
   # The keyfile required to decrypt the secrets.
   sops.age.keyFile = "${config.xdg.configHome}/age/user";
 
-  sops.secrets = lib.private.getSecrets ./secrets/secrets.yaml {
+  sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets/secrets.yaml {
     davfs2-credentials = {
       path = "${config.home.homeDirectory}/.davfs2/davfs2.conf";
     };

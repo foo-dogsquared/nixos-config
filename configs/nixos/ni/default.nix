@@ -1,4 +1,4 @@
-{ config, pkgs, lib, foodogsquaredModulesPath, ... }:
+{ config, pkgs, lib, foodogsquaredLib, foodogsquaredModulesPath, ... }:
 
 {
   imports = [
@@ -33,7 +33,7 @@
     type = "ed25519";
   }];
 
-  sops.secrets = lib.private.getSecrets ./secrets/secrets.yaml {
+  sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets/secrets.yaml {
     "ssh-key" = { };
   };
 

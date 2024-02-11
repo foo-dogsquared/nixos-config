@@ -1,5 +1,5 @@
 # It's a setup for my backup.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.ni;
@@ -47,9 +47,9 @@ in
     lib.mkEnableOption "backup setup with BorgBackup";
 
   config = lib.mkIf cfg.enable {
-    sops.secrets = lib.private.getSecrets
+    sops.secrets = foodogsquaredLib.sops-nix.getSecrets
       ./secrets.yaml
-      (lib.private.attachSopsPathPrefix pathPrefix {
+      (foodogsquaredLib.sops-nix.attachSopsPathPrefix pathPrefix {
         "patterns/home" = { };
         "patterns/etc" = { };
         "patterns/keys" = { };
@@ -94,18 +94,18 @@ in
         startAt = "04:30";
       };
 
-      remote-backup-hetzner-box = borgJobCommonSetting
-        {
-          patterns = with config.sops; [
-            secrets."${pathPrefix}/patterns/remote-backup".path
-          ];
-          passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/hetzner-box/password".path}";
-        } // {
-        doInit = true;
-        repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/desktop/ni";
-        startAt = "04:30";
-        environment.BORG_RSH = "ssh -i ${config.sops.secrets."${pathPrefix}/ssh-key".path}";
-      };
+      #remote-backup-hetzner-box = borgJobCommonSetting
+      #  {
+      #    patterns = with config.sops; [
+      #      secrets."${pathPrefix}/patterns/remote-backup".path
+      #    ];
+      #    passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/hetzner-box/password".path}";
+      #  } // {
+      #  doInit = true;
+      #  repo = "ssh://${hetzner-boxes-user}@${hetzner-boxes-server}:23/./borg/desktop/ni";
+      #  startAt = "04:30";
+      #  environment.BORG_RSH = "ssh -i ${config.sops.secrets."${pathPrefix}/ssh-key".path}";
+      #};
     };
 
     programs.ssh.extraConfig = ''

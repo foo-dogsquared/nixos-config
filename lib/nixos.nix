@@ -1,5 +1,4 @@
-# This is just a library intended solely for this flake.
-# It is expected to use the nixpkgs library with `lib/default.nix`.
+# All of the functions suitable only for NixOS.
 { lib }:
 
 rec {
@@ -22,7 +21,7 @@ rec {
             home.homeDirectory = homeDirectory;
           }
 
-          (getConfig "home-manager" user)
+          ../configs/home-manager/${user}
         ];
       };
 
@@ -31,8 +30,4 @@ rec {
         settings
       ];
     });
-
-  getConfig = type: config: ../configs/${type}/${config};
-
-  getUser = type: user: ../configs/${type}/_users/${user};
 }

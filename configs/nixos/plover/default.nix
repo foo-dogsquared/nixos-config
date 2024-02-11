@@ -1,4 +1,4 @@
-{ config, lib, pkgs, foodogsquaredModulesPath, ... }:
+{ config, lib, pkgs, foodogsquaredLib, foodogsquaredModulesPath, ... }:
 
 {
   imports = [
@@ -8,8 +8,8 @@
     ./modules/profiles/hetzner-cloud-cx21.nix
 
     # The users for this host.
-    (lib.private.getUser "nixos" "admin")
-    (lib.private.getUser "nixos" "plover")
+    (foodogsquaredLib.getUser "nixos" "admin")
+    (foodogsquaredLib.getUser "nixos" "plover")
 
     "${foodogsquaredModulesPath}/profiles/headless.nix"
     "${foodogsquaredModulesPath}/profiles/hardened.nix"
@@ -45,7 +45,7 @@
   # Offline SSH!?!
   programs.mosh.enable = true;
 
-  sops.secrets = lib.private.getSecrets ./secrets/secrets.yaml {
+  sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets/secrets.yaml {
     "ssh-key" = { };
     "lego/env" = { };
   };

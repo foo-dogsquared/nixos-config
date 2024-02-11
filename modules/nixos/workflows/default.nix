@@ -23,7 +23,11 @@ in {
   config = {
     assertions = [{
       assertion =
-        let enabledThemes = lib.countAttrs (_: theme: theme.enable) cfg.workflows;
+        let
+          countAttrs = pred: attrs:
+            lib.count (attr: pred attr.name attr.value)
+                      (lib.mapAttrsToList lib.nameValuePair attrs);
+          enabledThemes = countAttrs (_: theme: theme.enable) cfg.workflows;
         in cfg.disableLimit || (enabledThemes <= 1);
       message = "Can't have more than one theme enabled at any given time.";
     }];

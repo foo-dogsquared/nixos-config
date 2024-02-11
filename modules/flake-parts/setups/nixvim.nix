@@ -102,7 +102,14 @@ in
   };
 
   config = lib.mkIf (cfg.configs != { }) {
-    setups.nixvim.sharedModules = [ nixvimModules ];
+    setups.nixvim.sharedModules = [
+      nixvimModules
+
+      ({ lib, ... }: {
+        _module.args.foodogsquaredLib =
+          import ../../../lib/extras/nixvim-set.nix { inherit lib; };
+      })
+    ];
 
     perSystem = { system, config, lib, ... }:
       (

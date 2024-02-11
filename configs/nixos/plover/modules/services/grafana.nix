@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.plover;
@@ -28,7 +28,7 @@ in
             mode = "0400";
           };
         in
-        lib.private.getSecrets ../../secrets/secrets.yaml {
+        foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
           "grafana/database/password" = grafanaFileAttributes;
           "grafana/users/admin/password" = grafanaFileAttributes;
         };

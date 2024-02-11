@@ -18,7 +18,7 @@ let
       nixpkgs = inputs.${nixpkgsBranch};
 
       # Just to be sure, we'll use everything with the given nixpkgs' stdlib.
-      lib' = nixpkgs.lib.extend (import ../../../lib/extras/extend-lib.nix);
+      lib = nixpkgs.lib;
 
       # A modified version of `nixosSystem` from nixpkgs flake. There is a
       # recent change at nixpkgs (at 039f73f134546e59ec6f1b56b4aff5b81d889f64)
@@ -26,11 +26,10 @@ let
       # evaluate the NixOS system ourselves.
       nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
     in
-    (lib'.makeOverridable nixosSystem) {
+    (lib.makeOverridable nixosSystem) {
       specialArgs = {
         foodogsquaredModulesPath = builtins.toString nixosModules;
       };
-      lib = lib';
       modules = extraModules ++ [{
         nixpkgs.hostPlatform = lib.mkForce system;
       }];
@@ -514,6 +513,11 @@ in
 
       # Import our private modules.
       ../../nixos/_private
+
+      ({ lib, ... }: {
+        _module.args.foodogsquaredLib =
+          import ../../../lib/extras/nixos-set.nix { inherit lib; };
+      })
 
       # Set the home-manager-related settings.
       ({ lib, ... }: {

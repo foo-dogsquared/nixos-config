@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.ni;
@@ -95,7 +95,7 @@ in
     {
       environment.systemPackages = [ ytdlpArchiveVariant ];
 
-      sops.secrets = lib.private.getSecrets ./secrets.yaml
+      sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml
         (lib.attachSopsPathPrefix pathPrefix {
           "secrets-config" = { };
         });

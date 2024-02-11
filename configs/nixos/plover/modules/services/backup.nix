@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.plover;
@@ -49,7 +49,7 @@ in
     lib.mkEnableOption "backup service";
 
   config = lib.mkIf cfg.enable {
-    sops.secrets = lib.private.getSecrets ../../secrets/secrets.yaml {
+    sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
       "borg/repos/host/patterns/keys" = { };
       "borg/repos/host/password" = { };
       "borg/repos/services/password" = { };

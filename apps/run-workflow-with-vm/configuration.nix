@@ -6,7 +6,7 @@
 let
   pkgs = import <nixpkgs> { };
   config' = import <config> { };
-  lib = pkgs.lib.extend (import <config/lib/extras/extend-lib.nix>);
+  lib = pkgs.lib;
 in
 import <nixpkgs/nixos/lib/eval-config.nix> {
   inherit lib;
@@ -41,8 +41,13 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
           <sops-nix/modules/home-manager/sops.nix>
           ({ config, lib, ... }: {
             xdg.userDirs.createDirectories = lib.mkForce true;
+            _module.args.foodogsquaredLib =
+              import ../../lib/extras/home-manager-set.nix { inherit lib; };
           })
         ];
+
+        _module.args.foodogsquaredLib =
+          import ../../lib/extras/nixos-set.nix { inherit lib; };
 
         workflows.workflows.${workflow}.enable = true;
 

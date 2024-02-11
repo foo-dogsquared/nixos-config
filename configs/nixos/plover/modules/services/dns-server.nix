@@ -1,7 +1,7 @@
 # The DNS server for my domains. Take note it uses a hidden master setup with
 # the secondary nameservers of the service (as of 2023-10-05, we're using
 # Hetzner's secondary nameservers).
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.plover;
@@ -46,7 +46,7 @@ in
             mode = "0400";
           };
         in
-        lib.private.getSecrets ../../secrets/secrets.yaml {
+        foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
           "dns/${domain}/mailbox-security-key" = dnsFileAttribute;
           "dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
           "dns/${domain}/keybase-verification-key" = dnsFileAttribute;
