@@ -2,5 +2,5 @@
 { lib }:
 
 import ../default.nix { inherit lib; }
-// import ../home-manager.nix { inherit lib; }
+// import ../nixos.nix { inherit lib; }
 // { sops-nix = import ../sops.nix { inherit lib; }; }
