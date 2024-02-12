@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, helpers, ... }:
 
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
@@ -16,7 +16,7 @@ in
 
         mapping = {
           "<CR>" = "cmp.mapping.confirm({ select = true })";
-          "<C-Space" = "cmp.mapping.complete()";
+          "<C-Space>" = "cmp.mapping.complete()";
           "<C-d>" = "cmp.mapping.scroll_docs(-4)";
           "<C-u>" = "cmp.mapping.scroll_docs(4)";
           "<C-g>" = "cmp.mapping.close()";
@@ -70,7 +70,7 @@ in
     })
 
     (lib.mkIf nixvimCfg.setups.snippets.enable {
-      plugins.nvim-cmp.extraOptions.snippet.expand.__raw = ''
+      plugins.nvim-cmp.extraOptions.snippet.expand = helpers.mkRaw ''
         function(args)
           require('luasnip').lsp_expand(args.body)
         end
@@ -80,14 +80,12 @@ in
         name = "luasnip";
         groupIndex = 2;
       }];
+
+      plugins.cmp_luasnip.enable = true;
     })
 
     (lib.mkIf nixvimCfg.setups.treesitter.enable {
       plugins.cmp-treesitter.enable = true;
-    })
-
-    (lib.mkIf nixvimCfg.setups.snippets.enable {
-      plugins.cmp_luasnip.enable = true;
     })
   ]);
 }
