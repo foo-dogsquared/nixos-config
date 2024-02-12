@@ -34,13 +34,18 @@
     };
   };
 
+  # Install the common text markup tree-sitter grammars.
+  plugins.treesitter.grammarPackages = with pkgs.tree-sitter-grammars; [
+      tree-sitter-cooklang
+      tree-sitter-markdown
+      tree-sitter-org
+      tree-sitter-latex
+  ]
   # Install the tree-sitter parsers required for the core.defaults Neorg
   # module.
-  plugins.treesitter.grammarPackages =
-    lib.mkIf
-      (config.plugins.neorg.extraOptions ? load."core.defaults")
-      (with pkgs.tree-sitter-grammars; [
-        tree-sitter-norg
-        tree-sitter-norg-meta
-      ]);
+  ++ lib.optionals (config.plugins.neorg.extraOptions ? load."core.defaults")
+    (with pkgs.tree-sitter-grammars; [
+      tree-sitter-norg
+      tree-sitter-norg-meta
+    ]);
 }
