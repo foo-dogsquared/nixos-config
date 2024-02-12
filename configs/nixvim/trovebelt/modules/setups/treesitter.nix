@@ -15,8 +15,8 @@ in
       # Install all of the grammars with Nix. We can easily replace it if we
       # want to.
       nixGrammars = true;
-      ensureInstalled = lib.mkDefault "all";
       nixvimInjections = true;
+      grammarPackages = config.plugins.treesitter.package.allGrammars;
 
       # Enable all of its useful features.
       folding = true;
