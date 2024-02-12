@@ -17,8 +17,29 @@ in
       # Install all of the grammars with Nix. We can easily replace it if we
       # want to.
       nixGrammars = true;
-      ensureInstalled = "all";
       nixvimInjections = true;
+
+      # We'll just use the common languages out of the bat.
+      grammarPackages = with pkgs.tree-sitter-grammars; [
+        tree-sitter-bash
+        tree-sitter-c
+        tree-sitter-cpp
+        tree-sitter-css
+        tree-sitter-dockerfile
+        tree-sitter-go
+        tree-sitter-graphql
+        tree-sitter-html
+        tree-sitter-http
+        tree-sitter-javascript
+        tree-sitter-json
+        tree-sitter-json5
+        tree-sitter-nix
+        tree-sitter-rust
+        tree-sitter-toml
+        tree-sitter-tsx
+        tree-sitter-typescript
+        tree-sitter-yaml
+      ];
 
       # Enable all of its useful features.
       folding = true;
