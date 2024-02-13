@@ -1,4 +1,4 @@
-# Ripperootskees for the space.
+# Ripperootskees for the disk space.
 { mkShell
 , texlive
 , texlab

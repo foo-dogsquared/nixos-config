@@ -7,6 +7,8 @@
 , rustc
 , rustfmt
 , rust-analyzer
+, meson
+, ninja
 , rustPackages
 , rustPlatform
 }:
@@ -21,6 +23,10 @@ mkShell {
     rustc
     rustfmt
     rust-analyzer
+
+    # Also have these.
+    meson
+    ninja
   ];
 
   RUST_SRC_PATH = rustPlatform.rustLibSrc;
