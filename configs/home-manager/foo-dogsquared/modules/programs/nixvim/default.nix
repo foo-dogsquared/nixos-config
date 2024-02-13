@@ -17,6 +17,7 @@ in
           ./note-taking.nix
         ]
         ++ lib.optionals userCfg.setups.development.enable [
+          ./dev.nix
           ./lsp.nix
           ./dap.nix
         ];
