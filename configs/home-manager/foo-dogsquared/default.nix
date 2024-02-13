@@ -29,6 +29,10 @@
     };
   };
 
+  # Set the profile picture. Most of the desktop environments should support
+  # this.
+  home.file.".face".source = ./files/logo.png;
+
   # The keyfile required to decrypt the secrets.
   sops.age.keyFile = "${config.xdg.configHome}/age/user";
 
