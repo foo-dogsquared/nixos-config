@@ -34,7 +34,15 @@ let
       gopass = ''
         [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
       '';
-      custom = "[ -e ${path} ] || ${extraArgs}";
+      custom = ''
+        # Allow the extra arguments to make use of the URL and path thru
+        # variables.
+        (
+          url=${url}
+          path=${path}
+          [ -e ${path} ] || ${extraArgs}
+        )
+      '';
     };
 
   fileType = baseDir: { name, config, options, ... }: {
@@ -84,7 +92,9 @@ let
           - For `gopass`, the file will be cloned with {command}`gopass`.
           - For `custom`, the file will be passed with a user-given command.
           The `extraArgs` option is now assumed to be a list of a command and
-          its arguments.
+          its arguments. To make executing commands possible with custom
+          scripts, the URL and the path is stored in shell variables `$url` and
+          `$path` respectively.
 
           The default type is `fetch`.
         '';
