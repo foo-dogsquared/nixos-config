@@ -1,0 +1,6 @@
+= NixVim configurations
+:toc:
+
+
+A collection of NixVim configurations suitable for certain situations whether be it a simple note-taking configuration or a full-fledged IDE ideal for any software development project.
+It's on you to figure this out.
