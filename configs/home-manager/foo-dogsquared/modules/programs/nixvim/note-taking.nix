@@ -35,11 +35,19 @@
   };
 
   # Install the common text markup tree-sitter grammars.
-  plugins.treesitter.grammarPackages = with pkgs.tree-sitter-grammars; [
-      tree-sitter-cooklang
-      tree-sitter-markdown
-      tree-sitter-org
-      tree-sitter-latex
+  plugins.treesitter.grammarPackages = with config.plugins.treesitter.package.builtGrammars; [
+    bibtex
+    cooklang
+    latex
+    ledger
+    markdown
+    markdown_inline
+    org
+    po
+    pod
+    rst
+    tsx
+    typst
   ]
   # Install the tree-sitter parsers required for the core.defaults Neorg
   # module.
