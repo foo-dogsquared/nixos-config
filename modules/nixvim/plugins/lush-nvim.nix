@@ -9,8 +9,9 @@ let
         type = lib.types.lines;
         default = "";
         description = ''
-          Theme-specific Lua code to be included for the colorscheme plugin. This
-          is mainly useful for organizing the palette in your preferred way.
+          Theme-specific Lua code to be included for the colorscheme plugin.
+          This is mainly useful for organizing the color palette in your
+          preferred way.
         '';
       };
 
