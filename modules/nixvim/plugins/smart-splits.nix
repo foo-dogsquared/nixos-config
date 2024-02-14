@@ -9,7 +9,9 @@ in
 
     package = helpers.mkPackageOption "smart-splits.nvim" pkgs.vimPlugins.smart-splits-nvim;
 
-    settings = helpers.mkSettingsOption {
+    settings = lib.mkOption {
+      type = with lib.types; attrsOf anything;
+      default = { };
       description = ''
         Configuration to be passed as argument to `setup` function of the
         plugin.

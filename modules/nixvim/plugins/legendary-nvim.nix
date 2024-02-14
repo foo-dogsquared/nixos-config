@@ -24,7 +24,7 @@ in
 
     settings = lib.mkOption {
       type = lib.types.submodule {
-        freefromType = with lib.types; attrsOf anything;
+        freeformType = with lib.types; attrsOf anything;
 
         config = lib.mkMerge [
           (lib.mkIf
