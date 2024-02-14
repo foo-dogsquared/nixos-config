@@ -36,6 +36,9 @@ in
       nbsp = "%";
     };
 
+    # My elderly forgot-how-to-do-this assistant.
+    plugins.which-key.enable = true;
+
     # Taste the rainbow delimiters.
     plugins.rainbow-delimiters.enable = nixvimCfg.setups.treesitter.enable;
 
