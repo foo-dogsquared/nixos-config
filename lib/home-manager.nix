@@ -6,7 +6,7 @@ rec {
     Checks if there is the `osConfig` attribute and get the attribute path from
     its system configuration.
   */
-  getOSConfigPath =
+  hasNixOSConfigAttr =
     # The configuration attribute set of the home-manager configuration.
     attrs:
 
@@ -15,10 +15,21 @@ rec {
 
     # The default value when `attrPath` is missing.
     default:
-    attrs ? osConfig && lib.attrByPath attrPath default attrs;
+    attrs ? nixosConfig && lib.attrByPath attrPath default attrs;
+
+  hasDarwinConfigAttr =
+    # The configuration attribute set of the home-manager configuration.
+    attrs:
+
+    # A list of strings representing the attribute path.
+    attrPath:
+
+    # The default value when `attrPath` is missing.
+    default:
+    attrs ? darwinConfig && lib.attrByPath attrPath default attrs;
 
   /*
-    A quick function to check if the optional system module is enabled.
+    A quick function to check if the optional NixOS system module is enabled.
   */
   hasOSModuleEnabled =
     # The configuration attribute set of the home-manager configuration.
@@ -26,5 +37,5 @@ rec {
 
     # A list of strings representing the attribute path.
     attrPath:
-    getOSConfigPath attrs attrPath false;
+    hasNixOSConfigAttr attrs attrPath false;
 }
