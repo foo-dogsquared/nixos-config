@@ -1,6 +1,7 @@
 = foo-dogsquared's NixOS config
 :toc:
 :devos_link: https://github.com/divnix/digga/tree/580fc57ffaaf9cf3a582372235759dccfe44ac92/examples/devos
+:docs_site: https://foo-dogsquared.github.io/nixos-config
 :canonical_flake_url: github:foo-dogsquared/nixos-config
 :canonical_flake_url_tarball_master: https://github.com/foo-dogsquared/nixos-config/archive/master.tar.gz
 :canonical_flake_url_tarball_specific: https://github.com/foo-dogsquared/nixos-config/archive/35c27749c55077727529f412dade862e4deb2ae8.tar.gz
@@ -43,8 +44,8 @@ Then as root, install the desktop with the following commands.
 
 [source, shell, subs=attributes]
 ----
-bash $(nix build --no-link --print-out-paths {canonical_flake_url}#nixosConfigurations.ni.config.system.build.diskoScript)
-nixos-install --flake {canonical_flake_url}#ni
+eval "$(nix build --no-link --print-out-paths {canonical_flake_url}#nixosConfigurations.ni-x86_64-linux.config.system.build.diskoScript)"
+nixos-install --flake {canonical_flake_url}#ni-x86_64-linux
 ----
 
 The above command will automate everything for you including the partitioning steps.
@@ -53,7 +54,6 @@ Voila!
 You should have my desktop configuration installed.
 
 However, it should also be barely usable since there are a couple of missing components that are needed such as the private keys for the desktop which is required for certain tasks such as backup task with Borg among other things.
-There are also some additional prerequisites such as partitioning which is already handled with link:https://github.com/nix-community/disko[disko].
 
 
 
