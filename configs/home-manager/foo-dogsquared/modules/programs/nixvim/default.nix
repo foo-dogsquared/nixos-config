@@ -1,3 +1,6 @@
+# Take note, this already assumes we're using on top of an already existing
+# NixVim configuration. See the declarative users configuration for more
+# details.
 { config, lib, pkgs, ... }:
 
 let
@@ -14,6 +17,7 @@ in
       imports =
         [
           ./colorschemes.nix
+          ./misc.nix
           ./note-taking.nix
         ]
         ++ lib.optionals userCfg.setups.development.enable [
@@ -23,6 +27,8 @@ in
         ];
       config = {
         enable = true;
+
+        # Inherit all of the schemes.
         inherit (hmCfg) tinted-theming;
       };
     };
