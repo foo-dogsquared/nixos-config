@@ -103,8 +103,8 @@ in
             CursorColumn = CursorLine;
             CursorLineNr.fg = mkRaw "base0A";
             Visual = {
-              __unkeyed = "CursorColumn";
-              fg = mkRaw (lib.mkForce "base03.lighten(15)");
+              fg = mkRaw "base03.lighten(15)";
+              bg = mkRaw "CursorColumn.bg.darken(15)";
             };
             VisualNOS = { fg = mkRaw "base08"; };
             QuickFixLine = { bg = mkRaw "base00"; };
@@ -289,18 +289,11 @@ in
 
             # Spelling highlighting
             SpellBad = { gui = "undercurl"; };
-            # Spelling highlighting
             SpellCap = { gui = "undercurl"; };
             SpellRare = { gui = "undercurl"; };
 
             # Java highlighting
             javaOperator = { fg = mkRaw "base0D"; };
-
-            # LSP highlighting
-            LspDiagnosticsDefaultError = { fg = mkRaw "base08"; };
-            LspDiagnosticsDefaultWarning = { fg = mkRaw "base09"; };
-            LspDiagnosticsDefaultHint = { fg = mkRaw "base0A"; };
-            LspDiagnosticsDefaultInformation = { fg = mkRaw "base0B"; };
 
             # XML highlighting
             xmlTagName = { fg = mkRaw "base0D"; };
@@ -332,44 +325,33 @@ in
             TelescopeSelectionCaret = { fg = mkRaw "base0A"; bg = mkRaw "base01"; };
           })
 
+          # See `rb-delimiters-colors` help section for more details.
+          (lib.mkIf config.plugins.rainbow-delimiters.enable {
+            RainbowDelimiterRed = { fg = mkRaw "base09"; };
+            RainbowDelimiterYellow = { fg = mkRaw "base0A"; };
+            RainbowDelimiterBlue = { fg = mkRaw "base0B"; };
+            RainbowDelimiterOrange = { fg = mkRaw "base0C"; };
+            RainbowDelimiterGreen = { fg = mkRaw "base0D"; };
+            RainbowDelimiterViolet = { fg = mkRaw "base0E"; };
+            RainbowDelimiterCyan = { fg = mkRaw "base0F"; };
+          })
+
+          # See `lsp-highlight` help section for more details.
+          (lib.mkIf config.plugins.lsp.enable {
+            LspDiagnosticsDefaultError = { fg = mkRaw "base08"; };
+            LspDiagnosticsDefaultWarning = { fg = mkRaw "base09"; };
+            LspDiagnosticsDefaultHint = { fg = mkRaw "base0A"; };
+            LspDiagnosticsDefaultInformation = { fg = mkRaw "base0B"; };
+          })
+
+          # See `treesitter-highlight-groups` help section for more details.
           (lib.mkIf config.plugins.treesitter.enable {
-            TSError = { fg = mkRaw "Error.bg"; gui = "bold"; };
-            TSPunctDelimiter = { fg = mkRaw "base05"; };
-            TSPunctBracket = { fg = mkRaw "base05"; };
-            TSConstant = { fg = mkRaw "Constant.fg"; };
-            TSConstBuiltin = { fg = mkRaw "Constant.fg"; };
-            TSConstMacro = { fg = mkRaw "Constant.fg"; };
-            TSString = { fg = mkRaw "String.fg"; };
-            TSStringRegex = { fg = mkRaw "base03"; };
-            TSStringEscape = { fg = mkRaw "base03"; };
-            TSCharacter = { fg = mkRaw "Character.fg"; };
-            TSNumber = { fg = mkRaw "Number.fg"; };
-            TSBoolean = { fg = mkRaw "Boolean.fg"; };
-            TSFloat = { fg = mkRaw "Number.fg"; };
-            TSFunction = { fg = mkRaw "Function.fg"; };
-            TSFuncBuiltin = { fg = mkRaw "Function.fg"; };
-            TSFuncMacro = { fg = mkRaw "Function.fg"; };
-            TSParameter = { fg = mkRaw "base0D"; };
-            TSConstructor = { fg = mkRaw "base0E"; };
-            TSKeywordFunction = { fg = mkRaw "base0E"; };
-            TSLiteral = { fg = mkRaw "base04"; gui = "bold"; };
-            TSVariable = { fg = mkRaw "base03.lighten(25)"; };
-            TSVariableBuiltin = { fg = mkRaw "base0E"; };
-            TSParameterReference = { fg = mkRaw "TSParameter.fg"; };
-            TSMethod = { fg = mkRaw "Function.fg"; };
-            TSConditional = { fg = mkRaw "Conditional.fg"; };
-            TSRepeat = { fg = mkRaw "Repeat.fg"; };
-            TSLabel = { fg = mkRaw "Label.fg"; };
-            TSOperator = { fg = mkRaw "Operator.fg"; };
-            TSKeyword = { fg = mkRaw "Keyword.fg"; };
-            TSException = { fg = mkRaw "Exception.fg"; };
-            TSType = { fg = mkRaw "Type.fg"; };
-            TSTypeBuiltin = { fg = mkRaw "Type.fg"; };
-            TSStructure = { fg = mkRaw "Structure.fg"; };
-            TSInclude = { fg = mkRaw "Include.fg"; };
-            TSAnnotation = { fg = mkRaw "base03"; };
-            TSStrong = { fg = mkRaw "base05"; bg = mkRaw "base00"; gui = "bold"; };
-            TSTitle = { fg = mkRaw "base0D"; };
+            "${sym "@variable"}" = { __unkeyed = mkRaw "Normal"; };
+            "${sym "@tag.delimiter"}" = { fg = mkRaw "base0A"; };
+            "${sym "@text.emphasis"}" = { __unkeyed = mkRaw "Italic"; };
+            "${sym "@text.underline"}" = { __unkeyed = mkRaw "Underlined"; };
+            "${sym "@text.strike"}" = { gui = "strikethrough"; };
+            "${sym "@text.uri"}" = { fg = mkRaw "base0C"; };
           })
         ];
       }) config.tinted-theming.schemes;
