@@ -7,9 +7,10 @@ in
   options.plugins.firenvim = {
     enable = lib.mkEnableOption "Firenvim";
     package = helpers.mkPackageOption "firenvim" pkgs.vimPlugins.firenvim;
-    extraConfig = lib.mkOption {
-      type = with lib.types; attrsOf anything;
-      default = { };
+    settings = helpers.mkSettingsOption {
+      description = ''
+        Extra configuration options for Firenvim.
+      '';
       example = {
         globalSettings = { alt = "all"; };
         localSettings = {
@@ -22,15 +23,12 @@ in
           };
         };
       };
-      description = ''
-        Extra configuration options for Firenvim.
-      '';
     };
   };
 
   config = lib.mkIf cfg.enable {
     extraPlugins = [ cfg.package ];
 
-    globals.firenvim_config = cfg.extraConfig;
+    globals.firenvim_config = cfg.settings;
   };
 }
