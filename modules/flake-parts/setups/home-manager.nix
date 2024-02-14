@@ -135,7 +135,7 @@ let
 
     config = {
       modules = [
-        ../../../configs/home-manager/${name}
+        ../../../configs/home-manager/${config.configName}
 
         (
           let

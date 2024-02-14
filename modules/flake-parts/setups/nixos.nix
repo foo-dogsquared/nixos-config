@@ -302,7 +302,7 @@ let
     config.modules = [
       # Bring in the required modules.
       inputs.${config.homeManagerBranch}.nixosModules.home-manager
-      ../../../configs/nixos/${name}
+      ../../../configs/nixos/${config.configName}
 
       # Mapping the declarative home-manager users (if it has one) into NixOS
       # users.
@@ -403,7 +403,7 @@ let
             programs.nixvim = { ... }: {
               enable = lib.mkDefault true;
               imports =
-                partsConfig.setups.nixvim.${config.nixvim.instance}.modules
+                partsConfig.setups.nixvim.configs.${config.nixvim.instance}.modules
                 ++ partsConfig.setups.nixvim.sharedModules
                 ++ setupConfig.nixvim.additionalModules;
             };

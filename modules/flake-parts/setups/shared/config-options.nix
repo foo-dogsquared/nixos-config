@@ -1,4 +1,4 @@
-{ lib, systems, ... }: {
+{ lib, name, systems, ... }: {
   options = {
     systems = lib.mkOption {
       type = with lib.types; listOf str;
@@ -16,6 +16,16 @@
       default = [ ];
       description = ''
         A list of NixOS modules specific for that host.
+      '';
+    };
+
+    configName = lib.mkOption {
+      type = lib.types.nonEmptyStr;
+      default = name;
+      example = "plover";
+      description = ''
+        The name of the configuration to be used. Useful for creating variants
+        of the same declarative environment.
       '';
     };
   };
