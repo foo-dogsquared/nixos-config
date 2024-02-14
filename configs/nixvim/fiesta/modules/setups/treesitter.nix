@@ -3,7 +3,6 @@
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.treesitter;
-
 in
 {
   options.nixvimConfigs.fiesta.setups.treesitter.enable =
@@ -20,25 +19,26 @@ in
       nixvimInjections = true;
 
       # We'll just use the common languages out of the bat.
-      grammarPackages = with pkgs.tree-sitter-grammars; [
-        tree-sitter-bash
-        tree-sitter-c
-        tree-sitter-cpp
-        tree-sitter-css
-        tree-sitter-dockerfile
-        tree-sitter-go
-        tree-sitter-graphql
-        tree-sitter-html
-        tree-sitter-http
-        tree-sitter-javascript
-        tree-sitter-json
-        tree-sitter-json5
-        tree-sitter-nix
-        tree-sitter-rust
-        tree-sitter-toml
-        tree-sitter-tsx
-        tree-sitter-typescript
-        tree-sitter-yaml
+      grammarPackages = with config.plugins.treesitter.package.builtGrammars; [
+        bash
+        c
+        cpp
+        css
+        dockerfile
+        go
+        graphql
+        html
+        http
+        javascript
+        json
+        json5
+        lua
+        nix
+        rust
+        toml
+        tsx
+        typescript
+        yaml
       ];
 
       # Enable all of its useful features.
