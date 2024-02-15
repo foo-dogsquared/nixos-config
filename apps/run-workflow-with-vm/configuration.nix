@@ -1,6 +1,7 @@
 # A very basic NixOS VM configuration intended for testing out the given
 # workflow module. It's a good thing the baseline for the configuration is not
-# tedious to set up for simpler configs like this.
+# tedious to set up for simpler configs like this. Just take note this is
+# executed on a separate directory as its own so relative paths are moot.
 { workflow, extraModules ? [ ], extraHomeModules ? [ ] }:
 
 let
@@ -33,6 +34,10 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
       ];
 
       config = {
+        # Enable the display manager of choice.
+        services.xserver.displayManager.gdm.enable = true;
+
+        # Configure home-manager-related stuff.
         home-manager.useUserPackages = lib.mkDefault true;
         home-manager.useGlobalPkgs = lib.mkDefault true;
         home-manager.sharedModules = extraHomeModules ++ [
@@ -46,9 +51,11 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
           })
         ];
 
+        # Set up our own library.
         _module.args.foodogsquaredLib =
           import ../../lib/extras/nixos-set.nix { inherit lib; };
 
+        # The main function of the configuration.
         workflows.workflows.${workflow}.enable = true;
 
         nixpkgs.overlays = [

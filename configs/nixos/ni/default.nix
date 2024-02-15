@@ -24,6 +24,9 @@
     };
   };
 
+  # Enable the display manager of choice.
+  services.xserver.displayManager.gdm.enable = true;
+
   disko.devices = import ./disko.nix {
     disks = [ "/dev/nvme0n1" ];
   };
