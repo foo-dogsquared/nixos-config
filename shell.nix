@@ -1,7 +1,13 @@
 { pkgs ? import <nixpkgs> { }, extraPackages ? [ ] }:
 
+let
+  run-workflow-in-vm = pkgs.callPackage ./apps/run-workflow-with-vm { };
+in
 pkgs.mkShell {
   packages = with pkgs; [
+    # My internal applications.
+    run-workflow-in-vm
+
     age
     asciidoctor
     deploy-rs
