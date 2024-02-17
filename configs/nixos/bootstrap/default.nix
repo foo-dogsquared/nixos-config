@@ -6,25 +6,31 @@
 #
 # This means, there will be a "nixos" user among other things.
 {
-  isoImage = {
-    isoBaseName = config.networking.hostName;
+  config = lib.mkMerge [
+    {
+      boot.kernelPackages = pkgs.linuxPackages_6_6;
 
-    # Store the source code in a easy-to-locate path.
-    contents = [{
-      source = ../../..;
-      target = "/etc/nixos/";
-    }];
+      # Assume that this will be used for remote installations.
+      services.openssh = {
+        enable = true;
+        allowSFTP = true;
+      };
 
-    squashfsCompression = "zstd -Xcompression-level 11";
-  };
+      system.stateVersion = "23.11";
+    }
 
-  boot.kernelPackages = pkgs.linuxPackages_6_6;
+    (lib.mkIf config.formatAttr == "install-iso" {
+      isoImage = {
+        isoBaseName = config.networking.hostName;
 
-  # Assume that this will be used for remote installations.
-  services.openssh = {
-    enable = true;
-    allowSFTP = true;
-  };
+        # Store the source code in a easy-to-locate path.
+        contents = [{
+          source = ../../..;
+          target = "/etc/nixos/";
+        }];
 
-  system.stateVersion = "23.11";
+        squashfsCompression = "zstd -Xcompression-level 11";
+      };
+    })
+  ];
 }

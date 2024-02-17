@@ -8,40 +8,46 @@
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-base.nix"
   ];
 
-  isoImage = {
-    isoBaseName = config.networking.hostName;
+  config = lib.mkMerge [
+    {
+      boot.kernelPackages = pkgs.linuxPackages_6_6;
 
-    # Put the source code somewhere easy to see.
-    contents = [{
-      source = ../../..;
-      target = "/etc/nixos";
-    }];
+      # Use my desktop environment configuration without the apps just to make the
+      # closure size smaller.
+      workflows.workflows.a-happy-gnome = {
+        enable = true;
+        extraApps = [ ];
+      };
 
-    squashfsCompression = "zstd -Xcompression-level 12";
-  };
+      # Some niceties.
+      suites.desktop.enable = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_6_6;
+      services.xserver.displayManager = {
+        gdm = {
+          enable = true;
+          autoSuspend = false;
+        };
+        autoLogin = {
+          enable = true;
+          user = "nixos";
+        };
+      };
 
-  # Use my desktop environment configuration without the apps just to make the
-  # closure size smaller.
-  workflows.workflows.a-happy-gnome = {
-    enable = true;
-    extraApps = [ ];
-  };
+      system.stateVersion = "23.11";
+    }
 
-  # Some niceties.
-  suites.desktop.enable = true;
+    (lib.mkIf (config.formatAttr == "install-iso") {
+      isoImage = {
+        isoBaseName = config.networking.hostName;
 
-  services.xserver.displayManager = {
-    gdm = {
-      enable = true;
-      autoSuspend = false;
-    };
-    autoLogin = {
-      enable = true;
-      user = "nixos";
-    };
-  };
+        # Put the source code somewhere easy to see.
+        contents = [{
+          source = ../../..;
+          target = "/etc/nixos";
+        }];
 
-  system.stateVersion = "23.11";
+        squashfsCompression = "zstd -Xcompression-level 12";
+      };
+    })
+  ];
 }
