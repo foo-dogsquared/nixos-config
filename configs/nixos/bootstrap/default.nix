@@ -19,7 +19,7 @@
       system.stateVersion = "23.11";
     }
 
-    (lib.mkIf config.formatAttr == "install-iso" {
+    (lib.mkIf (config.formatAttr == "install-iso") {
       isoImage = {
         isoBaseName = config.networking.hostName;
 
