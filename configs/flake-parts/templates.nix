@@ -6,6 +6,10 @@
       path = ../../templates/basic-devshell;
       description = "Basic development shell template";
     };
+    basic-nix-cpp-app = {
+      path = ../../templates/basic-nix-cpp-app;
+      description = "Basic Nix program with C++ API";
+    };
     basic-nix-module-flake = {
       path = ../../templates/basic-nix-module-flake;
       description = "Basic Nix module flake template";
