@@ -14,6 +14,8 @@
     "${foodogsquaredModulesPath}/profiles/headless.nix"
     "${foodogsquaredModulesPath}/profiles/hardened.nix"
 
+    ./disko.nix
+
     ./modules
   ];
 
@@ -35,11 +37,6 @@
     grafana.enable = true;
     vaultwarden.enable = true;
     wireguard.enable = true;
-  };
-
-  # Automatic format and partitioning.
-  disko.devices = import ./disko.nix {
-    disks = [ "/dev/sda" ];
   };
 
   # Offline SSH!?!
