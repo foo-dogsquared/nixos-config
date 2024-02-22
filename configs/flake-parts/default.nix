@@ -8,6 +8,9 @@
     ./home-manager.nix
     ./nixos.nix
     ./nixvim.nix
+
+    # Subprojects.
+    ./bahaghari.nix
   ];
 
   _module.args = {
