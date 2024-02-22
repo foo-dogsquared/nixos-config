@@ -1,0 +1,59 @@
+= Bahaghari
+:toc:
+
+
+Bahaghari (Tagalog word for "rainbow") is a specialized set of Nix modules for generating and applying themes.
+Mainly useful for making your ricing process with NixOS and home-manager environments easier.
+This module set should allow for some flexibility for your use case.
+
+At its current state, Bahaghari is considered unstable and might have breaking changes more than what you'd expect.
+
+
+== Module sets
+
+As a whole, Bahaghari is more like a set of sets, a metaset, if you will.
+Specifically, it is composed of module sets of which has different ways to use them.
+Here is the exhaustive list of them and its details.
+
+=== Tinted Theming
+
+Bahaghari has a module set for interacting with Tinted Theming standard schemes and templates.
+To use it, simply import it and you're pretty much set.
+
+// TODO: Nix code importing here
+
+Optionally, you can also import Bahaghari's library set for Tinted Theming.
+Like most of the library components from Bahaghari, it requires both the `pkgs` and `lib` attribute found from the standard nixpkgs module system.
+
+// TODO: Nix code importing BahagharLib for TT. Also code samples for it.
+
+This module is designed to closely follow Tinted Theming's standard while offering some convenience with the library set.
+For example, you can use `importYAML` from Bahaghari's standard library set to easily import standard Base16 schemes into Nix-representable data which you can press onto your Nix configuration.
+
+// TODO: GNOME HIG module set
+
+=== Templated configuration sub-modules
+
+Bahaghari offers a pre-configured version of already existing modules for NixOS, home-manager, and NixVim quite similar to Stylix's `stylix.targets.<name>` submodules.
+To make use of this, you'll have to import Bahaghari module set's 
+
+// TODO: Pictures and sample configurations
+
+
+== Comparison with other modules
+
+=== nix-colors
+
+Bahaghari initially started as a derivative to nix-colors as a single Nix module entirely dedicated for Tinted Theming standard.
+It was created to address its limitation of allowing only one colorscheme at a time which limits a lot of possible applications.
+Most notably, the feature I'm looking for is generating multiple colorscheme templates for different applications which is nice for hybrid deployments of home-manager-plus-mutable-configurations (AKA traditional dotfiles).
+
+While Bahaghari eventually diverged from nix-colors entirely, it can be used as an alternative specifically with Bahaghari's Tinted Theming module set.
+You can replicate nix-colors' preference of allowing a default set of colorscheme
+
+== Stylix
+
+While Bahaghari can be used similarly to Stylix, it isn't completely 1-to-1 to Stylix as it focuses on the holistic side of customization including for fonts and wallpaper.
+On the other hand, Bahaghari completely focuses on colorscheme generation. footnote:[While Bahaghari as a project can also focus beyond colorschemes similar to Stylix, it isn't a part of the vision for now. Who knows, it might be. ;)]
+
+Bahaghari also took some cues from Stylix specifically from its Stylix targets which became the pre-templated configurations submodules for each of the module set.
