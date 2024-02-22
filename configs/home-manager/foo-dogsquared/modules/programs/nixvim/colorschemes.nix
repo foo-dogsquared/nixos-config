@@ -28,6 +28,9 @@ in
         extraConfigLua = ''
           ${lib.foldlAttrs initLushBase16 "" metadata.palette}
 
+          -- Set the background.
+          vim.o.background = '${metadata.variant}'
+
           vim.g.terminal_color_0 = base00.hex
           vim.g.terminal_color_1 = base08.hex
           vim.g.terminal_color_2 = base0B.hex
