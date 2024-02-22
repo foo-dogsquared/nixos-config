@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, helpers, ... }:
 
 {
   # The main star of the show.
@@ -8,30 +8,35 @@
   plugins.neorg.extraOptions = {
     lazy_loading = true;
 
-    load = {
-      # Pretty much required with tree-sitter integration and all.
-      "core.defaults" = { __empty = null; };
+    load = lib.mkMerge [
+      {
+        # Pretty much required with tree-sitter integration and all.
+        "core.defaults" = helpers.emptyTable;
 
-      # Conceal your blade (which is the markup, in which it is pretty sharp to
-      # look at).
-      "core.concealer" = { __empty = null; };
+        # Conceal your blade (which is the markup, in which it is pretty sharp to
+        # look at).
+        "core.concealer" = helpers.emptyTable;
 
-      # Dear diary...
-      "core.journal" = {
-        strategy = "flat";
-        toc_format = [ "yy" "mm" "dd" "link" "title" ];
-      };
-
-      # Norg ripping a page from org-mode.
-      "core.ui.calendar" = { __empty = null; };
-
-      # Manage your note workspaces.
-      "core.dirman" = {
-        config.workspaces = {
-          personal = "~/library/notes";
+        # Dear diary...
+        "core.journal".config = {
+          strategy = "flat";
         };
-      };
-    };
+
+        # Norg ripping a page from org-mode.
+        "core.ui.calendar" = helpers.emptyTable;
+
+        # Manage your note workspaces.
+        "core.dirman".config = {
+          workspaces = {
+            personal = "~/library/notes";
+          };
+        };
+      }
+
+      (lib.mkIf config.plugins.nvim-cmp.enable {
+        "core.completion".config.engine = "nvim-cmp";
+      })
+    ];
   };
 
   # Install the common text markup tree-sitter grammars.
@@ -47,7 +52,6 @@
     pod
     rst
     tsx
-    typst
   ]
   # Install the tree-sitter parsers required for the core.defaults Neorg
   # module.
