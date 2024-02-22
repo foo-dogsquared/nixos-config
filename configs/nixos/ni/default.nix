@@ -6,6 +6,10 @@
 
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+
+    # Include the disko configuration.
+    ./disko.nix
+
     ./modules
   ];
 
@@ -26,10 +30,6 @@
 
   # Enable the display manager of choice.
   services.xserver.displayManager.gdm.enable = true;
-
-  disko.devices = import ./disko.nix {
-    disks = [ "/dev/nvme0n1" ];
-  };
 
   services.openssh.hostKeys = [{
     path = config.sops.secrets."ssh-key".path;

@@ -1,48 +1,64 @@
-{ disks ? [ "/dev/nvme0n1" ], ... }:
+{ config, lib, ... }:
 
 {
-  disk.primary = {
-    device = builtins.elemAt disks 0;
-    type = "disk";
-    content = {
-      format = "gpt";
-      type = "table";
-      partitions = [
-        {
-          name = "root";
-          start = "512MiB";
-          end = "-8GiB";
-          part-type = "primary";
-          content = {
-            type = "filesystem";
-            mountpoint = "/";
-            format = "ext4";
+  disko.devices = {
+    disk.primary = {
+      device = [ "/dev/nvme0n1" ];
+      type = "disk";
+      content = {
+        type = "gpt";
+        partitions = {
+          # You can't really have a btrfs-layered boot so this'll have to do.
+          ESP = {
+            priority = 1;
+            start = "0";
+            end = "128MiB";
+            type = "EF00";
+            content = {
+              type = "filesystem";
+              mountpoint = "/boot";
+              format = "vfat";
+            };
           };
-        }
 
-        {
-          name = "ESP";
-          start = "0";
-          end = "512MiB";
-          bootable = true;
-          content = {
-            type = "filesystem";
-            mountpoint = "/boot";
-            format = "vfat";
-          };
-        }
+          root = {
+            size = "100%";
+            type = "8300";
+            content = {
+              type = "btrfs";
+              extraArgs = [ "-f" ];
 
-        {
-          name = "swap";
-          start = "-8GiB";
-          end = "100%";
-          part-type = "primary";
-          content = {
-            type = "swap";
-            randomEncryption = true;
+              subvolumes = lib.mkMerge [
+                {
+                  "/root" = {
+                    mountOptions = [ "compress=zstd" ];
+                    mountpoint = "/";
+                  };
+                  "/home" = {
+                    mountOptions = [ "compress=zstd" ];
+                    mountpoint = "/home";
+                  };
+                  "/nix" = {
+                    mountOptions = [ "compress=zstd" "noatime" "noattr" "noacl" ];
+                    mountpoint = "/nix";
+                  };
+                  "/swap" = {
+                    mountpoint = "/.swapvol";
+                    swap.swapfile.size = "8G";
+                  };
+                }
+
+                (lib.mkIf config.services.guix.enable {
+                  "/gnu" = {
+                    mountOptions = [ "compress=zstd" "noatime" "noattr" "noacl" ];
+                    mountpoint = "/gnu";
+                  };
+                })
+              ];
+            };
           };
-        }
-      ];
+        };
+      };
     };
   };
 }
