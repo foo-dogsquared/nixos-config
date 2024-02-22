@@ -1,0 +1,11 @@
+= Internal tools
+:toc:
+
+
+My custom project-specific applications that are more experimental in nature.
+They're written for a variety of purposes but most of them are for experimenting with something Nix-specific and to make certain tasks easier for this project.
+All of the programs in here are considered internal and is not intended for use on others' projects whatsoever.
+Support for others' use cases are not going to be considered, anything that does are only a side effect.
+
+Though it is considered internal, most of these tools are available as part of `apps` flake output.
+They are intended for interacting with the project easier, not as a tool to be used for other projects.
