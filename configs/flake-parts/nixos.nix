@@ -87,6 +87,14 @@
       inputs.sops-nix.nixosModules.sops
       inputs.disko.nixosModules.disko
 
+      # Setting up Bahaghari.
+      ({ config, lib, pkgs, ... }: {
+        imports = [ inputs.self.nixosModules."bahaghari/tinted-theming" ];
+
+        _module.args.bahaghariLib =
+          import inputs.self.bahaghariLib { inherit pkgs; };
+      })
+
       # Bring our own teeny-tiny snippets of configurations.
       defaultNixConf
       ../../modules/nixos/profiles/generic.nix

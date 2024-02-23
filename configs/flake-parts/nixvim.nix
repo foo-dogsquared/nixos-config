@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 
 {
   setups.nixvim.configs = {
@@ -20,6 +20,16 @@
       ];
     };
   };
+
+  setups.nixvim.sharedModules = [
+    # Setting up Bahaghari.
+    ({ config, lib, pkgs, ... }: {
+      imports = [ inputs.self.nixvimModules."bahaghari/tinted-theming" ];
+
+      _module.args.bahaghariLib =
+        import inputs.self.bahaghariLib { inherit pkgs; };
+    })
+  ];
 
   flake = {
     nixvimModules.default = ../../modules/nixvim;
