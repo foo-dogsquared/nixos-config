@@ -3,6 +3,7 @@
 
 let
   cfg = config.suites.desktop;
+  nixosCfg = attrs.nixosConfig;
 in
 {
   options.suites.desktop = {
@@ -13,7 +14,7 @@ in
       enable = lib.mkEnableOption "installations of audio-related apps";
       pipewire.enable = lib.mkOption {
         type = lib.types.bool;
-        default = attrs ? nixosConfig && lib.attrByPath [ "services" "pipewire" "enable" ] false attrs.nixosConfig;
+        default = nixosCfg.services.pipewire.enable or false;
         description = ''
           Enable whether to install Pipewire-related applications.
 
@@ -43,7 +44,7 @@ in
       ]
       ++ (
         let
-          hasBlenderNixOSModule = attrs ? nixosConfig && lib.attrByPath [ "programs" "blender" "enable" ] false attrs.nixosConfig;
+          hasBlenderNixOSModule = nixosCfg.programs.blender.enable or false;
         in
         lib.optional (!hasBlenderNixOSModule) pkgs.blender
       );
@@ -53,7 +54,7 @@ in
       home.packages = with pkgs; [
         audacity # EGADS!!!
         musescore # You won't find muses to score, only music: a common misconception.
-        zrythm # The freer FL Studio (if you're sailing by the high seven seas).
+        #zrythm # The freer FL Studio (if you're sailing by the high seven seas).
         supercollider # Not to be confused with the other Super Collider.
         sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
 
@@ -61,9 +62,9 @@ in
       ]
       ++ (
         let
-          hasWineProfile = attrs ? nixosConfig && lib.attrByPath [ "profiles" "desktop" "wine" "enable" ] false attrs.nixosConfig;
+          hasDesktopSuiteEnabled = nixosCfg.suites.desktop.enable or false;
         in
-        lib.optionals hasWineProfile (with pkgs; [
+        lib.optionals hasDesktopSuiteEnabled (with pkgs; [
           yabridge # Building bridges to Windows and Linux audio tools.
           yabridgectl # The bridge controller.
         ])
@@ -77,7 +78,7 @@ in
         enable = true;
         soundService =
           let
-            hasNixOSPipewirePulseEnabled = attrs ? nixosConfig && lib.attrByPath [ "services" "pipewire" "pulse" "enable" ] false attrs.nixosConfig;
+            hasNixOSPipewirePulseEnabled = attrs.nixosConfig.services.pipewire.enable or false;
           in
           lib.mkIf hasNixOSPipewirePulseEnabled "pipewire-pulse";
       };
