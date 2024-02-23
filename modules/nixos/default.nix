@@ -13,6 +13,5 @@
     ./services/vouch-proxy.nix
     ./services/yt-dlp.nix
     ./tinted-theming.nix
-    ./workflows
   ];
 }

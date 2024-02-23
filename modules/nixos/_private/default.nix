@@ -9,5 +9,6 @@
     ./suites/i18n.nix
     ./suites/server.nix
     ./suites/vpn.nix
+    ./workflows
   ];
 }
