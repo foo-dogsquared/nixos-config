@@ -35,6 +35,7 @@
         mode = "i";
         key = "jk";
         action = "<Esc>";
+        options.desc = "Escape";
       }
 
       {
@@ -42,6 +43,7 @@
         key = "<leader>bd";
         action = "vim.cmd.bdelete";
         lua = true;
+        options.desc = "Delete current buffer";
       }
     ];
 
