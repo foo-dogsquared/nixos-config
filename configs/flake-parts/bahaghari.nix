@@ -4,12 +4,17 @@
 {
   flake = {
     nixosModules = {
-      "bahaghari/tinted-theming" = ../../modules/bahaghari/modules/tinted-theming;
+      "bahaghari/tinted-theming" = ../../subprojects/bahaghari/modules/tinted-theming;
     };
 
-    bahaghariLib = {
-      default = ../../modules/bahaghari/lib;
-      tinted-theming = ../../modules/bahaghari/lib/tinted-theming.nix;
+    homeModules = {
+      "bahaghari/tinted-theming" = ../../subprojects/bahaghari/modules/tinted-theming;
     };
+
+    nixvimModules = {
+      "bahaghari/tinted-theming" = ../../subprojects/bahaghari/modules/tinted-theming;
+    };
+
+    bahaghariLib = ../../subprojects/bahaghari/lib;
   };
 }
