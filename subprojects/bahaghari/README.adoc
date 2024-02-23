@@ -31,6 +31,7 @@ This module is designed to closely follow Tinted Theming's standard while offeri
 For example, you can use `importYAML` from Bahaghari's standard library set to easily import standard Base16 schemes into Nix-representable data which you can press onto your Nix configuration.
 
 // TODO: GNOME HIG module set
+// TODO: Material You module set
 
 === Templated configuration sub-modules
 
