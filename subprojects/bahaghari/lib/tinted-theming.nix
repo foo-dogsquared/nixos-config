@@ -15,24 +15,17 @@
   # Base16 scheme.
   isBase16 = palette:
     let
-      paletteNames = lib.attrNames palette;
-      schemeNames = builtins.map (number: "base${number}") [
-        "00" "01" "02" "03" "04" "05" "06" "07" "08" "09" "0A"
-        "0B" "0C" "0D" "0E" "0F"
-      ];
+      paletteNames = pkgs.lib.attrNames palette;
+      schemeNames = builtins.map (number: "base${number}") (lib.hex.range 1 16);
     in
-    (lib.count (name: lib.elem name schemeNames) paletteNames) == 16;
+    (pkgs.lib.count (name: pkgs.lib.elem name schemeNames) paletteNames) == 16;
 
   # A very naive implementation of checking if a Tinted Theming scheme is a
   # Base24 scheme.
   isBase24 = palette:
     let
-      paletteNames = lib.attrNames palette;
-      schemeNames = builtins.map (number: "base${number}") [
-        "00" "01" "02" "03" "04" "05" "06" "07" "08" "09" "0A"
-        "0B" "0C" "0D" "0E" "0F" "10" "11" "12" "13" "14" "15"
-        "16" "17"
-      ];
+      paletteNames = pkgs.lib.attrNames palette;
+      schemeNames = builtins.map (number: "base${number}") (pkgs.lib.hex.range 1 24);
     in
-    (lib.count (name: lib.elem name schemeNames) paletteNames) == 24;
+    (pkgs.lib.count (name: pkgs.lib.elem name schemeNames) paletteNames) == 24;
 }
