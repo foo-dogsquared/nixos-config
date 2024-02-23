@@ -12,7 +12,7 @@ let
 in
 {
   colorscheme =
-    if config.tinted-theming.schemes?"bark-on-a-tree"
+    if config.bahaghari.tinted-theming.schemes?"bark-on-a-tree"
     then (lib.mkForce "bark-on-a-tree")
     else (lib.mkDefault "default");
 
@@ -357,6 +357,6 @@ in
             "${sym "@text.uri"}" = { fg = mkRaw "base0C"; };
           })
         ];
-      }) config.tinted-theming.schemes;
+      }) config.bahaghari.tinted-theming.schemes;
   };
 }

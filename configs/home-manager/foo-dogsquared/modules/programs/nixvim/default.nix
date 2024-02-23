@@ -29,7 +29,7 @@ in
         enable = true;
 
         # Inherit all of the schemes.
-        inherit (hmCfg) tinted-theming;
+        bahaghari.tinted-theming.schemes = hmCfg.bahaghari.tinted-theming.schemes;
       };
     };
   };
