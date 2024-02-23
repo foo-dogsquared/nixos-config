@@ -19,13 +19,13 @@
 
 buildNpmPackage rec {
   pname = "ags";
-  version = "1.7.4";
+  version = "1.7.7";
 
   src = fetchFromGitHub {
     owner = "Aylur";
     repo = "ags";
     rev = "v${version}";
-    hash = "sha256-n/NHEME+kCUIsvQhwEqqtIi14qd+/QsKFz+Bw7bEr8w=";
+    hash = "sha256-vaA4ERhDIHZDmgg5GJdPVGqDdyXT5FvsdZYelojb3UQ=";
     fetchSubmodules = true;
   };
 
