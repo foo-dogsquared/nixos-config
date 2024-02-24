@@ -1,6 +1,8 @@
 { pkgs, lib }:
 
 {
+  inherit (pkgs.lib.generators) toYAML;
+
   /* Read YAML files into a Nix expression similar to lib.importJSON and
      lib.importTOML from nixpkgs standard library. Unlike both of them, this
      unfortunately relies on an import-from-derivation (IFD) so it isn't exactly
@@ -11,7 +13,7 @@
 
      https://pkg.go.dev/gopkg.in/yaml.v3#readme-compatibility
 
-     Type: importYAML :: path -> any
+     Type: importYAML :: Path -> any
   */
   importYAML = path:
     let
@@ -20,4 +22,25 @@
       '';
     in
       pkgs.lib.importJSON data;
+
+  /* Convert a given decimal number to a specified base digit with the set of
+     glyphs for each digit as returned from lib.toBaseDigits.
+
+     Type: toBaseDigitWithGlyphs :: Int -> Int -> Attrs -> String
+
+     Example:
+       toBaseDigitWithGlyphs 24 267 {
+          "0" = "0";
+          # ...
+          "22" = "L";
+          "23" = "M";
+          "24" = "N";
+        }
+  */
+  toBaseDigitsWithGlyphs = base: i: glyphs:
+    let
+      baseDigits = pkgs.lib.toBaseDigits i;
+      toBaseDigits = d: glyphs.${builtins.toString i};
+    in
+    pkgs.lib.concatMapStrings toBaseDigits baseDigits;
 }

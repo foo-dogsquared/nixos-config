@@ -16,6 +16,6 @@ pkgs.lib.makeExtensible
       hex = callLibs ./hex.nix;
       tinted-theming = callLibs ./tinted-theming.nix;
 
-      inherit (self.trivial) importYAML;
+      inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs;
       inherit (self.hex) toHexString;
     })
