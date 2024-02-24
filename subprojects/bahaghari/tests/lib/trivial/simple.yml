@@ -1,0 +1,7 @@
+hello: there
+how-are-you-doing: |
+  I'm fine. Thank you for asking.
+It's a number: 53
+dog-breeds:
+  - chihuahua
+  - golden retriever
