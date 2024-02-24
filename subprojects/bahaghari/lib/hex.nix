@@ -6,6 +6,12 @@
 rec {
   inherit (pkgs.lib.trivial) toHexString;
 
-  # A variant of `lib.lists.range` function just with hexadecimal digits.
-  range = first: last: builtins.map (n: toHexString n) (lib.lists.range first last);
+  /* A variant of `lib.lists.range` function just with hexadecimal digits.
+
+    Type: range :: Int -> Int -> [ String ]
+
+    Example:
+      range 15 18 => [ "F" "10" "11" ]
+  */
+  range = first: last: builtins.map (n: toHexString n) (pkgs.lib.lists.range first last);
 }
