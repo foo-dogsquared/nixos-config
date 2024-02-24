@@ -46,4 +46,19 @@
       toBaseDigits = d: glyphs.${builtins.toString d};
     in
     pkgs.lib.concatMapStrings toBaseDigits baseDigits;
+
+  /* Generates a glyph set usable for `toBaseDigitsWithGlyphs`. Take note the
+     given list is assumed to be sorted and the generated glyph set starts at
+     `0` up to (`listLength - 1`).
+
+     Type: generateGlyphSet :: [ String ] -> Attrs
+
+     Example:
+       generateGlyphSet [ "0" "1" "2" "3" "4" "5" "6" "7" "8 "9" "A" "B" "C" "D" "E" "F" ]
+  */
+  generateGlyphSet = glyphsList:
+    let
+      glyphsList' = pkgs.lib.lists.imap0 (i: glyph: { "${builtins.toString i}" = glyph; }) glyphsList;
+    in
+      pkgs.lib.foldl (acc: glyph: acc // glyph) { } glyphsList';
 }
