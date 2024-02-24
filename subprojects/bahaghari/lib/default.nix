@@ -20,6 +20,7 @@ pkgs.lib.makeExtensible
       # a top-level attribute.
       tinted-theming = callLibs ./tinted-theming.nix;
 
-      inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs generateGlyphSet;
+      inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
+        generateGlyphSet;
       inherit (self.hex) toHexString isHexString;
     })

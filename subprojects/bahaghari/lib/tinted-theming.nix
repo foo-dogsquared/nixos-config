@@ -21,10 +21,31 @@ in
   # image.
   generateScheme = image: { };
 
-  # A very naive implementation of checking if a Tinted Theming scheme is a
-  # Base16 scheme.
+  /* A very naive implementation of checking whether the given palette is a
+     valid Base16 palette. It simply checks if `base00` to `base0F` is present.
+
+     Type: isBase16 :: Attrs -> Bool
+
+     Example:
+      isBase16 (bahaghariLib.importYAML ./base16.yml).palette
+      => true
+
+      isBase16 (bahaghariLib.importYAML ./base16-scheme-with-missing-base0F.yml).palette
+      => false
+  */
   isBase16 = isBaseX 16;
 
-  # Same but with Base24 scheme.
+  /* Similar to `isBase16` but for Base24 schemes. It considers the scheme as
+     valid if `base00` to `base17` from the palette are present.
+
+     Type: isBase24 :: Attrs -> Bool
+
+     Example:
+      isBase24 (bahaghariLib.importYAML ./base24.yml).palette
+      => true
+
+      isBase24 (bahaghariLib.importYAML ./base24-scheme-with-missing-base0F.yml).palette
+      => false
+  */
   isBase24 = isBaseX 24;
 }

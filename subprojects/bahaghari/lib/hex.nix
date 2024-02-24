@@ -11,9 +11,11 @@ rec {
     Type: range :: Int -> Int -> [ String ]
 
     Example:
-      range 15 18 => [ "F" "10" "11" ]
+      range 15 18
+      => [ "F" "10" "11" ]
   */
-  range = first: last: builtins.map (n: toHexString n) (pkgs.lib.lists.range first last);
+  range = first: last:
+    builtins.map (n: toHexString n) (pkgs.lib.lists.range first last);
 
   /* Checks if the given hex string is valid or not.
 
