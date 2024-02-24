@@ -39,8 +39,8 @@
   */
   toBaseDigitsWithGlyphs = base: i: glyphs:
     let
-      baseDigits = pkgs.lib.toBaseDigits i;
-      toBaseDigits = d: glyphs.${builtins.toString i};
+      baseDigits = pkgs.lib.toBaseDigits base i;
+      toBaseDigits = d: glyphs.${builtins.toString d};
     in
     pkgs.lib.concatMapStrings toBaseDigits baseDigits;
 }
