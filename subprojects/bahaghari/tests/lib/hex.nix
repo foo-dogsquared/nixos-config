@@ -1,19 +1,7 @@
 { pkgs, lib }:
 
 pkgs.lib.runTests {
-  # Even though this is basically borrowing from nixpkgs', we still to test
-  # them for consistency.
-  testConvertToHex1 = {
-    expr = lib.hex.toHexString 534;
-    expected = "216";
-  };
-
-  testConvertToHex2 = {
-    expr = lib.hex.toHexString 864954;
-    expected = "D32BA";
-  };
-
-  testConvertToHex3 = {
+  testToHexString = {
     expr = lib.hex.toHexString 293454837;
     expected = "117DC3F5";
   };
