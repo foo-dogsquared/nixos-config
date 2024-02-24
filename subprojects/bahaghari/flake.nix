@@ -11,19 +11,5 @@
     in inputs.flake-utils.lib.eachSystem systems (system: {
       devShells.default =
         import ./shell.nix { pkgs = import nixpkgs { inherit system; }; };
-    }) // {
-      nixosModules = {
-        "bahaghari/tinted-theming" = ./modules/tinted-theming;
-      };
-
-      homeModules = {
-        "bahaghari/tinted-theming" = ./modules/tinted-theming;
-      };
-
-      nixvimModules = {
-        "bahaghari/tinted-theming" = ./modules/tinted-theming;
-      };
-
-      bahaghariLib = ./lib;
-    };
+    }) // import ./default.nix { };
 }
