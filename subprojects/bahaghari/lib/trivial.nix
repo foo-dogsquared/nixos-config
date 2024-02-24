@@ -14,14 +14,17 @@
      https://pkg.go.dev/gopkg.in/yaml.v3#readme-compatibility
 
      Type: importYAML :: Path -> any
+
+     Example:
+       importYAML ./simple.yml
   */
   importYAML = path:
     let
-      data = pkgs.runCommand "convert-yaml-to-json" { } ''
-        ${pkgs.lib.getExe' pkgs.yaml2json "yaml2json"} < ${path} > $out
+      dataDrv = pkgs.runCommand "convert-yaml-to-json" { } ''
+        ${pkgs.lib.getExe' pkgs.yaml2json "yaml2json"} < "${path}" > "$out"
       '';
     in
-      pkgs.lib.importJSON data;
+      pkgs.lib.importJSON dataDrv.outPath;
 
   /* Convert a given decimal number to a specified base digit with the set of
      glyphs for each digit as returned from lib.toBaseDigits.
