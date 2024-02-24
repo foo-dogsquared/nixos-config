@@ -31,4 +31,31 @@ rec {
   */
   isHexString = hex:
     builtins.match "[A-Fa-f0-9]+" hex != null;
+
+  /* Left pads the given hex number with the given number of max amount of
+     digits. It will throw an error if it's not a hex string.
+
+     Type: pad :: Int -> String -> String
+
+     Example:
+       pad 2 "A"
+       => "0A"
+
+       pad 1 "ABC"
+       => "ABC"
+
+       pad -2 "ABC"
+       => "ABC"
+  */
+  pad = n: hex:
+    let
+      strLength = pkgs.lib.stringLength hex;
+      reqWidth = n - strLength;
+      components = pkgs.lib.genList (_: "0") reqWidth ++ [ hex ];
+    in
+    assert pkgs.lib.assertMsg (isHexString hex)
+      "bahaghariLib.hex.pad: given hex number (${hex}) is not valid";
+    if (reqWidth <= 0)
+    then hex
+    else pkgs.lib.concatStringsSep "" components;
 }

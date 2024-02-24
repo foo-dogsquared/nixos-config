@@ -37,4 +37,19 @@ pkgs.lib.runTests {
     expr = lib.hex.isHexString "WHAT IS THIS";
     expected = false;
   };
+
+  testHexPad = {
+    expr = lib.hex.pad 5 "A";
+    expected = "0000A";
+  };
+
+  testHexPadWithLowerMaxDigits = {
+    expr = lib.hex.pad 1 "9AC";
+    expected = "9AC";
+  };
+
+  testHexPadWithNegativeDigits = {
+    expr = lib.hex.pad -5 "A42C";
+    expected = "A42C";
+  };
 }
