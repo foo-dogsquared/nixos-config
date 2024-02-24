@@ -4,9 +4,11 @@ let
   isBaseX = i: palette:
     let
       paletteNames = pkgs.lib.attrNames palette;
-      schemeNames = builtins.map (number: "base${number}") (lib.hex.range 0 (i - 1));
+      maxDigitLength = pkgs.lib.lists.length (pkgs.lib.toBaseDigits 10 i);
+      mkBaseAttr = hex: "base${lib.hex.pad maxDigitLength hex}";
+      schemeNames = builtins.map mkBaseAttr (lib.hex.range 0 (i - 1));
     in
-    (pkgs.lib.count (name: pkgs.lib.elem name schemeNames) paletteNames) == i;
+      (pkgs.lib.count (name: pkgs.lib.elem name schemeNames) paletteNames) == i;
 in
 {
   # TODO: Return a derivation containing all of the template output from the
