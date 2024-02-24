@@ -14,4 +14,21 @@ rec {
       range 15 18 => [ "F" "10" "11" ]
   */
   range = first: last: builtins.map (n: toHexString n) (pkgs.lib.lists.range first last);
+
+  /* Checks if the given hex string is valid or not.
+
+     Type: isHexString :: String -> Bool
+
+     Example:
+       isHexString "ABC"
+       => true
+
+       isHexString "00ABC"
+       => true
+
+       isHexString "WHAT! HELL NO!"
+       => false
+  */
+  isHexString = hex:
+    builtins.match "[A-Fa-f0-9]+" hex != null;
 }

@@ -27,4 +27,14 @@ pkgs.lib.runTests {
     expr = lib.hex.range 49 17;
     expected = [ ];
   };
+
+  testIsHexString = {
+    expr = lib.hex.isHexString "ABC";
+    expected = true;
+  };
+
+  testIsHexStringWithInvalidHex = {
+    expr = lib.hex.isHexString "WHAT IS THIS";
+    expected = false;
+  };
 }

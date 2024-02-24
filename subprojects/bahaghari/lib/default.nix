@@ -21,5 +21,5 @@ pkgs.lib.makeExtensible
       tinted-theming = callLibs ./tinted-theming.nix;
 
       inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs generateGlyphSet;
-      inherit (self.hex) toHexString;
+      inherit (self.hex) toHexString isHexString;
     })
