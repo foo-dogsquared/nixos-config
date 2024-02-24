@@ -4,11 +4,15 @@
 { pkgs, lib, ... }:
 
 let
-  inherit (import ../../lib/tinted-theming.nix { inherit pkgs lib; }) isBase24 isBase16;
+  bahaghariLib = import ../../lib { inherit pkgs; };
+  inherit (bahaghariLib.tinted-theming) isBase24 isBase16;
 
   # This follows the schema of a Tinted Theming scheme. Its support for legacy
   # Base16 theme is pretty awful for now. Anyways. this would allow a simple
-  # `lib.importYAML` and wam-bam-thank-you-mam.
+  # `bahaghariLib.importYAML` and wam-bam-thank-you-mam.
+  #
+  # For future reference, you can take a look at the schemes schema at
+  # https://github.com/tinted-theming/home/blob/a6d697844a40350a3b3f3d231f68530a180e3f0e/builder.md
   schemeType = { name, config, lib, ... }: {
     # This would allow extensions to the schema if the scheme author or the
     # user wants to add some.
@@ -108,6 +112,7 @@ in
       example = {
         "bark-on-a-tree" = {
           system = "base16";
+          name = "Bark on a tree";
           author = "Gabriel Arazas";
           description = ''
             Rusty and woody theme inspired from forestry (and Nord theme).
