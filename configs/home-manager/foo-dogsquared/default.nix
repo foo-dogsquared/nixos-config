@@ -59,7 +59,7 @@
 
   xdg.configFile = {
     distrobox.source = ./config/distrobox;
-    kanidm.source = ./config/kanidm;
+    kanidm.source = ./config/kanidm/config;
   };
 
   # Automating some files to be fetched on activation.

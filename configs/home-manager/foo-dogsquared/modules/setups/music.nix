@@ -5,7 +5,7 @@ let
   cfg = userCfg.setups.music;
 
   ytdlpAudio = pkgs.writeScriptBin "yt-dlp-audio" ''
-    ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${../../config/yt-dlp-audio.conf}" $@
+    ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${../../config/yt-dlp/audio.conf}" $@
   '';
 
   musicDir = config.xdg.userDirs.music;
