@@ -1,10 +1,11 @@
 { config, lib, pkgs, ... }:
 {
-  extraPlugins = builtins.map (path:
-    pkgs.runCommand "vim-plugin-bare" { } ''
-      mkdir -p "$out"
-      cp -r ${path}/* "$out"
-    '')
+  extraPlugins = builtins.map
+    (path:
+      pkgs.runCommand "vim-plugin-bare" { } ''
+        mkdir -p "$out"
+        cp -r ${path}/* "$out"
+      '')
     (with pkgs; [
       "${decker}/share/vim-plugins/decker"
       "${fzf}/share/vim-plugins/fzf"

@@ -8,7 +8,7 @@ let
       mkBaseAttr = hex: "base${lib.hex.pad maxDigitLength hex}";
       schemeNames = builtins.map mkBaseAttr (lib.hex.range 0 (i - 1));
     in
-      (pkgs.lib.count (name: pkgs.lib.elem name schemeNames) paletteNames) == i;
+    (pkgs.lib.count (name: pkgs.lib.elem name schemeNames) paletteNames) == i;
 in
 {
   # TODO: Return a Nix object to generate a Tinted Theming color scheme from an

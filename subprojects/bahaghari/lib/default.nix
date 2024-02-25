@@ -9,18 +9,18 @@
 
 pkgs.lib.makeExtensible
   (self:
-    let
-      callLibs = file: import file { lib = self; inherit pkgs; };
-    in
-    {
-      trivial = callLibs ./trivial.nix;
-      hex = callLibs ./hex.nix;
+  let
+    callLibs = file: import file { lib = self; inherit pkgs; };
+  in
+  {
+    trivial = callLibs ./trivial.nix;
+    hex = callLibs ./hex.nix;
 
-      # Dedicated module sets are not supposed to have any of its functions as
-      # a top-level attribute.
-      tinted-theming = callLibs ./tinted-theming.nix;
+    # Dedicated module sets are not supposed to have any of its functions as
+    # a top-level attribute.
+    tinted-theming = callLibs ./tinted-theming.nix;
 
-      inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
-        generateGlyphSet;
-      inherit (self.hex) toHexString isHexString;
-    })
+    inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
+      generateGlyphSet;
+    inherit (self.hex) toHexString isHexString;
+  })

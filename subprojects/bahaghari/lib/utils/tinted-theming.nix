@@ -6,7 +6,7 @@ in
 rec {
   # Return a derivation containing all of the template output from the given
   # schemes.
-  generateOutputFromSchemes = { schemes ? {}, template }:
+  generateOutputFromSchemes = { schemes ? { }, template }:
     let
       schemesDir = pkgs.runCommand "aggregate-schemes" { }
         ''

@@ -36,7 +36,7 @@ let
           theme.highlights;
     in
     # This is based from rktjmp/lush-template. We'll improve on things from
-    # here whenever necessary.
+      # here whenever necessary.
     lib.nameValuePair "colors/${name}.lua" ''
       ${cfg.extraConfigLua}
       ${theme.extraConfigLua}

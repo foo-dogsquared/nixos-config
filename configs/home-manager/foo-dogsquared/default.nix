@@ -83,6 +83,6 @@
     bark-on-a-tree =
       bahaghariLib.importYAML ./files/tinted-theming/base16/bark-on-a-tree.yaml;
     albino-bark-on-a-tree =
-        bahaghariLib.importYAML ./files/tinted-theming/base16/albino-bark-on-a-tree.yaml;
+      bahaghariLib.importYAML ./files/tinted-theming/base16/albino-bark-on-a-tree.yaml;
   };
 }

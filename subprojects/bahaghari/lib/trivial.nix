@@ -24,7 +24,7 @@
         ${pkgs.lib.getExe' pkgs.yaml2json "yaml2json"} < "${path}" > "$out"
       '';
     in
-      pkgs.lib.importJSON dataDrv.outPath;
+    pkgs.lib.importJSON dataDrv;
 
   /* Convert a given decimal number to a specified base digit with the set of
      glyphs for each digit as returned from lib.toBaseDigits.
@@ -34,11 +34,13 @@
      Example:
        toBaseDigitWithGlyphs 24 267 {
           "0" = "0";
+          "1" = "1";
+          "2" = "2";
           # ...
-          "22" = "L";
-          "23" = "M";
-          "24" = "N";
+          "22" = "O";
+          "23" = "P";
         }
+      =>
   */
   toBaseDigitsWithGlyphs = base: i: glyphs:
     let
@@ -55,10 +57,20 @@
 
      Example:
        generateGlyphSet [ "0" "1" "2" "3" "4" "5" "6" "7" "8 "9" "A" "B" "C" "D" "E" "F" ]
+       => {
+         "0" = "0";
+         "1" = "1";
+         # ...
+         "14" = "E";
+         "15" = "F";
+       }
   */
   generateGlyphSet = glyphsList:
     let
-      glyphsList' = pkgs.lib.lists.imap0 (i: glyph: { "${builtins.toString i}" = glyph; }) glyphsList;
+      glyphsList' =
+        pkgs.lib.lists.imap0
+          (i: glyph: { "${builtins.toString i}" = glyph; })
+          glyphsList;
     in
-      pkgs.lib.foldl (acc: glyph: acc // glyph) { } glyphsList';
+    pkgs.lib.foldl (acc: glyph: acc // glyph) { } glyphsList';
 }
