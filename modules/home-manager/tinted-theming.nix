@@ -1,1 +1,0 @@
-../nixos/tinted-theming.nix
