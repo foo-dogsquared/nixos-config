@@ -46,13 +46,8 @@
       inputs.sops-nix.homeManagerModules.sops
       inputs.nix-index-database.hmModules.nix-index
 
-      # Setting up Bahaghari.
-      ({ config, lib, pkgs, ... }: {
-        imports = [ inputs.self.homeModules."bahaghari/tinted-theming" ];
-
-        _module.args.bahaghariLib =
-          import inputs.self.bahaghariLib { inherit pkgs; };
-      })
+      # The rainbow road to ricing your raw materials.
+      inputs.self.homeModules.bahaghari
 
       # The default shared config for our home-manager configurations. This
       # is also to be used for sharing modules among home-manager users from

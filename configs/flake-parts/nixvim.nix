@@ -22,13 +22,8 @@
   };
 
   setups.nixvim.sharedModules = [
-    # Setting up Bahaghari.
-    ({ config, lib, pkgs, ... }: {
-      imports = [ inputs.self.nixvimModules."bahaghari/tinted-theming" ];
-
-      _module.args.bahaghariLib =
-        import inputs.self.bahaghariLib { inherit pkgs; };
-    })
+    # The rainbow road to ricing your raw materials.
+    inputs.self.nixvimModules.bahaghari
   ];
 
   flake = {
