@@ -11,12 +11,6 @@ let
       (pkgs.lib.count (name: pkgs.lib.elem name schemeNames) paletteNames) == i;
 in
 {
-  # TODO: Return a derivation containing all of the template output from the
-  # given schemes.
-  generateOutputFromSchemes = schemes: template:
-    pkgs.runCommand "generate-templates" { } ''
-    '';
-
   # TODO: Return a Nix object to generate a Tinted Theming color scheme from an
   # image.
   generateScheme = image: { };
