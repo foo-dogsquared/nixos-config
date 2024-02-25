@@ -177,6 +177,8 @@ in
               (deviantArt "jenzee") # JenZee
               (deviantArt "silverponteo") # hurrakka
               #"https://www.pixiv.net/en/users/60562229" # Ravioli
+              (artStation "dominikmayerart") # Dominik Mayer
+              (artStation "archiewhitehead") # Archie Whitehead
               (artStation "kuvshinov_ilya") # Ilya Kuvshinov
               (artStation "meiipng") # Meiiart
               (artStation "bassem_wageeh") # Bassem wageeh
