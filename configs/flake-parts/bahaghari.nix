@@ -1,7 +1,11 @@
 # Bahaghari's subproject.
-{ ... }:
+{ lib, ... }:
 
 {
-  # We'll simply copy over Bahaghari's default exports.
-  flake = import ../../subprojects/bahaghari { };
+  flake = {
+    bahaghariLib = ../../subprojects/bahaghari/lib;
+    homeModules.bahaghari = ../../subprojects/bahaghari/modules;
+    nixosModules.bahaghari = ../../subprojects/bahaghari/modules;
+    nixvimModules.bahaghari = ../../subprojects/bahaghari/modules;
+  };
 }
