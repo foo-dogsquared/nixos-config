@@ -37,7 +37,7 @@ pkgs.lib.runTests {
   };
 
   testHexPadWithNegativeDigits = {
-    expr = lib.hex.pad -5 "A42C";
+    expr = lib.hex.pad (-5) "A42C";
     expected = "A42C";
   };
 }
