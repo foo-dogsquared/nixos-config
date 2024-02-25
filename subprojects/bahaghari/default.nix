@@ -2,16 +2,19 @@
 { }:
 
 {
-  nixosModules = {
-    "bahaghari/tinted-theming" = ./modules/tinted-theming;
+  nixosModules = rec {
+    bahaghari = ./modules;
+    default =  bahaghari;
   };
 
-  homeModules = {
-    "bahaghari/tinted-theming" = ./modules/tinted-theming;
+  homeModules.bahaghari = rec {
+    bahaghari = ./modules;
+    default =  bahaghari;
   };
 
-  nixvimModules = {
-    "bahaghari/tinted-theming" = ./modules/tinted-theming;
+  nixvimModules = rec {
+    bahaghari = ./modules;
+    default = bahaghari;
   };
 
   bahaghariLib = ./lib;
