@@ -1,4 +1,4 @@
-{ config, lib, pkgs, helpers, ... }:
+{ config, lib, pkgs, helpers, hmConfig, ... }:
 
 {
   # The main star of the show.
@@ -28,7 +28,9 @@
         # Manage your note workspaces.
         "core.dirman".config = {
           workspaces = {
-            personal = "~/library/notes";
+            personal = "${hmConfig.home.homeDirectory}/library/notes";
+            work = "${hmConfig.xdg.userDirs.documents}/Notes";
+            wiki = "${hmConfig.xdg.userDirs.documents}/Wiki";
           };
         };
       }
