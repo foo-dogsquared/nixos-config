@@ -514,11 +514,6 @@ in
       # Import our private modules.
       ../../nixos/_private
 
-      ({ lib, ... }: {
-        _module.args.foodogsquaredLib =
-          import ../../../lib/extras/nixos-set.nix { inherit lib; };
-      })
-
       # Set the home-manager-related settings.
       ({ lib, ... }: {
         home-manager.sharedModules = partsConfig.setups.home-manager.sharedModules;

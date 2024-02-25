@@ -236,11 +236,6 @@ in
     setups.home-manager.sharedModules = [
       homeManagerModules
 
-      ({ lib, ... }: {
-        _module.args.foodogsquaredLib =
-          import ../../../lib/extras/home-manager-set.nix { inherit lib; };
-      })
-
       # Import our private modules...
       ../../home-manager/_private
     ];

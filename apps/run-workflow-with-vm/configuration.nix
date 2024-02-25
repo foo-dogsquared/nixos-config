@@ -46,14 +46,8 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
           <sops-nix/modules/home-manager/sops.nix>
           ({ config, lib, ... }: {
             xdg.userDirs.createDirectories = lib.mkForce true;
-            _module.args.foodogsquaredLib =
-              import ../../lib/extras/home-manager-set.nix { inherit lib; };
           })
         ];
-
-        # Set up our own library.
-        _module.args.foodogsquaredLib =
-          import ../../lib/extras/nixos-set.nix { inherit lib; };
 
         # The main function of the configuration.
         workflows.workflows.${workflow}.enable = true;
