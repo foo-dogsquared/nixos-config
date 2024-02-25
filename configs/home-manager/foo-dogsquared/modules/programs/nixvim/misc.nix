@@ -13,6 +13,11 @@
   # Light your browser on fire, bebe.
   plugins.firenvim.enable = true;
 
+  plugins.legendary-nvim = {
+    enable = true;
+    integrations.smart-splits.enable = true;
+  };
+
   # Make it work.
   plugins.smart-splits.enable = true;
 
