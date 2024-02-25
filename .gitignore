@@ -2,6 +2,9 @@
 result*
 *.qcow2
 
+# My todo-lists.
+todo.*
+
 # These are dotenv files with sensitive data so we won't have to include them.
 .*.envrc
 
