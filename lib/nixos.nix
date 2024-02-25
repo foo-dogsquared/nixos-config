@@ -1,5 +1,5 @@
 # All of the functions suitable only for NixOS.
-{ lib }:
+{ pkgs, lib }:
 
 rec {
   # This is only used for home-manager users without a NixOS user counterpart.
@@ -7,10 +7,10 @@ rec {
     let
       homeDirectory = "/home/${user}";
       defaultUserConfig = {
-        extraGroups = lib.mkDefault [ "wheel" ];
-        createHome = lib.mkDefault true;
-        home = lib.mkDefault homeDirectory;
-        isNormalUser = lib.mkForce true;
+        extraGroups = pkgs.lib.mkDefault [ "wheel" ];
+        createHome = pkgs.lib.mkDefault true;
+        home = pkgs.lib.mkDefault homeDirectory;
+        isNormalUser = pkgs.lib.mkForce true;
       };
     in
     ({ lib, ... }: {

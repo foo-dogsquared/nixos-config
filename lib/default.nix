@@ -1,7 +1,7 @@
 # The entrypoint for our custom library set.
-{ lib }:
+{ pkgs }:
 
-lib.makeExtensible
+pkgs.lib.makeExtensible
   (self:
     rec {
       /* Count the attributes with the given predicate.
@@ -14,8 +14,8 @@ lib.makeExtensible
            => 1
       */
       countAttrs = pred: attrs:
-        lib.count (attr: pred attr.name attr.value)
-          (lib.mapAttrsToList lib.nameValuePair attrs);
+        pkgs.lib.count (attr: pred attr.name attr.value)
+          (pkgs.lib.mapAttrsToList pkgs.lib.nameValuePair attrs);
 
       /* Returns the file path of the given config of the given environment.
 

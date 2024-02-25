@@ -1,5 +1,5 @@
 # Custom libraries for home-manager library.
-{ lib }:
+{ pkgs, lib }:
 
 rec {
   /*
@@ -15,7 +15,7 @@ rec {
 
     # The default value when `attrPath` is missing.
     default:
-    attrs ? nixosConfig && lib.attrByPath attrPath default attrs;
+    attrs ? nixosConfig && pkgs.lib.attrByPath attrPath default attrs;
 
   hasDarwinConfigAttr =
     # The configuration attribute set of the home-manager configuration.
@@ -26,7 +26,7 @@ rec {
 
     # The default value when `attrPath` is missing.
     default:
-    attrs ? darwinConfig && lib.attrByPath attrPath default attrs;
+    attrs ? darwinConfig && pkgs.lib.attrByPath attrPath default attrs;
 
   /*
     A quick function to check if the optional NixOS system module is enabled.
