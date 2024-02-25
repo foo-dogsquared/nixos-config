@@ -5,7 +5,15 @@ These are where my workflows are defined and configured.
 Basically, workflows are mainly graphical sessions concerned with aesthetics and impose a structured way of using things, this may include Unix rices and good 'ol reliable desktop configurations like my link:./a-happy-gnome[GNOME config].
 This is where modules will define how you're going to interact with the computer whether you should use something ranging from a full-fledged desktop environment with bells and whistles to a minimalist desktop environment only composing of a window manager, a terminal, and a bar.
 
+
+
+
+[#design-constraints]
+== Design constraints
+
 The following list is the summary which can also serve as a guideline to developing a workflow module.
+
+* All workflow modules should be under `workflows.workflows.<name>` namespace with an `enable` option.
 
 * Due to the bigger scope and importance of this module, there is a limit where you can only enable one theme at a time.
 You can disable this with `config.workflows.disableLimit` set to `true`.
