@@ -1,13 +1,9 @@
-{ lib, config, pkgs, modulesPath, ... }:
+{ lib, config, pkgs, ... }:
 
 # Since this will be exported as an installer ISO, you'll have to keep in mind
 # about the added imports from nixos-generators. In this case, it simply adds
 # the NixOS installation CD profile.
 {
-  imports = [
-    "${modulesPath}/installer/cd-dvd/installation-cd-graphical-base.nix"
-  ];
-
   config = lib.mkMerge [
     {
       boot.kernelPackages = pkgs.linuxPackages_6_6;
@@ -36,15 +32,11 @@
       system.stateVersion = "23.11";
     }
 
-    (lib.mkIf (config.formatAttr == "install-iso") {
+    (lib.mkIf
+      (config.formatAttr == "isoImage" || config.formatAttr == "graphicalIsoImage") {
       isoImage = {
         isoBaseName = config.networking.hostName;
-
-        # Put the source code somewhere easy to see.
-        contents = [{
-          source = ../../..;
-          target = "/etc/nixos";
-        }];
+        edition = "A Happy GNOME";
 
         squashfsCompression = "zstd -Xcompression-level 12";
       };
