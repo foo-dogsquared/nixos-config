@@ -4,8 +4,11 @@ let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.dotfiles;
 
-  dotfiles = config.lib.file.mkOutOfStoreSymlink config.home.mutableFile."library/dotfiles".path;
-  getDotfiles = path: "${dotfiles}/${path}";
+  projectsDir = config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR;
+
+  dotfiles = "${projectsDir}/dotfiles";
+  dotfiles' = config.lib.file.mkOutOfStoreSymlink config.home.mutableFile."${dotfiles}".path;
+  getDotfiles = path: "${dotfiles'}/${path}";
 in
 {
   options.users.foo-dogsquared.dotfiles.enable =
@@ -13,13 +16,13 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      home.mutableFile."library/dotfiles" = {
+      home.mutableFile.${dotfiles} = {
         url = "https://github.com/foo-dogsquared/dotfiles.git";
         type = "git";
       };
 
       home.sessionPath = [
-        "${config.home.mutableFile."library/dotfiles".path}/bin"
+        "${config.home.mutableFile.${dotfiles}.path}/bin"
       ];
 
       xdg.configFile = {
