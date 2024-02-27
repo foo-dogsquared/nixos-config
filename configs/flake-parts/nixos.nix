@@ -63,7 +63,8 @@
       # The barely customized graphical installer.
       graphical-installer = {
         systems = [ "aarch64-linux" "x86_64-linux" ];
-        formats = [ "install-iso" ];
+        formats = [ "install-iso-graphical" ];
+        diskoConfigs = [ "external-hdd" ];
       };
 
       # The WSL system (that is yet to be used).
