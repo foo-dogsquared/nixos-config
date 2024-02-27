@@ -39,6 +39,22 @@ let
       system = null;
     };
 
+  # The nixos-generators modules set as well as our custom-made ones.
+  nixosGeneratorsModulesSet =
+    let
+      importNixosGeneratorModule = (_: modulePath: {
+        imports = [
+          modulePath
+          "${inputs.nixos-generators}/format-module.nix"
+        ];
+      });
+
+      customFormats = lib.mapAttrs importNixosGeneratorModule {
+        install-iso-graphical = ../../nixos-generators/install-iso-graphical.nix;
+      };
+    in
+    inputs.nixos-generators.nixosModules // customFormats;
+
   # A very very thin wrapper around `mkHost` to build with the given format.
   mkImage =
     { system
@@ -48,7 +64,7 @@ let
     }:
     let
       extraModules' =
-        extraModules ++ [ inputs.nixos-generators.nixosModules.${format} ];
+        extraModules ++ [ nixosGeneratorsModulesSet.${format} ];
       image = mkHost {
         inherit nixpkgsBranch system;
         extraModules = extraModules';
