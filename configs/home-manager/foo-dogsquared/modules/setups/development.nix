@@ -39,7 +39,7 @@ in
       ];
     }
 
-    (lib.mkIf (!config.programs.nixvim.enable) {
+    (lib.mkIf (!userCfg.programs.nixvim.enable) {
       programs.neovim = {
         enable = true;
         package = pkgs.neovim-nightly;
