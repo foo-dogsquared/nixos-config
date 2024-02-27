@@ -17,7 +17,7 @@ endforeach
 bindata = configuration_data()
 bindata.set('datadir', datadir)
 bindata.set('inputsArgs', inputsArgs)
-bindata.set('projectname', 'run-workflow-with-vm')
+bindata.set('projectname', meson.project_name())
 configure_file(
   input: 'app.sh',
   output: 'run-workflow-with-vm',

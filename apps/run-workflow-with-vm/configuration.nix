@@ -21,9 +21,9 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
     <sops-nix/modules/sops>
     <nixos-generators/formats/vm.nix>
     <nixos-generators/format-module.nix>
-    ({ config, lib, pkgs, ... }: {
+    ({ config, lib, pkgs, foodogsquaredLib, ... }: {
       imports = [
-        (lib.private.mapHomeManagerUser "alice" {
+        (foodogsquaredLib.mapHomeManagerUser "alice" {
           password = "";
           extraGroups = [ "wheel" ];
           description = "There is no password";
