@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, foodogsquaredModulesPath, ... }:
 
 # Since this will be exported as an installer ISO, you'll have to keep in mind
 # about the added imports from nixos-generators. In this case, it simply adds
@@ -6,6 +6,10 @@
 #
 # This means, there will be a "nixos" user among other things.
 {
+  imports = [
+    "${foodogsquaredModulesPath}/profiles/installer.nix"
+  ];
+
   config = lib.mkMerge [
     {
       boot.kernelPackages = pkgs.linuxPackages_6_6;
@@ -19,15 +23,9 @@
       system.stateVersion = "23.11";
     }
 
-    (lib.mkIf (config.formatAttr == "install-iso") {
+    (lib.mkIf (config.formatAttr == "isoImage") {
       isoImage = {
         isoBaseName = config.networking.hostName;
-
-        # Store the source code in a easy-to-locate path.
-        contents = [{
-          source = ../../..;
-          target = "/etc/nixos/";
-        }];
 
         squashfsCompression = "zstd -Xcompression-level 11";
       };
