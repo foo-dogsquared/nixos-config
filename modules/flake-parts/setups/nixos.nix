@@ -313,6 +313,16 @@ let
           remoteBuild = true;
         };
       };
+
+      diskoConfigs = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ ];
+        example = [ "external-hdd" ];
+        description = ''
+          A list of declarative Disko configurations to be included alongside
+          the NixOS configuration.
+        '';
+      };
     };
 
     config.modules = [
@@ -425,6 +435,19 @@ let
             };
           }
         ))
+
+      # Then we include the Disko configuration (if there's any).
+      (lib.mkIf (config.diskoConfigs != [ ] (
+        let
+          diskoConfigs =
+            builtins.map (name: import ../../../configs/disko/${name}) config.diskoConfigs;
+        in
+        {
+          imports =
+            [ inputs.disko.nixosModules.disko ]
+            ++ (lib.lists.flatten diskoConfigs);
+        })
+      ))
 
       # Setting up the typical configuration.
       (
