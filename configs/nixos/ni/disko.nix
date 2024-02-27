@@ -12,12 +12,22 @@
           ESP = {
             priority = 1;
             start = "0";
-            end = "128MiB";
+            end = "512MiB";
             type = "EF00";
             content = {
               type = "filesystem";
               mountpoint = "/boot";
               format = "vfat";
+            };
+          };
+
+          swap = {
+            start = "-8GiB";
+            end = "-0";
+            type = "8200";
+            content = {
+              type = "swap";
+              randomEncryption = true;
             };
           };
 
@@ -39,18 +49,14 @@
                     mountpoint = "/home";
                   };
                   "/nix" = {
-                    mountOptions = [ "compress=zstd" "noatime" "noattr" "noacl" ];
+                    mountOptions = [ "compress=zstd" "noatime" "noacl" ];
                     mountpoint = "/nix";
-                  };
-                  "/swap" = {
-                    mountpoint = "/.swapvol";
-                    swap.swapfile.size = "8G";
                   };
                 }
 
                 (lib.mkIf config.services.guix.enable {
                   "/gnu" = {
-                    mountOptions = [ "compress=zstd" "noatime" "noattr" "noacl" ];
+                    mountOptions = [ "compress=zstd" "noatime" "noacl" ];
                     mountpoint = "/gnu";
                   };
                 })
