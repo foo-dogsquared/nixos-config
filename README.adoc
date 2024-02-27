@@ -37,10 +37,16 @@ If you want the local documentation and has angst against online documentation, 
 This is an overencumbered set of NixOS configurations for different systems.
 For this section though, we'll assume you're only interested in installing the desktop configuration.
 
-To start, you'll have to download a NixOS installer image.
-While you can download link:https://releases.nixos.org/?prefix=nixos/unstable/[the latest revisions from the official website], you can get my personalized installer from link:https://github.com/foo-dogsquared/nixos-config/releases/tag/latest[the releases page of this project].
-Next, boot into the installer image.
-Then as root, install the desktop with the following commands.
+My main desktop configuration is quite big to the point where it cannot be completely installed with the regular installer from nixos.org without crashing.
+This is due to having not enough space given from the installer (being a 2GB tmpfs space which is enough for most) to build most of the outputs from the desktop derivation.
+For this, it now requires a modified persistent live installer (thus has a requirement of a larger disk space of >64GB).
+
+A persistent live installer should only be intended to install the humungous configuration.
+It isn't exactly made to be a NixOS-on-a-stick type but simply embiggening the root filesystem should be perfectly cromulent.
+
+Once you have a live installer in boot, you can then simply install the following commands.
+It will automate everything for you including the partitioning and mounting steps (powered by Disko).
+NO ADDITIONAL `mount` COMMANDS NEEDED!
 
 [source, shell, subs=attributes]
 ----
@@ -48,10 +54,8 @@ eval "$(nix build --no-link --print-out-paths {canonical_flake_url}#nixosConfigu
 nixos-install --flake {canonical_flake_url}#ni-x86_64-linux
 ----
 
-The above command will automate everything for you including the partitioning steps.
-
-Voila!
-You should have my desktop configuration installed.
+And voila!
+You should have my desktop configuration installed perfectly working (assuming no interruptions or crashes went while installing my desktop config).
 
 However, it should also be barely usable since there are a couple of missing components that are needed such as the private keys for the desktop which is required for certain tasks such as backup task with Borg among other things.
 
