@@ -5,6 +5,7 @@
     ./templates.nix
 
     # The environment configurations.
+    ./disko.nix
     ./home-manager.nix
     ./nixos.nix
     ./nixvim.nix
