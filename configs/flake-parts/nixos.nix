@@ -12,6 +12,9 @@
       ni = {
         systems = [ "x86_64-linux" ];
         formats = null;
+        modules = [
+          inputs.disko.nixosModules.disko
+        ];
         homeManagerUsers = {
           nixpkgsInstance = "global";
           users.foo-dogsquared = {
@@ -38,6 +41,9 @@
         systems = [ "x86_64-linux" ];
         formats = null;
         domain = "foodogsquared.one";
+        modules = [
+          inputs.disko.nixosModules.disko
+        ];
         deploy = {
           hostname = "plover.foodogsquared.one";
           autoRollback = true;
@@ -65,6 +71,7 @@
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso-graphical" ];
         diskoConfigs = [ "external-hdd" ];
+        shouldBePartOfNixOSConfigurations = true;
       };
 
       # The WSL system (that is yet to be used).
@@ -86,7 +93,6 @@
       # Only have third-party modules with optional NixOS modules.
       inputs.nix-index-database.nixosModules.nix-index
       inputs.sops-nix.nixosModules.sops
-      inputs.disko.nixosModules.disko
 
       # The rainbow road to ricing your raw materials.
       inputs.self.nixosModules.bahaghari
