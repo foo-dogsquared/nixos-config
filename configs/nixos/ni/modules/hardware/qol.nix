@@ -13,10 +13,6 @@ in
     # Bring in some of them good tools.
     suites.filesystem.tools.enable = true;
 
-    # We're using some better filesystems so we're using it.
-    boot.initrd.supportedFilesystems = [ "btrfs" ];
-    boot.supportedFilesystems = [ "btrfs" ];
-
     # Set up printers.
     services.printing = {
       enable = true;
