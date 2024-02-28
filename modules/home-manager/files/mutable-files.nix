@@ -35,13 +35,7 @@ let
         [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
       '';
       custom = ''
-        # Allow the extra arguments to make use of the URL and path thru
-        # variables.
-        (
-          url=${url}
-          path=${path}
-          [ -e ${path} ] || ${extraArgs}
-        )
+        [ -e ${path} ] || ${extraArgs}
       '';
     };
 
@@ -169,8 +163,19 @@ in
         ExecStart =
           let
             mutableFilesCmds = lib.mapAttrsToList
-              (path: value:
-                (fetchScript path value).${value.type})
+              (path: value: let
+                url = lib.escapeShellArg value.url;
+                path = lib.escapeShellArg value.path;
+              in
+              ''
+                (
+                  URL=${url}
+                  PATH=${path}
+                  DIRNAME=$(dirname ${path})
+                  mkdir -p "$DIRNAME"
+                  ${(fetchScript path value).${value.type}}
+                )
+              '')
               cfg;
 
             script = pkgs.writeShellApplication {
