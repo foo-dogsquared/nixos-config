@@ -323,6 +323,16 @@ let
           the NixOS configuration.
         '';
       };
+
+      shouldBePartOfNixOSConfigurations = lib.mkOption {
+        type = lib.types.bool;
+        default = lib.isAttrs config.deploy || config.formats == null;
+        example = true;
+        description = ''
+          Indicates whether the declarative NixOS setup should be included as
+          part of the `nixosConfigurations` flake output.
+        '';
+      };
     };
 
     config.modules = [
@@ -571,7 +581,7 @@ in
         pureNixosConfigs =
           let
             validConfigs =
-              lib.filterAttrs (_: v: v.formats == null || v.deploy != null) cfg.configs;
+              lib.filterAttrs (_: v: v.shouldBePartOfNixOSConfigurations) cfg.configs;
 
             generatePureConfigs = hostname: metadata:
               lib.listToAttrs
