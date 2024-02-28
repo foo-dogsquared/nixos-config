@@ -3,8 +3,18 @@
 # purpose.
 { pkgs, lib }:
 
+let
+  glyphList =
+    [ "0" "1" "2" "3" "4" "5" "6" "7"
+      "8" "9" "A" "B" "C" "D" "E" "F" ];
+
+  baseSet = lib.generateBaseDigitType glyphList;
+in
 rec {
-  inherit (pkgs.lib.trivial) toHexString;
+  /* Returns a convenient glyph set for creating your own conversion or
+     hex-related functions.
+  */
+  inherit (baseSet) glyphSet conversionTable fromDec toDec;
 
   /* A variant of `lib.lists.range` function just with hexadecimal digits.
 
@@ -15,7 +25,7 @@ rec {
       => [ "F" "10" "11" ]
   */
   range = first: last:
-    builtins.map (n: toHexString n) (pkgs.lib.lists.range first last);
+    builtins.map (n: baseSet.fromDec n) (pkgs.lib.lists.range first last);
 
   /* Checks if the given hex string is valid or not.
 

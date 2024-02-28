@@ -23,4 +23,5 @@ pkgs.lib.makeExtensible
     inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
       generateGlyphSet generateConversionTable generateBaseDigitType pow;
 
+    inherit (self.hex) isHexString;
   })

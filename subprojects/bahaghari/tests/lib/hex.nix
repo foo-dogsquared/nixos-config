@@ -2,8 +2,28 @@
 
 pkgs.lib.runTests {
   testToHexString = {
-    expr = lib.hex.toHexString 293454837;
+    expr = lib.hex.fromDec 293454837;
     expected = "117DC3F5";
+  };
+
+  testToHexString2 = {
+    expr = lib.hex.fromDec 4500;
+    expected = "1194";
+  };
+
+  testToHexString3 = {
+    expr = lib.hex.fromDec 5942819;
+    expected = "5AAE23";
+  };
+
+  testHexToDec = {
+    expr = lib.hex.toDec "FF";
+    expected = 255;
+  };
+
+  testHexToDec2 = {
+    expr = lib.hex.toDec "333FAB333";
+    expected = 13756969779;
   };
 
   testCreateHexRange = {
