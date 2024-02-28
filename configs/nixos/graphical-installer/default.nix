@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, foodogsquaredLib, ... }:
 
 # Since this will be exported as an installer ISO, you'll have to keep in mind
 # about the added imports from nixos-generators. In this case, it simply adds
@@ -33,7 +33,7 @@
     }
 
     (lib.mkIf
-      (config.formatAttr == "isoImage" || config.formatAttr == "graphicalIsoImage") {
+      (foodogsquaredLib.isFormat "graphicalIsoImage") {
       isoImage = {
         isoBaseName = config.networking.hostName;
         edition = "A Happy GNOME";
