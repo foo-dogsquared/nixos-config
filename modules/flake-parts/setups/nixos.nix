@@ -437,7 +437,7 @@ let
         ))
 
       # Then we include the Disko configuration (if there's any).
-      (lib.mkIf (config.diskoConfigs != [ ] (
+      (lib.mkIf (config.diskoConfigs != [ ]) (
         let
           diskoConfigs =
             builtins.map (name: import ../../../configs/disko/${name}) config.diskoConfigs;
@@ -447,7 +447,7 @@ let
             [ inputs.disko.nixosModules.disko ]
             ++ (lib.lists.flatten diskoConfigs);
         })
-      ))
+      )
 
       # Setting up the typical configuration.
       (
