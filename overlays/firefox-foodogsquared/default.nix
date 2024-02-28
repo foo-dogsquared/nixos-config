@@ -94,4 +94,66 @@ final: prev:
       UseSystemPrintDialog = true;
     };
   };
+
+  # A custom Firefox package with specific configuration intended for guest
+  # environments.
+  firefox-foodogsquared-guest = with prev; wrapFirefox firefox-unwrapped {
+    nativeMessagingHosts = [
+      tridactyl-native
+    ];
+
+    extraPolicies = {
+      AppAutoUpdate = false;
+      DisableAppUpdate = true;
+      DisableMasterPasswordCreation = true;
+      DisablePocket = true;
+      DisableSetDesktopBackground = true;
+      DontCheckDefaultBrowser = true;
+      EnableTrackingProtection = true;
+
+      ExtensionSettings =
+        let
+          mozillaAddon = id: "https://addons.mozilla.org/firefox/downloads/latest/${id}/latest.xpi";
+
+          # This option assumes the default installation mode is `normal_installed`.
+          extensions = {
+            "@contain-facebook".install_url = mozillaAddon "facebook-container";
+            "@contain-google".install_url = mozillaAddon "google-container";
+            "@testpilot-containers".install_url = mozillaAddon "multi-account-containers";
+            "FirefoxColor@mozilla.com".install_url = mozillaAddon "firefox-color";
+            "firefox-translations-addon@mozilla.org".install_url = mozillaAddon "firefox-translations";
+            "jid1-MnnxcxisBPnSXQ@jetpack".install_url = mozillaAddon "privacy-badger17";
+            "tridactyl.vim@cmcaine.co.uk".install_url = mozillaAddon "tridactyl-vim";
+            "uBlock0@raymondhill.net".install_url = mozillaAddon "ublock-origin";
+            "wayback_machine@mozilla.org" = {
+              install_url = mozillaAddon "wayback-machine_new";
+              default_area = "navbar";
+            };
+          };
+
+          applyInstallationMode = name: value:
+            lib.nameValuePair name (value //
+              (lib.optionalAttrs
+                (! (lib.hasAttrByPath [ "installation_mode" ] value))
+                { installation_mode = "normal_installed"; }));
+        in
+        lib.mapAttrs' applyInstallationMode extensions;
+
+      FirefoxHome = {
+        Highlights = false;
+        Pocket = false;
+        Snippets = false;
+        SponsporedPocket = false;
+        SponsporedTopSites = false;
+      };
+
+      NoDefaultBookmarks = true;
+      OfferToSaveLoginsDefault = false;
+      PasswordManagerEnabled = false;
+      SanitizeOnShutdown = {
+        FormData = true;
+      };
+      UseSystemPrintDialog = true;
+    };
+  };
 }
