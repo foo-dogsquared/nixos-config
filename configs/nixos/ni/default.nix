@@ -31,15 +31,6 @@
   # Enable the display manager of choice.
   services.xserver.displayManager.gdm.enable = true;
 
-  services.openssh.hostKeys = [{
-    path = config.sops.secrets."ssh-key".path;
-    type = "ed25519";
-  }];
-
-  sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets/secrets.yaml {
-    "ssh-key" = { };
-  };
-
   # The keyfile required for the secrets to be decrypted.
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
 
