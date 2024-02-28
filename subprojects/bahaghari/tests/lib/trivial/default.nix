@@ -77,6 +77,20 @@ pkgs.lib.runTests {
     expected = customBase24Glyphs;
   };
 
+  testGenerateConversionTable = {
+    expr = lib.trivial.generateConversionTable [ "A" "B" "C" "D" "E" "F" "G" "H" ];
+    expected = {
+      "A" = 0;
+      "B" = 1;
+      "C" = 2;
+      "D" = 3;
+      "E" = 4;
+      "F" = 5;
+      "G" = 6;
+      "H" = 7;
+    };
+  };
+
   testBaseDigitWithCustomOctalGlyph = {
     expr = lib.trivial.toBaseDigitsWithGlyphs 8 9 customOctalGlyphs;
     expected = "BB";
@@ -142,5 +156,10 @@ pkgs.lib.runTests {
   testToYAML = {
     expr = lib.trivial.toYAML { } { hello = "there"; };
     expected = "{\"hello\":\"there\"}";
+  };
+
+  testPow = {
+    expr = lib.trivial.pow 2 8;
+    expected = 256;
   };
 }

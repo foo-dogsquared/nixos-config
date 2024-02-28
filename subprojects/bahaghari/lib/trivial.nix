@@ -73,4 +73,50 @@
           glyphsList;
     in
     pkgs.lib.foldl (acc: glyph: acc // glyph) { } glyphsList';
+
+  /* Generates a conversion table for a sorted list of glyphs to its decimal
+     number. Suitable for creating your own conversion function. Accepts the
+     same argument as `generateGlyphSet`.
+
+     Type: generateConversionTable :: [ String ] -> Attrs
+
+     Example:
+       generateGlyphSet [ "0" "1" "2" "3" "4" "5" "6" "7" "8 "9" "A" "B" "C" "D" "E" "F" ]
+       => {
+         "0" = 0;
+         "1" = 1;
+         # ...
+         "E" = 14;
+         "F" = 15;
+       }
+  */
+  generateConversionTable = glyphsList:
+    let
+      glyphsList' =
+        pkgs.lib.lists.imap0
+          (i: glyph: pkgs.lib.nameValuePair glyph i)
+          glyphsList;
+    in
+    pkgs.lib.listToAttrs glyphsList';
+
+  /* Exponentiates the given base with the exponent.
+
+     Type: pow :: Int -> Int -> Int
+
+     Example:
+       pow 2 3
+       => 8
+
+       pow 6 4
+       => 1296
+  */
+  pow = base: exponent:
+    # I'll just make this linearly recursive instead.
+    let
+      iter = product: counter: max-count:
+        if counter > max-count
+        then product
+        else (iter (product * base) (counter + 1) max-count);
+    in
+    iter 1 1 exponent;
 }
