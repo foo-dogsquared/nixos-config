@@ -69,10 +69,10 @@
     let
       glyphsList' =
         pkgs.lib.lists.imap0
-          (i: glyph: { "${builtins.toString i}" = glyph; })
+          (i: glyph: pkgs.lib.nameValuePair (builtins.toString i) glyph)
           glyphsList;
     in
-    pkgs.lib.foldl (acc: glyph: acc // glyph) { } glyphsList';
+    pkgs.lib.listToAttrs glyphsList';
 
   /* Generates a conversion table for a sorted list of glyphs to its decimal
      number. Suitable for creating your own conversion function. Accepts the
