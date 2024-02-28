@@ -12,6 +12,33 @@ let
     "7" = "H";
   };
 
+  base24GlyphsList = [
+    "0"
+    "1"
+    "2"
+    "3"
+    "4"
+    "5"
+    "6"
+    "7"
+    "8"
+    "9"
+    "A"
+    "B"
+    "C"
+    "D"
+    "E"
+    "F"
+    "G"
+    "H"
+    "I"
+    "J"
+    "K"
+    "L"
+    "M"
+    "N"
+  ];
+
   customBase24Glyphs = {
     "0" = "0";
     "1" = "1";
@@ -33,11 +60,13 @@ let
     "17" = "H";
     "18" = "I";
     "19" = "J";
-    "20" = "M";
-    "21" = "N";
-    "22" = "O";
-    "23" = "P";
+    "20" = "K";
+    "21" = "L";
+    "22" = "M";
+    "23" = "N";
   };
+
+  base24Set = lib.trivial.generateBaseDigitType base24GlyphsList;
 in
 pkgs.lib.runTests {
   testGenerateCustomGlyphSet = {
@@ -46,34 +75,7 @@ pkgs.lib.runTests {
   };
 
   testGenerateBase24GlyphSet = {
-    expr =
-      lib.trivial.generateGlyphSet
-        [
-          "0"
-          "1"
-          "2"
-          "3"
-          "4"
-          "5"
-          "6"
-          "7"
-          "8"
-          "9"
-          "A"
-          "B"
-          "C"
-          "D"
-          "E"
-          "F"
-          "G"
-          "H"
-          "I"
-          "J"
-          "M"
-          "N"
-          "O"
-          "P"
-        ];
+    expr = lib.trivial.generateGlyphSet base24GlyphsList;
     expected = customBase24Glyphs;
   };
 
@@ -89,6 +91,41 @@ pkgs.lib.runTests {
       "G" = 6;
       "H" = 7;
     };
+  };
+
+  testGenerateConversionTable2 = {
+    expr = lib.trivial.generateConversionTable
+      [ "0" "1" "2" "3" "4" "5" "6" "7"
+        "8" "9" "A" "B" "C" "D" "E" "F" ];
+    expected = {
+      "0" = 0;
+      "1" = 1;
+      "2" = 2;
+      "3" = 3;
+      "4" = 4;
+      "5" = 5;
+      "6" = 6;
+      "7" = 7;
+      "8" = 8;
+      "9" = 9;
+      "A" = 10;
+      "B" = 11;
+      "C" = 12;
+      "D" = 13;
+      "E" = 14;
+      "F" = 15;
+    };
+  };
+
+  # Testing out the custom factory methods if they are working as intended.
+  testCustomBaseDigitSetToDec = {
+    expr = base24Set.toDec "12H";
+    expected = 641;
+  };
+
+  testCustomBaseDigitSetFromDec = {
+    expr = base24Set.fromDec 641;
+    expected = "12H";
   };
 
   testBaseDigitWithCustomOctalGlyph = {
