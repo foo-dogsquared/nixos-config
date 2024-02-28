@@ -1,9 +1,15 @@
-{ lib, config, pkgs, foodogsquaredLib, ... }:
+{ lib, config, pkgs, foodogsquaredLib, foodogsquaredModulesPath, ... }:
 
 # Since this will be exported as an installer ISO, you'll have to keep in mind
 # about the added imports from nixos-generators. In this case, it simply adds
 # the NixOS installation CD profile.
 {
+  imports = [
+    "${foodogsquaredModulesPath}/profiles/installer"
+
+    (foodogsquaredLib.mapHomeManager "nixos" { })
+  ];
+
   config = lib.mkMerge [
     {
       boot.kernelPackages = pkgs.linuxPackages_6_6;
@@ -13,6 +19,13 @@
       workflows.workflows.a-happy-gnome = {
         enable = true;
         extraApps = [ ];
+      };
+
+      # Install the web browser of course. What would be a graphical installer
+      # without one, yes?
+      programs.firefox = {
+        enable = true;
+        package = pkgs.firefox-foodogsquared-guest;
       };
 
       # Some niceties.
