@@ -10,6 +10,7 @@ pkgs.mkShell {
 
     age
     asciidoctor
+    disko
     deploy-rs
     home-manager
     git
