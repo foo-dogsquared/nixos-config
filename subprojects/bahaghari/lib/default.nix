@@ -15,13 +15,15 @@ pkgs.lib.makeExtensible
   {
     trivial = callLibs ./trivial.nix;
     hex = callLibs ./hex.nix;
+    math = callLibs ./math.nix;
 
     # Dedicated module sets are not supposed to have any of its functions as
     # a top-level attribute.
     tinted-theming = callLibs ./tinted-theming.nix;
 
     inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
-      generateGlyphSet generateConversionTable generateBaseDigitType pow;
+      generateGlyphSet generateConversionTable generateBaseDigitType;
 
     inherit (self.hex) isHexString;
+    inherit (self.math) abs pow percentage;
   })

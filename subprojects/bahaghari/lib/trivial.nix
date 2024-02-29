@@ -142,25 +142,4 @@ rec {
       in
       pkgs.lib.foldl (sum: v: sum + v) 0 convertDigitToDec;
   };
-
-  /* Exponentiates the given base with the exponent.
-
-     Type: pow :: Int -> Int -> Int
-
-     Example:
-       pow 2 3
-       => 8
-
-       pow 6 4
-       => 1296
-  */
-  pow = base: exponent:
-    # I'll just make this linearly recursive instead.
-    let
-      iter = product: counter: max-count:
-        if counter > max-count
-        then product
-        else iter (product * base) (counter + 1) max-count;
-    in
-    iter 1 1 exponent;
 }

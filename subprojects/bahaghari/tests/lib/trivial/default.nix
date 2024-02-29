@@ -210,9 +210,4 @@ pkgs.lib.runTests {
     expr = lib.trivial.toYAML { } { hello = "there"; };
     expected = "{\"hello\":\"there\"}";
   };
-
-  testPow = {
-    expr = lib.trivial.pow 2 8;
-    expected = 256;
-  };
 }

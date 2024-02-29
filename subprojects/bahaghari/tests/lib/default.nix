@@ -5,6 +5,7 @@ let
 in
 {
   hex = import ./hex.nix { inherit pkgs lib; };
+  math = import ./math.nix { inherit pkgs lib; };
   trivial = import ./trivial { inherit pkgs lib; };
   tinted-theming = import ./tinted-theming { inherit pkgs lib; };
 }
