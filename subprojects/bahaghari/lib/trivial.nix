@@ -129,17 +129,9 @@ rec {
     # open a can of worms about implementing this with stringy types.
     fromDec = decimal:
       let
-        iter = product: value:
-          let
-            quotient = value / base;
-            remainder = value - (base * quotient);
-            baseDigit = glyphSet.${builtins.toString remainder} + product;
-          in
-          if quotient <= 0
-          then baseDigit
-          else iter baseDigit quotient;
+        digits = pkgs.lib.toBaseDigits base decimal;
       in
-      iter "" decimal;
+      pkgs.lib.concatMapStrings (d: glyphSet.${builtins.toString d}) digits;
 
     toDec = digit:
       let
