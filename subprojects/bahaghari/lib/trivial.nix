@@ -99,58 +99,57 @@ rec {
     in
     pkgs.lib.listToAttrs glyphsList';
 
-    /* A factory function for generating an attribute set containing a glyph
-       set, a conversion table, and a conversion function to and from decimal.
-       Accepts the same list as `generateGlyphSet` and
-       `generateConversionTable` where it assumes it is sorted and
-       zero-indexed.
+  /* A factory function for generating an attribute set containing a glyph
+     set, a conversion table, and a conversion function to and from decimal.
+     Accepts the same list as `generateGlyphSet` and
+     `generateConversionTable` where it assumes it is sorted and
+     zero-indexed.
 
-       Type: generateBaseDigitType :: [ String ] -> Attrs
+     Type: generateBaseDigitType :: [ String ] -> Attrs
 
-       Example:
-        generateBaseDigitType [ "0" "1" ]
-        => {
-          base = 2;
-          glyphSet = { "0" = "0"; "1" = "1"; };
-          conversionTable = { "0" = 0; "1" = 1; };
-          isValidDigit = <function>;
-          fromDec = <function>;
-          toDec = <function>;
-        }
-    */
-    generateBaseDigitType = glyphsList: rec {
-      base = pkgs.lib.length glyphsList;
-      glyphSet = generateGlyphSet glyphsList;
-      conversionTable = generateConversionTable glyphsList;
+     Example:
+      generateBaseDigitType [ "0" "1" ]
+      => {
+        base = 2;
+        glyphSet = { "0" = "0"; "1" = "1"; };
+        conversionTable = { "0" = 0; "1" = 1; };
+        fromDec = <function>;
+        toDec = <function>;
+      }
+  */
+  generateBaseDigitType = glyphsList: rec {
+    base = pkgs.lib.length glyphsList;
+    glyphSet = generateGlyphSet glyphsList;
+    conversionTable = generateConversionTable glyphsList;
 
-      # Unfortunately, these functions cannot handle negative numbers unless we
-      # implement something like Two's complement. For now, we're not worrying
-      # about that since most of the use cases here will be mostly for color
-      # generation that typically uses hexadecimal (RGB). Plus I don't want to
-      # open a can of worms about implementing this with stringy types.
-      fromDec = decimal:
-        let
-          iter = product: value:
-            let
-              quotient = value / base;
-              remainder = value - (base * quotient);
-              baseDigit = glyphSet.${builtins.toString remainder} + product;
-            in
-            if quotient <= 0
-            then baseDigit
-            else iter baseDigit quotient;
-        in
-        iter "" decimal;
+    # Unfortunately, these functions cannot handle negative numbers unless we
+    # implement something like Two's complement. For now, we're not worrying
+    # about that since most of the use cases here will be mostly for color
+    # generation that typically uses hexadecimal (RGB). Plus I don't want to
+    # open a can of worms about implementing this with stringy types.
+    fromDec = decimal:
+      let
+        iter = product: value:
+          let
+            quotient = value / base;
+            remainder = value - (base * quotient);
+            baseDigit = glyphSet.${builtins.toString remainder} + product;
+          in
+          if quotient <= 0
+          then baseDigit
+          else iter baseDigit quotient;
+      in
+      iter "" decimal;
 
-      toDec = digit:
-        let
-          chars = pkgs.lib.stringToCharacters digit;
-          maxDigits = (pkgs.lib.length chars) - 1;
-          convertDigitToDec =
-            pkgs.lib.lists.imap0 (i: v: conversionTable.${v} * (pow base (maxDigits - i))) chars;
-        in
-        pkgs.lib.foldl (sum: v: sum + v) 0 convertDigitToDec;
-    };
+    toDec = digit:
+      let
+        chars = pkgs.lib.stringToCharacters digit;
+        maxDigits = (pkgs.lib.length chars) - 1;
+        convertDigitToDec =
+          pkgs.lib.lists.imap0 (i: v: conversionTable.${v} * (pow base (maxDigits - i))) chars;
+      in
+      pkgs.lib.foldl (sum: v: sum + v) 0 convertDigitToDec;
+  };
 
   /* Exponentiates the given base with the exponent.
 
@@ -169,7 +168,7 @@ rec {
       iter = product: counter: max-count:
         if counter > max-count
         then product
-        else (iter (product * base) (counter + 1) max-count);
+        else iter (product * base) (counter + 1) max-count;
     in
     iter 1 1 exponent;
 }

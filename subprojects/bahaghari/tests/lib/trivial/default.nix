@@ -95,8 +95,24 @@ pkgs.lib.runTests {
 
   testGenerateConversionTable2 = {
     expr = lib.trivial.generateConversionTable
-      [ "0" "1" "2" "3" "4" "5" "6" "7"
-        "8" "9" "A" "B" "C" "D" "E" "F" ];
+      [
+        "0"
+        "1"
+        "2"
+        "3"
+        "4"
+        "5"
+        "6"
+        "7"
+        "8"
+        "9"
+        "A"
+        "B"
+        "C"
+        "D"
+        "E"
+        "F"
+      ];
     expected = {
       "0" = 0;
       "1" = 1;
