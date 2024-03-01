@@ -6,6 +6,7 @@ let
 in
 {
   _module.args.foodogsquaredLib =
-    foodogsquaredLib.extend (final: prev:
-      import ../../../lib/nixvim.nix { inherit config pkgs; lib = prev; });
+    foodogsquaredLib.extend (final: prev: {
+      nixvim = import ../../../lib/nixvim.nix { inherit pkgs; lib = prev; };
+    });
 }
