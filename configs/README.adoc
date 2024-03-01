@@ -8,6 +8,7 @@ Each of these configurations are assumed to use custom modules defined at link:.
 Furthermore, these configurations do have a certain "codename" in the commits for easier inspection of the history.
 Here is the following list of them used in the repo history:
 
+* `diskoConfigs` for Disko configurations.
 * `hosts` for NixOS systems (e.g., `hosts/ni`).
 * `users` for home-manager configurations (e.g., `users/foo-dogsquared`).
 * `nixvimConfigs` for NixVim configurations (e.g., `nixvimConfigs/fiesta`).

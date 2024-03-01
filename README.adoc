@@ -127,6 +127,7 @@ However, I don't want to rebuild it every time I change it.
 
 * Migration of my link:https://github.com/foo-dogsquared/dotfiles[dotfiles].
 I still use it on other non-NixOS systems.
+link:./configs/home-manager/foo-dogsquared/modules/dotfiles.nix[Even on NixOS, yes.]
 
 * To be a configuration framework.
 This is my personal configuration which means experimentation will always be here.
