@@ -7,6 +7,8 @@ let
   bahaghariLib = import ../../lib { inherit pkgs; };
   inherit (bahaghariLib.tinted-theming) isBase24 isBase16;
 
+  settingsFormat = pkgs.formats.yaml { };
+
   # This follows the schema of a Tinted Theming scheme. Its support for legacy
   # Base16 theme is pretty awful for now. Anyways. this would allow a simple
   # `bahaghariLib.importYAML` and wam-bam-thank-you-mam.
@@ -16,7 +18,7 @@ let
   schemeType = { name, config, lib, ... }: {
     # This would allow extensions to the schema if the scheme author or the
     # user wants to add some.
-    freeformType = with lib.types; attrsOf anything;
+    freeformType = settingsFormat.type;
 
     options = {
       # The builder will be the one to detect these properly. Though, we could
