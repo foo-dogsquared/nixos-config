@@ -28,6 +28,7 @@ let
     in
     (lib.makeOverridable nixosSystem) {
       specialArgs = {
+        foodogsquaredUtils = import ../../../lib/utils/nixos.nix { inherit lib; };
         foodogsquaredModulesPath = builtins.toString nixosModules;
       };
       modules = extraModules ++ [{
