@@ -178,13 +178,14 @@ in
               '')
               cfg;
 
-            script = pkgs.writeShellApplication {
-              name = "fetch-mutable-files";
-              runtimeInputs = with pkgs; [ archiver curl git gopass ];
-              text = lib.concatStringsSep "\n" mutableFilesCmds;
-            };
+            runtimeInputs = lib.makeBinPath (with pkgs; [
+              archiver curl git gopass
+            ]);
           in
-          "${script}/bin/fetch-mutable-files";
+          pkgs.writeShellScript "fetch-mutable-files" ''
+            export PATH=${runtimeInputs}
+            ${lib.concatStringsSep "\n" mutableFilesCmds}
+          '';
 
         ExecStartPost =
           let
