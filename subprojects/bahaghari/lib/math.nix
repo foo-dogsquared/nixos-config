@@ -93,14 +93,22 @@ rec {
      Type: percentage :: Number -> Number -> Number
 
      Example:
-       percentage 4 100.0
+       percentage 100.0 4
        => 4
 
-       percentage 5 200.0
+       percentage 200.0 5
        => 10
+
+       percentage 55.4 58
+       => 32.132
+
+       percentage 0 24654
+       => 0
   */
-  percentage = number: value:
-    number / (100.0 / value);
+  percentage = value: number:
+    if value == 0
+    then 0
+    else number / (100.0 / value);
 
   /* Given a number, round up (or down) its number to the nearest integer.
 

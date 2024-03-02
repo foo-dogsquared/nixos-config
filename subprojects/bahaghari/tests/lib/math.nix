@@ -12,7 +12,7 @@ pkgs.lib.runTests {
   };
 
   testMathPowZero = {
-    expr = lib.math.pow 34 0;
+    expr = lib.math.pow 31 0;
     expected = 1;
   };
 
@@ -27,13 +27,33 @@ pkgs.lib.runTests {
   };
 
   testMathPercentage = {
-    expr = lib.math.percentage 100 50;
+    expr = lib.math.percentage 50 100;
     expected = 50;
   };
 
   testMathPercentage2 = {
-    expr = lib.math.percentage 453 13;
+    expr = lib.math.percentage 13 453;
     expected = 58.89;
+  };
+
+  testMathPercentageNegative = {
+    expr = lib.math.percentage (-20) 500;
+    expected = -100;
+  };
+
+  testMathPercentageNegative2 = {
+    expr = lib.math.percentage (-64) 843;
+    expected = -539.52;
+  };
+
+  testMathPercentageZero = {
+    expr = lib.math.percentage 0 45723;
+    expected = 0;
+  };
+
+  testMathPercentageZero2 = {
+    expr = lib.math.percentage 0 (-3423);
+    expected = 0;
   };
 
   testMathGrow = {
