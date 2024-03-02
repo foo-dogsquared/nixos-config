@@ -138,8 +138,23 @@ rec {
         chars = pkgs.lib.stringToCharacters digit;
         maxDigits = (pkgs.lib.length chars) - 1;
         convertDigitToDec =
-          pkgs.lib.lists.imap0 (i: v: conversionTable.${v} * (pow base (maxDigits - i))) chars;
+          pkgs.lib.lists.imap0 (i: v: conversionTable.${v} * (lib.math.pow base (maxDigits - i))) chars;
       in
       pkgs.lib.foldl (sum: v: sum + v) 0 convertDigitToDec;
   };
+
+  /* Given a range of two numbers, ensure the value is only returned within the
+     range.
+
+     Type: clamp :: Number -> Number -> Number -> Number
+
+     Example:
+       clamp 0 255 654
+       => 255
+
+       clamp (-100) 100 (-234)
+       => -100
+  */
+  clamp = min: max: value:
+    pkgs.lib.min max (pkgs.lib.max min value);
 }

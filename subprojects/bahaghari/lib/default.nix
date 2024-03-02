@@ -22,7 +22,7 @@ pkgs.lib.makeExtensible
     tinted-theming = callLibs ./tinted-theming.nix;
 
     inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
-      generateGlyphSet generateConversionTable generateBaseDigitType;
+      generateGlyphSet generateConversionTable generateBaseDigitType clamp;
 
     inherit (self.hex) isHexString;
     inherit (self.math) abs pow percentage;

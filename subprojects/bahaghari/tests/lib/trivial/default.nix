@@ -210,4 +210,19 @@ pkgs.lib.runTests {
     expr = lib.trivial.toYAML { } { hello = "there"; };
     expected = "{\"hello\":\"there\"}";
   };
+
+  testNumberClamp = {
+    expr = lib.trivial.clamp 1 10 4;
+    expected = 4;
+  };
+
+  testNumberClampMin = {
+    expr = lib.trivial.clamp 1 10 (-5);
+    expected = 1;
+  };
+
+  testNumberClampMax = {
+    expr = lib.trivial.clamp 1 10 453;
+    expected = 10;
+  };
 }
