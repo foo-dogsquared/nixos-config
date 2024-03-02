@@ -41,6 +41,20 @@ rec {
     in
     if exponent < 0 then (1 / value) else value;
 
+  /* Returns a boolean whether the given number is within the given (inclusive) range.
+
+     Type: isWithinRange :: Number -> Number -> Number -> Bool
+
+     Example:
+       isWithinRange 30 50 6
+       => false
+
+       isWithinRange 0 100 75
+       => true
+  */
+  isWithinRange = min: max: number:
+    (pkgs.lib.max number min) <= (pkgs.lib.min number max);
+
   /* Given a number, make it grow by given amount of percentage.
      A value of 100 should make the number doubled.
 
@@ -53,23 +67,26 @@ rec {
        grow 55.5 100
        => 111
   */
-  grow = number: value:
+  grow = value: number:
     number + (percentage number value);
 
-  /* Given a number, make it smaller by given amount of percentage.
-     A value of 100 should zero the number.
+  /* Similar to `grow` but only limits to be within the given (inclusive)
+     range.
 
-     Type: shrink :: Number -> Number -> Number
+     Type: grow' :: Number -> Number -> Number -> Number
 
      Example:
-       shrink 4 50.0
-       => 2
+       grow' 0 255 12 100
+       => 24
 
-       shrink 55.5 100
-       => 0
+       grow' 1 10 5 (-200)
+       => 1
   */
-  shrink = number: value:
-    number - (percentage number value);
+  grow' = min: max: value: number:
+    let
+      res = grow number value;
+    in
+      pkgs.lib.min max (pkgs.lib.max res min);
 
   /* Given a number, return its value by the given percentage.
 

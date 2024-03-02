@@ -37,13 +37,23 @@ pkgs.lib.runTests {
   };
 
   testMathGrow = {
-    expr = lib.math.grow 12 500;
+    expr = lib.math.grow 500 12;
     expected = 72;
   };
 
   testMathGrow2 = {
-    expr = lib.math.grow 5.5 55.5;
+    expr = lib.math.grow 55.5 5.5;
     expected = 8.5525;
+  };
+
+  testMathGrowVariantMax = {
+    expr = lib.math.grow' 0 255 130 100;
+    expected = 255;
+  };
+
+  testMathGrowVariantMin = {
+    expr = lib.math.grow' 0 255 130 (-500);
+    expected = 0;
   };
 
   testMathRoundDown = {
@@ -54,5 +64,15 @@ pkgs.lib.runTests {
   testMathRoundUp = {
     expr = lib.math.round 2.8;
     expected = 3;
+  };
+
+  testMathWithinRange = {
+    expr = lib.math.isWithinRange (-100) 100 50;
+    expected = true;
+  };
+
+  testMathWithinRange2 = {
+    expr = lib.math.isWithinRange 5 10 (-5);
+    expected = false;
   };
 }
