@@ -14,6 +14,7 @@
         formats = null;
         modules = [
           inputs.disko.nixosModules.disko
+          inputs.sops-nix.nixosModules.sops
         ];
         homeManagerUsers = {
           nixpkgsInstance = "global";
@@ -43,6 +44,7 @@
         domain = "foodogsquared.one";
         modules = [
           inputs.disko.nixosModules.disko
+          inputs.sops-nix.nixosModules.sops
         ];
         deploy = {
           hostname = "plover.foodogsquared.one";
@@ -92,7 +94,6 @@
     sharedModules = [
       # Only have third-party modules with optional NixOS modules.
       inputs.nix-index-database.nixosModules.nix-index
-      inputs.sops-nix.nixosModules.sops
 
       # The rainbow road to ricing your raw materials.
       inputs.self.nixosModules.bahaghari

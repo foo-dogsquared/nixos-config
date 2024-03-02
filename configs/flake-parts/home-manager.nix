@@ -27,6 +27,7 @@
         ];
         modules = [
           inputs.nur.hmModules.nur
+          inputs.sops-nix.homeManagerModules.sops
         ];
         nixvim.instance = "fiesta";
         deploy = {
@@ -43,7 +44,6 @@
     # cluster.
     sharedModules = [
       # ...plus a bunch of third-party modules.
-      inputs.sops-nix.homeManagerModules.sops
       inputs.nix-index-database.hmModules.nix-index
 
       # The rainbow road to ricing your raw materials.
