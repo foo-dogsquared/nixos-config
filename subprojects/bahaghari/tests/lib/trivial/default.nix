@@ -1,4 +1,4 @@
-{ pkgs, lib }:
+{ pkgs, lib, self }:
 
 let
   customOctalGlyphs = {
@@ -66,21 +66,21 @@ let
     "23" = "N";
   };
 
-  base24Set = lib.trivial.generateBaseDigitType base24GlyphsList;
+  base24Set = self.trivial.generateBaseDigitType base24GlyphsList;
 in
-pkgs.lib.runTests {
+lib.runTests {
   testGenerateCustomGlyphSet = {
-    expr = lib.trivial.generateGlyphSet [ "A" "B" "C" "D" "E" "F" "G" "H" ];
+    expr = self.trivial.generateGlyphSet [ "A" "B" "C" "D" "E" "F" "G" "H" ];
     expected = customOctalGlyphs;
   };
 
   testGenerateBase24GlyphSet = {
-    expr = lib.trivial.generateGlyphSet base24GlyphsList;
+    expr = self.trivial.generateGlyphSet base24GlyphsList;
     expected = customBase24Glyphs;
   };
 
   testGenerateConversionTable = {
-    expr = lib.trivial.generateConversionTable [ "A" "B" "C" "D" "E" "F" "G" "H" ];
+    expr = self.trivial.generateConversionTable [ "A" "B" "C" "D" "E" "F" "G" "H" ];
     expected = {
       "A" = 0;
       "B" = 1;
@@ -94,7 +94,7 @@ pkgs.lib.runTests {
   };
 
   testGenerateConversionTable2 = {
-    expr = lib.trivial.generateConversionTable
+    expr = self.trivial.generateConversionTable
       [
         "0"
         "1"
@@ -145,29 +145,29 @@ pkgs.lib.runTests {
   };
 
   testBaseDigitWithCustomOctalGlyph = {
-    expr = lib.trivial.toBaseDigitsWithGlyphs 8 9 customOctalGlyphs;
+    expr = self.trivial.toBaseDigitsWithGlyphs 8 9 customOctalGlyphs;
     expected = "BB";
   };
 
   testBaseDigitWithCustomOctalGlyph2 = {
-    expr = lib.trivial.toBaseDigitsWithGlyphs 8 641 customOctalGlyphs;
+    expr = self.trivial.toBaseDigitsWithGlyphs 8 641 customOctalGlyphs;
     expected = "BCAB";
   };
 
   testBaseDigitWithProperBase24Glyph = {
-    expr = lib.trivial.toBaseDigitsWithGlyphs 24 641 customBase24Glyphs;
+    expr = self.trivial.toBaseDigitsWithGlyphs 24 641 customBase24Glyphs;
     expected = "12H";
   };
 
   testBaseDigitWithProperBase24Glyph2 = {
-    expr = lib.trivial.toBaseDigitsWithGlyphs 24 2583 customBase24Glyphs;
+    expr = self.trivial.toBaseDigitsWithGlyphs 24 2583 customBase24Glyphs;
     expected = "4BF";
   };
 
-  # We're mainly testing if the underlying YAML library is mostly compliant
+  # We're mainly testing if the underlying YAML selfrary is mostly compliant
   # with whatever it claims.
   testImportBasicYAML = {
-    expr = lib.trivial.importYAML ./simple.yml;
+    expr = self.trivial.importYAML ./simple.yml;
     expected = {
       hello = "there";
       how-are-you-doing = "I'm fine. Thank you for asking.\n";
@@ -177,7 +177,7 @@ pkgs.lib.runTests {
   };
 
   testImportTintedThemingBase16YAML = {
-    expr = lib.trivial.importYAML ../tinted-theming/sample-base16-scheme.yml;
+    expr = self.trivial.importYAML ../tinted-theming/sample-base16-scheme.yml;
     expected = {
       system = "base16";
       name = "Bark on a tree";
@@ -207,22 +207,22 @@ pkgs.lib.runTests {
 
   # YAML is a superset of JSON (or was it the other way around?) after v1.2.
   testToYAML = {
-    expr = lib.trivial.toYAML { } { hello = "there"; };
+    expr = self.trivial.toYAML { } { hello = "there"; };
     expected = "{\"hello\":\"there\"}";
   };
 
   testNumberClamp = {
-    expr = lib.trivial.clamp 1 10 4;
+    expr = self.trivial.clamp 1 10 4;
     expected = 4;
   };
 
   testNumberClampMin = {
-    expr = lib.trivial.clamp 1 10 (-5);
+    expr = self.trivial.clamp 1 10 (-5);
     expected = 1;
   };
 
   testNumberClampMax = {
-    expr = lib.trivial.clamp 1 10 453;
+    expr = self.trivial.clamp 1 10 453;
     expected = 10;
   };
 }

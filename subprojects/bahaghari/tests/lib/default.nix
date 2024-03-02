@@ -2,10 +2,14 @@
 
 let
   lib = import ../../lib { inherit pkgs; };
+  callLib = file: import file {
+    inherit (pkgs) lib; inherit pkgs;
+    self = lib;
+  };
 in
 {
-  hex = import ./hex.nix { inherit pkgs lib; };
-  math = import ./math.nix { inherit pkgs lib; };
-  trivial = import ./trivial { inherit pkgs lib; };
-  tinted-theming = import ./tinted-theming { inherit pkgs lib; };
+  hex = callLib ./hex.nix;
+  math = callLib ./math.nix;
+  trivial = callLib ./trivial;
+  tinted-theming = callLib ./tinted-theming;
 }

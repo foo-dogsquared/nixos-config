@@ -10,7 +10,7 @@
 pkgs.lib.makeExtensible
   (self:
   let
-    callLibs = file: import file { lib = self; inherit pkgs; };
+    callLibs = file: import file { inherit (pkgs) lib; inherit pkgs self; };
   in
   {
     trivial = callLibs ./trivial.nix;

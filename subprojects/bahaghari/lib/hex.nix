@@ -1,7 +1,7 @@
 # A small utility library for manipulating hexadecimal numbers. It's made in 15
 # minutes with a bunch of duct tape on it but it's working for its intended
 # purpose.
-{ pkgs, lib }:
+{ pkgs, lib, self }:
 
 let
   glyphList =
@@ -24,7 +24,7 @@ let
       "F"
     ];
 
-  baseSet = lib.generateBaseDigitType glyphList;
+  baseSet = self.generateBaseDigitType glyphList;
 in
 rec {
   /* Returns a convenient glyph set for creating your own conversion or
@@ -41,7 +41,7 @@ rec {
       => [ "F" "10" "11" ]
   */
   range = first: last:
-    builtins.map (n: baseSet.fromDec n) (pkgs.lib.lists.range first last);
+    builtins.map (n: baseSet.fromDec n) (lib.lists.range first last);
 
   /* Checks if the given hex string is valid or not.
 
@@ -77,13 +77,13 @@ rec {
   */
   pad = n: hex:
     let
-      strLength = pkgs.lib.stringLength hex;
+      strLength = lib.stringLength hex;
       reqWidth = n - strLength;
-      components = pkgs.lib.genList (_: "0") reqWidth ++ [ hex ];
+      components = lib.genList (_: "0") reqWidth ++ [ hex ];
     in
-    assert pkgs.lib.assertMsg (isHexString hex)
+    assert lib.assertMsg (isHexString hex)
       "bahaghariLib.hex.pad: given hex number (${hex}) is not valid";
     if (reqWidth <= 0)
     then hex
-    else pkgs.lib.concatStringsSep "" components;
+    else lib.concatStringsSep "" components;
 }

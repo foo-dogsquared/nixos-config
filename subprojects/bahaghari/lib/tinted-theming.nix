@@ -1,16 +1,16 @@
-{ pkgs, lib }:
+{ pkgs, lib, self }:
 
 # TODO: Remove the legacy scheme support once it is entirely removed in Tinted
 # Theming standard.
 let
   isBaseX = i: palette:
     let
-      paletteNames = pkgs.lib.attrNames palette;
-      maxDigitLength = pkgs.lib.lists.length (pkgs.lib.toBaseDigits 10 i);
-      mkBaseAttr = hex: "base${lib.hex.pad maxDigitLength hex}";
-      schemeNames = builtins.map mkBaseAttr (lib.hex.range 0 (i - 1));
+      paletteNames = lib.attrNames palette;
+      maxDigitLength = lib.lists.length (lib.toBaseDigits 10 i);
+      mkBaseAttr = hex: "base${self.hex.pad maxDigitLength hex}";
+      schemeNames = builtins.map mkBaseAttr (self.hex.range 0 (i - 1));
     in
-    (pkgs.lib.count (name: pkgs.lib.elem name schemeNames) paletteNames) == i;
+    (lib.count (name: lib.elem name schemeNames) paletteNames) == i;
 in
 rec {
   # TODO: Return a Nix object to generate a Tinted Theming color scheme from an
@@ -105,7 +105,7 @@ rec {
         else null;
 
       palette =
-        pkgs.lib.attrsets.removeAttrs scheme [ "author" "description" "scheme" ];
+        lib.attrsets.removeAttrs scheme [ "author" "description" "scheme" ];
     in
     {
       inherit (scheme) author;
@@ -113,8 +113,8 @@ rec {
 
       name = scheme.scheme;
     }
-    // pkgs.lib.optionalAttrs (scheme?description) { inherit (scheme) description; }
-    // pkgs.lib.optionalAttrs (system != null) { inherit system; };
+    // lib.optionalAttrs (scheme?description) { inherit (scheme) description; }
+    // lib.optionalAttrs (system != null) { inherit system; };
 
   /* Imports a Base16 scheme. This also handles converting the legacy Base16
      schema into the new one if it's detected. Take note, every single token
@@ -139,9 +139,9 @@ rec {
   */
   importScheme = yamlpath:
     let
-      scheme = lib.importYAML yamlpath;
+      scheme = self.importYAML yamlpath;
     in
-    assert pkgs.lib.assertMsg (isValidScheme scheme || isLegacyScheme scheme)
+    assert lib.assertMsg (isValidScheme scheme || isLegacyScheme scheme)
       "bahaghariLib.tinted-theming.importScheme: given data is not a valid Tinted Theming scheme";
     if isLegacyScheme scheme
     then modernizeLegacyScheme scheme

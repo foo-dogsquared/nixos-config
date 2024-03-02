@@ -1,7 +1,7 @@
 # A little math utility for common operations. Don't expect any high-level
 # mathematical operations nor godly optimizations expected from a typical math
 # library, it's just basic high school type of shit in all aspects.
-{ pkgs, lib }:
+{ pkgs, lib, self }:
 
 rec {
   /* Returns the absolute value of the given number.
@@ -53,7 +53,7 @@ rec {
        => true
   */
   isWithinRange = min: max: number:
-    (pkgs.lib.max number min) <= (pkgs.lib.min number max);
+    (lib.max number min) <= (lib.min number max);
 
   /* Given a number, make it grow by given amount of percentage.
      A value of 100 should make the number doubled.
@@ -86,7 +86,7 @@ rec {
     let
       res = grow number value;
     in
-      pkgs.lib.min max (pkgs.lib.max res min);
+      lib.min max (lib.max res min);
 
   /* Given a number, return its value by the given percentage.
 

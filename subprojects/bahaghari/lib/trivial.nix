@@ -1,4 +1,4 @@
-{ pkgs, lib }:
+{ pkgs, lib, self }:
 
 rec {
   inherit (pkgs.lib.generators) toYAML;
@@ -21,10 +21,10 @@ rec {
   importYAML = path:
     let
       dataDrv = pkgs.runCommand "convert-yaml-to-json" { } ''
-        ${pkgs.lib.getExe' pkgs.yaml2json "yaml2json"} < "${path}" > "$out"
+        ${lib.getExe' pkgs.yaml2json "yaml2json"} < "${path}" > "$out"
       '';
     in
-    pkgs.lib.importJSON dataDrv;
+    lib.importJSON dataDrv;
 
   /* Convert a given decimal number to a specified base digit with the set of
      glyphs for each digit as returned from lib.toBaseDigits.
@@ -44,10 +44,10 @@ rec {
   */
   toBaseDigitsWithGlyphs = base: i: glyphs:
     let
-      baseDigits = pkgs.lib.toBaseDigits base i;
+      baseDigits = lib.toBaseDigits base i;
       toBaseDigits = d: glyphs.${builtins.toString d};
     in
-    pkgs.lib.concatMapStrings toBaseDigits baseDigits;
+    lib.concatMapStrings toBaseDigits baseDigits;
 
   /* Generates a glyph set usable for `toBaseDigitsWithGlyphs`. Take note the
      given list is assumed to be sorted and the generated glyph set starts at
@@ -68,11 +68,11 @@ rec {
   generateGlyphSet = glyphsList:
     let
       glyphsList' =
-        pkgs.lib.lists.imap0
-          (i: glyph: pkgs.lib.nameValuePair (builtins.toString i) glyph)
+        lib.lists.imap0
+          (i: glyph: lib.nameValuePair (builtins.toString i) glyph)
           glyphsList;
     in
-    pkgs.lib.listToAttrs glyphsList';
+    lib.listToAttrs glyphsList';
 
   /* Generates a conversion table for a sorted list of glyphs to its decimal
      number. Suitable for creating your own conversion function. Accepts the
@@ -93,11 +93,11 @@ rec {
   generateConversionTable = glyphsList:
     let
       glyphsList' =
-        pkgs.lib.lists.imap0
-          (i: glyph: pkgs.lib.nameValuePair glyph i)
+        lib.lists.imap0
+          (i: glyph: lib.nameValuePair glyph i)
           glyphsList;
     in
-    pkgs.lib.listToAttrs glyphsList';
+    lib.listToAttrs glyphsList';
 
   /* A factory function for generating an attribute set containing a glyph
      set, a conversion table, and a conversion function to and from decimal.
@@ -118,7 +118,7 @@ rec {
       }
   */
   generateBaseDigitType = glyphsList: rec {
-    base = pkgs.lib.length glyphsList;
+    base = lib.length glyphsList;
     glyphSet = generateGlyphSet glyphsList;
     conversionTable = generateConversionTable glyphsList;
 
@@ -129,18 +129,18 @@ rec {
     # open a can of worms about implementing this with stringy types.
     fromDec = decimal:
       let
-        digits = pkgs.lib.toBaseDigits base decimal;
+        digits = lib.toBaseDigits base decimal;
       in
-      pkgs.lib.concatMapStrings (d: glyphSet.${builtins.toString d}) digits;
+      lib.concatMapStrings (d: glyphSet.${builtins.toString d}) digits;
 
     toDec = digit:
       let
-        chars = pkgs.lib.stringToCharacters digit;
-        maxDigits = (pkgs.lib.length chars) - 1;
+        chars = lib.stringToCharacters digit;
+        maxDigits = (lib.length chars) - 1;
         convertDigitToDec =
-          pkgs.lib.lists.imap0 (i: v: conversionTable.${v} * (lib.math.pow base (maxDigits - i))) chars;
+          lib.lists.imap0 (i: v: conversionTable.${v} * (self.math.pow base (maxDigits - i))) chars;
       in
-      pkgs.lib.foldl (sum: v: sum + v) 0 convertDigitToDec;
+      lib.foldl (sum: v: sum + v) 0 convertDigitToDec;
   };
 
   /* Given a range of two numbers, ensure the value is only returned within the
@@ -154,7 +154,10 @@ rec {
 
        clamp (-100) 100 (-234)
        => -100
+
+       clamp (-100) 100 54
+       => 54
   */
   clamp = min: max: value:
-    pkgs.lib.min max (pkgs.lib.max min value);
+    lib.min max (lib.max min value);
 }
