@@ -104,6 +104,9 @@ in
   config = lib.mkIf (cfg.configs != { }) {
     setups.nixvim.sharedModules = [
       nixvimModules
+
+      # Import our private modules.
+      ../../nixvim/_private
     ];
 
     perSystem = { system, config, lib, ... }:
