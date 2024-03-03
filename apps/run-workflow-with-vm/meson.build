@@ -29,5 +29,8 @@ configure_file(
 
 install_data(
   './configuration.nix',
-  install_mode: 'r--r--r--'
+  './modules/home-manager/default.nix',
+  './modules/nixos/default.nix',
+  install_mode: 'r--r--r--',
+  preserve_path: true,
 )

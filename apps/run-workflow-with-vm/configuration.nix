@@ -2,7 +2,7 @@
 # workflow module. It's a good thing the baseline for the configuration is not
 # tedious to set up for simpler configs like this. Just take note this is
 # executed on a separate directory as its own so relative paths are moot.
-{ workflow, extraModules ? [ ], extraHomeModules ? [ ] }:
+{ workflow }:
 
 let
   pkgs = import <nixpkgs> { };
@@ -14,14 +14,18 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
   specialArgs = {
     foodogsquaredUtils = import <config/lib/utils/nixos.nix> { inherit lib; };
   };
-  modules = extraModules ++ [
+  modules = [
+    # You can include an extra set by setting `extra-config` as part of the
+    # include path. It is expected that this will not be overridden by the
+    # script or the build process.
+    <extra-config/modules/nixos>
+
     <config/modules/nixos>
     <config/modules/nixos/_private>
     <config/modules/nixos/profiles/generic.nix>
     <config/modules/nixos/profiles/nix-conf.nix>
+    <config/modules/nixos/profiles/desktop>
     <home-manager/nixos>
-    <disko/module.nix>
-    <sops-nix/modules/sops>
     <nixos-generators/formats/vm.nix>
     <nixos-generators/format-module.nix>
     ({ config, lib, pkgs, foodogsquaredUtils, ... }: {
@@ -43,7 +47,10 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
         # Configure home-manager-related stuff.
         home-manager.useUserPackages = lib.mkDefault true;
         home-manager.useGlobalPkgs = lib.mkDefault true;
-        home-manager.sharedModules = extraHomeModules ++ [
+        home-manager.sharedModules = [
+          # Same with home-manager modules.
+          <extra-config/modules/nixos>
+
           <config/modules/home-manager>
           <config/modules/home-manager/_private>
           <sops-nix/modules/home-manager/sops.nix>
