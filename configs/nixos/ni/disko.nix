@@ -1,9 +1,9 @@
-{ config, lib, ... }:
+{ disk ? "/dev/nvme0n1", config, lib, ... }:
 
 {
   disko.devices = {
     disk.primary = {
-      device = "/dev/nvme0n1";
+      device = disk;
       type = "disk";
       content = {
         type = "gpt";
