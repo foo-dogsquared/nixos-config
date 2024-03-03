@@ -11,6 +11,9 @@ let
 in
 import <nixpkgs/nixos/lib/eval-config.nix> {
   inherit lib;
+  specialArgs = {
+    foodogsquaredUtils = import <config/lib/utils/nixos.nix> { inherit lib; };
+  };
   modules = extraModules ++ [
     <config/modules/nixos>
     <config/modules/nixos/_private>
@@ -21,9 +24,9 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
     <sops-nix/modules/sops>
     <nixos-generators/formats/vm.nix>
     <nixos-generators/format-module.nix>
-    ({ config, lib, pkgs, foodogsquaredLib, ... }: {
+    ({ config, lib, pkgs, foodogsquaredUtils, ... }: {
       imports = [
-        (foodogsquaredLib.mapHomeManagerUser "alice" {
+        (foodogsquaredUtils.mapHomeManagerUser "alice" {
           password = "";
           extraGroups = [ "wheel" ];
           description = "There is no password";
