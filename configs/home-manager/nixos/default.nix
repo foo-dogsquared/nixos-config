@@ -3,6 +3,10 @@
 { config, lib, pkgs, ... }:
 
 {
+  imports = [ ./modules ];
+
+  users.nixos.programs.terminal-multiplexer.enable = true;
+
   suites = {
     dev = {
       enable = true;
