@@ -7,7 +7,4 @@
     ./audio.nix
     ./hardware.nix
   ];
-
-  # We'll just have the configuration stored as a backup.
-  environment.etc.nixos.source = ../../../../..;
 }
