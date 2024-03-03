@@ -1,0 +1,35 @@
+= run-workflow-with-vm
+:toc:
+
+An internal script for the sole purpose of building NixOS VMs with the link:../../modules/nixos/_private/workflows[given NixOS workflows].
+It is mainly used to developing them workflows (READ: rices).
+As a (VERY NEAT) side effect, if we exported this app, we can basically let other people test and even reproduce our workflows with this script.
+It only expects the name of the workflow as the first argument with the rest to be passed as part of `nix-build` (which is the backbone of the script).
+
+[source, shell]
+----
+run-workflow-with-vm a-happy-gnome
+----
+
+When run, it should build a VM with its script to easily initialize it.
+
+
+== Extra niceties
+
+There's some niceties left with this script including the ability to include your own config by overriding `extra-config` as part of the include path.
+It is expected that the extra configuration folder is structured similarly to this NixOS cluster.
+
+[source, tree]
+----
+./extra-config-stuff
+├── home-manager
+├── nixvim
+└── nixos
+----
+
+Once you have an folder containing those extra snippets, you can simply include them like so.
+
+[source, shell]
+----
+run-workflow-with-vm a-happy-gnome -I extra-config=./extra-config-stuff
+----
