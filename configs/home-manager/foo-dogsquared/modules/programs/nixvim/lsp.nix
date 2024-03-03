@@ -21,7 +21,13 @@
     nil_ls.enable = true; # For Nix.
     nushell.enable = true; # For Nushell.
     pyright.enable = true; # For Python.
-    rust-analyzer.enable = true; # For Rust (even though I barely use it).
+
+    # For Rust (even though I barely use it).
+    rust-analyzer = {
+      enable = true;
+      installRustc = false;
+    };
+
     solargraph.enable = true; # For Ruby.
     tailwindcss.enable = true; # For Tailwind CSS.
     terraformls.enable = true; # For Terraform.
