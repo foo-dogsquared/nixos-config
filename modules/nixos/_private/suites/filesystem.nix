@@ -34,16 +34,15 @@ in
 
     (lib.mkIf cfg.setups.archive.enable {
       fileSystems."/mnt/archives" = {
-        device = "/dev/disk/by-uuid/6ba86a30-5fa4-41d9-8354-fa8af0f57f49";
+        device = "/dev/disk/by-partlabel/disk-archive-root";
         fsType = "btrfs";
         noCheck = true;
         options = [
           # These are btrfs-specific mount options which can found in btrfs.5
           # manual page.
-          "subvol=@"
+          "subvol=/root"
           "noatime"
-          "compress=zstd:9"
-          "space_cache=v2"
+          "compress=zstd:6"
 
           "noauto"
           "nofail"
@@ -58,14 +57,16 @@ in
 
     (lib.mkIf cfg.setups.external-hdd.enable {
       fileSystems."/mnt/external-storage" = {
-        device = "/dev/disk/by-uuid/665A391C5A38EB07";
-        fsType = "ntfs";
+        device = "/dev/disk/by-partlabel/disk-live-installer-root";
+        fsType = "btrfs";
         noCheck = true;
         options = [
           "nofail"
           "noauto"
           "user"
 
+          "subvol=/data"
+          "compress=zstd"
           "x-systemd.automount"
           "x-systemd.device-timeout=2"
           "x-systemd.idle-timeout=2"
