@@ -1,5 +1,5 @@
 # Custom libraries for home-manager library.
-{ pkgs, lib }:
+{ pkgs, lib, self }:
 
 rec {
   /*
@@ -15,7 +15,7 @@ rec {
 
     # The default value when `attrPath` is missing.
     default:
-    attrs ? nixosConfig && pkgs.lib.attrByPath attrPath default attrs;
+    attrs ? nixosConfig && lib.attrByPath attrPath default attrs;
 
   hasDarwinConfigAttr =
     # The configuration attribute set of the home-manager configuration.

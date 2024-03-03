@@ -1,5 +1,5 @@
 # A library specifically for environments with sops-nix.
-{ pkgs, lib }:
+{ pkgs, lib, self }:
 
 {
   /* Get the secrets from a given sops file. This will set the individual
@@ -21,7 +21,7 @@
     let
       getKey = key: { inherit key sopsFile; };
     in
-    pkgs.lib.mapAttrs
+    lib.mapAttrs
       (path: attrs:
         (getKey path) // attrs)
       secrets;
@@ -44,9 +44,9 @@
         }))
   */
   attachSopsPathPrefix = prefix: secrets:
-    pkgs.lib.mapAttrs'
+    lib.mapAttrs'
       (key: settings:
-        pkgs.lib.nameValuePair
+        lib.nameValuePair
           "${prefix}/${key}"
           ({ inherit key; } // settings))
       secrets;
