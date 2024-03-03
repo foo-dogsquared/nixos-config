@@ -38,11 +38,27 @@ This is an overencumbered set of NixOS configurations for different systems.
 For this section though, we'll assume you're only interested in installing the desktop configuration.
 
 My main desktop configuration is quite big to the point where it cannot be completely installed with the regular installer from nixos.org without crashing.
-This is due to having not enough space given from the installer (being a 2GB tmpfs space which is enough for most) to build most of the outputs from the desktop derivation.
-For this, it now requires a modified persistent live installer (thus has a requirement of a larger disk space of >64GB).
+This is due to having not enough space given from the official installer (being a 2GB tmpfs space which is enough for most) to build most of the outputs from the desktop derivation.
+For this, it now requires a modified persistent live installer (thus has a requirement of a larger disk space of >64GB) to be installed first within a NixOS live installer environment first.footnote:[Installing a live installer environment inside of a live installer environment, oooh.]
 
 A persistent live installer should only be intended to install the humungous configuration.
 It isn't exactly made to be a NixOS-on-a-stick type but simply embiggening the root filesystem should be perfectly cromulent.
+
+[NOTE]
+====
+If you want to make this into a three-part step, you can install my graphical installer config.
+Take note, it assumes the disk drive is at least <=64GB and will format it into a Btrfs filesystem.
+For this step, you can simply use my Disko config for the external hard drive I carry around (recommend to back those data up before using).
+
+[source, shell, subs=attributes]
+----
+nix-shell -p disko git
+
+# Run the following commands as root.
+disko --mode disko [--arg disk "/dev/sda"] --flake {canonical_flake_url}#external-hdd
+nixos-install --root /mnt --flake {canonical_flake_url}#graphical-installer-x86_64-linux
+----
+====
 
 Once you have a live installer in boot, you can then simply install the following commands.
 It will automate everything for you including the partitioning and mounting steps (powered by Disko).
@@ -50,7 +66,8 @@ NO ADDITIONAL `mount` COMMANDS NEEDED!
 
 [source, shell, subs=attributes]
 ----
-eval "$(nix build --no-link --print-out-paths {canonical_flake_url}#nixosConfigurations.ni-x86_64-linux.config.system.build.diskoScript)"
+# Also run these as root.
+disko --mode disko [--arg disk "/dev/nvme0n1"] --flake {canonical_flake_url}#ni-x86_64-linux
 nixos-install --flake {canonical_flake_url}#ni-x86_64-linux
 ----
 
