@@ -1,4 +1,6 @@
-# Bahaghari's subproject.
+# Bahaghari's subproject. We're primarily exporting to use Bahaghari without
+# referring to its flake which is bad since the lockfile will constantly
+# update. Not a good look.
 { lib, ... }:
 
 {

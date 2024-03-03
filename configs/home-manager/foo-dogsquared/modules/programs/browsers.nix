@@ -118,6 +118,9 @@ in
             zhongwen
           ]);
 
+          # Much of the settings are affected by the policies set in the
+          # package. See more information about them in
+          # https://mozilla.github.io/policy-templates/.
           settings = {
             # Disable the UI tour.
             "browser.uitour.enabled" = false;
