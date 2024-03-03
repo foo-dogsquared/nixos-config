@@ -1,4 +1,4 @@
-{ config, pkgs, lib, foodogsquaredLib, foodogsquaredModulesPath, ... }:
+{ config, pkgs, lib, foodogsquaredModulesPath, ... }:
 
 {
   imports = [
@@ -10,6 +10,7 @@
     # Include the disko configuration.
     ./disko.nix
 
+    # My host-specific modules.
     ./modules
   ];
 
@@ -32,29 +33,13 @@
   services.xserver.displayManager.gdm.enable = true;
 
   # The keyfile required for the secrets to be decrypted.
-  sops.age.keyFile = "/var/lib/sops-nix/key.txt";
-
-  # My custom configuration with my custom modules starts here.
-  suites = {
-    archiving.enable = true;
-    browsers.chromium.enable = true;
-    filesystem.setups.personal-webstorage.enable = true;
-  };
-
-  # Basically, the most basic nixpkgs configuration.
-  environment.variables.NIXPKGS_CONFIG = lib.mkForce ./config/nixpkgs/config.nix;
+  sops.age.keyFile = "/var/lib/sops-nix/key";
 
   # Enable Nix channels.
   nix.channel.enable = true;
 
   # Make Nix experimental.
   nix.package = pkgs.nixStable;
-
-  # Some more experimentals for Nix.
-  nix.settings = {
-    auto-allocate-uids = true;
-    experimental-features = [ "auto-allocate-uids" ];
-  };
 
   system.stateVersion = "24.05"; # Yes! I read the comment!
 }
