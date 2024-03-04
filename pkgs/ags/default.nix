@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , meson
 , ninja
+, nodePackages
 , pkg-config
 , gobject-introspection
 , gjs
@@ -41,6 +42,7 @@ buildNpmPackage rec {
     pkg-config
     gjs
     gobject-introspection
+    nodePackages.typescript
     wrapGAppsHook
   ];
 
@@ -56,13 +58,6 @@ buildNpmPackage rec {
     networkmanager
     upower
   ];
-
-  # TODO: I have no idea how to properly make use of the binaries from
-  # node_modules folder, pls fix later (or is this the most Nix-idiomatic way of
-  # doing this?). :(
-  preConfigure = ''
-    addToSearchPath PATH $PWD/node_modules/.bin
-  '';
 
   postPatch = ''
     chmod u+x ./post_install.sh && patchShebangs ./post_install.sh
