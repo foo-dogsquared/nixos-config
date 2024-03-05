@@ -459,6 +459,11 @@ let
             {
               nixpkgs.overlays = setupConfig.overlays;
               networking.hostName = lib.mkDefault setupConfig.hostname;
+
+              nix.settings.nix-path = {
+                home-manager = lib.mkBefore "home-manager=${inputs.${config.homeManagerBranch}}";
+                nixpkgs = lib.mkBefore "nixpkgs=${inputs.${config.nixpkgsBranch}}";
+              };
             }
 
             (lib.mkIf (setupConfig.domain != null) {
