@@ -20,10 +20,8 @@ let
       # Just to be sure, we'll use everything with the given nixpkgs' stdlib.
       lib = nixpkgs.lib;
 
-      # A modified version of `nixosSystem` from nixpkgs flake. There is a
-      # recent change at nixpkgs (at 039f73f134546e59ec6f1b56b4aff5b81d889f64)
-      # that prevents setting our own custom functions so we'll have to
-      # evaluate the NixOS system ourselves.
+      # Evaluating the system ourselves (which is trivial) instead of relying
+      # on nixpkgs.lib.nixosSystem flake output.
       nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
     in
     (lib.makeOverridable nixosSystem) {
@@ -355,21 +353,18 @@ let
             config = lib.mkMerge [
               (lib.mkIf hasHomeManagerUsers {
                 users.users =
-                  lib.mkMerge
-                    (lib.mapAttrsToList
-                      (name: hmUser: { ${name} = hmUser.userConfig; })
-                      setupConfig.homeManagerUsers.users);
+                  lib.mapAttrs
+                    (name: hmUser: hmUser.userConfig)
+                    setupConfig.homeManagerUsers.users;
 
-                home-manager.users = lib.mkMerge
-                  (lib.mapAttrsToList
+                home-manager.users =
+                  lib.mapAttrs
                     (name: hmUser: {
-                      ${name} = { lib, ... }: {
-                        imports =
-                          partsConfig.setups.home-manager.configs.${name}.modules
-                          ++ hmUser.additionalModules;
-                      };
+                      imports =
+                        partsConfig.setups.home-manager.configs.${name}.modules
+                        ++ hmUser.additionalModules;
                     })
-                    setupConfig.homeManagerUsers.users);
+                    setupConfig.homeManagerUsers.users;
               })
 
               (lib.mkIf (isNixpkgs "global") {
@@ -378,15 +373,12 @@ let
                 # Disable all options that are going to be blocked once
                 # `home-manager.useGlobalPkgs` is used.
                 home-manager.users =
-                  lib.mkMerge
-                    (lib.mapAttrsToList
-                      (name: _: {
-                        ${name} = {
-                          nixpkgs.overlays = lib.mkForce null;
-                          nixpkgs.config = lib.mkForce null;
-                        };
-                      })
-                      setupConfig.homeManagerUsers.users);
+                  lib.mapAttrs
+                    (name: _: {
+                      nixpkgs.overlays = lib.mkForce null;
+                      nixpkgs.config = lib.mkForce null;
+                    })
+                    setupConfig.homeManagerUsers.users;
 
                 # Then apply all of the user overlays into the nixpkgs instance
                 # of the NixOS system.
@@ -414,15 +406,12 @@ let
               (lib.mkIf (isNixpkgs "separate") {
                 home-manager.useGlobalPkgs = lib.mkForce false;
                 home-manager.users =
-                  lib.mkMerge
-                    (lib.mapAttrsToList
-                      (name: _: {
-                        ${name} = {
-                          nixpkgs.overlays =
-                            partsConfig.setups.home-manager.configs.${name}.overlays;
-                        };
-                      })
-                      setupConfig.homeManagerUsers.users);
+                  lib.mapAttrs
+                    (name: _: {
+                      nixpkgs.overlays =
+                        partsConfig.setups.home-manager.configs.${name}.overlays;
+                    })
+                    setupConfig.homeManagerUsers.users;
               })
             ];
           }
