@@ -3,7 +3,6 @@
 { inputs, ... }: {
   # In case somebody wants to use my stuff to be included in nixpkgs.
   flake.overlays = import ../../overlays // {
-    default = final: prev: import ../../pkgs { pkgs = prev; };
     firefox-addons = final: prev: {
       inherit (final.nur.repos.rycee.firefox-addons) buildFirefoxXpiAddon;
       firefox-addons = final.callPackage ../../pkgs/firefox-addons { };

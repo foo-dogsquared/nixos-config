@@ -3,6 +3,7 @@
 # the values in the attribute set is a separate overlay function so you'll
 # simply have to append them as a list (i.e., `lib.attrValues`).
 {
+  default = final: prev: import ../pkgs { pkgs = prev; };
   ffmpeg-foodogsquared = import ./ffmpeg-foodogsquared;
   firefox-foodogsquared = import ./firefox-foodogsquared;
   blender-foodogsquared = import ./blender-foodogsquared;
