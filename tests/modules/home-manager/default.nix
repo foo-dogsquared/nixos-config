@@ -52,5 +52,6 @@ import nmt {
   testedAttrPath = [ "home" "activationPackage" ];
   tests = builtins.foldl' (a: b: a // (import b)) { } [
     ./programs/neovide
+    ./programs/pop-launcher
   ];
 }
