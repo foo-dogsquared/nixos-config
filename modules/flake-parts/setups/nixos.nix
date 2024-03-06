@@ -459,11 +459,6 @@ let
             {
               nixpkgs.overlays = setupConfig.overlays;
               networking.hostName = lib.mkDefault setupConfig.hostname;
-
-              nix.settings.nix-path = lib.mkBefore [
-                "home-manager=${inputs.${setupConfig.homeManagerBranch}}"
-                "nixpkgs=${inputs.${setupConfig.nixpkgsBranch}}"
-              ];
             }
 
             (lib.mkIf (setupConfig.domain != null) {
@@ -489,6 +484,7 @@ in
       type = with lib.types; attrsOf (submoduleWith {
         specialArgs = { inherit (config) systems; };
         modules = [
+          (import ./shared/nix-conf.nix { inherit inputs; })
           ./shared/config-options.nix
           ./shared/nixvim-instance-options.nix
           configType

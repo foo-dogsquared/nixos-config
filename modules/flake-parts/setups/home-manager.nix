@@ -200,6 +200,7 @@ in
       type = with lib.types; attrsOf (submoduleWith {
         specialArgs = { inherit (config) systems; };
         modules = [
+          (import ./shared/nix-conf.nix { inherit inputs; })
           ./shared/nixvim-instance-options.nix
           ./shared/config-options.nix
           configType
