@@ -197,6 +197,6 @@ in
 
     # We're disabling the upstream sessiond service since we have our own set
     # of sessiond sessions here.
-    systemd.user.services.sessiond.enable = false;
+    systemd.user.services.sessiond.enable = lib.mkForce false;
   };
 }
