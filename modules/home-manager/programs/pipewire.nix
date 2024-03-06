@@ -12,7 +12,7 @@ in
 {
   options.programs.pipewire = {
     enable = lib.mkEnableOption "Pipewire configuration";
-    settings = {
+    settings = lib.mkOption {
       type = settingsFormat.type;
       default = { };
       description = ''
@@ -21,7 +21,7 @@ in
         please see {manpage}`pipewire.conf(5)`.
       '';
     };
-    overrides = {
+    overrides = lib.mkOption {
       type = with lib.types; attrsOf settingsFormat.type;
       default = { };
       description = ''
@@ -41,7 +41,7 @@ in
     xdg.configFile =
       lib.optionalAttrs (cfg.settings != { })
         {
-          "pipewire/pipewire.conf" = settingsFormat.generate "hm-pipewire-settings" cfg.settings;
+          "pipewire/pipewire.conf".source = settingsFormat.generate "hm-pipewire-settings" cfg.settings;
         }
       // lib.mapAttrs' generatePipewireConfig cfg.overrides;
   };
