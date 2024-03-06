@@ -40,12 +40,14 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
+      home.packages = [ cfg.package ];
+    }
 
-    xdg.configFile."neovide/config.toml".source =
-      lib.mkIf
-        (cfg.settings != { })
-        (settingsFormat.generate "home-manager-neovide-settings" cfg.settings);
-  };
+    (lib.mkIf (cfg.settings != { }) {
+      xdg.configFile."neovide/config.toml".source =
+        settingsFormat.generate "home-manager-neovide-settings" cfg.settings;
+    })
+  ]);
 }
