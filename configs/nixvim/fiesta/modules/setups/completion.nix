@@ -10,51 +10,26 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      plugins.nvim-cmp = {
+      plugins.cmp = {
         enable = true;
         autoEnableSources = true;
 
-        mapping = {
+        settings.mapping = {
           "<CR>" = "cmp.mapping.confirm({ select = true })";
           "<C-Space>" = "cmp.mapping.complete()";
           "<C-d>" = "cmp.mapping.scroll_docs(-4)";
           "<C-u>" = "cmp.mapping.scroll_docs(4)";
           "<C-g>" = "cmp.mapping.close()";
-
-          "<C-n>" = {
-            action = "cmp.mapping.select_next_item()";
-            modes = [ "i" "s" ];
-          };
-          "<C-p>" = {
-            action = "cmp.mapping.select_prev_item()";
-            modes = [ "i" "s" ];
-          };
-
-          "<Tab>" = {
-            action = "cmp.mapping.select_next_item()";
-            modes = [ "i" "s" ];
-          };
-          "<S-Tab>" = {
-            action = "cmp.mapping.select_prev_item()";
-            modes = [ "i" "s" ];
-          };
+          "<C-n>" = "cmp.mapping.select_next_item()";
+          "<C-p>" = "cmp.mapping.select_prev_item()";
+          "<Tab>" = "cmp.mapping.select_next_item()";
+          "<S-Tab>" = "cmp.mapping.select_prev_item()";
         };
 
-        sources = [
-          {
-            name = "nvim_lsp";
-            groupIndex = 1;
-          }
-
-          {
-            name = "path";
-            groupIndex = 3;
-          }
-
-          {
-            name = "buffer";
-            groupIndex = 4;
-          }
+        settings.sources = [
+          { name = "nvim_lsp"; }
+          { name = "path"; }
+          { name = "buffer"; }
         ];
       };
 
@@ -70,16 +45,15 @@ in
     })
 
     (lib.mkIf nixvimCfg.setups.snippets.enable {
-      plugins.nvim-cmp.extraOptions.snippet.expand = helpers.mkRaw ''
-        function(args)
-          require('luasnip').lsp_expand(args.body)
-        end
-      '';
+      plugins.cmp.settings = {
+        snippet.expand = ''
+          function(args)
+            require('luasnip').lsp_expand(args.body)
+          end
+        '';
 
-      plugins.nvim-cmp.sources = [{
-        name = "luasnip";
-        groupIndex = 2;
-      }];
+        sources = [{ name = "luasnip"; }];
+      };
 
       plugins.cmp_luasnip.enable = true;
     })
