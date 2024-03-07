@@ -69,8 +69,6 @@ let
 in
 {
   options.programs.sessiond = {
-    enable = lib.mkEnableOption "creating X11-based desktop sessions with sessiond";
-
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.sessiond;
@@ -184,7 +182,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enable && cfg.sessions != { }) {
+  config = lib.mkIf (cfg.sessions != { }) {
     environment.systemPackages = [ cfg.package ];
 
     # Install all of the desktop session files.
