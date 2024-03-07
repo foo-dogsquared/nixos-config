@@ -39,16 +39,16 @@ let
     )
     cfg.sessions;
 
-  sessionSystemdUnits = lib.mapAttrsToList
+  sessionSystemdUnits = lib.concatMapAttrs
     (name: session:
       let
         inherit (utils.systemdUtils.lib)
           pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
 
         sessionComponents =
-          lib.foldlAttrs
-            (acc: name: component:
-              acc // {
+          lib.concatMapAttrs
+            (name: component:
+              {
                 "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
                 "${component.id}.target" = targetToUnit component.id component.targetUnit;
               } // lib.optionalAttrs (component.socketUnit != null) {
@@ -58,7 +58,6 @@ let
               } // lib.optionalAttrs (component.pathUnit != null) {
                 "${component.id}.path" = pathToUnit component.id component.pathUnit;
               })
-            { }
             session.components;
       in
       sessionComponents // {
@@ -193,7 +192,7 @@ in
 
     # Import those systemd units from sessiond as well.
     systemd.packages = [ cfg.package ];
-    systemd.user.units = lib.mkMerge sessionSystemdUnits;
+    systemd.user.units = sessionSystemdUnits;
 
     # We're disabling the upstream sessiond service since we have our own set
     # of sessiond sessions here.

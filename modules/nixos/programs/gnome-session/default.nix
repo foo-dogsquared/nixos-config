@@ -115,15 +115,15 @@ let
     )
     cfg.sessions;
 
-  sessionSystemdUnits = lib.mapAttrsToList
+  sessionSystemdUnits = lib.concatMapAttrs
     (name: session:
       let
         inherit (utils.systemdUtils.lib)
           pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
         componentsUnits =
-          lib.foldlAttrs
-            (acc: name: component:
-              acc // {
+          lib.concatMapAttrs
+            (name: component:
+              {
                 "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
                 "${component.id}.target" = targetToUnit component.id component.targetUnit;
               } // lib.optionalAttrs (component.socketUnit != null) {
@@ -133,7 +133,6 @@ let
               } // lib.optionalAttrs (component.pathUnit != null) {
                 "${component.id}.path" = pathToUnit component.id component.pathUnit;
               })
-            { }
             session.components;
       in
       componentsUnits // {
@@ -312,6 +311,6 @@ in
     # is more elegant and surprisingly trivial) but this requires
     # reimplementing parts of nixpkgs systemd-lib and we're lazy bastards so
     # no.
-    systemd.user.units = lib.mkMerge sessionSystemdUnits;
+    systemd.user.units = sessionSystemdUnits;
   };
 }
