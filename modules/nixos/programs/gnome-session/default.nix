@@ -143,8 +143,6 @@ let
 in
 {
   options.programs.gnome-session = {
-    enable = lib.mkEnableOption "creating desktop sessions with gnome-session";
-
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.gnome.gnome-session;
@@ -296,7 +294,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enable && cfg.sessions != { }) {
+  config = lib.mkIf (cfg.sessions != { }) {
     # Install all of the desktop session files.
     services.xserver.displayManager.sessionPackages = sessionPackages;
     environment.systemPackages = [ cfg.package ] ++ sessionPackages;
