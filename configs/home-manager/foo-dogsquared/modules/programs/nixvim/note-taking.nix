@@ -35,7 +35,7 @@
         };
       }
 
-      (lib.mkIf config.plugins.nvim-cmp.enable {
+      (lib.mkIf config.plugins.cmp.enable {
         "core.completion".config.engine = "nvim-cmp";
       })
     ];
