@@ -50,9 +50,12 @@ in
 import nmt {
   inherit pkgs lib modules;
   testedAttrPath = [ "home" "activationPackage" ];
-  tests = builtins.foldl' (a: b: a // (import b)) { } [
+  tests = builtins.foldl' (a: b: a // (import b)) { } ([
     ./programs/neovide
     ./programs/pipewire
     ./programs/pop-launcher
-  ];
+  ]
+  ++ lib.optionals isLinux [
+    ./services/plover
+  ]);
 }
