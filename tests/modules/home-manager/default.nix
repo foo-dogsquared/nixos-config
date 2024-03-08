@@ -56,6 +56,7 @@ import nmt {
     ./programs/pop-launcher
   ]
   ++ lib.optionals isLinux [
+    ./services/matcha
     ./services/plover
   ]);
 }
