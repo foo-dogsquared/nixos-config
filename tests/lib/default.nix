@@ -1,4 +1,5 @@
-{ pkgs }:
+# For the environment-specific subset, we'll be simulating the configurations
+# as a simple attribute set since that's what they are anyways.
 
 let
   inherit (pkgs) lib;
@@ -16,5 +17,9 @@ let
 in
 {
   trivial = callLib ./trivial.nix;
-  #home-manager = callLib ./home-manager.nix;
+
+  # Environment-specific subset.
+  home-manager = callLib ./home-manager.nix;
+  nixos = callLib ./nixos.nix;
+  nixvim = callLib ./nixvim.nix;
 }
