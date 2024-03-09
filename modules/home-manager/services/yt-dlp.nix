@@ -3,7 +3,7 @@
 let
   cfg = config.services.yt-dlp;
 
-  jobUnitName = name: "yt-dlp-archive-service-${name}";
+  jobUnitName = name: "yt-dlp-job-${name}";
 
   serviceLevelArgs = lib.escapeShellArgs cfg.extraArgs;
 

@@ -27,7 +27,7 @@
   test.stubs.yt-dlp = { };
 
   nmt.script = ''
-    assertFileExists home-files/.config/systemd/user/yt-dlp-archive-service-art.service
-    assertFileExists home-files/.config/systemd/user/yt-dlp-archive-service-art.timer
+    assertFileExists home-files/.config/systemd/user/yt-dlp-job-art.service
+    assertFileExists home-files/.config/systemd/user/yt-dlp-job-art.timer
   '';
 }

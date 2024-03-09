@@ -3,7 +3,7 @@
 let
   cfg = config.services.gallery-dl;
 
-  jobUnitName = name: "gallery-dl-service-job-${name}";
+  jobUnitName = name: "gallery-dl-job-${name}";
 
   settingsFormat = pkgs.formats.json { };
   settingsFormatFile =

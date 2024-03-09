@@ -51,14 +51,14 @@
   test.stubs.yt-dlp = { };
 
   nmt.script = ''
-    assertFileExists home-files/.config/systemd/user/yt-dlp-archive-service-art.service
-    assertFileExists home-files/.config/systemd/user/yt-dlp-archive-service-art.timer
+    assertFileExists home-files/.config/systemd/user/yt-dlp-job-art.service
+    assertFileExists home-files/.config/systemd/user/yt-dlp-job-art.timer
 
-    assertFileExists home-files/.config/systemd/user/yt-dlp-archive-service-music.service
-    assertFileExists home-files/.config/systemd/user/yt-dlp-archive-service-music.timer
+    assertFileExists home-files/.config/systemd/user/yt-dlp-job-music.service
+    assertFileExists home-files/.config/systemd/user/yt-dlp-job-music.timer
 
-    assertFileExists home-files/.config/systemd/user/yt-dlp-archive-service-miscellanea.service
-    assertFileExists home-files/.config/systemd/user/yt-dlp-archive-service-miscellanea.timer
+    assertFileExists home-files/.config/systemd/user/yt-dlp-job-miscellanea.service
+    assertFileExists home-files/.config/systemd/user/yt-dlp-job-miscellanea.timer
 
     assertPathNotExists home-files/.config/yt-dlp/config
   '';
