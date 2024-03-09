@@ -58,5 +58,6 @@ import nmt {
   ++ lib.optionals isLinux [
     ./services/matcha
     ./services/plover
+    ./services/yt-dlp
   ]);
 }
