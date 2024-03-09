@@ -153,7 +153,7 @@ in
                 scriptName =
                   "yt-dlp-archive-service-${config.home.username}-${name}";
                 jobLevelArgs = lib.escapeShellArgs value.extraArgs;
-                urls = lib.escapeShellArgs urls;
+                urls = lib.escapeShellArgs value.urls;
                 archiveScript = pkgs.writeShellScriptBin scriptName ''
                   ${cfg.package}/bin/yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
                                             ${urls} --paths ${lib.escapeShellArg cfg.archivePath}
