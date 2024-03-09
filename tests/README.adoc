@@ -1,0 +1,23 @@
+= Tests
+:toc:
+
+
+Yes, tests!
+We have tests for the major components of this NixOS configuration including the link:../lib[custom library], link:../modules/nixos[our custom NixOS modules], link:../modules/home-manager[custom home-manager modules], and so on.
+
+Each of the test suite follows how the upstream does their tests.
+For example, our home-manager module tests just copies what the upstream is doing.
+
+You should be able to test them with the following command:
+
+[source, shell]
+----
+# These commands assume you're in the project root.
+
+# This test is for home-manager module tests.
+nix-shell --pure ./tests/modules/home-manager -A list
+
+# This is for the library.
+nix eval -f ./tests lib
+----
+
