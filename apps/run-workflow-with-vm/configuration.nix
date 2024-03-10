@@ -6,7 +6,6 @@
 
 let
   pkgs = import <nixpkgs> { };
-  config' = import <config> { };
   lib = pkgs.lib;
 in
 import <nixpkgs/nixos/lib/eval-config.nix> {
@@ -24,6 +23,7 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
     <config/modules/nixos/_private>
     <config/modules/nixos/profiles/generic.nix>
     <config/modules/nixos/profiles/nix-conf.nix>
+    <config/modules/nixos/profiles/overlays.nix>
     <config/modules/nixos/profiles/desktop>
     <home-manager/nixos>
     <nixos-generators/formats/vm.nix>
@@ -61,10 +61,6 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
 
         # The main function of the configuration.
         workflows.workflows.${workflow}.enable = true;
-
-        nixpkgs.overlays = [
-          config'.overlays.default
-        ];
 
         system.stateVersion = "23.11";
       };
