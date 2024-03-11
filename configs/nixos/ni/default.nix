@@ -16,10 +16,7 @@
 
   hosts.ni = {
     hardware.qol.enable = true;
-    networking = {
-      enable = true;
-      wireguard.enable = true;
-    };
+    networking.enable = true;
     services.backup.enable = true;
     setups = {
       desktop.enable = true;
