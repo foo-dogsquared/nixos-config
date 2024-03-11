@@ -19,7 +19,7 @@ in
       enable = true;
       package = pkgs.gitFull;
       lfs.enable = true;
-      signing.key = "ADE0C41DAB221FCC";
+      signing.key = "4AA9CDFF7C99DFF9";
       extraConfig = {
         user = {
           name = config.accounts.email.accounts.personal.realName;
