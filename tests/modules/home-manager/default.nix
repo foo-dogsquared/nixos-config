@@ -57,6 +57,7 @@ import nmt {
   ]
   ++ lib.optionals isLinux [
     ./services/archivebox
+    ./services/bleachbit
     ./services/gallery-dl
     ./services/matcha
     ./services/plover
