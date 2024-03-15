@@ -13,6 +13,42 @@ let
     (lib.count (name: lib.elem name schemeNames) paletteNames) == i;
 in
 rec {
+  /* Imports a Base16 scheme. This also handles converting the legacy Base16
+     schema into the new one if it's detected. Take note, every single token
+     that is not part of the legacy proper is assumed to be part of the
+     `palette` of the new schema.
+
+     :::{.note}
+     This is the main entrypoint of the Bahaghari library Tinted Theming
+     subset. It is expected that most users will use this.
+     :::
+
+     Type: importScheme :: Path -> Attrs
+
+     Example:
+       importScheme ./legacy-base16-scheme.yml
+       => {
+         system = "base16";
+         name = "Scheme name";
+         author = "Scheme author";
+         palette = {
+           # All legacy token that are not included in the old standard proper
+           # are placed here. This is typically something like `background`,
+           # `foreground`, and whatnot that are added for enriching the palette
+           # or just for semantics for the theme designers.
+         };
+       }
+  */
+  importScheme = yamlpath:
+    let
+      scheme = self.importYAML yamlpath;
+    in
+    assert lib.assertMsg (isValidScheme scheme || isLegacyScheme scheme)
+      "bahaghariLib.tinted-theming.importScheme: given data is not a valid Tinted Theming scheme";
+    if isLegacyScheme scheme
+    then modernizeLegacyScheme scheme
+    else scheme;
+
   # TODO: Return a Nix object to generate a Tinted Theming color scheme from an
   # image.
   generateScheme = image: { };
@@ -24,10 +60,10 @@ rec {
      Type: isBase16 :: Attrs -> Bool
 
      Example:
-       isBase16 (bahaghariLib.tinted-theming.importScheme ./base16.yml)
+       isBase16 (bahaghariLib.tinted-theming.importScheme ./base16.yml).palette
        => true
 
-       isBase16 (bahaghariLib.tinted-theming.importScheme ./base16-scheme-with-missing-base0F.yml)
+       isBase16 (bahaghariLib.tinted-theming.importScheme ./base16-scheme-with-missing-base0F.yml).palette
        => false
   */
   isBase16 = isBaseX 16;
@@ -38,10 +74,10 @@ rec {
      Type: isBase24 :: Attrs -> Bool
 
      Example:
-       isBase24 (bahaghariLib.tinted-theming.importScheme ./base24.yml)
+       isBase24 (bahaghariLib.tinted-theming.importScheme ./base24.yml).palette
        => true
 
-       isBase24 (bahaghariLib.tinted-theming.importScheme ./base24-scheme-with-missing-base0F.yml)
+       isBase24 (bahaghariLib.tinted-theming.importScheme ./base24-scheme-with-missing-base0F.yml).palette
        => false
   */
   isBase24 = isBaseX 24;
@@ -52,10 +88,10 @@ rec {
      Type: isValidScheme :: Attrs -> Bool
 
      Example:
-       isValidScheme (bahaghariLib.importYAML ./base24.yml).palette
+       isValidScheme (bahaghariLib.tinted-theming.importScheme ./base24.yml)
        => true
 
-       isValidScheme (bahaghariLib.importYAML ./base16.yml).palette
+       isValidScheme (bahaghariLib.tinted-theming.importScheme ./base16.yml)
        => true
   */
   isValidScheme = scheme:
@@ -66,14 +102,10 @@ rec {
      Type: isLegacyBase16 :: Attrs -> Bool
 
      Example:
-       isLegacyBase16 {
-         # Some old-ass scheme...
-       }
+       isLegacyBase16 (bahaghariLib.tinted-theming.importScheme ./legacy-base16-scheme.yml)
        => true
 
-       isLegacyBase16 {
-         # Some new-ass scheme such as from the updated schemes repo...
-       }
+       isLegacyBase16 (bahaghariLib.tinted-theming.importScheme ./modern-base16-scheme.yml)
        => false
   */
   isLegacyScheme = scheme:
@@ -115,35 +147,4 @@ rec {
     }
     // lib.optionalAttrs (scheme?description) { inherit (scheme) description; }
     // lib.optionalAttrs (system != null) { inherit system; };
-
-  /* Imports a Base16 scheme. This also handles converting the legacy Base16
-     schema into the new one if it's detected. Take note, every single token
-     that is not part of the legacy proper is assumed to be part of the
-     `palette` of the new schema.
-
-     Type: importBase16Scheme :: Path -> Attrs
-
-     Example:
-       importScheme ./legacy-base16-scheme.yml
-       => {
-         system = "base16";
-         name = "Scheme name";
-         author = "Scheme author";
-         palette = {
-           # All legacy token that are not included in the old standard proper
-           # are placed here. This is typically something like `background`,
-           # `foreground`, and whatnot that are added for enriching the palette
-           # or just for semantics for the theme designers.
-         };
-       }
-  */
-  importScheme = yamlpath:
-    let
-      scheme = self.importYAML yamlpath;
-    in
-    assert lib.assertMsg (isValidScheme scheme || isLegacyScheme scheme)
-      "bahaghariLib.tinted-theming.importScheme: given data is not a valid Tinted Theming scheme";
-    if isLegacyScheme scheme
-    then modernizeLegacyScheme scheme
-    else scheme;
 }
