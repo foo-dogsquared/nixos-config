@@ -11,6 +11,7 @@
 
   # Include some modern niceties.
   environment.systemPackages = with pkgs; [
+    disko
     ripgrep
     git
     lazygit
