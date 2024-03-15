@@ -169,9 +169,9 @@ in
               in
               ''
                 (
-                  URL=${lib.escapeShellArg url}
-                  FILEPATH=${lib.escapeShellArg path}
-                  DIRNAME=$(dirname ${lib.escapeShellArg path})
+                  URL=${url}
+                  FILEPATH=${path}
+                  DIRNAME=$(dirname ${path})
                   mkdir -p "$DIRNAME"
                   ${(fetchScript path value).${value.type}}
                 )
