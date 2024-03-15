@@ -121,9 +121,9 @@ in
               "~/library/music|Library"
             ]
             ++ lib.optional (attrs?nixosConfig.suites.filesystem.setups.external-hdd.enable)
-              "/mnt/external-storage/library/music|External storage"
+              "/mnt/external-storage/Music|External storage"
             ++ lib.optional (attrs?nixosConfig.suites.filesystem.setups.archive.enable)
-              "/mnt/archives/music|Archive";
+              "/mnt/archives/Music|Archive";
           };
 
           internetarchive = {
