@@ -12,6 +12,7 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
   inherit lib;
   specialArgs = {
     foodogsquaredUtils = import <config/lib/utils/nixos.nix> { inherit lib; };
+    foodogsquaredModulesPath = builtins.toString <config/modules/nixos>;
   };
   modules = [
     # You can include an extra set by setting `extra-config` as part of the
@@ -31,8 +32,8 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
     ({ config, lib, pkgs, foodogsquaredUtils, ... }: {
       imports = [
         (foodogsquaredUtils.mapHomeManagerUser "alice" {
-          password = "";
-          extraGroups = [ "wheel" ];
+          initialHashedPassword = "";
+          extraGroups = [ "wheel" "networkmanager" "video" ];
           description = "There is no password";
           isNormalUser = true;
           createHome = true;
