@@ -18,7 +18,7 @@ jobs:
         id: metadata
         run: echo "DATE=$(date +%F)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v9
+      - uses: DeterminateSystems/nix-installer-action@v10
       - env:
           NIXPKGS_ALLOW_UNFREE: "1"
         run: nix develop --impure -c mozilla-addons-to-nix pkgs/firefox-addons/firefox-addons.json pkgs/firefox-addons/default.nix
