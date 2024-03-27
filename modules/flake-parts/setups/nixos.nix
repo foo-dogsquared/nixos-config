@@ -123,7 +123,7 @@ let
       };
 
       additionalModules = lib.mkOption {
-        type = with lib.types; listOf raw;
+        type = with lib.types; listOf deferredModule;
         description = ''
           A list of additional home-manager modules to be added with the
           user.
@@ -344,9 +344,10 @@ let
       (lib.mkIf (config.homeManagerUsers.users != { })
         (
           let
+            inherit (config.homeManagerUsers) nixpkgsInstance;
+
             setupConfig = config;
             hasHomeManagerUsers = config.homeManagerUsers.users != { };
-            inherit (config.homeManagerUsers) nixpkgsInstance;
             isNixpkgs = state: hasHomeManagerUsers && nixpkgsInstance == state;
           in
           { config, lib, pkgs, ... }: {
@@ -473,7 +474,7 @@ in
 {
   options.setups.nixos = {
     sharedModules = lib.mkOption {
-      type = with lib.types; listOf raw;
+      type = with lib.types; listOf deferredModule;
       default = [ ];
       description = ''
         A list of modules to be shared by all of the declarative NixOS setups.

@@ -23,7 +23,7 @@ let
     };
 
   modulesOption = lib.mkOption {
-    type = with lib.types; listOf raw;
+    type = with lib.types; listOf deferredModule;
     default = [ ];
   };
   modulesOption' = configEnv: modulesOption // {

@@ -169,7 +169,7 @@ in
 {
   options.setups.home-manager = {
     sharedModules = lib.mkOption {
-      type = with lib.types; listOf raw;
+      type = with lib.types; listOf deferredModule;
       default = [ ];
       description = ''
         A list of modules to be shared by all of the declarative home-manager
@@ -183,7 +183,7 @@ in
     };
 
     standaloneConfigModules = lib.mkOption {
-      type = with lib.types; listOf raw;
+      type = with lib.types; listOf deferredModule;
       default = [ ];
       internal = true;
       description = ''
