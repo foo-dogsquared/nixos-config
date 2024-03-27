@@ -78,8 +78,7 @@ in
 
     (lib.mkIf (userCfg.setups.desktop.enable && pkgs.stdenv.isLinux) {
       home.packages = with pkgs; [
-        bustle # Hustle with some d-bus Bustle.
-        dfeet # Some GNOME dev probably developed this.
+        d-spy # Some GNOME dev probably developed this.
       ];
     })
   ]);
