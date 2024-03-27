@@ -7,6 +7,8 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.doom-emacs;
+
+  doomEmacsInstallation = "${config.xdg.configHome}/emacs";
 in
 {
   options.users.foo-dogsquared.programs.doom-emacs.enable =
@@ -28,17 +30,17 @@ in
     };
 
     # Automatically install Doom Emacs from here.
-    home.mutableFile."${config.xdg.configHome}/emacs" = {
+    home.mutableFile.${doomEmacsInstallation} = {
       url = "https://github.com/doomemacs/doomemacs.git";
       type = "git";
       extraArgs = [ "--depth" "1" ];
       postScript = ''
-        ${config.xdg.configHome}/emacs/bin/doom install --no-config --no-fonts --install --force
-        ${config.xdg.configHome}/emacs/bin/doom sync
+        ${doomEmacsInstallation}/bin/doom install --no-config --no-fonts --install --force
+        ${doomEmacsInstallation}/bin/doom sync
       '';
     };
 
-    home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
+    home.sessionPath = [ "${doomEmacsInstallation}/bin" ];
 
     # Doom Emacs dependencies for the usual modules.
     home.packages = with pkgs; [
