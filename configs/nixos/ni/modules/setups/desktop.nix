@@ -43,7 +43,7 @@ in
       workflows.workflows.a-happy-gnome.enable = true;
     }
 
-    (lib.mkIf (hasAnyWorkflowEnabled [ "a-happy-gnome" "knome" "mosey-branch" ]) {
+    (lib.mkIf (hasAnyWorkflowEnabled [ "a-happy-gnome" "knome" ]) {
       hosts.ni.networking.setup = "networkmanager";
       suites.i18n.setup = "ibus";
     })
