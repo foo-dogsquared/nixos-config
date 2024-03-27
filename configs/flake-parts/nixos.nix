@@ -20,13 +20,16 @@
           nixpkgsInstance = "global";
           users.foo-dogsquared = {
             userConfig = {
+              uid = 1000;
               extraGroups = [
+                "adm"
                 "adbusers"
                 "wheel"
                 "audio"
                 "docker"
                 "podman"
                 "networkmanager"
+                "systemd-journal"
                 "wireshark"
               ];
               hashedPassword =
