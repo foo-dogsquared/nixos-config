@@ -1,7 +1,7 @@
 # Themes are your graphical sessions.
 # It also contains your aesthetics even specific workflow and whatnots.
 # You can also show your desktop being modularized like this.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let cfg = config.workflows;
 in {
@@ -24,10 +24,7 @@ in {
     assertions = [{
       assertion =
         let
-          countAttrs = pred: attrs:
-            lib.count (attr: pred attr.name attr.value)
-              (lib.mapAttrsToList lib.nameValuePair attrs);
-          enabledThemes = countAttrs (_: theme: theme.enable) cfg.workflows;
+          enabledThemes = foodogsquaredLib.countAttrs (_: theme: theme.enable) cfg.workflows;
         in
         cfg.disableLimit || (enabledThemes <= 1);
       message = "Can't have more than one theme enabled at any given time.";
