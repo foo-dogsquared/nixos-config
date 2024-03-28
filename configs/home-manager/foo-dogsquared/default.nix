@@ -1,5 +1,8 @@
 { config, lib, pkgs, foodogsquaredLib, bahaghariLib, ... }:
 
+let
+  inherit (bahaghariLib.tinted-theming) importScheme;
+in
 {
   imports = [ ./modules ];
 
@@ -81,8 +84,8 @@
 
   bahaghari.tinted-theming.schemes = {
     bark-on-a-tree =
-      bahaghariLib.importYAML ./files/tinted-theming/base16/bark-on-a-tree.yaml;
+      importScheme ./files/tinted-theming/base16/bark-on-a-tree.yaml;
     albino-bark-on-a-tree =
-      bahaghariLib.importYAML ./files/tinted-theming/base16/albino-bark-on-a-tree.yaml;
+      importScheme ./files/tinted-theming/base16/albino-bark-on-a-tree.yaml;
   };
 }
