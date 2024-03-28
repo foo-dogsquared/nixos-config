@@ -1,7 +1,6 @@
 {
   imports = [
     ./programs/blender.nix
-    ./programs/cardboard-wm.nix
     ./programs/distrobox.nix
     ./programs/gnome-session
     ./programs/pop-launcher.nix
