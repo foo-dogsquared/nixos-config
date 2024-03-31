@@ -350,12 +350,12 @@ in
 
             # See `treesitter-highlight-groups` help section for more details.
             (lib.mkIf config.plugins.treesitter.enable {
-              "${sym "@variable"}" = { __unkeyed = mkRaw "Normal"; };
-              "${sym "@tag.delimiter"}" = { fg = mkRaw "base0A"; };
-              "${sym "@text.emphasis"}" = { __unkeyed = mkRaw "Italic"; };
-              "${sym "@text.underline"}" = { __unkeyed = mkRaw "Underlined"; };
-              "${sym "@text.strike"}" = { gui = "strikethrough"; };
-              "${sym "@text.uri"}" = { fg = mkRaw "base0C"; };
+              ${sym "@variable"} = { __unkeyed = mkRaw "Normal"; };
+              ${sym "@tag.delimiter"} = { fg = mkRaw "base0A"; };
+              ${sym "@text.emphasis"} = { __unkeyed = mkRaw "Italic"; };
+              ${sym "@text.underline"} = { __unkeyed = mkRaw "Underlined"; };
+              ${sym "@text.strike"} = { gui = "strikethrough"; };
+              ${sym "@text.uri"} = { fg = mkRaw "base0C"; };
             })
           ];
         })
