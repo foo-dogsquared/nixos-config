@@ -28,19 +28,19 @@ For managing users, there are multiple ways to manage them within this project:
 * If you intend to import users from the link:./_users[`./_users`], you can simply import them through `imports` in the system module.
 +
 --
-For a convenient option, there is the function `getUser` defined from the link:../../lib/private.nix[private custom library].
+For a convenient option, there is the function `getUser` defined from the link:../../lib/default.nix[custom library].
 You can use it as follows:
 
 [source, nix]
 ----
 imports = [
-  (lib.private.getUser "nixos" "foo-dogsquared")
-  (lib.private.getUser "nixos" "polaski")
+  (foodogsquaredLib.getUser "nixos" "foo-dogsquared")
+  (foodogsquaredLib.getUser "nixos" "polaski")
 ];
 ----
 --
 
-* You could also easily map link:../home-manager[one of my home-manager configurations] into one of the users for a NixOS system with `lib.private.mapHomeManagerUser` which accepts two arguments: a name from of the home-manager user folder and the user config as if configuration with `users.users.<name>`.
+* You could also easily map link:../home-manager[one of my home-manager configurations] into one of the users for a NixOS system with `foodogsquaredUtils.mapHomeManagerUser` which accepts two arguments: a name from of the home-manager user folder and the user config as if configuration with `users.users.<name>`.
 However, this is only acceptable if the imported home-manager configuration only requires the baseline home-manager configuration and nothing else.
 +
 --
@@ -48,7 +48,7 @@ Here's an example to easily get my main home-manager config to be one of the use
 
 [source, nix]
 ----
-lib.private.mapHomeManagerUser "foo-dogsquared" {
+foodogsquaredUtils.mapHomeManagerUser "foo-dogsquared" {
   extraGroups = [ "audio" "docker" ];
   password = "what";
   createHome = true;
@@ -58,7 +58,7 @@ lib.private.mapHomeManagerUser "foo-dogsquared" {
 --
 
 * For more comprehensive home-manager users that requires additional home-manager modules outside of the baseline home-manager configuration, you'll have to use `setups.nixos.configs.<name>.homeManagerUsers.users` from the declarative hosts config.
-Similar to `mapHomeManagerUser` library function, this takes care to map the home-manager user into a NixOS user with a home-manager configuration but it does more.
+Similar to `mapHomeManagerUser` library function, this takes care of mapping the home-manager user into a NixOS user with a home-manager configuration but it does more.
 It also imports all of the overlays and modules from the declarative home-manager user config.
 +
 --
