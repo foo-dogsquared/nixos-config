@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, helpers, ... }:
 
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
@@ -18,8 +18,8 @@ in
 
       # The basic bare essentials.
       load = {
-        "core.defaults" = { __empty = null; };
-        "core.concealer" = { __empty = null; };
+        "core.defaults" = helpers.emptyTable;
+        "core.concealer" = helpers.emptyTable;
       };
     };
 
