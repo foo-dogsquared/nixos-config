@@ -5,7 +5,6 @@ final: prev:
     with p; [
       pandas
       scipy
-      imageio
       pillow
     ]);
 }
