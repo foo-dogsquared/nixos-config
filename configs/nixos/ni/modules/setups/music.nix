@@ -15,9 +15,13 @@ in
       settings = {
         listen-addr = "localhost:4747";
         cache-path = "/var/cache/gonic";
-        music-path = [
-          "/srv/music"
-        ];
+        music-path =
+          [
+            "/srv/Music"
+          ]
+          ++ lib.optionals config.suites.filesystem.setups.external-hdd.enable [
+            "/mnt/external-storage/Music"
+          ];
         podcast-path = "/var/cache/gonic/podcasts";
 
         jukebox-enabled = true;
