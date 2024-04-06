@@ -23,6 +23,7 @@
     # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
     experimental-features = [ "nix-command" "flakes" "repl-flake" ];
     auto-optimise-store = lib.mkDefault true;
+    flake-registry = "";
   };
 
   # Stallman-senpai will be disappointed.
