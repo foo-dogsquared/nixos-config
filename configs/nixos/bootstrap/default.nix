@@ -28,6 +28,9 @@
         isoBaseName = config.networking.hostName;
 
         squashfsCompression = "zstd -Xcompression-level 11";
+
+        makeEfiBootable = true;
+        makeUsbBootable = true;
       };
     })
   ];
