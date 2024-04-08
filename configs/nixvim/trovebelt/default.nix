@@ -18,7 +18,7 @@
       syntax = true;
     };
 
-    options = {
+    opts = {
       encoding = "utf-8";
       completeopt = [ "menuone" "noselect" ];
       expandtab = true;
