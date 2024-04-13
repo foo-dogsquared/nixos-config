@@ -186,7 +186,7 @@ in
     environment.systemPackages = [ cfg.package ];
 
     # Install all of the desktop session files.
-    services.xserver.displayManager.sessionPackages = sessionPackages;
+    services.displayManager.sessionData = sessionPackages;
 
     # Import those systemd units from sessiond as well.
     systemd.packages = [ cfg.package ];
