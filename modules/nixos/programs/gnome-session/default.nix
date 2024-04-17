@@ -296,7 +296,7 @@ in
 
   config = lib.mkIf (cfg.sessions != { }) {
     # Install all of the desktop session files.
-    services.displayManager.sessionData = sessionPackages;
+    services.displayManager.sessionPackages = sessionPackages;
     environment.systemPackages = [ cfg.package ] ++ sessionPackages;
 
     # Make sure it is searchable within gnome-session.
