@@ -50,10 +50,12 @@ in
     # Enable some more context for me.
     plugins.treesitter-context = {
       enable = true;
-      lineNumbers = true;
-      maxLines = 7;
-      mode = "cursor";
-      separator = "*";
+      settings = {
+        line_numbers = true;
+        max_lines = 7;
+        mode = "cursor";
+        separator = "*";
+      };
     };
 
     # Some niceties for refactoring.

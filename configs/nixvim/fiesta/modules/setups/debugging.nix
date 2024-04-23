@@ -14,7 +14,7 @@ in
     plugins.dap.extensions.dap-virtual-text.enable = true;
     plugins.debugprint = {
       enable = true;
-      ignoreTreesitter = false;
+      settings.ignore_treesitter = false;
     };
 
     keymaps =
