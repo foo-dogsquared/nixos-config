@@ -12,7 +12,7 @@ in
     # My portable music streaming server.
     services.gonic = {
       enable = true;
-      settings = {
+      settings = rec {
         listen-addr = "localhost:4747";
         cache-path = "/var/cache/gonic";
         music-path =
@@ -22,7 +22,8 @@ in
           ++ lib.optionals config.suites.filesystem.setups.external-hdd.enable [
             "/mnt/external-storage/Music"
           ];
-        podcast-path = "/var/cache/gonic/podcasts";
+        podcast-path = "${cache-path}/podcasts";
+        playlists-path = "${cache-path}/playlists";
 
         jukebox-enabled = true;
 
