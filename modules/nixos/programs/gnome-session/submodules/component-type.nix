@@ -177,6 +177,10 @@ in
       desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
       noDisplay = lib.mkForce true;
       onlyShowIn = session.desktopNames;
+
+      # For more information, you'll have to take a look into the
+      # gnome-session/README from its source code. Not even documented in the
+      # manual page but whatever. This is on the user to know.
       extraConfig = {
         X-GNOME-AutoRestart = lib.mkDefault "false";
         X-GNOME-Autostart-Notify = lib.mkDefault "true";
@@ -197,10 +201,10 @@ in
       especially if one of them failed.
 
       * Even if we have a way to limit starting desktop components with
-      `systemd-xdg-autostart-condition`, using `Service.ExecCondition=`
-      would severely limit possible reuse of desktop components with other
-      NixOS-module-generated gnome-session sessions so we're not bothering
-      with those.
+      `systemd-xdg-autostart-condition`, using `Service.ExecCondition=` would
+      severely limit possible reuse of desktop components with other
+      NixOS-module-generated sessiond sessions so we're not bothering with
+      those.
 
       TODO: Is `Type=notify` a good default?
       * `Service.Type=` is obviously not included since not all desktop
@@ -208,10 +212,6 @@ in
       some of them are oneshots, etc. Though, it might be better to have this
       as an explicit option set by the user instead of setting `Type=notify` as
       a default.
-
-      TODO: A good balance for this value, probably?
-      * `Service.OOMScoreAdjust=` have different values for different
-      components so it isn't included.
 
       * Most sandboxing options. Aside from the fact we're dealing with a
       systemd user unit, much of them are unnecessary and rarely needed (if
@@ -232,6 +232,12 @@ in
         Slice = lib.mkDefault "session.slice";
         Restart = lib.mkDefault "on-failure";
         TimeoutStopSec = lib.mkDefault 5;
+
+        # We'll assume most of the components are reasonably required so we'll
+        # set a reasonable middle-in-the-ground value for this one. The user
+        # should have the responsibility passing judgement for what is best for
+        # this.
+        OOMScoreAdjust = lib.mkDefault -500;
       };
 
       startLimitBurst = lib.mkDefault 3;
@@ -249,16 +255,28 @@ in
     };
 
     /*
-      Take note the session target unit already has `Wants=$COMPONENT.target`
-      so no need to set dependency ordering directives here.
+      Take note, we'll assume the session target unit will be the one to set
+      the dependency-related directives (i.e., `After=`, `Before=`, `Requires=`)
+      so no need to set any in here.
+
+      And another thing, we didn't set a default value for dependency-related
+      directives to one of the gnome-session-specific target unit. It is more
+      likely for a user to design their own desktop session with full control
+      so it would be better for these options to be empty for less confusion.
     */
     targetUnit = {
+      # This should be the dependency-related directive to be configured. The
+      # rest is for the user to judge.
       wants = [ "${config.id}.service" ];
+
       description = lib.mkDefault config.description;
       documentation = [
         "man:gnome-session(1)"
         "man:systemd.special(7)"
       ];
+
+      # Similar to the service unit, this is very much required as noted from
+      # the `gnome-session(1)` manual page.
       unitConfig.CollectMode = lib.mkForce "inactive-or-failed";
     };
   };

@@ -120,20 +120,19 @@ let
       let
         inherit (utils.systemdUtils.lib)
           pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
-        componentsUnits =
-          lib.concatMapAttrs
-            (name: component:
-              {
-                "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
-                "${component.id}.target" = targetToUnit component.id component.targetUnit;
-              } // lib.optionalAttrs (component.socketUnit != null) {
-                "${component.id}.socket" = socketToUnit component.id component.socketUnit;
-              } // lib.optionalAttrs (component.timerUnit != null) {
-                "${component.id}.timer" = timerToUnit component.id component.timerUnit;
-              } // lib.optionalAttrs (component.pathUnit != null) {
-                "${component.id}.path" = pathToUnit component.id component.pathUnit;
-              })
-            session.components;
+
+        mkSystemdUnits = name: component: {
+          "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
+          "${component.id}.target" = targetToUnit component.id component.targetUnit;
+        } // lib.optionalAttrs (component.socketUnit != null) {
+          "${component.id}.socket" = socketToUnit component.id component.socketUnit;
+        } // lib.optionalAttrs (component.timerUnit != null) {
+          "${component.id}.timer" = timerToUnit component.id component.timerUnit;
+        } // lib.optionalAttrs (component.pathUnit != null) {
+          "${component.id}.path" = pathToUnit component.id component.pathUnit;
+        };
+
+        componentsUnits = lib.concatMapAttrs mkSystemdUnits session.components;
       in
       componentsUnits // {
         "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" session.targetUnit;
