@@ -142,8 +142,11 @@ in
       know how different desktop components interact with each other
       especially if one of them failed.
 
-      * `Service.OOMScoreAdjust=` have different values for different
-      components so it isn't included.
+      * Even if we have a way to limit starting desktop components with
+      `systemd-xdg-autostart-condition`, using `Service.ExecCondition=` would
+      severely limit possible reuse of desktop components with other
+      NixOS-module-generated gnome-session sessions so we're not bothering with
+      those.
 
       * Most sandboxing options. Aside from the fact we're dealing with a
       systemd user unit, much of them are unnecessary and rarely needed (if
@@ -163,6 +166,12 @@ in
         Slice = lib.mkDefault "session.slice";
         Restart = lib.mkDefault "on-failure";
         TimeoutStopSec = lib.mkDefault 5;
+
+        # We'll assume most of the components are reasonably required so we'll
+        # set a reasonable middle-in-the-ground value for this one. The user
+        # should have the responsibility passing judgement for what is best for
+        # this.
+        OOMScoreAdjust = lib.mkDefault -500;
       };
 
       startLimitBurst = lib.mkDefault 3;
@@ -178,6 +187,11 @@ in
     /*
       Take note the session target unit already has `Wants=$COMPONENT.target`
       so no need to set dependency ordering directives here.
+
+      And another thing, we also didn't set any dependency ordering directives
+      to any of sessiond-specific systemd units (if there's any). It is more
+      likely that the user will design their own desktop session with full
+      control so this would be better set as empty for less confusion.
     */
     targetUnit = {
       wants = [ "${config.id}.service" ];

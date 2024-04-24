@@ -45,20 +45,19 @@ let
         inherit (utils.systemdUtils.lib)
           pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
 
+        mkSystemdUnits = name: component: {
+          "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
+          "${component.id}.target" = targetToUnit component.id component.targetUnit;
+        } // lib.optionalAttrs (component.socketUnit != null) {
+          "${component.id}.socket" = socketToUnit component.id component.socketUnit;
+        } // lib.optionalAttrs (component.timerUnit != null) {
+          "${component.id}.timer" = timerToUnit component.id component.timerUnit;
+        } // lib.optionalAttrs (component.pathUnit != null) {
+          "${component.id}.path" = pathToUnit component.id component.pathUnit;
+        };
+
         sessionComponents =
-          lib.concatMapAttrs
-            (name: component:
-              {
-                "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
-                "${component.id}.target" = targetToUnit component.id component.targetUnit;
-              } // lib.optionalAttrs (component.socketUnit != null) {
-                "${component.id}.socket" = socketToUnit component.id component.socketUnit;
-              } // lib.optionalAttrs (component.timerUnit != null) {
-                "${component.id}.timer" = timerToUnit component.id component.timerUnit;
-              } // lib.optionalAttrs (component.pathUnit != null) {
-                "${component.id}.path" = pathToUnit component.id component.pathUnit;
-              })
-            session.components;
+          lib.concatMapAttrs mkSystemdUnits session.components;
       in
       sessionComponents // {
         "${name}.service" = serviceToUnit name session.serviceUnit;
