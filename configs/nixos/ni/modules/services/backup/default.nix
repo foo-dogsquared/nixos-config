@@ -77,7 +77,7 @@ in
         ];
         passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/archives/password".path}";
         removableDevice = true;
-        repo = "/mnt/archives/backups";
+        repo = "/mnt/archives/Backups";
         startAt = "04:30";
       };
 
@@ -90,7 +90,7 @@ in
         passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/external-hdd/password".path}";
         removableDevice = true;
         doInit = true;
-        repo = "/mnt/external-storage/backups";
+        repo = "/mnt/external-storage/Backups";
         startAt = "04:30";
       };
 
