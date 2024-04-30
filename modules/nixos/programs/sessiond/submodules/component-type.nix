@@ -171,7 +171,7 @@ in
         # set a reasonable middle-in-the-ground value for this one. The user
         # should have the responsibility passing judgement for what is best for
         # this.
-        OOMScoreAdjust = lib.mkDefault -500;
+        OOMScoreAdjust = lib.mkDefault (-500);
       };
 
       startLimitBurst = lib.mkDefault 3;
