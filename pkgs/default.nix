@@ -2,7 +2,6 @@
 
 with pkgs;
 lib.makeScope newScope (self: {
-  ags = callPackage ./ags { };
   awesome-cli = callPackage ./awesome-cli { };
   base16-builder-go = callPackage ./base16-builder-go { };
   blender-blendergis = python3Packages.callPackage ./blender-blendergis { };
