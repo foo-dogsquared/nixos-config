@@ -1,6 +1,7 @@
 {
   imports = [
     ./extra-arguments.nix
+    ./state.nix
     ./suites/archiving.nix
     ./suites/browsers.nix
     ./suites/desktop.nix
