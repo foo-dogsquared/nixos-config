@@ -2,13 +2,14 @@
 , lib
 , meson
 , ninja
+, nix
 , makeWrapper
 , inputs ? [ ]
 }:
 
-stdenv.mkDerivation {
+stdenv.mkDerivation (finalAttrs: {
   pname = "run-workflow-with-vm";
-  version = "2024-03-15";
+  version = "2024-05-10";
 
   src = ./.;
 
@@ -22,9 +23,16 @@ stdenv.mkDerivation {
     mesonFlagsArray+=("-Dinputs=[${lib.concatStringsSep "," inputs}]")
   '';
 
+  postInstall = ''
+    wrapProgram $out/bin/${finalAttrs.pname} \
+      --prefix PATH ':' '${lib.makeBinPath [ nix ]}'
+  '';
+
   meta = with lib; {
     description = "Quickly run workflow modules with a VM.";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    mainProgram = finalAttrs.pname;
+    maintainers = with maintainers; [ foo-dogsquared ];
   };
-}
+})

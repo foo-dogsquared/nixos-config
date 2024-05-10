@@ -1,5 +1,5 @@
 project('run-workflow-with-vm',
-  version: '2024-03-15',
+  version: '2024-05-10',
   license: 'GPL-3.0-or-later',
   meson_version: '>=0.54.0',
 )
@@ -20,7 +20,7 @@ bindata.set('inputsArgs', inputsArgs)
 bindata.set('projectname', meson.project_name())
 configure_file(
   input: 'app.sh',
-  output: 'run-workflow-with-vm',
+  output: meson.project_name(),
   configuration: bindata,
   install_dir: get_option('bindir'),
   install_mode: 'rwxr-xr-x',

@@ -16,7 +16,7 @@ When run, it should build a VM with its script to easily initialize it.
 
 == Extra niceties
 
-There's some niceties left with this script including the ability to include your own config by overriding `extra-config` as part of the include path.
+There's some niceties left with this script including the ability to include your own set of modules by overriding `extra-config` as part of the include path.
 It is expected that the extra configuration folder is structured similarly to this NixOS cluster.
 
 [source, tree]
