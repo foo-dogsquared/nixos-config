@@ -10,6 +10,12 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
+      state.dev.ignoreDirectories = [
+        "node_modules" # For Node projects.
+        "result" # For Nix builds.
+        "target" # For Rust builds.
+      ];
+
       users.foo-dogsquared.programs = {
         shell.enable = lib.mkDefault true;
         git.enable = lib.mkDefault true;

@@ -58,7 +58,12 @@ in
       startAt = "daily";
       settings = {
         topdirs = "~/Downloads ~/Documents ~/library";
-        "skippedNames+" = "node_modules";
+        "skippedNames+" =
+          let
+            inherit (config.state) dev ignoreDirectories;
+            ignoreDirectories' = ignoreDirectories ++ dev.ignoreDirectories;
+          in
+          lib.concatStringsSep " " ignoreDirectories';
 
         "~/library/projects" = {
           "skippedNames+" = ".editorconfig .gitignore result flake.lock go.sum";
