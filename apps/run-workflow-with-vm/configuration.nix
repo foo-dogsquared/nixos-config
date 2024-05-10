@@ -29,6 +29,10 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
     <home-manager/nixos>
     <nixos-generators/formats/vm.nix>
     <nixos-generators/format-module.nix>
+
+    # TODO: Replace this path expression once Bahaghari is published.
+    <config/subprojects/bahaghari/modules>
+
     ({ config, lib, pkgs, foodogsquaredUtils, ... }: {
       imports = [
         (foodogsquaredUtils.mapHomeManagerUser "alice" {
@@ -55,6 +59,8 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
           <config/modules/home-manager>
           <config/modules/home-manager/_private>
           <sops-nix/modules/home-manager/sops.nix>
+          # TODO: Replace this path expression once Bahaghari is published.
+          <config/subprojects/bahaghari/modules>
           ({ config, lib, ... }: {
             xdg.userDirs.createDirectories = lib.mkForce true;
           })
