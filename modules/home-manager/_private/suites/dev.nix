@@ -18,6 +18,13 @@ in {
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
+      # Contains a dev-adjacent list of directory names to be ignored usually
+      # used in walking through directories.
+      state.dev.ignoreDirectories = [
+        ".git"
+        ".direnv"
+      ];
+
       home.packages = with pkgs; [
         cookiecutter # Cookiecutter templates for your mama (which is you).
         copier # Another set of scaffolding.
@@ -104,6 +111,11 @@ in {
           enable = true;
           changeDirWidgetCommand = "${fd} --type directory --unrestricted";
           defaultCommand = "${fd} --type file --hidden";
+          defaultOptions = let
+            skipDirectories' = lib.concatStringsSep "," config.state.dev.ignoreDirectories;
+          in [
+            "--walker-skip=${skipDirectories'}"
+          ];
         };
 
       # Supercharging your shell history. Just don't forget to flush them out
@@ -162,9 +174,13 @@ in {
       # Your E last to the A.
       programs.eza = {
         enable = true;
-        extraOptions = [
+        extraOptions = let
+          ignoreDirectories = lib.concatStringsSep "|" config.state.dev.ignoreDirectories;
+        in [
           "--group-directories-first"
           "--header"
+          "--git-ignore"
+          "--ignore-glob=${ignoreDirectories}"
         ];
       };
 
