@@ -20,7 +20,7 @@ in {
     ({
       # Contains a dev-adjacent list of directory names to be ignored usually
       # used in walking through directories.
-      state.dev.ignoreDirectories = [
+      state.ignoreDirectories = [
         ".git"
         ".direnv"
       ];
@@ -112,7 +112,7 @@ in {
           changeDirWidgetCommand = "${fd} --type directory --unrestricted";
           defaultCommand = "${fd} --type file --hidden";
           defaultOptions = let
-            skipDirectories' = lib.concatStringsSep "," config.state.dev.ignoreDirectories;
+            skipDirectories' = lib.concatStringsSep "," config.state.ignoreDirectories;
           in [
             "--walker-skip=${skipDirectories'}"
           ];
@@ -175,7 +175,7 @@ in {
       programs.eza = {
         enable = true;
         extraOptions = let
-          ignoreDirectories = lib.concatStringsSep "|" config.state.dev.ignoreDirectories;
+          ignoreDirectories = lib.concatStringsSep "|" config.state.ignoreDirectories;
         in [
           "--group-directories-first"
           "--header"

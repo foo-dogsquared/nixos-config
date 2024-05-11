@@ -60,10 +60,9 @@ in
         topdirs = "~/Downloads ~/Documents ~/library";
         "skippedNames+" =
           let
-            inherit (config.state) dev ignoreDirectories;
-            ignoreDirectories' = ignoreDirectories ++ dev.ignoreDirectories;
+            inherit (config.state) ignoreDirectories;
           in
-          lib.concatStringsSep " " ignoreDirectories';
+          lib.concatStringsSep " " ignoreDirectories;
 
         "~/library/projects" = {
           "skippedNames+" = ".editorconfig .gitignore result flake.lock go.sum";
