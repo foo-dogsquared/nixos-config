@@ -1,10 +1,9 @@
 # Essentially a derivative of nix-colors module that closely follows Tinted
 # Theming "standard" and can hold multiple palettes suitable for generating
 # multiple configuration files for organization purposes.
-{ pkgs, lib, ... }:
+{ pkgs, lib, bahaghariLib, ... }:
 
 let
-  bahaghariLib = import ../../lib { inherit pkgs; };
   inherit (bahaghariLib.tinted-theming) isBase24 isBase16;
 
   settingsFormat = pkgs.formats.yaml { };
