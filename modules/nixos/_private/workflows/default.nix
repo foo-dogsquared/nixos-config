@@ -1,17 +1,14 @@
-# Themes are your graphical sessions.
-# It also contains your aesthetics even specific workflow and whatnots.
-# You can also show your desktop being modularized like this.
-{ config, lib, pkgs, foodogsquaredLib, ... }:
+# Themes are your graphical sessions. It also contains your aesthetics even
+# specific workflow and whatnots. You can also show your desktop being
+# modularized like this.
+{ lib, ... }:
 
-let cfg = config.workflows;
-in {
-  options.workflows.disableLimit = lib.mkOption {
-    type = lib.types.bool;
-    default = false;
+{
+  options.workflows.enable = lib.mkOption {
+    type = with lib.types; listOf (enum [ ]);
+    default = [ ];
     description = ''
-      Whether to unlock the limit for workflows. Since workflows may overlap
-      with packages and configurations, this should be enabled at your own
-      risk.
+      A list of workflows to be enabled.
     '';
   };
 
@@ -19,15 +16,4 @@ in {
     ./a-happy-gnome
     ./knome
   ];
-
-  config = {
-    assertions = [{
-      assertion =
-        let
-          enabledThemes = foodogsquaredLib.countAttrs (_: theme: theme.enable) cfg.workflows;
-        in
-        cfg.disableLimit || (enabledThemes <= 1);
-      message = "Can't have more than one theme enabled at any given time.";
-    }];
-  };
 }

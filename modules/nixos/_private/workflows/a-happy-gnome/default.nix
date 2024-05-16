@@ -1,12 +1,15 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.workflows.workflows.a-happy-gnome;
+  workflowName = "a-happy-gnome";
+  cfg = config.workflows.workflows.${workflowName};
 in
 {
-  options.workflows.workflows.a-happy-gnome = {
-    enable = lib.mkEnableOption "'A happy GNOME', foo-dogsquared's configuration of GNOME desktop environment";
+  options.workflows.enable = lib.mkOption {
+    type = with lib.types; listOf (enum [ workflowName ]);
+  };
 
+  options.workflows.workflows.${workflowName} = {
     shellExtensions = lib.mkOption {
       type = with lib.types; listOf package;
       description = ''
@@ -81,7 +84,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (lib.elem workflowName config.workflows.enable) {
     # Enable GNOME and GDM.
     services.xserver = {
       enable = true;

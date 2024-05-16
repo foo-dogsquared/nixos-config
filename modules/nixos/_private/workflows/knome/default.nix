@@ -1,12 +1,15 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.workflows.workflows.knome;
+  workflowName = "knome";
+  cfg = config.workflows.workflows.${workflowName};
 in
 {
-  options.workflows.workflows.knome.enable = lib.mkEnableOption "KNOME, an attempt to bring as much GNOME to KDE Plasma";
+  options.workflows.enable = lib.mkOption {
+    type = with lib.types; listOf (enum [ workflowName ]);
+  };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (lib.elem workflowName config.workflows.enable) {
     services.xserver = {
       enable = true;
       desktopManager.plasma5 = {
