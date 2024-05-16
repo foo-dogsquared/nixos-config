@@ -4,6 +4,7 @@
     ./programs/neovide.nix
     ./programs/pipewire.nix
     ./programs/pop-launcher.nix
+    ./programs/zed-editor.nix
     ./services/archivebox.nix
     ./services/bleachbit.nix
     ./services/distant.nix

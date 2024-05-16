@@ -54,6 +54,7 @@ import nmt {
     ./programs/neovide
     ./programs/pipewire
     ./programs/pop-launcher
+    ./programs/zed-editor
   ]
   ++ lib.optionals isLinux [
     ./services/archivebox
