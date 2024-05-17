@@ -29,10 +29,25 @@ let
   # This is used both as the configuration format for sessiond.conf and its
   # hooks.
   settingsFormat = pkgs.formats.toml { };
-  sessionSettingsFile = settingsFormat.generate "sessiond-conf-${name}" config.settings;
+  sessionSettingsFile = settingsFormat.generate "sessiond-conf-${config.name}" config.settings;
 in
 {
   options = {
+    name = lib.mkOption {
+      type = lib.types.nonEmptyStr;
+      description = ''
+        The identifier for the desktop environment.
+
+        ::: {.note}
+        While there is no formal standard for naming these, it is recommended
+        to make the name in kebab-case (for example, "mosey-branch" for "Mosey
+        branch").
+        :::
+      '';
+      default = name;
+      example = "mosey-branch";
+    };
+
     fullName = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = "The display name of the desktop environment.";
@@ -202,7 +217,7 @@ in
 
     targetUnit = {
       description = config.description;
-      requires = [ "${name}.service" ];
+      requires = [ "${config.name}.service" ];
       wants =
         let
           componentTargetUnits =
@@ -213,9 +228,9 @@ in
 
     serviceUnit = {
       description = config.description;
-      partOf = [ "${name}.target" ];
-      before = [ "${name}.target" ];
-      requisite = [ "${name}.target" ];
+      partOf = [ "${config.name}.target" ];
+      before = [ "${config.name}.target" ];
+      requisite = [ "${config.name}.target" ];
       requires = [ "dbus.socket" ];
       after = [ "dbus.socket" ];
 

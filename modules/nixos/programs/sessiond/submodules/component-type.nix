@@ -18,6 +18,13 @@ let
 in
 {
   options = {
+    name = lib.mkOption {
+      type = lib.types.nonEmptyStr;
+      description = "The identifier of the component.";
+      default = name;
+      example = "desktop-widgets";
+    };
+
     description = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = "One-sentence description of the component.";
@@ -124,7 +131,7 @@ in
         The identifier of the component used in generating filenames for its
         `.desktop` files and as part of systemd unit names.
       '';
-      default = "${session.name}.${name}";
+      default = "${session.name}.${config.name}";
       defaultText = "\${session-name}.\${name}";
       readOnly = true;
     };
