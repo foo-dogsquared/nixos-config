@@ -22,9 +22,10 @@ It is expected that the extra configuration folder is structured similarly to th
 [source, tree]
 ----
 ./extra-config-stuff
-├── home-manager
-├── nixvim
-└── nixos
+└── modules
+    ├── home-manager
+    ├── nixvim
+    └── nixos
 ----
 
 Once you have an folder containing those extra snippets, you can simply include them like so.

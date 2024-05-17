@@ -1,5 +1,5 @@
 project('run-workflow-with-vm',
-  version: '2024-05-10',
+  version: '2024-05-17',
   license: 'GPL-3.0-or-later',
   meson_version: '>=0.54.0',
 )

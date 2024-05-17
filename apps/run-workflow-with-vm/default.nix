@@ -9,7 +9,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "run-workflow-with-vm";
-  version = "2024-05-10";
+  version = "2024-05-17";
 
   src = ./.;
 

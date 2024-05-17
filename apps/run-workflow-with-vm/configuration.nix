@@ -54,7 +54,7 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
         home-manager.useGlobalPkgs = lib.mkDefault true;
         home-manager.sharedModules = [
           # Same with home-manager modules.
-          <extra-config/modules/nixos>
+          <extra-config/modules/home-manager>
 
           <config/modules/home-manager>
           <config/modules/home-manager/_private>
@@ -67,7 +67,7 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
         ];
 
         # The main function of the configuration.
-        workflows.workflows.${workflow}.enable = true;
+        workflows.enable = [ workflow ];
 
         system.stateVersion = "23.11";
       };
