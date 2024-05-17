@@ -7,7 +7,7 @@
     default = bahaghari;
   };
 
-  homeModules.bahaghari = rec {
+  homeModules = rec {
     bahaghari = ./modules;
     default = bahaghari;
   };
