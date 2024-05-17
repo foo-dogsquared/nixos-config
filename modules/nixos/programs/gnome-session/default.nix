@@ -10,7 +10,7 @@ let
 
   # The bulk of the work. Pretty much the main purpose of this module.
   sessionPackages = lib.mapAttrsToList
-    (name: session:
+    (_: session:
       let
         gnomeSession = ''
           [GNOME Session]
@@ -22,7 +22,7 @@ let
           [Desktop Entry]
           Name=@fullName@
           Comment=${session.description}
-          Exec="@out@/libexec/${name}-session"
+          Exec="@out@/libexec/${session.name}-session"
           Type=Application
           DesktopNames=${lib.concatStringsSep ";" session.desktopNames};
         '';
@@ -46,14 +46,14 @@ let
           {
             wayland = ''
               (
-                DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${name}.desktop"
+                DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${session.name}.desktop"
                 install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
                 ${hasMoreDisplays "Wayland"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
               )
             '';
             x11 = ''
               (
-                DISPLAY_SESSION_FILE="$out/share/xsessions/${name}.desktop"
+                DISPLAY_SESSION_FILE="$out/share/xsessions/${session.name}.desktop"
                 install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
                 ${hasMoreDisplays "X11"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
               )
@@ -66,13 +66,10 @@ let
           session.display;
 
         installDesktops =
-          let
-            sessionName = name;
-          in
           lib.mapAttrsToList
             (name: component:
               let
-                scriptName = "${sessionName}-${name}-script";
+                scriptName = "${session.name}-${component.name}-script";
 
                 # There's already a lot of bad bad things in this world, we
                 # don't to add more of it here (only a fraction of it, though).
@@ -90,21 +87,21 @@ let
               '')
             session.components;
       in
-      pkgs.runCommandLocal "${name}-desktop-session-files"
+      pkgs.runCommandLocal "${session.name}-desktop-session-files"
         {
           env = {
             inherit (session) fullName;
           };
           inherit displaySession gnomeSession sessionScript;
           passAsFile = [ "displaySession" "gnomeSession" "sessionScript" ];
-          passthru.providedSessions = [ name ];
+          passthru.providedSessions = [ session.name ];
         }
         ''
-          SESSION_SCRIPT="$out/libexec/${name}-session"
+          SESSION_SCRIPT="$out/libexec/${session.name}-session"
           install -Dm0755 "$sessionScriptPath" "$SESSION_SCRIPT"
           substituteAllInPlace "$SESSION_SCRIPT"
 
-          GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${name}.session"
+          GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${session.name}.session"
           install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
           substituteAllInPlace "$GNOME_SESSION_FILE"
 
@@ -116,26 +113,26 @@ let
     cfg.sessions;
 
   sessionSystemdUnits = lib.concatMapAttrs
-    (name: session:
+    (_: session:
       let
         inherit (utils.systemdUtils.lib)
           pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
 
         mkSystemdUnits = name: component: {
-          "${component.id}.service" = serviceToUnit component.id component.serviceUnit;
-          "${component.id}.target" = targetToUnit component.id component.targetUnit;
+          "${component.id}.service" = serviceToUnit component.serviceUnit;
+          "${component.id}.target" = targetToUnit component.targetUnit;
         } // lib.optionalAttrs (component.socketUnit != null) {
-          "${component.id}.socket" = socketToUnit component.id component.socketUnit;
+          "${component.id}.socket" = socketToUnit component.socketUnit;
         } // lib.optionalAttrs (component.timerUnit != null) {
-          "${component.id}.timer" = timerToUnit component.id component.timerUnit;
+          "${component.id}.timer" = timerToUnit component.timerUnit;
         } // lib.optionalAttrs (component.pathUnit != null) {
-          "${component.id}.path" = pathToUnit component.id component.pathUnit;
+          "${component.id}.path" = pathToUnit component.pathUnit;
         };
 
         componentsUnits = lib.concatMapAttrs mkSystemdUnits session.components;
       in
       componentsUnits // {
-        "gnome-session@${name}.target" = targetToUnit "gnome-session@${name}" session.targetUnit;
+        "gnome-session@${session.name}.target" = targetToUnit session.targetUnit;
       }
     )
     cfg.sessions;

@@ -28,6 +28,22 @@ let
 in
 {
   options = {
+    name = lib.mkOption {
+      type = lib.types.nonEmptyStr;
+      description = ''
+        The identifier of the desktop environment to be used for the filenames
+        of related outputs.
+
+        ::: {.note}
+        While there is no formal specification around naming them, a common
+        convention is to use kebab-casing of the name (e.g., "mosey-branch" for
+        "Mosey Branch").
+        :::
+      '';
+      default = name;
+      example = "mosey-branch";
+    };
+
     fullName = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = "The display name of the desktop environment.";
@@ -187,19 +203,6 @@ in
           wants = ... # All of the required components as a target unit.
         }
       '';
-    };
-
-    sessionPackage = lib.mkOption {
-      type = lib.types.package;
-      description = ''
-        The collective package containing everything desktop-related
-        such as:
-
-        * The display session (`<name>.desktop`) files.
-        * gnome-session `.session` file.
-        * The components `.desktop` file.
-      '';
-      readOnly = true;
     };
   };
 

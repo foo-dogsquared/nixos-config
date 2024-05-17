@@ -19,6 +19,13 @@ let
 in
 {
   options = {
+    name = lib.mkOption {
+      type = lib.types.nonEmptyStr;
+      description = "Component name.";
+      default = name;
+      example = "desktop-manager";
+    };
+
     description = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = "One-sentence description of the component.";
@@ -163,7 +170,7 @@ in
         The identifier of the component used in generating filenames for its
         `.desktop` files and as part of systemd unit names.
       '';
-      default = "${session.name}.${name}";
+      default = "${session.name}.${config.name}";
       defaultText = "\${session-name}.\${name}";
       readOnly = true;
     };
@@ -203,7 +210,7 @@ in
       * Even if we have a way to limit starting desktop components with
       `systemd-xdg-autostart-condition`, using `Service.ExecCondition=` would
       severely limit possible reuse of desktop components with other
-      NixOS-module-generated sessiond sessions so we're not bothering with
+      NixOS-module-generated gnome-session sessions so we're not bothering with
       those.
 
       TODO: Is `Type=notify` a good default?
