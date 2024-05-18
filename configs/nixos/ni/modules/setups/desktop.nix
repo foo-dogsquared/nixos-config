@@ -5,7 +5,7 @@ let
   cfg = hostCfg.setups.desktop;
 
   hasAnyWorkflowEnabled = workflows:
-    lib.lists.any (workflow: config.workflows.workflows.${workflow}.enable) workflows;
+    lib.lists.any (workflow: lib.elem workflow config.workflows.enable) workflows;
 in
 {
   options.hosts.ni.setups.desktop.enable =
@@ -40,7 +40,7 @@ in
       suites.i18n.enable = true;
 
       # ...which is by the way is this one.
-      workflows.workflows.a-happy-gnome.enable = true;
+      workflows.enable = [ "a-happy-gnome" ];
     }
 
     (lib.mkIf (hasAnyWorkflowEnabled [ "a-happy-gnome" "knome" ]) {
