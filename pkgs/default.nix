@@ -32,6 +32,7 @@ lib.makeScope newScope (self: {
   uwsm = callPackage ./uwsm { };
   vgc = qt6Packages.callPackage ./vgc { };
   watc = callPackage ./watc { };
+  willow = callPackage ./willow { };
   wzmach = callPackage ./wzmach { };
   xs = callPackage ./xs { };
 })
