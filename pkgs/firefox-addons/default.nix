@@ -67,21 +67,21 @@
     };
     "simple-translate" = buildFirefoxXpiAddon {
       pname = "simple-translate";
-      version = "2.8.2";
+      version = "3.0.0";
       addonId = "simple-translate@sienori";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4165189/simple_translate-2.8.2.xpi";
-      sha256 = "8e8c3af0ffadfd3ff9928355e7be2292befe6c4f0e483f7c37c2d9a34a54f345";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4286113/simple_translate-3.0.0.xpi";
+      sha256 = "c9e36d1d8e32a223da367bdc83133f2436103eb5f16460c7cce2096376e78b68";
       meta = with lib;
       {
         homepage = "https://simple-translate.sienori.com";
         description = "Quickly translate selected or typed text on web pages. Supports Google Translate and DeepL API.";
         license = licenses.mpl20;
         mozPermissions = [
-          "<all_urls>"
           "storage"
           "contextMenus"
           "http://*/*"
           "https://*/*"
+          "<all_urls>"
         ];
         platforms = platforms.all;
       };
