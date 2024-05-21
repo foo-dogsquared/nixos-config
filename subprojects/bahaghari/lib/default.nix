@@ -38,7 +38,8 @@ pkgs.lib.makeExtensible
     tinted-theming = callLibs ./tinted-theming.nix;
 
     inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
-      generateGlyphSet generateConversionTable generateBaseDigitType clamp;
+      generateGlyphSet generateConversionTable generateBaseDigitType clamp
+      isNumber scale;
 
     inherit (self.hex) isHexString;
     inherit (self.math) abs pow percentage;

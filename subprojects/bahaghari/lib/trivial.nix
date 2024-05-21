@@ -160,4 +160,39 @@ rec {
   */
   clamp = min: max: value:
     lib.min max (lib.max min value);
+
+  /* Given a value, check if it's a number type.
+
+     Type: isNumber :: Number -> bool
+
+     Example:
+       isNumber 3.0
+       => true
+
+       isNumber 653
+       => true
+
+       isNumber true
+       => false
+  */
+  isNumber = v:
+    lib.isInt v || lib.isFloat v;
+
+  /* Given an initial range of integers, scale the given number with its own
+     set of range.
+
+     Type: scale :: Attrs -> Number -> Number
+
+     Example:
+       scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 4
+       => 68
+
+       scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } (-4)
+       => -68
+
+       scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 15
+       => 255
+  */
+  scale = { inMin, inMax, outMin, outMax }: v:
+    ((v - inMin) * (outMax - outMin)) / ((inMax - inMin) + outMin);
 }

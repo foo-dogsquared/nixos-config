@@ -225,4 +225,39 @@ lib.runTests {
     expr = self.trivial.clamp 1 10 453;
     expected = 10;
   };
+
+  testNumberScale = {
+    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 15;
+    expected = 255;
+  };
+
+  testNumberScale2 = {
+    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 4;
+    expected = 68;
+  };
+
+  testNumberScale3 = {
+    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } (-4);
+    expected = (-68);
+  };
+
+  testIsNumber1 = {
+    expr = self.trivial.isNumber 3;
+    expected = true;
+  };
+
+  testIsNumber2 = {
+    expr = self.trivial.isNumber 4.09;
+    expected = true;
+  };
+
+  testIsNumber3 = {
+    expr = self.trivial.isNumber "HELLO";
+    expected = false;
+  };
+
+  testIsNumber4 = {
+    expr = self.trivial.isNumber true;
+    expected = false;
+  };
 }
