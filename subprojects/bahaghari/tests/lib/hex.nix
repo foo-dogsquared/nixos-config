@@ -26,6 +26,21 @@ lib.runTests {
     expected = 13756969779;
   };
 
+  testHexToDec3 = {
+    expr = self.hex.toDec "0FF";
+    expected = 255;
+  };
+
+  testHexToDec4 = {
+    expr = self.hex.toDec "0000FF";
+    expected = 255;
+  };
+
+  testHexToDec5 = {
+    expr = self.hex.toDec "0A05";
+    expected = 2565;
+  };
+
   testCreateHexRange = {
     expr = self.hex.range 10 17;
     expected = [ "A" "B" "C" "D" "E" "F" "10" "11" ];
