@@ -30,6 +30,12 @@ pkgs.lib.makeExtensible
     hex = callLibs ./hex.nix;
     math = callLibs ./math.nix;
 
+    # We won't export any of the attributes here as a top-level attribute for
+    # some unbeknownst and probably irrational reason.
+    colors = {
+      rgb = callLibs ./colors/rgb.nix;
+    };
+
     # Dedicated module sets are not supposed to have any of its functions as a
     # top-level attribute. It's to make things a bit easier to organize and
     # maintain. Plus, if there's any functions that are easily applicable
