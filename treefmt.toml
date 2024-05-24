@@ -8,7 +8,7 @@ command = "stylua"
 includes = [ "*.lua" ]
 
 [formatter.nix]
-command = "nixpkgs-fmt"
+command = "nixfmt"
 includes = [ "*.nix" ]
 
 [formatter.python]
