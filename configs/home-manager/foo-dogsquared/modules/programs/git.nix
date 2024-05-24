@@ -45,6 +45,8 @@ in
           "https://git.savannah.nongnu.org/git/".insteadOf = [ "sv:" "savannah:" ];
         };
 
+        pull.rebase = "interactive";
+
         status = {
           showPatch = true;
           showStash = true;
