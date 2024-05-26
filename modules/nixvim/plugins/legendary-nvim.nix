@@ -9,7 +9,7 @@ in
   options.plugins.legendary-nvim = {
     enable = lib.mkEnableOption "legendary.nvim";
 
-    package = helpers.mkPackageOption "legendary.nvim" pkgs.vimPlugins.legendary-nvim;
+    package = helpers.mkPluginPackageOption "legendary.nvim" pkgs.vimPlugins.legendary-nvim;
 
     additionalSetup = mkEnableOption' "dependencies for additional features like frecency sorting";
 

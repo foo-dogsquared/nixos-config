@@ -6,7 +6,9 @@ in
 {
   options.plugins.firenvim = {
     enable = lib.mkEnableOption "Firenvim";
-    package = helpers.mkPackageOption "firenvim" pkgs.vimPlugins.firenvim;
+
+    package = helpers.mkPluginPackageOption "firenvim" pkgs.vimPlugins.firenvim;
+
     settings = lib.mkOption {
       type = with lib.types; attrsOf anything;
       default = { };

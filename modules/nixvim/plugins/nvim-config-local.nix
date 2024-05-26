@@ -8,7 +8,7 @@ in
     helpers.neovim-plugin.extraOptionsOptions // {
       enable = lib.mkEnableOption "nvim-config-local";
 
-      package = helpers.mkPackageOption "nvim-config-local" pkgs.vimPlugins.nvim-config-local;
+      package = helpers.mkPluginPackageOption "nvim-config-local" pkgs.vimPlugins.nvim-config-local;
 
       configFiles = lib.mkOption {
         type = with lib.types; listOf str;

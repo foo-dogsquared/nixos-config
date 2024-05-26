@@ -61,7 +61,7 @@ in
   options.colorschemes.lush = {
     enable = lib.mkEnableOption "theming with lush.nvim";
 
-    package = helpers.mkPackageOption "lush.nvim" pkgs.vimPlugins.lush-nvim;
+    package = helpers.mkPluginPackageOption "lush.nvim" pkgs.vimPlugins.lush-nvim;
 
     extraConfigLua = lib.mkOption {
       type = lib.types.lines;
