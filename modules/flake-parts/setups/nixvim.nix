@@ -130,6 +130,9 @@ in
                         config.allowUnfree = true;
                       };
 
+                      # Unfortunately we cannot have NixVim with Neovim-reliant
+                      # packages such as Neovide or something similar. It has
+                      # to be Neovim.
                       neovimPackages = metadata.neovimPackages pkgs;
 
                       mkNixvimConfig' = neovimPkg:

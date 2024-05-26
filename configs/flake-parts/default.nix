@@ -4,7 +4,7 @@
     ./packages.nix
     ./templates.nix
 
-    # The environment configurations.
+    # Environment configurations.
     ./disko.nix
     ./home-manager.nix
     ./nixos.nix

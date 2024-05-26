@@ -85,7 +85,7 @@ in
   };
 
   config = lib.mkIf (lib.elem workflowName config.workflows.enable) {
-    # Enable GNOME and GDM.
+    # Enable GNOME.
     services.xserver = {
       enable = true;
       desktopManager.gnome.enable = true;
@@ -113,6 +113,9 @@ in
     # Bring all of the dconf keyfiles in there.
     programs.dconf = {
       enable = true;
+
+      # In this case, we're using the default user dconf profile which is the
+      # fallback for every dconf-using components. Pretty handy.
       profiles.user.databases = lib.singleton {
         # Get them keyfiles.
         keyfiles = [ ./config/dconf ];

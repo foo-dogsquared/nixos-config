@@ -10,6 +10,11 @@
     description = ''
       A list of workflows to be enabled.
     '';
+    example = [
+      "a-happy-gnome"
+      "knome"
+      "horizontal-hunger"
+    ];
   };
 
   imports = [
