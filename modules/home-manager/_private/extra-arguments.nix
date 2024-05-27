@@ -8,8 +8,8 @@ in
 {
   _module.args.foodogsquaredLib =
     foodogsquaredLib.extend (final: prev: {
-      home-manager = import ../../../lib/home-manager.nix { inherit pkgs lib; self = final; };
+      home-manager = import ../../../lib/env-specific/home-manager.nix { inherit pkgs lib; self = final; };
     } // lib.optionalAttrs (options?sops) {
-      sops-nix = import ../../../lib/sops.nix { inherit pkgs lib; self = final; };
+      sops-nix = import ../../../lib/env-specific/sops.nix { inherit pkgs lib; self = final; };
     });
 }
