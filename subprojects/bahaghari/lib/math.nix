@@ -4,6 +4,9 @@
 { pkgs, lib, self }:
 
 rec {
+  pi = 3.141592653589793238462643383279502884197;
+  e = 2.7182818284590452353602874713527;
+
   /* Returns the absolute value of the given number.
 
      Type: abs :: Int -> Int
@@ -40,6 +43,22 @@ rec {
       value = iter 1 1 absValue;
     in
     if exponent < 0 then (1 / value) else value;
+
+  /* Implements the factorial function with the given value.
+
+     Type: factorial :: Number -> Number
+
+     Example:
+       factorial 3
+       => 6
+
+       factorial 10
+       => 3628800
+  */
+  factorial = x:
+    assert lib.assertMsg (x >= 0)
+      "bahaghariLib.math.factorial: given value is not a positive integer";
+    product (lib.range 1 x);
 
   /* Returns a boolean whether the given number is within the given (inclusive) range.
 
@@ -110,7 +129,7 @@ rec {
     then 0
     else number / (100.0 / value);
 
-  /* Given a number, round up (or down) its number to the nearest integer.
+  /* Given a number, round up (or down) its number to the nearest ones place.
 
      Type: round :: Number -> Number
 
@@ -125,9 +144,54 @@ rec {
        => 3
   */
   round = number:
+    round' 0 number;
+
+  /* Given a tens place (10 ^ n) and a number, round the nearest integer to its
+     given place.
+
+     Type: round' :: Number -> Number -> Number
+
+     Example:
+       # Round the number to the nearest ones.
+       round' 0 5.65
+       => 6
+
+       # Round the number to the nearest tens.
+       round' 1 5.65
+       => 10
+
+       # Round the number to the nearest hundreds.
+       round' 2 5.65
+       => 0
+
+       # Round the number to the nearest tenth.
+       round' (-1) 5.65
+       => 5.7
+  */
+  round' = tens: number:
     let
-      number' = builtins.floor number;
-      difference = number - number';
+      nearest = pow 10.0 tens;
+      difference = number / nearest;
     in
-    if difference >= 0.5 then (number' + 1) else number';
+      builtins.floor (difference + 0.5) * nearest;
+
+  /* Adds all of the given items on the list starting from a sum of zero.
+
+     Type: summate :: List[Number] -> Number
+
+     Example:
+       summate [ 1 2 3 4 ]
+       => 10
+  */
+  summate = builtins.foldl' builtins.add 0;
+
+  /* Multiply all of the given items on the list starting from a product of 1.
+
+     Type: product :: List[Number] -> Number
+
+     Example:
+       product [ 1 2 3 4 ]
+       => 24
+  */
+  product = builtins.foldl' builtins.mul 1;
 }

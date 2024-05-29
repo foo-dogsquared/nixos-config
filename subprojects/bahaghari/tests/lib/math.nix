@@ -16,6 +16,11 @@ lib.runTests {
     expected = 1;
   };
 
+  testsMathPowWithFloat = {
+    expr = self.math.pow 2 7.0;
+    expected = 128.0;
+  };
+
   testMathAbsoluteValue = {
     expr = self.math.abs 5493;
     expected = 5493;
@@ -86,6 +91,31 @@ lib.runTests {
     expected = 3;
   };
 
+  testMathRoundOnes = {
+    expr = self.math.round' 0 5.65;
+    expected = 6;
+  };
+
+  testMathRoundTens = {
+    expr = self.math.round' 1 5.65;
+    expected = 10;
+  };
+
+  testMathRoundHundreds = {
+    expr = self.math.round' 2 5.65;
+    expected = 0;
+  };
+
+  testMathRoundTenth = {
+    expr = self.math.round' (-1) 5.65;
+    expected = 5.7;
+  };
+
+  testMathRoundHundredth = {
+    expr = self.math.round' (-2) 5.655;
+    expected = 5.66;
+  };
+
   testMathWithinRange = {
     expr = self.math.isWithinRange (-100) 100 50;
     expected = true;
@@ -94,5 +124,40 @@ lib.runTests {
   testMathWithinRange2 = {
     expr = self.math.isWithinRange 5 10 (-5);
     expected = false;
+  };
+
+  testMathFactorial = {
+    expr = self.math.factorial 3;
+    expected = 6;
+  };
+
+  testMathFactorial2 = {
+    expr = self.math.factorial 10;
+    expected = 3628800;
+  };
+
+  testMathFactorialZero = {
+    expr = self.math.factorial 0;
+    expected = 1;
+  };
+
+  testMathSummate = {
+    expr = self.math.summate [ 1 2 3 4 ];
+    expected = 10;
+  };
+
+  testMathSummate22 = {
+    expr = self.math.summate [ 1 2 3 4.5 5.6 6.7 ];
+    expected = 22.8;
+  };
+
+  testMathProduct = {
+    expr = self.math.product [ 1 2 3 4 ];
+    expected = 24;
+  };
+
+  testMathProduct2 = {
+    expr = self.math.product [ 1.5 2 3 4.6 ];
+    expected = 41.4;
   };
 }

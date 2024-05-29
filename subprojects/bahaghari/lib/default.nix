@@ -48,5 +48,5 @@ pkgs.lib.makeExtensible
       isNumber scale;
 
     inherit (self.hex) isHexString;
-    inherit (self.math) abs pow percentage;
+    inherit (self.math) abs pow percentage factorial round round' summate product;
   })
