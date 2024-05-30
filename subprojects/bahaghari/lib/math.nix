@@ -4,6 +4,10 @@
 { pkgs, lib, self }:
 
 rec {
+  # We have the rounding functions here anyways so we may as well include the
+  # rest of the decimal place changing functions here for consistency.
+  inherit (builtins) floor ceil;
+
   pi = 3.141592653589793238462643383279502884197;
   e = 2.7182818284590452353602874713527;
 
@@ -173,7 +177,7 @@ rec {
       nearest = pow 10.0 tens;
       difference = number / nearest;
     in
-      builtins.floor (difference + 0.5) * nearest;
+      floor (difference + 0.5) * nearest;
 
   /* Adds all of the given items on the list starting from a sum of zero.
 

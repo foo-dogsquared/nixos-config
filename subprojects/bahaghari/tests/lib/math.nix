@@ -81,6 +81,26 @@ lib.runTests {
     expected = 0;
   };
 
+  testMathFloor = {
+    expr = self.math.floor 3.467;
+    expected = 3;
+  };
+
+  testMathFloor2 = {
+    expr = self.math.floor 3.796;
+    expected = 3;
+  };
+
+  testMathCeil = {
+    expr = self.math.ceil 3.469;
+    expected = 4;
+  };
+
+  testMathCeil2 = {
+    expr = self.math.ceil 3.796;
+    expected = 4;
+  };
+
   testMathRoundDown = {
     expr = self.math.round 2.3;
     expected = 2;
