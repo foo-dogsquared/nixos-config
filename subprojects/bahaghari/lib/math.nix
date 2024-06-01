@@ -48,6 +48,41 @@ rec {
     in
     if exponent < 0 then (1 / value) else value;
 
+  /* Given a number, find its square root. This method is implemented using
+     Newton's method.
+
+     Type: sqrt :: Number -> Number
+
+     Example:
+       sqrt 4
+       => 2
+
+       sqrt 169
+       => 13
+
+       sqrt 12
+       => 3.464101615
+  */
+  sqrt = number:
+    assert lib.assertMsg (number >= 0)
+      "bahaghariLib.math.sqrt: Only positive numbers are allowed";
+    let
+      # Changing this value can change the result drastically. A value of
+      # 10^-13 for tolerance seems to be the most balanced so far since we are
+      # dealing with floats and should be enough for most cases.
+      tolerance = pow 10 (-13);
+
+      iter = value:
+        let
+          root = 0.5 * (value + (number / value));
+        in
+          if (abs (root - value) > tolerance) then
+            iter root
+          else
+            value;
+    in
+      iter number;
+
   /* Implements the factorial function with the given value.
 
      Type: factorial :: Number -> Number

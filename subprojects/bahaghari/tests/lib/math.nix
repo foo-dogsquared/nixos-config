@@ -166,7 +166,7 @@ lib.runTests {
     expected = 10;
   };
 
-  testMathSummate22 = {
+  testMathSummate2 = {
     expr = self.math.summate [ 1 2 3 4.5 5.6 6.7 ];
     expected = 22.8;
   };
@@ -179,5 +179,27 @@ lib.runTests {
   testMathProduct2 = {
     expr = self.math.product [ 1.5 2 3 4.6 ];
     expected = 41.4;
+  };
+
+  # All of the answers here should be sourced from another tool such as a
+  # calculator.
+  testMathSqrt = {
+    expr = self.math.sqrt 4;
+    expected = 2;
+  };
+
+  testMathSqrt2 = {
+    expr = self.math.sqrt 169;
+    expected = 13;
+  };
+
+  testMathSqrt3 = {
+    expr = self.math.round' (-9) (self.math.sqrt 12);
+    expected = 3.464101615;
+  };
+
+  testMathSqrt4 = {
+    expr = self.math.round' (-10) (self.math.sqrt 2);
+    expected = 1.4142135624;
   };
 }

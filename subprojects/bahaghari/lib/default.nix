@@ -49,5 +49,5 @@ pkgs.lib.makeExtensible
 
     inherit (self.hex) isHexString;
     inherit (self.math) abs pow percentage factorial floor ceil round round'
-      summate product;
+      summate product sqrt;
   })
