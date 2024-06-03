@@ -1,5 +1,16 @@
+# Being a math library implementation, we should be careful of making tests
+# here to be consistent with the other math libraries. All of the answers here
+# should be sourced from another tool such as a calculator.
+#
+# For future references, the initial maintainer (foodogsquared) basically used
+# GNOME Calculator which uses libmath.
 { pkgs, lib, self }:
 
+let
+  # The typical rounding procedure for our results. 10 decimal places should be
+  # enough to test accuracy at least for a basic math subset like this.
+  round' = self.math.round' (-10);
+in
 lib.runTests {
   testMathPowPositive = {
     expr = self.math.pow 2 8;
@@ -181,8 +192,6 @@ lib.runTests {
     expected = 41.4;
   };
 
-  # All of the answers here should be sourced from another tool such as a
-  # calculator.
   testMathSqrt = {
     expr = self.math.sqrt 4;
     expected = 2;
@@ -194,12 +203,12 @@ lib.runTests {
   };
 
   testMathSqrt3 = {
-    expr = self.math.round' (-9) (self.math.sqrt 12);
-    expected = 3.464101615;
+    expr = round' (self.math.sqrt 12);
+    expected = 3.4641016151;
   };
 
   testMathSqrt4 = {
-    expr = self.math.round' (-10) (self.math.sqrt 2);
+    expr = round' (self.math.sqrt 2);
     expected = 1.4142135624;
   };
 
@@ -214,7 +223,7 @@ lib.runTests {
   };
 
   testMathExp3 = {
-    expr = self.math.round' (-10) (self.math.exp 2);
+    expr = round' (self.math.exp 2);
     expected = 7.3890560989;
   };
 }
