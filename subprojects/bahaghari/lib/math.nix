@@ -8,8 +8,15 @@ rec {
   # rest of the decimal place changing functions here for consistency.
   inherit (builtins) floor ceil;
 
-  pi = 3.141592653589793238462643383279502884197;
-  e = 2.7182818284590452353602874713527;
+  constants = {
+    pi = 3.141592653589793238462643383279502884197;
+    e = 2.7182818284590452353602874713527;
+    ln10 = 2.302585092994046;
+    ln2 = 0.6931471805599453;
+
+    # The minimum precision for our functions that need them.
+    epsilon = pow 10 (-13);
+  };
 
   /* Returns the absolute value of the given number.
 
@@ -48,6 +55,23 @@ rec {
     in
     if exponent < 0 then (1 / value) else value;
 
+  /* Given a number as x, return e^x.
+
+     Type: exp :: Number -> Number
+
+     Example:
+       exp 0
+       => 1
+
+       exp 1
+       => 2.7182818284590452353602874713527
+
+       exp -1
+       => 0.36787944117144233
+  */
+  exp = x:
+    pow constants.e x;
+
   /* Given a number, find its square root. This method is implemented using
      Newton's method.
 
@@ -70,7 +94,7 @@ rec {
       # Changing this value can change the result drastically. A value of
       # 10^-13 for tolerance seems to be the most balanced so far since we are
       # dealing with floats and should be enough for most cases.
-      tolerance = pow 10 (-13);
+      tolerance = constants.epsilon;
 
       iter = value:
         let

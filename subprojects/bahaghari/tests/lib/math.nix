@@ -202,4 +202,19 @@ lib.runTests {
     expr = self.math.round' (-10) (self.math.sqrt 2);
     expected = 1.4142135624;
   };
+
+  testMathExp = {
+    expr = self.math.exp 1;
+    expected = 2.7182818284590452353602874713527;
+  };
+
+  testMathExp2 = {
+    expr = self.math.exp (-1);
+    expected = 0.36787944117144233;
+  };
+
+  testMathExp3 = {
+    expr = self.math.round' (-10) (self.math.exp 2);
+    expected = 7.3890560989;
+  };
 }
