@@ -195,4 +195,22 @@ rec {
   */
   scale = { inMin, inMax, outMin, outMax }: v:
     ((v - inMin) * (outMax - outMin)) / ((inMax - inMin) + outMin);
+
+  /* Returns a null value if the condition fails. Otherwise, returns the given
+     value `as`.
+
+     Type: optionalNull :: Bool -> Any -> Any
+
+     Example:
+      optionalNull true "HELLO"
+      => "HELLO"
+
+      optionalNull (null != null) "HELLO"
+      => null
+  */
+  optionalNull = cond: as:
+    if cond then
+      as
+    else
+      null;
 }

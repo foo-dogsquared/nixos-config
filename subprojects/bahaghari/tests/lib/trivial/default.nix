@@ -260,4 +260,14 @@ lib.runTests {
     expr = self.trivial.isNumber true;
     expected = false;
   };
+
+  testOptionalNull = {
+    expr = self.trivial.optionalNull true "HELLO";
+    expected = "HELLO";
+  };
+
+  testOptionalNull2 = {
+    expr = self.trivial.optionalNull false "HELLO";
+    expected = null;
+  };
 }
