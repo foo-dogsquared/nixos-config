@@ -5,8 +5,13 @@
 { pkgs, lib, self }:
 
 rec {
-  /* Generates an RGB colorspace object to be generated with its method for
-     convenience.
+  # A bunch of metadata for this implementation. Might be useful if you want to
+  # create functions from this subset.
+  valueMin = 0.0;
+  valueMax = 255.0;
+
+  /* Generates an RGB colorspace object. The point is to provide some
+     typechecking if the values passed are correct.
 
      Type: RGB :: Attrs -> Attrs
 
@@ -14,23 +19,13 @@ rec {
        RGB { r = 242.0; g = 12; b = 23; }
        => {
          # The individual red, green, and blue components.
-
-         # And several methods.
-         __functor = {
-           toHex = <function>;
-           lighten = <function>;
-         };
        }
   */
-  RGB = { r, g, b }@color:
+  RGB = { r, g, b, ... }@color:
     assert lib.assertMsg (isRgb color)
-      "bahaghariLib.colors.rgb.RGB: given color does not have valid RGB value";
-    {
+      "bahaghariLib.colors.rgb.RGB: Given object has invalid values (only 0-255 are allowed)";
+    lib.optionalAttrs (color ? a) { inherit (color) a; } // {
       inherit r g b;
-      __functor = {
-        toHex = self: toHex color;
-        lighten = self: lighten color;
-      };
     };
 
   /* Returns a boolean to check if it's a valid RGB Nix object or not.
@@ -49,12 +44,12 @@ rec {
        isRgb { r = 123; g = 123; b = 123; }
        => true
   */
-  isRgb = { r, g, b }@color:
+  isRgb = { r, g, b, ... }@color:
     let
-      isWithinRGBRange = v: self.math.isWithinRange 0 255 v;
+      isWithinRGBRange = v: self.math.isWithinRange valueMin valueMax v;
       isValidRGB = v: self.isNumber v && isWithinRGBRange v;
-    in
-    lib.lists.all (v: isValidRGB v) (lib.attrValues color);
+      colors = [ r g b ] ++ lib.optionals (color ? a) [ color.a ];
+    in lib.lists.all (v: isValidRGB v) colors;
 
   /* Converts the color to a 6-digit hex string. Unfortunately, it cannot
      handle floats very well so we'll have to round these up.
@@ -67,13 +62,30 @@ rec {
   */
   toHex = { r, g, b, ... }:
     let
-      r' = self.math.round r;
-      g' = self.math.round g;
-      b' = self.math.round b;
-      rH = self.hex.pad 2 (self.hex.fromDec r');
-      gH = self.hex.pad 2 (self.hex.fromDec g');
-      bH = self.hex.pad 2 (self.hex.fromDec b');
-    in "${rH}${gH}${bH}";
+      components = builtins.map (c:
+        let c' = self.math.round c;
+        in self.hex.pad 2 (self.hex.fromDec c')) [ r g b ];
+    in lib.concatStringsSep "" components;
+
+  /* Converts the color to a 8-digit hex string (RGBA). If no `a` component, it
+     will be assumed to be at maximum value. Unfortunately, it cannot handle
+     floats very well so we'll have to round these up.
+
+     Type: toHex :: RGB -> String
+
+     Example:
+       toHex' { r = 231; g = 12; b = 21; }
+       => "E70C15FF"
+
+       toHex' { r = 231; g = 12; b = 21; a = 0; }
+       => "E70C1500"
+  */
+  toHex' = { r, g, b, a ? valueMax, ... }:
+    let
+      components = builtins.map (c:
+        let c' = self.math.round c;
+        in self.hex.pad 2 (self.hex.fromDec c')) [ r g b a ];
+    in lib.concatStringsSep "" components;
 
   /* Converts a valid hex string into an RGB object.
 
@@ -85,6 +97,12 @@ rec {
 
        fromHex "FFF"
        => { r = 255; g = 255; b = 255; }
+
+       fromHex "FFFF"
+       => { r = 255; g = 255; b = 255; a = 255; }
+
+       fromHex "FFFFFFFF"
+       => { r = 255; g = 255; b = 255; a = 255; }
   */
   fromHex = hex:
     let
@@ -92,8 +110,15 @@ rec {
       r = lib.lists.elemAt hex' 0;
       g = lib.lists.elemAt hex' 1;
       b = lib.lists.elemAt hex' 2;
-    in
-    RGB { inherit r g b; };
+      a =
+        if lib.lists.length hex' == 4 then
+          lib.lists.elemAt hex' 3
+        else
+          null;
+    in RGB {
+      inherit r g b;
+      ${self.optionalNull (a != null) "a"} = a;
+    };
 
   /* Given a percentage, uniformly lighten the given RGB color.
 
@@ -105,11 +130,10 @@ rec {
        in
        lighten color 50
   */
-  lighten = { r, g, b, ... }: percentage:
-    let
-      grow' = c: self.math.grow' 0 255 percentage;
-    in
-    RGB {
+  lighten = { r, g, b, ... }:
+    percentage:
+    let grow' = c: self.math.grow' valueMin valueMax percentage;
+    in RGB {
       r = grow' r;
       g = grow' g;
       b = grow' b;
@@ -134,9 +158,10 @@ rec {
   hexMatch = hex:
     let
       length = lib.stringLength hex;
-      genMatch = r: n: lib.concatStringsSep "" (lib.genList (_: "([[:xdigit:]]{${builtins.toString n}})") r);
-      nonAlphaGenMatch = genMatch 3;
-      withAlphaGenMatch = genMatch 4;
+      generateRegex = r: n:
+        lib.strings.replicate r "([[:xdigit:]]{${builtins.toString n}})";
+      nonAlphaGenMatch = generateRegex 3;
+      withAlphaGenMatch = generateRegex 4;
 
       regex =
         if (length == 6) then
@@ -153,8 +178,8 @@ rec {
       scale = self.trivial.scale {
         inMin = 0;
         inMax = 15;
-        outMin = 0;
-        outMax = 255;
+        outMin = valueMin;
+        outMax = valueMax;
       };
 
       match = lib.strings.match regex hex;

@@ -5,7 +5,7 @@ let
   # actual results. Also, it will mess up the result comparison since comparing
   # functions is reference-based so it will always fail.
   normalizeData = colors:
-    lib.attrsets.removeAttrs colors [ "__functor" ];
+    lib.attrsets.removeAttrs colors [ "__functor" "methods" ];
 
   rgbSample = self.colors.rgb.RGB {
     r = 255;
@@ -15,8 +15,7 @@ let
 
   # A modified version of RGB that normalizes data out-of-the-boxly.
   RGB = colors: normalizeData (self.colors.rgb.RGB colors);
-in
-lib.runTests {
+in lib.runTests {
   testsBasicRgb = {
     expr = RGB {
       r = 34;
@@ -27,6 +26,21 @@ lib.runTests {
       r = 34;
       g = 2;
       b = 0;
+    };
+  };
+
+  testsBasicRgb2 = {
+    expr = RGB {
+      r = 23;
+      g = 65;
+      b = 241;
+      a = 255;
+    };
+    expected = {
+      r = 23;
+      g = 65;
+      b = 241;
+      a = 255;
     };
   };
 
@@ -54,6 +68,7 @@ lib.runTests {
       r = 255;
       g = 255;
       b = 255;
+      a = 255;
     });
   };
 
@@ -63,6 +78,7 @@ lib.runTests {
       r = 255;
       g = 255;
       b = 255;
+      a = 255;
     });
   };
 
@@ -78,6 +94,25 @@ lib.runTests {
       b = 105;
     });
     expected = "173A69";
+  };
+
+  testsToHexVariant = {
+    expr = self.colors.rgb.toHex' (RGB {
+      r = 255;
+      g = 56;
+      b = 105;
+    });
+    expected = "FF3869FF";
+  };
+
+  testsToHexVariant2 = {
+    expr = self.colors.rgb.toHex' (RGB {
+      r = 255;
+      g = 56;
+      b = 105;
+      a = 34;
+    });
+    expected = "FF386922";
   };
 
   testsHexMatch = {
