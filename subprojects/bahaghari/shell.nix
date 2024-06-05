@@ -1,7 +1,19 @@
-{ pkgs ? import <nixpkgs> { } }:
+let
+  sources = import ./npins;
+in
+{ pkgs ? import sources.nixos-stable { } }:
 
 with pkgs;
 
 mkShell {
-  inputsFrom = [ nix ];
+  inputsFrom = [
+    nix
+  ];
+
+  packages = [
+    npins
+
+    treefmt
+    nixpkgs-fmt
+  ];
 }

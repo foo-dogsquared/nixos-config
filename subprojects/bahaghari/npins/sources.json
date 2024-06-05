@@ -1,0 +1,29 @@
+{
+  "pins": {
+    "nixos-stable": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixpkgs"
+      },
+      "branch": "nixos-24.05",
+      "revision": "b3b2b28c1daa04fe2ae47c21bb76fd226eac4ca1",
+      "url": "https://github.com/NixOS/nixpkgs/archive/b3b2b28c1daa04fe2ae47c21bb76fd226eac4ca1.tar.gz",
+      "hash": "06jxcg73ymibvfg3czmq856f84bkhxhqgwa51mf87xprjz74zxks"
+    },
+    "nixos-unstable": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixpkgs"
+      },
+      "branch": "nixos-unstable",
+      "revision": "57610d2f8f0937f39dbd72251e9614b1561942d8",
+      "url": "https://github.com/NixOS/nixpkgs/archive/57610d2f8f0937f39dbd72251e9614b1561942d8.tar.gz",
+      "hash": "0k8az8vmfdk1n8xlza252sqk0hm1hfc7g67adin6jxqaab2s34n9"
+    }
+  },
+  "version": 3
+}
