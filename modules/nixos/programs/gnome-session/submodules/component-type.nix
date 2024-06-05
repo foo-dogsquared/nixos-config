@@ -1,4 +1,4 @@
-{ name, config, lib, utils, session, ... }:
+{ name, config, pkgs, lib, utils, session, ... }:
 
 let
   optionalSystemdUnitOption = type: systemdModuleAttribute:
@@ -29,14 +29,22 @@ in
     description = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = "One-sentence description of the component.";
+      default = name;
       example = "Desktop widgets";
     };
 
     script = lib.mkOption {
       type = lib.types.lines;
       description = ''
-        Shell script fragment of the component. Take note this will be
-        wrapped in a script for proper integration with `gnome-session`.
+        Shell script fragment of the component.
+
+        The way it is handled is different per startup methods.
+
+        * This will be wrapped in a script for proper integration with the
+        legacy non-systemd session management.
+
+        * For systemd-managed sessions, it will be part of
+        {option}`programs.gnome-session.sessions.<sessions>.components.<name>.serviceUnit.script`.
       '';
     };
 
@@ -182,6 +190,7 @@ in
     desktopConfig = {
       name = lib.mkForce config.id;
       desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
+      exec = lib.mkDefault (pkgs.writeShellScript "${session.name}-${config.name}-script" config.script);
       noDisplay = lib.mkForce true;
       onlyShowIn = session.desktopNames;
 
@@ -213,7 +222,6 @@ in
       NixOS-module-generated gnome-session sessions so we're not bothering with
       those.
 
-      TODO: Is `Type=notify` a good default?
       * `Service.Type=` is obviously not included since not all desktop
       components are the same either. Some of them could be a D-Bus service,
       some of them are oneshots, etc. Though, it might be better to have this

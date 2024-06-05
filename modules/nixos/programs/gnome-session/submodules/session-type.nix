@@ -162,6 +162,7 @@ in
         customized version of GNOME.
         :::
       '';
+      default = lib.mapAttrsToList (_: component: component.id) config.components;
       example = [
         "org.gnome.Shell"
         "org.gnome.SettingsDaemon.A11ySettings"
@@ -209,10 +210,6 @@ in
   config = {
     # Append the session argument.
     extraArgs = [ "--session=${name}" ];
-
-    # By default. set the required components from the given desktop
-    # components.
-    requiredComponents = lib.mapAttrsToList (_: component: component.id) config.components;
 
     targetUnit = {
       overrideStrategy = lib.mkForce "asDropin";

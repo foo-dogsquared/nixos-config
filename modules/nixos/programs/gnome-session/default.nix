@@ -60,27 +60,16 @@ let
             '';
           };
 
-        installDesktopSessions = builtins.map
+        installDesktopSessionFiles = builtins.map
           (display:
             displayScripts.${display})
           session.display;
 
-        installDesktops =
+        installDesktopFiles =
           lib.mapAttrsToList
             (name: component:
               let
-                scriptName = "${session.name}-${component.name}-script";
-
-                # There's already a lot of bad bad things in this world, we
-                # don't to add more of it here (only a fraction of it, though).
-                scriptPackage = pkgs.writeShellApplication {
-                  name = scriptName;
-                  text = component.script;
-                };
-
-                script = "${scriptPackage}/bin/${scriptName}";
-                desktopConfig = lib.mergeAttrs component.desktopConfig { exec = script; };
-                desktopPackage = pkgs.makeDesktopItem desktopConfig;
+                desktopPackage = pkgs.makeDesktopItem component.desktopConfig;
               in
               ''
                 install -Dm0644 ${desktopPackage}/share/applications/*.desktop -t $out/share/applications
@@ -105,9 +94,9 @@ let
           install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
           substituteAllInPlace "$GNOME_SESSION_FILE"
 
-          ${lib.concatStringsSep "\n" installDesktopSessions}
+          ${lib.concatStringsSep "\n" installDesktopSessionFiles}
 
-          ${lib.concatStringsSep "\n" installDesktops}
+          ${lib.concatStringsSep "\n" installDesktopFiles}
         ''
     )
     cfg.sessions;
