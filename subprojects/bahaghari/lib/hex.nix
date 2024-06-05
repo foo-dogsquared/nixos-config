@@ -27,10 +27,37 @@ let
   baseSet = self.generateBaseDigitType glyphList;
 in
 rec {
-  /* Returns a convenient glyph set for creating your own conversion or
-     hex-related functions.
+  inherit (baseSet) glyphSet conversionTable;
+
+  /* Converts a hexadecimal digit string into its decimal equivalent.
+
+     Type: toDec :: String -> Number
+
+     Example:
+       toDec "FF"
+       => 255
+
+       toDec "ff"
+       => 255
   */
-  inherit (baseSet) glyphSet conversionTable fromDec toDec;
+  toDec = digit:
+    let
+      digit' = lib.toUpper digit;
+    in
+      baseSet.toDec digit';
+
+  /* Converts a decimal digit into its hexadecimal notation.
+
+     Type: fromDec :: Number -> String
+
+     Example:
+       fromDec 255
+       => "FF"
+
+       fromDec 293454837
+       => "117DC3F5"
+  */
+  fromDec = decimal: lib.toUpper (baseSet.fromDec decimal);
 
   /* A variant of `lib.lists.range` function just with hexadecimal digits.
 

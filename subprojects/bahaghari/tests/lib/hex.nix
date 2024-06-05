@@ -41,6 +41,16 @@ lib.runTests {
     expected = 2565;
   };
 
+  testHexToDecLowercase = {
+    expr = self.hex.toDec "0A0FfbA";
+    expected = 10551226;
+  };
+
+  testHexToDecLowercase2 = {
+    expr = self.hex.toDec "0af";
+    expected = 175;
+  };
+
   testCreateHexRange = {
     expr = self.hex.range 10 17;
     expected = [ "A" "B" "C" "D" "E" "F" "10" "11" ];
@@ -74,5 +84,10 @@ lib.runTests {
   testHexPadWithNegativeDigits = {
     expr = self.hex.pad (-5) "A42C";
     expected = "A42C";
+  };
+
+  testHexPadWithMixedLetterCase = {
+    expr = self.hex.pad 8 "AfB9";
+    expected = "0000AfB9";
   };
 }
