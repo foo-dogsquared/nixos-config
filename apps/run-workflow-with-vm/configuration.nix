@@ -26,6 +26,7 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
     <config/modules/nixos/profiles/nix-conf.nix>
     <config/modules/nixos/profiles/overlays.nix>
     <config/modules/nixos/profiles/desktop>
+
     <home-manager/nixos>
     <nixos-generators/formats/vm.nix>
     <nixos-generators/format-module.nix>
@@ -47,6 +48,7 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
 
       config = {
         # Enable the display manager of choice.
+        services.displayManager.enable = true;
         services.xserver.displayManager.gdm.enable = true;
 
         # Configure home-manager-related stuff.
