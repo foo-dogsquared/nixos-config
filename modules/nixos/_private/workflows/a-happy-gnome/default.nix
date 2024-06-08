@@ -3,6 +3,11 @@
 let
   workflowName = "a-happy-gnome";
   cfg = config.workflows.workflows.${workflowName};
+
+  requiredApps = with pkgs; [
+    # The application menu.
+    junction
+  ];
 in
 {
   options.workflows.enable = lib.mkOption {
@@ -40,7 +45,6 @@ in
           just-perfection
         ];
       '';
-      internal = true;
     };
 
     extraApps = lib.mkOption {
@@ -80,7 +84,46 @@ in
       example = lib.literalExpression ''
         with pkgs; [ gnome.polari ];
       '';
-      internal = true;
+    };
+
+    disableSearchProviders = lib.mkOption {
+      type = with lib.types; listOf (
+        coercedTo str (lib.removeSuffix ".desktop") str
+      );
+      description = ''
+        A list of the application filenames (without the `.desktop` part) where
+        its GNOME Shell search provider is to be disabled.
+
+        By default, it disables some of the search providers from the default
+        list of applications in
+        {option}`workflows.workflows.a-happy-gnome.extraApps`.
+      '';
+      default = [
+        "org.gnome.seahorse.Application"
+        "org.gnome.Photos"
+        "org.gnome.Epiphany"
+        "app.drey.Dialect"
+        "com.belmoussaoui.Authenticator"
+      ];
+      apply = builtins.map (x: "${x}.desktop");
+    };
+
+    disableNotifications = lib.mkOption {
+      type = with lib.types; listOf str;
+      description = ''
+        A list of identifiers of the application's notification to be disabled
+        within GNOME Shell.
+
+        By default, it just list a few from the default value of
+        {option}`workflows.workflows.a-happy-gnome.extraApps`.
+      '';
+      default = [
+        "re-sonny-tangram"
+        "org-gnome-polari"
+        "io-github-hexchat"
+        "org-gnome-evolution-alarm-notify"
+        "thunderbird"
+      ];
     };
   };
 
@@ -123,13 +166,7 @@ in
         settings = lib.mkMerge [
           {
             "org/gnome/desktop/search-providers" = {
-              disabled = [
-                "org.gnome.seahorse.Application.desktop"
-                "org.gnome.Photos.desktop"
-                "org.gnome.Epiphany.desktop"
-                "app.drey.Dialect.desktop"
-                "com.belmoussaoui.Authenticator.desktop"
-              ];
+              disabled = cfg.disableSearchProviders;
             };
             "org/gnome/shell" = {
               enabled-extensions = builtins.map (p: p.extensionUuid) cfg.shellExtensions;
@@ -138,19 +175,14 @@ in
 
           # Disable all of the messenger's notification (only the annoying
           # ones).
-          (lib.listToAttrs
-            (builtins.map
-              (app:
-                lib.nameValuePair
-                  "org/gnome/desktop/notifications/application/${app}"
-                  { show-banners = false; })
-              [
-                "re-sonny-tangram"
-                "org-gnome-polari"
-                "io-github-hexchat"
-                "org-gnome-evolution-alarm-notify"
-                "thunderbird"
-              ]))
+          (lib.pipe cfg.disableNotifications [
+            (builtins.map (app:
+              lib.nameValuePair
+                "org/gnome/desktop/notifications/application/${app}"
+                { show-banners = false; }))
+
+            lib.listToAttrs
+          ])
         ];
       };
     };
@@ -170,9 +202,6 @@ in
       };
     };
 
-    environment.systemPackages = with pkgs; [
-      # The application menu.
-      junction
-    ] ++ cfg.shellExtensions ++ cfg.extraApps;
+    environment.systemPackages = requiredApps ++ cfg.shellExtensions ++ cfg.extraApps;
   };
 }
