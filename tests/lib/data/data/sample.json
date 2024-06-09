@@ -1,0 +1,9 @@
+{
+  "hello": "world",
+  "whoa": 4566,
+  "list-of-names": [
+    "Cheesy",
+    "Angry",
+    "Ash"
+  ]
+}

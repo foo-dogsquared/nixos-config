@@ -18,6 +18,7 @@ let
 in
 {
   trivial = callLib ./trivial.nix;
+  data = callLib ./data;
 
   # Environment-specific subset.
   home-manager = callLib ./home-manager.nix;
