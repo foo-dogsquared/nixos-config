@@ -23,7 +23,7 @@
 
     # ...except we allow other configurations to use other nixpkgs branch so
     # that may not matter anyways.
-    nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixos-stable.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -34,7 +34,7 @@
     # Managing home configurations.
     home-manager.follows = "home-manager-unstable";
 
-    home-manager-stable.url = "github:nix-community/home-manager/release-23.11";
+    home-manager-stable.url = "github:nix-community/home-manager/release-24.05";
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager-unstable.url = "github:nix-community/home-manager";
