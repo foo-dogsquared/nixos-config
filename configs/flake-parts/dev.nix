@@ -1,6 +1,10 @@
 # All of the development-related shtick for this project is over here.
 { inputs, ... }: {
-  flake.lib = import ../../lib { lib = inputs.nixpkgs.lib; };
+  flake = {
+    lib = import ../../lib { lib = inputs.nixpkgs.lib; };
+
+    foodogsquaredLib = ../../lib;
+  };
 
   perSystem = { config, lib, pkgs, ... }: {
     apps = {
