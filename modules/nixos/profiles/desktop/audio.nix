@@ -21,6 +21,9 @@
   };
 
   # This is based from https://jackaudio.org/faq/linux_rt_config.html.
+  #
+  # Anyways, this enables several audio-related software requiring realtime
+  # scheduling to work such as Sonic Pi.
   security.pam.loginLimits = [
     {
       domain = "@audio";

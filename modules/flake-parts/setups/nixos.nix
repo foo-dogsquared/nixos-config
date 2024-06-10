@@ -201,6 +201,7 @@ let
       };
 
       home-manager = {
+        # Extending it with more NixOS-specific user options.
         users = lib.mkOption {
           type = with lib.types; attrsOf (submodule homeManagerUserType);
         };
@@ -337,6 +338,9 @@ let
                     # overlay list is constructed. However, this is much more
                     # preferable than letting a massive list with duplicated
                     # overlays from different home-manager users to be applied.
+                    #
+                    # Anyways, all I'm saying is that this is a massive hack
+                    # because it isn't correct.
                   lib.lists.unique overlays;
               })
 
@@ -549,9 +553,8 @@ in
                 (
                   let
                     deployConfig = cfg.configs.${name}.deploy;
-                    deployConfig' = lib.attrsets.removeAttrs deployConfig [ "profiles" ];
                   in
-                  deployConfig'
+                  deployConfig
                   // {
                     profiles =
                       cfg.configs.${name}.deploy.profiles {

@@ -88,8 +88,8 @@ let
         default = "nixpkgs";
         example = "nixos-unstable-small";
         description = ''
-          The nixpkgs branch to be used for evaluating the NixOS configuration.
-          By default, it will use the `nixpkgs` flake input.
+          The nixpkgs branch to be used for evaluating the home-manager
+          configuration. By default, it will use the `nixpkgs` flake input.
 
           ::: {.note}
           This is based from your flake inputs and not somewhere else. If you

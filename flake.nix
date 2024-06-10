@@ -90,7 +90,9 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Make a default.nix compatible stuff.
+    # Make a default.nix compatible stuff. Take note, we're giving this a
+    # unique suffix since there are other flake inputs that uses the same flake
+    # and we want our `default.nix` to refer to our version.
     flake-compat-fds.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
 
     # Someone had the idea to make the flake outputs be configured as a Nix

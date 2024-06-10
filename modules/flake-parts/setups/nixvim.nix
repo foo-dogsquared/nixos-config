@@ -64,7 +64,6 @@ let
           pkgs: with pkgs; [
             (wrapNeovim neovim-unwrapped { })
             neovim-nightly
-            neovide
           ]
         '';
         description = ''
@@ -104,7 +103,8 @@ in
     sharedModules = modulesOption // {
       description = ''
         A list of NixVim modules to be shared across all of the NixVim
-        configurations.
+        configurations. This is also to be shared among wider-scoped
+        environments when NixVim-specific integrations has been enabled.
       '';
     };
     standaloneConfigModules = modulesOption' "standalone configuration";
