@@ -23,6 +23,8 @@
     };
 
     defaultOverlays = lib.attrValues inputs.self.overlays;
+
+    defaultSystems = [ "x86_64-linux" ];
   };
 
   perSystem = { lib, system, ... }: {
