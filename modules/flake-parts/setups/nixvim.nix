@@ -11,8 +11,8 @@ let
   cfg = config.setups.nixvim;
   nixvimModules = ../../nixvim;
 
-  mkNixvimConfig = { system, pkgs, modules ? [ ] }:
-    inputs.nixvim.legacyPackages.${system}.makeNixvimWithModule {
+  mkNixvimConfig = { system, pkgs, nixvimBranch ? "nixvim", modules ? [ ] }:
+    inputs.${nixvimBranch}.legacyPackages.${system}.makeNixvimWithModule {
       inherit pkgs;
       module = {
         imports = modules;
@@ -45,6 +45,15 @@ let
           "nixos-unstable"
           "nixos-stable"
         ];
+      };
+
+      nixvimBranch = lib.mkOption {
+        type = lib.types.nonEmptyStr;
+        default = "nixvim";
+        example = "nixvim-unstable";
+        description = ''
+          The NixVim branch to be used for the configuration.
+        '';
       };
 
       neovimPackages = lib.mkOption {
@@ -140,6 +149,7 @@ in
                           "${name}-${nixpkgsBranch}-${neovimPkg.name}"
                           (mkNixvimConfig {
                             inherit system pkgs;
+                            inherit (metadata) nixvimBranch;
                             modules =
                               cfg.sharedModules
                               ++ cfg.standaloneConfigModules
