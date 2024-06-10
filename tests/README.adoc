@@ -3,7 +3,9 @@
 
 
 Yes, tests!
-We have tests for the major components of this NixOS configuration including the link:../lib[custom library], link:../modules/nixos[our custom NixOS modules], link:../modules/home-manager[custom home-manager modules], and so on.
+Because apparently, letting desktop users BE the developers of their own operating system is such as a GOOOOOOOOD idea...
+
+Anyways, as part of cosplaying of a wannabe developer, we have tests for the major components of this NixOS configuration including the link:../lib[custom library], link:../modules/nixos[our custom NixOS modules], link:../modules/home-manager[custom home-manager modules], and so on.
 
 Each of the test suite follows how the upstream does their tests.
 For example, our home-manager module tests just copies what the upstream is doing.
@@ -14,7 +16,8 @@ You should be able to test them with the following command:
 ----
 # These commands assume you're in the project root.
 
-# This test is for home-manager module tests.
+# This test is for home-manager module tests because it is using nix-lib-nmt
+# which is only working in pure mode.
 nix-shell --pure ./tests/modules/home-manager -A list
 
 # This is for the library.
