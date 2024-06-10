@@ -151,7 +151,7 @@ let
         (lib.mkIf (config.nixvim.instance != null)
           ({ lib, ... }: {
             imports = [
-              inputs.nixvim.homeManagerModules.nixvim
+              inputs.${config.nixvim.branch}.homeManagerModules.nixvim
             ];
 
             config.programs.nixvim = { ... }: {

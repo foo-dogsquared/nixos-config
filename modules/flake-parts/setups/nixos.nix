@@ -361,7 +361,7 @@ let
             setupConfig = config;
           in
           { lib, ... }: {
-            imports = [ inputs.nixvim.nixosModules.nixvim ];
+            imports = [ inputs.${config.nixvim.branch}.nixosModules.nixvim ];
 
             programs.nixvim = { ... }: {
               enable = lib.mkDefault true;
