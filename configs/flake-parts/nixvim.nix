@@ -6,8 +6,9 @@
       nixpkgsBranches = [
         "nixos-unstable"
       ];
+      nixvimBranch = "nixvim-unstable";
       neovimPackages = p: with p; [
-        neovim-nightly
+        neovim
       ];
     };
 
@@ -15,8 +16,9 @@
       nixpkgsBranches = [
         "nixos-unstable"
       ];
+      nixvimBranch = "nixos-unstable";
       neovimPackages = p: with p; [
-        neovim-nightly
+        neovim
       ];
     };
   };

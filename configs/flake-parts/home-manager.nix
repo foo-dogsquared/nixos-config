@@ -11,6 +11,8 @@
     configs = {
       # The typical user in desktop environments.
       foo-dogsquared = {
+        nixpkgsBranch = "nixos-unstable";
+        homeManagerBranch = "home-manager-unstable";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         overlays = [
           # Neovim nightly!
@@ -29,7 +31,10 @@
           inputs.nur.hmModules.nur
           inputs.sops-nix.homeManagerModules.sops
         ];
-        nixvim.instance = "fiesta";
+        nixvim = {
+          instance = "fiesta";
+          branch = "nixvim-unstable";
+        };
         deploy = {
           autoRollback = true;
           magicRollback = true;
@@ -37,7 +42,11 @@
       };
 
       # The typical user in server environments.
-      plover.systems = [ "x86_64-linux" ];
+      plover = {
+        nixpkgsBranch = "nixos-unstable";
+        homeManagerBranch = "home-manager-unstable";
+        systems = [ "x86_64-linux" ];
+      };
     };
 
     # Pretty much the baseline home-manager configuration for the whole

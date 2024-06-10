@@ -10,13 +10,15 @@
     configs = {
       # The main desktop.
       ni = {
+        nixpkgsBranch = "nixos-unstable";
         systems = [ "x86_64-linux" ];
         formats = null;
         modules = [
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
         ];
-        homeManagerUsers = {
+        home-manager = {
+          branch = "home-manager-unstable";
           nixpkgsInstance = "global";
           users.foo-dogsquared = {
             userConfig = {
@@ -59,6 +61,7 @@
       # TODO: Remove extra newlines that are here for whatever reason.
       #{{{
       void = {
+        nixpkgsBranch = "nixos-unstable";
         systems = [ "x86_64-linux" ];
         formats = [ "vm" ];
       };
@@ -73,6 +76,7 @@
 
       # The barely customized graphical installer.
       graphical-installer = {
+        nixpkgsBranch = "nixos-unstable";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso-graphical" ];
         diskoConfigs = [ "external-hdd" ];
@@ -81,6 +85,7 @@
 
       # The WSL system (that is yet to be used).
       winnowing = {
+        nixpkgsBranch = "nixos-unstable";
         systems = [ "x86_64-linux" ];
         formats = null;
         overlays = [
