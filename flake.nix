@@ -41,9 +41,15 @@
     home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs";
 
     # Make a Neovim distro.
-    nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
-    nixvim.inputs.home-manager.follows = "home-manager";
+    nixvim.follows = "nixvim-unstable";
+
+    nixvim-stable.url = "github:nix-community/nixvim/nixos-24.05";
+    nixvim-stable.inputs.nixpkgs.follows = "nixos-stable";
+    nixvim-stable.inputs.home-manager.follows = "home-manager-stable";
+
+    nixvim-unstable.url = "github:nix-community/nixvim";
+    nixvim-unstable.inputs.nixpkgs.follows = "nixos-unstable";
+    nixvim-unstable.inputs.home-manager.follows = "home-manager-unstable";
 
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
