@@ -13,24 +13,24 @@ in
     colorschemes = lib.mkDefault { gruvbox.enable = true; };
 
     # Make it so that terminal GUI colors are au natural.
-    options.termguicolors = true;
+    opts.termguicolors = true;
 
     # Show locations you're supposed to be copying from the internet (or your
     # own code).
-    options.number = true;
+    opts.number = true;
 
     # Make it easy to count.
-    options.relativenumber = true;
+    opts.relativenumber = true;
 
     # Make it easy to identify your cursor.
-    options.cursorline = true;
+    opts.cursorline = true;
 
     # Conceal all of the hidden weapons (or distractions).
-    options.conceallevel = 1;
+    opts.conceallevel = 1;
 
     # Show them hidden suckers.
-    options.list = true;
-    options.listchars = {
+    opts.list = true;
+    opts.listchars = {
       tab = "↦ *";
       trail = "·";
       nbsp = "%";
