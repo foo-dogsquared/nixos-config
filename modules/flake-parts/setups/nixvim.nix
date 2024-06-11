@@ -2,8 +2,6 @@
 , lib
 , config
 
-, defaultOverlays
-
 , ...
 }:
 
@@ -33,18 +31,22 @@ let
     '';
   };
 
-  configType = { name, lib, config, ... }: {
+  componentType = { lib, config, ... }: {
     options = {
-      nixpkgsBranches = lib.mkOption {
-        type = with lib.types; listOf str;
+      nixpkgsBranch = lib.mkOption {
+        type = lib.types.nonEmptyStr;
+        default = "nixpkgs";
+        example = "nixos-unstable";
         description = ''
-          A list of nixpkgs branches for the NixVim configuration to be built
+          The nixpkgs branch for the NixVim configuration to be built
           against.
+
+          ::: {.note}
+          This refers to your flake inputs so in order to support multiple
+          nixpkgs branches, you need to import multiple nixpkgs as part of the
+          `inputs` flake attribute.
+          :::
         '';
-        example = [
-          "nixos-unstable"
-          "nixos-stable"
-        ];
       };
 
       nixvimBranch = lib.mkOption {
@@ -52,26 +54,62 @@ let
         default = "nixvim";
         example = "nixvim-unstable";
         description = ''
-          The NixVim branch to be used for the configuration.
+          The NixVim branch to be used for the NixVim configuration.
+
+          It is recommend to match the NixVim branch with the nixpkgs branch.
+          For example, a NixVim configuration of `nixos-24.05` should be paired
+          with nixpkgs `nixos-24.05` branch.
+
+          ::: {.note}
+          This refers to your flake inputs so in order to support multiple
+          NixVim branches, you need to import multiple NixVim branches as part
+          of the `inputs` flake attribute.
+          :::
         '';
       };
 
-      neovimPackages = lib.mkOption {
-        type = with lib.types; functionTo (listOf package);
-        default = pkgs: with pkgs; [ neovim ];
-        defaultText = "pkgs: with pkgs; [ neovim ]";
+      neovimPackage = lib.mkOption {
+        type = with lib.types; functionTo package;
+        default = pkgs: pkgs.neovim;
+        defaultText = "pkgs: pkgs.neovim";
         example = lib.literalExpression ''
-          pkgs: with pkgs; [
-            (wrapNeovim neovim-unwrapped { })
-            neovim-nightly
+          pkgs: pkgs.neovim-nightly
+        '';
+        description = ''
+          The package to be used for the NixVim configuration. Since this is
+          used per-system, it has to be a function returning a package from the
+          given nixpkgs instance.
+        '';
+      };
+
+      overlays = lib.mkOption {
+        type = with lib.types; listOf (functionTo raw);
+        default = [ ];
+        example = lib.literalExpression ''
+          [
+            inputs.neovim-nightly-overlay.overlays.default
           ]
         '';
         description = ''
-          A list of Neovim packages from different branches to be built
-          against. Since this is to be used per-system, it should be a function
-          that returns a list of packages where the given statement is the
-          nixpkgs instance.
+          A list of overlays to be applied for the nixpkgs instance.
         '';
+      };
+    };
+  };
+
+  configType = { name, lib, config, ... }: {
+    options = {
+      components = lib.mkOption {
+        type = with lib.types; listOf (submodule componentType);
+        description = ''
+          A list of specific components for the NixVim configuration to be
+          built against.
+        '';
+        example = [
+          { nixpkgsBranch = "nixos-unstable"; nixvimBranch = "nixvim-unstable"; }
+          { nixpkgsBranch = "nixos-stable"; nixvimBranch = "nixvim-stable"; }
+          { nixpkgsBranch = "nixos-stable"; nixvimBranch = "nixvim-stable"; neovimPackage = pkgs: pkgs.neovim-nightly; }
+        ];
       };
     };
 
@@ -129,38 +167,26 @@ in
             let
               generateNixvimConfigs = name: metadata:
                 let
-                  iterateThruBranches = nixpkgsBranch:
+                  mkNixvimConfig' = component:
                     let
-                      pkgs = import inputs.${nixpkgsBranch} {
+                      pkgs = import inputs.${component.nixpkgsBranch} {
+                        inherit (component) overlays;
                         inherit system;
-                        overlays = defaultOverlays ++ [
-                          inputs.neovim-nightly-overlay.overlays.default
-                        ];
-                        config.allowUnfree = true;
                       };
-
-                      # Unfortunately we cannot have NixVim with Neovim-reliant
-                      # packages such as Neovide or something similar. It has
-                      # to be Neovim.
-                      neovimPackages = metadata.neovimPackages pkgs;
-
-                      mkNixvimConfig' = neovimPkg:
-                        lib.nameValuePair
-                          "${name}-${nixpkgsBranch}-${neovimPkg.name}"
-                          (mkNixvimConfig {
-                            inherit system pkgs;
-                            inherit (metadata) nixvimBranch;
-                            modules =
-                              cfg.sharedModules
-                              ++ cfg.standaloneConfigModules
-                              ++ metadata.modules
-                              ++ [{ package = neovimPkg; }];
-                          });
+                      neovimPackage = component.neovimPackage pkgs;
                     in
-                    builtins.map mkNixvimConfig' neovimPackages;
-
-                  nixvimConfigs = lib.lists.flatten
-                    (builtins.map iterateThruBranches metadata.nixpkgsBranches);
+                    lib.nameValuePair
+                      "${name}-${component.nixpkgsBranch}-${neovimPackage.pname}"
+                      (mkNixvimConfig {
+                        inherit system pkgs;
+                        inherit (component) nixvimBranch;
+                        modules =
+                          cfg.sharedModules
+                          ++ cfg.standaloneConfigModules
+                          ++ metadata.modules
+                          ++ [{ package = neovimPackage; }];
+                      });
+                  nixvimConfigs = builtins.map mkNixvimConfig' metadata.components;
                 in
                 lib.listToAttrs nixvimConfigs;
             in
