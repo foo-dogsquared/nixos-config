@@ -120,7 +120,7 @@ rec {
   */
   factorial = x:
     assert lib.assertMsg (x >= 0)
-      "bahaghariLib.math.factorial: given value is not a positive integer";
+      "bahaghariLib.math.factorial: Given value is not a positive integer";
     product (lib.range 1 x);
 
   /* Returns a boolean whether the given number is within the given (inclusive) range.

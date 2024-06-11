@@ -44,7 +44,7 @@ rec {
       scheme = self.importYAML yamlpath;
     in
     assert lib.assertMsg (isValidScheme scheme || isLegacyScheme scheme)
-      "bahaghariLib.tinted-theming.importScheme: given data is not a valid Tinted Theming scheme";
+      "bahaghariLib.tinted-theming.importScheme: Given data is not a valid Tinted Theming scheme";
     if isLegacyScheme scheme
     then modernizeLegacyScheme scheme
     else scheme;
