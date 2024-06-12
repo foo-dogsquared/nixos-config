@@ -69,36 +69,6 @@ let
 
   configType = { config, name, lib, ... }: {
     options = {
-      overlays = lib.mkOption {
-        type = with lib.types; listOf (functionTo raw);
-        default = [ ];
-        example = lib.literalExpression ''
-          [
-            inputs.neovim-nightly-overlay.overlays.default
-            inputs.emacs-overlay.overlays.default
-          ]
-        '';
-        description = ''
-          A list of overlays to be applied for that host.
-        '';
-      };
-
-      nixpkgsBranch = lib.mkOption {
-        type = lib.types.str;
-        default = "nixpkgs";
-        example = "nixos-unstable-small";
-        description = ''
-          The nixpkgs branch to be used for evaluating the home-manager
-          configuration. By default, it will use the `nixpkgs` flake input.
-
-          ::: {.note}
-          This is based from your flake inputs and not somewhere else. If you
-          want to have support for multiple nixpkgs branch, simply add them as
-          a flake input.
-          :::
-        '';
-      };
-
       homeManagerBranch = lib.mkOption {
         type = lib.types.str;
         default = "home-manager";
@@ -142,7 +112,7 @@ let
             setupConfig = config;
           in
           { config, lib, ... }: {
-            nixpkgs.overlays = setupConfig.overlays;
+            nixpkgs.overlays = setupConfig.nixpkgs.overlays;
             home.username = lib.mkForce name;
             home.homeDirectory = lib.mkForce setupConfig.homeDirectory;
           }
@@ -201,6 +171,7 @@ in
         specialArgs = { inherit (config) systems; };
         modules = [
           (import ./shared/nix-conf.nix { inherit inputs; })
+          ./shared/nixpkgs-options.nix
           ./shared/nixvim-instance-options.nix
           ./shared/config-options.nix
           configType
@@ -218,7 +189,7 @@ in
               inputs.nur.hmModules.nur
               inputs.nixvim.homeManagerModules.nixvim
             ];
-            overlays = [
+            nixpkgs.overlays = [
               inputs.neovim-nightly-overlay.overlays.default
               inputs.emacs-overlay.overlays.default
               inputs.helix-editor.overlays.default

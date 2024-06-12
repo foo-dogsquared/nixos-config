@@ -156,20 +156,6 @@ let
         '';
       };
 
-      overlays = lib.mkOption {
-        type = with lib.types; listOf (functionTo raw);
-        default = [ ];
-        example = lib.literalExpression ''
-          [
-            inputs.neovim-nightly-overlay.overlays.default
-            inputs.emacs-overlay.overlays.default
-          ]
-        '';
-        description = ''
-          A list of overlays to be applied for that host.
-        '';
-      };
-
       hostname = lib.mkOption {
         type = lib.types.nonEmptyStr;
         default = name;
@@ -182,22 +168,6 @@ let
         default = null;
         example = "work.example.com";
         description = "The domain of the NixOS system.";
-      };
-
-      nixpkgsBranch = lib.mkOption {
-        type = lib.types.str;
-        default = "nixpkgs";
-        description = ''
-          The nixpkgs branch to be used for evaluating the NixOS configuration.
-          By default, it will use the `nixpkgs` flake input.
-
-          ::: {.note}
-          This is based from your flake inputs and not somewhere else. If you
-          want to have support for multiple nixpkgs branch, simply add them as
-          a flake input.
-          :::
-        '';
-        example = "nixos-unstable-small";
       };
 
       home-manager = {
@@ -218,9 +188,11 @@ let
             * `global` enforces to use one nixpkgs instance for all
             home-manager users and imports all of the overlays into the
             nixpkgs instance of the NixOS system.
+
             * `separate` enforces the NixOS system to use individual
             nixpkgs instance for all home-manager users and imports the
             overlays to the nixpkgs instance of the home-manager user.
+
             * `none` leave the configuration alone and do not import
             overlays at all where you have to set them yourself. This is
             the best option if you want more control over each individual
@@ -325,7 +297,7 @@ let
                     hmUsersOverlays =
                       lib.mapAttrsToList
                         (name: _:
-                          partsConfig.setups.home-manager.configs.${name}.overlays)
+                          partsConfig.setups.home-manager.configs.${name}.nixpkgs.overlays)
                         setupConfig.home-manager.users;
 
                     overlays = lib.lists.flatten hmUsersOverlays;
@@ -350,7 +322,7 @@ let
                   lib.mapAttrs
                     (name: _: {
                       nixpkgs.overlays =
-                        partsConfig.setups.home-manager.configs.${name}.overlays;
+                        partsConfig.setups.home-manager.configs.${name}.nixpkgs.overlays;
                     })
                     setupConfig.home-manager.users;
               })
@@ -398,7 +370,7 @@ let
         { config, lib, ... }: {
           config = lib.mkMerge [
             {
-              nixpkgs.overlays = setupConfig.overlays;
+              nixpkgs.overlays = setupConfig.nixpkgs.overlays;
               networking.hostName = lib.mkDefault setupConfig.hostname;
             }
 
@@ -429,6 +401,7 @@ in
           ./shared/config-options.nix
           ./shared/nixvim-instance-options.nix
           ./shared/home-manager-users.nix
+          ./shared/nixpkgs-options.nix
           configType
         ];
       });
@@ -453,26 +426,29 @@ in
             modules = [
               inputs.nur.nixosModules.nur
             ];
-            overlays = [
-              # Neovim nightly!
-              inputs.neovim-nightly-overlay.overlays.default
+            nixpkgs = {
+              branch = "nixos-unstable";
+              overlays = [
+                # Neovim nightly!
+                inputs.neovim-nightly-overlay.overlays.default
 
-              # Emacs unstable version!
-              inputs.emacs-overlay.overlays.default
+                # Emacs unstable version!
+                inputs.emacs-overlay.overlays.default
 
-              # Helix master!
-              inputs.helix-editor.overlays.default
+                # Helix master!
+                inputs.helix-editor.overlays.default
 
-              # Access to NUR.
-              inputs.nur.overlay
-            ];
+                # Access to NUR.
+                inputs.nur.overlay
+              ];
+            };
           };
 
           server = {
             systems = [ "x86_64-linux" "aarch64-linux" ];
             domain = "work.example.com";
             formats = [ "do" "linode" ];
-            nixpkgsBranch = "nixos-unstable-small";
+            nixpkgs.branch = "nixos-unstable-small";
             deploy = {
               autoRollback = true;
               magicRollback = true;

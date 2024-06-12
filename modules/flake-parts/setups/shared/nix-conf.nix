@@ -4,7 +4,7 @@
 
 let
   inputs' = inputs // {
-    nixpkgs = inputs.${config.nixpkgsBranch};
+    nixpkgs = inputs.${config.nixpkgs.branch};
     home-manager = inputs.${config.homeManagerBranch};
   };
 in
