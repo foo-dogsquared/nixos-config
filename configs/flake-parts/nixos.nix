@@ -61,7 +61,7 @@
       # TODO: Remove extra newlines that are here for whatever reason.
       #{{{
       void = {
-        nixpkgsBranch = "nixos-unstable";
+        nixpkgs.branch = "nixos-unstable";
         systems = [ "x86_64-linux" ];
         formats = [ "vm" ];
       };
@@ -69,14 +69,14 @@
 
       # The barely customized non-graphical installer.
       bootstrap = {
+        nixpkgs.branch = "nixos-unstable-small";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso" ];
-        nixpkgsBranch = "nixos-unstable-small";
       };
 
       # The barely customized graphical installer.
       graphical-installer = {
-        nixpkgsBranch = "nixos-unstable";
+        nixpkgs.branch = "nixos-unstable";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso-graphical" ];
         diskoConfigs = [ "external-hdd" ];
@@ -85,12 +85,14 @@
 
       # The WSL system (that is yet to be used).
       winnowing = {
-        nixpkgsBranch = "nixos-unstable";
+        nixpkgs = {
+          branch = "nixos-unstable";
+          overlays = [
+            inputs.neovim-nightly-overlay.overlays.default
+          ];
+        };
         systems = [ "x86_64-linux" ];
         formats = null;
-        overlays = [
-          inputs.neovim-nightly-overlay.overlays.default
-        ];
         modules = [
           # Well, well, well...
           inputs.nixos-wsl.nixosModules.default
