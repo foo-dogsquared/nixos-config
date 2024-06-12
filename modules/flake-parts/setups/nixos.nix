@@ -143,7 +143,9 @@ let
       };
   };
 
-  configType = { options, config, name, lib, ... }: {
+  configType = { options, config, name, lib, ... }: let
+    setupConfig = config;
+  in {
     options = {
       formats = lib.mkOption {
         type = with lib.types; nullOr (listOf str);
@@ -255,7 +257,6 @@ let
           let
             inherit (config.home-manager) nixpkgsInstance;
 
-            setupConfig = config;
             hasHomeManagerUsers = config.home-manager.users != { };
             isNixpkgs = state: hasHomeManagerUsers && nixpkgsInstance == state;
           in
@@ -333,9 +334,6 @@ let
       # Next, we include the chosen NixVim configuration into NixOS.
       (lib.mkIf (config.nixvim.instance != null)
         (
-          let
-            setupConfig = config;
-          in
           { lib, ... }: {
             imports = [ inputs.${config.nixvim.branch}.nixosModules.nixvim ];
 
@@ -364,9 +362,6 @@ let
 
       # Setting up the typical configuration.
       (
-        let
-          setupConfig = config;
-        in
         { config, lib, ... }: {
           config = lib.mkMerge [
             {
