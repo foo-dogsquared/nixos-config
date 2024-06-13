@@ -20,9 +20,9 @@ in
   # with the home-manager flake-parts module where it also shares the Nix
   # configuration submodule. Without this option, it would not work (or we
   # could just rename the options from the home-manager module).
-  options.homeManagerBranch = options.home-manager.branch // {
-    default = config.home-manager.branch;
-  };
+  imports = [
+    (lib.mkAliasOptionModule [ "homeManagerBranch" ] [ "home-manager" "branch" ])
+  ];
 
   options.home-manager = {
     branch = lib.mkOption {

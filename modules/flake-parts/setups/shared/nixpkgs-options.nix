@@ -3,9 +3,9 @@
 {
   # A compatibility option while the newer iteration of configuring nixpkgs
   # inside our internal flake-parts module is in progress.
-  options.nixpkgsBranch = options.nixpkgs.branch // {
-    default = config.nixpkgs.branch;
-  };
+  imports = [
+    (lib.mkAliasOptionModule [ "nixpkgsBranch" ] [ "nixpkgs" "branch" ])
+  ];
 
   options.nixpkgs = {
     branch = lib.mkOption {
