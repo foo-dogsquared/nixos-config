@@ -1,5 +1,4 @@
-{ lib, pkgs, ... }: {
-
+{ config, lib, pkgs, ... }: {
   # Set the package for generating the configuration.
   nix.package = lib.mkDefault pkgs.nixStable;
 
@@ -21,7 +20,9 @@
     #
     # Since we're using flakes to make this possible, we need it. Plus, the
     # UX of Nix CLI is becoming closer to Guix's which is a nice bonus.
-    experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+    experimental-features =
+      [ "nix-command" "flakes" ]
+      ++ lib.optionals (lib.versionOlder config.nix.package.version "2.22.0") [ "repl-flake" ];
     auto-optimise-store = lib.mkDefault true;
     flake-registry = "";
   };
