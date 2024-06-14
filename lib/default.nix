@@ -1,7 +1,9 @@
-# The entrypoint for our custom library set. Take note, this is modularly
-# included as part of the environment so we cannot have any functions or
-# references that could make the evaluation go in an infinite recursion such as
-# a function that generates a valid nixpkgs module.
+# The entrypoint for our custom library set.
+#
+# Take note, this is modularly included as part of the environment so we cannot
+# have any functions or references that could make the evaluation go in an
+# infinite recursion such as a function that generates a valid nixpkgs module.
+# If you have to add those functions, you'll have to add them in configUtils.
 { pkgs }:
 
 pkgs.lib.makeExtensible
@@ -13,6 +15,6 @@ pkgs.lib.makeExtensible
     trivial = callLib ./trivial.nix;
     data = callLib ./data.nix;
 
-    inherit (self.trivial) countAttrs getConfig getUser;
+    inherit (self.trivial) countAttrs;
     inherit (self.data) importYAML renderTeraTemplate;
   })

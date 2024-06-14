@@ -14,26 +14,11 @@
     lib.count (attr: pred attr.name attr.value)
       (lib.mapAttrsToList lib.nameValuePair attrs);
 
-  /* Returns the file path of the given config of the given environment.
-
-     Type: getConfig :: String -> String -> Path
+  /* Filters and groups the attribute set into two separate attribute.
 
      Example:
-       getConfig "home-manager" "foo-dogsquared"
-       => ../configs/home-manager/foo-dogsquared
+       filterAttrs' (n: v: v == 4) { a = 4; b = 2; c = 6; }
+       => { ok = { a = 4; }; reject = { b = 2; c = 6; }; }
   */
-  getConfig = type: config: ../configs/${type}/${config};
-
-
-  /* Returns the file path of the given user subpart of the given
-     environment. Only certain environments such as NixOS have this type of
-     setup.
-
-     Type: getConfig :: String -> String -> Path
-
-     Example:
-       getUser "nixos" "foo-dogsquared"
-       => ../configs/nixos/_users/foo-dogsquared
-  */
-  getUser = type: user: ../configs/${type}/_users/${user};
+  filterAttrs' = f: attrs: { };
 }
