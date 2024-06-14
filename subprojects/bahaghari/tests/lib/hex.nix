@@ -56,6 +56,11 @@ lib.runTests {
     expected = [ "A" "B" "C" "D" "E" "F" "10" "11" ];
   };
 
+  testCreateHexRange2 = {
+    expr = self.hex.range 64 76;
+    expected = [ "40" "41" "42" "43" "44" "45" "46" "47" "48" "49" "4A" "4B" "4C" ];
+  };
+
   testCreateHexWithHigherStart = {
     expr = self.hex.range 49 17;
     expected = [ ];

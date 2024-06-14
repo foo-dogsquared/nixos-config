@@ -96,6 +96,16 @@ in lib.runTests {
     expected = "173A69";
   };
 
+  testsToHex3 = {
+    expr = self.colors.rgb.toHex (RGB {
+      r = 23;
+      g = 58;
+      b = 105;
+      a = 21;
+    });
+    expected = "173A69";
+  };
+
   testsToHexVariant = {
     expr = self.colors.rgb.toHex' (RGB {
       r = 255;
