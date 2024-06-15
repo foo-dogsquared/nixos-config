@@ -212,6 +212,61 @@ lib.runTests {
     expected = 1.4142135624;
   };
 
+  testMathMod = {
+    expr = self.math.mod' 65.5 3;
+    expected = 2.5;
+  };
+
+  testMathMod2 = {
+    expr = self.math.mod' 1.5 3;
+    expected = 1.5;
+  };
+
+  testMathMod3 = {
+    expr = self.math.mod' 4.25 2;
+    expected = 0.25;
+  };
+
+  testMathMod4 = {
+    expr = self.math.mod' 6 6;
+    expected = 0;
+  };
+
+  testMathMod5 = {
+    expr = self.math.mod' 6.5 6;
+    expected = 0.5;
+  };
+
+  testMathMod6 = {
+    expr = self.math.mod' 7856.5 20;
+    expected = 16.5;
+  };
+
+  testMathMod7 = {
+    expr = self.math.mod' 7568639.2 45633;
+    expected = 39194.200000000186;
+  };
+
+  testMathModBothPositive = {
+    expr = self.math.mod' 54.5 20.5;
+    expected = 13.5;
+  };
+
+  testMathModNegativeBase = {
+    expr = self.math.mod' (-54.5) 20.5;
+    expected = -13.5;
+  };
+
+  testMathModNegativeNumber = {
+    expr = self.math.mod' 54.5 (-20.5);
+    expected = 13.5;
+  };
+
+  testMathModBothNegatives = {
+    expr = self.math.mod' (-54.5) (-20.5);
+    expected = -13.5;
+  };
+
   testMathExp = {
     expr = self.math.exp 1;
     expected = 2.7182818284590452353602874713527;

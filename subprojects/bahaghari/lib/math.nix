@@ -238,6 +238,44 @@ rec {
     in
       floor (difference + 0.5) * nearest;
 
+  /* Similar to the nixpkgs' `trivial.mod` but retain the decimal values. This
+     is just an approximation from ECMAScript's implementation of the modulo
+     operator (%).
+
+     Type: mod' :: Number -> Number -> Number
+
+     Example:
+       mod' 4.25 2
+       => 0.25
+
+       mod' 1.5 2
+       => 1.5
+
+       mod' 65 5
+       => 0
+
+       mod' (-54) 4
+       => -2
+
+       mod' (-54) (-4)
+       => -2
+  */
+  mod' = base: number:
+    let
+      base' = abs base;
+      number' = abs number;
+      difference = number' * ((floor base' / (floor number')) + 1);
+
+      result = number' - (difference - base');
+    in
+      if number' > base' then
+        base
+      else
+        if base < 0 then
+          -(result)
+        else
+          result;
+
   /* Adds all of the given items on the list starting from a sum of zero.
 
      Type: summate :: List[Number] -> Number
