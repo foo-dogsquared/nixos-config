@@ -254,27 +254,27 @@ rec {
 
   /* Similar to the nixpkgs' `trivial.mod` but retain the decimal values. This
      is just an approximation from ECMAScript's implementation of the modulo
-     operator (%).
+     operator (%) which is more like a remainder operator.
 
-     Type: mod' :: Number -> Number -> Number
+     Type: remainder :: Number -> Number -> Number
 
      Example:
-       mod' 4.25 2
+       remainder 4.25 2
        => 0.25
 
-       mod' 1.5 2
+       remainder 1.5 2
        => 1.5
 
-       mod' 65 5
+       remainder 65 5
        => 0
 
-       mod' (-54) 4
+       remainder (-54) 4
        => -2
 
-       mod' (-54) (-4)
+       remainder (-54) (-4)
        => -2
   */
-  mod' = base: number:
+  remainder = base: number:
     let
       base' = abs base;
       number' = abs number;

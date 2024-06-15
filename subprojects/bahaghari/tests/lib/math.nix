@@ -227,63 +227,64 @@ lib.runTests {
     expected = 1.4142135624;
   };
 
-  testMathMod = {
-    expr = self.math.mod' 65.5 3;
+  testMathRemainder = {
+    expr = self.math.remainder 65.5 3;
     expected = 2.5;
   };
 
-  testMathMod2 = {
-    expr = self.math.mod' 1.5 3;
+  testMathRemainder2 = {
+    expr = self.math.remainder 1.5 3;
     expected = 1.5;
   };
 
-  testMathMod3 = {
-    expr = self.math.mod' 4.25 2;
+  testMathRemainder3 = {
+    expr = self.math.remainder 4.25 2;
     expected = 0.25;
   };
 
-  testMathMod4 = {
-    expr = self.math.mod' 6 6;
+  testMathRemainder4 = {
+    expr = self.math.remainder 6 6;
     expected = 0;
   };
 
-  testMathMod5 = {
-    expr = self.math.mod' 6.5 6;
+  testMathRemainder5 = {
+    expr = self.math.remainder 6.5 6;
     expected = 0.5;
   };
 
-  testMathMod6 = {
-    expr = self.math.mod' 7856.5 20;
+  testMathRemainder6 = {
+    expr = self.math.remainder 7856.5 20;
     expected = 16.5;
   };
 
-  testMathMod7 = {
-    expr = self.math.mod' 7568639.2 45633;
+  # Computers and their quirky floating-values implementations...
+  testMathRemainder7 = {
+    expr = self.math.remainder 7568639.2 45633;
     expected = 39194.200000000186;
   };
 
-  testMathMod8 = {
-    expr = self.math.mod' 567.5 3.5;
+  testMathRemainder8 = {
+    expr = self.math.remainder 567.5 3.5;
     expected = 0.5;
   };
 
-  testMathModBothPositive = {
-    expr = self.math.mod' 54.5 20.5;
+  testMathRemainderBothPositive = {
+    expr = self.math.remainder 54.5 20.5;
     expected = 13.5;
   };
 
-  testMathModNegativeBase = {
-    expr = self.math.mod' (-54.5) 20.5;
+  testMathRemainderNegativeBase = {
+    expr = self.math.remainder (-54.5) 20.5;
     expected = -13.5;
   };
 
-  testMathModNegativeNumber = {
-    expr = self.math.mod' 54.5 (-20.5);
+  testMathRemainderNegativeNumber = {
+    expr = self.math.remainder 54.5 (-20.5);
     expected = 13.5;
   };
 
-  testMathModBothNegatives = {
-    expr = self.math.mod' (-54.5) (-20.5);
+  testMathRemainderBothNegatives = {
+    expr = self.math.remainder (-54.5) (-20.5);
     expected = -13.5;
   };
 
