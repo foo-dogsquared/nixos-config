@@ -253,8 +253,8 @@ rec {
       floor (difference + 0.5) * nearest;
 
   /* Similar to the nixpkgs' `trivial.mod` but retain the decimal values. This
-     is just an approximation from ECMAScript's implementation of the modulo
-     operator (%) which is more like a remainder operator.
+     is just an approximation from ECMAScript's implementation of the remainder
+     operator.
 
      Type: remainder :: Number -> Number -> Number
 
@@ -274,20 +274,11 @@ rec {
        remainder (-54) (-4)
        => -2
   */
-  remainder = base: number:
+  remainder = dividend: divisor:
     let
-      base' = abs base;
-      number' = abs number;
-      difference = number' * ((floor (base' / number')) + 1);
-
-      result = abs (number' - (difference - base'));
+      quotient = dividend / divisor;
     in
-      if number' > base'
-      then base
-      else
-        if base < 0
-        then -(result)
-        else result;
+      dividend - ((floor quotient) * divisor);
 
   /* Adds all of the given items on the list starting from a sum of zero.
 

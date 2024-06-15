@@ -268,22 +268,22 @@ lib.runTests {
     expected = 0.5;
   };
 
-  testMathRemainderBothPositive = {
+  testMathRemainderPositiveOperands = {
     expr = self.math.remainder 54.5 20.5;
     expected = 13.5;
   };
 
-  testMathRemainderNegativeBase = {
+  testMathRemainderNegativeDividend = {
     expr = self.math.remainder (-54.5) 20.5;
-    expected = -13.5;
+    expected = 7;
   };
 
-  testMathRemainderNegativeNumber = {
+  testMathRemainderNegativeDivisor = {
     expr = self.math.remainder 54.5 (-20.5);
-    expected = 13.5;
+    expected = -7;
   };
 
-  testMathRemainderBothNegatives = {
+  testMathRemainderNegativeOperands = {
     expr = self.math.remainder (-54.5) (-20.5);
     expected = -13.5;
   };
