@@ -157,6 +157,21 @@ lib.runTests {
     expected = false;
   };
 
+  testMathWithinRangeExclusive = {
+    expr = self.math.isWithinRange' 5 10 (-5);
+    expected = false;
+  };
+
+  testMathWithinRangeExclusive2 = {
+    expr = self.math.isWithinRange' 5 10 10;
+    expected = false;
+  };
+
+  testMathWithinRangeExclusive3 = {
+    expr = self.math.isWithinRange' (-100) 100 750;
+    expected = false;
+  };
+
   testMathFactorial = {
     expr = self.math.factorial 3;
     expected = 6;

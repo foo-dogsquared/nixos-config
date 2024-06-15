@@ -137,6 +137,20 @@ rec {
   isWithinRange = min: max: number:
     (lib.max number min) <= (lib.min number max);
 
+  /* Returns a boolean whether the given number is within the given (exclusive) range.
+
+     Type: isWithinRange :: Number -> Number -> Number -> Bool
+
+     Example:
+       isWithinRange 30 50 6
+       => false
+
+       isWithinRange 0 100 75
+       => true
+  */
+  isWithinRange' = min: max: number:
+    (lib.max number min) < (lib.min number max);
+
   /* Given a number, make it grow by given amount of percentage.
      A value of 100 should make the number doubled.
 
