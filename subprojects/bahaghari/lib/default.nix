@@ -34,6 +34,7 @@ pkgs.lib.makeExtensible
     # some unbeknownst and probably irrational reason.
     colors = {
       rgb = callLibs ./colors/rgb.nix;
+      hsl = callLibs ./colors/hsl.nix;
     };
 
     # Dedicated module sets are not supposed to have any of its functions as a
