@@ -71,14 +71,14 @@ in rec {
   toRgb = { h, s, l, ... }@color:
     let
       inherit (self.colors.rgb) RGB valueMax;
-      inherit (self.math) abs sub mod';
+      inherit (self.math) abs sub remainder round;
 
       l' = l / valueParamMax;
       s' = s / valueParamMax;
 
       # This may as well turn into Scheme code.
       C = (1 - (abs ((2 * l') - 1))) * s';
-      X = C * (1 - (abs (sub (mod' (h / 60.0) 2) 1)));
+      X = C * (1 - (abs (sub (remainder (h / 60.0) 2) 1)));
       m = l' - (C / 2);
 
       isHueWithin = min: max:
@@ -98,7 +98,7 @@ in rec {
           { r = C; g = 0; b = X; }
         else throw "WHAT IN THE HELL";
 
-      scaleValue = x: self.math.round ((x + m) * valueMax);
+      scaleValue = x: round ((x + m) * valueMax);
     in
       RGB {
         r = scaleValue rgb'.r;
