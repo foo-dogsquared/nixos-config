@@ -252,6 +252,23 @@ rec {
     in
       floor (difference + 0.5) * nearest;
 
+  /* Given a base and a modulus, returns the value of a modulo operation.
+
+     Type: mod :: Number -> Number -> Number
+
+     Example:
+       mod 5 4
+       => 1
+
+       mod 1245 4.5
+       => 3
+
+       mod 19 (-12)
+       => -5
+  */
+  mod = base: modulus:
+    remainder ((remainder base modulus) + modulus) modulus;
+
   /* Similar to the nixpkgs' `trivial.mod` but retain the decimal values. This
      is just an approximation from ECMAScript's implementation of the remainder
      operator.

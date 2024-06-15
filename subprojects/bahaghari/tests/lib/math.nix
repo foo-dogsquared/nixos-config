@@ -227,6 +227,36 @@ lib.runTests {
     expected = 1.4142135624;
   };
 
+  testMathMod = {
+    expr = self.math.mod 5 4;
+    expected = 1;
+  };
+
+  testMathMod2 = {
+    expr = self.math.mod 1245 4.5;
+    expected = 3;
+  };
+
+  testMathModPositiveOperands = {
+    expr = self.math.mod 19 12;
+    expected = 7;
+  };
+
+  testMathModNegativeDividend = {
+    expr = self.math.mod (-19) 12;
+    expected = 5;
+  };
+
+  testMathModNegativeDivisor = {
+    expr = self.math.mod 19 (-12);
+    expected = -5;
+  };
+
+  testMathModNegativeOperands = {
+    expr = self.math.mod (-19) (-12);
+    expected = -7;
+  };
+
   testMathRemainder = {
     expr = self.math.remainder 65.5 3;
     expected = 2.5;
