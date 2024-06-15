@@ -278,17 +278,16 @@ rec {
     let
       base' = abs base;
       number' = abs number;
-      difference = number' * ((floor base' / (floor number')) + 1);
+      difference = number' * ((floor (base' / number')) + 1);
 
-      result = number' - (difference - base');
+      result = abs (number' - (difference - base'));
     in
-      if number' > base' then
-        base
+      if number' > base'
+      then base
       else
-        if base < 0 then
-          -(result)
-        else
-          result;
+        if base < 0
+        then -(result)
+        else result;
 
   /* Adds all of the given items on the list starting from a sum of zero.
 

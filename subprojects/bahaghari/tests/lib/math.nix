@@ -262,6 +262,11 @@ lib.runTests {
     expected = 39194.200000000186;
   };
 
+  testMathMod8 = {
+    expr = self.math.mod' 567.5 3.5;
+    expected = 0.5;
+  };
+
   testMathModBothPositive = {
     expr = self.math.mod' 54.5 20.5;
     expected = 13.5;
