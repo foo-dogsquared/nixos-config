@@ -44,13 +44,14 @@ rec {
        => 1296
   */
   pow = base: exponent:
-    # I'll just make this as a tail recursive function instead.
+    # Just to be a contrarian, I'll just make this as a tail recursive function
+    # instead lol.
     let
       absValue = abs exponent;
-      iter = product: counter: max-count:
-        if counter > max-count
+      iter = product: counter: maxCount:
+        if counter > maxCount
         then product
-        else iter (product * base) (counter + 1) max-count;
+        else iter (product * base) (counter + 1) maxCount;
       value = iter 1 1 absValue;
     in
     if exponent < 0 then (1 / value) else value;
@@ -179,10 +180,7 @@ rec {
        => 1
   */
   grow' = min: max: value: number:
-    let
-      res = grow number value;
-    in
-      lib.min max (lib.max res min);
+    self.trivial.clamp min max (grow number value);
 
   /* Given a number, return its value by the given percentage.
 
@@ -220,8 +218,7 @@ rec {
        round 2.7
        => 3
   */
-  round = number:
-    round' 0 number;
+  round = round' 0;
 
   /* Given a tens place (10 ^ n) and a number, round the nearest integer to its
      given place.
