@@ -45,7 +45,7 @@
 
       # The typical user in server environments.
       plover = {
-        nixpkgsBranch = "nixos-unstable";
+        nixpkgs.branch = "nixos-unstable";
         homeManagerBranch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];
       };

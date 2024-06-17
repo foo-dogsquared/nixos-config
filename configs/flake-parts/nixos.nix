@@ -10,7 +10,7 @@
     configs = {
       # The main desktop.
       ni = {
-        nixpkgsBranch = "nixos-unstable";
+        nixpkgs.branch = "nixos-unstable";
         systems = [ "x86_64-linux" ];
         formats = null;
         modules = [
@@ -44,6 +44,8 @@
 
       # A remote server.
       plover = {
+        nixpkgs.branch = "nixos-unstable";
+        home-manager.branch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];
         formats = null;
         domain = "foodogsquared.one";
@@ -62,6 +64,7 @@
       #{{{
       void = {
         nixpkgs.branch = "nixos-unstable";
+        home-manager.branch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];
         formats = [ "vm" ];
       };
@@ -77,6 +80,7 @@
       # The barely customized graphical installer.
       graphical-installer = {
         nixpkgs.branch = "nixos-unstable";
+        home-manager.branch = "home-manager-unstable";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso-graphical" ];
         diskoConfigs = [ "external-hdd" ];
@@ -91,6 +95,7 @@
             inputs.neovim-nightly-overlay.overlays.default
           ];
         };
+        home-manager.branch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];
         formats = null;
         modules = [
