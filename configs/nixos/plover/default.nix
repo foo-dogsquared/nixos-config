@@ -1,4 +1,4 @@
-{ config, lib, pkgs, foodogsquaredLib, foodogsquaredModulesPath, ... }:
+{ config, lib, pkgs, foodogsquaredLib, foodogsquaredUtils, foodogsquaredModulesPath, ... }:
 
 {
   imports = [
@@ -8,8 +8,8 @@
     ./modules/profiles/hetzner-cloud-cx21.nix
 
     # The users for this host.
-    (foodogsquaredLib.getUser "nixos" "admin")
-    (foodogsquaredLib.getUser "nixos" "plover")
+    (foodogsquaredUtils.getUser "nixos" "admin")
+    (foodogsquaredUtils.getUser "nixos" "plover")
 
     "${foodogsquaredModulesPath}/profiles/headless.nix"
     "${foodogsquaredModulesPath}/profiles/hardened.nix"
