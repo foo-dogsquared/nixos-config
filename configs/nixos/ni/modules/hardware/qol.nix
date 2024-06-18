@@ -24,9 +24,6 @@ in
       ];
     };
 
-    # Make your CPU more useful.
-    services.auto-cpufreq.enable = true;
-
     # Extend the life of an SSD.
     services.fstrim.enable = true;
   };
