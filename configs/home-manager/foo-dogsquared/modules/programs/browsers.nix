@@ -10,6 +10,8 @@ in
     firefox.enable = lib.mkEnableOption "foo-dogsquared's Firefox setup";
     brave.enable = lib.mkEnableOption "foo-dogsquared's Brave setup";
     misc.enable = lib.mkEnableOption "foo-dogsquared's miscellaneous browsers setup";
+
+    plugins.firenvim.enable = lib.mkEnableOption "setting up Firenvim";
   };
 
   config = lib.mkMerge [
@@ -215,7 +217,7 @@ in
     (lib.mkIf cfg.misc.enable {
       home.packages = with pkgs; [
         google-chrome
-        nyxt
+        #nyxt
       ];
 
       services.bleachbit.cleaners = [
@@ -229,5 +231,25 @@ in
         "google_chrome.vacuum"
       ];
     })
+
+    (lib.mkIf cfg.plugins.firenvim.enable
+      (let
+        supportedBrowsers = [
+          "brave"
+          "chromium"
+          "google-chrome"
+          "vivaldi"
+        ];
+        enableSupportedBrowser = acc: name: acc // {
+          programs.${name}.extensions = [
+            { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; }
+          ];
+        };
+      in
+      lib.foldl' enableSupportedBrowser { } supportedBrowsers // {
+        programs.firefox.profiles.personal.extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          firenvim
+        ];
+      }))
   ];
 }
