@@ -35,16 +35,16 @@ let
         type = with lib.types; functionTo (attrsOf anything);
         default = homeenv: {
           home = {
-            sshUser = username;
-            user = username;
+            sshUser = homeenv.name;
+            user = homeenv.name;
             path = inputs.deploy.lib.${homeenv.system}.activate.home-manager homeenv.config;
           };
         };
         defaultText = lib.literalExpression ''
           homeenv: {
             home = {
-              sshUser = "$USERNAME";
-              user = "$USERNAME";
+              sshUser = "''${homeenv.name}";
+              user = "''${homeenv.name}";
               path = <deploy-rs>.lib.''${homeenv.system}.activate.home-manager homeenv.config;
             };
           }
