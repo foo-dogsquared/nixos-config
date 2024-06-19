@@ -54,7 +54,7 @@ in
       home.packages = with pkgs; [
         audacity # EGADS!!!
         musescore # You won't find muses to score, only music: a common misconception.
-        #zrythm # The freer FL Studio (if you're sailing by the high seven seas).
+        zrythm # The freer FL Studio (if you're sailing by the high seven seas).
         supercollider # Not to be confused with the other Super Collider.
         sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
 
