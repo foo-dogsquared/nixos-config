@@ -32,9 +32,11 @@
 
       # Use my desktop environment configuration without the apps just to make the
       # closure size smaller.
-      workflows.workflows.a-happy-gnome = {
-        enable = true;
-        extraApps = [ ];
+      workflows = {
+        enable = [ "a-happy-gnome" ];
+        workflows.a-happy-gnome = {
+          extraApps = lib.mkForce [ ];
+        };
       };
 
       # Install the web browser of course. What would be a graphical installer
@@ -62,10 +64,10 @@
     }
 
     (lib.mkIf
-      (foodogsquaredLib.isFormat "graphicalIsoImage") {
+      (foodogsquaredLib.nixos.isFormat config "isoImage") {
       isoImage = {
         isoBaseName = config.networking.hostName;
-        edition = "A Happy GNOME";
+        edition = "a-happy-gnome";
 
         squashfsCompression = "zstd -Xcompression-level 12";
       };
