@@ -24,6 +24,7 @@ lib.makeScope newScope (self: {
   pop-launcher-plugin-duckduckgo-bangs =
     callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
   pop-launcher-plugin-jetbrains = callPackage ./pop-launcher-plugin-jetbrains { };
+  pigeon-mail = callPackage ./pigeon-mail { };
   swh = callPackage ./software-heritage { python3Packages = python310Packages; };
   speki = callPackage ./speki { };
   tic-80 = callPackage ./tic-80 { };
