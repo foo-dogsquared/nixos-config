@@ -7,6 +7,9 @@ let
     nixpkgs = inputs.${config.nixpkgs.branch};
     home-manager = inputs.${config.homeManagerBranch};
   };
+
+  flakeInputName = name:
+    if name == "self" then "config" else name;
 in
 {
   config.modules = [(
@@ -17,19 +20,12 @@ in
       nix.registry =
         lib.mapAttrs'
           (name: flake:
-            let
-              name' = if (name == "self") then "config" else name;
-            in
-            lib.nameValuePair name' { inherit flake; })
+            lib.nameValuePair (flakeInputName name) { inherit flake; })
           inputs';
 
       nix.settings.nix-path =
         (lib.mapAttrsToList
-          (name: source:
-            let
-              name' = if (name == "self") then "config" else name;
-            in
-            "${name'}=${source}")
+          (name: source: "${flakeInputName name}=${source}")
           inputs'
         ++ [
           "/nix/var/nix/profiles/per-user/root/channels"
