@@ -1,0 +1,12 @@
+= foodogsquared custom nixpkgs library
+:toc:
+
+
+This is my custom library set of functions to be included within each of the environment.
+They are included in each of the environment as `foodogsquaredLib` module argument.
+It is similarly structured from nixpkgs (though it is directly copied after I've implemented how Bahaghari structures their library set) where it is an extensible fixed point making it easy to use after adding new functions into the set AND extend it if you want to through the `$LIB.extend` function.
+The structure is even copied from nixpkgs where each of the subset is in the fixed point also stored with the same name.
+
+The only exception to this are the environment-specific subsets where they are only intended to be imported into NixOS, home-manager, and the like.
+This is in the link:./env-specific[`./env-specific` directory].
+Furthermore, env-specific subsets have a lesser restriction of allowing the configuration object to be included in there (though it is discouraged to use it but that's on a case-by-case basis).
