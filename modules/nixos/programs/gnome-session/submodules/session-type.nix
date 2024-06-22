@@ -1,6 +1,7 @@
-{ name, config, lib, utils, ... }:
+{ name, config, lib, utils, glibKeyfileFormat, ... }:
 
 let
+
   # For an updated list, see `menu/menu-spec.xml` from
   # https://gitlab.freedesktop.org/xdg/xdg-specs.
   validDesktopNames = [
@@ -136,6 +137,25 @@ in
       ];
     };
 
+    settings = lib.mkOption {
+      type = glibKeyfileFormat.type;
+      description = ''
+        Settings to be included to the gnome-session keyfile of the session.
+
+        Generally, you won't need to set this since the module will set the
+        common settings such as the `RequiredComponents=` key.
+      '';
+      example = lib.literalExpression ''
+        {
+          # A helper script to check if the session is runnable.
+          IsRunnableHelper = "''${lib.getExe' pkgs.niri "niri"} --validate config";
+
+          # A fallback session in case it failed.
+          FallbackSession = "gnome";
+        }
+      '';
+    };
+
     requiredComponents = lib.mkOption {
       type = with lib.types; listOf str;
       description = ''
@@ -204,6 +224,11 @@ in
     targetUnit = {
       overrideStrategy = lib.mkForce "asDropin";
       wants = lib.mkDefault (builtins.map (c: "${c}.target") config.requiredComponents);
+    };
+
+    settings."GNOME Session" = {
+      Name = "${config.fullName} session";
+      RequiredComponents = config.requiredComponents;
     };
   };
 }

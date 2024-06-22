@@ -8,15 +8,22 @@
 let
   cfg = config.programs.gnome-session;
 
+  glibKeyfileFormat = pkgs.formats.ini {
+    listsAsDuplicateKeys = false;
+    mkKeyValue =
+      let
+        mkValueString = lib.generators.mkKeyValueDefault { };
+      in
+        k: v:
+          if lib.isList v then lib.concatStringsSep ";" v
+          else "${k}=${mkValueString v}";
+  };
+
   # The bulk of the work. Pretty much the main purpose of this module.
   sessionPackages = lib.mapAttrsToList
     (_: session:
       let
-        gnomeSession = ''
-          [GNOME Session]
-          Name=${session.fullName} session
-          RequiredComponents=${lib.concatStringsSep ";" session.requiredComponents};
-        '';
+        gnomeSession = glibKeyfileFormat.generate "session-${session.name}" session.settings;
 
         displaySession = ''
           [Desktop Entry]
@@ -50,13 +57,13 @@ let
               '')
             session.components;
       in
-      pkgs.runCommandLocal "${session.name}-desktop-session-files"
+      pkgs.runCommand "${session.name}-desktop-session-files"
         {
           env = {
             inherit (session) fullName;
           };
           inherit displaySession gnomeSession sessionScript;
-          passAsFile = [ "displaySession" "gnomeSession" "sessionScript" ];
+          passAsFile = [ "displaySession" "sessionScript" ];
           passthru.providedSessions = [ session.name ];
         }
         ''
@@ -65,8 +72,7 @@ let
           substituteAllInPlace "$SESSION_SCRIPT"
 
           GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${session.name}.session"
-          install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
-          substituteAllInPlace "$GNOME_SESSION_FILE"
+          install -Dm0644 "$gnomeSession" "$GNOME_SESSION_FILE"
 
           DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${session.name}.desktop"
           install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
@@ -116,7 +122,7 @@ in
 
     sessions = lib.mkOption {
       type = with lib.types; attrsOf (submoduleWith {
-        specialArgs = { inherit utils; };
+        specialArgs = { inherit utils glibKeyfileFormat; };
         modules = [ ./submodules/session-type.nix ];
       });
       description = ''
