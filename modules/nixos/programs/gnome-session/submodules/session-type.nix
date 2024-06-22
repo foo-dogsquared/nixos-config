@@ -78,16 +78,6 @@ in
       example = [ "GNOME" "Garden" ];
     };
 
-    display = lib.mkOption {
-      type = with lib.types; listOf (enum [ "wayland" "x11" ]);
-      description = ''
-        A list of display server protocols supported by the desktop
-        environment.
-      '';
-      default = [ "wayland" ];
-      example = [ "wayland" "x11" ];
-    };
-
     description = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = ''

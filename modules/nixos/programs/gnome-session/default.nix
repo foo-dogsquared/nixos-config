@@ -39,32 +39,6 @@ let
           ${lib.getExe' cfg.package "gnome-session"} ${lib.escapeShellArgs session.extraArgs}
         '';
 
-        displayScripts =
-          let
-            hasMoreDisplays = protocol: lib.optionalString (lib.length session.display > 1) "fullName='${session.fullName} (${protocol})'";
-          in
-          {
-            wayland = ''
-              (
-                DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${session.name}.desktop"
-                install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
-                ${hasMoreDisplays "Wayland"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
-              )
-            '';
-            x11 = ''
-              (
-                DISPLAY_SESSION_FILE="$out/share/xsessions/${session.name}.desktop"
-                install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
-                ${hasMoreDisplays "X11"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
-              )
-            '';
-          };
-
-        installDesktopSessionFiles = builtins.map
-          (display:
-            displayScripts.${display})
-          session.display;
-
         installDesktopFiles =
           lib.mapAttrsToList
             (name: component:
@@ -94,7 +68,8 @@ let
           install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
           substituteAllInPlace "$GNOME_SESSION_FILE"
 
-          ${lib.concatStringsSep "\n" installDesktopSessionFiles}
+          DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${session.name}.desktop"
+          install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
 
           ${lib.concatStringsSep "\n" installDesktopFiles}
         ''
