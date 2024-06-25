@@ -8,15 +8,33 @@
 let
   cfg = config.programs.gnome-session;
 
+  # The gnome-session config files uses one from GLib. See the following link
+  # at <https://docs.gtk.org/glib/struct.KeyFile.html> for details about the
+  # keyfile formatting and possibly the Desktop Entry specification at
+  # <https://freedesktop.org/wiki/Specifications/desktop-entry-spec>.
   glibKeyfileFormat = pkgs.formats.ini {
     listsAsDuplicateKeys = false;
-    mkKeyValue =
+    mkKeyValue = lib.generators.mkKeyValueDefault {
+      mkValueString = v:
+        if lib.isList v then
+          lib.concatStringsSep ";" v
+        else
+          lib.generators.mkValueStringDefault { } v;
+    } "=";
+  } // {
+    type = with lib.types;
       let
-        mkValueString = lib.generators.mkKeyValueDefault { };
+        valueType = oneOf [
+          bool
+          float
+          int
+          str
+          (listOf valueType)
+        ] // {
+          description = "GLib keyfile atom (null, bool, int, float, string, or a list of the previous atoms)";
+        };
       in
-        k: v:
-          if lib.isList v then lib.concatStringsSep ";" v
-          else "${k}=${mkValueString v}";
+        attrsOf (attrsOf valueType);
   };
 
   # The bulk of the work. Pretty much the main purpose of this module.
@@ -25,13 +43,14 @@ let
       let
         gnomeSession = glibKeyfileFormat.generate "session-${session.name}" session.settings;
 
+        # For now, we set this as a 
         displaySession = ''
           [Desktop Entry]
-          Name=@fullName@
+          Name=${session.fullName}
           Comment=${session.description}
           Exec="@out@/libexec/${session.name}-session"
           Type=Application
-          DesktopNames=${lib.concatStringsSep ";" session.desktopNames};
+          DesktopNames=${lib.concatStringsSep ";" session.desktopNames}
         '';
 
         sessionScript = ''
@@ -76,6 +95,7 @@ let
 
           DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${session.name}.desktop"
           install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
+          substituteAllInPlace "$DISPLAY_SESSION_FILE"
 
           ${lib.concatStringsSep "\n" installDesktopFiles}
         ''
@@ -122,7 +142,7 @@ in
 
     sessions = lib.mkOption {
       type = with lib.types; attrsOf (submoduleWith {
-        specialArgs = { inherit utils glibKeyfileFormat; };
+        specialArgs = { inherit utils glibKeyfileFormat pkgs; };
         modules = [ ./submodules/session-type.nix ];
       });
       description = ''

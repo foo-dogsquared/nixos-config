@@ -1,7 +1,6 @@
-{ name, config, lib, utils, glibKeyfileFormat, ... }:
+{ name, config, pkgs, lib, utils, glibKeyfileFormat, ... }:
 
 let
-
   # For an updated list, see `menu/menu-spec.xml` from
   # https://gitlab.freedesktop.org/xdg/xdg-specs.
   validDesktopNames = [
@@ -92,7 +91,7 @@ in
     components = lib.mkOption {
       type = with lib.types; attrsOf (submoduleWith {
         specialArgs = {
-          inherit utils;
+          inherit utils pkgs;
           session = {
             inherit (config) fullName desktopNames description;
             inherit name;
@@ -147,11 +146,13 @@ in
       '';
       example = lib.literalExpression ''
         {
-          # A helper script to check if the session is runnable.
-          IsRunnableHelper = "''${lib.getExe' pkgs.niri "niri"} --validate config";
+          "GNOME Session" = {
+            # A helper script to check if the session is runnable.
+            IsRunnableHelper = "''${lib.getExe' pkgs.niri "niri"} --validate config";
 
-          # A fallback session in case it failed.
-          FallbackSession = "gnome";
+            # A fallback session in case it failed.
+            FallbackSession = "gnome";
+          };
         }
       '';
     };
@@ -227,7 +228,7 @@ in
     };
 
     settings."GNOME Session" = {
-      Name = "${config.fullName} session";
+      Name = lib.mkDefault "${config.fullName} session";
       RequiredComponents = config.requiredComponents;
     };
   };
