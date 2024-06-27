@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, helpers, ... }:
 
 {
   imports = [ ./modules ];
@@ -41,8 +41,7 @@
       {
         mode = "n";
         key = "<leader>bd";
-        action = "vim.cmd.bdelete";
-        lua = true;
+        action = helpers.mkRaw "vim.cmd.bdelete";
         options.desc = "Delete current buffer";
       }
     ];

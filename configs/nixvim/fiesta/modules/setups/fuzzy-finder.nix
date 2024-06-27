@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, helpers, ... }:
 
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
@@ -31,26 +31,23 @@ in
       lib.mapAttrsToList mkTelescopeKeymap ({
         "A" = {
           options.desc = "Resume from last use";
-          action = "require('telescope.builtin').resume";
-          lua = true;
+          action = helpers.mkRaw "require('telescope.builtin').resume";
         };
         "b" = {
           options.desc = "List buffers";
-          action = "require('telescope.builtin').buffers";
-          lua = true;
+          action = helpers.mkRaw "require('telescope.builtin').buffers";
         };
         "f" = {
           options.desc = "Find files";
-          action = ''
+          action = helpers.mkRaw ''
             function()
               require('telescope.builtin').find_files { hidden = true }
             end
           '';
-          lua = true;
         };
         "F" = {
           options.desc = "Find files in current directory";
-          action = ''
+          action = helpers.mkRaw ''
             function()
               require('telescope.builtin').find_files {
                 cwd = require('telescope.utils').buffer_dir(),
@@ -58,34 +55,28 @@ in
               }
             end
           '';
-          lua = true;
         };
         "g" = {
           options.desc = "Find files tracked by Git";
-          action = "require('telescope.builtin').git_files";
-          lua = true;
+          action = helpers.mkRaw "require('telescope.builtin').git_files";
         };
         "G" = {
           options.desc = "Live grep for the whole project";
-          action = "require('telescope.builtin').live_grep";
-          lua = true;
+          action = helpers.mkRaw "require('telescope.builtin').live_grep";
         };
         "h" = {
           options.desc = "Find section from help tags";
-          action = "require('telescope.builtin').help_tags";
-          lua = true;
+          action = helpers.mkRaw "require('telescope.builtin').help_tags";
         };
         "m" = {
           options.desc = "Find manpage entries";
-          action = "require('telescope.builtin').man_pages";
-          lua = true;
+          action = helpers.mkRaw "require('telescope.builtin').man_pages";
         };
       }
       // lib.optionalAttrs nixvimCfg.setups.treesitter.enable {
         "t" = {
           options.desc = "List symbols from treesitter queries";
-          action = "require('telescope.builtin').treesitter";
-          lua = true;
+          action = helpers.mkRaw "require('telescope.builtin').treesitter";
         };
       });
   };
