@@ -313,4 +313,35 @@ rec {
        => 24
   */
   product = builtins.foldl' builtins.mul 1;
+
+  /* Given a number in radians, convert it to degrees.
+
+     Type: radiansToDegrees :: Number -> Number
+
+     Example:
+       radiansToDegrees bahaghariLib.math.constants.pi
+       => 180
+
+       radiansToDegrees 180
+       => 10313.240312355
+  */
+  radiansToDegrees = x:
+    x * 180.0 / constants.pi;
+
+  /* Given a number in degrees unit, convert it to radians.
+
+     Type: degreesToRadians :: Number -> Number
+
+     Example:
+       degreesToRadians 180
+       => 3.141592653589793238462643383279502884197
+
+       degreesToRadians 360
+       => 6.283185307
+
+       degreesToRadians 95
+       => 1.658062789
+  */
+  degreesToRadians = x:
+    x * constants.pi / 180.0;
 }

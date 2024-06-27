@@ -332,4 +332,34 @@ lib.runTests {
     expr = round' (self.math.exp 2);
     expected = 7.3890560989;
   };
+
+  testDegreesToRadians = {
+    expr = self.math.degreesToRadians 180;
+    expected = self.math.constants.pi;
+  };
+
+  testDegreesToRadians2 = {
+    expr = self.math.degreesToRadians 360;
+    expected = self.math.constants.pi * 2;
+  };
+
+  testDegreesToRadians3 = {
+    expr = self.math.round' (-5) (self.math.degreesToRadians 95);
+    expected = 1.65806;
+  };
+
+  testRadiansToDegrees = {
+    expr = self.math.radiansToDegrees self.math.constants.pi;
+    expected = 180;
+  };
+
+  testRadiansToDegrees2 = {
+    expr = self.math.round' (-3) (self.math.radiansToDegrees 180);
+    expected = 10313.24;
+  };
+
+  testRadiansToDegrees3 = {
+    expr = self.math.round' (-3) (self.math.radiansToDegrees 4.5);
+    expected = 257.831;
+  };
 }
