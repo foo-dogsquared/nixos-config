@@ -6,21 +6,23 @@
 {
   /* The build function for making simple and single executable
      wrappers similar to nixpkgs builders for various ecosystems (for example,
-     `buildGoPackage` and `buildRustPackage`). 
+     `buildGoPackage` and `buildRustPackage`).
   */
   mkWrapper = {
     arg0,
     executableName ? arg0,
-    makeWrapperArgs ? [ ],
+    isBinary ? true,
 
+    makeWrapperArgs ? [ ],
     nativeBuildInputs ? [ ],
     passthru ? { },
   }@args:
-    pkgs.runCommand "wrapper-manager-script-${arg0}" (
-      (builtins.removeAttrs args [ "executableName" "arg0" ])
+    pkgs.runCommand "wrapper-manager-script-${executableName}" (
+      (builtins.removeAttrs args [ "executableName" "arg0" "isBinary" ])
       // {
         inherit makeWrapperArgs;
-        nativeBuildInputs = nativeBuildInputs ++ [ pkgs.makeWrapper ];
+        nativeBuildInputs = nativeBuildInputs ++
+          (if isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeWrapper ]);
 
         passthru = passthru // {
           wrapperScript = { inherit arg0 executableName; };
@@ -28,12 +30,15 @@
       }
     ) ''
       mkdir -p $out/bin
-      makeWrapper ${arg0} "$out/bin/${executableName}" ''${makeWrapperArgs[@]}
+      makeWrapper "${arg0}" "$out/bin/${executableName}" ''${makeWrapperArgs[@]}
     '';
 
+  /* Similar to `mkWrapper` but include the output of the given package. */
   mkWrappedPackage = {
     package,
     executableName ? package.meta.mainProgram or package.pname,
+    extraPackages ? [ ],
+    isBinary ? true,
 
     postBuild ? "",
     nativeBuildInputs ? [ ],
@@ -41,20 +46,20 @@
     passthru ? { },
   }@args:
     pkgs.symlinkJoin (
-      (builtins.removeAttrs args [ "package" "executableName" ])
+      (builtins.removeAttrs args [ "package" "executableName" "extraPackages" "isBinary" ])
       // {
         name = "wrapper-manager-wrapped-package-${package.pname}";
-        paths = [ package ];
+        paths = [ package ] ++ extraPackages;
 
         inherit makeWrapperArgs;
-        nativeBuildInputs = nativeBuildInputs ++ [ pkgs.makeWrapper ];
+        nativeBuildInputs = nativeBuildInputs ++
+          (if isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeWrapper ]);
         passthru = passthru // {
           wrapperScript = { inherit executableName package; };
         };
         postBuild = ''
           ${postBuild}
-          wrapProgram "${lib.getExe' package executableName}" ''${makeWrapperArgs[@]}
+          wrapProgram "$out/bin/${executableName}" ''${makeWrapperArgs[@]}
         '';
       });
-
 }
