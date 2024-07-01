@@ -16,6 +16,7 @@ rec {
     pkgs.lib.evalModules {
       modules = [ ../modules/wrapper-manager ] ++ modules;
       specialArgs = specialArgs // {
+        inherit pkgs;
         modulesPath = builtins.toString ../modules/wrapper-manager;
       };
     };
