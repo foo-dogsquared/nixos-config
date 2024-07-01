@@ -78,7 +78,7 @@ in
       '';
       default =
         if config.build.variant == "executable" then
-          lib.tail (lib.path.subpath.components config.arg0)
+          lib.last (lib.path.subpath.components (lib.removePrefix "/" config.arg0))
         else
           config.package.meta.mainProgram or config.package.pname;
       example = "custom-name";
