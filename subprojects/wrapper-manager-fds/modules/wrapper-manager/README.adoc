@@ -1,0 +1,5 @@
+= wrapper-manager modules
+:toc:
+
+This is the module set of the wrapper-manager module environment.
+Just take note that we're following the runtime shell of nixpkgs which is GNU Bash as of 2024-06-30.
