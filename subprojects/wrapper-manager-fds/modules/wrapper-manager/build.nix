@@ -19,11 +19,21 @@
       example = "package";
     };
 
-    extraWrapperArgs = lib.mkOption {
+    isBinary = lib.mkOption {
+      type = lib.types.bool;
+      description = ''
+        Sets the build step to create a tiny compiled executable for the
+        wrapper. By default, it is set to `true`.
+      '';
+      default = true;
+      example = false;
+    };
+
+    makeWrapperArgs = lib.mkOption {
       type = with lib.types; listOf str;
       description = ''
-        A list of extra arguments to be passed to the `makeWrapper` nixpkgs
-        setup hook function.
+        A list of extra arguments to be passed to the `makeWrapperArgs` build
+        step of the evaluation.
       '';
       example = [ "--inherit-argv0" ];
     };
@@ -36,6 +46,7 @@
         part of the derivation attribute into the resulting script from
         {option}`preScript`.
       '';
+      default = { };
     };
 
     toplevel = lib.mkOption {
@@ -46,31 +57,33 @@
     };
   };
 
-  config.build = {
-    extraWrapperArgs = [
-      "--argv0" (config.executableName or config.arg0)
-      "--add-flags" config.prependFlags
-      "--append-flags" config.appendFlags
-    ]
-    ++ (lib.mapAttrsToList (n: v: "--set ${lib.escapeShellArg n} ${lib.escapeShellArg v}") config.env)
-    ++ (builtins.map (v: "--prefix 'PATH' ':' ${lib.escapeShellArg v}") config.pathAdd)
-    ++ (lib.optionals (config.preScript != "") (
-      let
-        preScript =
-          pkgs.runCommand "wrapper-script-prescript-${config.executableName}" config.build.extraArgs config.preScript;
-      in
-        "--run" preScript));
+  config = {
+    build = {
+      makeWrapperArgs = [
+        "--argv0" (config.executableName or config.arg0)
+      ]
+      ++ (lib.mapAttrsToList (n: v: "--set ${n} ${v}") config.env)
+      ++ (builtins.map (v: "--prefix 'PATH' ':' ${lib.escapeShellArg v}") config.pathAdd)
+      ++ (builtins.map (v: "--add-flags ${v}") config.prependArgs)
+      ++ (builtins.map (v: "--append-flags ${v}") config.appendArgs)
+      ++ (lib.optionals (!config.build.isBinary && config.preScript != "") (
+        let
+          preScript =
+            pkgs.runCommand "wrapper-script-prescript-${config.executableName}" config.build.extraArgs config.preScript;
+        in
+          [ "--run" preScript ]));
 
-      toplevel =
-        if config.build.variant == "executable" then
-          wrapperManagerLib.mkWrapper (config.build.extraArgs // {
-            inherit (config) arg0 executableName;
-            makeWrapperArgs = config.build.extraWrapperArgs;
-          })
-        else
-          wrapperManagerLib.mkWrappedPackage (config.build.extraArgs // {
-            inherit (config) package executableName;
-            makeWrapperArgs = config.build.extraWrapperArgs;
-          });
+        toplevel =
+          if config.build.variant == "executable" then
+            wrapperManagerLib.mkWrapper (config.build.extraArgs // {
+              inherit (config) arg0 executableName;
+              inherit (config.build) isBinary makeWrapperArgs;
+            })
+          else
+            wrapperManagerLib.mkWrappedPackage (config.build.extraArgs // {
+              inherit (config) package executableName;
+              inherit (config.build) isBinary makeWrapperArgs;
+            });
+    };
   };
 }
