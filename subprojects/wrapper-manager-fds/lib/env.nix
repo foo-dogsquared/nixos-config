@@ -10,10 +10,11 @@ rec {
   /* Evaluate a wrapper-manager configuration. */
   eval = {
     pkgs,
+    lib ? pkgs.lib,
     modules ? [ ],
     specialArgs ? { },
   }:
-    pkgs.lib.evalModules {
+    lib.evalModules {
       modules = [ ../modules/wrapper-manager ] ++ modules;
       specialArgs = specialArgs // {
         inherit pkgs;
