@@ -63,6 +63,7 @@
         "--argv0" (config.executableName or config.arg0)
       ]
       ++ (lib.mapAttrsToList (n: v: "--set ${n} ${v}") config.env)
+      ++ (builtins.map (v: "--unset ${v}") config.unset)
       ++ (builtins.map (v: "--prefix 'PATH' ':' ${lib.escapeShellArg v}") config.pathAdd)
       ++ (builtins.map (v: "--add-flags ${v}") config.prependArgs)
       ++ (builtins.map (v: "--append-flags ${v}") config.appendArgs)

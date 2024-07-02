@@ -64,6 +64,15 @@ in
       };
     };
 
+    unset = lib.mkOption {
+      type = with lib.types; listOf nonEmptyStr;
+      description = ''
+        A list of environment variables to be unset into the wrapper script.
+      '';
+      default = [ ];
+      example = [ "NO_COLOR" ];
+    };
+
     executableName = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = ''
