@@ -8,14 +8,12 @@ in
     ../common.nix
   ];
 
-  options.wrapper-manager.wrappers = lib.mkOption {
-    type = lib.types.submoduleWith {
-      specialArgs.nixosConfig = config;
-    };
-  };
+  config = lib.mkMerge [
+    { wrapper-manager.extraSpecialArgs.nixosConfig = config; }
 
-  config = lib.mkIf (cfg.wrappers != {}) {
-    environment.systemPackages =
-      lib.mapAttrsToList (_: wrapper: wrapper.config.build.toplevel) cfg.wrappers;
-  };
+    (lib.mkIf (cfg.wrappers != {}) {
+      environment.systemPackages =
+        lib.mapAttrsToList (_: wrapper: wrapper.build.toplevel) cfg.wrappers;
+    })
+  ];
 }

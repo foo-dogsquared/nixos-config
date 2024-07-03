@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.wrapper-manager;
@@ -7,6 +7,7 @@ let
     description = "wrapper-manager module";
     class = "wrapperManager";
     specialArgs = cfg.extraSpecialArgs // {
+      inherit pkgs;
       modulesPath = builtins.toString ../wrapper-manager;
     };
     modules = [
@@ -18,6 +19,13 @@ let
   };
 in
 {
+  imports = [
+    # Bringing all of the arguments from the wrapper-manager environment for
+    # convenience. It would also allow its users for full control without using
+    # the integration module itself.
+    ../wrapper-manager/extra-args.nix
+  ];
+
   options.wrapper-manager = {
     sharedModules = lib.mkOption {
       type = with lib.types; listOf deferredModule;
