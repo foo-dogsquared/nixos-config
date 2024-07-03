@@ -37,6 +37,7 @@
   mkWrappedPackage = {
     package,
     executableName ? package.meta.mainProgram or package.pname,
+    arg0 ? executableName,
     extraPackages ? [ ],
     isBinary ? true,
 
@@ -48,7 +49,7 @@
     pkgs.symlinkJoin (
       (builtins.removeAttrs args [ "package" "executableName" "extraPackages" "isBinary" ])
       // {
-        name = "wrapper-manager-wrapped-package-${package.pname}";
+        name = "wrapper-manager-wrapped-packages";
         paths = [ package ] ++ extraPackages;
 
         inherit makeWrapperArgs;
@@ -59,7 +60,7 @@
         };
         postBuild = ''
           ${postBuild}
-          wrapProgram "$out/bin/${executableName}" ''${makeWrapperArgs[@]}
+          makeWrapper "$out/bin/${arg0}" "$out/bin/${executableName}" ''${makeWrapperArgs[@]}
         '';
       });
 }

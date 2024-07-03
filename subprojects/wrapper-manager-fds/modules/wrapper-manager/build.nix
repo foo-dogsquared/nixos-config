@@ -82,7 +82,7 @@
             })
           else
             wrapperManagerLib.mkWrappedPackage (config.build.extraArgs // {
-              inherit (config) package executableName;
+              inherit (config) arg0 package executableName;
               inherit (config.build) isBinary makeWrapperArgs;
             });
     };
