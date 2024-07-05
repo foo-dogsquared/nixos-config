@@ -4,10 +4,6 @@ let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.music;
 
-  ytdlpAudio = pkgs.writeScriptBin "yt-dlp-audio" ''
-    ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${../../config/yt-dlp/audio.conf}" $@
-  '';
-
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";
 in
@@ -21,9 +17,15 @@ in
     {
       home.packages = with pkgs; [
         songrec # SHAZAM!
-        ytdlpAudio # My custom script for downloading music with yt-dlp.
         picard # Graphical beets.
       ];
+
+      wrapper-manager.wrappers.yt-dlp-audio = {
+        arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
+        prependArgs = [
+          "--config-location" ../../config/yt-dlp/audio.conf
+        ];
+      };
 
       # Enable the desktop audio profile for extra auditorial goodies.
       suites.desktop.audio = {

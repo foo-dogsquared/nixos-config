@@ -32,6 +32,7 @@
         modules = [
           inputs.nur.hmModules.nur
           inputs.sops-nix.homeManagerModules.sops
+          inputs.self.homeModules.wrapper-manager
         ];
         nixvim = {
           instance = "fiesta";
