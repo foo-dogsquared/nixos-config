@@ -208,7 +208,7 @@ lib.runTests {
   };
 
   testMathSqrt = {
-    expr = self.math.sqrt 4;
+    expr = round' (self.math.sqrt 4);
     expected = 2;
   };
 
@@ -361,5 +361,94 @@ lib.runTests {
   testRadiansToDegrees3 = {
     expr = self.math.round' (-3) (self.math.radiansToDegrees 4.5);
     expected = 257.831;
+  };
+
+  # At this point, most of the things are just adjusting to the quirks of those
+  # accursed floating-values.
+  testMathSine = {
+    expr = round' (self.math.sin 10);
+    expected = round' (-0.5440211108893698);
+  };
+
+  testMathSine2 = {
+    expr = self.math.sin 0;
+    expected = 0;
+  };
+
+  testMathSine3 = let
+    round' = self.math.round' (-5);
+  in {
+    expr = round' (self.math.sin (self.math.constants.pi / 2));
+    expected = round' 1;
+  };
+
+  testMathSine4 = {
+    expr = round' (self.math.sin 360);
+    expected = round' 0.9589157234143065;
+  };
+
+  testMathSine5 = {
+    expr = round' (self.math.sin 152);
+    expected = round' 0.933320523748862;
+  };
+
+  testMathSine6 = {
+    expr = round' (self.math.sin (-152));
+    expected = round' (-0.933320523748862);
+  };
+
+  testMathCosine = {
+    expr = round' (self.math.cos 10);
+    expected = round' (-0.8390715290764524);
+  };
+
+  testMathCosine2 = {
+    expr = round' (self.math.cos 0);
+    expected = 1;
+  };
+
+  testMathCosine3 = {
+    expr = round' (self.math.cos self.math.constants.pi);
+    expected = -1;
+  };
+
+  testMathCosine4 = {
+    expr = round' (self.math.cos (self.math.constants.pi * 2));
+    expected = 1;
+  };
+
+  testMathCosine5 = {
+    expr = round' (self.math.cos 1);
+    expected = round' 0.5403023058681398;
+  };
+
+  testMathCosine6 = {
+    expr = round' (self.math.cos 152);
+    expected = round' 0.35904428689111606;
+  };
+
+  testMathTangent = {
+    expr = round' (self.math.tan 10);
+    expected = round' 0.6483608274590866;
+  };
+
+  testMathTangent2 = {
+    expr = round' (self.math.tan 0);
+    expected = 0;
+  };
+
+  testMathTangent3 = {
+    expr = round' (self.math.tan (self.math.constants.pi / 4));
+    expected = round' (0.99999999999999999);
+  };
+
+  testMathTangent4 = {
+    expr = round' (self.math.tan 152);
+    expected = round' 2.5994579438382797;
+  };
+
+  testMathTangent5 = {
+    expr = round' (self.math.tan (-152));
+    expected = round' (-2.5994579438382797);
   };
 }

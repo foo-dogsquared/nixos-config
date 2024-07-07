@@ -14,8 +14,8 @@ rec {
     ln10 = 2.302585092994046;
     ln2 = 0.6931471805599453;
 
-    # The minimum precision for our functions that need them.
-    epsilon = pow 10 (-13);
+    # The precision target for our functions that need them.
+    epsilon = pow 0.1 13;
   };
 
   /* Returns the absolute value of the given number.
@@ -31,6 +31,20 @@ rec {
   */
   abs = number:
     if number < 0 then -(number) else number;
+
+  /* Given a Nix number, force it to be a floating value.
+
+     Type: toFloat :: Number -> Float
+
+     Example:
+       toFloat 5
+       => 5.0
+
+       toFloat 59.0
+       => 59.0
+  */
+  toFloat = x:
+    1.0 * x;
 
   /* Exponentiates the given base with the exponent.
 
@@ -313,6 +327,60 @@ rec {
        => 24
   */
   product = builtins.foldl' builtins.mul 1;
+
+  # The following trigonometric functions is pretty much sourced from the following link.
+  # https://lantian.pub/en/article/modify-computer/nix-trigonometric-math-library-from-zero.lantian/
+
+  /* Given a number in radians, return the value applied with a sine function.
+
+     Type: sin :: Number -> Number
+
+     Example:
+       sin 10
+       => -0.5440211108893698
+
+       sin (constants.pi / 2)
+       => 1
+  */
+  sin = x: let
+    x' = mod (toFloat x) (2 * constants.pi);
+    step = i: (pow (-1) (i - 1)) * product (lib.genList (j: x' / (j + 1)) (i * 2 - 1));
+    iter = value: counter: let
+      value' = step counter;
+    in
+      if (abs value') < constants.epsilon
+      then value
+      else iter (value' + value) (counter + 1);
+  in
+    if x < 0
+    then -(sin (-x))
+    else iter 0 1;
+
+  /* Given a number in radians, apply the cosine function.
+
+     Type: cos :: Number -> Number
+
+     Example:
+       cos 10
+       => -0.8390715290764524
+
+       cos 0
+       => 1
+  */
+  cos = x: sin (0.5 * constants.pi - x);
+
+  /* Given a number in radians, apply the tan trigonometric function.
+
+     Type: tan :: Number -> Number
+
+     Example:
+       tan 0
+       => 0
+
+       tan 10
+       => 0.6483608274590866
+  */
+  tan = x: (sin x) / (cos x);
 
   /* Given a number in radians, convert it to degrees.
 
