@@ -18,8 +18,7 @@
   # set of applications and everything (except for overlapping NixOS services
   # that will just add them into the NixOS environment itself).
   mkNixoslikeEnvironment = config: args:
-    pkgs.buildEnv {
-      inherit (args) paths name;
+    pkgs.buildEnv (args // {
       inherit (config.environment) pathsToLink extraOutputsToInstall;
       ignoreCollisions = true;
       postBuild =
@@ -33,11 +32,12 @@
 
          ${config.environment.extraSetup}
        '';
-    };
+    });
 
   # Given an environment (built with `pkgs.buildEnv`), create a systemd
   # environment attrset meant to be used as part of the desktop service.
   mkSystemdDesktopEnvironment = env: {
+    PATH = "${lib.getBin env}\${PATH:+:$PATH}";
     XDG_DATA_DIRS = "${env}/share\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
     XDG_CONFIG_DIRS = "${env}/etc/xdg\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
   };
