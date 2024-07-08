@@ -20,11 +20,13 @@ in
         picard # Graphical beets.
       ];
 
-      wrapper-manager.wrappers.yt-dlp-audio = {
-        arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
-        prependArgs = [
-          "--config-location" ../../config/yt-dlp/audio.conf
-        ];
+      wrapper-manager.packages.music-setup = {
+        wrappers.yt-dlp-audio = {
+          arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
+          prependArgs = [
+            "--config-location" ../../config/yt-dlp/audio.conf
+          ];
+        };
       };
 
       # Enable the desktop audio profile for extra auditorial goodies.

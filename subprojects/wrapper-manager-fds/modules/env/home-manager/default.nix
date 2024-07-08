@@ -11,9 +11,9 @@ in
   config = lib.mkMerge [
     { wrapper-manager.extraSpecialArgs.hmConfig = config; }
 
-    (lib.mkIf (cfg.wrappers != {}) {
+    (lib.mkIf (cfg.packages != {}) {
       home.packages =
-        lib.mapAttrsToList (_: wrapper: wrapper.build.toplevel) cfg.wrappers;
+        lib.mapAttrsToList (_: wrapper: wrapper.build.toplevel) cfg.packages;
     })
   ] ;
 }

@@ -11,10 +11,7 @@ let
       modulesPath = builtins.toString ../wrapper-manager;
     };
     modules = [
-      ({ lib, name, ... }: {
-        imports = [ ../wrapper-manager ];
-        config.executableName = lib.mkDefault name;
-      })
+      ../wrapper-manager
     ] ++ cfg.sharedModules;
   };
 in
@@ -34,18 +31,17 @@ in
         [
           {
             config.build = {
-              variant = "package";
               isBinary = true;
             };
           }
         ]
       '';
       description = ''
-        Extra modules to be added to all of the wrappers.
+        Extra modules to be added to all of the wrapper-manager configurations.
       '';
     };
 
-    wrappers = lib.mkOption {
+    packages = lib.mkOption {
       type = lib.types.attrsOf wrapperManagerModule;
       description = ''
         A set of wrappers to be added into the environment configuration.

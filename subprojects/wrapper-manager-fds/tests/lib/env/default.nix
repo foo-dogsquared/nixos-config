@@ -10,7 +10,7 @@ lib.runTests {
           specialArgs.yourMomName = "Joe Mama";
         };
       in
-        lib.isDerivation sampleConf.config.build.toplevel;
+        lib.isDerivation sampleConf;
     expected = true;
   };
 
@@ -23,7 +23,7 @@ lib.runTests {
           specialArgs.yourMomName = "Joe Mama";
         };
       in
-        lib.isDerivation sampleConf.config.build.toplevel;
+        lib.isDerivation sampleConf;
     expected = true;
   };
 }
