@@ -9,4 +9,5 @@ let
 in
 {
   env = callLib ./env;
+  utils = callLib ./utils.nix;
 }
