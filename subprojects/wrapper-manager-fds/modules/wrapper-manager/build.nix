@@ -36,6 +36,9 @@
             lib.concatMapStrings (v: ''
               makeWrapper "${v.arg0}" "${builtins.placeholder "out"}/bin/${v.executableName}" ${lib.concatStringsSep " " v.makeWrapperArgs}
             '') wrappers;
+
+          mkDesktopEntries = desktopEntries:
+            builtins.map (entry: pkgs.makeDesktopItem entry) desktopEntries;
         in
           pkgs.symlinkJoin {
             name = "wrapper-manager-fds-wrapped-package";
@@ -43,11 +46,14 @@
             nativeBuildInputs =
               if config.build.isBinary
               then [ pkgs.makeBinaryWrapper ]
-              else [ pkgs.makeWrapper ];
+              else [ pkgs.makeWrapper ]
+              ++ lib.optionals (pkgs.stdenv.isLinux && config.xdg.desktopEntries != { }) [ pkgs.copyDesktopItems ];
             postBuild = ''
               ${config.build.extraSetup}
               ${mkWrapBuild (lib.attrValues config.wrappers)}
             '';
+            desktopItems =
+              mkDesktopEntries (lib.attrValues config.xdg.desktopEntries);
           };
     };
   };

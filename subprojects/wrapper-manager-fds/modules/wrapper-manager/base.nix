@@ -6,6 +6,7 @@
       type = with lib.types; attrsOf (submoduleWith {
         modules = [ ./shared/wrappers.nix ];
         specialArgs.envConfig = config;
+        shorthandOnlyDefinesConfig = true;
       });
       description = ''
         A set of wrappers to be included in the resulting derivation from
