@@ -144,6 +144,7 @@ in
       type = with lib.types; attrsOf (submoduleWith {
         specialArgs = { inherit utils glibKeyfileFormat pkgs; };
         modules = [ ./submodules/session-type.nix ];
+        shorthandOnlyDefinesConfig = true;
       });
       description = ''
         A set of desktop sessions to be created with

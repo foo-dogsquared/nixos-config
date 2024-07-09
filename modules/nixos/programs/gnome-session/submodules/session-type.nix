@@ -98,6 +98,7 @@ in
           };
         };
         modules = [ ./component-type.nix ];
+        shorthandOnlyDefinesConfig = true;
       });
       description = ''
         The individual components to be launched with the desktop session.
