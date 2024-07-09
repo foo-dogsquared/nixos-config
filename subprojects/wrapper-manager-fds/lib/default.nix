@@ -16,7 +16,7 @@ pkgs.lib.makeExtensible
   in
   {
     build-support = callLibs ./build-support.nix;
-    env = callLibs ./env.nix;
+    env = import ./env.nix;
     utils = callLibs ./utils.nix;
 
     inherit (self.build-support) mkWrapper mkWrappedPackage;

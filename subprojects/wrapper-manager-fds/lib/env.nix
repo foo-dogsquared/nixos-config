@@ -1,5 +1,3 @@
-{ pkgs, lib, self }:
-
 rec {
   /* Given the attrset for evaluating a wrapper-manager module, return a
      derivation containing the wrapper.

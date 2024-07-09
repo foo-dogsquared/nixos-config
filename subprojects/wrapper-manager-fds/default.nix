@@ -13,6 +13,6 @@
     wrapper-manager = ./modules/env/home-manager;
   };
 
-  wrapperManagerModules.default = ./modules/wrapper-manager;
+  lib = import ./lib/env.nix;
   wrapperManagerLib = ./lib;
 }
