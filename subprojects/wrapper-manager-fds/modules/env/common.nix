@@ -49,29 +49,35 @@ in
       default = { };
       example = lib.literalExpression ''
         {
-          neofetch = {
-            arg0 = lib.getExe' pkgs.neofetch "neofetch";
-            appendArgs = [
-              "--ascii-distro" "guix"
-              "--config" ./config/neofetch/config
-            ];
-          };
-
-          yt-dlp-audio = {
-            arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
-            prependArgs = [
-              "--config-location" ./config/yt-dlp/audio.conf
-            ];
-          };
-
-          asciidoctor-fds = {
-            arg = lib.getExe' pkgs.asciidoctor-with-extensions "asciidoctor";
-            executableName = "asciidoctor";
-            prependArgs =
-              builtins.map (v: "-r ''${v}") [
-                "asciidoctor-diagram"
-                "asciidoctor-bibtex"
+          custom-ricing = {
+            wrappers.neofetch = {
+              arg0 = lib.getExe' pkgs.neofetch "neofetch";
+              appendArgs = [
+                "--ascii-distro" "guix"
+                "--config" ./config/neofetch/config
               ];
+            };
+          };
+
+          music-setup = {
+            wrappers.yt-dlp-audio = {
+              arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
+              prependArgs = [
+                "--config-location" ./config/yt-dlp/audio.conf
+              ];
+            };
+          };
+
+          writing = {
+            wrappers.asciidoctor-fds = {
+              arg = lib.getExe' pkgs.asciidoctor-with-extensions "asciidoctor";
+              executableName = "asciidoctor";
+              prependArgs =
+                builtins.map (v: "-r ''${v}") [
+                  "asciidoctor-diagram"
+                  "asciidoctor-bibtex"
+                ];
+            };
           };
         }
       '';
