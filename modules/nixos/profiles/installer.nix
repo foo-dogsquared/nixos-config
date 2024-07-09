@@ -1,5 +1,6 @@
 # A dedicated profile for installers with some niceties in it. This is also
-# used for persistent live installers.
+# used for persistent live installers so you'll have to exclude setting up shop
+# and do that in the respective NixOS configuration instead.
 { pkgs, modulesPath, ... }:
 
 {

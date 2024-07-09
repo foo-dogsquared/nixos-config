@@ -24,6 +24,8 @@
       [ "nix-command" "flakes" ]
       ++ lib.optionals (lib.versionOlder config.nix.package.version "2.22.0") [ "repl-flake" ];
     auto-optimise-store = lib.mkDefault true;
+
+    # We don't want to download every time we invoke Nix, seriously. Thanks.
     flake-registry = "";
   };
 
