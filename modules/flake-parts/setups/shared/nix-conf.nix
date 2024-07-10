@@ -10,6 +10,14 @@ let
 
   flakeInputName = name:
     if name == "self" then "config" else name;
+
+  nixChannels =
+    lib.mapAttrsToList
+      (name: source: "${flakeInputName name}=${source}")
+      inputs'
+    ++ [
+      "/nix/var/nix/profiles/per-user/root/channels"
+    ];
 in
 {
   config.modules = [(
@@ -23,13 +31,10 @@ in
             lib.nameValuePair (flakeInputName name) { inherit flake; })
           inputs';
 
-      nix.settings.nix-path =
-        (lib.mapAttrsToList
-          (name: source: "${flakeInputName name}=${source}")
-          inputs'
-        ++ [
-          "/nix/var/nix/profiles/per-user/root/channels"
-        ]);
-      }
+      nix.settings.nix-path = nixChannels;
+
+      # It doesn't work on the traditional tools like nix-shell so ehhh...
+      nix.nixPath = nixChannels;
+    }
   )];
 }
