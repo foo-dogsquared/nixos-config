@@ -15,11 +15,9 @@ pkgs.lib.makeExtensible
     callLibs = file: import file { inherit (pkgs) lib; inherit pkgs self; };
   in
   {
-    build-support = callLibs ./build-support.nix;
     env = import ./env.nix;
     utils = callLibs ./utils.nix;
 
-    inherit (self.build-support) mkWrapper mkWrappedPackage;
     inherit (self.env) build eval;
     inherit (self.utils) getBin getLibexec;
   })
