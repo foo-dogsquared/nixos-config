@@ -24,8 +24,11 @@ It is expected that the extra configuration folder is structured similarly to th
 ./extra-config-stuff
 └── modules
     ├── home-manager
+    │   └── default.nix
     ├── nixvim
+    │   └── default.nix
     └── nixos
+        └── default.nix
 ----
 
 Once you have an folder containing those extra snippets, you can simply include them like so.
