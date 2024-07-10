@@ -106,7 +106,7 @@ in
           };
 
           config.xdg.desktopEntry.settings = lib.mkIf config.xdg.desktopEntry.enable {
-            name = lib.mkDefault name;
+            name = lib.mkDefault config.executableName;
             desktopName = lib.mkDefault name;
             type = lib.mkDefault "Application";
 
