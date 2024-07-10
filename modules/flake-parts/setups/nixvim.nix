@@ -9,13 +9,19 @@ let
   cfg = config.setups.nixvim;
   nixvimModules = ../../nixvim;
 
-  mkNixvimConfig = { system, pkgs, nixvimBranch ? "nixvim", modules ? [ ] }:
+  mkNixvimConfig = {
+    system,
+    pkgs,
+    nixvimBranch ? "nixvim",
+    modules ? [ ],
+    specialArgs ? { },
+  }:
     inputs.${nixvimBranch}.legacyPackages.${system}.makeNixvimWithModule {
       inherit pkgs;
       module = {
         imports = modules;
       };
-      extraSpecialArgs = {
+      extraSpecialArgs = specialArgs // {
         foodogsquaredModulesPath = builtins.toString nixvimModules;
       };
     };

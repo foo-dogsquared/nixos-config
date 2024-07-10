@@ -13,7 +13,7 @@ let
   partsConfig = config;
 
   # A thin wrapper around the NixOS configuration function.
-  mkHost = { extraModules ? [ ], nixpkgsBranch ? "nixpkgs", system }:
+  mkHost = { system ,extraModules ? [ ], nixpkgsBranch ? "nixpkgs", specialArgs ? { } }:
     let
       nixpkgs = inputs.${nixpkgsBranch};
 
@@ -25,7 +25,7 @@ let
       nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
     in
     (lib.makeOverridable nixosSystem) {
-      specialArgs = {
+      specialArgs = specialArgs // {
         foodogsquaredUtils = import ../../../lib/utils/nixos.nix { inherit lib; };
         foodogsquaredModulesPath = builtins.toString nixosModules;
       };

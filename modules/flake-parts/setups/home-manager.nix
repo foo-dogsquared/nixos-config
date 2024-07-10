@@ -12,12 +12,13 @@ let
     , nixpkgsBranch ? "nixpkgs"
     , homeManagerBranch ? "home-manager"
     , extraModules ? [ ]
+    , specialArgs ? { }
     }:
     let
       pkgs = inputs.${nixpkgsBranch}.legacyPackages.${system};
     in
     inputs.${homeManagerBranch}.lib.homeManagerConfiguration {
-      extraSpecialArgs = {
+      extraSpecialArgs = specialArgs // {
         foodogsquaredModulesPath = builtins.toString homeManagerModules;
       };
 
