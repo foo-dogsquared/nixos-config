@@ -3,8 +3,12 @@
 let
   cfg = config.home.mutableFile;
 
+  runtimeInputs = lib.makeBinPath (with pkgs; [
+    archiver curl git gopass
+  ]);
+
   # An attribute set to be used to get the fetching script.
-  fetchScript = path: value:
+  fetchScript = _: value:
     let
       url = lib.escapeShellArg value.url;
       path = lib.escapeShellArg value.path;
@@ -177,10 +181,6 @@ in
                 )
               '')
               cfg;
-
-            runtimeInputs = lib.makeBinPath (with pkgs; [
-              archiver curl git gopass
-            ]);
           in
           pkgs.writeShellScript "fetch-mutable-files" ''
             export PATH=${runtimeInputs}
@@ -192,14 +192,11 @@ in
             mutableFilesCmds = lib.mapAttrsToList
               (path: value: value.postScript)
               cfg;
-
-            script = pkgs.writeShellApplication {
-              name = "fetch-mutable-files-post-script";
-              runtimeInputs = with pkgs; [ archiver curl git gopass ];
-              text = lib.concatStringsSep "\n" mutableFilesCmds;
-            };
           in
-          "${script}/bin/fetch-mutable-files-post-script";
+            pkgs.writeShellScript "fetch-mutable-files-post-script" ''
+              export PATH=${runtimeInputs}
+              ${lib.concatStringsSep "\n" mutableFilesCmds}
+            '';
       };
 
       Install.WantedBy = [ "default.target" ];
