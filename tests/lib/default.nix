@@ -17,6 +17,7 @@ let
   callLib = file: import file { inherit pkgs lib; self = foodogsquaredLib; };
 in
 {
+  builders = callLib ./builders.nix;
   trivial = callLib ./trivial.nix;
   data = callLib ./data;
 

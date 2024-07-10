@@ -12,9 +12,11 @@ pkgs.lib.makeExtensible
     inherit (pkgs) lib;
     callLib = file: import file { inherit pkgs lib self; };
   in {
+    builders = callLib ./builders.nix;
     trivial = callLib ./trivial.nix;
     data = callLib ./data.nix;
 
+    inherit (self.builders) makeXDGMimeAssociationList makeXDGPortalConfiguration;
     inherit (self.trivial) countAttrs;
     inherit (self.data) importYAML renderTeraTemplate;
   })
