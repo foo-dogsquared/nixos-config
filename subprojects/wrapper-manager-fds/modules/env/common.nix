@@ -57,6 +57,15 @@ in
                 "--config" ./config/neofetch/config
               ];
             };
+
+            wrappers.fastfetch = {
+              arg0 = lib.getExe' pkgs.fastfetch "fastfetch";
+              appendArgs = [
+                "--config" ./config/fastfetch/config
+                "--logo" "Guix"
+              ];
+              env.NO_COLOR = 1;
+            };
           };
 
           music-setup = {
@@ -64,6 +73,20 @@ in
               arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
               prependArgs = [
                 "--config-location" ./config/yt-dlp/audio.conf
+              ];
+            };
+
+            wrappers.yt-dlp-video = {
+              arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
+              prependArgs = [
+                "--config-location" ./config/yt-dlp/video.conf
+              ];
+            };
+
+            wrappers.beets-fds = {
+              arg0 = lib.getExe' pkgs.beet "beet";
+              prependArgs = [
+                "--config" ./config/beets/config
               ];
             };
           };
