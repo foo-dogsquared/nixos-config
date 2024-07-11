@@ -11,14 +11,14 @@
     cssls.enable = true; # For CSS.
     denols.enable = true; # For Deno runtime.
     dockerls.enable = true; # For Dockerfiles.
-    emmet_ls.enable = true; # For emmet support.
+    emmet-ls.enable = true; # For emmet support.
     eslint.enable = true; # For JavaScript.
     html.enable = true; # For HTML.
     jsonls.enable = true; # There's one for JSON?
     lemminx.enable = true; # And for XML?
     ltex.enable = true; # And for LanguageTool, too?
     lua-ls.enable = true; # For Lua.
-    nil_ls.enable = true; # For Nix.
+    nil-ls.enable = true; # For Nix.
     nushell.enable = true; # For Nushell.
     pyright.enable = true; # For Python.
 

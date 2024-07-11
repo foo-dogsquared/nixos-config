@@ -20,8 +20,10 @@ in
 
       # Enable all of its useful features.
       folding = true;
-      indent = true;
-      incrementalSelection.enable = true;
+      settings = {
+        indent.enable = true;
+        incremental_selection.enable = true;
+      };
     };
 
     # Enable some more context for me.

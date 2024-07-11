@@ -43,8 +43,10 @@ in
 
       # Enable all of its useful features.
       folding = true;
-      indent = true;
-      incrementalSelection.enable = true;
+      settings = {
+        indent.enable = true;
+        incremental_selection.enable = true;
+      };
     };
 
     # Enable some more context for me.
@@ -94,7 +96,7 @@ in
       }]
       ++ (
         let
-          motions = lib.cartesianProductOfSets {
+          motions = lib.cartesianProduct {
             region = [ "Start" "End" ];
             jumpDirection = [ "Previous" "Next" ];
             variant = [ "outer" "inner" ];
@@ -213,7 +215,7 @@ in
         [{ enable = true; }]
         ++ (
           let
-            motions = lib.cartesianProductOfSets {
+            motions = lib.cartesianProduct {
               jumpDirection = [ "Previous" "Next" ];
               variant = [ "outer" ];
             };
