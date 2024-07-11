@@ -109,7 +109,6 @@ let
             A list of extra arguments to be passed as part of makeWrapper.
           '';
           example = [ "--inherit-argv0" ];
-          readOnly = true;
         };
       };
 
