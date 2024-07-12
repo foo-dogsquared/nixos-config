@@ -15,7 +15,8 @@ let
     , specialArgs ? { }
     }:
     let
-      pkgs = inputs.${nixpkgsBranch}.legacyPackages.${system};
+      nixpkgs = inputs.${nixpkgsBranch};
+      pkgs = import nixpkgs { inherit system; };
     in
     inputs.${homeManagerBranch}.lib.homeManagerConfiguration {
       extraSpecialArgs = specialArgs // {

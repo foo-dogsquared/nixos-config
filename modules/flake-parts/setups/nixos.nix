@@ -18,13 +18,15 @@ let
       nixpkgs = inputs.${nixpkgsBranch};
 
       # Just to be sure, we'll use everything with the given nixpkgs' stdlib.
-      lib = nixpkgs.lib;
+      pkgs = import nixpkgs { inherit system; };
+      lib = pkgs.lib;
 
       # Evaluating the system ourselves (which is trivial) instead of relying
       # on nixpkgs.lib.nixosSystem flake output.
       nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
     in
     (lib.makeOverridable nixosSystem) {
+      inherit pkgs;
       specialArgs = specialArgs // {
         foodogsquaredUtils = import ../../../lib/utils/nixos.nix { inherit lib; };
         foodogsquaredModulesPath = builtins.toString nixosModules;
