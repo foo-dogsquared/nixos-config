@@ -7,7 +7,7 @@
       description = ''
         The name of the NixVim configuration from
         {option}`setups.nixvim.configs.<name>` to be included as part
-        of the NixOS system.
+        of the wider-scoped environment.
       '';
     };
 
