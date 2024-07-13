@@ -3,22 +3,22 @@
 lib.runTests {
   testsUtilsGetBin = {
     expr = self.utils.getBin [
-      ../modules
+      ../../lib
       ../../modules
     ];
     expected = [
-      (lib.getBin ../modules)
+      (lib.getBin ../../lib)
       (lib.getBin ../../modules)
     ];
   };
 
   testsUtilsGetLibexec = {
     expr = self.utils.getLibexec [
-      ../modules
+      ../../lib
       ../../modules
     ];
     expected = [
-      "${../modules}/libexec"
+      "${../../lib}/libexec"
       "${../../modules}/libexec"
     ];
   };
