@@ -9,9 +9,9 @@ let
     callLib = file: import file { inherit pkgs lib; self = prev; };
   in
   {
-    nixos = callLib ../../lib/nixos.nix;
-    home-manager = callLib ../../lib/home-manager.nix;
-    nixvim = callLib ../../lib/nixvim.nix;
+    nixos = callLib ../../lib/env-specific/nixos.nix;
+    home-manager = callLib ../../lib/env-specific/home-manager.nix;
+    nixvim = callLib ../../lib/env-specific/nixvim.nix;
   });
 
   callLib = file: import file { inherit pkgs lib; self = foodogsquaredLib; };

@@ -12,9 +12,4 @@ lib.runTests {
     };
     expected = 2;
   };
-
-  testGetConfig = {
-    expr = self.trivial.getConfig "home-manager" "foo-dogsquared";
-    expected = ../../configs/home-manager/foo-dogsquared;
-  };
 }
