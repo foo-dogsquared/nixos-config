@@ -1,5 +1,9 @@
 Copyright (c) 2024 Gabriel Arazas <foodogsquared@foodogsquared.one>
 
+Program uses the following files/implementations from other authors;
+see their respective license headers for more details:
+flake.nix, specifically the eachSystem which is taken directly from flake-utils: Copyright (c) 2020 zimbatm
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
