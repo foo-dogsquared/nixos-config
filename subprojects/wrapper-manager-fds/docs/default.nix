@@ -4,12 +4,12 @@ in
 { pkgs ? import sources.nixos-unstable { } }:
 
 let
-  inherit (pkgs) nixosOptionDoc stdenv lib;
+  inherit (pkgs) nixosOptionsDoc stdenv lib;
   wrapperManagerLib = import ../lib/env.nix;
 
   wrapperManagerEval = wrapperManagerLib.eval { inherit pkgs; };
 
-  optionsDoc = nixosOptionDoc { inherit (wrapperManagerEval) options; };
+  optionsDoc = nixosOptionsDoc { inherit (wrapperManagerEval) options; };
 
   gems = pkgs.bundlerEnv {
     name = "wrapper-manager-fds-gem-env";
