@@ -31,7 +31,12 @@
     pkgs = import sources.nixos-unstable { inherit system; };
     tests = import ./tests { inherit pkgs; };
   in {
-    devShells.default = import ./shell.nix { inherit pkgs; };
+    devShells = {
+      default = import ./shell.nix { inherit pkgs; };
+      website = import ./docs/shell.nix { inherit pkgs; };
+    };
+
+    packages.website = import ./docs { inherit pkgs; };
 
     checks.wrapperManagerLibrarySetPkg = tests.libTestPkg;
   }));
