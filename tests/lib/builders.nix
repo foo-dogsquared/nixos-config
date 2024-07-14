@@ -64,4 +64,42 @@ lib.runTests {
     expected =
       builtins.readFile ./data/fixtures/xdg-portal.conf;
   };
+
+  # We're just testing out if the destination is correct at this point.
+  testsBuilderMakeSampleXDGDesktopEntry = {
+    expr =
+      let
+        xdgDesktopEntry = self.builders.makeXDGDesktopEntry {
+          name = sampleDesktopName;
+          validate = false;
+          config = {
+            "Desktop Entry".Exec = "Hello";
+          };
+        };
+      in
+        builtins.readFile "${xdgDesktopEntry}/share/applications/${sampleDesktopName}.desktop";
+    expected =
+      builtins.readFile ./data/fixtures/xdg-desktop-entry.desktop;
+  };
+
+  # We're just testing out if the destination is correct at this point.
+  testsBuilderMakeSampleDesktopSessionFile = {
+    expr =
+      let
+        xdgDesktopEntry = self.builders.makeXDGDesktopEntry {
+          name = sampleDesktopName;
+          validate = false;
+          destination = "/share/wayland-sessions/${sampleDesktopName}.desktop";
+          config = {
+            "Desktop Entry" = {
+              Exec = "Hello";
+              DesktopNames = [ "GNOME" "Sway" ];
+            };
+          };
+        };
+      in
+        builtins.readFile "${xdgDesktopEntry}/share/wayland-sessions/${sampleDesktopName}.desktop";
+    expected =
+      builtins.readFile ./data/fixtures/xdg-desktop-session.desktop;
+  };
 }
