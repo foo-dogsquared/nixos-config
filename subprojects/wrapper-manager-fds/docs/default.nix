@@ -41,7 +41,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   patchPhase = ''
     runHook prePatch
-    cp "${optionsDoc.optionsJSON}" > "${finalAttrs.src}/content/"
+    install -Dm0644 "${optionsDoc.optionsJSON}/share/doc/nixos/options.json" "${finalAttrs.src}/content/en-US/nix-module-options/module-environment/content.json"
     runHook postPatch
   '';
 
