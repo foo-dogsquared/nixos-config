@@ -1,0 +1,9 @@
+[[main]]
+identifier = "nix-module-options"
+name = "Module options"
+url = "nix-module-options/"
+
+[[main]]
+identifier = "source-code"
+name = "Source code"
+url = "https://github.com/foo-dogsquared/wrapper-manager-fds"

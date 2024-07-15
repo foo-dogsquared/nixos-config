@@ -1,0 +1,13 @@
+baseURL = 'https://foo-dogsquared.github.io/wrapper-manager-fds'
+defaultContentLanguage = 'en-US'
+title = "wrapper-manager-fds"
+timeZone = "UTC"
+
+[params]
+toc = true
+
+[security.exec]
+allow = [
+  "^go$",
+  "^asciidoctor$",
+]

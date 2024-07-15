@@ -1,0 +1,27 @@
+[[imports]]
+path = "github.com/foo-dogsquared/hugo-theme-more-contentful"
+
+[[imports]]
+path = "github.com/foo-dogsquared/website"
+ignoreConfig = true
+ignoreImports = true
+
+[[imports.mounts]]
+source = "assets/svg/avatars/"
+target = "static/icons/avatars/"
+
+[[imports.mounts]]
+source = "assets/scss/"
+target = "assets/scss/"
+
+[[imports.mounts]]
+source = "assets/css/"
+target = "assets/css/"
+
+[[imports.mounts]]
+source = "layouts/partials/"
+target = "layouts/partials/"
+
+[[imports.mounts]]
+source = "data/more-contentful/themes/"
+target = "data/more-contentful/themes/"

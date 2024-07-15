@@ -1,0 +1,34 @@
+[asciidocExt]
+extensions = [
+  "asciidoctor-diagram",
+  "asciidoctor-foodogsquared-extensions",
+]
+trace = true
+workingFolderCurrent = true
+
+[asciidocExt.attributes]
+toc = true
+sectanchors = true
+"figure-caption!" = true
+source-highlighter = "rouge"
+allow-uri-read = true
+experimental = true
+linkcss = true
+cache-uri = true
+reproducible = true
+stem = "latexmath"
+
+avatarsdir = "/nixos-config/icons/avatars"
+avatarstype = "svg"
+
+icons = "image"
+iconsdir = "/nixos-config/icons/asciidoctor"
+icontype = "svg"
+
+# Project-wide attributes to be used.
+github-repo = "foo-dogsquared/nixos-config"
+canonical-flake-url = "github:foo-dogsquared/nixos-config"
+canonical-source-repo = "https://github.com/foo-dogsquared/nixos-config"
+canonical-flake-url-tarball-master = "https://github.com/foo-dogsquared/nixos-config/archive/master.tar.gz"
+canonical-flake-url-tarball-specific = "https://github.com/foo-dogsquared/nixos-config/archive/35c27749c55077727529f412dade862e4deb2ae8.tar.gz"
+devos-link = "https://github.com/divnix/digga/tree/580fc57ffaaf9cf3a582372235759dccfe44ac92/examples/devos"
