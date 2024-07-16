@@ -168,6 +168,7 @@ Or even both in the same configuration (which you can do).
 You could even create https://specifications.freedesktop.org/desktop-entry-spec/latest/[XDG desktop entry] files useful for the application to be launched through an application launcher/menu.
 For example, you could create an executable and a desktop entry to launch a custom Firefox profile in your home-manager configuration.
 
+.Creating a custom Firefox desktop entry launching a custom profile
 [source, nix]
 ----
 { config, lib, pkgs, ... }:
@@ -260,6 +261,7 @@ This is useful for extending wrapper-manager inside of the configuration environ
 Here's an example of adding wrappers through wrapper-manager inside of a home-manager configuration.
 The following configuration will create a wrapped package for yt-dlp with an additional wrapper script named `yt-dlp-audio` and `yt-dlp-video`.
 
+.Installing yt-dlp with custom variants of it inside of a home-manager configuration
 [source, nix]
 ----
 { config, lib, pkgs, ... }:
@@ -307,6 +309,10 @@ Setting up the development environment should be easy enough.
 * For flake users, you can just reproduce the development environment with `nix develop`.
 * For non-flake users, you can do the same with `nix-develop`.
 
+As an additional note, it is recommended to use something like direnv with `use flake` or `use nix` depending on your personal preferences to use flake or not.
+
+Take note there is a `Makefile` full of commands intended for easily interacting with the project but it is heavily assumed you're in the development environment of the project.
+
 [#development-library-set-and-modules]
 === Library set and modules
 
@@ -339,7 +345,31 @@ Just take note that the website also requires the NixOS options which comes in a
 This should be already taken care of in the package definition of the website but otherwise it is something that you'll have to be aware of.
 
 The more important task to developing this part of the project is continuously getting feedback from it.
-You can do so but 
+You can do so simply with the following commands:
+
+* For flake users, `nix develop --command hugo -s ./docs serve`.
+* For non-flake users, `nix-shell docs --command hugo -s ./docs serve`.
+* If you're using `Makefile` of this project, `make docs-serve`.
+
+[#development-nix]
+=== Nix environment
+
+As for developing the environment with Nix itself, it is very much preferred to make wrapper-manager-fds work with non-flake setups.
+This also includes the workflow of the development itself for the purpose of easier time bootstrapping wrapper-manager-fds.
+
+Due to the unfortunate situation with flakes as an experimental feature, it is more like a second-class citizen in terms of support.
+This is because it is pretty easy to make a flake with non-flake tools compared to vice versa. footnote:[flake-compat is great and all but it holds back wrapper-manager-fds in making it easy to bootstrap if we rely on it.]
+
+Here's an exhaustive guidelines that you have to keep in mind when developing related files within the project:
+
+* This project uses https://calver.org/[calendar versioning] following software versioning of the upstream.
+The unstable branches are basically deployed with development versions of this project.
+
+* Only the current stable branch and the unstable branch of NixOS is supported.
+
+* The preferred default nixpkgs branch at development is `nixos-unstable`.
+
+* There shouldn't be any user consumables that requires anything from the npins sources.
 
 
 [#goals-and-non-goals]
