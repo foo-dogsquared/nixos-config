@@ -115,6 +115,9 @@ autocontain -s upwork\.com Work
 autocontain -s monster\.com Work
 autocontain -s foundit\.com(\.ph?) Work
 autocontain -s fiverr\.com Work
+autocontain -s linkedin\.com Work
+autocontain -s jobstreet\.com(\.ph?) Work
+autocontain -s (ph\.?)jobstreet\.com(\.ph?) Work
 
 " Shopping, shopping, shopping!
 autocontain -s yelp\.com Shopping
