@@ -62,7 +62,7 @@ in
         gnome-decoder # Go with them QR codes.
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
-        gnome.dconf-editor # A saner version of Windows registry.
+        dconf-editor # A saner version of Windows registry.
         gnome.gnome-boxes # Virtual machines, son.
         gnome.polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
         gradience # Make it rain!
