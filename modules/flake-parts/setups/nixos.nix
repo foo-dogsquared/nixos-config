@@ -3,7 +3,7 @@
 # inclusion of the home-manager NixOS module, a deploy-rs node, a hostname and
 # an optional domain, and deploy-rs-related options so it isn't really made to
 # be generic or anything like that.
-{ config, lib, inputs, ... }:
+{ config, options, lib, inputs, ... }:
 
 let
   cfg = config.setups.nixos;
@@ -13,12 +13,18 @@ let
   partsConfig = config;
 
   # A thin wrapper around the NixOS configuration function.
-  mkHost = { system ,extraModules ? [ ], nixpkgsBranch ? "nixpkgs", specialArgs ? { } }:
+  mkHost = {
+    system,
+    extraModules ? [ ],
+    nixpkgsBranch ? "nixpkgs",
+    nixpkgsConfig ? { },
+    specialArgs ? { },
+  }:
     let
       nixpkgs = inputs.${nixpkgsBranch};
 
       # Just to be sure, we'll use everything with the given nixpkgs' stdlib.
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs { inherit system; config = nixpkgsConfig; };
       lib = pkgs.lib;
 
       # Evaluating the system ourselves (which is trivial) instead of relying
@@ -247,6 +253,8 @@ let
       };
     };
 
+    config.nixpkgs.config = cfg.sharedNixpkgsConfig;
+
     config.modules = [
       # Bring in the required modules.
       inputs.${config.home-manager.branch}.nixosModules.home-manager
@@ -382,6 +390,20 @@ let
 in
 {
   options.setups.nixos = {
+    sharedNixpkgsConfig = options.setups.sharedNixpkgsConfig // {
+      description = ''
+        Shared configuration between all of the nixpkgs instance of the
+        declarative NixOS systems.
+
+        ::: {.note}
+        This is implemented since the way how NixOS systems built here are made
+        with initializing a nixpkgs instance ourselves and NixOS doesn't allow
+        configuring the nixpkgs instances that are already defined outside of
+        its module environment.
+        :::
+      '';
+    };
+
     sharedModules = lib.mkOption {
       type = with lib.types; listOf deferredModule;
       default = [ ];
@@ -462,6 +484,8 @@ in
   };
 
   config = lib.mkIf (cfg.configs != { }) {
+    setups.nixos.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+
     setups.nixos.sharedModules = [
       # Import our own public NixOS modules.
       nixosModules
@@ -495,6 +519,7 @@ in
                   (system:
                     lib.nameValuePair system (mkHost {
                       nixpkgsBranch = metadata.nixpkgsBranch;
+                      nixpkgsConfig = metadata.nixpkgs.config;
                       extraModules = cfg.sharedModules ++ metadata.modules;
                       inherit system;
                     })

@@ -28,7 +28,4 @@
     # We don't want to download every time we invoke Nix, seriously. Thanks.
     flake-registry = "";
   };
-
-  # Stallman-senpai will be disappointed.
-  nixpkgs.config.allowUnfree = true;
 }

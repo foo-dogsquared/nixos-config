@@ -3,6 +3,8 @@
 # each other such as the ability to easily declare home-manager users (or a
 # NixVim instance) into a NixOS system from already existing declared
 # home-manager users (or NixVim instances) in the flake config.
+{ lib, ... }:
+
 {
   imports = [
     ./disko.nix
@@ -10,4 +12,16 @@
     ./nixvim.nix
     ./home-manager.nix
   ];
+
+  options.setups.sharedNixpkgsConfig = lib.mkOption {
+    type = with lib.types; attrsOf anything;
+    description = ''
+      Shared configuration of the nixpkgs instance to be passed to all of the
+      module environments based from the nixpkgs module system.
+    '';
+    default = { };
+    example = {
+      allowUnfree = true;
+    };
+  };
 }

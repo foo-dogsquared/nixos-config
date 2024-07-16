@@ -28,6 +28,10 @@
     defaultSystems = [ "x86_64-linux" ];
   };
 
+  setups.sharedNixpkgsConfig = {
+    allowUnfree = true;
+  };
+
   perSystem = { lib, system, ... }: {
     _module.args = {
       # nixpkgs for this module should be used as less as possible especially

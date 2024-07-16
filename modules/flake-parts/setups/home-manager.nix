@@ -1,5 +1,5 @@
 # This is the declarative user management converted into a flake-parts module.
-{ config, lib, inputs, ... }:
+{ config, options, lib, inputs, ... }:
 
 let
   cfg = config.setups.home-manager;
@@ -10,13 +10,14 @@ let
   mkHome =
     { system
     , nixpkgsBranch ? "nixpkgs"
+    , nixpkgsConfig ? { }
     , homeManagerBranch ? "home-manager"
     , extraModules ? [ ]
     , specialArgs ? { }
     }:
     let
       nixpkgs = inputs.${nixpkgsBranch};
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs { inherit system; config = nixpkgsConfig; };
     in
     inputs.${homeManagerBranch}.lib.homeManagerConfiguration {
       extraSpecialArgs = specialArgs // {
@@ -135,11 +136,20 @@ let
             };
           }))
       ];
+
+      nixpkgs.config = cfg.sharedNixpkgsConfig;
     };
   };
 in
 {
   options.setups.home-manager = {
+    sharedNixpkgsConfig = options.setups.sharedNixpkgsConfig // {
+      description = ''
+        nixpkgs configuration to be shared among home-manager configurations
+        defined here.
+      '';
+    };
+
     sharedModules = lib.mkOption {
       type = with lib.types; listOf deferredModule;
       default = [ ];
@@ -206,6 +216,8 @@ in
   };
 
   config = lib.mkIf (cfg.configs != { }) {
+    setups.home-manager.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+
     # Import our own home-manager modules.
     setups.home-manager.sharedModules = [
       homeManagerModules
@@ -226,6 +238,7 @@ in
                     lib.nameValuePair system (mkHome {
                       inherit (metadata) nixpkgsBranch homeManagerBranch;
                       inherit system;
+                      nixpkgsConfig = metadata.nixpkgs.config;
                       extraModules =
                         cfg.sharedModules
                         ++ cfg.standaloneConfigModules

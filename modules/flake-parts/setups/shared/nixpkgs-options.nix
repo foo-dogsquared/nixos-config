@@ -24,6 +24,18 @@
       example = "nixos-unstable-small";
     };
 
+    config = lib.mkOption {
+      type = with lib.types; attrsOf anything;
+      description = ''
+        The configuration to be passed to the nixpkgs instance of the module
+        environment.
+      '';
+      default = { };
+      example = {
+        allowUnfree = true;
+      };
+    };
+
     overlays = lib.mkOption {
       type = with lib.types; listOf (functionTo raw);
       default = [ ];

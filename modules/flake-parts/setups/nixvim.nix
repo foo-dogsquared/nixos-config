@@ -1,6 +1,7 @@
 { inputs
 , lib
 , config
+, options
 
 , ...
 }:
@@ -38,23 +39,12 @@ let
   };
 
   componentType = { lib, config, ... }: {
+    imports = [
+      ./shared/nixpkgs-options.nix
+      (lib.mkAliasOptionModule [ "overlays" ] [ "nixpkgs" "overlays" ])
+    ];
+
     options = {
-      nixpkgsBranch = lib.mkOption {
-        type = lib.types.nonEmptyStr;
-        default = "nixpkgs";
-        example = "nixos-unstable";
-        description = ''
-          The nixpkgs branch for the NixVim configuration to be built
-          against.
-
-          ::: {.note}
-          This refers to your flake inputs so in order to support multiple
-          nixpkgs branches, you need to import multiple nixpkgs as part of the
-          `inputs` flake attribute.
-          :::
-        '';
-      };
-
       nixvimBranch = lib.mkOption {
         type = lib.types.nonEmptyStr;
         default = "nixvim";
@@ -87,19 +77,10 @@ let
           given nixpkgs instance.
         '';
       };
+    };
 
-      overlays = lib.mkOption {
-        type = with lib.types; listOf (functionTo raw);
-        default = [ ];
-        example = lib.literalExpression ''
-          [
-            inputs.neovim-nightly-overlay.overlays.default
-          ]
-        '';
-        description = ''
-          A list of overlays to be applied for the nixpkgs instance.
-        '';
-      };
+    config = {
+      nixpkgs.config = cfg.sharedNixpkgsConfig;
     };
   };
 
@@ -152,9 +133,17 @@ in
       '';
     };
     standaloneConfigModules = modulesOption' "standalone configuration";
+
+    sharedNixpkgsConfig = options.setups.sharedNixpkgsConfig // {
+      description = ''
+        nixpkgs configuration to be shared among the declared NixVim instances.
+      '';
+    };
   };
 
   config = lib.mkIf (cfg.configs != { }) {
+    setups.nixvim.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+
     setups.nixvim.sharedModules = [
       nixvimModules
 
@@ -176,7 +165,7 @@ in
                   mkNixvimConfig' = component:
                     let
                       pkgs = import inputs.${component.nixpkgsBranch} {
-                        inherit (component) overlays;
+                        inherit (component.nixpkgs) config overlays;
                         inherit system;
                       };
                       neovimPackage = component.neovimPackage pkgs;
