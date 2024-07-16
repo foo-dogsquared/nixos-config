@@ -8,24 +8,19 @@ let
 
   # A thin wrapper around the home-manager configuration function.
   mkHome =
-    { system
-    , nixpkgsBranch ? "nixpkgs"
-    , nixpkgsConfig ? { }
+    { pkgs
+    , lib ? pkgs.lib
+    , system
     , homeManagerBranch ? "home-manager"
     , extraModules ? [ ]
     , specialArgs ? { }
     }:
-    let
-      nixpkgs = inputs.${nixpkgsBranch};
-      pkgs = import nixpkgs { inherit system; config = nixpkgsConfig; };
-    in
     inputs.${homeManagerBranch}.lib.homeManagerConfiguration {
       extraSpecialArgs = specialArgs // {
         foodogsquaredModulesPath = builtins.toString homeManagerModules;
       };
 
-      inherit pkgs;
-      lib = pkgs.lib;
+      inherit pkgs lib;
       modules = extraModules;
     };
 
@@ -235,10 +230,19 @@ in
               lib.listToAttrs
                 (builtins.map
                   (system:
+                    let
+                      nixpkgs = inputs.${metadata.nixpkgs.branch};
+
+                      # We won't apply the overlays here since it is set
+                      # modularly.
+                      pkgs = import nixpkgs {
+                        inherit system;
+                        inherit (metadata.nixpkgs) config;
+                      };
+                    in
                     lib.nameValuePair system (mkHome {
-                      inherit (metadata) nixpkgsBranch homeManagerBranch;
-                      inherit system;
-                      nixpkgsConfig = metadata.nixpkgs.config;
+                      inherit pkgs system;
+                      inherit (metadata) homeManagerBranch;
                       extraModules =
                         cfg.sharedModules
                         ++ cfg.standaloneConfigModules

@@ -14,22 +14,16 @@ let
 
   # A thin wrapper around the NixOS configuration function.
   mkHost = {
+    pkgs,
+    lib ? pkgs.lib,
     system,
     extraModules ? [ ],
-    nixpkgsBranch ? "nixpkgs",
-    nixpkgsConfig ? { },
     specialArgs ? { },
   }:
     let
-      nixpkgs = inputs.${nixpkgsBranch};
-
-      # Just to be sure, we'll use everything with the given nixpkgs' stdlib.
-      pkgs = import nixpkgs { inherit system; config = nixpkgsConfig; };
-      lib = pkgs.lib;
-
       # Evaluating the system ourselves (which is trivial) instead of relying
       # on nixpkgs.lib.nixosSystem flake output.
-      nixosSystem = args: import "${nixpkgs}/nixos/lib/eval-config.nix" args;
+      nixosSystem = args: import "${pkgs.path}/nixos/lib/eval-config.nix" args;
     in
     (lib.makeOverridable nixosSystem) {
       inherit pkgs;
@@ -517,11 +511,19 @@ in
               lib.listToAttrs
                 (builtins.map
                   (system:
+                    let
+                      nixpkgs = inputs.${metadata.nixpkgs.branch};
+
+                      # We won't apply the overlays here since it is set
+                      # modularly.
+                      pkgs = import nixpkgs {
+                        inherit system;
+                        inherit (metadata.nixpkgs) config;
+                      };
+                    in
                     lib.nameValuePair system (mkHost {
-                      nixpkgsBranch = metadata.nixpkgsBranch;
-                      nixpkgsConfig = metadata.nixpkgs.config;
+                      inherit pkgs system;
                       extraModules = cfg.sharedModules ++ metadata.modules;
-                      inherit system;
                     })
                   )
                   metadata.systems);
