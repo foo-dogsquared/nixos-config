@@ -157,9 +157,8 @@ in
         A list of packages to be included in the wrapper package.
 
         ::: {note}
-        If the list is not empty, this can override some of the binaries
-        included in this list which is typically intended to be used as a
-        wrapped package.
+        This can override some of the binaries included in this list which is
+        typically intended to be used as a wrapped package.
         :::
       '';
       default = [ ];

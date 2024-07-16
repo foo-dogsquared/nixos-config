@@ -1,3 +1,5 @@
+# As a design restriction, this flake shouldn't have any inputs whatsoever.
+# We're already using the Nix projects through pinning with npins.
 {
   description = "wrapper-manager-fds flake";
   outputs = { ... }: let
