@@ -18,9 +18,6 @@ in
         music-path =
           [
             "/srv/Music"
-          ]
-          ++ lib.optionals config.suites.filesystem.setups.external-hdd.enable [
-            "/mnt/external-storage/Music"
           ];
         podcast-path = "${cache-path}/podcasts";
         playlists-path = "${cache-path}/playlists";

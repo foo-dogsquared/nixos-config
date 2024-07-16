@@ -19,7 +19,6 @@ in
       browsing = true;
       drivers = with pkgs; [
         gutenprint
-        hplip
         splix
       ];
     };
