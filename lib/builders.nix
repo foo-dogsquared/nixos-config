@@ -13,7 +13,7 @@
     defaultApplications ? { },
   }:
     pkgs.writeTextFile {
-      name = "xdg-mime-associations";
+      name = "xdg-mime-associations${lib.optionalString (desktopName != "") "-${desktopName}"}";
       text =
         # Non-desktop-specific mimeapps.list are only allowed to specify
         # default applications.
@@ -35,7 +35,7 @@
     config,
   }:
     pkgs.writeTextFile {
-      name = "xdg-portal-config-${desktopName}";
+      name = "xdg-portal-config${lib.optionalString (desktopName != "common") "-${desktopName}"}";
       text = lib.generators.toINI { } config;
       destination = "/share/xdg-desktop-portal/${lib.optionalString (desktopName != "common") "${desktopName}-"}portals.conf";
     };
