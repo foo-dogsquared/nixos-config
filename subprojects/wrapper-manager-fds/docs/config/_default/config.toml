@@ -11,3 +11,7 @@ allow = [
   "^go$",
   "^asciidoctor$",
 ]
+osEnv = [ '^LAST_COMMIT_DATE$' ]
+
+[security.funcs]
+getenv = [ "^LAST_COMMIT_DATE$" ]
