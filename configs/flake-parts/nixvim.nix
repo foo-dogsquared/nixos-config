@@ -16,7 +16,7 @@
     };
 
     trovebelt = {
-      components = lib.cartesianProductOfSets {
+      components = lib.cartesianProduct {
         nixpkgsBranch = [ "nixos-unstable" ];
         nixvimBranch = [ "nixvim-unstable" ];
         neovimPackage = [ (pkgs: pkgs.neovim) ];
