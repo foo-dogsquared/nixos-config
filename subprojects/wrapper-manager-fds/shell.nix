@@ -4,18 +4,15 @@ in
 { pkgs ? import sources.nixos-unstable { } }:
 
 let
-  websiteDevshell = import ./docs/shell.nix { inherit pkgs; };
+  websitePkg = import ./docs { inherit pkgs; };
 in
 pkgs.mkShell {
-  packages = with pkgs; [
-    websiteDevshell
+  inputsFrom = [ websitePkg ];
 
+  packages = with pkgs; [
     npins
     treefmt
     nixpkgs-fmt
-
-    hugo
-    asciidoctor
 
     # For easy validation of the test suite.
     yajsv

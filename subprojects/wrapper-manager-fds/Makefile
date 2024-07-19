@@ -11,3 +11,8 @@ docs-build:
 .PHONY: update
 update:
 	npins update
+
+# Ideally this should be done before committing.
+.PHONY: format
+format:
+	treefmt
