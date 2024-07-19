@@ -57,17 +57,17 @@ let
     inputs.nixos-generators.nixosModules // customFormats;
 
   # A very very thin wrapper around `mkHost` to build with the given format.
-  mkImage =
-    { system
-    , nixpkgsBranch ? "nixpkgs"
-    , extraModules ? [ ]
-    , format ? "iso"
-    }:
+  mkImage = {
+    pkgs,
+    system,
+    extraModules ? [ ],
+    format ? "iso",
+  }:
     let
       extraModules' =
         extraModules ++ [ nixosGeneratorsModulesSet.${format} ];
       image = mkHost {
-        inherit nixpkgsBranch system;
+        inherit pkgs system;
         extraModules = extraModules';
       };
     in
