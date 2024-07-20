@@ -47,6 +47,18 @@
       "revision": "693bc46d169f5af9c992095736e82c3488bf7dbb",
       "url": "https://github.com/NixOS/nixpkgs/archive/693bc46d169f5af9c992095736e82c3488bf7dbb.tar.gz",
       "hash": "0q3shwwdfkml1nxshd5mfmvpla7lbs986qfw9jz4d3193kcn3rx1"
+    },
+    "website": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "foo-dogsquared",
+        "repo": "website"
+      },
+      "branch": "master",
+      "revision": "799cfa313e36eaba67862b872a8b350d50ec3617",
+      "url": "https://github.com/foo-dogsquared/website/archive/799cfa313e36eaba67862b872a8b350d50ec3617.tar.gz",
+      "hash": "0kcmcsrfs0fxx9pyx7dnpyk2wg1r6kdb0vrl8b3vlhcirz0nlmlx"
     }
   },
   "version": 3
