@@ -1,1 +1,1 @@
-docs/content/en-US/project-overview.adoc
+docs/content/en/project-overview.adoc

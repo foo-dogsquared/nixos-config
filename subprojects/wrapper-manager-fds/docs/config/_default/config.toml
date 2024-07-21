@@ -1,5 +1,5 @@
 baseURL = 'https://foo-dogsquared.github.io/wrapper-manager-fds'
-defaultContentLanguage = 'en-US'
+defaultContentLanguage = 'en'
 title = "wrapper-manager-fds"
 timeZone = "UTC"
 
