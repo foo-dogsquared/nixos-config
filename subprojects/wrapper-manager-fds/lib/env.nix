@@ -13,10 +13,16 @@ rec {
     specialArgs ? { },
   }:
     lib.evalModules {
-      modules = [ ../modules/wrapper-manager ] ++ modules;
-      specialArgs = specialArgs // {
-        inherit pkgs;
-        modulesPath = builtins.toString ../modules/wrapper-manager;
-      };
+      inherit specialArgs;
+      modules = [
+        ../modules/wrapper-manager
+
+        # Setting pkgs modularly. This would make setting up wrapper-manager
+        # with different nixpkgs instances possible but it isn't something that
+        # is explicitly supported.
+        ({ lib, ... }: {
+          config._module.args.pkgs = lib.mkDefault pkgs;
+        })
+      ] ++ modules;
     };
 }
