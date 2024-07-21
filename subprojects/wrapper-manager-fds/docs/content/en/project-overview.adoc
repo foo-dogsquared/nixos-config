@@ -4,8 +4,10 @@ title: Project overview
 = nix-wrapper-manager-fds
 :toc:
 
-:github-repo: foo-dogsquared/wrapper-manager-fds
-:remote-git-repo: https://github.com/foo-dogsquared/wrapper-manager-fds
+:github-repo: nix-module-wrapper-manager-fds
+:github-full: foo-dogsquared/{github-repo}
+:remote-git-repo: https://github.com/{github-full}
+:docs-site: https://foo-dogsquared.github.io/{github-repo}
 
 
 wrapper-manager-fds is foodogsquared's reimagining of https://github.com/viperML/wrapper-manager/[wrapper-manager].
@@ -30,9 +32,9 @@ And that's how wrapper-manager-fds came to be.
 
 You can install wrapper-manager-fds with https://zero-to-nix.com/concepts/channels[Nix channels].
 
-[source, shell]
+[source, shell, subs=attributes]
 ----
-nix-channel --add https://github.com/foo-dogsquared/wrapper-manager-fds/archive/master.tar.gz wrapper-manager-fds
+nix-channel --add {remote-git-repo}/archive/master.tar.gz wrapper-manager-fds
 nix-channel --update
 ----
 
@@ -46,9 +48,9 @@ A recommended (non-flakes) way to install Nix dependencies is to use a pinning t
 There are a handful of pinning tool out there but in this case, we'll use https://github.com/andir/npins[npins] as our tool of choice.
 Assuming you have already initialized npins, you can simply add wrapper-manager-fds to your Nix project with the following command.
 
-[source, shell]
+[source, shell, subs="attributes+"]
 ----
-npins add github foo-dogsquared wrapper-manager-fds
+npins add github foo-dogsquared {github-repo}
 ----
 
 Similar to channels installation, you'll have to import the <<user-entrypoint>> object.
@@ -58,12 +60,12 @@ Similar to channels installation, you'll have to import the <<user-entrypoint>> 
 
 Though not recommended, you could manually pin the Nix library yourself like in the following code.
 
-[source, nix]
+[source, nix, subs="attributes+"]
 ----
 { pkgs, ... }:
 
 let
-  wrapper-manager-fds = builtins.fetchTarball "https://github.com/foo-dogsquared/wrapper-manager-fds/archive/master.tar.gz";
+  wrapper-manager-fds = builtins.fetchTarball "{remote-git-repo}/archive/master.tar.gz";
   wrapperManager = import wrapper-manager-fds { };
   wrapperManagerLib = import wrapperManagerLib.lib { inherit pkgs; }
 in
@@ -77,10 +79,10 @@ This project also has a https://zero-to-nix.com/concepts/flakes[flake object].
 In your flake definition, just import it as one of the inputs.
 Unlike the other methods, the flake output is the user entrypoint so no need to import it or anything.
 
-[source, nix]
+[source, nix, subs="attributes+"]
 ----
 {
-  inputs.wrapper-manager-fds.url = "github:foo-dogsquared/wrapper-manager-fds";
+  inputs.wrapper-manager-fds.url = "github:{github-full}";
 
   outputs = { nixpkgs, ... }@inputs: {
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
@@ -125,6 +127,10 @@ One part of the project is the module environment.
 Just like https://github.com/nix-community/home-manager[home-manager] and https://github.com/nix-community/disko[disko] and https://github.com/viperML/wrapper-manager[the original source], wrapper-manager-fds comes with its own module environment.
 Instead of a home environment from home-manager or an installation script from disko, wrapper-manager-fds module environment evaluates to a derivation containing a wrapper script. footnote:[While the original source also evaluates similar to that, it typically involves a set of wrappers inside of the same configuration environment rather than a single wrapper.]
 This can be thought of as a declarative layer over `makeWrapper` build hook from nixpkgs.
+
+If you want to view the module options, you can see it in
+ifdef::env-hugo[link:./nix-module-options/[wrapper-manager module options].]
+ifndef::env-hugo[{docs-site}/nix-module-options[wrapper-manager documentation site].]
 
 Here's a very simple example of a wrapper for Neofetch.
 
@@ -252,6 +258,16 @@ The most user-friendly way of using wrapper-manager would be as a composable nix
 wrapper-manager provides a Nix module specifically for NixOS and home-manager environment. footnote:[Any other environments are basically unsupported and if you like to use it outside of NixOS and home-manager, you're on your own.]
 You can import them through the `{nixos,home}Modules.default` from the user entrypoint of the project.
 
+You can view the module options for each environment.
+
+* For NixOS, you can view it in
+ifdef::env-hugo[link:./wrapper-manager-nixos-module/[NixOS module integration options].]
+ifndef::env-hugo[{docs-site}/wrapper-manager-nixos-module/[documentation site].]
+
+* For home-manager, you can view it in
+ifdef::env-hugo[link:./wrapper-manager-home-manager-module/[home-manager module integration options].]
+ifndef::env-hugo[{docs-site}/wrapper-manager-home-manager-module/[documentation site].]
+
 Most of the things set up here are implemented to make declaring wrappers ergonomic with the environment.
 For a start, wrapper-manager-fds sets up a module namespace in `wrapper-manager`.
 Here's a quick breakdown of the features that the module has.
@@ -324,7 +340,7 @@ Take note there is a `Makefile` full of commands intended for easily interacting
 === Library set and modules
 
 This Nix project has a test infrastructure set up at
-ifdef::env-hugo[github:{github-repo}[test directory, rev=main, path=tests]]
+ifdef::env-hugo[github:{github-full}[test directory, rev=main, path=tests]]
 ifndef::env-hugo[link:./tests[`./tests`]]
 covering the library set and the wrapper-manager module environment.
 For its library set, it makes use of the nixpkgs library and a JSON schema to validate if it passes the whole test suite.
@@ -375,12 +391,10 @@ This is because it is pretty easy to make a flake with non-flake tools compared 
 
 Here's an exhaustive guidelines that you have to keep in mind when developing related files within the project:
 
-* This project uses https://calver.org/[calendar versioning] following software versioning of the upstream.
-The unstable branches are basically deployed with development versions of this project.
+* This project uses https://calver.org/[calendar versioning].
 
-* Only the current stable branch and the unstable branch of NixOS is supported.
-
-* The preferred default nixpkgs branch at development is `nixos-unstable`.
+* Only the unstable branch of NixOS is currently supported.
+Support for the stable versions are unfortunately secondary and more incidental (at least at the moment).
 
 * There shouldn't be any user consumables that requires anything from the npins sources.
 
@@ -454,6 +468,8 @@ Just know this is something the author is trying to resolve.
 * wrapper-manager-fds is not great at handling double wrappers.
 It just naively wraps a package and goes on its merry way.
 
+* wrapper-manager-fds is strongly biased towards Linux (and Unix-adjacent) ecosystem.
+
 * wrapper-manager-fds doesn't handle any replacement for the related files very well.
 This is especially noticeable in large desktop-adjacent packages such as Inkscape, Firefox, and Blender with a bunch of plugins and whatnot where they have their own wrappers.
 This means you cannot set `programs.NAME.package` or something similar with it.
@@ -478,13 +494,13 @@ Here's a list of resources I've found.
 
 This project is licensed under MIT License (SPDX identifier: https://spdx.org/licenses/MIT.html[`MIT`]).
 Just see
-ifdef::env-hugo[github:{github-repo}[license file, rev=main, path=LICENSE]]
+ifdef::env-hugo[github:{github-full}[license file, rev=main, path=LICENSE]]
 ifndef::env-hugo[link:./LICENSE[`./LICENSE`]]
 for full text and details and whatnot.
 
 The documentation (except for the code examples), on the other hand, is licensed under https://www.gnu.org/licenses/fdl-1.3.txt[GNU Free Documentation License] v1.3 only with no "Invariants" section (SPDX identifier: https://spdx.org/licenses/GFDL-1.3-no-invariants-only[`GFDL-1.3-no-invariants-only`])
 You can see either the link or
-ifdef::env-hugo[github:{github-repo}[license file, rev=main, path=docs/LICENSE]]
+ifdef::env-hugo[github:{github-full}[license file, rev=main, path=docs/LICENSE]]
 ifndef::env-hugo[link:./docs/LICENSE[`./docs/LICENSE`]]
 for more info.
 The code examples, similar to the project codebase, are licensed under MIT with the same conditions apply and all that jazz.
