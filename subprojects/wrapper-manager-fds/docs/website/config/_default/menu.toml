@@ -1,0 +1,20 @@
+[[main]]
+identifier = "nix-module-options"
+name = "Module options"
+url = "wrapper-manager-env-options/"
+weight = 1
+
+[[main]]
+identifier = "source-code"
+name = "Source code"
+url = "https://github.com/foo-dogsquared/wrapper-manager-fds"
+
+[[main]]
+identifier = "wrapper-manager-nixos"
+name = "NixOS module"
+url = "wrapper-manager-nixos-module/"
+
+[[main]]
+identifier = "wrapper-manager-home-manager"
+name = "home-manager module"
+url = "wrapper-manager-home-manager-module/"

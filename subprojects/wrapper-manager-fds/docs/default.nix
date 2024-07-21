@@ -11,74 +11,103 @@ in
 
 let
   inherit (pkgs) nixosOptionsDoc stdenv lib;
+
+  # Pretty much inspired from home-manager's documentation build process.
+  evalDoc = args@{ modules, includeModuleSystemOptions ? false, ... }:
+    let
+      options = (pkgs.lib.evalModules {
+        modules = modules ++ [ { _module.check = false; } ];
+        class = "wrapperManager";
+      }).options;
+    in
+    nixosOptionsDoc ({
+      options =
+        if includeModuleSystemOptions
+        then options
+        else builtins.removeAttrs options [ "_module" ];
+      }
+      // builtins.removeAttrs args [ "modules" "includeModuleSystemOptions" ]);
   buildHugoSite = pkgs.callPackage ./hugo-build-module.nix { };
-  wrapperManagerLib = import ../lib/env.nix;
 
-  wrapperManagerEval = wrapperManagerLib.eval { inherit pkgs; };
-
-  optionsDoc = nixosOptionsDoc { inherit (wrapperManagerEval) options; };
-
-  gems = pkgs.bundlerEnv {
-    name = "wrapper-manager-fds-gem-env";
-    ruby = pkgs.ruby_3_1;
-    gemdir = ./.;
+  wmOptionsDoc = evalDoc {
+    modules = [ ../modules/wrapper-manager ];
+    includeModuleSystemOptions = true;
   };
-
-  # Now this is some dogfooding.
-  asciidoctorWrapped =
-    wrapperManagerLib.build {
-      inherit pkgs;
-      modules = [
-        ({ config, lib, pkgs, ... }: {
-          wrappers.asciidoctor = {
-            arg0 = lib.getExe' gems "asciidoctor";
-            appendArgs = [
-              "-T" "${sources.website}/templates"
-            ];
-          };
-        })
-      ];
-    };
 in
-buildHugoSite {
-  pname = "wrapper-manager-docs";
-  version = "2024-07-13";
+{
+  website =
+    let
+      gems = pkgs.bundlerEnv {
+        name = "wrapper-manager-fds-gem-env";
+        ruby = pkgs.ruby_3_1;
+        gemdir = ./.;
+      };
 
-  src = lib.fileset.toSource {
-    root = ./.;
-    fileset = lib.fileset.unions [
-      ./assets
-      ./config
-      ./content
-      ./layouts
-      ./go.mod
-      ./go.sum
-    ];
-  };
+      wrapperManagerLib = (import ../. { }).lib;
 
-  vendorHash = "sha256-vMLi8of2eF/s60B/lM3FDfSntEyieGkvJbTSMuI7Wws=";
+      # Now this is some dogfooding.
+      asciidoctorWrapped =
+        wrapperManagerLib.build {
+          inherit pkgs;
+          modules = [
+            ({ config, lib, pkgs, ... }: {
+              wrappers.asciidoctor = {
+                arg0 = lib.getExe' gems "asciidoctor";
+                appendArgs = [
+                  "-T" "${sources.website}/templates"
+                ];
+              };
+            })
+          ];
+        };
+    in
+    buildHugoSite {
+      pname = "wrapper-manager-docs";
+      version = "2024-07-13";
 
-  buildInputs = with pkgs; [
-    asciidoctorWrapped
-    hugo
-    git
-    gems
-    gems.wrappedRuby
-  ];
+      src = lib.fileset.toSource {
+        root = ./.;
+        fileset = lib.fileset.unions [
+          ./website/assets
+          ./website/config
+          ./website/content
+          ./website/layouts
+          ./website/go.mod
+          ./website/go.sum
+        ];
+      };
 
-  installPhase = ''
-    runHook preInstall
-    cp --reflink=auto "$src/public" "$out"
-    runHook postInstall
+      vendorHash = "sha256-vMLi8of2eF/s60B/lM3FDfSntEyieGkvJbTSMuI7Wws=";
+
+      buildInputs = with pkgs; [
+        asciidoctorWrapped
+        hugo
+        git
+        gems
+        gems.wrappedRuby
+      ];
+
+      meta = with lib; {
+        description = "wrapper-manager-fds documentation";
+        homepage = "https://github.com/foo-dogsquared/wrapper-manager-fds";
+        license = with licenses; [
+          mit
+          fdl13Only
+        ];
+        platforms = platforms.all;
+      };
+    };
+
+  inherit wmOptionsDoc;
+  wmNixosDoc = evalDoc { modules = [ ../modules/env/nixos ];  };
+  wmHmDoc = evalDoc { modules = [ ../modules/env/home-manager ]; };
+
+  manualPage = pkgs.runCommand "wrapper-manager-reference-manpage" {
+    nativeBuildInputs = with pkgs; [ nixos-render-docs ];
+  } ''
+    mkdir -p $out/share/man/man5
+    nixos-render-docs options manpage \
+      ${wmOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
+      $out/share/man/man5/wrapper-manager.nix.5
   '';
-
-  meta = with lib; {
-    description = "wrapper-manager-fds documentation";
-    homepage = "https://github.com/foo-dogsquared/wrapper-manager-fds";
-    license = with licenses; [
-      mit
-      fdl13Only
-    ];
-    platforms = platforms.all;
-  };
 }
