@@ -6,12 +6,13 @@ let
   wrapperManagerModule = lib.types.submoduleWith {
     description = "wrapper-manager module";
     class = "wrapperManager";
-    specialArgs = cfg.extraSpecialArgs // {
-      inherit pkgs;
-      modulesPath = builtins.toString ../wrapper-manager;
-    };
+    specialArgs = cfg.extraSpecialArgs;
     modules = [
       ../wrapper-manager
+
+      ({ lib, ... }: {
+        config._module.args.pkgs = lib.mkDefault pkgs;
+      })
     ] ++ cfg.sharedModules;
   };
 in
