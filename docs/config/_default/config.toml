@@ -1,5 +1,5 @@
 baseURL = 'https://foo-dogsquared.github.io/nixos-config'
-defaultContentLanguage = 'en-US'
+defaultContentLanguage = 'en'
 title = "foodogsquared's NixOS config"
 timeZone = "UTC"
 

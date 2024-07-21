@@ -1,0 +1,56 @@
+---
+title: Workflows
+---
+= Workflows
+
+Workflows are all-encompassing NixOS modules for dictating how you interact with your computer/device/whatever.
+Basically, this is where certain things are set such as your GNOME desktop environment settings, your dolled up standalone window manager setup, or an oddball audio-only desktop interface.
+
+[NOTE]
+====
+Take note that they are considered as private modules so if you're not foodogsquared, you shouldn't use it.
+====
+
+The workflow namespace mainly contains the `enable` option where you can enable more than one workflows like in the following code.
+
+[source, nix]
+----
+{ config, lib, pkgs, ... }:
+
+{
+  workflows.enable = [
+    "a-happy-gnome"
+    "beepeedobolyuessemm"
+  ];
+}
+----
+
+However, enabling workflows shouldn't be taken lightly as they are quite pervasive with what they can configure.
+
+* Enabling (and/or disabling) system services such as the preferred network manager.
+
+* Modifying the list of installed applications.
+This is especially more prevalent when you enable more than workflow module.
+
+* Setting up programs with custom configurations which could cause conflicts with the defaults (upstream or from nixpkgs) or with another workflow module.
+
+Additionally, you can make your workflow module configurable by setting up options in `workflows.workflows.<name>` namespace.
+
+[chat, foodogsquared]
+====
+By organizing the workflow modules this way, you can easily create your desktop rices without overlapping system settings.
+Bless the Nix module system!
+====
+
+[chat, foodogsquared, state=cheeky]
+====
+Whether those rices are worth posting to Unix ricing communities is up to you though.
+====
+
+[chat, Ezran, state=disappointed, role=reversed]
+====
+Whippersnappers with your "riced"-up systems...
+====
+
+
+include::../../../../../modules/nixos/_private/workflows/README.adoc#design-constraints[]
