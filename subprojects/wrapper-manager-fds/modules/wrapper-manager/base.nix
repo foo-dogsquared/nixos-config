@@ -93,9 +93,13 @@ let
         preScript = lib.mkOption {
           type = lib.types.lines;
           description = ''
-            Script fragments to run before the main executable. This option is only
-            used when the wrapper script is not compiled into a binary (that is,
-            when {option}`build.isBinary` is set to `false`).
+            Script fragments to run before the main executable.
+
+            ::: {.note}
+            This option is only used when the wrapper script is not compiled
+            into a binary (that is, when {option}`build.isBinary` is set to
+            `false`).
+            :::
           '';
           default = "";
           example = lib.literalExpression ''
@@ -106,7 +110,8 @@ let
         makeWrapperArgs = lib.mkOption {
           type = with lib.types; listOf str;
           description = ''
-            A list of extra arguments to be passed as part of makeWrapper.
+            A list of extra arguments to be passed as part of `makeWrapper`
+            build step.
           '';
           example = [ "--inherit-argv0" ];
         };
@@ -118,7 +123,7 @@ let
         ]
         ++ (lib.mapAttrsToList (n: v: "--set ${n} ${v}") config.env)
         ++ (builtins.map (v: "--unset ${v}") config.unset)
-        ++ (builtins.map (v: "--prefix 'PATH' ':' ${lib.escapeShellArg v}") config.pathAdd)
+        ++ (builtins.map (v: "--prefix 'PATH' ':' ${v}") config.pathAdd)
         ++ (builtins.map (v: "--add-flags ${v}") config.prependArgs)
         ++ (builtins.map (v: "--append-flags ${v}") config.appendArgs)
         ++ (lib.optionals (!envConfig.build.isBinary && config.preScript != "") (
@@ -156,7 +161,7 @@ in
       description = ''
         A list of packages to be included in the wrapper package.
 
-        ::: {note}
+        ::: {.note}
         This can override some of the binaries included in this list which is
         typically intended to be used as a wrapped package.
         :::

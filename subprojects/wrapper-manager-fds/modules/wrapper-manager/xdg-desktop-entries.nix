@@ -17,7 +17,7 @@ let
 
       desktopName = lib.mkOption {
         type = lib.types.nonEmptyStr;
-        description = "Specific name of the application";
+        description = "Specific name of the application.";
         default = name;
         example = "Firefox";
       };
@@ -31,7 +31,7 @@ let
 
       genericName = lib.mkOption {
         type = with lib.types; nullOr nonEmptyStr;
-        description = "Generic name of the application";
+        description = "Generic name of the application.";
         default = null;
         example = "Web browser";
       };
@@ -64,6 +64,8 @@ in
     type = with lib.types; attrsOf (submodule xdgDesktopEntry);
     description = ''
       A set of desktop entries to be exported along with the wrapped package.
+      The attribute name will be used as the filename of the generated desktop
+      entry file.
     '';
     default = { };
     example = lib.literalExpression ''
