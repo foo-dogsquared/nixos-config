@@ -22,4 +22,26 @@ lib.runTests {
       "${../../modules}/libexec"
     ];
   };
+
+  testsUtilsGetXdgConfigDirs = {
+    expr = self.utils.getXdgConfigDirs [
+      ../../lib
+      ../../modules
+    ];
+    expected = [
+      "${../../lib}/etc/xdg"
+      "${../../modules}/etc/xdg"
+    ];
+  };
+
+  testsUtilsGetXdgDataDirs = {
+    expr = self.utils.getXdgDataDirs [
+      ../../lib
+      ../../modules
+    ];
+    expected = [
+      "${../../lib}/share"
+      "${../../modules}/share"
+    ];
+  };
 }
