@@ -409,6 +409,7 @@ in
     configs = lib.mkOption {
       type = with lib.types; attrsOf (submoduleWith {
         specialArgs = { inherit (config) systems; };
+        shorthandOnlyDefinesConfig = true;
         modules = [
           (import ./shared/nix-conf.nix { inherit inputs; })
           ./shared/config-options.nix

@@ -11,6 +11,7 @@
     ./nixos.nix
     ./nixvim.nix
     ./home-manager.nix
+    ./wrapper-manager.nix
   ];
 
   options.setups.sharedNixpkgsConfig = lib.mkOption {

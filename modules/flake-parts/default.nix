@@ -13,6 +13,7 @@
     ./home-modules.nix
     ./nixvim-modules.nix
     ./nixvim-configurations.nix
+    ./wrapper-manager-packages.nix
     ./setups
   ];
 }
