@@ -4,7 +4,6 @@
 let
   cfg = config.setups.home-manager;
   homeManagerModules = ../../home-manager;
-  partsConfig = config;
 
   # A thin wrapper around the home-manager configuration function.
   mkHome =
@@ -115,21 +114,6 @@ let
             home.homeDirectory = lib.mkForce setupConfig.homeDirectory;
           }
         )
-
-        (lib.mkIf (config.nixvim.instance != null)
-          ({ lib, ... }: {
-            imports = [
-              inputs.${config.nixvim.branch}.homeManagerModules.nixvim
-            ];
-
-            config.programs.nixvim = { ... }: {
-              enable = lib.mkDefault true;
-              imports =
-                partsConfig.setups.nixvim.configs.${config.nixvim.instance}.modules
-                ++ partsConfig.setups.nixvim.sharedModules
-                ++ config.nixvim.additionalModules;
-            };
-          }))
       ];
 
       nixpkgs.config = cfg.sharedNixpkgsConfig;
@@ -179,7 +163,6 @@ in
         modules = [
           (import ./shared/nix-conf.nix { inherit inputs; })
           ./shared/nixpkgs-options.nix
-          ./shared/nixvim-instance-options.nix
           ./shared/config-options.nix
           configType
         ];

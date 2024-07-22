@@ -335,22 +335,6 @@ let
           }
         ))
 
-      # Next, we include the chosen NixVim configuration into NixOS.
-      (lib.mkIf (config.nixvim.instance != null)
-        (
-          { lib, ... }: {
-            imports = [ inputs.${config.nixvim.branch}.nixosModules.nixvim ];
-
-            programs.nixvim = { ... }: {
-              enable = lib.mkDefault true;
-              imports =
-                partsConfig.setups.nixvim.configs.${config.nixvim.instance}.modules
-                ++ partsConfig.setups.nixvim.sharedModules
-                ++ setupConfig.nixvim.additionalModules;
-            };
-          }
-        ))
-
       # Then we include the Disko configuration (if there's any).
       (lib.mkIf (config.diskoConfigs != [ ]) (
         let
@@ -413,7 +397,6 @@ in
         modules = [
           (import ./shared/nix-conf.nix { inherit inputs; })
           ./shared/config-options.nix
-          ./shared/nixvim-instance-options.nix
           ./shared/home-manager-users.nix
           ./shared/nixpkgs-options.nix
           configType

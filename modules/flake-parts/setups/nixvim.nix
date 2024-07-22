@@ -7,6 +7,7 @@
 }:
 
 let
+  partsConfig = config;
   cfg = config.setups.nixvim;
   nixvimModules = ../../nixvim;
 
@@ -106,6 +107,59 @@ let
       ];
     };
   };
+
+  nixvimIntegrationModule = { name, config, lib, ... }: {
+    options.nixvim = {
+      instance = lib.mkOption {
+        type = with lib.types; nullOr str;
+        default = null;
+        example = "fiesta";
+        description = ''
+          The name of the NixVim configuration from
+          {option}`setups.nixvim.configs.<name>` to be included as part
+          of the wider-scoped environment.
+        '';
+      };
+
+      branch = lib.mkOption {
+        type = lib.types.nonEmptyStr;
+        default = "nixvim";
+        example = "nixvim-stable";
+        description = ''
+          The branch of NixVim to be used for the module.
+
+          ::: {.tip}
+          A rule of thumb for properly setting up NixVim with the wider-scoped
+          environment is it should match the nixpkgs version of it. For example,
+          a NixOS system of `nixos-23.11` nixpkgs branch should be paired with a NixVim
+          branch of `nixos-23.11`.
+          :::
+        '';
+      };
+
+      additionalModules = lib.mkOption {
+        type = with lib.types; listOf raw;
+        default = [ ];
+        description = ''
+          A list of additional NixVim modules to be included.
+        '';
+      };
+    };
+
+    config = lib.mkIf (config.nixvim.instance != null) {
+      modules = [
+        ({ lib, ... }: {
+          programs.nixvim = { ... }: {
+            enable = lib.mkDefault true;
+            imports =
+              partsConfig.setups.nixvim.configs.${config.nixvim.instance}.modules
+              ++ partsConfig.setups.nixvim.sharedModules
+              ++ config.nixvim.additionalModules;
+          };
+        })
+      ];
+    };
+  };
 in
 {
   options.setups.nixvim = {
@@ -139,6 +193,28 @@ in
         nixpkgs configuration to be shared among the declared NixVim instances.
       '';
     };
+  };
+
+  options.setups.nixos.configs = lib.mkOption {
+    type = with lib.types; attrsOf (submodule [
+      nixvimIntegrationModule
+      ({ config, lib, ... }: {
+        config.modules = [
+          inputs.${config.nixvim.branch}.nixosModules.nixvim
+        ];
+      })
+    ]);
+  };
+
+  options.setups.home-manager.configs = lib.mkOption {
+    type = with lib.types; attrsOf (submodule [
+      nixvimIntegrationModule
+      ({ config, lib, ... }: {
+        config.modules = [
+          inputs.${config.nixvim.branch}.homeManagerModules.nixvim
+        ];
+      })
+    ]);
   };
 
   config = lib.mkIf (cfg.configs != { }) {
