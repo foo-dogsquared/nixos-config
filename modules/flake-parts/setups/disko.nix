@@ -4,7 +4,7 @@
 # that. Take note we don't consider integrating this with declarative NixOS
 # setups since their Disko scripts are already gettable in
 # `config.system.build.diskoScript` along with its variants (e.g., `noDeps`).
-{ config, lib, ... }:
+{ config, lib, inputs, ... }:
 
 let
   cfg = config.setups.disko;
@@ -38,6 +38,40 @@ in
       '';
     };
   };
+
+  options.setups.nixos.configs =
+    let
+      diskoIntegrationModule = { config, lib, name, ... }: {
+        options = {
+          diskoConfigs = lib.mkOption {
+            type = with lib.types; listOf str;
+            default = [ ];
+            example = [ "external-hdd" ];
+            description = ''
+              A list of declarative Disko configurations to be included alongside
+              the NixOS configuration.
+            '';
+          };
+        };
+
+        config = lib.mkIf (config.diskoConfigs != [ ]) (
+          let
+            diskoConfigs =
+              builtins.map (name: import ../../../configs/disko/${name}) config.diskoConfigs;
+          in
+          {
+            modules = lib.singleton {
+              imports =
+                [ inputs.disko.nixosModules.disko ]
+                ++ (lib.lists.flatten diskoConfigs);
+            };
+          }
+        );
+      };
+    in
+    lib.mkOption {
+      type = with lib.types; attrsOf (submodule diskoIntegrationModule);
+    };
 
   config = {
     flake.diskoConfigurations =
