@@ -391,17 +391,13 @@ in
     };
 
     configs = lib.mkOption {
-      type = with lib.types; attrsOf (submoduleWith {
-        specialArgs = { inherit (config) systems; };
-        shorthandOnlyDefinesConfig = true;
-        modules = [
-          (import ./shared/nix-conf.nix { inherit inputs; })
-          ./shared/config-options.nix
-          ./shared/home-manager-users.nix
-          ./shared/nixpkgs-options.nix
-          configType
-        ];
-      });
+      type = with lib.types; attrsOf (submodule [
+        (import ./shared/nix-conf.nix { inherit inputs; })
+        (import ./shared/config-options.nix { inherit (config) systems; })
+        ./shared/home-manager-users.nix
+        ./shared/nixpkgs-options.nix
+        configType
+      ]);
       default = { };
       description = ''
         An attribute set of metadata for the declarative NixOS setups. This

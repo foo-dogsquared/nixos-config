@@ -158,15 +158,12 @@ in
     };
 
     configs = lib.mkOption {
-      type = with lib.types; attrsOf (submoduleWith {
-        specialArgs = { inherit (config) systems; };
-        modules = [
-          (import ./shared/nix-conf.nix { inherit inputs; })
-          ./shared/nixpkgs-options.nix
-          ./shared/config-options.nix
-          configType
-        ];
-      });
+      type = with lib.types; attrsOf (submodule [
+        (import ./shared/nix-conf.nix { inherit inputs; })
+        (import ./shared/config-options.nix { inherit (config) systems; })
+        ./shared/nixpkgs-options.nix
+        configType
+      ]);
       default = { };
       description = ''
         An attribute set of metadata for the declarative home-manager setups.

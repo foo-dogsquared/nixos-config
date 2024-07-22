@@ -164,13 +164,10 @@ in
 {
   options.setups.nixvim = {
     configs = lib.mkOption {
-      type = with lib.types; attrsOf (submoduleWith {
-        specialArgs = { inherit (config) systems; };
-        modules = [
-          ./shared/config-options.nix
-          configType
-        ];
-      });
+      type = with lib.types; attrsOf (submodule [
+        (import ./shared/config-options.nix { inherit (config) systems; })
+        configType
+      ]);
       default = { };
       description = ''
         A set of NixVim configurations to be integrated into the declarative

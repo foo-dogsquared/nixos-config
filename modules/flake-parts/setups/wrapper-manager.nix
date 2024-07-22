@@ -102,7 +102,7 @@ in
 
     configs = lib.mkOption {
       type = with lib.types; attrsOf (submodule [
-        ./shared/config-options.nix
+        (import ./shared/config-options.nix { inherit (config) systems; })
         ./shared/nixpkgs-options.nix
         wrapperManagerConfigModule
       ]);

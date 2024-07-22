@@ -1,4 +1,6 @@
-{ lib, name, systems, ... }: {
+{ systems }:
+
+{ lib, name, ... }: {
   options = {
     systems = lib.mkOption {
       type = with lib.types; listOf str;
