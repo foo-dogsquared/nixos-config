@@ -1,16 +1,12 @@
 # This is the declarative host management converted into a flake-parts module.
-# It also enforces a structure for declarative NixOS setups such as a mandatory
-# inclusion of the home-manager NixOS module, a deploy-rs node, a hostname and
-# an optional domain, and deploy-rs-related options so it isn't really made to
-# be generic or anything like that.
+# It also enforces a structure for declarative NixOS setups such a deploy-rs
+# node, a hostname and an optional domain, and deploy-rs-related options so it
+# isn't really made to be generic or anything like that.
 { config, options, lib, inputs, ... }:
 
 let
   cfg = config.setups.nixos;
   nixosModules = ../../nixos;
-
-  # This is used on a lot of the Nix modules below.
-  partsConfig = config;
 
   # A thin wrapper around the NixOS configuration function.
   mkHost = {
@@ -114,37 +110,6 @@ let
     };
   };
 
-  homeManagerUserType = { name, config, lib, ... }: {
-    options = {
-      userConfig = lib.mkOption {
-        type = with lib.types; attrsOf anything;
-        description = ''
-          The configuration applied for individual users set in the
-          wider-scoped environment.
-        '';
-      };
-    };
-
-    config =
-      let
-        hmUserConfig = partsConfig.setups.home-manager.configs.${name};
-      in
-      {
-        userConfig = {
-          isNormalUser = lib.mkDefault true;
-          createHome = lib.mkDefault true;
-          home = lib.mkForce hmUserConfig.homeDirectory;
-        };
-
-        additionalModules = [
-          ({ lib, ... }: {
-            home.homeDirectory = lib.mkForce hmUserConfig.homeDirectory;
-            home.username = lib.mkForce name;
-          })
-        ];
-      };
-  };
-
   configType = { options, config, name, lib, ... }: let
     setupConfig = config;
   in {
@@ -172,40 +137,6 @@ let
         default = null;
         example = "work.example.com";
         description = "The domain of the NixOS system.";
-      };
-
-      home-manager = {
-        # Extending it with more NixOS-specific user options.
-        users = lib.mkOption {
-          type = with lib.types; attrsOf (submodule homeManagerUserType);
-        };
-
-        nixpkgsInstance = lib.mkOption {
-          type = lib.types.enum [ "global" "separate" "none" ];
-          default = "global";
-          description = ''
-            Indicates how to manage the nixpkgs instance (or instances)
-            of the holistic system. This will also dictate how to import
-            overlays from
-            {option}`setups.home-manager.configs.<user>.overlays`.
-
-            * `global` enforces to use one nixpkgs instance for all
-            home-manager users and imports all of the overlays into the
-            nixpkgs instance of the NixOS system.
-
-            * `separate` enforces the NixOS system to use individual
-            nixpkgs instance for all home-manager users and imports the
-            overlays to the nixpkgs instance of the home-manager user.
-
-            * `none` leave the configuration alone and do not import
-            overlays at all where you have to set them yourself. This is
-            the best option if you want more control over each individual
-            NixOS and home-manager configuration.
-
-            The default value is set to `global` which is the encouraged
-            practice with this module.
-          '';
-        };
       };
 
       deploy = lib.mkOption {
@@ -251,89 +182,7 @@ let
 
     config.modules = [
       # Bring in the required modules.
-      inputs.${config.home-manager.branch}.nixosModules.home-manager
       ../../../configs/nixos/${config.configName}
-
-      # Mapping the declarative home-manager users (if it has one) into NixOS
-      # users.
-      (lib.mkIf (config.home-manager.users != { })
-        (
-          let
-            inherit (config.home-manager) nixpkgsInstance;
-
-            hasHomeManagerUsers = config.home-manager.users != { };
-            isNixpkgs = state: hasHomeManagerUsers && nixpkgsInstance == state;
-          in
-          { config, lib, pkgs, ... }: {
-            config = lib.mkMerge [
-              (lib.mkIf hasHomeManagerUsers {
-                users.users =
-                  lib.mapAttrs
-                    (name: hmUser: hmUser.userConfig)
-                    setupConfig.home-manager.users;
-
-                home-manager.users =
-                  lib.mapAttrs
-                    (name: hmUser: {
-                      imports =
-                        partsConfig.setups.home-manager.configs.${name}.modules
-                        ++ hmUser.additionalModules;
-                    })
-                    setupConfig.home-manager.users;
-              })
-
-              (lib.mkIf (isNixpkgs "global") {
-                home-manager.useGlobalPkgs = lib.mkForce true;
-
-                # Disable all options that are going to be blocked once
-                # `home-manager.useGlobalPkgs` is used.
-                home-manager.users =
-                  lib.mapAttrs
-                    (name: _: {
-                      nixpkgs.overlays = lib.mkForce null;
-                      nixpkgs.config = lib.mkForce null;
-                    })
-                    setupConfig.home-manager.users;
-
-                # Then apply all of the user overlays into the nixpkgs instance
-                # of the NixOS system.
-                nixpkgs.overlays =
-                  let
-                    hmUsersOverlays =
-                      lib.mapAttrsToList
-                        (name: _:
-                          partsConfig.setups.home-manager.configs.${name}.nixpkgs.overlays)
-                        setupConfig.home-manager.users;
-
-                    overlays = lib.lists.flatten hmUsersOverlays;
-                  in
-                  # Most of the overlays are going to be imported from a
-                    # variable anyways. This should massively reduce the step
-                    # needed for nixpkgs to do its thing.
-                    #
-                    # Though, it becomes unpredictable due to the way how the
-                    # overlay list is constructed. However, this is much more
-                    # preferable than letting a massive list with duplicated
-                    # overlays from different home-manager users to be applied.
-                    #
-                    # Anyways, all I'm saying is that this is a massive hack
-                    # because it isn't correct.
-                  lib.lists.unique overlays;
-              })
-
-              (lib.mkIf (isNixpkgs "separate") {
-                home-manager.useGlobalPkgs = lib.mkForce false;
-                home-manager.users =
-                  lib.mapAttrs
-                    (name: _: {
-                      nixpkgs.overlays =
-                        partsConfig.setups.home-manager.configs.${name}.nixpkgs.overlays;
-                    })
-                    setupConfig.home-manager.users;
-              })
-            ];
-          }
-        ))
 
       # Then we include the Disko configuration (if there's any).
       (lib.mkIf (config.diskoConfigs != [ ]) (
@@ -394,7 +243,6 @@ in
       type = with lib.types; attrsOf (submodule [
         (import ./shared/nix-conf.nix { inherit inputs; })
         (import ./shared/config-options.nix { inherit (config) systems; })
-        ./shared/home-manager-users.nix
         ./shared/nixpkgs-options.nix
         configType
       ]);
@@ -466,17 +314,6 @@ in
 
       # Import our private modules.
       ../../nixos/_private
-
-      # Set the home-manager-related settings.
-      ({ lib, ... }: {
-        home-manager.sharedModules = partsConfig.setups.home-manager.sharedModules;
-
-        # These are just the recommended options for home-manager that may be
-        # the default value in the future but this is how most of the NixOS
-        # setups are already done so...
-        home-manager.useUserPackages = lib.mkDefault true;
-        home-manager.useGlobalPkgs = lib.mkDefault true;
-      })
     ];
 
     flake =
