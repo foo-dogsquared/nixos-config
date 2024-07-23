@@ -1,6 +1,6 @@
 # For the environment-specific subset, we'll be simulating the configurations
 # as a simple attribute set since that's what they are anyways.
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import <nixpkgs> { }, utils ? import ../utils.nix { inherit pkgs; } }:
 
 let
   inherit (pkgs) lib;
