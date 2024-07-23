@@ -48,6 +48,7 @@ in
         A set of wrappers to be added into the environment configuration.
       '';
       default = { };
+      visible = "shallow";
       example = lib.literalExpression ''
         {
           custom-ricing = {
