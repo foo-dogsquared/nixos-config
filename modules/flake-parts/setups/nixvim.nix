@@ -103,7 +103,7 @@ let
 
     config = {
       modules = [
-        ../../../configs/nixvim/${config.configName}
+        "${partsConfig.setups.configDir}/nixvim/${config.configName}"
       ];
     };
   };

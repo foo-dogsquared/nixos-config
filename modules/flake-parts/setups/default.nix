@@ -14,15 +14,30 @@
     ./wrapper-manager.nix
   ];
 
-  options.setups.sharedNixpkgsConfig = lib.mkOption {
-    type = with lib.types; attrsOf anything;
-    description = ''
-      Shared configuration of the nixpkgs instance to be passed to all of the
-      module environments based from the nixpkgs module system.
-    '';
-    default = { };
-    example = {
-      allowUnfree = true;
+  options.setups = {
+    configDir = lib.mkOption {
+      type = lib.types.path;
+      default = ../../../configs;
+      description = ''
+        The directory containing configurations of various environments. The
+        top-level directories are expected to be the name of the environment
+        with their configurations inside.
+      '';
+      example = lib.literalExpression ''
+        ''${inputs.my-flake}/configs
+      '';
+    };
+
+    sharedNixpkgsConfig = lib.mkOption {
+      type = with lib.types; attrsOf anything;
+      description = ''
+        Shared configuration of the nixpkgs instance to be passed to all of the
+        module environments based from the nixpkgs module system.
+      '';
+      default = { };
+      example = {
+        allowUnfree = true;
+      };
     };
   };
 }

@@ -105,7 +105,7 @@ let
 
     config = {
       modules = [
-        ../../../configs/home-manager/${config.configName}
+        "${partsConfig.setups.configDir}/home-manager/${config.configName}"
 
         (
           let

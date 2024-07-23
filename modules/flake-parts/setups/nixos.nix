@@ -6,6 +6,7 @@
 
 let
   cfg = config.setups.nixos;
+  partsConfig = config;
   nixosModules = ../../nixos;
 
   # A thin wrapper around the NixOS configuration function.
@@ -172,7 +173,7 @@ let
 
     config.modules = [
       # Bring in the required modules.
-      ../../../configs/nixos/${config.configName}
+      "${partsConfig.setups.configDir}/nixos/${config.configName}"
 
       # Setting up the typical configuration.
       (

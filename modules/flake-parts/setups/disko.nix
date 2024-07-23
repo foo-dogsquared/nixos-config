@@ -8,6 +8,7 @@
 
 let
   cfg = config.setups.disko;
+  partsConfig = config;
 
   diskoConfigType = { name, config, ... }: {
     options = {
@@ -57,7 +58,7 @@ in
         config = lib.mkIf (config.diskoConfigs != [ ]) (
           let
             diskoConfigs =
-              builtins.map (name: import ../../../configs/disko/${name}) config.diskoConfigs;
+              builtins.map (name: import "${partsConfig.setups.configDir}/disko/${name}") config.diskoConfigs;
           in
           {
             modules = lib.singleton {
@@ -75,6 +76,6 @@ in
 
   config = {
     flake.diskoConfigurations =
-      lib.mapAttrs (name: _: import ../../../configs/disko/${name}) cfg.configs;
+      lib.mapAttrs (name: _: import "${partsConfig.setups.configDir}/disko/${name}") cfg.configs;
   };
 }

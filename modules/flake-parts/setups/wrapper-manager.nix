@@ -86,7 +86,7 @@ let
       nixpkgs.config = cfg.sharedNixpkgsConfig;
 
       modules = [
-        ../../../configs/wrapper-manager/${config.configName}
+        "${partsConfig.setups.configDir}/wrapper-manager/${config.configName}"
       ];
     };
   };
