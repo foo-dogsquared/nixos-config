@@ -9,6 +9,7 @@
     ./home-manager.nix
     ./nixos.nix
     ./nixvim.nix
+    ./wrapper-manager.nix
 
     # Subprojects.
     ./bahaghari.nix
