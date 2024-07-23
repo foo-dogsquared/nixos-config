@@ -44,14 +44,13 @@ in
         xdgDirsType = { name, lib, config, ... }: {
           options.xdg = xdgDirsOption;
 
+          # When set this way, we could allow the user to override everything.
+          config.xdg.configDirs = cfg.configDirs;
+          config.xdg.dataDirs = cfg.dataDirs;
+
           config.makeWrapperArgs =
-            let
-              # Just take note wrapper-specific values should be the one taking over.
-              configDirs = cfg.configDirs ++ config.xdg.configDirs;
-              dataDirs = cfg.dataDirs ++ config.xdg.dataDirs;
-            in
-            builtins.map (v: "--prefix 'XDG_CONFIG_DIRS' ':' ${v}") configDirs
-            ++ (builtins.map (v: "--prefix 'XDG_DATA_DIRS' ':' ${v}") dataDirs);
+            builtins.map (v: "--prefix 'XDG_CONFIG_DIRS' ':' ${v}") config.xdg.configDirs
+            ++ (builtins.map (v: "--prefix 'XDG_DATA_DIRS' ':' ${v}") config.xdg.dataDirs);
         };
       in
       with lib.types; attrsOf (submodule xdgDirsType);
