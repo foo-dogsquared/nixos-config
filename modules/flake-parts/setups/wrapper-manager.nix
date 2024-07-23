@@ -7,8 +7,8 @@ let
   mkWrapperManagerPackage = {
     pkgs,
     src,
-    modules,
-    specialArgs,
+    modules ? [ ],
+    specialArgs ? { },
   }:
     let
       wrapperManagerEntrypoint = import src { };
@@ -189,7 +189,7 @@ in
             in
             mkWrapperManagerPackage {
               inherit pkgs;
-              inherit (metadata) src;
+              inherit (metadata.wrapper-manager) src;
               modules =
                 cfg.sharedModules
                 ++ cfg.standaloneModules
