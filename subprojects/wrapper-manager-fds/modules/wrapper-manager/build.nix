@@ -20,6 +20,15 @@
       default = "";
     };
 
+    extraPassthru = lib.mkOption {
+      type = with lib.types; attrsOf anything;
+      description = ''
+        Set of data to be passed through `passthru` of the resulting
+        derivation.
+      '';
+      default = { };
+    };
+
     toplevel = lib.mkOption {
       type = lib.types.package;
       readOnly = true;
@@ -44,6 +53,7 @@
               mkDesktopEntries (lib.attrValues config.xdg.desktopEntries);
         in
           pkgs.symlinkJoin {
+            passthru = config.build.extraPassthru;
             name = "wrapper-manager-fds-wrapped-package";
             paths = desktopEntries ++ config.basePackages;
             nativeBuildInputs =
