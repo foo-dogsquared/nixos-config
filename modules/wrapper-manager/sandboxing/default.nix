@@ -1,6 +1,9 @@
 { lib, ... }:
 
 {
+  imports = [
+    ./bubblewrap
+  ];
 
   options.wrappers =
     let
