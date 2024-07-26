@@ -98,6 +98,7 @@ in
 {
   imports = [
     ./dbus-filter.nix
+    ./filesystem.nix
   ];
 
   options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
