@@ -6,6 +6,9 @@
 #
 # Similar to most of them, this is basically a builder for the right arguments
 # to be passed to `bwrap`.
+#
+# As already mentioned from the Bubblewrap README, we'll have to be careful for
+# handling D-Bus so we'll use xdg-dbus-proxy for that.
 { config, lib, pkgs, ... }:
 
 let
@@ -93,6 +96,10 @@ let
   };
 in
 {
+  imports = [
+    ./dbus-filter.nix
+  ];
+
   options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
 
   options.wrappers =
