@@ -114,8 +114,8 @@ in
 
             # Welp, we could set it to the absolute location of the wrapper
             # executable in the final output but it's a big pain the ass to do
-            # so but we're opting to the executable name instead. This current
-            # way of doing it is simply the next (and the simplest) best thing.
+            # so we're opting to the executable name instead. This current
+            # way of doing it is simply the next best (and the simplest) thing.
             # We just have to make sure the build step for the wrapper script
             # is consistent throughout the entire module environment.
             #

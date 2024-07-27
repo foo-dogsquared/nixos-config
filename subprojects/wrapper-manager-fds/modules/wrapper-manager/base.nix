@@ -96,9 +96,8 @@ let
             Script fragments to run before the main executable.
 
             ::: {.note}
-            This option is only used when the wrapper script is not compiled
-            into a binary (that is, when {option}`build.isBinary` is set to
-            `false`).
+            This option is only used when {option}`build.isBinary` is set to
+            `false`.
             :::
           '';
           default = "";
@@ -117,23 +116,29 @@ let
         };
       };
 
-      config = {
-        env.PATH = lib.concatStringsSep ":" config.pathAdd;
+      config = lib.mkMerge [
+        {
+          makeWrapperArgs = [
+            "--argv0" config.arg0
+          ]
+          ++ (builtins.map (v: "--unset ${lib.escapeShellArg v}") config.unset)
+          ++ (lib.mapAttrsToList (n: v: "--set ${lib.escapeShellArg n} ${lib.escapeShellArg v}") config.env)
+          ++ (builtins.map (v: "--add-flags ${lib.escapeShellArg v}") config.prependArgs)
+          ++ (builtins.map (v: "--append-flags ${lib.escapeShellArg v}") config.appendArgs)
+          ++ (lib.optionals (!envConfig.build.isBinary && config.preScript != "") (
+            let
+              preScript =
+                pkgs.runCommand "wrapper-script-prescript-${config.executableName}" { } config.preScript;
+            in
+              [ "--run" preScript ]));
+        }
 
-        makeWrapperArgs = [
-          "--argv0" config.arg0
-        ]
-        ++ (builtins.map (v: "--unset ${v}") config.unset)
-        ++ (lib.mapAttrsToList (n: v: "--set ${n} ${v}") config.env)
-        ++ (builtins.map (v: "--add-flags ${v}") config.prependArgs)
-        ++ (builtins.map (v: "--append-flags ${v}") config.appendArgs)
-        ++ (lib.optionals (!envConfig.build.isBinary && config.preScript != "") (
-          let
-            preScript =
-              pkgs.runCommand "wrapper-script-prescript-${config.executableName}" { } config.preScript;
-          in
-            [ "--run" preScript ]));
-      };
+        (lib.mkIf (config.pathAdd != [ ]) {
+          env.PATH = lib.concatStringsSep ":" config.pathAdd;
+
+        })
+
+      ];
     };
 in
 {

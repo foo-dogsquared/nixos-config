@@ -44,14 +44,21 @@ in
         xdgDirsType = { name, lib, config, ... }: {
           options.xdg = xdgDirsOption;
 
-          # When set this way, we could allow the user to override everything.
-          config.xdg.configDirs = cfg.configDirs;
-          config.xdg.dataDirs = cfg.dataDirs;
+          config = lib.mkMerge [
+            {
+              # When set this way, we could allow the user to override everything.
+              xdg.configDirs = cfg.configDirs;
+              xdg.dataDirs = cfg.dataDirs;
+            }
 
-          config.env = {
-            XDG_CONFIG_DIRS = lib.concatStringsSep ":" config.xdg.configDirs;
-            XDG_DATA_DIRS = lib.concatStringsSep ":" config.xdg.dataDirs;
-          };
+            (lib.mkIf (config.xdg.configDirs != [ ]) {
+              env.XDG_CONFIG_DIRS = lib.concatStringsSep ":" config.xdg.configDirs;
+            })
+
+            (lib.mkIf (config.xdg.dataDirs != [ ]) {
+              env.XDG_DATA_DIRS = lib.concatStringsSep ":" config.xdg.dataDirs;
+            })
+          ];
         };
       in
       with lib.types; attrsOf (submodule xdgDirsType);

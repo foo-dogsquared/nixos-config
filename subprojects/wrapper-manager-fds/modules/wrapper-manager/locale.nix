@@ -4,29 +4,27 @@ let
   cfg = config.locale;
 
   localeModuleFactory = { isGlobal ? false }: {
-    locale = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = if isGlobal then true else cfg.enable;
-        description = if isGlobal then ''
-          Whether to enable explicit glibc locale support. This is recommended
-          for Nix-built applications.
-        '' else ''
-          Whether to enable locale support for this wrapper. Recommended for
-          Nix-built applications.
-        '';
-      };
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = if isGlobal then true else cfg.enable;
+      description = if isGlobal then ''
+        Whether to enable explicit glibc locale support. This is recommended
+        for Nix-built applications.
+      '' else ''
+        Whether to enable locale support for this wrapper. Recommended for
+        Nix-built applications.
+      '';
+    };
 
-      package = lib.mkOption {
-        type = lib.types.package;
-        default =
-          if isGlobal
-          then (pkgs.glibcLocales.override { allLocales = true; })
-          else cfg.package;
-        description = ''
-          The package containing glibc locales.
-        '';
-      };
+    package = lib.mkOption {
+      type = lib.types.package;
+      default =
+        if isGlobal
+        then (pkgs.glibcLocales.override { allLocales = true; })
+        else cfg.package;
+      description = ''
+        The package containing glibc locales.
+      '';
     };
   };
 in
