@@ -120,7 +120,7 @@ in
 
       bubblewrapModule = { config, lib, pkgs, name, ... }:
         let
-          submoduleCfg = config;
+          submoduleCfg = config.sandboxing.bubblewrap;
         in
           {
             options.sandboxing.bubblewrap =
@@ -151,7 +151,7 @@ in
                   };
 
                   config = lib.mkIf (config.sandboxing.variant == "bubblewrap") {
-                    bubblewrap.dbus.filter.extraArgs =
+                    sandboxing.bubblewrap.dbus.filter.extraArgs =
                       let
                         makeDbusProxyArgs = address: metadata:
                           [ address metadata.path ] ++ metadata.extraArgs;

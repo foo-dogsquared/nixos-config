@@ -121,7 +121,7 @@ in
               # TODO: All of the Linux-exclusive flags could be handled by the
               # launcher instead. ALSO MODULARIZE THIS CRAP!
               # Ordering of the arguments here matter(?).
-              bubblewrap.extraArgs =
+              sandboxing.bubblewrap.extraArgs =
                 cfg.extraArgs
                 ++ lib.optionals stdenv.isLinux [
                   "--proc" "/proc"
@@ -138,14 +138,14 @@ in
             }
 
             (lib.mkIf submoduleCfg.enableSharedNixStore {
-              bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
+              sandboxing.bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
             })
 
             (lib.mkIf submoduleCfg.enableNetwork {
               # In case isolation is also enabled, we'll have this still
               # enabled at least.
-              bubblewrap.extraArgs = lib.mkAfter [ "--share-net" ];
-              bubblewrap.binds.ro = [
+              sandboxing.bubblewrap.extraArgs = lib.mkAfter [ "--share-net" ];
+              sandboxing.bubblewrap.binds.ro = [
                 "/etc/ssh"
                 "/etc/hosts"
                 "/etc/resolv.conf"
@@ -153,7 +153,8 @@ in
             })
 
             (lib.mkIf submoduleCfg.enableIsolation {
-              bubblewrap.extraArgs = lib.mkBefore [ "--unshare-all" ];
+              sandboxing.bubblewrap.extraArgs = lib.mkBefore [ "--unshare-all" ];
+            })
             })
           ]);
         };

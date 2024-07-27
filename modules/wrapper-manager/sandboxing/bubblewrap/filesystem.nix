@@ -77,7 +77,7 @@ in
         options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = false; };
 
         config = lib.mkIf (config.sandboxing.variant == "bubblewrap") {
-          bubblewrap.extraArgs =
+          sandboxing.bubblewrap.filesystem =
             lib.lists.flatten
               (lib.mapAttrsToList
                 (dst: metadata:
