@@ -1,4 +1,4 @@
-{ inputs, lib, ... }: {
+{ inputs, config, lib, ... }: {
   imports = [
     ./dev.nix
     ./packages.nix
@@ -39,7 +39,7 @@
       # for building NixOS and home-manager systems.
       pkgs = import inputs.nixpkgs {
         inherit system;
-        config.allowUnfree = true;
+        config = config.setups.sharedNixpkgsConfig;
         overlays = lib.attrValues inputs.self.overlays ++ [
           inputs.nur.overlay
         ];
