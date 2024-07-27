@@ -51,13 +51,18 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    basePackages = [ cfg.package ];
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
+      basePackages = [ cfg.package ];
 
-    # TODO: Should we replace the .desktop file for this?
-    wrappers.blender = {
-      arg0 = lib.getExe' cfg.package "blender";
-      env.BLENDER_SYSTEM_RESOURCES.value = lib.mkIf (builtins.length cfg.addons > 0) addons;
-    };
-  };
+      # TODO: Should we replace the .desktop file for this?
+      wrappers.blender = {
+        arg0 = lib.getExe' cfg.package "blender";
+      };
+    }
+
+    (lib.mkIf (builtins.length cfg.addons > 0) {
+      wrappers.blender.env.BLENDER_SYSTEM_RESOURCES.value = addons;
+    })
+  ]);
 }
