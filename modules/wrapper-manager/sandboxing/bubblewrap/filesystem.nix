@@ -1,7 +1,7 @@
 # Essentially a poor man's version of NixOS filesystem module except that is
 # made for Bubblewrap environment. Everything here should only make use of
 # Bubblewrap's filesystem options from the command-line application.
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.sandboxing.bubblewrap;
@@ -54,6 +54,33 @@ let
       };
     };
   in {
+    enableSharedNixStore = lib.mkEnableOption null // {
+      default = if isGlobal then false else cfg.enableSharedNixStore;
+      description = ''
+        Whether to share the entire Nix store directory.
+
+        ::: {.caution}
+        Typically, this is not recommended especially for Bubblewrap
+        environments. If you want to bind some of the items from the Nix store,
+        it is recommended to use {option}`sharedNixPaths` instead.
+        :::
+      '';
+    };
+
+    sharedNixPaths = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = if isGlobal then [ ] else cfg.sharedNixPaths;
+      description = ''
+        A list of store paths to be mounted (as read-only bind-mounts). Note
+        that this also includes the listed store objects' dependencies.
+      '';
+      example = lib.literalExpression ''
+        with pkgs; [
+          gtk3
+        ]
+      '';
+    };
+
     binds = {
       ro = lib.mkOption {
         type = with lib.types; listOf path;
@@ -121,7 +148,6 @@ let
           };
 
           "/etc/xdg" = {
-            source = ./configs;
             permissions = "0700";
             operation = "dir";
           };
@@ -139,6 +165,16 @@ let
 in
 {
   options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
+
+  # TODO: There has to be a better way to get this info without relying on
+  # pkgs.closureInfo builder, right?
+  config.sandboxing.bubblewrap.binds.ro =
+    let
+      sharedNixPathsClosureInfo = pkgs.closureInfo { rootpaths = cfg.sharedNixPaths; };
+      closurePaths = lib.readFile "${sharedNixPathsClosureInfo}/store-paths";
+    in
+      lib.lists.filter (p: p != "") (lib.splitStrings "\n" closurePaths);
+
   config.sandboxing.bubblewrap.filesystem =
     let
       makeFilesystemMapping = operation: bind:
@@ -157,37 +193,43 @@ in
       in {
         options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = false; };
 
-        config = lib.mkIf (config.sandboxing.variant == "bubblewrap") {
-          sandboxing.bubblewrap.filesystem =
-            let
-              makeFilesystemMapping = operation: bind:
-                lib.nameValuePair bind { inherit operation; source = bind; };
-              filesystemMappings =
-                lib.lists.map (makeFilesystemMapping "ro-bind-try") submoduleCfg.binds.ro
-                ++ lib.lists.map (makeFilesystemMapping "bind") submoduleCfg.binds.rw
-                ++ lib.lists.map (makeFilesystemMapping "dev-bind-try") submoduleCfg.binds.dev;
-            in
-            builtins.listToAttrs filesystemMappings;
+        config = lib.mkIf (config.sandboxing.variant == "bubblewrap") (lib.mkMerge [
+          {
+            sandboxing.bubblewrap.filesystem =
+              let
+                makeFilesystemMapping = operation: bind:
+                  lib.nameValuePair bind { inherit operation; source = bind; };
+                filesystemMappings =
+                  lib.lists.map (makeFilesystemMapping "ro-bind-try") submoduleCfg.binds.ro
+                  ++ lib.lists.map (makeFilesystemMapping "bind") submoduleCfg.binds.rw
+                  ++ lib.lists.map (makeFilesystemMapping "dev-bind-try") submoduleCfg.binds.dev;
+              in
+              builtins.listToAttrs filesystemMappings;
 
-          sandboxing.bubblewrap.extraArgs =
-            let
-              makeFilesystemArgs = dst: metadata:
-                let
-                  src = metadata.source;
-                  hasPermissions = metadata.permissions != null;
-                  isValidOperationWithPerms = lib.elem metadata.operation fileOperationsWithPerms;
-                in
-                lib.optionals (hasPermissions && isValidOperationWithPerms) [ "--perms ${metadata.permissions}" ]
-                ++ (
-                  if metadata.operation == "dir"
-                  then [ "--${metadata.operation} ${dst}" ]
-                  else [ "--${metadata.operation} ${src} ${dst}" ]
-                )
-                ++ lib.optionals metadata.lock [ "--lock-file ${dst}" ];
-            in
-            lib.lists.flatten
-              (lib.mapAttrsToList makeFilesystemArgs submoduleCfg.filesystem);
-        };
+            sandboxing.bubblewrap.extraArgs =
+              let
+                makeFilesystemArgs = dst: metadata:
+                  let
+                    src = metadata.source;
+                    hasPermissions = metadata.permissions != null;
+                    isValidOperationWithPerms = lib.elem metadata.operation fileOperationsWithPerms;
+                  in
+                  lib.optionals (hasPermissions && isValidOperationWithPerms) [ "--perms ${metadata.permissions}" ]
+                  ++ (
+                    if metadata.operation == "dir"
+                    then [ "--${metadata.operation} ${dst}" ]
+                    else [ "--${metadata.operation} ${src} ${dst}" ]
+                  )
+                  ++ lib.optionals metadata.lock [ "--lock-file ${dst}" ];
+              in
+              lib.lists.flatten
+                (lib.mapAttrsToList makeFilesystemArgs submoduleCfg.filesystem);
+            }
+
+            (lib.mkIf submoduleCfg.enableSharedNixStore {
+              sandboxing.bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
+            })
+        ]);
       };
     in
       lib.mkOption {

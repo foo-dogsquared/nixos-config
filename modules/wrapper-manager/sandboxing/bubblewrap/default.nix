@@ -34,10 +34,6 @@ let
         '';
     };
 
-    enableSharedNixStore = lib.mkEnableOption "sharing of the Nix store" // {
-      default = if isGlobal then true else cfg.enableSharedNixStore;
-    };
-
     enableNetwork = lib.mkEnableOption "sharing of the host network" // lib.optionalAttrs isGlobal {
       default = if isGlobal then true else cfg.enableNetwork;
     };
@@ -89,10 +85,6 @@ in
               arg0 = lib.getExe' submoduleCfg.package "bwrap";
               prependArgs = lib.mkBefore (submoduleCfg.extraArgs ++ [ "--" submoduleCfg.wraparound.executable ] ++ submoduleCfg.wraparound.extraArgs);
             }
-
-            (lib.mkIf submoduleCfg.enableSharedNixStore {
-              sandboxing.bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
-            })
 
             (lib.mkIf submoduleCfg.enableNetwork {
               # In case isolation is also enabled, we'll have this still
