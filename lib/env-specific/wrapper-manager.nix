@@ -1,6 +1,6 @@
 { pkgs, lib, self }:
 
-{
+rec {
   /* Given a Blender package and its addons to be wrapped, create a derivation
      containing all of the addons properly placed as a system resource folder.
   */
@@ -23,4 +23,21 @@
         lndir -silent $resourcesPath $out
       done
     '';
+
+  makeBlenderWrapper = module@{ blenderPackage, blenderArgs ? [ ] , addons ? [ ], ... }:
+    let
+      blenderAddons = wrapBlenderAddons { inherit blenderPackage addons; };
+    in
+    lib.mkMerge [
+      {
+        arg0 = lib.getExe' blenderPackage "blender";
+        prependArgs = lib.mkBefore blenderArgs;
+      }
+
+      (lib.mkIf (builtins.length addons > 0) {
+        env.BLENDER_SYSTEM_RESOURCES = blenderAddons;
+      })
+
+      (lib.removeAttrs module [ "blenderPackage" "blenderArgs" "addons" ])
+    ];
 }
