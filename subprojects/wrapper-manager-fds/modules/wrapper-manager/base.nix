@@ -118,12 +118,13 @@ let
       };
 
       config = {
+        env.PATH = lib.concatStringsSep ":" config.pathAdd;
+
         makeWrapperArgs = [
           "--argv0" config.arg0
         ]
-        ++ (lib.mapAttrsToList (n: v: "--set ${n} ${v}") config.env)
         ++ (builtins.map (v: "--unset ${v}") config.unset)
-        ++ (builtins.map (v: "--prefix 'PATH' ':' ${v}") config.pathAdd)
+        ++ (lib.mapAttrsToList (n: v: "--set ${n} ${v}") config.env)
         ++ (builtins.map (v: "--add-flags ${v}") config.prependArgs)
         ++ (builtins.map (v: "--append-flags ${v}") config.appendArgs)
         ++ (lib.optionals (!envConfig.build.isBinary && config.preScript != "") (

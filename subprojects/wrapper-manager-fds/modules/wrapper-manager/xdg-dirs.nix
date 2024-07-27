@@ -48,9 +48,10 @@ in
           config.xdg.configDirs = cfg.configDirs;
           config.xdg.dataDirs = cfg.dataDirs;
 
-          config.makeWrapperArgs =
-            builtins.map (v: "--prefix 'XDG_CONFIG_DIRS' ':' ${v}") config.xdg.configDirs
-            ++ (builtins.map (v: "--prefix 'XDG_DATA_DIRS' ':' ${v}") config.xdg.dataDirs);
+          config.env = {
+            XDG_CONFIG_DIRS = lib.concatStringsSep ":" config.xdg.configDirs;
+            XDG_DATA_DIRS = lib.concatStringsSep ":" config.xdg.dataDirs;
+          };
         };
       in
       with lib.types; attrsOf (submodule xdgDirsType);
