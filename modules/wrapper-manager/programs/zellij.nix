@@ -26,7 +26,7 @@ in
     basePackages = [ cfg.package ];
     wrappers.zellij = {
       arg0 = lib.getExe' cfg.package "zellij";
-      env.ZELLIJ_CONFIG_FILE = cfg.configFile;
+      env.ZELLIJ_CONFIG_FILE.value = cfg.configFile;
     };
   };
 }

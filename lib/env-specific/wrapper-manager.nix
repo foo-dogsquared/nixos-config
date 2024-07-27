@@ -35,7 +35,7 @@ rec {
       }
 
       (lib.mkIf (builtins.length addons > 0) {
-        env.BLENDER_SYSTEM_RESOURCES = blenderAddons;
+        env.BLENDER_SYSTEM_RESOURCES.value = blenderAddons;
       })
 
       (lib.removeAttrs module [ "blenderPackage" "blenderArgs" "addons" ])

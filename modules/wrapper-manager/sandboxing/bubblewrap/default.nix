@@ -79,8 +79,12 @@ in
                   "--proc" "/proc"
                   "--dev" "/dev"
                 ]
-                ++ builtins.map (var: "--unsetenv ${var}") config.unset
-                ++ lib.mapAttrsToList (var: value: "--setenv ${var} ${value}") config.env;
+                ++ lib.mapAttrsToList
+                  (var: metadata:
+                    if metadata.action == "unset"
+                    then "--unsetenv ${var}"
+                    else "--setenv ${var} ${metadata.value}")
+                  config.env;
 
               arg0 = lib.getExe' submoduleCfg.package "bwrap";
               prependArgs = lib.mkBefore (submoduleCfg.extraArgs ++ [ "--" submoduleCfg.wraparound.executable ] ++ submoduleCfg.wraparound.extraArgs);

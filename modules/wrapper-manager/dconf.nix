@@ -87,7 +87,7 @@ in
         };
 
         config = lib.mkIf submoduleCfg.enable {
-          env.DCONF_PROFILE = dconfProfileFile;
+          env.DCONF_PROFILE.value = dconfProfileFile;
         };
       };
     in

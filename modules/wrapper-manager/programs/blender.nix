@@ -57,7 +57,7 @@ in
     # TODO: Should we replace the .desktop file for this?
     wrappers.blender = {
       arg0 = lib.getExe' cfg.package "blender";
-      env.BLENDER_SYSTEM_RESOURCES = lib.mkIf (builtins.length cfg.addons > 0) addons;
+      env.BLENDER_SYSTEM_RESOURCES.value = lib.mkIf (builtins.length cfg.addons > 0) addons;
     };
   };
 }
