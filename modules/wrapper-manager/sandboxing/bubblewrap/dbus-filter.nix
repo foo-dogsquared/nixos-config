@@ -149,16 +149,16 @@ in
                       };
                     };
                   };
-
-                  config = lib.mkIf (config.sandboxing.variant == "bubblewrap") {
-                    sandboxing.bubblewrap.dbus.filter.extraArgs =
-                      let
-                        makeDbusProxyArgs = address: metadata:
-                          [ address metadata.path ] ++ metadata.extraArgs;
-                      in
-                      lib.lists.flatten (lib.mapAttrsToList makeDbusProxyArgs submoduleCfg.dbus.filter.addresses);
-                  };
                 };
+
+              config = lib.mkIf (config.sandboxing.variant == "bubblewrap") {
+                sandboxing.bubblewrap.dbus.filter.extraArgs =
+                  let
+                    makeDbusProxyArgs = address: metadata:
+                      [ address metadata.path ] ++ metadata.extraArgs;
+                  in
+                  lib.lists.flatten (lib.mapAttrsToList makeDbusProxyArgs submoduleCfg.dbus.filter.addresses);
+              };
             };
     in
       lib.mkOption {
