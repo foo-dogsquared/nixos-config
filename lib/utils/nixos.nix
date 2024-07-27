@@ -5,12 +5,6 @@
   mapHomeManagerUser = user: settings:
     let
       homeDirectory = "/home/${user}";
-      defaultUserConfig = {
-        extraGroups = lib.mkDefault [ "wheel" ];
-        createHome = lib.mkDefault true;
-        home = lib.mkDefault homeDirectory;
-        isNormalUser = lib.mkForce true;
-      };
     in
     ({ lib, ... }: {
       home-manager.users."${user}" = { ... }: {
@@ -25,7 +19,12 @@
       };
 
       users.users."${user}" = lib.mkMerge [
-        defaultUserConfig
+        {
+          extraGroups = lib.mkDefault [ "wheel" ];
+          createHome = lib.mkDefault true;
+          home = lib.mkDefault homeDirectory;
+          isNormalUser = lib.mkForce true;
+        }
         settings
       ];
     });
