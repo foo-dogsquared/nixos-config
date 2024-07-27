@@ -52,11 +52,11 @@ in
             }
 
             (lib.mkIf (config.xdg.configDirs != [ ]) {
-              env.XDG_CONFIG_DIRS = lib.concatStringsSep ":" config.xdg.configDirs;
+              env.XDG_CONFIG_DIRS.value = lib.concatStringsSep ":" config.xdg.configDirs;
             })
 
             (lib.mkIf (config.xdg.dataDirs != [ ]) {
-              env.XDG_DATA_DIRS = lib.concatStringsSep ":" config.xdg.dataDirs;
+              env.XDG_DATA_DIRS.value = lib.concatStringsSep ":" config.xdg.dataDirs;
             })
           ];
         };

@@ -7,6 +7,32 @@ let
     let
       toStringType = with lib.types; coercedTo anything (x: builtins.toString x) str;
       flagType = with lib.types; listOf toStringType;
+
+      envSubmodule = { config, lib, name, ... }: {
+        options = {
+          action = lib.mkOption {
+            type = lib.types.enum [ "unset" "set" "set-default" ];
+            description = ''
+              Sets the appropriate action for the environment variable.
+
+              * `unset`... unsets the given variable.
+              * `set-default` only sets the variable with the given value if
+              not already set.
+              * `set` forcibly sets the variable with given value.
+            '';
+            default = "set";
+            example = "unset";
+          };
+
+          value = lib.mkOption {
+            type = toStringType;
+            description = ''
+              The value of the variable that is holding.
+            '';
+            example = "HELLO THERE";
+          };
+        };
+      };
     in
     {
       options = {
@@ -56,24 +82,16 @@ let
         };
 
         env = lib.mkOption {
-          type = with lib.types; attrsOf toStringType;
+          type = with lib.types; attrsOf (submodule envSubmodule);
           description = ''
-            A set of environment variables to be declared in the wrapper script.
+            A set of environment variables to be declared in the wrapper
+            script.
           '';
           default = { };
           example = {
             "FOO_TYPE" = "custom";
             "FOO_LOG_STYLE" = "systemd";
           };
-        };
-
-        unset = lib.mkOption {
-          type = with lib.types; listOf nonEmptyStr;
-          description = ''
-            A list of environment variables to be unset into the wrapper script.
-          '';
-          default = [ ];
-          example = [ "NO_COLOR" ];
         };
 
         pathAdd = lib.mkOption {
@@ -121,8 +139,12 @@ let
           makeWrapperArgs = [
             "--argv0" config.arg0
           ]
-          ++ (builtins.map (v: "--unset ${lib.escapeShellArg v}") config.unset)
-          ++ (lib.mapAttrsToList (n: v: "--set ${lib.escapeShellArg n} ${lib.escapeShellArg v}") config.env)
+          ++ (lib.mapAttrsToList
+              (n: v:
+                if v.action == "unset"
+                then "--${v.action} ${lib.escapeShellArg n}"
+                else "--${v.action} ${lib.escapeShellArg n} ${lib.escapeShellArg v.value}")
+              config.env)
           ++ (builtins.map (v: "--add-flags ${lib.escapeShellArg v}") config.prependArgs)
           ++ (builtins.map (v: "--append-flags ${lib.escapeShellArg v}") config.appendArgs)
           ++ (lib.optionals (!envConfig.build.isBinary && config.preScript != "") (
@@ -134,7 +156,7 @@ let
         }
 
         (lib.mkIf (config.pathAdd != [ ]) {
-          env.PATH = lib.concatStringsSep ":" config.pathAdd;
+          env.PATH.value = lib.concatStringsSep ":" config.pathAdd;
 
         })
 

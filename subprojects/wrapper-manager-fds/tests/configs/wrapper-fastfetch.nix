@@ -4,7 +4,7 @@
   wrappers.fastfetch = {
     arg0 = lib.getExe' pkgs.fastfetch "fastfetch";
     appendArgs = [ "--logo" "Guix" ];
-    env.NO_COLOR = "1";
+    env.NO_COLOR.value = "1";
     xdg.desktopEntry.enable = true;
   };
 

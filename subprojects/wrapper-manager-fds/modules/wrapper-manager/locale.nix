@@ -39,7 +39,7 @@ in
         options.locale = localeModuleFactory { isGlobal = false; };
 
         config = lib.mkIf submoduleCfg.enable {
-          env.LOCALE_ARCHIVE = "${submoduleCfg.package}/lib/locale/locale-archive";
+          env.LOCALE_ARCHIVE.value = "${submoduleCfg.package}/lib/locale/locale-archive";
         };
       };
     in
