@@ -45,6 +45,10 @@ let
     enableIsolation = lib.mkEnableOption "unsharing most of the system" // {
       default = if isGlobal then true else cfg.enableIsolation;
     };
+
+    enableEnsureChildDiesWithParent = lib.mkEnableOption "ensuring child processes die with parent" // {
+      default = if isGlobal then true else cfg.enableEnsureChildDiesWithParent;
+    };
   };
 in
 {
@@ -104,6 +108,9 @@ in
             (lib.mkIf submoduleCfg.enableIsolation {
               sandboxing.bubblewrap.extraArgs = lib.mkBefore [ "--unshare-all" ];
             })
+
+            (lib.mkIf submoduleCfg.enableEnsureChildDiesWithParent {
+              sandboxing.bubblewrap.extraArgs = lib.mkBefore [ "--die-with-parent" ];
             })
           ]);
         };
