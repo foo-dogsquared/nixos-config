@@ -117,6 +117,15 @@
       defaultNixConf
       ../../modules/nixos/profiles/generic.nix
       ../../modules/nixos/profiles/nix-conf.nix
+
+      {
+        config.documentation.nixos = {
+          extraModules = [
+            ../../modules/nixos
+            ../../modules/nixos/_private
+          ];
+        };
+      }
     ];
   };
 
