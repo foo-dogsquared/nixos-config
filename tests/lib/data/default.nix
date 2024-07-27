@@ -30,4 +30,13 @@ lib.runTests {
     });
     expected = builtins.readFile ./fixtures/sample.tera;
   };
+
+  testRenderMustacheTemplate = {
+    expr = builtins.readFile (self.data.renderTeraTemplate {
+      template = ./templates/sample.mustache;
+      context = lib.importJSON ./data/sample.json;
+    });
+    # There the same lol.
+    expected = builtins.readFile ./fixtures/sample.tera;
+  };
 }

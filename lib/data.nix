@@ -44,4 +44,24 @@
     } ''
       tera --out "$out" ${extraArgs'} --template "${template}" "${contextFile}"
     '';
+
+  /* Render a Mustache template given a parameter set powered by `mustache-go`.
+     Also typically used as an IFD.
+
+     Type: renderMustacheTemplate :: Attrs -> Path
+
+     Example:
+       renderMustacheTemplate { path = ./template.mustache; context = { hello = 34; }; }
+       => /nix/store/HASH-mustache-render-template
+  */
+  renderMustacheTemplate = { template, context, extraArgs ? { } }:
+    let
+      extraArgs' = lib.cli.toGNUCommandLineShell { } extraArgs;
+    in pkgs.runCommand "mustache-render-template" {
+      nativeBuildInputs = with pkgs; [ mustache-go ];
+      context = builtins.toJSON context;
+      passAsFile = [ "template" "context" ];
+    } ''
+      mustache "$contextPath" "${template}" ${extraArgs'} > $out
+    '';
 }
