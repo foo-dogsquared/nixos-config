@@ -6,6 +6,17 @@
 let
   cfg = config.sandboxing.bubblewrap;
 
+  fileOperationsWithPerms = [
+    "file" "dir"
+    "bind-data" "ro-bind-data"
+  ];
+  fileOperationsWithoutPerms = [
+    "symlink"
+    "bind" "bind-try"
+    "dev-bind" "dev-bind-try"
+    "ro-bind" "ro-bind-try"
+  ];
+
   bubblewrapModuleFactory = { isGlobal ? false }: let
     filesystemSubmodule = { config, lib, name, ... }: {
       options = {
@@ -17,23 +28,81 @@ let
           example = lib.literalExpression "./files/example.file";
         };
 
-        perms = lib.mkOption {
+        permissions = lib.mkOption {
           type = with lib.types; nullOr (strMatch "[0-7]{0,4}");
           description = ''
-            The permissions of the node in octal.
+            The permissions of the node in octal. If the value is `null`, it
+            will be handled by Bubblewrap executable. For more details for each
+            operation, see {manpage}`bwrap(1)`.
           '';
           default = null;
           example = "0755";
         };
 
-        symlink = lib.mkEnableOption "create the file as a symlink";
-        createDir = lib.mkEnableOption "create the directory in the Bubblewrap environment";
-        bindMount = lib.mkEnableOption "bind-mount the given source to the Bubblewrap environment";
-        bindMountReadOnly = lib.mkEnableOption "bind-mount read-only the given source to the Bubblewrap environment";
+        operation = lib.mkOption {
+          type = lib.types.enum (fileOperationsWithPerms ++ fileOperationsWithoutPerms);
+          description = ''
+            Specify what filesystem-related operations to be done for the given
+            filesystem object. Only certain operations accept permissions given
+            from {option}`sandboxing.bubblewrap.filesystem.<name>.permissions`.
+          '';
+          default = "ro-bind-try";
+          example = "bind";
+        };
+
+        lock = lib.mkEnableOption "locking the file";
       };
     };
   in {
-    options.filesystem = lib.mkOption {
+    binds = {
+      ro = lib.mkOption {
+        type = with lib.types; listOf path;
+        default = if isGlobal then [ ] else cfg.binds.ro;
+        description =
+          if isGlobal
+          then ''
+            Global list of read-only mounts to be given to all Bubblewrap-enabled
+            wrappers.
+          ''
+          else ''
+            List of read-only mounts to the Bubblewrap environment.
+          '';
+        example = [
+          "/etc/resolv.conf"
+          "/etc/ssh"
+        ];
+      };
+
+      rw = lib.mkOption {
+        type = with lib.types; listOf path;
+        default = if isGlobal then [ ] else cfg.binds.rw;
+        description =
+          if isGlobal
+          then ''
+            Global list of read-write mounts to be given to all
+            Bubblewrap-enabled wrappers.
+          ''
+          else ''
+            List of read-write mounts to the Bubblewrap environment.
+          '';
+      };
+
+      dev = lib.mkOption {
+        type = with lib.types; listOf path;
+        default = if isGlobal then [ ] else cfg.binds.dev;
+        description =
+          if isGlobal 
+          then ''
+            Global list of devices to be mounted to all Bubblewrap-enabled
+            wrappers.
+          ''
+          else ''
+            List of devices to be mounted inside of the Bubblewrap environment.
+          '';
+      };
+    };
+
+    filesystem = lib.mkOption {
       type = with lib.types; attrsOf (submodule filesystemSubmodule);
       description =
         if isGlobal then ''
@@ -47,20 +116,22 @@ let
         {
           "/etc/hello" = {
             source = ./files/hello;
-            perms = "0700";
+            permissions = "0700";
+            operation = "file";
           };
 
           "/etc/xdg" = {
             source = ./configs;
-            perms = "0700";
+            permissions = "0700";
+            operation = "dir";
           };
 
           "/srv/data" = {
             source = "/srv/data";
-            symlink = true;
+            operation = "symlink";
           };
 
-          "/srv/logs".createDir = true;
+          "/srv/logs".operation = "dir";
         }
       '';
     };
@@ -68,33 +139,54 @@ let
 in
 {
   options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
+  config.sandboxing.bubblewrap.filesystem =
+    let
+      makeFilesystemMapping = operation: bind:
+        lib.nameValuePair bind { inherit operation; source = bind; };
+      filesystemMappings =
+        lib.lists.map (makeFilesystemMapping "ro-bind-try") cfg.binds.ro
+        ++ lib.lists.map (makeFilesystemMapping "bind") cfg.binds.rw
+        ++ lib.lists.map (makeFilesystemMapping "dev-bind-try") cfg.binds.dev;
+    in
+    builtins.listToAttrs filesystemMappings;
 
   options.wrappers =
     let
       bubblewrapModule = { config, lib, name, ... }: let
-        submoduleCfg = config;
+        submoduleCfg = config.sandboxing.bubblewrap;
       in {
         options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = false; };
 
         config = lib.mkIf (config.sandboxing.variant == "bubblewrap") {
           sandboxing.bubblewrap.filesystem =
+            let
+              makeFilesystemMapping = operation: bind:
+                lib.nameValuePair bind { inherit operation; source = bind; };
+              filesystemMappings =
+                lib.lists.map (makeFilesystemMapping "ro-bind-try") submoduleCfg.binds.ro
+                ++ lib.lists.map (makeFilesystemMapping "bind") submoduleCfg.binds.rw
+                ++ lib.lists.map (makeFilesystemMapping "dev-bind-try") submoduleCfg.binds.dev;
+            in
+            builtins.listToAttrs filesystemMappings;
+
+          sandboxing.bubblewrap.extraArgs =
+            let
+              makeFilesystemArgs = dst: metadata:
+                let
+                  src = metadata.source;
+                  hasPermissions = metadata.permissions != null;
+                  isValidOperationWithPerms = lib.elem metadata.operation fileOperationsWithPerms;
+                in
+                lib.optionals (hasPermissions && isValidOperationWithPerms) [ "--perms ${metadata.permissions}" ]
+                ++ (
+                  if metadata.operation == "dir"
+                  then [ "--${metadata.operation} ${dst}" ]
+                  else [ "--${metadata.operation} ${src} ${dst}" ]
+                )
+                ++ lib.optionals metadata.lock [ "--lock-file ${dst}" ];
+            in
             lib.lists.flatten
-              (lib.mapAttrsToList
-                (dst: metadata:
-                  lib.optionals (metadata.perms != null) [ "--perms ${metadata.perms}" ]
-                  ++ (let
-                    inherit (metadata) source;
-                  in
-                    if metadata.createDir
-                    then [ "--dir ${dst}"]
-                    else if metadata.symlink
-                    then [ "--symlink ${source} ${dst}"]
-                    else if metadata.bindMount
-                    then [ "--bind-data ${source} ${dst}" ]
-                    else if metadata.bindMountReadOnly
-                    then [ "--ro-bind-data ${source} ${dst}" ]
-                    else [ "--file ${source} ${dst}"]))
-                submoduleCfg.filesystem);
+              (lib.mapAttrsToList makeFilesystemArgs submoduleCfg.filesystem);
         };
       };
     in

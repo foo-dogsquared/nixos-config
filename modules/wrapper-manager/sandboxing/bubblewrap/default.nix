@@ -45,54 +45,6 @@ let
     enableIsolation = lib.mkEnableOption "unsharing most of the system" // {
       default = if isGlobal then true else cfg.enableIsolation;
     };
-
-    binds = {
-      ro = lib.mkOption {
-        type = with lib.types; listOf path;
-        default = if isGlobal then [ ] else cfg.binds.ro;
-        description =
-          if isGlobal
-          then ''
-            Global list of read-only mounts to be given to all Bubblewrap-enabled
-            wrappers.
-          ''
-          else ''
-            List of read-only mounts to the Bubblewrap environment.
-          '';
-        example = [
-          "/etc/resolv.conf"
-          "/etc/ssh"
-        ];
-      };
-
-      rw = lib.mkOption {
-        type = with lib.types; listOf path;
-        default = if isGlobal then [ ] else cfg.binds.rw;
-        description =
-          if isGlobal
-          then ''
-            Global list of read-write mounts to be given to all
-            Bubblewrap-enabled wrappers.
-          ''
-          else ''
-            List of read-write mounts to the Bubblewrap environment.
-          '';
-      };
-
-      dev = lib.mkOption {
-        type = with lib.types; listOf path;
-        default = if isGlobal then [ ] else cfg.binds.dev;
-        description =
-          if isGlobal 
-          then ''
-            Global list of devices to be mounted to all Bubblewrap-enabled
-            wrappers.
-          ''
-          else ''
-            List of devices to be mounted inside of the Bubblewrap environment.
-          '';
-      };
-    };
   };
 in
 {
@@ -127,9 +79,6 @@ in
                   "--proc" "/proc"
                   "--dev" "/dev"
                 ]
-                ++ builtins.map (bind: "--ro-bind-try ${bind}") submoduleCfg.binds.ro
-                ++ builtins.map (bind: "--bind ${bind}") submoduleCfg.binds.rw
-                ++ builtins.map (bind: "--dev-bind-try ${bind}") submoduleCfg.binds.dev
                 ++ builtins.map (var: "--unsetenv ${var}") config.unset
                 ++ lib.mapAttrsToList (var: value: "--setenv ${var} ${value}") config.env;
 
