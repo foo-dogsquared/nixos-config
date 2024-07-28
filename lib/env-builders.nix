@@ -4,14 +4,15 @@
 # and basically redoing what the upstream projects are doing so maintenance is
 # pretty much higher here.
 #
+# Anyways, all we're doing here is to see how much of a pain to use those Nix
+# projects especially those that are entirely relying on flakes.
+#
 # Despite named similarly to npins `sources` convention, it should also work
 # for flake-based setups as long as the inputs attrset from the flake output
 # function is the one that is passed.
 { lib, foodogsquaredLib, sources }:
 
 let
-  nixosModules = ../modules/nixos;
-
   # A set of nixos-generators modules including our custom ones.
   nixosGeneratorModules =
     let
@@ -39,6 +40,8 @@ rec {
     specialArgs ? { },
   }:
     let
+      nixosModules = ../modules/nixos;
+
       # Evaluating the system ourselves (which is trivial) instead of relying
       # on nixpkgs.lib.nixosSystem flake output.
       nixosSystem = args: import "${pkgs.path}/nixos/lib/eval-config.nix" args;
@@ -49,9 +52,13 @@ rec {
         foodogsquaredUtils = import ./utils/nixos.nix { inherit lib; };
         foodogsquaredModulesPath = builtins.toString nixosModules;
       };
-      modules = extraModules ++ [{
+      modules = extraModules ++ lib.singleton {
+        imports = [
+          nixosModules
+          ../modules/nixos/_private
+        ];
         nixpkgs.hostPlatform = lib.mkForce system;
-      }];
+      };
 
       # Since we're setting it through nixpkgs.hostPlatform, we'll have to pass
       # this as null.
@@ -62,6 +69,7 @@ rec {
   mkNixosImage = {
     pkgs,
     system,
+    lib ? pkgs.lib,
     extraModules ? [ ],
     specialArgs ? { },
     format ? "iso",
@@ -69,7 +77,7 @@ rec {
     let
       extraModules' = extraModules ++ [ nixosGeneratorModules.${format} ];
       nixosSystem = mkNixosSystem {
-        inherit pkgs system specialArgs;
+        inherit pkgs lib system specialArgs;
         extraModules = extraModules';
       };
     in
