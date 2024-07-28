@@ -16,7 +16,7 @@ let
   evalDoc = args@{ modules, includeModuleSystemOptions ? false, ... }:
     let
       options = (pkgs.lib.evalModules {
-        modules = modules ++ [ { _module.check = false; } ];
+        modules = modules ++ [ { _module.check = false; _module.args.pkgs = pkgs; } ];
         class = "wrapperManager";
       }).options;
     in

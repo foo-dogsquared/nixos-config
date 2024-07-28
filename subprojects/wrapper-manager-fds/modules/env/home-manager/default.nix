@@ -11,7 +11,7 @@ in
   config = lib.mkMerge [
     { wrapper-manager.extraSpecialArgs.hmConfig = config; }
 
-    (lib.mkIf moduleArgs?nixosConfig {
+    (lib.mkIf (moduleArgs ? nixosConfig) {
       wrapper-manager.sharedModules = [
         ({ lib, ... }: {
           # NixOS already has the option to set the locale so we don't need to

@@ -6,10 +6,10 @@ in
 let
   docs = import ../. { inherit pkgs; };
 in
-with pkgs; mkShell {
+pkgs.mkShell {
   inputsFrom = [ docs.website ];
 
-  packages = [
+  packages = with pkgs; [
     nodePackages.prettier
     vscode-langservers-extracted
   ];

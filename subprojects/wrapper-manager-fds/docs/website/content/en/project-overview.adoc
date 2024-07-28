@@ -50,7 +50,7 @@ Assuming you have already initialized npins, you can simply add wrapper-manager-
 
 [source, shell, subs="attributes+"]
 ----
-npins add github foo-dogsquared {github-repo}
+npins add --name wrapper-manager github foo-dogsquared {github-repo} --branch main
 ----
 
 Similar to channels installation, you'll have to import the <<user-entrypoint>> object.
@@ -129,8 +129,8 @@ Instead of a home environment from home-manager or an installation script from d
 This can be thought of as a declarative layer over `makeWrapper` build hook from nixpkgs.
 
 If you want to view the module options, you can see it in
-ifdef::env-hugo[link:./nix-module-options/[wrapper-manager module options].]
-ifndef::env-hugo[{docs-site}/nix-module-options[wrapper-manager documentation site].]
+ifdef::env-hugo[link:./wrapper-manager-env-options/[wrapper-manager module options].]
+ifndef::env-hugo[{docs-site}/wrapper-manager-env-options[wrapper-manager documentation site].]
 
 Here's a very simple example of a wrapper for Neofetch.
 
@@ -360,7 +360,7 @@ It is also quicker to eyeball results in this way especially if you're always wo
 
 This project also has a website set up with https://gohugo.io/[Hugo].
 The files that you need to see are in
-ifdef::env-hugo[github:foo-dogsquared/wrapper-manager-fds[`docs`, rev=main, path=docs]]
+ifdef::env-hugo[github:{github-full}[`docs`, rev=main, path=docs]]
 ifndef::env-hugo[link:./docs[`./docs`]]
 directory.
 
