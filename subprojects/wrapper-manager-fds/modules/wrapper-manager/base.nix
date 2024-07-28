@@ -31,6 +31,10 @@ let
             '';
             example = "HELLO THERE";
           };
+
+          isEscaped = lib.mkEnableOption "escaping of the value" // {
+            default = true;
+          };
         };
       };
     in
@@ -143,7 +147,7 @@ let
               (n: v:
                 if v.action == "unset"
                 then "--${v.action} ${lib.escapeShellArg n}"
-                else "--${v.action} ${lib.escapeShellArg n} ${lib.escapeShellArg v.value}")
+                else "--${v.action} ${lib.escapeShellArg n} ${if v.isEscaped then lib.escapeShellArg v.value else v.value}")
               config.env)
           ++ (builtins.map (v: "--add-flags ${lib.escapeShellArg v}") config.prependArgs)
           ++ (builtins.map (v: "--append-flags ${lib.escapeShellArg v}") config.appendArgs)
