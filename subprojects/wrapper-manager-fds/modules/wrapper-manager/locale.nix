@@ -7,6 +7,7 @@ let
     enable = lib.mkOption {
       type = lib.types.bool;
       default = if isGlobal then true else cfg.enable;
+      example = false;
       description = if isGlobal then ''
         Whether to enable explicit glibc locale support. This is recommended
         for Nix-built applications.

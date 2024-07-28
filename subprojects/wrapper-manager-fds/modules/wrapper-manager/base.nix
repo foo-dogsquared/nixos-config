@@ -72,8 +72,7 @@ let
         arg0 = lib.mkOption {
           type = lib.types.str;
           description = ''
-            The first argument of the wrapper script. This option is used when the
-            {option}`build.variant` is `executable`.
+            The first argument of the wrapper script.
           '';
           example = lib.literalExpression "lib.getExe' pkgs.neofetch \"neofetch\"";
         };
@@ -93,8 +92,12 @@ let
           '';
           default = { };
           example = {
-            "FOO_TYPE" = "custom";
-            "FOO_LOG_STYLE" = "systemd";
+            "FOO_TYPE".value = "custom";
+            "FOO_LOG_STYLE" = {
+              action = "set-default";
+              value = "systemd";
+            };
+            "USELESS_VAR".action = "unset";
           };
         };
 
