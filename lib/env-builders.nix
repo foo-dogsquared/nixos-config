@@ -82,4 +82,59 @@ rec {
       };
     in
     nixosSystem.config.system.build.${nixosSystem.config.formatAttr};
+
+  mkHome = {
+    pkgs,
+    homeManagerSrc,
+    lib ? pkgs.lib,
+    modules ? [ ],
+    specialArgs ? { },
+  }:
+    let
+      homeModules = ../modules/home-manager;
+    in
+    import "${homeManagerSrc}/modules" {
+      inherit pkgs lib;
+      check = true;
+      extraSpecialArgs = specialArgs // {
+        foodogsquaredModulesPath = builtins.toString homeModules;
+      };
+      configuration = { lib, ... }: {
+        imports = modules ++ lib.singleton {
+          imports = [
+            homeModules
+            ../modules/home-manager/_private
+          ];
+        };
+        config = {
+          programs.home-manager.path = homeManagerSrc;
+          inherit (pkgs) overlays;
+          nixpkgs.config = lib.mkDefault pkgs.config;
+        };
+      };
+    };
+
+  mkWrapper = {
+    pkgs,
+    lib ? pkgs.lib,
+    wrapperManagerSrc,
+    modules ? [ ],
+    specialArgs ? { },
+  }:
+    let
+      wrapperManagerModules = ../modules/wrapper-manager;
+      wrapperManager = import wrapperManagerSrc { };
+    in
+      wrapperManager.lib.build {
+        inherit pkgs lib;
+        specialArgs = specialArgs // {
+          foodogsquaredModulesPath = builtins.toString wrapperManagerModules;
+        };
+        modules = modules ++ lib.singleton {
+          imports = [
+            wrapperManagerModules
+            ../modules/wrapper-manager/_private
+          ];
+        };
+      };
 }
