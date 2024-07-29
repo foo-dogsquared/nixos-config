@@ -3,7 +3,6 @@
 
 let
   cfg = config.suites.desktop;
-  nixosCfg = attrs.nixosConfig;
 in
 {
   options.suites.desktop = {
@@ -14,7 +13,7 @@ in
       enable = lib.mkEnableOption "installations of audio-related apps";
       pipewire.enable = lib.mkOption {
         type = lib.types.bool;
-        default = nixosCfg.services.pipewire.enable or false;
+        default = attrs.nixosConfig.services.pipewire.enable or false;
         description = ''
           Enable whether to install Pipewire-related applications.
 

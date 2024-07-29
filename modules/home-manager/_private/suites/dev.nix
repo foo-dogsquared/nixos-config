@@ -93,11 +93,7 @@ in {
 
       # Echolocation. Since you're using a home-manager configuration, you're
       # most likely using Nix anyways.
-      programs.nix-index.enable =
-        let
-          hasNixOSModuleEnabled = attrs ? nixosConfig && lib.attrByPath [ "programs" "nix-index" "enable" ] false attrs.nixosConfig;
-        in
-          !hasNixOSModuleEnabled;
+      programs.nix-index.enable = !attrs.nixosConfig.programs.nix-index.enable or false;
     })
 
     # Level up your terminal-dwelling skills with these.
