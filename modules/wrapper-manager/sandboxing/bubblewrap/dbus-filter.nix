@@ -108,7 +108,7 @@ in
           };
         };
 
-        config.dbus.filter.extraArgs =
+        config.extraArgs =
           let
             makePolicyArgs = dbusName: policyMetadata:
               lib.optionals (policyMetadata.level != null) [ "--${policyMetadata.level}=${dbusName}" ]

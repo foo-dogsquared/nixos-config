@@ -162,18 +162,19 @@ let
       '';
     };
   };
-in
-{
-  options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
 
   # TODO: There has to be a better way to get this info without relying on
   # pkgs.closureInfo builder, right?
-  config.sandboxing.bubblewrap.binds.ro =
+  getClosurePaths = rootpaths:
     let
-      sharedNixPathsClosureInfo = pkgs.closureInfo { rootpaths = cfg.sharedNixPaths; };
+      sharedNixPathsClosureInfo = pkgs.closureInfo { inherit rootpaths; };
       closurePaths = lib.readFile "${sharedNixPathsClosureInfo}/store-paths";
     in
       lib.lists.filter (p: p != "") (lib.splitStrings "\n" closurePaths);
+in
+{
+  options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
+  config.sandboxing.bubblewrap.binds.ro = getClosurePaths cfg.sharedNixPaths;
 
   config.sandboxing.bubblewrap.filesystem =
     let
@@ -195,6 +196,8 @@ in
 
         config = lib.mkIf (config.sandboxing.variant == "bubblewrap") (lib.mkMerge [
           {
+            sandboxing.bubblewrap.binds.ro = getClosurePaths submoduleCfg.sharedNixPaths;
+
             sandboxing.bubblewrap.filesystem =
               let
                 makeFilesystemMapping = operation: bind:

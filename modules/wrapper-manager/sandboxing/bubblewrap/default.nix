@@ -97,6 +97,10 @@ in
               # In case isolation is also enabled, we'll have this still
               # enabled at least.
               sandboxing.bubblewrap.extraArgs = lib.mkAfter [ "--share-net" ];
+
+              # The most common network-related files found on most
+              # distributions. This should be enough in most cases. If not,
+              # we'll probably let the launcher handle this.
               sandboxing.bubblewrap.binds.ro = [
                 "/etc/ssh"
                 "/etc/hosts"
