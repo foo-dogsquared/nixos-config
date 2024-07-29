@@ -193,7 +193,7 @@ in
           User = "archivebox";
           Group = "archivebox";
 
-          ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${
+          ExecStart = "${lib.getExe' cfg.package "archivebox"} server localhost:${
             toString cfg.webserver.port
           }";
 
