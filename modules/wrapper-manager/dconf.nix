@@ -72,11 +72,11 @@ in
             '';
           };
 
-          profiles = lib.mkOption {
+          profile = lib.mkOption {
             type = with lib.types; listOf str;
             description = ''
-              A list of dconf profiles that will be used for the
-              dconf-configured wrapper.
+              A list of dconf databases that will be used for the main dconf
+              profile of the dconf-configured wrapper.
             '';
             default = [ "user-db:user" "file-db:${dconfSettingsDatabase}" ];
             defaultText = ''
