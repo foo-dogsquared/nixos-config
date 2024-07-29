@@ -7,7 +7,7 @@
 
   options.wrappers =
     let
-      sandboxingType = { name, lib, config, ... }: {
+      sandboxingType = { name, lib, config, options, ... }: {
         options.sandboxing = {
           variant = lib.mkOption {
             type = with lib.types; nullOr (enum []);
@@ -17,6 +17,11 @@
             '';
             default = null;
             example = "bubblewrap";
+          };
+
+          wraparound = {
+            executable = options.arg0;
+            extraArgs = options.extraArgs;
           };
         };
       };

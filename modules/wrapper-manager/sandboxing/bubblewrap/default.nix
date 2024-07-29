@@ -87,7 +87,10 @@ in
                   config.env;
 
               arg0 = lib.getExe' submoduleCfg.package "bwrap";
-              prependArgs = lib.mkBefore (submoduleCfg.extraArgs ++ [ "--" submoduleCfg.wraparound.executable ] ++ submoduleCfg.wraparound.extraArgs);
+              prependArgs = lib.mkBefore
+                (submoduleCfg.extraArgs
+                  ++ [ "--" config.sandboxing.wraparound.executable ]
+                  ++ config.sandboxing.wraparound.extraArgs);
             }
 
             (lib.mkIf submoduleCfg.enableNetwork {
