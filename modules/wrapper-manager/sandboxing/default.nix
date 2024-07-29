@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./boxxy.nix
     ./bubblewrap
   ];
 
