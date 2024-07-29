@@ -4,7 +4,7 @@ let
   cfg = config.home.mutableFile;
 
   runtimeInputs = lib.makeBinPath (with pkgs; [
-    archiver curl git gopass
+    coreutils archiver curl git gopass
   ]);
 
   # An attribute set to be used to get the fetching script.
@@ -43,6 +43,15 @@ let
       '';
     };
 
+  # The file submodule. Take note the values here are sanitized to only
+  # represent relative paths starting with the given base directory as the root
+  # (such as the home directory).
+  #
+  # Playing with absolute paths is basically like playing with fire, some use
+  # cases are nice for it, some are bad especially that this is only used for
+  # home-manager where it is expected to be limited to its associated home
+  # directory. But that's for the user to know how their user interact with the
+  # rest of the system.
   fileType = baseDir: { name, config, options, ... }: {
     options = {
       url = lib.mkOption {
@@ -181,22 +190,26 @@ in
                 )
               '')
               cfg;
+
+            shellScript = pkgs.writeShellScriptBin "fetch-mutable-files" ''
+              export PATH=${runtimeInputs}''${PATH:-:$PATH}
+              ${lib.concatStringsSep "\n" mutableFilesCmds}
+            '';
           in
-          pkgs.writeShellScript "fetch-mutable-files" ''
-            export PATH=${runtimeInputs}
-            ${lib.concatStringsSep "\n" mutableFilesCmds}
-          '';
+            lib.getExe shellScript;
 
         ExecStartPost =
           let
             mutableFilesCmds = lib.mapAttrsToList
               (path: value: value.postScript)
               cfg;
-          in
-            pkgs.writeShellScript "fetch-mutable-files-post-script" ''
-              export PATH=${runtimeInputs}
+
+            shellScript = pkgs.writeShellScriptBin "fetch-mutable-files-post-script" ''
+              export PATH=${runtimeInputs}''${PATH:-:$PATH}
               ${lib.concatStringsSep "\n" mutableFilesCmds}
             '';
+          in
+            lib.getExe shellScript;
       };
 
       Install.WantedBy = [ "default.target" ];
