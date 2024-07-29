@@ -124,9 +124,9 @@ in
               "$XDG_MUSIC_DIR|Music"
               "~/library/music|Library"
             ]
-            ++ lib.optional (attrs?nixosConfig.suites.filesystem.setups.external-hdd.enable)
+            ++ lib.optional (attrs.nixosConfig.suites.filesystem.setups.external-hdd.enable or false)
               "/mnt/external-storage/Music|External storage"
-            ++ lib.optional (attrs?nixosConfig.suites.filesystem.setups.archive.enable)
+            ++ lib.optional (attrs.nixosConfig.suites.filesystem.setups.archive.enable or false)
               "/mnt/archives/Music|Archive";
           };
 
