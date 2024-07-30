@@ -69,8 +69,11 @@ let
 
     sharedNixPaths = lib.mkOption {
       type = with lib.types; listOf package;
-      default = if isGlobal then [ ] else cfg.sharedNixPaths;
-      description = ''
+      default = [ ];
+      description = if isGlobal then ''
+        A global list of store paths to be shared
+        per-Bubblewrap-enabled-wrappers.
+      '' else ''
         A list of store paths to be mounted (as read-only bind-mounts). Note
         that this also includes the listed store objects' dependencies.
       '';
@@ -84,12 +87,12 @@ let
     binds = {
       ro = lib.mkOption {
         type = with lib.types; listOf path;
-        default = if isGlobal then [ ] else cfg.binds.ro;
+        default = [ ];
         description =
           if isGlobal
           then ''
-            Global list of read-only mounts to be given to all Bubblewrap-enabled
-            wrappers.
+            Global list of read-only mounts to be given to all
+            Bubblewrap-enabled wrappers.
           ''
           else ''
             List of read-only mounts to the Bubblewrap environment.
@@ -102,7 +105,7 @@ let
 
       rw = lib.mkOption {
         type = with lib.types; listOf path;
-        default = if isGlobal then [ ] else cfg.binds.rw;
+        default = [ ];
         description =
           if isGlobal
           then ''
@@ -116,7 +119,7 @@ let
 
       dev = lib.mkOption {
         type = with lib.types; listOf path;
-        default = if isGlobal then [ ] else cfg.binds.dev;
+        default = [ ];
         description =
           if isGlobal 
           then ''
@@ -138,7 +141,7 @@ let
           Set of wrapper-specific filesystem configurations in the Bubblewrap
           environment.
         '';
-      default = if isGlobal then { } else cfg.filesystem;
+      default = { };
       example = lib.literalExpression ''
         {
           "/etc/hello" = {
@@ -197,7 +200,6 @@ in
         config = lib.mkIf (config.sandboxing.variant == "bubblewrap") (lib.mkMerge [
           {
             sandboxing.bubblewrap.binds.ro = getClosurePaths submoduleCfg.sharedNixPaths;
-
             sandboxing.bubblewrap.filesystem =
               let
                 makeFilesystemMapping = operation: bind:
@@ -227,11 +229,16 @@ in
               in
               lib.lists.flatten
                 (lib.mapAttrsToList makeFilesystemArgs submoduleCfg.filesystem);
-            }
+          }
 
-            (lib.mkIf submoduleCfg.enableSharedNixStore {
-              sandboxing.bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
-            })
+          {
+            sandboxing.bubblewrap.binds = cfg.binds;
+            sandboxing.bubblewrap.filesystem = cfg.filesystem;
+          }
+
+          (lib.mkIf submoduleCfg.enableSharedNixStore {
+            sandboxing.bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
+          })
         ]);
       };
     in

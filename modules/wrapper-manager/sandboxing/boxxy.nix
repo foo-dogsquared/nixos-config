@@ -40,9 +40,11 @@ let
 
     rules = lib.mkOption {
       type = with lib.types; attrsOf (submodule boxxyRuleModule);
-      default = if isGlobal then { } else cfg.rules;
-      description = ''
+      default = { };
+      description = if isGlobal then ''
         Global set of rules to be applied per-wrapper.
+      '' else ''
+        Set of rules to be applied to the wrapper.
       '';
       example = lib.literalExpression ''
         {
@@ -58,10 +60,12 @@ let
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
-      description = ''
+      description = if isGlobal then ''
+        Global list of arguments to be appended to each Boxxy-enabled wrappers.
+      '' else ''
         List of arguments to the {program}`boxxy` executable.
       '';
-      default = if isGlobal then [ ] else cfg.extraArgs;
+      default = [ ];
       example = [ "--immutable" "--daemon" ];
     };
   };
@@ -83,8 +87,11 @@ in
           options.sandboxing.boxxy = boxxyModuleFactory { isGlobal = false; };
 
           config = lib.mkIf (config.sandboxing.variant == "boxxy") {
+            sandboxing.boxxy.rules = cfg.rules;
+
             sandboxing.boxxy.extraArgs =
-              lib.mapAttrsToList
+              cfg.extraArgs
+              ++ (lib.mapAttrsToList
                 (_: metadata:
                   let
                     inherit (metadata) source destination mode;
@@ -92,7 +99,7 @@ in
                   if mode != null
                   then "--rule ${source}:${destination}:${mode}"
                   else "--rule ${source}:${destination}")
-                submoduleCfg.rules;
+                submoduleCfg.rules);
 
             arg0 = lib.getExe submoduleCfg.package;
             prependArgs = lib.mkBefore
