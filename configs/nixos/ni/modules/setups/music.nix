@@ -3,6 +3,9 @@
 let
   hostCfg = config.hosts.ni;
   cfg = hostCfg.setups.music;
+
+  gonicPort = 4747;
+  uxplayPort = gonicPort + 1;
 in
 {
   options.hosts.ni.setups.music.enable =
@@ -13,7 +16,7 @@ in
     services.gonic = {
       enable = true;
       settings = rec {
-        listen-addr = "localhost:4747";
+        listen-addr = "localhost:${builtins.toString gonicPort}";
         cache-path = "/var/cache/gonic";
         music-path =
           [
@@ -28,5 +31,13 @@ in
         scan-at-start-enabled = true;
       };
     };
+
+    # My AirPlay mirroring server.
+    services.uxplay = {
+      enable = true;
+      extraArgs = [ "-p" (builtins.toString uxplayPort) ];
+    };
+
+    networking.firewall.allowedTCPPorts = [ gonicPort uxplayPort ];
   };
 }
