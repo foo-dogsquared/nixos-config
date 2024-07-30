@@ -13,6 +13,7 @@ pkgs.mkShell {
     asciidoctor
     disko
     deploy-rs
+    npins
     nixos-anywhere
     home-manager
     git
