@@ -1,42 +1,42 @@
-{ config, lib, ... }:
+{ config, lib, options, ... }:
 
 let
   envConfig = config;
 
+  toStringType = with lib.types; coercedTo anything (x: builtins.toString x) str;
+  envSubmodule = { config, lib, name, ... }: {
+    options = {
+      action = lib.mkOption {
+        type = lib.types.enum [ "unset" "set" "set-default" ];
+        description = ''
+          Sets the appropriate action for the environment variable.
+
+          * `unset`... unsets the given variable.
+          * `set-default` only sets the variable with the given value if
+          not already set.
+          * `set` forcibly sets the variable with given value.
+        '';
+        default = "set";
+        example = "unset";
+      };
+
+      value = lib.mkOption {
+        type = toStringType;
+        description = ''
+          The value of the variable that is holding.
+        '';
+        example = "HELLO THERE";
+      };
+
+      isEscaped = lib.mkEnableOption "escaping of the value" // {
+        default = true;
+      };
+    };
+  };
+
   wrapperType = { name, lib, config, pkgs, ... }:
     let
-      toStringType = with lib.types; coercedTo anything (x: builtins.toString x) str;
       flagType = with lib.types; listOf toStringType;
-
-      envSubmodule = { config, lib, name, ... }: {
-        options = {
-          action = lib.mkOption {
-            type = lib.types.enum [ "unset" "set" "set-default" ];
-            description = ''
-              Sets the appropriate action for the environment variable.
-
-              * `unset`... unsets the given variable.
-              * `set-default` only sets the variable with the given value if
-              not already set.
-              * `set` forcibly sets the variable with given value.
-            '';
-            default = "set";
-            example = "unset";
-          };
-
-          value = lib.mkOption {
-            type = toStringType;
-            description = ''
-              The value of the variable that is holding.
-            '';
-            example = "HELLO THERE";
-          };
-
-          isEscaped = lib.mkEnableOption "escaping of the value" // {
-            default = true;
-          };
-        };
-      };
     in
     {
       options = {
@@ -84,36 +84,8 @@ let
           example = "custom-name";
         };
 
-        env = lib.mkOption {
-          type = with lib.types; attrsOf (submodule envSubmodule);
-          description = ''
-            A set of environment variables to be declared in the wrapper
-            script.
-          '';
-          default = { };
-          example = {
-            "FOO_TYPE".value = "custom";
-            "FOO_LOG_STYLE" = {
-              action = "set-default";
-              value = "systemd";
-            };
-            "USELESS_VAR".action = "unset";
-          };
-        };
-
-        pathAdd = lib.mkOption {
-          type = with lib.types; listOf path;
-          description = ''
-            A list of paths to be added as part of the `PATH` environment variable.
-          '';
-          default = [ ];
-          example = lib.literalExpression ''
-            wrapperManagerLib.getBin (with pkgs; [
-              yt-dlp
-              gallery-dl
-            ])
-          '';
-        };
+        env = options.environment.variables;
+        pathAdd = options.environment.pathAdd;
 
         preScript = lib.mkOption {
           type = lib.types.lines;
@@ -143,6 +115,9 @@ let
 
       config = lib.mkMerge [
         {
+          env = envConfig.environment.variables;
+          pathAdd = envConfig.environment.pathAdd;
+
           makeWrapperArgs = [
             "--argv0" config.arg0
           ]
@@ -164,9 +139,7 @@ let
 
         (lib.mkIf (config.pathAdd != [ ]) {
           env.PATH.value = lib.concatStringsSep ":" config.pathAdd;
-
         })
-
       ];
     };
 in
@@ -206,6 +179,38 @@ in
         with pkgs; [
           yt-dlp
         ]
+      '';
+    };
+
+    environment.variables = lib.mkOption {
+      type = with lib.types; attrsOf (submodule envSubmodule);
+      description = ''
+        A global set of environment variables and their actions to be applied
+        per-wrapper.
+      '';
+      default = { };
+      example = {
+        "FOO_TYPE".value = "custom";
+        "FOO_LOG_STYLE" = {
+          action = "set-default";
+          value = "systemd";
+        };
+        "USELESS_VAR".action = "unset";
+      };
+    };
+
+    environment.pathAdd = lib.mkOption {
+      type = with lib.types; listOf path;
+      description = ''
+        A global list of paths to be added per-wrapper as part of the `PATH`
+        environment variable.
+      '';
+      default = [ ];
+      example = lib.literalExpression ''
+        wrapperManagerLib.getBin (with pkgs; [
+          yt-dlp
+          gallery-dl
+        ])
       '';
     };
   };
