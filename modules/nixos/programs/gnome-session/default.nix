@@ -12,16 +12,7 @@ let
   # at <https://docs.gtk.org/glib/struct.KeyFile.html> for details about the
   # keyfile formatting and possibly the Desktop Entry specification at
   # <https://freedesktop.org/wiki/Specifications/desktop-entry-spec>.
-  glibKeyfileFormat = pkgs.formats.ini {
-    listsAsDuplicateKeys = false;
-    mkKeyValue = lib.generators.mkKeyValueDefault {
-      mkValueString = v:
-        if lib.isList v then
-          lib.concatStringsSep ";" v
-        else
-          lib.generators.mkValueStringDefault { } v;
-    } "=";
-  } // {
+  glibKeyfileFormat = {
     type = with lib.types;
       let
         valueType = oneOf [
@@ -31,10 +22,14 @@ let
           str
           (listOf valueType)
         ] // {
-          description = "GLib keyfile atom (null, bool, int, float, string, or a list of the previous atoms)";
+          description = "GLib keyfile atom (bool, int, float, string, or a list of the previous atoms)";
         };
       in
         attrsOf (attrsOf valueType);
+
+    generate = name: value:
+      pkgs.callPackage ({ writeText }:
+        writeText name (lib.generators.toDconfINI value));
   };
 
   # The bulk of the work. Pretty much the main purpose of this module.
@@ -43,7 +38,8 @@ let
       let
         gnomeSession = glibKeyfileFormat.generate "session-${session.name}" session.settings;
 
-        # For now, we set this as a 
+        # For now, we set this as a static template since there's not much
+        # things to configure especially for a desktop session anyways.
         displaySession = ''
           [Desktop Entry]
           Name=${session.fullName}
@@ -53,6 +49,8 @@ let
           DesktopNames=${lib.concatStringsSep ";" session.desktopNames}
         '';
 
+        # Similarly to the desktop session template, this is also set as a
+        # static template.
         sessionScript = ''
           #!${pkgs.runtimeShell}
 

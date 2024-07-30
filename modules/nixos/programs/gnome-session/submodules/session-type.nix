@@ -123,7 +123,7 @@ in
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       description = ''
-        A list of arguments from {program}`gnome-session` to be added for the session
+        A list of arguments from {command}`gnome-session` to be added for the session
         script.
 
         ::: {.note}
@@ -145,6 +145,7 @@ in
         Generally, you won't need to set this since the module will set the
         common settings such as the `RequiredComponents=` key.
       '';
+      default = { };
       example = lib.literalExpression ''
         {
           "GNOME Session" = {
@@ -211,6 +212,7 @@ in
         `reloadTriggers` and `restartTriggers`.
         :::
       '';
+      visible = "shallow";
       defaultText = ''
         {
           wants = ... # All of the required components as a target unit.

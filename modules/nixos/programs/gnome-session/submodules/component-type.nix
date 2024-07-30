@@ -14,6 +14,7 @@ let
         `restartTriggers`.
         :::
       '';
+      visible = "shallow";
       default = null;
     };
 in
