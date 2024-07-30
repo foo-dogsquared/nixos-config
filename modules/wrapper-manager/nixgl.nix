@@ -66,7 +66,9 @@ in
 
   options.wrappers =
     let
-      nixglWrapperModule = { config, lib, name, ... }: {
+      nixglWrapperModule = { config, lib, name, ... }: let
+        submoduleCfg = config.nixgl;
+      in {
         options.nixgl = {
           enable = lib.mkEnableOption "wrapping NixGL for this wrapper" // {
             default = cfg.enableAll;
@@ -112,10 +114,10 @@ in
 
         config = lib.mkIf config.nixgl.enable {
           arg0 =
-            if config.executable == null
+            if submoduleCfg.executable == null
             then lib.getExe (nixgl config.nixgl.variant config.nixgl.src)
-            else config.executable;
-          prependArgs = lib.mkBefore ([ config.nixgl.wraparound.executable ] ++ config.nixgl.wraparound.extraArgs);
+            else submoduleCfg.executable;
+          prependArgs = lib.mkBefore ([ submoduleCfg.wraparound.executable ] ++ submoduleCfg.wraparound.extraArgs);
         };
       };
     in
