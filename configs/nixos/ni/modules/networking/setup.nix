@@ -7,6 +7,17 @@ in
 {
   options.hosts.ni.networking = {
     enable = lib.mkEnableOption "networking setup";
+
+    enableCommonSetup = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether to enable opening TCP ports and configuring network-related
+        settings typically used for easy networking with clients.
+      '';
+      example = false;
+    };
+
     setup = lib.mkOption {
       type = lib.types.enum [ "networkd" "networkmanager" ];
       description = ''
@@ -137,6 +148,19 @@ in
           mode = "active-backup";
         };
         interfaces = [ "enp1s0" "wlp2s0" ];
+      };
+    })
+
+    (lib.mkIf cfg.enableCommonSetup {
+      state.ports = {
+        http = {
+          value = 80;
+          openFirewall = true;
+        };
+        https = {
+          value = 443;
+          openFirewall = true;
+        };
       };
     })
   ]);
