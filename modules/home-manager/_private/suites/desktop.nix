@@ -43,7 +43,7 @@ in
       ]
       ++ (
         let
-          hasBlenderNixOSModule = nixosCfg.programs.blender.enable or false;
+          hasBlenderNixOSModule = attrs.nixosConfig.programs.blender.enable or false;
         in
         lib.optional (!hasBlenderNixOSModule) pkgs.blender
       );
@@ -56,12 +56,11 @@ in
         zrythm # The freer FL Studio (if you're sailing by the high seven seas).
         supercollider # Not to be confused with the other Super Collider.
         sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
-
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
       ]
       ++ (
         let
-          hasDesktopSuiteEnabled = nixosCfg.suites.desktop.enable or false;
+          hasDesktopSuiteEnabled = attrs.nixosConfig.suites.desktop.enable or false;
         in
         lib.optionals hasDesktopSuiteEnabled (with pkgs; [
           yabridge # Building bridges to Windows and Linux audio tools.
