@@ -41,4 +41,17 @@
     XDG_DATA_DIRS = "${env}/share\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
     XDG_CONFIG_DIRS = "${env}/etc/xdg\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
   };
+
+  # Create a range object (as [start, end) in notation) that is typically used
+  # in module options that accept them.
+  makeRange = start: range:
+    { from = start; to = start + range; };
+
+  # Create a range object (as [start + 1, end + 1] in notation) that is typically used
+  # in module options that accept them except that the starting port is included.
+  makeRange' = start: range:
+    let
+      start' = start + 1;
+    in
+    { from = start'; to = start' + range; };
 }
