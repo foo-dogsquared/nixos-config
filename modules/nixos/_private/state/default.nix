@@ -1,9 +1,13 @@
 { lib, ... }:
 
 {
+  imports = [
+    ./ports.nix
+  ];
+
   options.state = lib.mkOption {
     type = lib.types.submodule {
-      freeFormType = with lib.types; attrsOf anything;
+      freeformType = with lib.types; attrsOf anything;
       default = { };
     };
     description = ''
