@@ -98,7 +98,7 @@ Unlike the other methods, the flake output is the user entrypoint so no need to 
 [#user-entrypoint]
 === User entrypoint
 
-Most of the things you need from the project are all retrieveable from the entrypoint of this project (`default.nix`) which is an attribute set closely structured from a typical Nix flake that you see.
+Most of the things you need from the project are all retrieveable from the entrypoint of this project (`default.nix` in project root) which is an attribute set closely structured from a typical Nix flake that you see.
 For example, if you want the NixOS module for wrapper-manager, you could refer to `nixosModules.default`.
 Here's the breakdown of the attrset entries in the entrypoint.
 
@@ -112,6 +112,20 @@ You could get the main module with the `default` attribute.
 
 * `wrapperManagerLib` contains a path intended to be imported within your Nix code.
 It simply contains the library set that can be used outside of the wrapper-manager-fds module environment.
+To use it, it only requires a nixpkgs instance like in the following code.
++
+[source, nix, subs="attributes+"]
+----
+{ pkgs, ... }:
+
+let
+  wrapper-manager-fds = builtins.fetchTarball "{remote-git-repo}/archive/master.tar.gz";
+  wrapperManager = import wrapper-manager-fds { };
+  wrapperManagerLib = import wrapperManagerLib.lib { inherit pkgs; }
+in
+wmLib.env.build { }
+----
+
 
 
 [#getting-started]
@@ -411,6 +425,32 @@ Not necessarily user-friendly but it should easy enough to get started while all
 
 * Make a nice environment for creating custom wrappers which is already quite possible thanks to the heavy lifting of the nixpkgs module system.
 
+For now, wrapper-manager-fds does not focus on the following ideas;
+the main focus for now (as of 2024-07-31) is the core attributes needed to make wrapper-manager extensible for third-party module authors.
+Take note, these are all ideas that are considered but may or may not be out of the blacklisted ideas at some point in the future for a variety of reasons.
+Think of them as a list of possibilities for what may come within wrapper-manager-fds.
+
+* Create an environment similar to NixOS and home-manager.
+wrapper-manager-fds' endgoal is to create a derivation typically composed as part of an environment (e.g., `mkShell` for devshells, `environment.systemPackages` for NixOS, `home.packages` for home-manager).
+Otherwise, we're creating a poor man's version of them and it'll quickly creep in scope.
+
+* Support for multiple nixpkgs releases.
+Up until I put some elbow grease for release engineering and to make testing between multiple branches easy, only the unstable branch of nixpkgs is officially supported for now.
+
+* Integrating with sandboxing frameworks such as https://github.com/containers/bubblewrap[Bubblewrap] and https://github.com/queer/boxxy[Boxxy]. footnote:[That said, the author does have custom wrapper-manager modules that does exactly that so this being ruled out may be ruled out in the future ;p]
+This is too big of a task so it isn't considered for now.
+Plus, having this would now require creating additional support which the author does not have time for it.
+
+* Create an ecosystem of modules that would allow to create quick configurations for different programs similarly found on other module environments such as in NixOS and home-manager.
+Specifically, we're talking about modules in `programs` namespace (e.g., `programs.kitty`, `programs.alacritty`, `programs.nixvim`).
+This would also require having a support cadence so not much is going to happen here.
+Instead, I would encourage to have a separately-maintained project containing those for now.
+
+* Focus on hardware-related configuration for the wrappers.
+For now, it isn't possible within wrapper-manager (or Nix, really).
+Some possible ideas include creating our own version of nixpkgs' `makeWrapper`, creating a specialized launcher for it, or something in the middle.
+Would be a fun idea to make though. :)
+
 
 [#faq]
 == Frequently asked questions (FAQ)
@@ -473,6 +513,9 @@ It just naively wraps a package and goes on its merry way.
 * wrapper-manager-fds doesn't handle any replacement for the related files very well.
 This is especially noticeable in large desktop-adjacent packages such as Inkscape, Firefox, and Blender with a bunch of plugins and whatnot where they have their own wrappers.
 This means you cannot set `programs.NAME.package` or something similar with it.
+
+* The build step isn't enough to completely let the user replace the arguments found in `programs.<name>.package` (e.g., `programs.kitty.package = wrapperManagerLib.env.build { }`).
+For now, the project focuses on making a nice declarative environment allowing the user to create a wrapper meant to work without adding configuration files into arbitrary locations in the filesystem (e.g., `$XDG_CONFIG_HOME`).
 --
 
 
