@@ -60,7 +60,7 @@ in
         topdirs = "~/Downloads ~/Documents ~/library";
         "skippedNames+" =
           let
-            inherit (config.state) ignoreDirectories;
+            inherit (config.state.paths) ignoreDirectories;
           in
           lib.concatStringsSep " " ignoreDirectories;
 

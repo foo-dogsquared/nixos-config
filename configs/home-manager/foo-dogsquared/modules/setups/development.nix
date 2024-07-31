@@ -10,7 +10,7 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      state.ignoreDirectories = [
+      state.paths.ignoreDirectories = [
         "node_modules" # For Node projects.
         "result" # For Nix builds.
         "target" # For Rust builds.

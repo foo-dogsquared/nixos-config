@@ -20,7 +20,7 @@ in {
     ({
       # Contains a dev-adjacent list of directory names to be ignored usually
       # used in walking through directories.
-      state.ignoreDirectories = [
+      state.paths.ignoreDirectories = [
         ".git"
         ".direnv"
       ];
@@ -171,7 +171,7 @@ in {
       programs.eza = {
         enable = true;
         extraOptions = let
-          ignoreDirectories = lib.concatStringsSep "|" config.state.ignoreDirectories;
+          ignoreDirectories = lib.concatStringsSep "|" config.state.paths.ignoreDirectories;
         in [
           "--group-directories-first"
           "--header"
