@@ -119,5 +119,14 @@ in
         yourMomName = "Joe Mama";
       };
     };
+
+    # They're all disabled by default to let wrapper-manager not get out of the
+    # way. wrapper-manager configurations are meant to be a part of other
+    # environments and we're trying not to make a spotlight for wrapper-manager
+    # in whatever form including exporting the documentation.
+    documentation = {
+      manpage.enable = lib.mkEnableOption "manpage output";
+      html.enable = lib.mkEnableOption "HTML output";
+    };
   };
 }

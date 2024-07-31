@@ -1,7 +1,8 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.wrapper-manager;
+  wmDocs = import ../../../docs { inherit pkgs; };
 in
 {
   imports = [
@@ -10,6 +11,10 @@ in
 
   config = lib.mkMerge [
     {
+      environment.systemPackages =
+        lib.optionals cfg.documentation.manpage.enable [ wmDocs.outputs.manpage ]
+        ++ lib.optionals cfg.documentation.html.enable [ wmDocs.outputs.html ];
+
       wrapper-manager.extraSpecialArgs.nixosConfig = config;
 
       wrapper-manager.sharedModules = [
