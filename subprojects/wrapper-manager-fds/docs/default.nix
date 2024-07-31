@@ -1,16 +1,10 @@
-# I forgot about the fact Hugo also uses Go modules for its Hugo modules
-# feature. For now, this is considered broken up until that is working. Also,
-# Hugo has several features such as embedding metadata from VCS which doesn't
-# play well with Nix that is requiring a clean source.
-#
-# For now, we're just relying on nix-shell to build it for us.
 let
   sources = import ../npins;
 in
 { pkgs ? import sources.nixos-unstable { } }:
 
 let
-  inherit (pkgs) nixosOptionsDoc stdenv lib;
+  inherit (pkgs) nixosOptionsDoc lib;
 
   # Pretty much inspired from home-manager's documentation build process.
   evalDoc = args@{ modules, includeModuleSystemOptions ? false, ... }:
@@ -27,23 +21,31 @@ let
         else builtins.removeAttrs options [ "_module" ];
       }
       // builtins.removeAttrs args [ "modules" "includeModuleSystemOptions" ]);
-  buildHugoSite = pkgs.callPackage ./hugo-build-module.nix { };
+  releaseConfig = lib.importJSON ../release.json;
 
+  wrapperManagerLib = (import ../. { }).lib;
   wmOptionsDoc = evalDoc {
     modules = [ ../modules/wrapper-manager ];
     includeModuleSystemOptions = true;
   };
+
+  gems = pkgs.bundlerEnv {
+    name = "wrapper-manager-fds-gem-env";
+    ruby = pkgs.ruby_3_1;
+    gemdir = ./.;
+  };
 in
 {
+  # I forgot about the fact Hugo also uses Go modules for its Hugo modules
+  # feature. For now, this is considered broken up until that is working and I
+  # know squat about Go build system. Also, Hugo has several features such as
+  # embedding metadata from VCS which doesn't play well with Nix that is
+  # requiring a clean source.
+  #
+  # For now, we're just relying on nix-shell to build it for us.
   website =
     let
-      gems = pkgs.bundlerEnv {
-        name = "wrapper-manager-fds-gem-env";
-        ruby = pkgs.ruby_3_1;
-        gemdir = ./.;
-      };
-
-      wrapperManagerLib = (import ../. { }).lib;
+      buildHugoSite = pkgs.callPackage ./hugo-build-module.nix { };
 
       # Now this is some dogfooding.
       asciidoctorWrapped =
@@ -102,12 +104,24 @@ in
   wmNixosDoc = evalDoc { modules = [ ../modules/env/nixos ];  };
   wmHmDoc = evalDoc { modules = [ ../modules/env/home-manager ]; };
 
-  manualPage = pkgs.runCommand "wrapper-manager-reference-manpage" {
-    nativeBuildInputs = with pkgs; [ nixos-render-docs ];
-  } ''
-    mkdir -p $out/share/man/man5
-    nixos-render-docs options manpage \
-      ${wmOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
-      $out/share/man/man5/wrapper-manager.nix.5
-  '';
+  inherit releaseConfig;
+  outputs = {
+    manpage = pkgs.runCommand "wrapper-manager-reference-manpage" {
+      nativeBuildInputs = with pkgs; [ nixos-render-docs gems gems.wrappedRuby ];
+    } ''
+      mkdir -p $out/share/man/man5
+      asciidoctor --backend manpage ${./manpages/header.adoc} --out-file header.5
+      nixos-render-docs options manpage --revision ${releaseConfig.version} \
+        --header ./header.5 --footer ${./manpages/footer.5} \
+        ${wmOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
+        $out/share/man/man5/wrapper-manager.nix.5
+    '';
+
+    html = pkgs.runCommand "wrapper-manager-reference-html" {
+      nativeBuildInputs = [ gems gems.wrappedRuby ];
+    } ''
+      mkdir -p $out/share/wrapper-manager
+      asciidoctor --backend html ${wmOptionsDoc.optionsAsciiDoc} --out-file $out/share/wrapper-manager/options-reference.html
+    '';
+  };
 }

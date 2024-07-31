@@ -1,0 +1,14 @@
+= wrapper-manager-configuration(5)
+:doctype: manpage
+:mantitle: WRAPPER-MANAGER-CONFIGURATION.NIX(5)
+:manmanual: wrapper-manager configuration
+:mansource: wrapper-manager configuration
+:man-linkstyle: pass:[blue R < >]
+
+
+== Name
+
+wrapper-manager-configuration.nix - wrapper-manager configuration specification
+
+
+== Options
