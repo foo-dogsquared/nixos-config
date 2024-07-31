@@ -83,6 +83,8 @@ nix-shell -p disko git
 disko --mode disko [--arg disk "/dev/sda"] --flake {canonical_flake_url}#external-hdd
 nixos-install --no-root-passwd --root /mnt --flake {canonical_flake_url}#graphical-installer-x86_64-linux
 ----
+
+Also, the installer configuration also includes Guix which means it's also a Guix System installer.
 ====
 
 Once you have a live installer in boot, you can then simply install the following commands.
@@ -124,10 +126,15 @@ The FlakeHub flake follows a rolling release model so all of the releases are un
 == Stability promise
 
 THERE'S NO STABILITY PROMISE HERE!
+YOU KNOW WHY!?!
+BECAUSE DEBUGGING IN NIX (whether in nixpkgs' module system or outside of it) IS ONE OF THE MOST PAINFUL EXPERIENCE IT MIGHT AS WELL BE CLASSIFIED AS A TIME MACHINE BECAUSE OF HOW FAR IT SETS YOU BACK, GODDAMN!
+MIGHT AS WELL USE THE BETTER ALTERNATIVE CALLED GUIX AND LEARN GUILE SCHEME FROM SCRATCH INSTEAD. footnote:[Seriously though, it is pretty nice and the community especially its developers does have the advantage of hindsight and using a general-purpose programming language. If you're interested in using declarative operating systems (or even just a home environment), I recommend to try it.]
+
 If you're one of the unfortunate users for whatever reason, sorry but I'm afraid there's no such word as "stability" in this project's dictionary (or most Nix projects, really ;p).
 Not every commit successfully builds because of the way how the project is managed (which is very very badly):
 
 * All of the included changes are pushed in one fell swoop over time instead of carefully testing each of them.
+* There's barely any testing infrastructure set (at least until I set it up).
 * NixOS and home-manager configurations are able to be deployed in pure evaluation mode and suddenly it's not (most of the time, it isn't).
 * Module interfaces change all the time.
 * Packages can be left unmaintained and vanish at any time. footnote:[The ones I actively maintain are in nixpkgs anyways.]
@@ -190,6 +197,9 @@ include::./docs/content/en-US/08-acknowledgement/index.adoc[tag=acknowledgement]
 
 == Copyright
 
-This project is licensed under MIT license.
+For those who care, this project is licensed under MIT license.
 I just chose it to make it easier to upstream parts of this project to nixpkgs and to make it easier to copy it without much problems (just don't forget to add attribution as indicated from the license).
 Please see link:./LICENSE[`./LICENSE`] for the full text.
+
+However, various subprojects found in here may be under different licenses.
+An example of this is the custom GNOME Shell extensions found for my main GNOME configuration which are licensed under GPLv3 only.
