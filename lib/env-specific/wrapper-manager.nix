@@ -40,4 +40,49 @@ rec {
 
       (lib.removeAttrs module [ "blenderPackage" "blenderArgs" "addons" ])
     ];
+
+  /* Create a configuration module for quickly wrapping with Boxxy.
+  */
+  makeBoxxyWrapper = module@{ boxxyArgs, wraparound, wraparoundArgs ? [], ... }:
+    lib.mkMerge [
+      {
+        arg0 = lib.getExe' pkgs.boxxy "boxxy";
+        prependArgs = lib.mkBefore (boxxyArgs ++ [ "--" wraparound ] ++ wraparoundArgs);
+      }
+
+      (builtins.removeAttrs module [ "boxxyArgs" "wraparound" "wraparoundArgs" ])
+    ];
+
+  /* Given the path to the source code, the attribute path, and the executable
+     name, return the store path to one of its executables.
+  */
+  getNixglExecutable = { src, variant ? [ "auto" "nixGLDefault" ], nixglProgram ? "nixGL" }:
+    let
+      nixgl = import src { inherit pkgs; };
+      nixglPkg = lib.getAttrFromPath variant nixgl;
+    in
+      lib.getExe' nixglPkg nixglProgram;
+
+  /* Create a configuration module for quickly wrapping with NixGL.
+  */
+  makeNixglWrapper = {
+    nixglSrc,
+    nixglArgs,
+    nixglVariant,
+    nixglExecutable,
+    wraparound,
+    wraparoundArgs ? [],
+    ...
+  }@module:
+    lib.mkMerge [
+      {
+        arg0 = getNixglExecutable nixglSrc nixglVariant nixglExecutable;
+        prependArgs = lib.mkBefore (nixglArgs ++ [ "--" wraparound ] ++ wraparoundArgs);
+      }
+
+      (builtins.removeAttrs module [
+        "nixglArgs" "nixglVariant" "nixglExecutable"
+        "wraparound" "wraparoundArgs"
+      ])
+    ];
 }
