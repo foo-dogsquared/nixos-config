@@ -36,7 +36,7 @@
   in {
     devShells = {
       default = import ./shell.nix { inherit pkgs; };
-      website = import ./docs/shell.nix { inherit pkgs; };
+      website = import ./docs/website/shell.nix { inherit pkgs; };
     };
 
     packages.website = docs.website;

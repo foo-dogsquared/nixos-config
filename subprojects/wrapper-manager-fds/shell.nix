@@ -4,10 +4,10 @@ in
 { pkgs ? import sources.nixos-unstable { } }:
 
 let
-  websitePkg = import ./docs { inherit pkgs; };
+  docs = import ./docs { inherit pkgs; };
 in
 pkgs.mkShell {
-  inputsFrom = [ websitePkg ];
+  inputsFrom = [ docs.website ];
 
   packages = with pkgs; [
     npins
