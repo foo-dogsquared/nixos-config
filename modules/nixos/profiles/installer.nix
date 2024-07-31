@@ -1,7 +1,7 @@
 # A dedicated profile for installers with some niceties in it. This is also
 # used for persistent live installers so you'll have to exclude setting up shop
 # and do that in the respective NixOS configuration instead.
-{ pkgs, modulesPath, ... }:
+{ pkgs, lib, modulesPath, ... }:
 
 {
   imports = [
@@ -19,4 +19,8 @@
     neovim
     zellij
   ];
+
+  # Yeah, that's right, this is also a Guix System installer because SCREW YOU,
+  # NIXOS USERS!
+  services.guix.enable = lib.mkDefault true;
 }
