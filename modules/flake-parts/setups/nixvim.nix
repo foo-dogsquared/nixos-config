@@ -1,3 +1,6 @@
+# Declarative NixVim configurations because everything under the Nix ecosystem
+# must be so declarative so we're setting up declarative ways of declaring
+# those accursed setups to be exported in this flake.
 { inputs
 , lib
 , config

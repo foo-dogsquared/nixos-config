@@ -65,7 +65,7 @@ in
           type = with lib.types; attrsOf (submodule dbusFilterType);
           description = ''
             A global set of D-Bus addresses with their policies set with
-            {program}`xdg-dbus-proxy` for each D-Bus address specified on the
+            {command}`xdg-dbus-proxy` for each D-Bus address specified on the
             Bubblewrap-enabled wrappers. See {manpage}`xdg-dbus-proxy(1)` for
             more details.
           '';
@@ -102,7 +102,7 @@ in
             type = with lib.types; listOf str;
             description = ''
               List of proxy-specific arguments to be passed to
-              {program}`xdg-dbus-proxy`.
+              {command}`xdg-dbus-proxy`.
             '';
             default = [ ];
           };
@@ -131,7 +131,7 @@ in
                     extraArgs = lib.mkOption {
                       type = with lib.types; listOf str;
                       description = ''
-                        List of arguments to be passed to {program}`xdg-dbus-proxy`.
+                        List of arguments to be passed to {command}`xdg-dbus-proxy`.
                       '';
                       default = [ ];
                     };
@@ -140,7 +140,7 @@ in
                       type = with lib.types; attrsOf (submodule addressesModule);
                       description = ''
                         A set of addresses to be applied with the filter through
-                        {program}`xdg-dbus-proxy`.
+                        {command}`xdg-dbus-proxy`.
                       '';
                       default = { };
                       example = {

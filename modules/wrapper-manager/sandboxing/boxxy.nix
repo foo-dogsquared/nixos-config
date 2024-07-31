@@ -63,7 +63,7 @@ let
       description = if isGlobal then ''
         Global list of arguments to be appended to each Boxxy-enabled wrappers.
       '' else ''
-        List of arguments to the {program}`boxxy` executable.
+        List of arguments to the {command}`boxxy` executable.
       '';
       default = [ ];
       example = [ "--immutable" "--daemon" ];

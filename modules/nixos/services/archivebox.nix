@@ -151,6 +151,9 @@ in
         curl
         yt-dlp
       ] ++ lib.optional config.programs.git.enable config.programs.git.package;
+      defaultText = ''
+        Chromium, NodeJS, wget, yt-dlp, and git if enabled.
+      '';
       example = lib.literalExpression ''
         with pkgs; [
           curl

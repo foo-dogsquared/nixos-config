@@ -1,4 +1,4 @@
-{ config, lib, options, pkgs, ... }:
+{ config, lib, options, ... }:
 
 let
   cfg = config.xdg.mime;
