@@ -30,7 +30,14 @@ in
         risk.
         :::
       '';
-      default = "networkmanager";
+      default =
+        if config.networking.useNetworkd
+        then "networkd"
+        else "networkmanager";
+      defaultText = ''
+        When networkd is enabled, `networkd`, otherwise `networkmanager` as the
+        general fallback value.
+      '';
       example = "networkd";
     };
   };
@@ -155,10 +162,12 @@ in
       state.ports = {
         http = {
           value = 80;
+          protocols = [ "tcp" ];
           openFirewall = true;
         };
         https = {
           value = 443;
+          protocols = [ "tcp" ];
           openFirewall = true;
         };
       };
