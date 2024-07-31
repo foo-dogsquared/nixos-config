@@ -7,6 +7,13 @@
       description = ''
         Sets the build step to create a tiny compiled executable for the
         wrapper. By default, it is set to `true`.
+
+        ::: {.warning}
+        Binary wrappers cannot have runtime expansion in its arguments
+        especially when setting environment variables that needs it. For this,
+        you'll have to switch to shell wrappers (e.g., `build.isBinary =
+        false`).
+        :::
       '';
       default = true;
       example = false;
