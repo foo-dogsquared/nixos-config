@@ -1,7 +1,9 @@
 let
   sources = import ./npins;
 in
-{ pkgs ? import sources.nixos-unstable { } }:
+{
+  pkgs ? import sources.nixos-unstable { },
+}:
 
 let
   docs = import ./docs { inherit pkgs; };
@@ -12,7 +14,7 @@ pkgs.mkShell {
   packages = with pkgs; [
     npins
     treefmt
-    nixpkgs-fmt
+    nixfmt-rfc-style
 
     # For easy validation of the test suite.
     yajsv

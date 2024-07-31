@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   options.build = {
@@ -48,30 +53,27 @@
     build = {
       toplevel =
         let
-          mkWrapBuild = wrappers:
+          mkWrapBuild =
+            wrappers:
             lib.concatMapStrings (v: ''
               makeWrapper "${v.arg0}" "${builtins.placeholder "out"}/bin/${v.executableName}" ${lib.concatStringsSep " " v.makeWrapperArgs}
             '') wrappers;
 
-          mkDesktopEntries = desktopEntries:
-            builtins.map (entry: pkgs.makeDesktopItem entry) desktopEntries;
+          mkDesktopEntries = desktopEntries: builtins.map (entry: pkgs.makeDesktopItem entry) desktopEntries;
 
-            desktopEntries =
-              mkDesktopEntries (lib.attrValues config.xdg.desktopEntries);
+          desktopEntries = mkDesktopEntries (lib.attrValues config.xdg.desktopEntries);
         in
-          pkgs.symlinkJoin {
-            passthru = config.build.extraPassthru;
-            name = "wrapper-manager-fds-wrapped-package";
-            paths = desktopEntries ++ config.basePackages;
-            nativeBuildInputs =
-              if config.build.isBinary
-              then [ pkgs.makeBinaryWrapper ]
-              else [ pkgs.makeWrapper ];
-            postBuild = ''
-              ${config.build.extraSetup}
-              ${mkWrapBuild (lib.attrValues config.wrappers)}
-            '';
-          };
+        pkgs.symlinkJoin {
+          passthru = config.build.extraPassthru;
+          name = "wrapper-manager-fds-wrapped-package";
+          paths = desktopEntries ++ config.basePackages;
+          nativeBuildInputs =
+            if config.build.isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeWrapper ];
+          postBuild = ''
+            ${config.build.extraSetup}
+            ${mkWrapBuild (lib.attrValues config.wrappers)}
+          '';
+        };
     };
   };
 }

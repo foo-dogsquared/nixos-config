@@ -41,26 +41,34 @@ in
   options.wrappers = lib.mkOption {
     type =
       let
-        xdgDirsType = { name, lib, config, ... }: {
-          options.xdg = xdgDirsOption;
+        xdgDirsType =
+          {
+            name,
+            lib,
+            config,
+            ...
+          }:
+          {
+            options.xdg = xdgDirsOption;
 
-          config = lib.mkMerge [
-            {
-              # When set this way, we could allow the user to override everything.
-              xdg.configDirs = cfg.configDirs;
-              xdg.dataDirs = cfg.dataDirs;
-            }
+            config = lib.mkMerge [
+              {
+                # When set this way, we could allow the user to override everything.
+                xdg.configDirs = cfg.configDirs;
+                xdg.dataDirs = cfg.dataDirs;
+              }
 
-            (lib.mkIf (config.xdg.configDirs != [ ]) {
-              env.XDG_CONFIG_DIRS.value = lib.concatStringsSep ":" config.xdg.configDirs;
-            })
+              (lib.mkIf (config.xdg.configDirs != [ ]) {
+                env.XDG_CONFIG_DIRS.value = lib.concatStringsSep ":" config.xdg.configDirs;
+              })
 
-            (lib.mkIf (config.xdg.dataDirs != [ ]) {
-              env.XDG_DATA_DIRS.value = lib.concatStringsSep ":" config.xdg.dataDirs;
-            })
-          ];
-        };
+              (lib.mkIf (config.xdg.dataDirs != [ ]) {
+                env.XDG_DATA_DIRS.value = lib.concatStringsSep ":" config.xdg.dataDirs;
+              })
+            ];
+          };
       in
-      with lib.types; attrsOf (submodule xdgDirsType);
+      with lib.types;
+      attrsOf (submodule xdgDirsType);
   };
 }

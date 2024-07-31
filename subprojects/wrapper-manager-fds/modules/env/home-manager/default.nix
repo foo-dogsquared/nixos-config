@@ -1,13 +1,16 @@
-{ config, lib, pkgs, ... }@moduleArgs:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}@moduleArgs:
 
 let
   cfg = config.wrapper-manager;
   wmDocs = import ../../../docs { inherit pkgs; };
 in
 {
-  imports = [
-    ../common.nix
-  ];
+  imports = [ ../common.nix ];
 
   config = lib.mkMerge [
     {
@@ -20,17 +23,19 @@ in
 
     (lib.mkIf (moduleArgs ? nixosConfig) {
       wrapper-manager.sharedModules = [
-        ({ lib, ... }: {
-          # NixOS already has the option to set the locale so we don't need to
-          # have this.
-          config.locale.enable = lib.mkDefault false;
-        })
+        (
+          { lib, ... }:
+          {
+            # NixOS already has the option to set the locale so we don't need to
+            # have this.
+            config.locale.enable = lib.mkDefault false;
+          }
+        )
       ];
     })
 
-    (lib.mkIf (cfg.packages != {}) {
-      home.packages =
-        lib.mapAttrsToList (_: wrapper: wrapper.build.toplevel) cfg.packages;
+    (lib.mkIf (cfg.packages != { }) {
+      home.packages = lib.mapAttrsToList (_: wrapper: wrapper.build.toplevel) cfg.packages;
     })
-  ] ;
+  ];
 }

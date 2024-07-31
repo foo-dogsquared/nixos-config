@@ -9,10 +9,15 @@
 # module.
 { pkgs }:
 
-pkgs.lib.makeExtensible
-  (self:
+pkgs.lib.makeExtensible (
+  self:
   let
-    callLibs = file: import file { inherit (pkgs) lib; inherit pkgs self; };
+    callLibs =
+      file:
+      import file {
+        inherit (pkgs) lib;
+        inherit pkgs self;
+      };
   in
   {
     env = import ./env.nix;
@@ -20,5 +25,5 @@ pkgs.lib.makeExtensible
 
     inherit (self.env) build eval;
     inherit (self.utils) getBin getLibexec;
-  })
-
+  }
+)

@@ -1,26 +1,42 @@
 let
   sources = import ../npins;
 in
-{ pkgs ? import sources.nixos-unstable { } }:
+{
+  pkgs ? import sources.nixos-unstable { },
+}:
 
 let
   inherit (pkgs) nixosOptionsDoc lib;
 
   # Pretty much inspired from home-manager's documentation build process.
-  evalDoc = args@{ modules, includeModuleSystemOptions ? false, ... }:
+  evalDoc =
+    args@{
+      modules,
+      includeModuleSystemOptions ? false,
+      ...
+    }:
     let
-      options = (pkgs.lib.evalModules {
-        modules = modules ++ [ { _module.check = false; _module.args.pkgs = pkgs; } ];
-        class = "wrapperManager";
-      }).options;
-    in
-    nixosOptionsDoc ({
       options =
-        if includeModuleSystemOptions
-        then options
-        else builtins.removeAttrs options [ "_module" ];
+        (pkgs.lib.evalModules {
+          modules = modules ++ [
+            {
+              _module.check = false;
+              _module.args.pkgs = pkgs;
+            }
+          ];
+          class = "wrapperManager";
+        }).options;
+    in
+    nixosOptionsDoc (
+      {
+        options =
+          if includeModuleSystemOptions then options else builtins.removeAttrs options [ "_module" ];
       }
-      // builtins.removeAttrs args [ "modules" "includeModuleSystemOptions" ]);
+      // builtins.removeAttrs args [
+        "modules"
+        "includeModuleSystemOptions"
+      ]
+    );
   releaseConfig = lib.importJSON ../release.json;
 
   wrapperManagerLib = (import ../. { }).lib;
@@ -48,20 +64,28 @@ in
       buildHugoSite = pkgs.callPackage ./hugo-build-module.nix { };
 
       # Now this is some dogfooding.
-      asciidoctorWrapped =
-        wrapperManagerLib.build {
-          inherit pkgs;
-          modules = [
-            ({ config, lib, pkgs, ... }: {
+      asciidoctorWrapped = wrapperManagerLib.build {
+        inherit pkgs;
+        modules = [
+          (
+            {
+              config,
+              lib,
+              pkgs,
+              ...
+            }:
+            {
               wrappers.asciidoctor = {
                 arg0 = lib.getExe' gems "asciidoctor";
                 appendArgs = [
-                  "-T" "${sources.website}/templates"
+                  "-T"
+                  "${sources.website}/templates"
                 ];
               };
-            })
-          ];
-        };
+            }
+          )
+        ];
+      };
     in
     buildHugoSite {
       pname = "wrapper-manager-docs";
@@ -101,27 +125,40 @@ in
     };
 
   inherit wmOptionsDoc;
-  wmNixosDoc = evalDoc { modules = [ ../modules/env/nixos ];  };
+  wmNixosDoc = evalDoc { modules = [ ../modules/env/nixos ]; };
   wmHmDoc = evalDoc { modules = [ ../modules/env/home-manager ]; };
 
   inherit releaseConfig;
   outputs = {
-    manpage = pkgs.runCommand "wrapper-manager-reference-manpage" {
-      nativeBuildInputs = with pkgs; [ nixos-render-docs gems gems.wrappedRuby ];
-    } ''
-      mkdir -p $out/share/man/man5
-      asciidoctor --backend manpage ${./manpages/header.adoc} --out-file header.5
-      nixos-render-docs options manpage --revision ${releaseConfig.version} \
-        --header ./header.5 --footer ${./manpages/footer.5} \
-        ${wmOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
-        $out/share/man/man5/wrapper-manager.nix.5
-    '';
+    manpage =
+      pkgs.runCommand "wrapper-manager-reference-manpage"
+        {
+          nativeBuildInputs = with pkgs; [
+            nixos-render-docs
+            gems
+            gems.wrappedRuby
+          ];
+        }
+        ''
+          mkdir -p $out/share/man/man5
+          asciidoctor --backend manpage ${./manpages/header.adoc} --out-file header.5
+          nixos-render-docs options manpage --revision ${releaseConfig.version} \
+            --header ./header.5 --footer ${./manpages/footer.5} \
+            ${wmOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
+            $out/share/man/man5/wrapper-manager.nix.5
+        '';
 
-    html = pkgs.runCommand "wrapper-manager-reference-html" {
-      nativeBuildInputs = [ gems gems.wrappedRuby ];
-    } ''
-      mkdir -p $out/share/wrapper-manager
-      asciidoctor --backend html ${wmOptionsDoc.optionsAsciiDoc} --out-file $out/share/wrapper-manager/options-reference.html
-    '';
+    html =
+      pkgs.runCommand "wrapper-manager-reference-html"
+        {
+          nativeBuildInputs = [
+            gems
+            gems.wrappedRuby
+          ];
+        }
+        ''
+          mkdir -p $out/share/wrapper-manager
+          asciidoctor --backend html ${wmOptionsDoc.optionsAsciiDoc} --out-file $out/share/wrapper-manager/options-reference.html
+        '';
   };
 }

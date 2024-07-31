@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.wrapper-manager;
@@ -10,9 +15,12 @@ let
     modules = [
       ../wrapper-manager
 
-      ({ lib, ... }: {
-        config._module.args.pkgs = lib.mkDefault pkgs;
-      })
+      (
+        { lib, ... }:
+        {
+          config._module.args.pkgs = lib.mkDefault pkgs;
+        }
+      )
     ] ++ cfg.sharedModules;
   };
 in

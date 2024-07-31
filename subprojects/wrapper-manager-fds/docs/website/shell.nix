@@ -1,7 +1,9 @@
 let
   sources = import ../../npins;
 in
-{ pkgs ? import sources.nixos-unstable { } }:
+{
+  pkgs ? import sources.nixos-unstable { },
+}:
 
 let
   docs = import ../. { inherit pkgs; };

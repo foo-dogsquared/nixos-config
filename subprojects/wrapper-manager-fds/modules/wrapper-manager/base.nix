@@ -1,40 +1,63 @@
-{ config, lib, options, ... }:
+{
+  config,
+  lib,
+  options,
+  ...
+}:
 
 let
   envConfig = config;
 
   toStringType = with lib.types; coercedTo anything (x: builtins.toString x) str;
-  envSubmodule = { config, lib, name, ... }: {
-    options = {
-      action = lib.mkOption {
-        type = lib.types.enum [ "unset" "set" "set-default" ];
-        description = ''
-          Sets the appropriate action for the environment variable.
+  envSubmodule =
+    {
+      config,
+      lib,
+      name,
+      ...
+    }:
+    {
+      options = {
+        action = lib.mkOption {
+          type = lib.types.enum [
+            "unset"
+            "set"
+            "set-default"
+          ];
+          description = ''
+            Sets the appropriate action for the environment variable.
 
-          * `unset`... unsets the given variable.
-          * `set-default` only sets the variable with the given value if
-          not already set.
-          * `set` forcibly sets the variable with given value.
-        '';
-        default = "set";
-        example = "unset";
-      };
+            * `unset`... unsets the given variable.
+            * `set-default` only sets the variable with the given value if
+            not already set.
+            * `set` forcibly sets the variable with given value.
+          '';
+          default = "set";
+          example = "unset";
+        };
 
-      value = lib.mkOption {
-        type = toStringType;
-        description = ''
-          The value of the variable that is holding.
-        '';
-        example = "HELLO THERE";
-      };
+        value = lib.mkOption {
+          type = toStringType;
+          description = ''
+            The value of the variable that is holding.
+          '';
+          example = "HELLO THERE";
+        };
 
-      isEscaped = lib.mkEnableOption "escaping of the value" // {
-        default = true;
+        isEscaped = lib.mkEnableOption "escaping of the value" // {
+          default = true;
+        };
       };
     };
-  };
 
-  wrapperType = { name, lib, config, pkgs, ... }:
+  wrapperType =
+    {
+      name,
+      lib,
+      config,
+      pkgs,
+      ...
+    }:
     let
       flagType = with lib.types; listOf toStringType;
     in
@@ -118,28 +141,36 @@ let
           env = envConfig.environment.variables;
           pathAdd = envConfig.environment.pathAdd;
 
-          makeWrapperArgs = [
-            "--argv0" config.arg0
-          ]
-          ++ (lib.mapAttrsToList
-              (n: v:
-                if v.action == "unset"
-                then "--${v.action} ${lib.escapeShellArg n}"
-                else "--${v.action} ${lib.escapeShellArg n} ${if v.isEscaped then lib.escapeShellArg v.value else v.value}")
-              config.env)
-          ++ (builtins.map (v: "--add-flags ${lib.escapeShellArg v}") config.prependArgs)
-          ++ (builtins.map (v: "--append-flags ${lib.escapeShellArg v}") config.appendArgs)
-          ++ (lib.optionals (!envConfig.build.isBinary && config.preScript != "") (
-            let
-              preScript =
-                pkgs.runCommand "wrapper-script-prescript-${config.executableName}" { } config.preScript;
-            in
-              [ "--run" preScript ]));
+          makeWrapperArgs =
+            [
+              "--argv0"
+              config.arg0
+            ]
+            ++ (lib.mapAttrsToList (
+              n: v:
+              if v.action == "unset" then
+                "--${v.action} ${lib.escapeShellArg n}"
+              else
+                "--${v.action} ${lib.escapeShellArg n} ${
+                  if v.isEscaped then lib.escapeShellArg v.value else v.value
+                }"
+            ) config.env)
+            ++ (builtins.map (v: "--add-flags ${lib.escapeShellArg v}") config.prependArgs)
+            ++ (builtins.map (v: "--append-flags ${lib.escapeShellArg v}") config.appendArgs)
+            ++ (lib.optionals (!envConfig.build.isBinary && config.preScript != "") (
+              let
+                preScript =
+                  pkgs.runCommand "wrapper-script-prescript-${config.executableName}" { }
+                    config.preScript;
+              in
+              [
+                "--run"
+                preScript
+              ]
+            ));
         }
 
-        (lib.mkIf (config.pathAdd != [ ]) {
-          env.PATH.value = lib.concatStringsSep ":" config.pathAdd;
-        })
+        (lib.mkIf (config.pathAdd != [ ]) { env.PATH.value = lib.concatStringsSep ":" config.pathAdd; })
       ];
     };
 in
