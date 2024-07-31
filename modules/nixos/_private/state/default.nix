@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./paths.nix
     ./ports.nix
   ];
 
