@@ -52,13 +52,13 @@ rec {
         foodogsquaredUtils = import ./utils/nixos.nix { inherit lib; };
         foodogsquaredModulesPath = builtins.toString nixosModules;
       };
-      modules = extraModules ++ lib.singleton {
-        imports = [
-          nixosModules
-          ../modules/nixos/_private
-        ];
-        nixpkgs.hostPlatform = lib.mkForce system;
-      };
+      modules = extraModules ++ [
+        nixosModules
+        ../modules/nixos/_private
+        ({ lib, ... }: {
+          nixpkgs.hostPlatform = lib.mkForce system;
+        })
+      ];
 
       # Since we're setting it through nixpkgs.hostPlatform, we'll have to pass
       # this as null.
@@ -100,12 +100,11 @@ rec {
         foodogsquaredModulesPath = builtins.toString homeModules;
       };
       configuration = { lib, ... }: {
-        imports = modules ++ lib.singleton {
-          imports = [
-            homeModules
-            ../modules/home-manager/_private
-          ];
-        };
+        imports = modules ++ [
+          homeModules
+          ../modules/home-manager/_private
+        ];
+
         config = {
           programs.home-manager.path = homeManagerSrc;
           inherit (pkgs) overlays;
@@ -130,11 +129,9 @@ rec {
         specialArgs = specialArgs // {
           foodogsquaredModulesPath = builtins.toString wrapperManagerModules;
         };
-        modules = modules ++ lib.singleton {
-          imports = [
-            wrapperManagerModules
-            ../modules/wrapper-manager/_private
-          ];
-        };
+        modules = modules ++ [
+          wrapperManagerModules
+          ../modules/wrapper-manager/_private
+        ];
       };
 }
