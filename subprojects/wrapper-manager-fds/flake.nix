@@ -39,7 +39,11 @@
       website = import ./docs/website/shell.nix { inherit pkgs; };
     };
 
-    packages.website = docs.website;
+    packages = {
+      manpage-reference = docs.outputs.manpage;
+      html-reference = docs.outputs.html;
+      website = docs.website;
+    };
 
     checks.wrapperManagerLibrarySetPkg = tests.libTestPkg;
   }));
