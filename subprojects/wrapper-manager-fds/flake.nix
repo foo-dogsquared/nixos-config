@@ -32,13 +32,14 @@
   in import ./. { } // (eachSystem systems (system: let
     pkgs = import sources.nixos-unstable { inherit system; };
     tests = import ./tests { inherit pkgs; };
+    docs = import ./docs { inherit pkgs; };
   in {
     devShells = {
       default = import ./shell.nix { inherit pkgs; };
       website = import ./docs/shell.nix { inherit pkgs; };
     };
 
-    packages.website = import ./docs { inherit pkgs; };
+    packages.website = docs.website;
 
     checks.wrapperManagerLibrarySetPkg = tests.libTestPkg;
   }));
