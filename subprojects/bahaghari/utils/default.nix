@@ -1,7 +1,7 @@
-{ config, lib, pkgs, bahaghariLib }:
+{ config, lib, pkgs, bahaghariLib }@args:
 
 let
-  callLib = path: import path { inherit config lib pkgs bahaghariLib; };
+  callLib = path: import path args;
 in
 {
   tinted-theming = callLib ./tinted-theming.nix;
