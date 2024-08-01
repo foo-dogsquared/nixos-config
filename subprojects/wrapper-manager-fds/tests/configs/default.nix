@@ -12,4 +12,5 @@ in
 {
   fastfetch = build [ ./wrapper-fastfetch.nix ];
   neofetch = build [ ./wrapper-neofetch.nix ];
+  single-basepackage = build [ ./single-basepackage.nix ];
 }

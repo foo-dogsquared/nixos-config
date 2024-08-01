@@ -196,14 +196,18 @@ in
     };
 
     basePackages = lib.mkOption {
-      type = with lib.types; listOf package;
+      type = with lib.types; either package (listOf package);
       description = ''
-        A list of packages to be included in the wrapper package.
+        Packages to be included in the wrapper package. However, there are
+        differences in behavior when given certain values.
 
-        ::: {.note}
-        This can override some of the binaries included in this list which is
-        typically intended to be used as a wrapped package.
-        :::
+        * When the value is a bare package, the build process will use
+        `$PACKAGE.overrideAttrs` to create the package. This makes it suitable
+        to be used as part of `programs.<name>.package` typically found on
+        other environments (e.g., NixOS).
+
+        * When the value is a list of packages, the build process will use
+        `symlinkJoin` as the builder to create the derivation.
       '';
       default = [ ];
       example = lib.literalExpression ''

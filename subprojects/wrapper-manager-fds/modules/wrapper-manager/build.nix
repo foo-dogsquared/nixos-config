@@ -63,17 +63,33 @@
 
           desktopEntries = mkDesktopEntries (lib.attrValues config.xdg.desktopEntries);
         in
-        pkgs.symlinkJoin {
-          passthru = config.build.extraPassthru;
-          name = "wrapper-manager-fds-wrapped-package";
-          paths = desktopEntries ++ config.basePackages;
-          nativeBuildInputs =
-            if config.build.isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeWrapper ];
-          postBuild = ''
-            ${config.build.extraSetup}
-            ${mkWrapBuild (lib.attrValues config.wrappers)}
-          '';
-        };
+          if lib.isList config.basePackages then
+            pkgs.symlinkJoin {
+              passthru = config.build.extraPassthru;
+              name = "wrapper-manager-fds-wrapped-package";
+              paths = desktopEntries ++ config.basePackages;
+              nativeBuildInputs =
+                if config.build.isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeWrapper ];
+              postBuild = ''
+                ${config.build.extraSetup}
+                ${mkWrapBuild (lib.attrValues config.wrappers)}
+              '';
+            }
+          else
+            config.basePackages.overrideAttrs (final: prev: {
+              nativeBuildInputs =
+                (prev.nativeBuildInputs or [ ])
+                ++ (if config.build.isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeWrapper ])
+                ++ lib.optionals (config.xdg.desktopEntries != { }) [ pkgs.copyDesktopItems ];
+              desktopItems = (prev.desktopItems or [ ]) ++ desktopEntries;
+              postFixup = ''
+                ${prev.postFixup or ""}
+                ${mkWrapBuild (lib.attrValues config.wrappers)}
+              '';
+              passthru = lib.recursiveUpdate (prev.passthru or { }) (config.build.extraPassthru // {
+                unwrapped = config.basePackages;
+              });
+            });
     };
   };
 }
