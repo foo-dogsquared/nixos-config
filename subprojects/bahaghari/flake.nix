@@ -39,8 +39,15 @@
           )
         );
     in eachSystem systems
-      (system: {
+      (system: let
+        tests = branch: import ./tests { inherit branch system; };
+      in {
         devShells.default =
           import ./shell.nix { pkgs = import sources.nixos-stable { inherit system; }; };
+
+        checks = {
+          bahaghariLibStable = (tests "stable").libTestPkg;
+          bahaghariLibUnstable = (tests "unstable").libTestPkg;
+        };
       }) // import ./default.nix { };
 }
