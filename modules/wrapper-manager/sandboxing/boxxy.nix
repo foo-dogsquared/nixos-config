@@ -38,6 +38,10 @@ let
       default = cfg.package;
     };
 
+    # TODO: Perhaps, consider creating a PR to upstream repo to pass a config file?
+    # Boxxy doesn't have a way to pass a custom configuration file so we're
+    # settling with this. Besides, Boxxy-launched programs can inherit the
+    # environment anyways so a custom config file is not needed for now.
     rules = lib.mkOption {
       type = with lib.types; attrsOf (submodule boxxyRuleModule);
       default = { };

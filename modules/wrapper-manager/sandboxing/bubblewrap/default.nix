@@ -7,6 +7,12 @@
 # Similar to most of them, this is basically a builder for the right arguments
 # to be passed to `bwrap`.
 #
+# Also similar to those projects, we also have a launcher (at `launcher`
+# subdirectory) specializing in Bubblewrap-wrapped programs. The reasoning is
+# it allows us to easily take care of things that are hard to do inside of Nix
+# such as handling hardware configuration and the experience to have to do all
+# of that in nixpkgs runtime shell (Bash) is a pain to develop.
+#
 # As already mentioned from the Bubblewrap README, we'll have to be careful for
 # handling D-Bus so we'll use xdg-dbus-proxy for that.
 { config, lib, pkgs, ... }:
@@ -49,6 +55,7 @@ let
 in
 {
   imports = [
+    #./launcher.nix
     ./dbus-filter.nix
     ./filesystem.nix
   ];

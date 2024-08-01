@@ -62,7 +62,7 @@ let
         ::: {.caution}
         Typically, this is not recommended especially for Bubblewrap
         environments. If you want to bind some of the items from the Nix store,
-        it is recommended to use {option}`sharedNixPaths` instead.
+        it is recommended to use {option}`sandboxing.bubblewrap.sharedNixPaths` instead.
         :::
       '';
     };
@@ -71,7 +71,7 @@ let
       type = with lib.types; listOf package;
       default = [ ];
       description = if isGlobal then ''
-        A global list of store paths to be shared
+        A global list of store paths (including its dependencies) to be shared
         per-Bubblewrap-enabled-wrappers.
       '' else ''
         A list of store paths to be mounted (as read-only bind-mounts). Note
