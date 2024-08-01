@@ -21,7 +21,7 @@
           };
 
           wraparound = {
-            executable = options.arg0;
+            arg0 = options.arg0;
             extraArgs = options.extraArgs;
           };
         };

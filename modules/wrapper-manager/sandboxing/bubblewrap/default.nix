@@ -96,7 +96,7 @@ in
               arg0 = lib.getExe' submoduleCfg.package "bwrap";
               prependArgs = lib.mkBefore
                 (submoduleCfg.extraArgs
-                  ++ [ "--" config.sandboxing.wraparound.executable ]
+                  ++ [ "--" config.sandboxing.wraparound.arg0 ]
                   ++ config.sandboxing.wraparound.extraArgs);
             }
 
