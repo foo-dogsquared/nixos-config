@@ -23,4 +23,5 @@ in
       ''
         yajsv -s "${./lib/tests.schema.json}" "$testDataPath" && touch $out || jq . "$testDataPath"
       '';
+  configs = import ./configs { inherit pkgs; };
 }
