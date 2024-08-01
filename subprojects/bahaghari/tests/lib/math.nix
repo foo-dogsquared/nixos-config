@@ -12,6 +12,26 @@ let
   round' = self.math.round' (-10);
 in
 lib.runTests {
+  testMathIsOdd = {
+    expr = self.math.isOdd 45;
+    expected = true;
+  };
+
+  testMathIsOdd2 = {
+    expr = self.math.isOdd 10;
+    expected = false;
+  };
+
+  testMathIsEven = {
+    expr = self.math.isEven 45;
+    expected = false;
+  };
+
+  testMathIsEven2 = {
+    expr = self.math.isEven 10;
+    expected = true;
+  };
+
   testMathPowPositive = {
     expr = self.math.pow 2 8;
     expected = 256;

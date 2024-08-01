@@ -18,6 +18,34 @@ rec {
     epsilon = pow 0.1 13;
   };
 
+  # TODO: We may need to export these functions as a separate Nix library.
+  /* Given a number, check if it's an even number.
+
+     Type: isEven :: Int -> Int
+
+     Example:
+      isEven 10
+      => true
+
+      isEven 13
+      => false
+  */
+  isEven = x:
+    (builtins.bitAnd x 1) == 0;
+
+  /* Given a number, check if it's an odd number.
+
+     Type: isOdd :: Int -> Int
+
+     Example:
+      isOdd 10
+      => true
+
+      isOdd 13
+      => false
+  */
+  isOdd = x: !(isEven x);
+
   /* Returns the absolute value of the given number.
 
      Type: abs :: Int -> Int
