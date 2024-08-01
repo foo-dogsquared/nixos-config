@@ -60,6 +60,7 @@ import nmt {
     ./services/archivebox
     ./services/bleachbit
     ./services/gallery-dl
+    ./services/gonic
     ./services/matcha
     ./services/plover
     ./services/yt-dlp
