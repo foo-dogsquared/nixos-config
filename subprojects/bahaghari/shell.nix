@@ -14,6 +14,6 @@ mkShell {
     npins
 
     treefmt
-    nixpkgs-fmt
+    nixfmt-rfc-style
   ];
 }
