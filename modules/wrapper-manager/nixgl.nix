@@ -87,7 +87,7 @@ in
           };
 
           wraparound = {
-            executable = lib.mkOption {
+            arg0 = lib.mkOption {
               type = lib.types.nonEmptyStr;
               description = ''
                 The executable to be wrapped around.
@@ -117,7 +117,7 @@ in
             if submoduleCfg.executable == null
             then lib.getExe (nixgl config.nixgl.variant config.nixgl.src)
             else submoduleCfg.executable;
-          prependArgs = lib.mkBefore ([ submoduleCfg.wraparound.executable ] ++ submoduleCfg.wraparound.extraArgs);
+          prependArgs = lib.mkBefore ([ submoduleCfg.wraparound.arg0 ] ++ submoduleCfg.wraparound.extraArgs);
         };
       };
     in

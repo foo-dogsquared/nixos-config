@@ -16,7 +16,7 @@ let
   wrapNixGL = arg0:
     if isInNonNixOS then {
       nixgl.enable = true;
-      nixgl.wraparound.executable = arg0;
+      nixgl.wraparound.arg0 = arg0;
     } else {
       inherit arg0;
     };
