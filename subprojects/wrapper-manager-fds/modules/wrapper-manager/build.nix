@@ -53,10 +53,13 @@
     build = {
       toplevel =
         let
+          makeWrapperArg0 =
+            if config.build.isBinary then "makeBinaryWrapper" else "makeShellWrapper";
+
           mkWrapBuild =
             wrappers:
             lib.concatMapStrings (v: ''
-              makeWrapper "${v.arg0}" "${builtins.placeholder "out"}/bin/${v.executableName}" ${lib.concatStringsSep " " v.makeWrapperArgs}
+              ${makeWrapperArg0} "${v.arg0}" "${builtins.placeholder "out"}/bin/${v.executableName}" ${lib.concatStringsSep " " v.makeWrapperArgs}
             '') wrappers;
 
           mkDesktopEntries = desktopEntries: builtins.map (entry: pkgs.makeDesktopItem entry) desktopEntries;
@@ -69,7 +72,7 @@
               name = "wrapper-manager-fds-wrapped-package";
               paths = desktopEntries ++ config.basePackages;
               nativeBuildInputs =
-                if config.build.isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeWrapper ];
+                if config.build.isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeShellWrapper ];
               postBuild = ''
                 ${config.build.extraSetup}
                 ${mkWrapBuild (lib.attrValues config.wrappers)}
