@@ -108,7 +108,7 @@ in {
           changeDirWidgetCommand = "${fd} --type directory --unrestricted";
           defaultCommand = "${fd} --type file --hidden";
           defaultOptions = let
-            skipDirectories' = lib.concatStringsSep "," config.state.ignoreDirectories;
+            skipDirectories' = lib.concatStringsSep "," config.state.paths.ignoreDirectories;
           in [
             "--walker-skip=${skipDirectories'}"
           ];
