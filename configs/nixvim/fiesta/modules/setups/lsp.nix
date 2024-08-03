@@ -15,7 +15,10 @@ in
     };
 
   config = lib.mkIf cfg.enable {
-    plugins.lsp.enable = true;
+    plugins.lsp = {
+      enable = true;
+      inlayHints = true;
+    };
 
     # Keymaps for moving around in the buffer.
     plugins.lsp.keymaps.lspBuf = {

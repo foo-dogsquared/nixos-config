@@ -14,7 +14,10 @@ in
     plugins.dap.extensions.dap-virtual-text.enable = true;
     plugins.debugprint = {
       enable = true;
-      settings.ignore_treesitter = false;
+      settings = {
+        variable_below_alwaysprompt = null;
+        variable_above_alwaysprompt = null;
+      };
     };
 
     keymaps =
