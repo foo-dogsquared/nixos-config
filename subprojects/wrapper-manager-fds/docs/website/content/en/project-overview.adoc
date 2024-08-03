@@ -38,7 +38,7 @@ nix-channel --add {remote-git-repo}/archive/master.tar.gz wrapper-manager-fds
 nix-channel --update
 ----
 
-Then in your environment configuration, you'll have to import it.
+Then in your environment configuration, you'll have to import the user entrypoint.
 For more details, see <<user-entrypoint>>.
 
 [#installation-pinning-tool]
@@ -65,9 +65,9 @@ Though not recommended, you could manually pin the Nix library yourself like in 
 { pkgs, ... }:
 
 let
-  wrapper-manager-fds = builtins.fetchTarball "{remote-git-repo}/archive/master.tar.gz";
-  wrapperManager = import wrapper-manager-fds { };
-  wrapperManagerLib = import wrapperManagerLib.lib { inherit pkgs; }
+  wrapper-manager-fds-src = builtins.fetchTarball "{remote-git-repo}/archive/master.tar.gz";
+  wrapper-manager = import wrapper-manager-fds-src { };
+  wrapperManagerLib = import wrapper-manager.wrapperManagerLib { inherit pkgs; }
 in
 wrapperManagerLib.env.build { }
 ----
@@ -119,11 +119,11 @@ To use it, it only requires a nixpkgs instance like in the following code.
 { pkgs, ... }:
 
 let
-  wrapper-manager-fds = builtins.fetchTarball "{remote-git-repo}/archive/master.tar.gz";
-  wrapperManager = import wrapper-manager-fds { };
-  wrapperManagerLib = import wrapperManagerLib.lib { inherit pkgs; }
+  wrapper-manager-fds-src = builtins.fetchTarball "{remote-git-repo}/archive/master.tar.gz";
+  wrapper-manager = import wrapper-manager-fds-src { };
+  wrapperManagerLib = import wrapper-manager.wrapperManagerLib { inherit pkgs; }
 in
-wmLib.env.build { }
+wrapperManagerLib.env.build { }
 ----
 
 
