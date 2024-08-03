@@ -59,11 +59,13 @@ in
               }
 
               (lib.mkIf (config.xdg.configDirs != [ ]) {
-                env.XDG_CONFIG_DIRS.value = lib.concatStringsSep ":" config.xdg.configDirs;
+                env.XDG_CONFIG_DIRS.value = lib.lists.map builtins.toString config.xdg.configDirs;
+                env.XDG_CONFIG_DIRS.action = "prefix";
               })
 
               (lib.mkIf (config.xdg.dataDirs != [ ]) {
-                env.XDG_DATA_DIRS.value = lib.concatStringsSep ":" config.xdg.dataDirs;
+                env.XDG_DATA_DIRS.value = lib.lists.map builtins.toString config.xdg.dataDirs;
+                env.XDG_DATA_DIRS.action = "prefix";
               })
             ];
           };
