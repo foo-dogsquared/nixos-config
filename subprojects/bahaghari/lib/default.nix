@@ -46,7 +46,7 @@ pkgs.lib.makeExtensible
 
     inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
       generateGlyphSet generateConversionTable generateBaseDigitType clamp
-      isNumber scale optionalNull;
+      isNumber scale optionalNull toFloat;
 
     inherit (self.hex) isHexString;
     inherit (self.math) abs pow percentage factorial floor ceil round round'

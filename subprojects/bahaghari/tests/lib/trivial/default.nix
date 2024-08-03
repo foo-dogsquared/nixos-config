@@ -1,6 +1,10 @@
 { pkgs, lib, self }:
 
 let
+  # The typical rounding procedure for our results. 10 decimal places should be
+  # enough to test accuracy at least for a basic math subset like this.
+  round' = self.math.round' (-6);
+
   customOctalGlyphs = {
     "0" = "A";
     "1" = "B";
@@ -241,6 +245,21 @@ lib.runTests {
     expected = (-68);
   };
 
+  testNumberScaleFloat = {
+    expr = self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 255;
+    expected = 1.0;
+  };
+
+  testNumberScaleFloat2 = {
+    expr = self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 127.5;
+    expected = 0.5;
+  };
+
+  testNumberScaleFloat3 = {
+    expr = round' (self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 53);
+    expected = round' 0.207843;
+  };
+
   testIsNumber1 = {
     expr = self.trivial.isNumber 3;
     expected = true;
@@ -269,5 +288,15 @@ lib.runTests {
   testOptionalNull2 = {
     expr = self.trivial.optionalNull false "HELLO";
     expected = null;
+  };
+
+  testToFloat = {
+    expr = self.trivial.toFloat 46;
+    expected = 46.0;
+  };
+
+  testToFloat2 = {
+    expr = self.trivial.toFloat 26.5;
+    expected = 26.5;
   };
 }

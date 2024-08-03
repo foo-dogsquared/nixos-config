@@ -60,20 +60,6 @@ rec {
   abs = number:
     if number < 0 then -(number) else number;
 
-  /* Given a Nix number, force it to be a floating value.
-
-     Type: toFloat :: Number -> Float
-
-     Example:
-       toFloat 5
-       => 5.0
-
-       toFloat 59.0
-       => 59.0
-  */
-  toFloat = x:
-    1.0 * x;
-
   /* Exponentiates the given base with the exponent.
 
      Type: pow :: Int -> Int -> Int

@@ -178,6 +178,20 @@ rec {
   isNumber = v:
     lib.isInt v || lib.isFloat v;
 
+  /* Given a Nix number, force it to be a floating value.
+
+     Type: toFloat :: Number -> Float
+
+     Example:
+       toFloat 5
+       => 5.0
+
+       toFloat 59.0
+       => 59.0
+  */
+  toFloat = x:
+    1.0 * x;
+
   /* Given an initial range of integers, scale the given number with its own
      set of range.
 
