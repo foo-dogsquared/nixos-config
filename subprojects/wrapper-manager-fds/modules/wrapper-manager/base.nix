@@ -8,7 +8,7 @@
 let
   envConfig = config;
 
-  toStringType = with lib.types; coercedTo str (x: "${x}") str;
+  toStringType = with lib.types; coercedTo (oneOf [str path int float bool]) (x: "${x}") str;
   envSubmodule =
     {
       config,
