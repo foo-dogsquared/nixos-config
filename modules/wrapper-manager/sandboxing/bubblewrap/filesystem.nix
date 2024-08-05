@@ -21,7 +21,7 @@ let
     filesystemSubmodule = { config, lib, name, ... }: {
       options = {
         source = lib.mkOption {
-          type = lib.types.path;
+          type = lib.types.str;
           description = ''
             The source of the path to be copied from.
           '';
@@ -86,7 +86,7 @@ let
 
     binds = {
       ro = lib.mkOption {
-        type = with lib.types; listOf path;
+        type = with lib.types; listOf str;
         default = [ ];
         description =
           if isGlobal
@@ -104,7 +104,7 @@ let
       };
 
       rw = lib.mkOption {
-        type = with lib.types; listOf path;
+        type = with lib.types; listOf str;
         default = [ ];
         description =
           if isGlobal
@@ -118,7 +118,7 @@ let
       };
 
       dev = lib.mkOption {
-        type = with lib.types; listOf path;
+        type = with lib.types; listOf str;
         default = [ ];
         description =
           if isGlobal 
