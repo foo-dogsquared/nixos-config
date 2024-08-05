@@ -177,18 +177,6 @@ let
 in
 {
   options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
-  config.sandboxing.bubblewrap.binds.ro = getClosurePaths cfg.sharedNixPaths;
-
-  config.sandboxing.bubblewrap.filesystem =
-    let
-      makeFilesystemMapping = operation: bind:
-        lib.nameValuePair bind { inherit operation; source = bind; };
-      filesystemMappings =
-        lib.lists.map (makeFilesystemMapping "ro-bind-try") cfg.binds.ro
-        ++ lib.lists.map (makeFilesystemMapping "bind") cfg.binds.rw
-        ++ lib.lists.map (makeFilesystemMapping "dev-bind-try") cfg.binds.dev;
-    in
-    builtins.listToAttrs filesystemMappings;
 
   options.wrappers =
     let
@@ -199,6 +187,12 @@ in
 
         config = lib.mkIf (config.sandboxing.variant == "bubblewrap") (lib.mkMerge [
           {
+            sandboxing.bubblewrap.binds = cfg.binds;
+            sandboxing.bubblewrap.sharedNixPaths = cfg.sharedNixPaths;
+            sandboxing.bubblewrap.filesystem = cfg.filesystem;
+          }
+
+          {
             sandboxing.bubblewrap.binds.ro = getClosurePaths submoduleCfg.sharedNixPaths;
             sandboxing.bubblewrap.filesystem =
               let
@@ -206,7 +200,7 @@ in
                   lib.nameValuePair bind { inherit operation; source = bind; };
                 filesystemMappings =
                   lib.lists.map (makeFilesystemMapping "ro-bind-try") submoduleCfg.binds.ro
-                  ++ lib.lists.map (makeFilesystemMapping "bind") submoduleCfg.binds.rw
+                  ++ lib.lists.map (makeFilesystemMapping "bind-try") submoduleCfg.binds.rw
                   ++ lib.lists.map (makeFilesystemMapping "dev-bind-try") submoduleCfg.binds.dev;
               in
               builtins.listToAttrs filesystemMappings;
@@ -229,11 +223,6 @@ in
               in
               lib.lists.flatten
                 (lib.mapAttrsToList makeFilesystemArgs submoduleCfg.filesystem);
-          }
-
-          {
-            sandboxing.bubblewrap.binds = cfg.binds;
-            sandboxing.bubblewrap.filesystem = cfg.filesystem;
           }
 
           (lib.mkIf submoduleCfg.enableSharedNixStore {

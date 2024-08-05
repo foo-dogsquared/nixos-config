@@ -53,7 +53,6 @@ let
         };
       };
     };
-
   };
 in
 {
@@ -94,9 +93,7 @@ in
             '';
           };
 
-          policies = options.sandboxing.bubblewrap.dbus.filter.policies // {
-            default = cfg.dbus.filter.policies;
-          };
+          policies = options.sandboxing.bubblewrap.dbus.filter.policies;
 
           extraArgs = lib.mkOption {
             type = with lib.types; listOf str;
@@ -108,6 +105,7 @@ in
           };
         };
 
+        config.policies = cfg.dbus.filter.policies;
         config.extraArgs =
           let
             makePolicyArgs = dbusName: policyMetadata:
