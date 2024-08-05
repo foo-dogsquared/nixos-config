@@ -55,7 +55,7 @@ let
 in
 {
   imports = [
-    #./launcher.nix
+    ./launcher.nix
     ./dbus-filter.nix
     ./filesystem.nix
   ];
@@ -77,27 +77,18 @@ in
 
           config = lib.mkIf (config.sandboxing.variant == "bubblewrap") (lib.mkMerge [
             {
-              # TODO: All of the Linux-exclusive flags could be handled by the
-              # launcher instead. ALSO MODULARIZE THIS CRAP!
               # Ordering of the arguments here matter(?).
               sandboxing.bubblewrap.extraArgs =
                 cfg.extraArgs
-                ++ lib.optionals stdenv.isLinux [
-                  "--proc" "/proc"
-                  "--dev" "/dev"
-                ]
                 ++ lib.mapAttrsToList
                   (var: metadata:
-                    if metadata.action == "unset"
-                    then "--unsetenv ${var}"
-                    else "--setenv ${var} ${metadata.value}")
+                    if metadata.action == "unset" then
+                      "--unsetenv ${var}"
+                    else if lib.elem metadata.action [ "prefix" "suffix" ] then
+                      "--setenv ${var} ${lib.escapeShellArg (lib.concatStringsSep metadata.separator metadata.value)}"
+                    else
+                      "--setenv ${var} ${metadata.value}")
                   config.env;
-
-              arg0 = lib.getExe' submoduleCfg.package "bwrap";
-              prependArgs = lib.mkBefore
-                (submoduleCfg.extraArgs
-                  ++ [ "--" config.sandboxing.wraparound.arg0 ]
-                  ++ config.sandboxing.wraparound.extraArgs);
             }
 
             (lib.mkIf submoduleCfg.enableNetwork {
