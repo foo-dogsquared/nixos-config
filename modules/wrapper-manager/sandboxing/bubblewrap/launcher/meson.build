@@ -9,5 +9,5 @@ configure_file(
   output: meson.project_name(),
   install_dir: get_option('bindir'),
   install_mode: 'rwxr-xr-x',
-  install: true
+  copy: true,
 )

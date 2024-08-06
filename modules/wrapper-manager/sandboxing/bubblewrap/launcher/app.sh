@@ -37,15 +37,15 @@ case "$(uname)" in
         additional_flags+=(--dev /dev)
         additional_flags+=(--dev-bind /dev/dri /dev/dri)
         additional_flags+=(--tmpfs /tmp)
-        additional_flags+=(--ro-bind /sys/dev/char)
-        additional_flags+=(--ro-bind /sys/devices/pci0000:00)
+        additional_flags+=(--ro-bind '/sys/dev/char' '/sys/dev/char')
+        additional_flags+=(--ro-bind '/sys/devices/pci0000:00' '/sys/devices/pci0000:00')
 
         # Check if we're in a NixOS system.
         if [[ -f /etc/NIXOS ]]; then
-            additional_flags+=(--ro-bind /run/opengl-driver/ /run/opengl-driver/)
+            additional_flags+=(--ro-bind /run/opengl-driver /run/opengl-driver)
 
             if [[ -d /run/opengl-driver-32 ]]; then
-                additional_flags+=(--ro-bind /run/opengl-driver-32 /run/opengl-driver-32/)
+                additional_flags+=(--ro-bind /run/opengl-driver-32 /run/opengl-driver-32)
             fi
         fi
         ;;
@@ -56,23 +56,23 @@ esac
 
 # Bind Wayland if it's detected to be running on one.
 if is_autoconfigured_or "${WRAPPER_MANAGER_BWRAP_LAUNCHER_WAYLAND}" && [ -S "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}" ]; then
-    additional_flags+=(--ro-bind "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}")
+    additional_flags+=(--ro-bind "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}" "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}")
 fi
 
 # Bind Pipewire if it's detected.
 if is_autoconfigured_or "${WRAPPER_MANAGER_BWRAP_LAUNCHER_PIPEWIRE}" && [ -S "${XDG_RUNTIME_DIR}/pipewire-0" ]; then
-    additional_flags+=(--ro-bind "${XDG_RUNTIME_DIR}/pipewire-0")
+    additional_flags+=(--ro-bind "${XDG_RUNTIME_DIR}/pipewire-0" "${XDG_RUNTIME_DIR}/pipewire-0")
 fi
 
 # Bind PulseAudio if it's detected and configured.
 if is_autoconfigured_or "${WRAPPER_MANAGER_BWRAP_LAUNCHER_PULSEAUDIO}" && [ -e "${XDG_RUNTIME_DIR}/pulse/pid" ]; then
-    additional_flags+=(--ro-bind "${XDG_RUNTIME_DIR}/pulse")
+    additional_flags+=(--ro-bind "${XDG_RUNTIME_DIR}/pulse" "${XDG_RUNTIME_DIR}/pulse")
 fi
 
 # Bind X11 thingies if it's configured and detected.
 if is_autoconfigured_or "${WRAPPER_MANAGER_BWRAP_LAUNCHER_X11}" && [ "${XAUTHORITY}" ]; then
-    additional_flags+=(--ro-bind "${XAUTHORITY}")
-    additional_flags+=(--ro-bind "/tmp/.X11-unix")
+    additional_flags+=(--ro-bind "${XAUTHORITY}" "${XAUTHORITY}")
+    additional_flags+=(--ro-bind '/tmp/.X11-unix' '/tmp/.X11-unix')
 fi
 
 # Fork the D-Bus proxy in case it is needed. We only need to know if its needed
