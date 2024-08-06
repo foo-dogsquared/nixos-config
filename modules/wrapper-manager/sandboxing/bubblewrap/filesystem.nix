@@ -55,15 +55,9 @@ let
     };
   in {
     enableSharedNixStore = lib.mkEnableOption null // {
-      default = if isGlobal then false else cfg.enableSharedNixStore;
+      default = if isGlobal then true else cfg.enableSharedNixStore;
       description = ''
         Whether to share the entire Nix store directory.
-
-        ::: {.caution}
-        Typically, this is not recommended especially for Bubblewrap
-        environments. If you want to bind some of the items from the Nix store,
-        it is recommended to use {option}`sandboxing.bubblewrap.sharedNixPaths` instead.
-        :::
       '';
     };
 
