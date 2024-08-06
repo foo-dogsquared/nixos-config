@@ -22,7 +22,7 @@
 
           wraparound = {
             arg0 = options.arg0;
-            extraArgs = options.extraArgs;
+            extraArgs = options.appendArgs;
           };
         };
       };
