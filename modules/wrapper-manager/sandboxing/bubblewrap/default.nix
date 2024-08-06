@@ -44,6 +44,10 @@ let
       default = if isGlobal then true else cfg.enableNetwork;
     };
 
+    enableBundledCertificates = lib.mkEnableOption "bundling additional certificates from nixpkgs" // {
+      default = if isGlobal then true else cfg.enableBundledCertificates;
+    };
+
     enableIsolation = lib.mkEnableOption "unsharing most of the system" // {
       default = if isGlobal then true else cfg.enableIsolation;
     };
@@ -104,6 +108,10 @@ in
                 "/etc/hosts"
                 "/etc/resolv.conf"
               ];
+            })
+
+            (lib.mkIf submoduleCfg.enableBundledCertificates {
+              sandboxing.bubblewrap.sharedNixPaths = [ pkgs.cacert ];
             })
 
             (lib.mkIf submoduleCfg.enableIsolation {
