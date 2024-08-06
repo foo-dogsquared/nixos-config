@@ -18,7 +18,8 @@ pkgs.lib.makeExtensible
     trivial = callLib ./trivial.nix;
     data = callLib ./data.nix;
 
-    inherit (self.builders) makeXDGMimeAssociationList makeXDGPortalConfiguration;
+    inherit (self.builders) makeXDGMimeAssociationList
+      makeXDGPortalConfiguration makeXDGDesktopEntry;
     inherit (self.trivial) countAttrs;
     inherit (self.data) importYAML renderTeraTemplate;
   } // lib.optionalAttrs (builtins ? fetchTree) {
