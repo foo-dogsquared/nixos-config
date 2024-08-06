@@ -173,12 +173,12 @@ let
 
   # TODO: There has to be a better way to get this info without relying on
   # pkgs.closureInfo builder, right?
-  getClosurePaths = rootpaths:
+  getClosurePaths = rootPaths:
     let
-      sharedNixPathsClosureInfo = pkgs.closureInfo { inherit rootpaths; };
+      sharedNixPathsClosureInfo = pkgs.closureInfo { inherit rootPaths; };
       closurePaths = lib.readFile "${sharedNixPathsClosureInfo}/store-paths";
     in
-      lib.lists.filter (p: p != "") (lib.splitStrings "\n" closurePaths);
+      lib.lists.filter (p: p != "") (lib.splitString "\n" closurePaths);
 in
 {
   options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
@@ -198,7 +198,6 @@ in
           }
 
           {
-            sandboxing.bubblewrap.binds.ro = getClosurePaths submoduleCfg.sharedNixPaths;
             sandboxing.bubblewrap.filesystem =
               let
                 renameNixStorePaths = path:
@@ -240,6 +239,14 @@ in
 
           (lib.mkIf submoduleCfg.enableSharedNixStore {
             sandboxing.bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
+          })
+
+          (lib.mkIf (submoduleCfg.sharedNixPaths != [ ]) {
+            sandboxing.bubblewrap.extraArgs =
+              let
+                closurePaths = getClosurePaths submoduleCfg.sharedNixPaths;
+              in
+                builtins.map (p: "--ro-bind ${lib.escapeShellArg p} ${lib.escapeShellArg p}") closurePaths;
           })
         ]);
       };
