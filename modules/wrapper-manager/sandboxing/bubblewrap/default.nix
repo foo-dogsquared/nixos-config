@@ -68,9 +68,10 @@ in
 
   options.wrappers =
     let
-      bubblewrapModule = { name, config, lib, pkgs, ... }:
+      bubblewrapModule = { name, config, lib, ... }:
         let
           submoduleCfg = config.sandboxing.bubblewrap;
+          env' = lib.filterAttrs (n: _: !(lib.strings.hasPrefix "WRAPPER_MANAGER_BWRAP_LAUNCHER" n)) config.env;
         in
         {
           options.sandboxing.variant = lib.mkOption {
@@ -89,10 +90,10 @@ in
                     if metadata.action == "unset" then
                       "--unsetenv ${var}"
                     else if lib.elem metadata.action [ "prefix" "suffix" ] then
-                      "--setenv ${var} ${lib.escapeShellArg (lib.concatStringsSep metadata.separator metadata.value)}"
+                      "--setenv ${lib.escapeShellArg var} ${lib.escapeShellArg (lib.concatStringsSep metadata.separator metadata.value)}"
                     else
-                      "--setenv ${var} ${metadata.value}")
-                  config.env;
+                      "--setenv ${lib.escapeShellArg var} ${lib.escapeShellArg metadata.value}")
+                  env';
             }
 
             (lib.mkIf submoduleCfg.enableNetwork {
@@ -105,6 +106,7 @@ in
               # we'll probably let the launcher handle this.
               sandboxing.bubblewrap.binds.ro = [
                 "/etc/ssh"
+                "/etc/ssl"
                 "/etc/hosts"
                 "/etc/resolv.conf"
               ];
@@ -112,6 +114,10 @@ in
 
             (lib.mkIf submoduleCfg.enableBundledCertificates {
               sandboxing.bubblewrap.sharedNixPaths = [ pkgs.cacert ];
+            })
+
+            (lib.mkIf config.locale.enable {
+              sandboxing.bubblewrap.sharedNixPaths = [ config.locale.package ];
             })
 
             (lib.mkIf submoduleCfg.enableIsolation {
