@@ -7,7 +7,7 @@ let
   cfg = config.sandboxing.bubblewrap;
 
   fileOperationsWithPerms = [
-    "file" "dir"
+    "file" "dir" "remount-ro"
     "bind-data" "ro-bind-data"
   ];
   fileOperationsWithoutPerms = [
@@ -28,8 +28,17 @@ let
           example = lib.literalExpression "./files/example.file";
         };
 
+        destination = lib.mkOption {
+          type = lib.types.str;
+          description = ''
+            The source of the path to be copied from.
+          '';
+          default = name;
+          example = lib.literalExpression "./files/example.file";
+        };
+
         permissions = lib.mkOption {
-          type = with lib.types; nullOr (strMatch "[0-7]{0,4}");
+          type = with lib.types; nullOr (strMatching "[0-7]{0,4}");
           description = ''
             The permissions of the node in octal. If the value is `null`, it
             will be handled by Bubblewrap executable. For more details for each
@@ -53,6 +62,8 @@ let
         lock = lib.mkEnableOption "locking the file";
       };
     };
+
+    bindsType = with lib.types; listOf (oneOf [ str package ]);
   in {
     enableSharedNixStore = lib.mkEnableOption null // {
       default = if isGlobal then true else cfg.enableSharedNixStore;
@@ -80,7 +91,7 @@ let
 
     binds = {
       ro = lib.mkOption {
-        type = with lib.types; listOf str;
+        type = bindsType;
         default = [ ];
         description =
           if isGlobal
@@ -98,7 +109,7 @@ let
       };
 
       rw = lib.mkOption {
-        type = with lib.types; listOf str;
+        type = bindsType;
         default = [ ];
         description =
           if isGlobal
@@ -112,7 +123,7 @@ let
       };
 
       dev = lib.mkOption {
-        type = with lib.types; listOf str;
+        type = bindsType;
         default = [ ];
         description =
           if isGlobal 
@@ -190,8 +201,14 @@ in
             sandboxing.bubblewrap.binds.ro = getClosurePaths submoduleCfg.sharedNixPaths;
             sandboxing.bubblewrap.filesystem =
               let
+                renameNixStorePaths = path:
+                  if lib.isDerivation path then path.pname else path;
                 makeFilesystemMapping = operation: bind:
-                  lib.nameValuePair bind { inherit operation; source = bind; };
+                  lib.nameValuePair (renameNixStorePaths bind) {
+                    inherit operation;
+                    source = builtins.toString bind;
+                    destination = builtins.toString bind;
+                  };
                 filesystemMappings =
                   lib.lists.map (makeFilesystemMapping "ro-bind-try") submoduleCfg.binds.ro
                   ++ lib.lists.map (makeFilesystemMapping "bind-try") submoduleCfg.binds.rw
@@ -201,22 +218,24 @@ in
 
             sandboxing.bubblewrap.extraArgs =
               let
-                makeFilesystemArgs = dst: metadata:
+                makeFilesystemArgs = _: metadata:
                   let
-                    src = metadata.source;
+                    src = lib.escapeShellArg metadata.source;
+                    dst = lib.escapeShellArg metadata.destination;
                     hasPermissions = metadata.permissions != null;
                     isValidOperationWithPerms = lib.elem metadata.operation fileOperationsWithPerms;
                   in
+                  # Take note of the ordering here such as `--perms` requiring
+                    # to be before the file operation flags.
                   lib.optionals (hasPermissions && isValidOperationWithPerms) [ "--perms ${metadata.permissions}" ]
                   ++ (
-                    if metadata.operation == "dir"
+                    if lib.elem metadata.operation [ "dir" "remount-ro" ]
                     then [ "--${metadata.operation} ${dst}" ]
                     else [ "--${metadata.operation} ${src} ${dst}" ]
                   )
                   ++ lib.optionals metadata.lock [ "--lock-file ${dst}" ];
               in
-              lib.lists.flatten
-                (lib.mapAttrsToList makeFilesystemArgs submoduleCfg.filesystem);
+                lib.lists.flatten (lib.mapAttrsToList makeFilesystemArgs submoduleCfg.filesystem);
           }
 
           (lib.mkIf submoduleCfg.enableSharedNixStore {
