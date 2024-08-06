@@ -39,6 +39,7 @@ in
         DynamicUser = true;
         User = "uxplay";
         Group = "uxplay";
+        RuntimeDirectory = "uxplay";
 
         Restart = "on-failure";
         LockPersonality = true;
@@ -68,6 +69,10 @@ in
         SystemCallFilter = [ "@system-service" "~@privileged" ];
         SystemCallArchitectures = "native";
         SystemCallErrorNumber = "EPERM";
+      };
+      unitConfig = {
+        StartLimitBurst = 5;
+        StartLimitIntervalSec = 10;
       };
     };
   };
