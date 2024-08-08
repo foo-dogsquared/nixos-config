@@ -12,4 +12,16 @@ lib.runTests {
     };
     expected = 2;
   };
+
+  testFilterAttrs' = {
+    expr = self.trivial.filterAttrs' (n: v: v == 4) {
+      e = 5;
+      f = 7;
+      a = 4;
+    };
+    expected = {
+      ok = { a = 4; };
+      notOk = { e = 5; f = 7; };
+    };
+  };
 }
