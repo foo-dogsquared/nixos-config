@@ -99,10 +99,12 @@ in
                 (_: metadata:
                   let
                     inherit (metadata) source destination mode;
+                    ruleArg =
+                      if mode != null
+                        then "${source}:${destination}:${mode}"
+                        else "${source}:${destination}";
                   in
-                  if mode != null
-                  then "--rule ${source}:${destination}:${mode}"
-                  else "--rule ${source}:${destination}")
+                  "--rule ${lib.escapeShellArg ruleArg}")
                 submoduleCfg.rules);
 
             arg0 = lib.getExe submoduleCfg.package;
