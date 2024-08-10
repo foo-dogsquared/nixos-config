@@ -18,7 +18,6 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (pkgs) stdenv;
   cfg = config.sandboxing.bubblewrap;
 
   bubblewrapModuleFactory = { isGlobal ? false }: {
@@ -40,7 +39,7 @@ let
         '';
     };
 
-    enableNetwork = lib.mkEnableOption "sharing of the host network" // lib.optionalAttrs isGlobal {
+    enableNetwork = lib.mkEnableOption "sharing of the host network" // {
       default = if isGlobal then true else cfg.enableNetwork;
     };
 
