@@ -48,6 +48,12 @@ case "$(uname)" in
                 additional_flags+=(--ro-bind /run/opengl-driver-32 /run/opengl-driver-32)
             fi
         fi
+
+        for sysfs_dir in /sys/{block,bus,class,dev,devices}; do
+            if [[ -r "$sysfs_dir" ]] && [[ -x "$sysfs_dir" ]]; then
+                additional_flags+=(--ro-bind "${sysfs_dir}")
+            fi
+        done
         ;;
 esac
 
@@ -75,6 +81,8 @@ if is_autoconfigured_or "${WRAPPER_MANAGER_BWRAP_LAUNCHER_X11}" && [ "${XAUTHORI
     additional_flags+=(--ro-bind '/tmp/.X11-unix' '/tmp/.X11-unix')
 fi
 
+# TODO: Create a Flatpak workaround trick to enable sandboxing with XDG Portals.
+
 # Fork the D-Bus proxy in case it is needed. We only need to know if its needed
 # if the *DBUS_PROXY_ARGS envvar is set.
 if [ -n "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS}" ]; then
@@ -83,5 +91,4 @@ if [ -n "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS}" ]; then
             -- "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY}" "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS[@]}"
     ) &
 fi
-
 exec ${WRAPPER_MANAGER_BWRAP_LAUNCHER_BWRAP} "${additional_flags[@]}" "$@"
