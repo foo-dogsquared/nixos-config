@@ -104,7 +104,7 @@ in
                         then "${source}:${destination}:${mode}"
                         else "${source}:${destination}";
                   in
-                  "--rule ${lib.escapeShellArg ruleArg}")
+                  "--rule ${ruleArg}")
                 submoduleCfg.rules);
 
             arg0 = lib.getExe submoduleCfg.package;
