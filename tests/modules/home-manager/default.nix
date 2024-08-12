@@ -61,6 +61,7 @@ import nmt {
     ./services/bleachbit
     ./services/gallery-dl
     ./services/gonic
+    ./services/ludusavi
     ./services/matcha
     ./services/plover
     ./services/yt-dlp
