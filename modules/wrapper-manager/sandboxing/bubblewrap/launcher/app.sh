@@ -51,7 +51,7 @@ case "$(uname)" in
 
         for sysfs_dir in /sys/{block,bus,class,dev,devices}; do
             if [[ -r "$sysfs_dir" ]] && [[ -x "$sysfs_dir" ]]; then
-                additional_flags+=(--ro-bind "${sysfs_dir}")
+                additional_flags+=(--ro-bind "${sysfs_dir}" "${sysfs_dir}")
             fi
         done
         ;;

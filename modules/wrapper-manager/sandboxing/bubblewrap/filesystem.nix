@@ -219,8 +219,8 @@ in
               let
                 makeFilesystemArgs = _: metadata:
                   let
-                    src = lib.escapeShellArg metadata.source;
-                    dst = lib.escapeShellArg metadata.destination;
+                    src = metadata.source;
+                    dst = metadata.destination;
                     hasPermissions = metadata.permissions != null;
                     isValidOperationWithPerms = lib.elem metadata.operation fileOperationsWithPerms;
                   in
@@ -246,7 +246,7 @@ in
               let
                 closurePaths = getClosurePaths submoduleCfg.sharedNixPaths;
               in
-                builtins.map (p: "--ro-bind ${lib.escapeShellArg p} ${lib.escapeShellArg p}") closurePaths;
+                builtins.map (p: "--ro-bind ${p} ${p}") closurePaths;
           })
         ]);
       };

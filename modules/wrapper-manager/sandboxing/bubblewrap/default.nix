@@ -89,9 +89,9 @@ in
                     if metadata.action == "unset" then
                       "--unsetenv ${var}"
                     else if lib.elem metadata.action [ "prefix" "suffix" ] then
-                      "--setenv ${lib.escapeShellArg var} ${lib.escapeShellArg (lib.concatStringsSep metadata.separator metadata.value)}"
+                      "--setenv ${var} ${lib.concatStringsSep metadata.separator metadata.value}"
                     else
-                      "--setenv ${lib.escapeShellArg var} ${lib.escapeShellArg metadata.value}")
+                      "--setenv ${var} ${metadata.value}")
                   env';
             }
 
