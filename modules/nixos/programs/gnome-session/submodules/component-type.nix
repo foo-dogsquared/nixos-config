@@ -106,6 +106,7 @@ in
         :::
       '';
       default = { };
+      visible = "shallow";
     };
 
     targetUnit = lib.mkOption {
@@ -132,6 +133,7 @@ in
         :::
       '';
       default = { };
+      visible = "shallow";
     };
 
     timerUnit = optionalSystemdUnitOption "timer" "timers" // {
