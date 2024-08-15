@@ -1,4 +1,5 @@
-# For now, it has
+# It has a design constraint of requiring no flake inputs as we're already
+# using npins.
 {
   description = "Specialized set of Nix modules for generating and applying themes.";
 

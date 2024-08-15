@@ -5,7 +5,7 @@
 :fn-specialization-comment: footnote:[Which I can see is useful for separating rices and booting into them separately for whatever reason (again, your system, your rules but my guess is because you're a control freak).]
 
 
-Bahaghari (Tagalog word for "rainbow" or a "king's loincloth" if you prefer) is a specialized set of Nix modules for generating and applying themes.
+Bahaghari footnote:[Tagalog word for "rainbow" or a "king's loincloth" if you prefer.] is a specialized set of Nix modules for generating and applying themes.
 Mainly useful for making your ricing process with NixOS and home-manager environments easier.
 This module set should allow for some flexibility for your use case.
 
@@ -19,32 +19,13 @@ At its current state, Bahaghari is considered unstable and might have breaking c
 
 To get started using Bahaghari, you have to set some things up first.
 The way how Bahaghari expects you to use it is by choosing one (or more if you want) of the module sets which you can view more details at <<module-sets, its dedicated section>>.
-For now, let's assume that you are using Tinted Theming module set in your NixOS configuration which you can set it up with the following code.
+For now, let's assume that you are using Tinted Theming module set (which is basically the most developed out of all of them) in your NixOS configuration which you can set it up with the following code.
 
 // TODO: Change all of the URLs once this moves into its own repo.
 First, you'll have to install Bahaghari as part of your Nix project or whatever.
 There are multiple ways to do this.
 
-* We'll first start with the increasingly popular method of including Nix dependencies with https://zero-to-nix.com/concepts/flakes[Nix flakes], a built-in way of pinning them dependencies.
-+
-[source, nix]
-----
-{
-  inputs.bahaghari.url = "github:foo-dogsquared/nixos-config?dir=subprojects/bahaghari";
-
-  # ...
-
-  outputs = { nixpkgs, ... }@inputs: {
-    nixosConfigurations = nixpkgs.lib.nixosSystem {
-      modules = [
-        inputs.bahaghari.nixosModules.bahaghari
-      ];
-    };
-  };
-}
-----
-
-* You can also import the dependencies with a pinning tool (that is not flakes) like https://github.com/nmattia/niv[niv].
+* You can import the dependencies with a pinning tool (that is not flakes) like https://github.com/nmattia/niv[niv] or https://github.com/andir/npins[npins].
 +
 [source, shell]
 ----
@@ -65,7 +46,26 @@ in
 }
 ----
 
-* Lastly, you can import it through https://zero-to-nix.com/concepts/channels[channels].
+* You could install it with https://zero-to-nix.com/concepts/flakes[Nix flakes], an experimental feature featuring a built-in way of pinning them dependencies.
++
+[source, nix]
+----
+{
+  inputs.bahaghari.url = "github:foo-dogsquared/nixos-config?dir=subprojects/bahaghari";
+
+  # ...
+
+  outputs = { nixpkgs, ... }@inputs: {
+    nixosConfigurations = nixpkgs.lib.nixosSystem {
+      modules = [
+        inputs.bahaghari.nixosModules.bahaghari
+      ];
+    };
+  };
+}
+----
+
+* Last but not least, you can import it through https://zero-to-nix.com/concepts/channels[channels].
 +
 [source, shell]
 ----
@@ -90,7 +90,7 @@ in
 
 Importing the module will also import Bahaghari's library set (`bahaghariLib`), making it available as `bahaghariLib` module argument.
 
-If for whatever reason you need Bahaghari library outside of using it with Bahaghari, you can also import it yourself.
+If for whatever reason you need Bahaghari library outside of using it with Bahaghari (for example, you want to use the math subset), you can also import it yourself.
 Here's one way to set it to be available in the module of your environment.
 
 [source, nix]
@@ -108,8 +108,6 @@ in
 ----
 
 
-
-
 [#module-sets]
 == Module sets
 
@@ -117,17 +115,39 @@ As a whole, Bahaghari is more like a set of sets, a metaset, if you will.
 Specifically, it is composed of module sets of which has different ways to use them.
 Here is the exhaustive list of them and its details.
 
-
 [#tinted-theming]
 === Tinted Theming
 
-Bahaghari has a module set for interacting with Tinted Theming standard schemes and templates.
+Bahaghari has a module set for interacting with https://github.com/tinted-theming/[Tinted Theming] standard schemes and templates.
 
 This module is designed to closely follow Tinted Theming's standard while offering some convenience with the library set.
 For example, you can use `importYAML` from Bahaghari's standard library set to easily import standard Base16 schemes into Nix-representable data which you can press onto your Nix configuration.
 
+However, Bahaghari has a dedicated set of library functions in `bahaghariLib.tinted-theming` to make interacting with this module set a bit easier.
+For example, instead of using `importYAML`, you can use `tinted-theming.importScheme` instead which the function will also take care of modernizing legacy Base16 schemes if it detected as one.
+
+[source, nix]
+----
+{ config, lib, bahaghariLib, ... }:
+
+{
+  bahaghari.tinted-theming.schemes = {
+    # Instead of using `importYAML`...
+    bark-on-a-tree = bahaghariLib.importYAML ./legacy-base16-scheme.yml;
+
+    # ...you can use `tinted-theming.importScheme` instead.
+    albino-bark-on-a-tree = bahaghariLib.tinted-theming.importScheme ./legacy-base16-scheme.yml;
+
+    # This should work both on legacy and modern Tinted Theming schemes.
+    ice-ice-baby = bahaghariLib.tinted-theming.importScheme ./modern-base16-scheme.yml;
+  };
+}
+----
+
+
 // TODO: GNOME HIG module set
 // TODO: Material You module set
+// TODO: Panapton module set
 
 [#templated-configuration-sub-modules]
 === Templated configuration sub-modules
@@ -141,10 +161,13 @@ To make use of this, you'll have to import Bahaghari module set's
 [#comparison-with-other-modules]
 == Comparison with other modules
 
+Bahaghari is not the first nor the last Nix project to ever deal with setting up a foundation for generating them rainbowy rices.
+Here's some (unbiased ;p) insights comparing Bahaghari and some of the more established projects in this space.
+
 [#nix-colors]
 === nix-colors
 
-Bahaghari initially started as a derivative to nix-colors as a single Nix module entirely dedicated for Tinted Theming standard.
+Bahaghari initially started as a derivative to nix-colors as a single Nix module entirely dedicated for Tinted Theming standard "proper".
 It was created to address its limitation of allowing only one colorscheme at a time which limits a lot of possible applications.
 Most notably, the feature I'm looking for is generating multiple colorscheme templates for different applications which is nice for hybrid deployments of home-manager-plus-mutable-configurations (AKA traditional dotfiles) and for mixed installations of NixOS and home-manager (or whatever else that can be combined).
 
@@ -166,16 +189,13 @@ Here's one way to implement it.
 }
 ----
 
-
-
-
 [#stylix]
 === Stylix
 
 While Bahaghari can be used similarly to Stylix, it isn't completely 1-to-1 to Stylix as the latter focuses on the holistic side of customization including for fonts and wallpaper.
 On the other hand, Bahaghari completely focuses on colorscheme generation. footnote:[While Bahaghari as a project can also focus beyond colorschemes similar to Stylix, it isn't a part of the vision for now.]
 
-Bahaghari also took some cues from Stylix specifically from its Stylix targets which became the pre-templated configurations submodules for each of the design system module set (e.g., Tinted Theming).
+Still, if you're looking for a streamlined way of generating a theme configuration, Stylix is still the tool for the job.
 
 
 
@@ -195,11 +215,28 @@ This is used both by the flake- and non-flake-based setups for consistency (and 
 * link:./lib/[./lib/] is where the Bahaghari library set lives.
 It takes a lot of cues from nixpkgs how the library is maintained with individual files separated by purpose and the module sets (most of the time).
 
+* link:./utils/[./utils/] is another part of Bahaghari library.
+You can see more details in <<library-development>>.
+
 * link:./modules/[./modules/] is where the Bahaghari module sets reside.
 All of them are then separated by... module sets and are organized by the aforementioned `default.nix`.
 
 * link:./tests/[./tests/] is where the test suites reside.
 We'll cover how to interact with the test suite right after this section.
+
+An interesting thing to note: being a project where it exposes a Nix module and a library set, we actually don't use flakes for pinning our supported branches of nixpkgs and/or NixOS as much as we don't want to be fully locked into that feature and will also limit support for non-flake usage especially if a potential contributor doesn't use flakes.
+Instead, we use a different pinning tool with https://github.com/andir/npins[npins].
+Please see its homepage for more information on using it.
+
+
+[#library-development]
+=== Library development
+
+A large part of Bahaghari is its library.
+There's actually two top-level directories that you have to keep in mind: `lib` and `utils`.
+Bahaghari separates its function set as either part of the library subset or utilities subset patterned after the NixOS environment of adding `utils` module argument.
+The main difference between these two is the utilities subset depends on the environment configuration (for example, using `config.bahaghari.tinted-theming.schemes`) while those in library subset does not.
+We just separate these for easier maintenance.
 
 
 [#testing]
