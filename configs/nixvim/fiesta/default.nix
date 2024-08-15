@@ -5,6 +5,7 @@
 
   config = {
     nixvimConfigs.fiesta.setups = {
+      devenvs.enable = true;
       snippets.enable = true;
       ui.enable = true;
       completion.enable = true;
