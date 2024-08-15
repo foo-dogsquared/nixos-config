@@ -1,0 +1,6 @@
+= wrapper-manager-fds custom module tests
+:toc:
+
+The test infrastructure for my custom wrapper-manager modules.
+This should handle both the public and private modules.
+The main file you should be paying attention first and foremost is in link:./default.nix[./default.nix] where it sets up the entire test for all of them.
