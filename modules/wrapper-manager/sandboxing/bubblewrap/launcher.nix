@@ -48,13 +48,14 @@ in
               # We're just unsetting autoconfigure since we're configuring this
               # through the module system anyways and would allow the user to
               # have some more control over what can be enabled.
-              "${envSuffix "AUTOCONFIGURE"}".value = "";
+              "${envSuffix "AUTOCONFIGURE"}".value = "0";
             };
           }
 
           (lib.mkIf config.sandboxing.bubblewrap.dbus.enable {
             env.${envSuffix "DBUS_PROXY"}.value = lib.getExe' config.sandboxing.bubblewrap.dbus.filter.package "xdg-dbus-proxy";
             env.${envSuffix "DBUS_PROXY_ARGS"}.value = lib.concatStringsSep " " config.sandboxing.bubblewrap.dbus.filter.extraArgs;
+            env.${envSuffix "DBUS_PROXY_BWRAP_ARGS"}.value = lib.concatStringsSep " " config.sandboxing.bubblewrap.dbus.filter.bwrapArgs;
           })
 
           (lib.mkIf submoduleCfg.integrations.pulseaudio.enable {

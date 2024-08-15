@@ -82,18 +82,27 @@ in
 
   options.wrappers =
     let
-      addressesModule = { config, lib, ... }: {
+      addressesModule = { config, lib, name, ... }: {
         options = {
           path = lib.mkOption {
-            type = with lib.types; nullOr path;
-            default = null;
+            type = lib.types.str;
+            default = "$XDG_RUNTIME_DIR/wrapper-manager-fds/$(echo $RANDOM | base64)";
             description = ''
               Path of the unix socket domain. A value of `null` means
               the launcher takes care of it.
             '';
           };
 
-          policies = options.sandboxing.bubblewrap.dbus.filter.policies;
+          policies = lib.mkOption {
+            type = lib.types.submodule dbusFilterType;
+            description = ''
+              Policies to be set to that address.
+            '';
+            default = { };
+            example = {
+              level = "see";
+            };
+          };
 
           extraArgs = lib.mkOption {
             type = with lib.types; listOf str;
@@ -108,12 +117,11 @@ in
         config.policies = cfg.dbus.filter.policies;
         config.extraArgs =
           let
-            makePolicyArgs = dbusName: policyMetadata:
-              lib.optionals (policyMetadata.level != null) [ "--${policyMetadata.level}=${dbusName}" ]
-              ++ builtins.map (rule: "--call=${dbusName}=${rule}") policyMetadata.call
-              ++ builtins.map (rule: "--broadcast=${dbusName}=${rule}") policyMetadata.broadcast;
+            inherit (config) policies;
           in
-            lib.mapAttrsToList makePolicyArgs config.dbus.filter.policies;
+          lib.optionals (policies.level != null) [ "--${policies.level}=${name}" ]
+          ++ builtins.map (rule: "--call=${name}=${rule}") policies.call
+          ++ builtins.map (rule: "--broadcast=${name}=${rule}") policies.broadcast;
       };
 
       bubblewrapModule = { config, lib, pkgs, name, ... }:
@@ -134,6 +142,15 @@ in
                       default = [ ];
                     };
 
+                    bwrapArgs = lib.mkOption {
+                      type = with lib.types; listOf str;
+                      description = ''
+                        List of arguments to be passed to the Bubblewrap
+                        environment of the D-Bus proxy.
+                      '';
+                      default = [ ];
+                    };
+
                     addresses = lib.mkOption {
                       type = with lib.types; attrsOf (submodule addressesModule);
                       description = ''
@@ -142,8 +159,10 @@ in
                       '';
                       default = { };
                       example = {
-                        "org.example.Bar" = {
-                        };
+                        "org.example.Bar".policies.level = "talk";
+                        "org.freedesktop.systemd1".policies.level = "talk";
+                        "org.gtk.vfs.*".policies.level = "talk";
+                        "org.gtk.vfs".policies.level = "talk";
                       };
                     };
                   };
@@ -153,9 +172,13 @@ in
                 sandboxing.bubblewrap.dbus.filter.extraArgs =
                   let
                     makeDbusProxyArgs = address: metadata:
-                      [ address metadata.path ] ++ metadata.extraArgs;
+                      [ address (builtins.toString metadata.path) ] ++ metadata.extraArgs;
                   in
                   lib.lists.flatten (lib.mapAttrsToList makeDbusProxyArgs submoduleCfg.dbus.filter.addresses);
+
+                sandboxing.bubblewrap.sharedNixPaths = [
+                  submoduleCfg.dbus.filter.package
+                ];
               };
             };
     in

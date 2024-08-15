@@ -19,10 +19,10 @@
 # launcher. Let the user do it themselves if they want.
 
 declare -a additional_flags
-: "${XDG_RUNTIME_DIR:="/run/user/$(id -u)"}"
-: "${WRAPPER_MANAGER_BWRAP_LAUNCHER_BWRAP:="bwrap"}"
-: "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY:="xdg-dbus-proxy"}"
-: "${WRAPPER_MANAGER_BWRAP_LAUNCHER_AUTOCONFIGURE:="1"}"
+: "${XDG_RUNTIME_DIR:="/run/user/$(id -u)"}" \
+  "${WRAPPER_MANAGER_BWRAP_LAUNCHER_BWRAP:="bwrap"}" \
+  "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY:="xdg-dbus-proxy"}" \
+  "${WRAPPER_MANAGER_BWRAP_LAUNCHER_AUTOCONFIGURE:="1"}"
 
 is_autoconfigured_or() {
     local service="$1"
@@ -85,10 +85,14 @@ fi
 
 # Fork the D-Bus proxy in case it is needed. We only need to know if its needed
 # if the *DBUS_PROXY_ARGS envvar is set.
-if [ -n "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS}" ]; then
+if [ -n "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS}" ] && [ -n "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY}" ]; then
     (
-        ${WRAPPER_MANAGER_BWRAP_LAUNCHER_BWRAP} "${additional_flags[@]}" \
-            -- "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY}" "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS[@]}"
+        # shellcheck disable=2068
+        ${WRAPPER_MANAGER_BWRAP_LAUNCHER_BWRAP} \
+            ${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_BWRAP_ARGS[@]} \
+            "${additional_flags[@]}" \
+            -- "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY}" \
+               ${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS[@]}
     ) &
 fi
 exec ${WRAPPER_MANAGER_BWRAP_LAUNCHER_BWRAP} "${additional_flags[@]}" "$@"

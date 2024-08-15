@@ -248,6 +248,14 @@ in
               in
                 builtins.map (p: "--ro-bind ${p} ${p}") closurePaths;
           })
+
+          (lib.mkIf submoduleCfg.dbus.enable {
+            sandboxing.bubblewrap.dbus.filter.bwrapArgs =
+              let
+                closurePaths = getClosurePaths submoduleCfg.sharedNixPaths;
+              in
+                builtins.map (p: "--ro-bind ${p} ${p}") closurePaths;
+          })
         ]);
       };
     in
