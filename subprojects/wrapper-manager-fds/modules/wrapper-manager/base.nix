@@ -8,7 +8,9 @@
 let
   envConfig = config;
 
-  toStringType = with lib.types; coercedTo (oneOf [str path int float bool]) (x: "${x}") str;
+  toStringType = (with lib.types; coercedTo (oneOf [str path int float bool]) (x: "${x}") str) // {
+    description = "string and select types (numbers, boolean, and path) convertible to it";
+  };
   envSubmodule =
     {
       config,
@@ -30,9 +32,16 @@ let
             Sets the appropriate action for the environment variable.
 
             * `unset`... unsets the given variable.
+
             * `set-default` only sets the variable with the given value if
             not already set.
+
             * `set` forcibly sets the variable with given value.
+
+            * `prefix` and `suffix` prepends and appends the environment
+            variable containing a given separator-delimited list of values
+            respectively. It requires the `value` to be a list of string and a
+            `separator` value.
           '';
           default = "set";
           example = "unset";
@@ -142,6 +151,9 @@ let
           '';
         };
 
+        # makeWrapperArgs are unescaped, a third-party module author can take
+        # advantage of that with runtime expansion values (if using the shell
+        # wrapper).
         makeWrapperArgs = lib.mkOption {
           type = with lib.types; listOf str;
           description = ''
@@ -179,8 +191,7 @@ let
                 "--run"
                 preScript
               ]
-            ))
-            ++ [ "--inherit-argv0" ];
+            ));
         }
 
         (lib.mkIf (config.pathAdd != [ ]) {
@@ -220,7 +231,8 @@ in
         * When the value is a bare package, the build process will use
         `$PACKAGE.overrideAttrs` to create the package. This makes it suitable
         to be used as part of `programs.<name>.package` typically found on
-        other environments (e.g., NixOS).
+        other environments (e.g., NixOS). Take note this means a rebuild of the
+        package.
 
         * When the value is a list of packages, the build process will use
         `symlinkJoin` as the builder to create the derivation.
@@ -240,14 +252,16 @@ in
         per-wrapper.
       '';
       default = { };
-      example = {
-        "FOO_TYPE".value = "custom";
-        "FOO_LOG_STYLE" = {
-          action = "set-default";
-          value = "systemd";
-        };
-        "USELESS_VAR".action = "unset";
-      };
+      example = lib.literalExpression ''
+        {
+          "FOO_TYPE".value = "custom";
+          "FOO_LOG_STYLE" = {
+            action = "set-default";
+            value = "systemd";
+          };
+          "USELESS_VAR".action = "unset";
+        }
+      '';
     };
 
     environment.pathAdd = lib.mkOption {
