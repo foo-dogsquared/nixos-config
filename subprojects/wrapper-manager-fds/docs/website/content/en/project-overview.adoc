@@ -4,6 +4,7 @@ title: Project overview
 = nix-wrapper-manager-fds
 :toc:
 
+:current-version: 0.1.0
 :github-repo: nix-module-wrapper-manager-fds
 :github-full: foo-dogsquared/{github-repo}
 :remote-git-repo: https://github.com/{github-full}
@@ -50,7 +51,7 @@ Assuming you have already initialized npins, you can simply add wrapper-manager-
 
 [source, shell, subs="attributes+"]
 ----
-npins add --name wrapper-manager github foo-dogsquared {github-repo} --branch main
+npins add --name wrapper-manager github foo-dogsquared {github-repo} --at {current-version}
 ----
 
 Similar to channels installation, you'll have to import the <<user-entrypoint>> object.
@@ -58,14 +59,14 @@ Similar to channels installation, you'll have to import the <<user-entrypoint>> 
 [#installation-manual-pinning]
 === Manual pinning
 
-Though not recommended, you could manually pin the Nix library yourself like in the following code.
+Though not recommended, you could manually pin the Nix library yourself and then import the <<user-entrypoint, user entrypoint>> like in the following code.
 
 [source, nix, subs="attributes+"]
 ----
 { pkgs, ... }:
 
 let
-  wrapper-manager-fds-src = builtins.fetchTarball "{remote-git-repo}/archive/master.tar.gz";
+  wrapper-manager-fds-src = builtins.fetchTarball "{remote-git-repo}/archive/{current-version}.tar.gz";
   wrapper-manager = import wrapper-manager-fds-src { };
   wrapperManagerLib = import wrapper-manager.wrapperManagerLib { inherit pkgs; }
 in
@@ -82,7 +83,7 @@ Unlike the other methods, the flake output is the user entrypoint so no need to 
 [source, nix, subs="attributes+"]
 ----
 {
-  inputs.wrapper-manager-fds.url = "github:{github-full}";
+  inputs.wrapper-manager-fds.url = "github:{github-full}/{current-version}";
 
   outputs = { nixpkgs, ... }@inputs: {
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
@@ -174,7 +175,7 @@ Or if you want fastfetch...
   wrappers.fastfetch = {
     arg0 = lib.getExe' pkgs.fastfetch "fastfetch";
     appendArgs = [ "--logo" "Guix" ];
-    env.NO_COLOR = "1";
+    env.NO_COLOR.value = "1";
   };
 }
 ----
