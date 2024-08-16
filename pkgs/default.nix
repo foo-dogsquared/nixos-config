@@ -7,6 +7,7 @@ lib.makeScope newScope (self: {
   blender-blendergis = python3Packages.callPackage ./blender-blendergis { };
   blender-machin3tools = python3Packages.callPackage ./blender-machin3tools { };
   clidle = callPackage ./clidle.nix { };
+  ctrld = callPackage ./ctrld { };
   domterm = libsForQt5.callPackage ./domterm { };
   fastn = callPackage ./fastn { };
   freerct = callPackage ./freerct.nix { };
