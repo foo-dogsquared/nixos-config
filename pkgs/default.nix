@@ -10,6 +10,7 @@ lib.makeScope newScope (self: {
   ctrld = callPackage ./ctrld { };
   domterm = libsForQt5.callPackage ./domterm { };
   fastn = callPackage ./fastn { };
+  flatsync = callPackage ./flatsync { };
   freerct = callPackage ./freerct.nix { };
   distant = callPackage ./distant.nix { };
   gnome-search-provider-recoll =
