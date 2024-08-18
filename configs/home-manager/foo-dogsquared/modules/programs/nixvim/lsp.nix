@@ -2,6 +2,7 @@
 
 {
   plugins.lsp.enable = true;
+  plugins.lsp.inlayHints = true;
 
   # Enable all of the LSP servers that I'll likely use.
   plugins.lsp.servers = {
@@ -18,7 +19,7 @@
     lemminx.enable = true; # And for XML?
     ltex.enable = true; # And for LanguageTool, too?
     lua-ls.enable = true; # For Lua.
-    nil-ls.enable = true; # For Nix.
+    nixd.enable = true; # For Nix.
     nushell.enable = true; # For Nushell.
     pyright.enable = true; # For Python.
 
