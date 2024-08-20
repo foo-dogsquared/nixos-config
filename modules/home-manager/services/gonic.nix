@@ -40,7 +40,7 @@ in
       Unit = {
         Description = "Gonic media server";
         Documentation = [ "https://github.com/sentriz/gonic/wiki" ];
-        After = [ "network.target" ];
+        After = [ "network-online.target" ];
       };
 
       Service = {

@@ -59,6 +59,8 @@ in
       Unit = {
         Description = "Matcha periodic feed digest generator";
         Documentation = [ "https://github.com/piqoni/matcha" ];
+        After = [ "network-online.target" ];
+        Wants = [ "network-online.target" ];
       };
 
       Install.WantedBy = [ "default.target" ];
@@ -73,7 +75,6 @@ in
       Unit = {
         Description = "Matcha periodic feed digest generator";
         Documentation = [ "https://github.com/piqoni/matcha" ];
-        After = [ "network.target" ];
       };
       Install.WantedBy = [ "timers.target" ];
       Timer = {

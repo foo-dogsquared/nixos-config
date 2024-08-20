@@ -113,7 +113,7 @@ in
               Unit = {
                 Description =
                   "Archivebox archive group '${name}' for ${cfg.archivePath}";
-                After = "network.target";
+                After = [ "network-online.target" ];
                 Documentation = [ "https://docs.archivebox.io/" ];
               };
 
@@ -142,7 +142,8 @@ in
           archivebox-server = {
             Unit = {
               Description = "Archivebox server for ${cfg.archivePath}";
-              After = "network.target";
+              After = [ "network-online.target" ];
+              Wants = [ "network-online.target" ];
               Documentation = [ "https://docs.archivebox.io/" ];
             };
 
@@ -164,7 +165,8 @@ in
           lib.nameValuePair (jobUnitName name) {
             Unit = {
               Description = "Archivebox additions for ${cfg.archivePath}";
-              After = "network.target";
+              After = [ "network-online.target" ];
+              Wants = [ "network-online.target" ];
               Documentation = [ "https://docs.archivebox.io/" ];
             };
 
