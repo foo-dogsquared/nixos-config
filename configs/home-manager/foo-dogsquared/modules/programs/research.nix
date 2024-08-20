@@ -36,10 +36,14 @@ in
     (lib.mkIf userCfg.programs.shell.enable {
       programs.atuin.settings.history_filter = [
         "^curl"
+        "^wget"
         "^monolith"
         "^sherlock"
         "^yt-dlp"
+        "^yt-dl"
         "^gallery-dl"
+        "^archivebox"
+        "^fanficfare"
       ];
     })
   ]);
