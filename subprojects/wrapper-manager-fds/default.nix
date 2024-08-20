@@ -17,4 +17,7 @@
 
   lib = import ./lib/env.nix;
   wrapperManagerLib = ./lib;
+  overlays.default = final: prev: {
+    wrapperManagerLib = import ./lib { pkgs = final; };
+  };
 }
