@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, options, pkgs, ... }:
 
 let
   cfg = config.services.yt-dlp;
@@ -7,7 +7,7 @@ let
 
   jobUnitName = name: "yt-dlp-archive-service-${name}";
 
-  jobType = { name, config, options, ... }: {
+  jobType = { name, config, ... }: {
     options = {
       urls = lib.mkOption {
         type = with lib.types; listOf str;
@@ -35,16 +35,12 @@ let
         example = "*-*-3/4";
       };
 
-      extraArgs = lib.mkOption {
-        type = with lib.types; listOf str;
-        description =
-          "Job-specific extra arguments to be passed to the {command}`yt-dlp`.";
-        default = [ ];
-        example = lib.literalExpression ''
-          [
-            "--date" "today"
-          ]
-        '';
+      extraArgs = options.services.yt-dlp.extraArgs // {
+        default = cfg.extraArgs;
+      };
+
+      archivePath = options.services.yt-dlp.archivePath // {
+        default = cfg.archivePath;
       };
     };
   };
@@ -64,17 +60,18 @@ in
     };
 
     archivePath = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.path;
       description = ''
         The location of the archive to be downloaded. Must be an absolute path.
       '';
+      default = "/var/yt-dlp";
       example = "/var/archives/yt-dlp-service";
     };
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       description =
-        "List of arguments to be passed to {command}`yt-dlp`.";
+        "Global list of arguments to be passed to each yt-dlp job.";
       default = [ "--download-archive videos" ];
       example = lib.literalExpression ''
         [
@@ -118,11 +115,12 @@ in
   # `--paths` flag.
   config = lib.mkIf cfg.enable {
     systemd.services = lib.mapAttrs'
-      (name: value:
+      (name: job:
         let
-          jobLevelArgs = lib.escapeShellArgs value.extraArgs;
+          jobLevelArgs = lib.escapeShellArgs job.extraArgs;
         in
         lib.nameValuePair (jobUnitName name) {
+          inherit (job) startAt;
           wantedBy = [ "multi-user.target" ];
           wants = [ "network-online.target" ];
           after = [ "network-online.target" ];
@@ -131,13 +129,13 @@ in
           enable = true;
           path = [ cfg.package pkgs.coreutils ];
           preStart = ''
-            mkdir -p ${lib.escapeShellArg cfg.archivePath}
+            mkdir -p ${lib.escapeShellArg job.archivePath}
           '';
           script = ''
             yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
-                   ${lib.escapeShellArgs value.urls} --paths ${lib.escapeShellArg cfg.archivePath}
+                   ${lib.escapeShellArgs job.urls} \
+                   --paths ${lib.escapeShellArg job.archivePath}
           '';
-          startAt = value.startAt;
           serviceConfig = {
             LockPersonality = true;
             NoNewPrivileges = true;
