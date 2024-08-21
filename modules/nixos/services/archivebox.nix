@@ -46,7 +46,8 @@ let
       (jobUnitName name)
       {
         description = "Archivebox download group '${name}'";
-        after = [ "network.target" ];
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
         preStart = ''
           mkdir -p ${lib.escapeShellArg cfg.archivePath}
@@ -189,7 +190,8 @@ in
     (lib.mkIf cfg.webserver.enable {
       systemd.services.archivebox-server = {
         description = "Archivebox web server";
-        after = [ "network.target" ];
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
         wantedBy = [ "graphical-session.target" ];
         serviceConfig = {

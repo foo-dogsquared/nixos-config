@@ -124,6 +124,8 @@ in
         in
         lib.nameValuePair (jobUnitName name) {
           wantedBy = [ "multi-user.target" ];
+          wants = [ "network-online.target" ];
+          after = [ "network-online.target" ];
           description = "yt-dlp archive job for group '${name}'";
           documentation = [ "man:yt-dlp(1)" ];
           enable = true;

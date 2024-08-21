@@ -31,7 +31,8 @@ in
   config = lib.mkIf cfg.enable {
     systemd.services.wezterm-mux-server = {
       description = "Wezterm mux server";
-      after = [ "network.target" ];
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
       path = [ cfg.package ];
 
       wantedBy = [ "multi-user.target" ];
