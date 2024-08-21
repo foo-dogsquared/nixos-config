@@ -184,40 +184,42 @@ in
       ];
     };
 
-    targetUnit = lib.mkOption {
-      type =
-        let
-          inherit (utils.systemdUtils.lib) unitConfig;
-          inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
-        in
-        lib.types.submodule [
-          commonUnitOptions
-          unitConfig
-        ];
-      description = ''
-        systemd target configuration to be generated for
-        `gnome-session@<name>.target`. This should be configured if the
-        session is managed by systemd and you want to control the session
-        further (which is recommended since this module don't know what
-        components are more important, etc.).
+    systemd = {
+      targetUnit = lib.mkOption {
+        type =
+          let
+            inherit (utils.systemdUtils.lib) unitConfig;
+            inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            unitConfig
+          ];
+        description = ''
+          systemd target configuration to be generated for
+          `gnome-session@<name>.target`. This should be configured if the
+          session is managed by systemd and you want to control the session
+          further (which is recommended since this module don't know what
+          components are more important, etc.).
 
-        By default, the session target will have all of its components from
-        {option}`<session>.requiredComponents` under `Wants=` directive. It
-        also assumes all of them have a target unit at
-        `''${requiredComponent}.target`.
+          By default, the session target will have all of its components from
+          {option}`<session>.requiredComponents` under `Wants=` directive. It
+          also assumes all of them have a target unit at
+          `''${requiredComponent}.target`.
 
-        :::{.note}
-        This has the same options as {option}`systemd.user.targets.<name>`
-        but without certain options from stage 2 counterparts such as
-        `reloadTriggers` and `restartTriggers`.
-        :::
-      '';
-      visible = "shallow";
-      defaultText = ''
-        {
-          wants = ... # All of the required components as a target unit.
-        }
-      '';
+          :::{.note}
+          This has the same options as {option}`systemd.user.targets.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
+          :::
+        '';
+        visible = "shallow";
+        defaultText = ''
+          {
+            wants = ... # All of the required components as a target unit.
+          }
+        '';
+      };
     };
   };
 
@@ -225,7 +227,7 @@ in
     # Append the session argument.
     extraArgs = [ "--session=${name}" ];
 
-    targetUnit = {
+    systemd.targetUnit = {
       overrideStrategy = lib.mkForce "asDropin";
       wants = lib.mkDefault (builtins.map (c: "${c}.target") config.requiredComponents);
     };

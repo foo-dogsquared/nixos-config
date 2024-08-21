@@ -107,20 +107,20 @@ let
           pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
 
         mkSystemdUnits = name: component: {
-          "${component.id}.service" = serviceToUnit component.serviceUnit;
-          "${component.id}.target" = targetToUnit component.targetUnit;
-        } // lib.optionalAttrs (component.socketUnit != null) {
-          "${component.id}.socket" = socketToUnit component.socketUnit;
-        } // lib.optionalAttrs (component.timerUnit != null) {
-          "${component.id}.timer" = timerToUnit component.timerUnit;
-        } // lib.optionalAttrs (component.pathUnit != null) {
-          "${component.id}.path" = pathToUnit component.pathUnit;
+          "${component.id}.service" = serviceToUnit component.systemd.serviceUnit;
+          "${component.id}.target" = targetToUnit component.systemd.targetUnit;
+        } // lib.optionalAttrs (component.systemd.socketUnit != null) {
+          "${component.id}.socket" = socketToUnit component.systemd.socketUnit;
+        } // lib.optionalAttrs (component.systemd.timerUnit != null) {
+          "${component.id}.timer" = timerToUnit component.systemd.timerUnit;
+        } // lib.optionalAttrs (component.systemd.pathUnit != null) {
+          "${component.id}.path" = pathToUnit component.systemd.pathUnit;
         };
 
         componentsUnits = lib.concatMapAttrs mkSystemdUnits session.components;
       in
       componentsUnits // {
-        "gnome-session@${session.name}.target" = targetToUnit session.targetUnit;
+        "gnome-session@${session.name}.target" = targetToUnit session.systemd.targetUnit;
       }
     )
     cfg.sessions;
