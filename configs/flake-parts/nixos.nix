@@ -16,6 +16,7 @@
         modules = [
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
+          inputs.self.nixosModules.wrapper-manager
         ];
         home-manager = {
           branch = "home-manager-unstable";

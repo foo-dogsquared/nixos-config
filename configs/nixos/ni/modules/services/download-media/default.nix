@@ -29,8 +29,7 @@ in
 
         # Write the subtitle file with the preferred languages.
         "--write-subs"
-        "--sub-langs"
-        "en.*,ja,ko,zh.*,fr,pt.*"
+        "--sub-langs" "en.*,ja,ko,zh.*,fr,pt.*"
 
         # Write the description in a separate file.
         "--write-description"
@@ -44,15 +43,12 @@ in
         "(webm,mkv,mp4)[height<=?1280]"
 
         # Prefer MKV whenever possible for video formats.
-        "--merge-output-format"
-        "mkv"
+        "--merge-output-format" "mkv"
 
         # Don't download any videos that are originally live streams.
-        "--match-filters"
-        "!was_live"
+        "--match-filters" "!was_live"
 
-        "--audio-quality"
-        "1"
+        "--audio-quality" "1"
 
         # Not much error since it will always fail.
         "--no-abort-on-error"
@@ -60,9 +56,17 @@ in
         "--ignore-no-formats-error"
       ];
 
-      ytdlpArchiveVariant = pkgs.writeScriptBin "yt-dlp-archive-variant" ''
-        ${pkgs.yt-dlp}/bin/yt-dlp ${lib.escapeShellArgs ytdlpArgs} $@
-      '';
+      galleryDlArgs = [
+        # Write metadata to separate JSON files.
+        "--write-metadata"
+
+        # The config file that contains the secrets for various services.
+        # We're putting as a separate config file instead of configuring it
+        # in the service properly since secrets decrypted by sops-nix cannot
+        # be read in Nix.
+        "--config"
+        "${config.sops.secrets."${pathPrefix}/secrets-config".path}"
+      ];
 
       # Given an attribute set of jobs that contains a list of objects with
       # their names and URL, create an attrset suitable for declaring the
@@ -93,25 +97,27 @@ in
         lib.listToAttrs jobsList;
     in
     {
-      environment.systemPackages = [ ytdlpArchiveVariant ];
-
       sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml
         (lib.attachSopsPathPrefix pathPrefix {
           "secrets-config" = { };
         });
 
+      # This is to make an exception for Archivebox.
+      nixpkgs.config.permittedInsecurePackages = [
+        "python3.12-django-3.1.14"
+      ];
+
       suites.filesystem.setups.archive.enable = true;
 
       services.yt-dlp = {
         enable = true;
-        archivePath = "${mountName}/yt-dlp-service";
+        downloadPath = "${mountName}/yt-dlp-service";
 
         # This is applied on all jobs. It is best to be minimal as much as
         # possible for this.
         extraArgs = ytdlpArgs ++ [
           # Make a global list of successfully downloaded videos as a cache for yt-dlp.
-          "--download-archive"
-          "${config.services.yt-dlp.archivePath}/videos"
+          "--download-archive" "videos"
         ];
 
         jobs = mkJobs {
@@ -150,20 +156,10 @@ in
         enable = true;
         archivePath = "${mountName}/gallery-dl-service";
 
-        extraArgs = [
+        extraArgs = galleryDlArgs ++ [
           # Record all downloaded files in an archive file.
           "--download-archive"
           "${config.services.gallery-dl.archivePath}/photos"
-
-          # Write metadata to separate JSON files.
-          "--write-metadata"
-
-          # The config file that contains the secrets for various services.
-          # We're putting as a separate config file instead of configuring it
-          # in the service properly since secrets decrypted by sops-nix cannot
-          # be read in Nix.
-          "--config"
-          "${config.sops.secrets."${pathPrefix}/secrets-config".path}"
         ];
 
         settings.extractor = {
@@ -201,6 +197,18 @@ in
             ];
             startAt = "weekly";
           };
+        };
+      };
+
+      wrapper-manager.packages.download-media-variants = {
+        wrappers."yt-dlp-${pathPrefix}" = {
+          arg0 = lib.getExe' config.services.yt-dlp.package "yt-dlp";
+          prependArgs = ytdlpArgs;
+        };
+
+        wrappers."gallery-dl-${pathPrefix}" = {
+          arg0 = lib.getExe' config.services.gallery-dl.package "gallery-dl";
+          prependArgs = galleryDlArgs;
         };
       };
     }
