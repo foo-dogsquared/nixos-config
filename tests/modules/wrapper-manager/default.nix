@@ -20,4 +20,5 @@ in
   bubblewrap = runTests ./sandboxing/bubblewrap { };
   boxxy = runTests ./sandboxing/boxxy { };
   zellij = runTests ./programs/zellij { };
+  jujutsu = runTests ./programs/jujutsu { };
 }
