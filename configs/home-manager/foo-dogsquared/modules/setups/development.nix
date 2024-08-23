@@ -19,6 +19,7 @@ in
       users.foo-dogsquared.programs = {
         shell.enable = lib.mkDefault true;
         git.enable = lib.mkDefault true;
+        jujutsu.enable = lib.mkDefault true;
         keys.gpg.enable = true;
         keys.ssh.enable = true;
         terminal-multiplexer.enable = lib.mkDefault true;

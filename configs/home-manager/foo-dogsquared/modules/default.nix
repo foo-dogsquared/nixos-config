@@ -8,6 +8,7 @@
     ./programs/doom-emacs.nix
     ./programs/email.nix
     ./programs/git.nix
+    ./programs/jujutsu.nix
     ./programs/keys.nix
     ./programs/nixvim
     ./programs/research.nix
