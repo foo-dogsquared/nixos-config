@@ -4,6 +4,7 @@
   imports = [
     ./ports.nix
     ./paths.nix
+    ./packages.nix
   ];
 
   options.state = lib.mkOption {
