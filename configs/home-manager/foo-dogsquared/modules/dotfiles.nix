@@ -6,7 +6,7 @@ let
 
   projectsDir = config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR;
 
-  dotfiles = "${projectsDir}/dotfiles";
+  dotfiles = "${projectsDir}/packages/dotfiles";
   dotfiles' = config.lib.file.mkOutOfStoreSymlink config.home.mutableFile."${dotfiles}".path;
   getDotfiles = path: "${dotfiles'}/${path}";
 in
