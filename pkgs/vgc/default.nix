@@ -11,17 +11,15 @@
 , git
 }:
 
-# TODO: Get rid of the build date or at least set the build date to zero to be
-# reproducible.
 stdenv.mkDerivation rec {
   pname = "vgc";
-  version = "unstable-2023-02-05";
+  version = "unstable-2024-08-16";
 
   src = fetchFromGitHub {
     owner = "vgc";
     repo = "vgc";
-    rev = "8e8d958ab9f7fa6f741346d60f17af44d7abb592";
-    sha256 = "sha256-84dckIOrHmxVX7U7VM1Le6tEqG1cJYaAfBcbKqJ6Ros=";
+    rev = "f9814daf5b7d411feeca0a1d994b344243402989";
+    sha256 = "sha256-86Ze8+aKMn0EU+RjcyUuDCCaEleh48gzyU9ZuYxpSdM=";
     fetchSubmodules = true;
   };
 
@@ -45,5 +43,6 @@ stdenv.mkDerivation rec {
     description =
       "Upcoming suite of vector-drawing applications that makes use of Vector Graphics Complex (VGC)";
     license = licenses.asl20;
+    maintainers = with maintainers; [ foo-dogsquared ];
   };
 }

@@ -6,7 +6,7 @@
 , gtksourceview5
 , libadwaita
 , autoreconfHook
-, wrapGAppsHook
+, wrapGAppsHook4
 , pkg-config
 }:
 
@@ -27,7 +27,7 @@ stdenv.mkDerivation rec {
     glib
     gnome.nautilus
     pkg-config
-    wrapGAppsHook
+    wrapGAppsHook4
   ];
 
   buildInputs = [

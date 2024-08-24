@@ -8,7 +8,7 @@
 , gettext
 , glib
 , gtk4
-, libwnck3
+, libwnck
 , wrapGAppsHook4
 , pkg-config
 , python3Packages
@@ -60,7 +60,7 @@ python3Packages.buildPythonApplication rec {
   ];
 
   buildInputs = [
-    libwnck3
+    libwnck
     gtk4
   ];
 
