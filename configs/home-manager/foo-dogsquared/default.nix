@@ -2,6 +2,7 @@
 
 let
   inherit (bahaghariLib.tinted-theming) importScheme;
+  userCfg = config.users.foo-dogsquared;
 in
 {
   imports = [ ./modules ];
@@ -63,6 +64,17 @@ in
   xdg.configFile = {
     distrobox.source = ./config/distrobox;
     kanidm.source = ./config/kanidm/config;
+  };
+
+  # Holding these in for whatever reason.
+  state.packages = {
+    diff = pkgs.diffoscope;
+    pager = config.programs.bat.package;
+    editor =
+      if userCfg.programs.nixvim.enable then
+        config.programs.nixvim.finalPackage
+      else
+        config.programs.neovim.package;
   };
 
   # Automating some files to be fetched on activation.
