@@ -1,7 +1,9 @@
 # All of the programs with my outside dotfiles from
 # https://github.com/foo-dogsquared/dotfiles. Pretty nifty for me to have,
 # yeah? This should work on both NixOS and non-NixOS system considering that
-# parts from the config are conditionally setting up NixGL wrapping.
+# parts from the config are conditionally setting up NixGL wrapping. Though,
+# you have to use NixOS systems in order to actually use it. We probably should
+# have a specialized launcher for this.
 let
   sources = import ./npins;
 in
@@ -22,6 +24,10 @@ let
     };
 in
 {
+  # This wrapper needs runtime expansion which is not possible with binary
+  # wrappers.
+  build.isBinary = false;
+
   nixgl.src = nixgl;
 
   wrappers.wezterm = lib.mkMerge [
@@ -48,13 +54,13 @@ in
   # Trying to create a portable Doom Emacs.
   wrappers.emacs = lib.mkMerge [
     {
-      env.EMACSDIR.value = sources.doom-emacs;
+      env.EMACSDIR.value = builtins.toString sources.doom-emacs;
       env.DOOMDIR.value = getDotfiles "emacs";
-      env.DOOMPROFILELOADFILE.value = "$XDG_CACHE_HOME/doom/profiles.el";
+      env.DOOMPROFILELOADFILE.value = lib.escapeShellArg "$XDG_CACHE_HOME/doom/profiles.el";
 
       # TODO: This will be removed in Doom Emacs 3.0 as far as I can tell so we'll
       # remove it once that happens.
-      env.DOOMLOCALDIR.value = "$XDG_CONFIG_HOME/emacs/";
+      env.DOOMLOCALDIR.value = lib.escapeShellArg "$XDG_CONFIG_HOME/emacs/";
 
       pathAdd = wrapperManagerLib.getBin [
         sources.doom-emacs
