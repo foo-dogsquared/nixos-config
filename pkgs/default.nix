@@ -20,6 +20,7 @@ lib.makeScope newScope (self: {
   gnome-search-provider-recoll =
     callPackage ./gnome-search-provider-recoll.nix { };
   hush-shell = callPackage ./hush-shell.nix { };
+  lazyjj = callPackage ./lazyjj { };
   lwp = callPackage ./lwp { };
   moac = callPackage ./moac.nix { };
   mopidy-beets = callPackage ./mopidy-beets.nix { };
@@ -37,7 +38,7 @@ lib.makeScope newScope (self: {
   smile = callPackage ./smile { };
   sessiond = callPackage ./sessiond { };
   uwsm = callPackage ./uwsm { };
-  vgc = qt6Packages.callPackage ./vgc { };
+  vgc = qt5.callPackage ./vgc { };
   watc = callPackage ./watc { };
   willow = callPackage ./willow { };
   wzmach = callPackage ./wzmach { };
