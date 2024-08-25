@@ -181,7 +181,7 @@ in
           serviceConfig = {
             ReadWritePaths =
               [ job.downloadPath ]
-              ++ lib.mapAttrsToList (n: v: lib.optionals (v.path != null) v.path) job.metadata;
+              ++ lib.lists.flatten (lib.mapAttrsToList (n: v: lib.optionals (v.path != null) v.path) job.metadata);
 
             LockPersonality = true;
             NoNewPrivileges = true;
