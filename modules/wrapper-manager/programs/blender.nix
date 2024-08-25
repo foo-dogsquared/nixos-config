@@ -26,7 +26,7 @@ in
     enable = lib.mkEnableOption "Blender, a 3D computer graphics tool";
 
     package = lib.mkPackageOption pkgs "blender" {
-      example = ''
+      example = lib.literalExpression ''
         pkgs.blender-with-packages {
           name = "sample-studio-wrapped";
           packages = with pkgs.python3Packages; [ pandas ];
@@ -55,7 +55,6 @@ in
     {
       basePackages = [ cfg.package ];
 
-      # TODO: Should we replace the .desktop file for this?
       wrappers.blender = {
         arg0 = lib.getExe' cfg.package "blender";
       };
