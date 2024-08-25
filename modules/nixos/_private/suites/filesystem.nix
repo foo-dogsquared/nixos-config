@@ -29,6 +29,7 @@ in
       # Installing filesystem debugging utilities.
       environment.systemPackages = with pkgs; [
         afuse
+        ntfs3g
       ];
     })
 
