@@ -2,10 +2,13 @@
   config,
   lib,
   pkgs,
+  wrapperManagerLib,
   ...
 }:
 
 {
+  build.isBinary = false;
+
   wrappers.fastfetch = {
     arg0 = lib.getExe' pkgs.fastfetch "fastfetch";
     appendArgs = [
@@ -15,6 +18,10 @@
     env.NO_COLOR.value = "1";
     xdg.desktopEntry.enable = true;
   };
+
+  environment.pathAdd = wrapperManagerLib.getBin (with pkgs; [
+    hello
+  ]);
 
   build.extraPassthru.tests = {
     actuallyBuilt =
