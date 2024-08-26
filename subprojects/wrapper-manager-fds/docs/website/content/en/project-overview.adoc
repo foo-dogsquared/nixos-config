@@ -143,8 +143,10 @@ The project itself is made of different parts which you can use for different pu
 
 One part of the project is the module environment.
 Just like https://github.com/nix-community/home-manager[home-manager] and https://github.com/nix-community/disko[disko] and https://github.com/viperML/wrapper-manager[the original source], wrapper-manager-fds comes with its own module environment.
-Instead of a home environment from home-manager or an installation script from disko, wrapper-manager-fds module environment evaluates to a derivation containing a wrapper script. footnote:[While the original source also evaluates similar to that, it typically involves a set of wrappers inside of the same configuration environment rather than a single wrapper.]
-This can be thought of as a declarative layer over `makeWrapper` build hook from nixpkgs.
+Instead of a home environment from home-manager, an entire operating system from NixOS, or an installation script from disko, wrapper-manager-fds module environment evaluates to a package similar to how certain environments treats them (e.g., `environment.systemPackages` for NixOS, `home.packages` for home-manager).
+
+Much of the module environment relies on `makeWrapper`.
+In fact, this can be thought of as a declarative layer over `makeWrapper` with some other integrations.
 
 If you want to view the module options, you can see it in
 ifdef::env-hugo[link:./wrapper-manager-env-options/[wrapper-manager module options].]
@@ -184,6 +186,7 @@ Or if you want fastfetch...
 ----
 
 Or even both in the same configuration (which you can do).
+If evaluated, this should result in a single derivation that contains two executables in `$out/bin/{fastfetch, neofetch}`.
 
 [source, nix]
 ----

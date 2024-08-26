@@ -59,7 +59,7 @@ in
       visible = "shallow";
       example = lib.literalExpression ''
         {
-          custom-ricing = {
+          custom-ricing = { lib, pkgs, ... }: {
             wrappers.neofetch = {
               arg0 = lib.getExe' pkgs.neofetch "neofetch";
               appendArgs = [
@@ -78,7 +78,7 @@ in
             };
           };
 
-          music-setup = {
+          music-setup = { lib, pkgs, ... }: {
             wrappers.yt-dlp-audio = {
               arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
               prependArgs = [
@@ -101,7 +101,7 @@ in
             };
           };
 
-          writing = {
+          writing = { lib, pkgs, ... }: {
             wrappers.asciidoctor-fds = {
               arg = lib.getExe' pkgs.asciidoctor-with-extensions "asciidoctor";
               executableName = "asciidoctor";
