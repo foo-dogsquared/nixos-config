@@ -8,6 +8,8 @@ in
 let
   inherit (pkgs) nixosOptionsDoc lib;
 
+  src = builtins.toString ../.;
+
   # Pretty much inspired from home-manager's documentation build process.
   evalDoc =
     args@{
@@ -26,11 +28,30 @@ let
           ];
           class = "wrapperManager";
         }).options;
+
+    # Based from nixpkgs' and home-manager's code.
+    gitHubDeclaration = user: repo: subpath:
+      {
+        url = "https://github.com/${user}/${repo}/blob/master/${subpath}";
+        name = "<${repo}/${subpath}>";
+      };
+
     in
     nixosOptionsDoc (
       {
         options =
           if includeModuleSystemOptions then options else builtins.removeAttrs options [ "_module" ];
+        transformOptions = opt:
+          opt // {
+            declarations = map (decl:
+              if lib.hasPrefix src (toString decl) then
+                gitHubDeclaration "foo-dogsquared" "wrapper-manager-fds"
+                (lib.removePrefix "/" (lib.removePrefix src (toString decl)))
+              else if decl == "lib/modules.nix" then
+                gitHubDeclaration "NixOS" "nixpkgs" decl
+              else
+                decl) opt.declarations;
+          };
       }
       // builtins.removeAttrs args [
         "modules"
