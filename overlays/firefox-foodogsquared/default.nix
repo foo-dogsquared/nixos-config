@@ -66,7 +66,7 @@ final: prev:
               install_url = mozillaAddon "wayback-machine_new";
               default_area = "navbar";
             };
-            "zotero@chnm.gmu.edu".install_url = "https://download.zotero.org/connector/firefox/release/Zotero_Connector-5.0.141.xpi";
+            "zotero@chnm.gmu.edu".install_url = "https://www.zotero.org/download/connector/dl?browser=firefox";
           };
 
           applyInstallationMode = name: value:
