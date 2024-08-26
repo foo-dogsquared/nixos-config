@@ -48,7 +48,10 @@ in
     # My AirPlay mirroring server.
     services.uxplay = {
       enable = true;
-      extraArgs = [ "-p" (builtins.toString config.state.ports.uxplay.value) ];
+      extraArgs = [
+        "-p" (builtins.toString config.state.ports.uxplay.value)
+        "-reset" "30"
+      ];
     };
   };
 }
