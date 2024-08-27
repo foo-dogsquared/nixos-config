@@ -18,6 +18,7 @@ pkgs.mkShell {
     home-manager
     git
     sops
+    nix-update
 
     bind
     opentofu
