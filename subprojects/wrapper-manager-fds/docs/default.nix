@@ -179,7 +179,7 @@ in
         }
         ''
           mkdir -p $out/share/wrapper-manager
-          asciidoctor --backend html ${wmOptionsDoc.optionsAsciiDoc} --out-file $out/share/wrapper-manager/options-reference.html
+          asciidoctor --backend html ${wmOptionsDoc.optionsAsciiDoc} --attribute toc --out-file $out/share/wrapper-manager/options-reference.html
         '';
   };
 }
