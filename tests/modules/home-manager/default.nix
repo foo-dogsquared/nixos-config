@@ -1,6 +1,7 @@
 # We're basically reimplmenting parts from the home-manager test suite here
 # just with our own modules included.
 { pkgs ? import <nixpkgs> { }
+, utils ? import ../../utils.nix { inherit pkgs; }
 , homeManagerSrc ? <home-manager>
 , enableBig ? true
 }:

@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import <nixpkgs> { }, utils ? import ../../utils.nix { inherit pkgs; } }:
 
 let
   inherit (pkgs) lib;

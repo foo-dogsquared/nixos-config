@@ -12,6 +12,6 @@ in
   modules = {
     home-manager = import ./modules/home-manager { inherit pkgs utils; };
     nixos = import ./modules/nixos { inherit pkgs utils; };
-    wrapper-manager = import ./modules/wrapper-manager { inherit pkgs; };
+    wrapper-manager = import ./modules/wrapper-manager { inherit pkgs utils; };
   };
 }
