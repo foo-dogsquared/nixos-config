@@ -21,4 +21,5 @@ in
   boxxy = runTests ./sandboxing/boxxy { };
   zellij = runTests ./programs/zellij { };
   jujutsu = runTests ./programs/jujutsu { };
+  dconf = runTests ./dconf { };
 }

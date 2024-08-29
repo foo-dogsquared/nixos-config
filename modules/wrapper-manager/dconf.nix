@@ -39,14 +39,15 @@ in
         dconfProfileFile =
           pkgs.writeText
             "dconf-profile"
-            (lib.concatMapStrings (profile: "${profile}\n") submoduleCfg.profiles);
+            (lib.concatMapStrings (db: "${db}\n") submoduleCfg.profile);
 
+        dconfDirName = "wrapper-manager-dconf-${config.executableName}";
         dconfSettings =
-          settingsFormat.generate "wrapper-manager-dconf-${config.executableName}" submoduleCfg.settings;
+          settingsFormat.generate dconfDirName submoduleCfg.settings;
 
         dconfSettingsDatabase =
           pkgs.runCommand "wrapper-manager-dconf-${config.executableName}-database" { nativeBuildInputs = [ submoduleCfg.package ]; } ''
-            dconf compile ${builtins.placeholder "out"} ${dconfSettings}
+            dconf compile ${builtins.placeholder "out"} "${dconfSettings}/dconf"
           '';
       in {
         options.dconf = {
