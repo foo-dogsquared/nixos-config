@@ -4,6 +4,11 @@ with pkgs;
 lib.makeScope newScope (self: {
   # My custom nixpkgs extensions.
   foodogsquaredLib = import ../lib { inherit pkgs; };
+  inherit (self.foodogsquaredLib.builders)
+    makeXDGMimeAssociationList makeXDGPortalConfiguration makeXDGDesktopEntry
+    buildHugoSite;
+  inherit (self.foodogsquaredLib.fetchers)
+    fetchInternetArchive;
 
   # My custom packages.
   awesome-cli = callPackage ./awesome-cli { };
