@@ -22,7 +22,7 @@ pkgs.lib.makeExtensible
     inherit (self.builders) makeXDGMimeAssociationList
       makeXDGPortalConfiguration makeXDGDesktopEntry;
     inherit (self.trivial) countAttrs;
-    inherit (self.data) importYAML renderTeraTemplate;
+    inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
     inherit (self.fetchers) fetchInternetArchive;
   } // lib.optionalAttrs (builtins ? fetchTree) {
     flake = callLib ./flake.nix;
