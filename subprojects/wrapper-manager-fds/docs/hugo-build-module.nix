@@ -9,10 +9,8 @@
 
 {
   name ? "${args'.pname}-${args'.version}",
-  src,
   nativeBuildInputs ? [ ],
   passthru ? { },
-  patches ? [ ],
 
   # A function to override the goModules derivation
   overrideModAttrs ? (_oldAttrs: { }),
@@ -49,21 +47,12 @@
 
   meta ? { },
 
-  # Not needed with buildGoModule
-  goPackagePath ? "",
-
   ldflags ? [ ],
 
   GOFLAGS ? [ ],
 
-  # needed for buildFlags{,Array} warning
-  buildFlags ? "",
-  buildFlagsArray ? "",
-
   ...
 }@args':
-
-assert goPackagePath != "" -> throw "`goPackagePath` is not needed with `buildGoModule`";
 
 let
   args = removeAttrs args' [
@@ -264,101 +253,16 @@ let
         );
 
       buildPhase =
-        args.buildPhase or (
-          lib.warnIf (buildFlags != "" || buildFlagsArray != "")
-            "`buildFlags`/`buildFlagsArray` are deprecated and will be removed in the 24.11 release. Use the `ldflags` and/or `tags` attributes instead of `buildFlags`/`buildFlagsArray`"
-            lib.warnIf
-            (builtins.elem "-buildid=" ldflags)
-            "`-buildid=` is set by default as ldflag by buildGoModule"
-            ''
-              runHook preBuild
-
-              exclude='\(/_\|examples\|Godeps\|testdata'
-              if [[ -n "$excludedPackages" ]]; then
-                IFS=' ' read -r -a excludedArr <<<$excludedPackages
-                printf -v excludedAlternates '%s\\|' "''${excludedArr[@]}"
-                excludedAlternates=''${excludedAlternates%\\|} # drop final \| added by printf
-                exclude+='\|'"$excludedAlternates"
-              fi
-              exclude+='\)'
-
-              buildGoDir() {
-                local cmd="$1" dir="$2"
-
-                declare -ga buildFlagsArray
-                declare -a flags
-                flags+=($buildFlags "''${buildFlagsArray[@]}")
-                flags+=(''${tags:+-tags=''${tags// /,}})
-                flags+=(''${ldflags:+-ldflags="$ldflags"})
-                flags+=("-p" "$NIX_BUILD_CORES")
-
-                if [ "$cmd" = "test" ]; then
-                  flags+=(-vet=off)
-                  flags+=($checkFlags)
-                fi
-
-                local OUT
-                if ! OUT="$(go $cmd "''${flags[@]}" $dir 2>&1)"; then
-                  if ! echo "$OUT" | grep -qE '(no( buildable| non-test)?|build constraints exclude all) Go (source )?files'; then
-                    echo "$OUT" >&2
-                    return 1
-                  fi
-                fi
-                if [ -n "$OUT" ]; then
-                  echo "$OUT" >&2
-                fi
-                return 0
-              }
-
-              getGoDirs() {
-                local type;
-                type="$1"
-                if [ -n "$subPackages" ]; then
-                  echo "$subPackages" | sed "s,\(^\| \),\1./,g"
-                else
-                  find . -type f -name \*$type.go -exec dirname {} \; | grep -v "/_vendor/" | sort --unique | grep -v "$exclude"
-                fi
-              }
-
-              if (( "''${NIX_DEBUG:-0}" >= 1 )); then
-                buildFlagsArray+=(-x)
-              fi
-
-              if [ -z "$enableParallelBuilding" ]; then
-                  export NIX_BUILD_CORES=1
-              fi
-              for pkg in $(getGoDirs ""); do
-                echo "Building subPackage $pkg"
-                buildGoDir install "$pkg"
-              done
-            ''
-          + lib.optionalString (stdenv.hostPlatform != stdenv.buildPlatform) ''
-            # normalize cross-compiled builds w.r.t. native builds
-            (
-              dir=$GOPATH/bin/${go.GOOS}_${go.GOARCH}
-              if [[ -n "$(shopt -s nullglob; echo $dir/*)" ]]; then
-                mv $dir/* $dir/..
-              fi
-              if [[ -d $dir ]]; then
-                rmdir $dir
-              fi
-            )
-          ''
-          + ''
-            runHook postBuild
-          ''
-        );
+        args.buildPhase or ''
+          runHook preBuild
+          hugo "''${buildFlags[@]}" --destination public
+          runHook postBuild
+        '';
 
       doCheck = args.doCheck or true;
       checkPhase =
         args.checkPhase or ''
           runHook preCheck
-          # We do not set trimpath for tests, in case they reference test assets
-          export GOFLAGS=''${GOFLAGS//-trimpath/}
-
-          for pkg in $(getGoDirs test); do
-            buildGoDir test "$pkg"
-          done
 
           runHook postCheck
         '';
@@ -368,8 +272,7 @@ let
           runHook preInstall
 
           mkdir -p $out
-          dir="$GOPATH/bin"
-          [ -e "$dir" ] && cp -r $dir $out
+          cp -r public/* $out
 
           runHook postInstall
         '';

@@ -113,7 +113,7 @@ in
       version = "2024-07-13";
 
       src = lib.fileset.toSource {
-        root = ./.;
+        root = ./website;
         fileset = lib.fileset.unions [
           ./website/assets
           ./website/config
@@ -124,11 +124,10 @@ in
         ];
       };
 
-      vendorHash = "sha256-vMLi8of2eF/s60B/lM3FDfSntEyieGkvJbTSMuI7Wws=";
+      vendorHash = "sha256-W0PJdS9C8Qz9jU5zRmfwBshsCK8BJFIYBFVstpfZEUI=";
 
       buildInputs = with pkgs; [
         asciidoctorWrapped
-        hugo
         git
         gems
         gems.wrappedRuby

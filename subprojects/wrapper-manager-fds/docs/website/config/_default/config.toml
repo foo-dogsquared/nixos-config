@@ -11,7 +11,14 @@ allow = [
   "^go$",
   "^asciidoctor$",
 ]
-osEnv = [ '^LAST_COMMIT_DATE$' ]
+osEnv = [
+  '^LAST_COMMIT_DATE$',
+  '^PATH$',
+  '^GOPATH$',
+  '^GOPROXY$',
+  '^HTTP_PROXY$',
+  '^HTTPS_PROXY$',
+]
 
 [security.funcs]
 getenv = [ "^LAST_COMMIT_DATE$" ]
