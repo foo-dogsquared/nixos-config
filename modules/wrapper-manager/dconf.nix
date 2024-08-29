@@ -41,13 +41,19 @@ in
             "dconf-profile"
             (lib.concatMapStrings (db: "${db}\n") submoduleCfg.profile);
 
-        dconfDirName = "wrapper-manager-dconf-${config.executableName}";
         dconfSettings =
-          settingsFormat.generate dconfDirName submoduleCfg.settings;
+          settingsFormat.generate "wrapper-manager-dconf-${config.executableName}-settings" submoduleCfg.settings;
+
+        keyfilesDir = pkgs.symlinkJoin {
+          name = "wrapper-manager-dconf-${config.executableName}";
+          paths = submoduleCfg.keyfiles ++ [ "${dconfSettings}/dconf" ];
+        };
 
         dconfSettingsDatabase =
-          pkgs.runCommand "wrapper-manager-dconf-${config.executableName}-database" { nativeBuildInputs = [ submoduleCfg.package ]; } ''
-            dconf compile ${builtins.placeholder "out"} "${dconfSettings}/dconf"
+          pkgs.runCommand "wrapper-manager-dconf-${config.executableName}-database" {
+            nativeBuildInputs = [ submoduleCfg.package ];
+          } ''
+            dconf compile ${builtins.placeholder "out"} "${keyfilesDir}"
           '';
       in {
         options.dconf = {
@@ -70,6 +76,20 @@ in
                   show-hidden = true;
                 };
               }
+            '';
+          };
+
+          keyfiles = lib.mkOption {
+            type = with lib.types; listOf path;
+            description = ''
+              Additional list of keyfiles to be included as part of the dconf
+              database.
+            '';
+            default = [ ];
+            example = lib.literalExpression ''
+              [
+                ./config/dconf/90-extra-settings.conf
+              ]
             '';
           };
 
