@@ -105,10 +105,20 @@ in
               database file from our settings.
             '';
           };
+
+          databaseDrv = lib.mkOption {
+            type = lib.types.package;
+            description = ''
+              Derivation containing the compiled dconf database. Useful for
+              integrating with your own module.
+            '';
+            readOnly = true;
+          };
         };
 
         config = lib.mkIf submoduleCfg.enable {
           env.DCONF_PROFILE.value = dconfProfileFile;
+          dconf.databaseDrv = dconfSettingsDatabase;
         };
       };
     in
