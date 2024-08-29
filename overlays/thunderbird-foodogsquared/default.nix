@@ -1,8 +1,9 @@
-{ final, prev }:
-
+# My custom installation of Thunderbird where it's customized to be as
+# standalone as possible.
+final: prev:
 
 {
-  thunderbird-foodogsquared = with prev; wrapThunderbird thunderbird {
+  thunderbird-foodogsquared = with prev; wrapThunderbird thunderbird-unwrapped {
     extraPolicies = {
       AppsAutoUpdate = false;
       DisableAppUpdate = false;
