@@ -14,7 +14,7 @@ pkgs.lib.makeExtensible
   let
     callLib = file: import file { inherit pkgs lib self; };
   in {
-    builders = callLib ./builders.nix;
+    builders = callLib ./builders;
     trivial = callLib ./trivial.nix;
     data = callLib ./data.nix;
     fetchers = callLib ./fetchers;
