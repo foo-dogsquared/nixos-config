@@ -161,7 +161,8 @@ in
         }
         ''
           mkdir -p $out/share/man/man5
-          asciidoctor --backend manpage ${./manpages/header.adoc} --out-file header.5
+          asciidoctor --attribute is-wider-scoped --backend manpage \
+            ${./manpages/header.adoc} --out-file header.5
           nixos-render-docs options manpage --revision ${releaseConfig.version} \
             --header ./header.5 --footer ${./manpages/footer.5} \
             ${wmOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
