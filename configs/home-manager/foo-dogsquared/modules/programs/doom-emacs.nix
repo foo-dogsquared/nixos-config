@@ -71,10 +71,19 @@ in
       socketActivation.enable = true;
     };
 
+    # Add org-protocol support.
+    xdg.desktopEntries.org-protocol = {
+      name = "Org protocol";
+      exec = "emacsclient %u";
+      icon = "emacs-icon";
+      mimeType = [ "x-scheme-handler/org-protocol" ];
+    };
+
     xdg.mimeApps.defaultApplications = {
       "application/json" = [ "emacs.desktop" ];
       "text/org" = [ "emacs.desktop" ];
       "text/plain" = [ "emacs.desktop" ];
+      "x-scheme-handler/org-protocol" = [ "org-protocol.desktop" ];
     };
   };
 }
