@@ -120,6 +120,10 @@ autocontain -s (ph\.?)linkedin\.com Work
 autocontain -s jobstreet\.com(\.ph?) Work
 autocontain -s (ph\.?)jobstreet\.com(\.ph?) Work
 
+autocontain -s mxroute\.com Work
+autocontain -s mailbox\.org Work
+autocontain -s cloud\.google\.com Work
+
 " Shopping, shopping, shopping!
 autocontain -s yelp\.com Shopping
 autocontain -s shopee\.(com|ph) Shopping

@@ -24,7 +24,7 @@ in
 
         "merge-tools.diffedit3" = {
           merge-args = [ "$left" "$right" "$output" ];
-          program = lib.getExe' config.services.diffedit3.package "diffedit3";
+          program = lib.getExe' pkgs.diffedit3 "diffedit3";
         };
       };
     };
