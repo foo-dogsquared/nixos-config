@@ -1,0 +1,13 @@
+[[imports]]
+path = "github.com/foo-dogsquared/hugo-mod-simple-icons"
+
+[[imports]]
+path = "github.com/Templarian/MaterialDesign"
+
+[[imports.mounts]]
+source = "svg/"
+target = "assets/svg/material-design-icons/"
+
+[[imports.mounts]]
+source = "meta.json"
+target = "data/icons/material-design-icons/meta.json"

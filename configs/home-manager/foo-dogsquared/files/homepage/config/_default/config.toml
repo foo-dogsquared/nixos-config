@@ -1,0 +1,5 @@
+baseURL = "./"
+defaultContentLanguage = "en"
+title = "foodogsquared's homepage"
+timeZone = "UTC"
+disableKinds = [ "taxonomy", "sitemap", "robotstxt", "rss" ]
