@@ -20,7 +20,6 @@ in
       nixvim.enable = true;
       email.enable = true;
       email.thunderbird.enable = true;
-      research.enable = true;
       vs-code.enable = true;
 
       custom-homepage = {
@@ -49,6 +48,7 @@ in
       fonts.enable = true;
       music.enable = true;
       music.mpd.enable = true;
+      research.enable = true;
     };
   };
 

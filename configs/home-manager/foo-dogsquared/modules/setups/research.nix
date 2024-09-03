@@ -2,10 +2,10 @@
 
 let
   userCfg = config.users.foo-dogsquared;
-  cfg = userCfg.programs.research;
+  cfg = userCfg.setups.research;
 in
 {
-  options.users.foo-dogsquared.programs.research.enable =
+  options.users.foo-dogsquared.setups.research.enable =
     lib.mkEnableOption "foo-dogsquared's usual toolbelt for research";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [

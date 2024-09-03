@@ -12,7 +12,6 @@
     ./programs/keys.nix
     ./programs/nixvim
     ./programs/custom-homepage.nix
-    ./programs/research.nix
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
     ./programs/vs-code.nix
@@ -21,5 +20,6 @@
     ./setups/development.nix
     ./setups/fonts.nix
     ./setups/music.nix
+    ./setups/research.nix
   ];
 }
