@@ -52,9 +52,9 @@
   # rely on the vendor folder within the source.
   vendorHash ? throw (
     if args' ? vendorSha256 then
-      "buildGoModule: Expect vendorHash instead of vendorSha256"
+      "buildHugoSite: Expect vendorHash instead of vendorSha256"
     else
-      "buildGoModule: vendorHash is missing"
+      "buildHugoSite: vendorHash is missing"
   ),
 
   # Whether to delete the vendor folder supplied with the source.
@@ -234,7 +234,7 @@ let
             (lib.optional (!proxyVendor) "-mod=vendor")
         ++
           lib.warnIf (builtins.elem "-trimpath" GOFLAGS)
-            "`-trimpath` is added by default to GOFLAGS by buildGoModule when allowGoReference isn't set to true"
+            "`-trimpath` is added by default to GOFLAGS by buildHugoSite when allowGoReference isn't set to true"
             (lib.optional (!allowGoReference) "-trimpath");
       inherit
         CGO_ENABLED
