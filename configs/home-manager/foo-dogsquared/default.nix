@@ -22,6 +22,25 @@ in
       email.thunderbird.enable = true;
       research.enable = true;
       vs-code.enable = true;
+
+      custom-homepage = {
+        enable = true;
+        sections.services = lib.mkMerge [
+          {
+            name = "Local services";
+            flavorText = "For your local productivity";
+            textOnly = true;
+            weight = (-50);
+          }
+
+          (lib.mkIf config.services.archivebox.webserver.enable {
+            links = lib.singleton {
+              url = "http://localhost:${builtins.toString config.state.ports.archivebox-webserver.value}";
+              text = "Archive webserver";
+            };
+          })
+        ];
+      };
     };
 
     setups = {

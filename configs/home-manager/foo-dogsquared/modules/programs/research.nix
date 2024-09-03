@@ -10,6 +10,8 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
+      state.ports.syncthing.value = 8384;
+
       home.packages = with pkgs; [
         anki # Rise, rinse, and repeat.
         #archivebox # The ultimate archiving solution created by a pirate!
@@ -26,11 +28,22 @@ in
         zotero # It's actually good at archiving despite not being a researcher myself.
       ];
 
-      services.syncthing.enable = true;
+      services.syncthing = {
+        enable = true;
+        extraOptions = [
+          "--gui-address=http://localhost:${builtins.toString config.state.ports.syncthing.value}"
+        ];
+      };
 
       xdg.mimeApps.defaultApplications = {
         "application/vnd.anki" = [ "anki.desktop" ];
       };
+
+      users.foo-dogsquared.programs.custom-homepage.sections.services.links =
+        lib.singleton {
+          url = "http://localhost:${builtins.toString config.state.ports.syncthing.value}";
+          text = "Local sync server";
+        };
     }
 
     (lib.mkIf userCfg.programs.shell.enable {

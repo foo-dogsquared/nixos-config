@@ -4,8 +4,6 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.browsers;
-
-  homepage = pkgs.callPackage ../../files/homepage/package.nix { };
 in
 {
   options.users.foo-dogsquared.programs.browsers = {
@@ -132,7 +130,8 @@ in
             # Some quality of lifes.
             "browser.search.widget.inNavBar" = true;
             "browser.search.openintab" = true;
-            "browser.startup.homepage" = "file://${homepage}";
+            "browser.startup.homepage" =
+              lib.mkIf userCfg.programs.custom-homepage.enable "file://${userCfg.programs.custom-homepage.finalPackage}";
 
             # Some privacy settings...
             "privacy.donottrackheader.enabled" = true;

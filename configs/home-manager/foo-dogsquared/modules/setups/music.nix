@@ -96,9 +96,20 @@ in
         "vlc.memory_dump"
         "vlc.mru"
       ];
+
+      # Set every music-related services from the encompassing NixOS
+      # configuration.
+      users.foo-dogsquared.programs.custom-homepage.sections.services.links = lib.mkMerge [
+        (lib.mkIf (attrs.nixosConfig.services.gonic.enable or false) (lib.singleton {
+          url = "http://localhost:${builtins.toString attrs.nixosConfig.state.ports.gonic.value}";
+          text = "Subsonic music server";
+        }))
+      ];
     }
 
     (lib.mkIf cfg.mpd.enable {
+      state.ports.mopidy.value = 6680;
+
       services.mopidy = {
         enable = true;
         extensionPackages = with pkgs; [
@@ -114,7 +125,7 @@ in
         settings = {
           http = {
             hostname = "127.0.0.1";
-            port = 6680;
+            port = config.state.ports.mopidy.value;
             default_app = "iris";
           };
 
@@ -157,6 +168,12 @@ in
       programs.ncmpcpp = {
         enable = true;
         mpdMusicDir = musicDir;
+      };
+
+      # Set this to the custom homepage.
+      users.foo-dogsquared.programs.custom-homepage.sections.services.links = lib.singleton {
+        url = "http://localhost:${builtins.toString config.state.ports.mopidy.value}";
+        text = "Music streaming server";
       };
     })
   ]);
