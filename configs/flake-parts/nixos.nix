@@ -17,6 +17,7 @@
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
           inputs.self.nixosModules.wrapper-manager
+          { wrapper-manager.documentation.manpage.enable = true; }
         ];
         home-manager = {
           branch = "home-manager-unstable";
