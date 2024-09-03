@@ -17,7 +17,7 @@ let
 
     args' = lib.removeAttrs args [ "id" "file" "formats" ] // {
       inherit url hash name;
-    } // lib.optionalAttrs isFormatIndiciated { inherit hash; };
+    };
 
   fetcher =
     if isFormatIndiciated
