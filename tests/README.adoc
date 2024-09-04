@@ -22,5 +22,10 @@ nix-shell --pure ./tests/modules/home-manager -A list
 
 # This is for the library.
 nix eval -f ./tests lib
+
+# This is for the wrapper-manager modules but it should be best done with the
+# tests passthru attribute. We just don't have easy way of testing with them
+# yet.
+nix build -f ./tests/modules/wrapper-manager
 ----
 
