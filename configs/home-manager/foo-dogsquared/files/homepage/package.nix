@@ -12,7 +12,7 @@ buildHugoSite {
 
   preBuild = ''
     install -Dm0644 ${../tinted-theming/base16/bark-on-a-tree.yaml} ./data/foodogsquared-homepage/themes/_dark.yaml
-    install -Dm0644 ${../tinted-theming/base16/albino-bark-on-a-tree.yaml} ./data/foodogsquared-homepage/themes/_dark.yaml
+    install -Dm0644 ${../tinted-theming/base16/albino-bark-on-a-tree.yaml} ./data/foodogsquared-homepage/themes/_light.yaml
   '';
 
   meta = with lib; {

@@ -19,60 +19,57 @@
 */}}
 {{ if (and $hasLight (not $hasDark)) }}
   {{- warnf "No given dark theme. Generating one from the light theme..." }}
+  {{ $palette := $hasLight.palette }}
   {{ $darkTheme := dict
       "scheme" (printf "%s (light)" $hasLight.scheme)
-      "base00" $hasLight.base07
-      "base01" $hasLight.base06
-      "base02" $hasLight.base05
-      "base03" $hasLight.base04
-      "base04" $hasLight.base03
-      "base05" $hasLight.base02
-      "base06" $hasLight.base01
-      "base07" $hasLight.base00
-      "base08" (print "{lighten(saturate(#" $hasLight.base08 ", 10%), 15%)}")
-      "base09" (print "{lighten(saturate(#" $hasLight.base09 ", 10%), 15%)}")
-      "base0A" (print "{lighten(saturate(#" $hasLight.base0A ", 10%), 15%)}")
-      "base0B" (print "{lighten(saturate(#" $hasLight.base0B ", 10%), 15%)}")
-      "base0C" (print "{lighten(saturate(#" $hasLight.base0C ", 10%), 15%)}")
-      "base0D" (print "{lighten(saturate(#" $hasLight.base0D ", 10%), 15%)}")
-      "base0E" (print "{lighten(saturate(#" $hasLight.base0E ", 10%), 15%)}")
-      "base0F" (print "{lighten(saturate(#" $hasLight.base0F ", 10%), 15%)}")
+      "base00" $palette.base07
+      "base01" $palette.base06
+      "base02" $palette.base05
+      "base03" $palette.base04
+      "base04" $palette.base03
+      "base05" $palette.base02
+      "base06" $palette.base01
+      "base07" $palette.base00
+      "base08" (print "{lighten(saturate(#" $palette.base08 ", 10%), 15%)}")
+      "base09" (print "{lighten(saturate(#" $palette.base09 ", 10%), 15%)}")
+      "base0A" (print "{lighten(saturate(#" $palette.base0A ", 10%), 15%)}")
+      "base0B" (print "{lighten(saturate(#" $palette.base0B ", 10%), 15%)}")
+      "base0C" (print "{lighten(saturate(#" $palette.base0C ", 10%), 15%)}")
+      "base0D" (print "{lighten(saturate(#" $palette.base0D ", 10%), 15%)}")
+      "base0E" (print "{lighten(saturate(#" $palette.base0E ", 10%), 15%)}")
+      "base0F" (print "{lighten(saturate(#" $palette.base0F ", 10%), 15%)}")
   }}
   {{ $themes = merge $themes (dict "_dark" $darkTheme) }}
 {{ else if (and $hasDark (not $hasLight)) }}
   {{- warnf "No given light theme. Generating one from the dark theme..." }}
+  {{ $palette := $hasDark.palette }}
   {{ $lightTheme := dict
       "scheme" (printf "%s (light)" $hasDark.scheme)
-      "base00" $hasDark.base07
-      "base01" $hasDark.base06
-      "base02" $hasDark.base05
-      "base03" $hasDark.base04
-      "base04" $hasDark.base03
-      "base05" $hasDark.base02
-      "base06" $hasDark.base01
-      "base07" $hasDark.base00
-      "base08" (print "{darken(saturate(#" $hasDark.base08 ", 10%), 15%)}")
-      "base09" (print "{darken(saturate(#" $hasDark.base09 ", 10%), 15%)}")
-      "base0A" (print "{darken(saturate(#" $hasDark.base0A ", 10%), 15%)}")
-      "base0B" (print "{darken(saturate(#" $hasDark.base0B ", 10%), 15%)}")
-      "base0C" (print "{darken(saturate(#" $hasDark.base0C ", 10%), 15%)}")
-      "base0D" (print "{darken(saturate(#" $hasDark.base0D ", 10%), 15%)}")
-      "base0E" (print "{darken(saturate(#" $hasDark.base0E ", 10%), 15%)}")
-      "base0F" (print "{darken(saturate(#" $hasDark.base0F ", 10%), 15%)}")
+      "base00" $palette.base07
+      "base01" $palette.base06
+      "base02" $palette.base05
+      "base03" $palette.base04
+      "base04" $palette.base03
+      "base05" $palette.base02
+      "base06" $palette.base01
+      "base07" $palette.base00
+      "base08" (print "{darken(saturate(#" $palette.base08 ", 10%), 15%)}")
+      "base09" (print "{darken(saturate(#" $palette.base09 ", 10%), 15%)}")
+      "base0A" (print "{darken(saturate(#" $palette.base0A ", 10%), 15%)}")
+      "base0B" (print "{darken(saturate(#" $palette.base0B ", 10%), 15%)}")
+      "base0C" (print "{darken(saturate(#" $palette.base0C ", 10%), 15%)}")
+      "base0D" (print "{darken(saturate(#" $palette.base0D ", 10%), 15%)}")
+      "base0E" (print "{darken(saturate(#" $palette.base0E ", 10%), 15%)}")
+      "base0F" (print "{darken(saturate(#" $palette.base0F ", 10%), 15%)}")
   }}
   {{ $themes = merge $themes (dict "_light" $lightTheme) }}
-{{ else if not $hasSystemTheme }}
-  {{ $systemThemes := dict
-      "_dark" $themes._dark_fallback
-      "_light" $themes._light_fallback
-  }}
-  {{ $themes = merge $systemThemes $themes }}
 {{ end }}
 
 {{- range $name, $scheme := $themes }}
   // This is a template for a colorscheme based from a Base16 data file from
   // https://github.com/chriskempson/base16.
   @mixin createColorScheme {
+    {{ $palette := $scheme.palette }}
     {{- range $i := seq 0 15 }}
       {{- $hex := upper (printf "%02x" $i) }}
       {{- $key := printf "base%s" $hex }}
@@ -80,14 +77,10 @@
       // TODO: Make a better way to interpolate the color strings.
       {{/* We're just taking advantage the fact that the SASS color functions
       returns the colors in the same format we needed. */}}
-      {{- $color := printf "#%s" (index $scheme $key) }}
+      {{- $color := printf "#%s" (index $palette $key) }}
       --{{ $key }}: {{ $color }};
     {{- end }}
   }
-
-  {{- if (or (eq $name "_light_fallback") (eq $name "_dark_fallback")) }}
-    {{ continue }}
-  {{- end }}
 
   {{- if eq $name "_light" }}
     :root {
@@ -107,7 +100,7 @@
     }
   {{- end }}
 
-  [data-theme="{{ .scheme }}"]:root, [data-theme="{{ .scheme }}"]::backdrop {
+  [data-theme="{{ .name }}"]:root, [data-theme="{{ .name }}"]::backdrop {
     @include createColorScheme;
   }
 {{- end }}
