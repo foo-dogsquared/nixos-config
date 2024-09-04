@@ -87,10 +87,11 @@ fi
 # if the *DBUS_PROXY_ARGS envvar is set.
 if [ -n "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS}" ] && [ -n "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY}" ]; then
     (
+        # We need the proxy-specific bwrap arguments to split since they are
+        # passed as a string.
         # shellcheck disable=2068
         ${WRAPPER_MANAGER_BWRAP_LAUNCHER_BWRAP} \
             ${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_BWRAP_ARGS[@]} \
-            "${additional_flags[@]}" \
             -- "${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY}" \
                ${WRAPPER_MANAGER_BWRAP_LAUNCHER_DBUS_PROXY_ARGS[@]}
     ) &

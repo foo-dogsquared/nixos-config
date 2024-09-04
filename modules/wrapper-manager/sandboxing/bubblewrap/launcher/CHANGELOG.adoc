@@ -1,0 +1,15 @@
+= Changelog
+:toc:
+
+All changes in this project will be documented for the users.
+The structure is loosely based on https://keepachangelog.com/en/1.1.0/[Keep a changelog format].
+
+
+[#0-1-0]
+== 0.1.0 (Unreleased)
+
+=== Added
+
+* Add conditional flags for Wayland, Pipewire, Pulseaudio, and X11-enabled setups.
+* Init xdg-dbus-proxy support.
+* Init Linux foot:[Pretty much the only OS to be supported.] support.
