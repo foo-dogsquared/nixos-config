@@ -1,7 +1,9 @@
 { pkgs ? import <nixpkgs> { } }:
 
-with pkgs;
-lib.makeScope newScope (self: {
+let
+  inherit (pkgs) lib callPackage python3Packages qt5;
+in
+lib.makeScope pkgs.newScope (self: {
   # My custom nixpkgs extensions.
   foodogsquaredLib = import ../lib { inherit pkgs; };
   inherit (self.foodogsquaredLib.builders)
@@ -17,7 +19,7 @@ lib.makeScope newScope (self: {
   blender-machin3tools = python3Packages.callPackage ./blender-machin3tools { };
   clidle = callPackage ./clidle.nix { };
   ctrld = callPackage ./ctrld { };
-  domterm = libsForQt5.callPackage ./domterm { };
+  domterm = qt5.callPackage ./domterm { };
   fastn = callPackage ./fastn { };
   flatsync = callPackage ./flatsync { };
   freerct = callPackage ./freerct.nix { };
@@ -37,7 +39,7 @@ lib.makeScope newScope (self: {
     callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
   pop-launcher-plugin-jetbrains = callPackage ./pop-launcher-plugin-jetbrains { };
   pigeon-mail = callPackage ./pigeon-mail { };
-  swh = callPackage ./software-heritage { python3Packages = python310Packages; };
+  swh = callPackage ./software-heritage { python3Packages = pkgs.python310Packages; };
   speki = callPackage ./speki { };
   tic-80 = callPackage ./tic-80 { };
   smile = callPackage ./smile { };
