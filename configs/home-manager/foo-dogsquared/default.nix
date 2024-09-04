@@ -24,16 +24,23 @@ in
 
       custom-homepage = {
         enable = true;
-        sections.services = lib.mkMerge [
+        sections = lib.mkMerge [
+          # Merge the upstream since any new files will be overridden. It also
+          # allows us to attach data to it such as new links to the hardcoded
+          # sections.
+          (lib.importTOML "${config.users.foo-dogsquared.programs.custom-homepage.package.src}/data/foodogsquared-homepage/links.toml")
+
           {
-            name = "Local services";
-            flavorText = "For your local productivity";
-            textOnly = true;
-            weight = (-50);
+            services = {
+              name = "Local services";
+              flavorText = "For your local productivity";
+              textOnly = true;
+              weight = (-50);
+            };
           }
 
           (lib.mkIf config.services.archivebox.webserver.enable {
-            links = lib.singleton {
+            services.links = lib.singleton {
               url = "http://localhost:${builtins.toString config.state.ports.archivebox-webserver.value}";
               text = "Archive webserver";
             };

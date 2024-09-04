@@ -99,10 +99,15 @@ in
 
       # Set every music-related services from the encompassing NixOS
       # configuration.
-      users.foo-dogsquared.programs.custom-homepage.sections.services.links = lib.mkMerge [
-        (lib.mkIf (attrs.nixosConfig.services.gonic.enable or false) (lib.singleton {
-          url = "http://localhost:${builtins.toString attrs.nixosConfig.state.ports.gonic.value}";
-          text = "Subsonic music server";
+      users.foo-dogsquared.programs.custom-homepage.sections = lib.mkMerge [
+        (lib.mkIf (attrs.nixosConfig.services.gonic.enable or false) (let
+          subsonicLink = {
+            url = "http://localhost:${builtins.toString attrs.nixosConfig.state.ports.gonic.value}";
+            text = "Jukebox server";
+          };
+        in {
+          services.links = lib.singleton subsonicLink;
+          music.links = lib.mkAfter [ (subsonicLink // { text = "Subsonic music server"; }) ];
         }))
       ];
     }
@@ -171,9 +176,14 @@ in
       };
 
       # Set this to the custom homepage.
-      users.foo-dogsquared.programs.custom-homepage.sections.services.links = lib.singleton {
-        url = "http://localhost:${builtins.toString config.state.ports.mopidy.value}";
-        text = "Music streaming server";
+      users.foo-dogsquared.programs.custom-homepage.sections = let
+        mopidyLink = {
+          url = "http://localhost:${builtins.toString config.state.ports.mopidy.value}";
+          text = "Music streaming server";
+        };
+      in {
+        services.links = lib.singleton mopidyLink;
+        music.links = lib.singleton (mopidyLink // { text = "Mopidy server"; });
       };
     })
   ]);
