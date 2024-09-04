@@ -107,7 +107,7 @@ in
                   "--rule ${ruleArg}")
                 submoduleCfg.rules);
 
-            arg0 = lib.getExe submoduleCfg.package;
+            arg0 = lib.getExe' submoduleCfg.package "boxxy";
             prependArgs = lib.mkBefore
               (submoduleCfg.extraArgs
                 ++ [ "--" config.sandboxing.wraparound.arg0 ]

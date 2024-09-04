@@ -1,3 +1,8 @@
+# Module revolving around the specialized launcher. It is managed as a separate
+# project in the launcher subdirectory. Just look into the source code as you
+# would spelunk any other project. So far, the subproject itself doesn't have a
+# good state of testing (which is just used as a program for this very purpose)
+# so just use wrapper-manager's testing infra instead.
 { config, lib, options, pkgs, ... }:
 
 let
