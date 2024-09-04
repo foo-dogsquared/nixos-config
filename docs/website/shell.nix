@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> {
-  overlays = [ (import ../overlays).default ];
+  overlays = [ (import ../../overlays).default ];
 } }:
 
 
