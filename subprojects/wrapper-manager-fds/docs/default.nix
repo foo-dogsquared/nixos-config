@@ -3,6 +3,7 @@ let
 in
 {
   pkgs ? import sources.nixos-unstable { },
+  extraModules ? [ ],
 }:
 
 let
@@ -62,7 +63,7 @@ let
 
   wrapperManagerLib = (import ../. { }).lib;
   wmOptionsDoc = evalDoc {
-    modules = [ ../modules/wrapper-manager ];
+    modules = [ ../modules/wrapper-manager ] ++ extraModules;
     includeModuleSystemOptions = true;
   };
 

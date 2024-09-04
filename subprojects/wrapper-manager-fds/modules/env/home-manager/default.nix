@@ -7,7 +7,7 @@
 
 let
   cfg = config.wrapper-manager;
-  wmDocs = import ../../../docs { inherit pkgs; };
+  wmDocs = import ../../../docs { inherit pkgs; inherit (cfg.documentation) extraModules; };
 in
 {
   imports = [ ../common.nix ];

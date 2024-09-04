@@ -135,6 +135,20 @@ in
     documentation = {
       manpage.enable = lib.mkEnableOption "manpage output";
       html.enable = lib.mkEnableOption "HTML output";
+
+      extraModules = lib.mkOption {
+        type = with lib.types; listOf deferredModule;
+        description = ''
+          List of extra wrapper-manager modules to be included as part of the
+          documentation.
+        '';
+        default = [ ];
+        example = lib.literalExpression ''
+          [
+            ./modules/wrapper-manager
+          ]
+        '';
+      };
     };
   };
 }

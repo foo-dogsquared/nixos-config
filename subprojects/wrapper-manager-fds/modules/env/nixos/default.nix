@@ -7,7 +7,7 @@
 
 let
   cfg = config.wrapper-manager;
-  wmDocs = import ../../../docs { inherit pkgs; };
+  wmDocs = import ../../../docs { inherit pkgs; inherit (cfg.documentation) extraModules; };
 in
 {
   imports = [ ../common.nix ];
@@ -33,7 +33,8 @@ in
     }
 
     (lib.mkIf (cfg.packages != { }) {
-      environment.systemPackages = lib.mapAttrsToList (_: wrapper: wrapper.build.toplevel) cfg.packages;
+      environment.systemPackages =
+        lib.mapAttrsToList (_: wrapper: wrapper.build.toplevel) cfg.packages;
     })
   ];
 }
