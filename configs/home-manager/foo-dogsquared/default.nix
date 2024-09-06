@@ -44,6 +44,11 @@ in
               url = "http://localhost:${builtins.toString config.state.ports.archivebox-webserver.value}";
               text = "Archive webserver";
             };
+
+            YOHOOHOOHOOHOO.links = lib.mkBefore (lib.singleton {
+              url = "http://localhost:${builtins.toString config.state.ports.archivebox-webserver.value}";
+              text = "ArchiveBox webserver";
+            });
           })
         ];
       };

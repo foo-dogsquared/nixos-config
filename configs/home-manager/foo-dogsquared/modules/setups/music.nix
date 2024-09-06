@@ -107,7 +107,7 @@ in
           };
         in {
           services.links = lib.singleton subsonicLink;
-          music.links = lib.mkAfter [ (subsonicLink // { text = "Subsonic music server"; }) ];
+          music.links = lib.mkBefore [ (subsonicLink // { text = "Subsonic music server"; }) ];
         }))
       ];
     }
@@ -183,7 +183,7 @@ in
         };
       in {
         services.links = lib.singleton mopidyLink;
-        music.links = lib.singleton (mopidyLink // { text = "Mopidy server"; });
+        music.links = lib.mkBefore [ (mopidyLink // { text = "Mopidy server"; }) ];
       };
     })
   ]);
