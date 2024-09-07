@@ -15,6 +15,7 @@
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
     ./programs/vs-code.nix
+    ./services/backup
 
     ./setups/desktop.nix
     ./setups/development.nix

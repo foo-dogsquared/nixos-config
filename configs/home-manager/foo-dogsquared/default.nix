@@ -54,6 +54,8 @@ in
       };
     };
 
+    services.backup.enable = true;
+
     setups = {
       desktop.enable = true;
       development.enable = true;
