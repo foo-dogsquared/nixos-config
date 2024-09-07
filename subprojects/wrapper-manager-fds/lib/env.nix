@@ -14,7 +14,9 @@ rec {
       specialArgs ? { },
     }:
     lib.evalModules {
-      inherit specialArgs;
+      specialArgs = specialArgs // {
+        modulesPath = builtins.toString ../modules/wrapper-manager;
+      };
       modules = [
         ../modules/wrapper-manager
 
