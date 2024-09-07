@@ -6,7 +6,7 @@
       directoriesSubmodule = { lib, ... }: {
         options = {
           paths = lib.mkOption {
-            type = with lib.types; attrsOf (listOf str);
+            type = with lib.types; attrsOf (either path (listOf str));
             description = ''
               A set of directories to share its value to various parts of the
               system.
