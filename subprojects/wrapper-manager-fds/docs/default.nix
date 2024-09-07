@@ -66,6 +66,8 @@ let
     modules = [ ../modules/wrapper-manager ] ++ extraModules;
     includeModuleSystemOptions = true;
   };
+  wmNixosDoc = evalDoc { modules = [ ../modules/env/nixos ]; };
+  wmHmDoc = evalDoc { modules = [ ../modules/env/home-manager ]; };
 
   gems = pkgs.bundlerEnv {
     name = "wrapper-manager-fds-gem-env";
@@ -134,6 +136,12 @@ in
         gems.wrappedRuby
       ];
 
+      preBuild = ''
+        install -Dm0644 ${wmOptionsDoc.optionsAsciiDoc} ./content/en/wrapper-manager-env-options.adoc
+        install -Dm0644 ${wmNixosDoc.optionsAsciiDoc} ./content/en/wrapper-manager-nixos-module.adoc
+        install -Dm0644 ${wmHmDoc.optionsAsciiDoc} ./content/en/wrapper-manager-home-manager-module.adoc
+      '';
+
       meta = with lib; {
         description = "wrapper-manager-fds documentation";
         homepage = "https://github.com/foo-dogsquared/wrapper-manager-fds";
@@ -145,9 +153,7 @@ in
       };
     };
 
-  inherit wmOptionsDoc;
-  wmNixosDoc = evalDoc { modules = [ ../modules/env/nixos ]; };
-  wmHmDoc = evalDoc { modules = [ ../modules/env/home-manager ]; };
+  inherit wmOptionsDoc wmHmDoc wmNixosDoc;
 
   inherit releaseConfig;
   outputs = {
