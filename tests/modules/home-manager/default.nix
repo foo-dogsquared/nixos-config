@@ -51,7 +51,9 @@ in
 import nmt {
   inherit pkgs lib modules;
   testedAttrPath = [ "home" "activationPackage" ];
+  # TODO: Fix nmt to accept specialArgs or something.
   tests = builtins.foldl' (a: b: a // (import b)) { } ([
+    #./programs/borgmatic
     ./programs/neovide
     ./programs/pipewire
     ./programs/pop-launcher

@@ -5,6 +5,7 @@
     ./programs/pipewire.nix
     ./programs/pop-launcher.nix
     ./programs/zed-editor.nix
+    ./programs/borgmatic.nix
     ./services/archivebox.nix
     ./services/bleachbit.nix
     ./services/distant.nix
