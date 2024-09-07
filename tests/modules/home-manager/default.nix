@@ -61,6 +61,7 @@ import nmt {
   ]
   ++ lib.optionals isLinux [
     ./services/archivebox
+    #./services/borgmatic
     ./services/bleachbit
     ./services/gallery-dl
     ./services/gonic

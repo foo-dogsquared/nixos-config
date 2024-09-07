@@ -7,6 +7,7 @@
     ./programs/zed-editor.nix
     ./programs/borgmatic.nix
     ./services/archivebox.nix
+    ./services/borgmatic.nix
     ./services/bleachbit.nix
     ./services/distant.nix
     ./services/gallery-dl.nix
