@@ -20,6 +20,7 @@ in
         gallery-dl # More potential for your image collection.
         internetarchive # All of the potential vintage collection of questionable materials at your fingertips.
         kiwix # Offline reader for your fanon wiki.
+        localsend # Local network syncing.
         monolith # Archive webpages into a single file.
         qbittorrent # The pirate's toolkit for downloading Linux ISOs.
         sherlock # Make a profile of your *target*.
