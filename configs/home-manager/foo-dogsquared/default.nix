@@ -73,12 +73,6 @@ in
   # The keyfile required to decrypt the secrets.
   sops.age.keyFile = "${config.xdg.configHome}/age/user";
 
-  sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets/secrets.yaml {
-    davfs2-credentials = {
-      path = "${config.home.homeDirectory}/.davfs2/davfs2.conf";
-    };
-  };
-
   # Add our own projects directory since most programs can't decide where it is
   # properly.
   xdg.userDirs.extraConfig.XDG_PROJECTS_DIR = "${config.home.homeDirectory}/Projects";
