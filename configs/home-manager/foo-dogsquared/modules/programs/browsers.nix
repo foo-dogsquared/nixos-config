@@ -199,7 +199,19 @@ in
       };
 
       # Configuring Tridactyl.
-      xdg.configFile.tridactyl.source = ../../config/tridactyl;
+      xdg.configFile."tridactyl/tridactylrc".source = pkgs.concatTextFile {
+        name = "tridactyl-config";
+        files = [
+          ../../config/tridactyl/tridactylrc
+
+          (pkgs.writeTextFile {
+            name = "tridactyl-nix-generated";
+            text = ''
+              set newtab file://${userCfg.programs.custom-homepage.finalPackage}/index.html
+            '';
+          })
+        ];
+      };
 
       # Configuring Bleachbit for Firefox cleaning.
       services.bleachbit.cleaners = [
