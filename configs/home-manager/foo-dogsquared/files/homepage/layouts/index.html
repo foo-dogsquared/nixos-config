@@ -9,7 +9,13 @@
     <div id="links">
         {{ range $key, $value := sort (index $.Site.Data (slice "foodogsquared-homepage" "links")) "weight" }}
             {{- $name := default $key $value.name -}}
-            <section id="section-{{ $name }}">
+            <section
+                id="section-{{ $name }}"
+                tabindex="1"
+                {{ with $value.grid }}
+                style="{{ with .column }}grid-column: span {{ . }};{{ end }}{{ with .row }}grid-row: span {{ . }};{{ end }}"
+                {{ end }}
+            >
                 <span class="nav-header">{{ $name }}</span>
                 {{ with $value.flavorText }}
                     <span class="flavor-text">{{ . }}</span>

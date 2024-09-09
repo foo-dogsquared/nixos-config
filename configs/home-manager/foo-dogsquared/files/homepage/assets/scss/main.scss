@@ -14,23 +14,11 @@ body {
 }
 
 #links {
-  --width: 40ch;
+  --width: 30ch;
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: var(--width);
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
+  grid-template-rows: max-content;
   gap: 0.5em;
-
-  // Place it at the very center.
-  position: absolute;
-  top: 30%;
-  margin-top: calc(var(--width) / 2);
-  margin-left: calc(0 - var(--width));
-
-  height: auto;
-  margin: 0 auto;
-
-  overflow-x: scroll;
 
   section[id^="section-"] {
     background: var(--foreground);

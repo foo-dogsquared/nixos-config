@@ -10,6 +10,7 @@ links = [
   { url = "https://login.tailscale.com", text = "Tailscale" },
   { url = "https://devdocs.io", text = "Devdocs" },
 ]
+grid.row = 2
 
 [applications]
 name = "Applications"
@@ -35,6 +36,7 @@ links = [
   { url = "https://cloud.oracle.com", text = "Oracle Cloud" },
   { url = "https://cloud.hetzner.com", text = "Hetzner Cloud" },
 ]
+grid.row = 2
 
 [design]
 name = "Design"
