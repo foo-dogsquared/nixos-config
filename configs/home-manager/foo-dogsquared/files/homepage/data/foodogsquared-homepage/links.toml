@@ -10,7 +10,8 @@ links = [
   { url = "https://login.tailscale.com", text = "Tailscale" },
   { url = "https://devdocs.io", text = "Devdocs" },
 ]
-grid.row = 2
+icon.iconset = "material-design-icons"
+icon.name = "fast-forward"
 
 [applications]
 name = "Applications"
@@ -23,6 +24,8 @@ links = [
   { url = "https://pass.foodogsquared.one", icon = "bitwarden", text = "Password manager" },
   { url = "https://monitoring.foodogsquared.one", icon = "grafana", text = "Monitoring application" },
 ]
+icon.iconset = "material-design-icons"
+icon.name = "developer-board"
 
 [dev]
 name = "Software dev"
@@ -35,19 +38,27 @@ links = [
   { url = "https://vscode.dev", text = "Online Visual Studio Code" },
   { url = "https://cloud.oracle.com", text = "Oracle Cloud" },
   { url = "https://cloud.hetzner.com", text = "Hetzner Cloud" },
+  { url = "https://portal.azure.com", text = "Azure Cloud" },
+  { url = "https://manpages.debian.org", text = "Debian Manpages" },
 ]
 grid.row = 2
+icon.iconset = "simple-icons"
+icon.name = "github"
 
 [design]
 name = "Design"
 flavorText = "No matter how hard I try, it's pretty crap"
 textOnly = true
 links = [
+  { url = "https://app.diagrams.net/", text = "lazy way of drawing things" },
+  { url = "https://figma.com", text = "Figma..." },
   { url = "https://www.awwwards.com/", text = "Awwwards" },
   { url = "https://dribbble.com", text = "Dribbble" },
   { url = "https://simpleicons.org/", text = "Simple Icons" },
   { url = "https://pictogrammers.com/library/mdi/", text = "Material Design Icons" },
 ]
+icon.iconset = "material-design-icons"
+icon.name = "pencil-ruler"
 
 [music]
 name = "Music"
@@ -59,10 +70,12 @@ links = [
   { url = "https://www.last.fm", text = "last.fm" },
   { url = "https://modarchive.org/", text = "The Mod Archive" },
 ]
+icon.iconset = "material-design-icons"
+icon.name = "music"
 
 [YOHOOHOOHOOHOO]
-name = "🏴💀🏴"
-flavorText = "Sailing on the high seas"
+name = "YOHOOHOOHOOHOO"
+flavorText = "Fly away, glum blue sea"
 textOnly = true
 weight = 100
 links = [
@@ -72,3 +85,5 @@ links = [
   { url = "https://annas-archive.se/", text = "Anna's Archive" },
   { url = "https://archive.softwareheritage.org", text = "Software Heritage" },
 ]
+icon.iconset = "material-design-icons"
+icon.name = "skull-crossbones"

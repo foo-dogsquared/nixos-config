@@ -11,26 +11,40 @@ body {
   min-height: 100%;
   margin: 0;
   background: var(--background);
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 #links {
   --width: 30ch;
+  --gap: 0.5em;
+  --header-font-size: 1.5em;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
   grid-template-rows: max-content;
-  gap: 0.5em;
+  gap: var(--gap);
+  margin: calc(var(--gap) * 2);
 
   section[id^="section-"] {
     background: var(--foreground);
     color: var(--background);
-    font-family: sans-serif;
 
-    border: 0.5em solid var(--accent-color);
-    padding: 1rem;
+    border: var(--gap) solid var(--accent-color);
+    padding: calc(var(--gap) * 2);
     text-align: center;
 
+    .nav-icon {
+      color: currentColor;
+      fill: currentColor;
+
+      svg {
+        --size: calc(var(--header-font-size) * 2);
+        width: var(--size);
+        height: var(--size);
+      }
+    }
+
     .nav-header {
-      font-size: 1.5em;
+      font-size: var(--header-font-size);
       font-weight: bolder;
     }
 

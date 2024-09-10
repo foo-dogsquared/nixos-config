@@ -11,14 +11,16 @@
             {{- $name := default $key $value.name -}}
             <section
                 id="section-{{ $name }}"
-                tabindex="1"
                 {{ with $value.grid }}
                 style="{{ with .column }}grid-column: span {{ . }};{{ end }}{{ with .row }}grid-row: span {{ . }};{{ end }}"
                 {{ end }}
             >
-                <span class="nav-header">{{ $name }}</span>
+                {{ with $value.icon }}
+                    <div class="nav-icon">{{ partial "icon.html" . }}</div>
+                {{ end }}
+                <div class="nav-header">{{ $name }}</div>
                 {{ with $value.flavorText }}
-                    <span class="flavor-text">{{ . }}</span>
+                    <div class="flavor-text">{{ . }}</div>
                 {{ end }}
                 <hr />
 

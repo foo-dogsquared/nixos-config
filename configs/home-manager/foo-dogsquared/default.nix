@@ -1,4 +1,4 @@
-{ config, lib, pkgs, foodogsquaredLib, bahaghariLib, ... }:
+{ config, lib, pkgs, foodogsquaredLib, bahaghariLib, ... }@attrs:
 
 let
   inherit (bahaghariLib.tinted-theming) importScheme;
@@ -36,6 +36,11 @@ in
               flavorText = "For your local productivity";
               textOnly = true;
               weight = (-50);
+
+              icon = {
+                iconset = "material-design-icons";
+                name = "room-service";
+              };
             };
           }
 
@@ -48,6 +53,13 @@ in
             YOHOOHOOHOOHOO.links = lib.mkBefore (lib.singleton {
               url = "http://localhost:${builtins.toString config.state.ports.archivebox-webserver.value}";
               text = "ArchiveBox webserver";
+            });
+          })
+
+          (lib.mkIf (attrs.nixosConfig.suites.filesystem.setups.archive.enable or false) {
+            YOHOOHOOHOOHOO.links = lib.mkBefore (lib.singleton {
+              url = "file://${attrs.nixosConfig.state.paths.archive}";
+              text = "Personal archive";
             });
           })
         ];

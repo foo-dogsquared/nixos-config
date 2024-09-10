@@ -1,15 +1,13 @@
 {{- /*
   A partial for easily using icons from Simple Icons set.
 */ -}}
-{{- $name := default .id .name }}
-{{- $iconset := .iconset }}
-
-{{- $output := cond "" "" "" }}
-{{- $template := cond "" "" "" }}
-{{- $res := resources.ExecuteAsTemplate (printf $output .id)
-                                      (dict "id" .id
-                                            "name" $name)
-                                      (resources.Get $template) }}
-<svg class="site__icon">
-<use href="{{ $res.RelPermalink }}#{{ $name }}"></use>
-</svg>
+{{ if eq .iconset "simple-icons" }}
+    {{- $res := resources.ExecuteAsTemplate (printf "svg/brands/%s.svg" .name)
+                                            (dict "id" .name
+                                                  "name" .name)
+                                            (resources.Get "templates/simple-icon.svg") }}
+    {{ $res.Content | safeHTML }}
+{{ else if eq .iconset "material-design-icons" }}
+    {{- $res := resources.Get (printf "svg/material-design-icons/%s.svg" .name) }}
+    {{ $res.Content | safeHTML }}
+{{ end }}
