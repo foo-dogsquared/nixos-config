@@ -1,4 +1,4 @@
-{ config, lib, foodogsquaredLib, ... }@attrs:
+{ config, lib, foodogsquaredLib, pkgs, ... }@attrs:
 
 let
   userCfg = config.users.foo-dogsquared;
@@ -56,6 +56,10 @@ let
       check_last = 4;
     }
   ];
+
+  checkRemovableMountScript = pkgs.writeShellScript "check-for-removable-storage" ''
+    { findmnt "$(dirname "$1")" > /dev/null && [ -d "$1" ]; } || exit 75
+  '';
 in
 {
   options.users.foo-dogsquared.services.backup.enable =
@@ -89,12 +93,15 @@ in
         local-external-hdd-personal = {
           initService.enable = true;
           initService.startAt = "04:30";
-          settings = borgmaticCommonConfig {
+          settings = let
+            removablePath = "${attrs.nixosConfig.state.paths.external-hdd}/Backups";
+          in borgmaticCommonConfig {
             encryption_passcommand = "cat ${getPath "repos/local-external-hdd-personal/password"}";
             repositories = lib.singleton {
-              path = attrs.nixosConfig.state.paths.external-hdd;
+              path = removablePath;
               label = "local-external-hdd";
             };
+            before_backup = lib.singleton "${checkRemovableMountScript} ${removablePath}";
           };
         };
       })
@@ -103,12 +110,15 @@ in
         local-archive-personal = {
           initService.enable = true;
           initService.startAt = "04:30";
-          settings = borgmaticCommonConfig {
+          settings = let
+            removablePath = "${attrs.nixosConfig.state.paths.archive}/Backups";
+          in borgmaticCommonConfig {
             encryption_passcommand = "cat ${getPath "repos/local-archive-personal/password"}";
             repositories = lib.singleton {
-              path = attrs.nixosConfig.state.paths.archive;
+              path = removablePath;
               label = "local-archive";
             };
+            before_backup = lib.singleton "${checkRemovableMountScript} ${removablePath}";
           };
         };
       })
