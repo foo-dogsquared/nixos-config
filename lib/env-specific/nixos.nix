@@ -54,4 +54,16 @@
       start' = start + 1;
     in
     { from = start'; to = start' + range; };
+
+  /*
+    A specific function that checks if specific filesystem setups are set.
+  */
+  isFilesystemSet = config: setupName:
+    config.suites.filesystem.setups.${setupName}.enable or false;
+
+  /*
+    Get the path from the state variable.
+  */
+  getFilesystem = config: setupName:
+    config.state.paths.${setupName};
 }
