@@ -63,8 +63,6 @@ in
         Wants = [ "network-online.target" ];
       };
 
-      Install.WantedBy = [ "default.target" ];
-
       Service = {
         ExecStart = "${cfg.package}/bin/matcha -c ${settingsFile}";
         Restart = "on-failure";

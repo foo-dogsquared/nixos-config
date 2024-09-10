@@ -86,8 +86,6 @@ in
         ExecStart = "${lib.getExe' cfg.package "ludusavi"} --config ${configFile} backup ${lib.concatStringsSep " " cfg.extraArgs}";
         Restart = "on-failure";
       };
-
-      Install.WantedBy = [ "default.target" ];
     };
 
     systemd.user.timers.ludusavi = {
