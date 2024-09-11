@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, options, ... }:
 
 let
   cfg = config.services.gallery-dl;
@@ -9,7 +9,7 @@ let
   settingsFormatFile =
     settingsFormat.generate "gallery-dl-service-config" cfg.settings;
 
-  jobType = { name, config, options, ... }: {
+  jobType = { name, config, ... }: {
     options = {
       urls = lib.mkOption {
         type = with lib.types; listOf str;
@@ -37,6 +37,10 @@ let
         example = "*-*-3/4";
       };
 
+      downloadPath = options.services.gallery-dl.downloadPath // {
+        default = cfg.downloadPath;
+      };
+
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
         description = ''
@@ -52,18 +56,18 @@ let
         '';
       };
 
-      settings = lib.mkOption {
-        type = settingsFormat.type;
+      settings = options.services.gallery-dl.settings // {
         description = ''
-          Job-specific settings to be overridden to the service-wide settings.
+          Job-specific settings to be overridden to the service-wide settings
+          (if there's any).
         '';
         default = { };
-        example = lib.literalExpression ''
-          {
-            extractor.directory = [ "{category}" "{user|artist|uploader}" ];
-          }
-        '';
       };
+    };
+
+    config = {
+      extraArgs = cfg.extraArgs;
+      settings = cfg.settings;
     };
   };
 in
@@ -79,13 +83,13 @@ in
       defaultText = lib.literalExpression "pkgs.gallery-dl";
     };
 
-    archivePath = lib.mkOption {
+    downloadPath = lib.mkOption {
       type = lib.types.str;
       description = ''
-        The location of the archive to be downloaded. Take note it is assumed
-        to be created at the time of running the service. Should be an absolute
-        path.
+        The default download path of the entire jobset (which can easily be
+        overriden).
       '';
+      default = "/var/gallery-dl";
       example = "/var/archives/gallery-dl-service";
     };
 
@@ -100,14 +104,16 @@ in
       example = lib.literalExpression ''
         {
           cache.file = "~/.gallery-dl-cache.sqlite3";
+          extractor.directory = [ "{category}" "{user|artist|uploader}" ];
         }
       '';
     };
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
-      description =
-        "List of arguments to be passed to {command}`gallery-dl`.";
+      description = ''
+        Global list of arguments to be passed to each gallery-dl download jobs.
+      '';
       default = [ ];
       example = lib.literalExpression ''
         [
@@ -153,7 +159,7 @@ in
           enable = true;
           path = with pkgs; [ brotli ffmpeg cfg.package ];
           preStart = ''
-            mkdir -p ${lib.escapeShellArg cfg.archivePath}
+            mkdir -p ${lib.escapeShellArg value.downloadPath}
           '';
 
           # Order matters here. We're letting service-level arguments and
@@ -172,13 +178,10 @@ in
                   value.settings;
             in
             ''
-              gallery-dl ${lib.escapeShellArgs cfg.extraArgs} ${
-                lib.optionalString (cfg.settings != null)
-                "--config ${settingsFormatFile}"
-              } ${lib.escapeShellArgs value.extraArgs} ${
+              gallery-dl ${lib.escapeShellArgs value.extraArgs} ${
                 lib.optionalString (value.settings != null)
                 "--config ${jobLevelSettingsFile}"
-              } --destination ${lib.escapeShellArg cfg.archivePath} ${
+              } --destination ${lib.escapeShellArg value.downloadPath} ${
                 lib.escapeShellArgs value.urls
               }
             '';
