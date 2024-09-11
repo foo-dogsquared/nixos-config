@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }@attrs:
+{ config, lib, pkgs, foodogsquaredLib, ... }@attrs:
 
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.music;
+
+  isFilesystemSet = setupName:
+    attrs.nixosConfig.suites.filesystem.setups.${setupName}.enable or false;
 
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";
@@ -11,6 +14,7 @@ in
   options.users.foo-dogsquared.setups.music = {
     enable = lib.mkEnableOption "foo-dogsquared's music setup";
     mpd.enable = lib.mkEnableOption "foo-dogsquared's MPD server setup";
+    spotify.enable = lib.mkEnableOption "music streaming setup with Spotify";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -112,6 +116,25 @@ in
       ];
     }
 
+    (lib.mkIf cfg.spotify.enable {
+      home.packages = with pkgs; [ spotify ];
+
+      state.ports.spotifyd.value = 9009;
+
+      services.spotifyd = {
+        enable = true;
+        settings.global = {
+          use_mpris = true;
+          device_name = "My laptop";
+          bitrate = 320;
+          device_type = "computer";
+          zeroconf_port = config.state.ports.spotifyd.value;
+        };
+      };
+
+      services.mopidy.extensionPackages = [ pkgs.mopidy-spotify ];
+    })
+
     (lib.mkIf cfg.mpd.enable {
       state.ports.mopidy.value = 6680;
 
@@ -140,10 +163,10 @@ in
               "$XDG_MUSIC_DIR|Music"
               "~/library/music|Library"
             ]
-            ++ lib.optional (attrs.nixosConfig.suites.filesystem.setups.external-hdd.enable or false)
-              "/mnt/external-storage/Music|External storage"
-            ++ lib.optional (attrs.nixosConfig.suites.filesystem.setups.archive.enable or false)
-              "/mnt/archives/Music|Archive";
+            ++ lib.optional (isFilesystemSet "external-hdd")
+              "${attrs.nixosConfig.state.paths.external-hdd}/Music|External storage"
+            ++ lib.optional (isFilesystemSet "archive")
+              "${attrs.nixosConfig.state.paths.archive}/Music|Archive";
           };
 
           internetarchive = {
