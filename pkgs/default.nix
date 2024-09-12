@@ -33,6 +33,7 @@ lib.makeScope pkgs.newScope (self: {
   mopidy-beets = callPackage ./mopidy-beets.nix { };
   mopidy-funkwhale = callPackage ./mopidy-funkwhale.nix { };
   mopidy-internetarchive = callPackage ./mopidy-internetarchive.nix { };
+  mopidy-listenbrainz = callPackage ./mopidy-listenbrainz { };
   nautilus-annotations = callPackage ./nautilus-annotations { };
   pop-launcher-plugin-brightness = callPackage ./pop-launcher-plugin-brightness { };
   pop-launcher-plugin-duckduckgo-bangs =
