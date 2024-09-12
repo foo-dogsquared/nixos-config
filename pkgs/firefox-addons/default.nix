@@ -1,5 +1,24 @@
 { buildFirefoxXpiAddon, fetchurl, lib, stdenv }:
   {
+    "extended-color-management" = buildFirefoxXpiAddon {
+      pname = "extended-color-management";
+      version = "1.1.1";
+      addonId = "{816dd215-0e91-4621-9d89-3bac78798e6f}";
+      url = "https://addons.mozilla.org/firefox/downloads/file/3966904/extended_color_management-1.1.1.xpi";
+      sha256 = "8b09d9fb312635c428571bd74beacf67e426089ebc812c7f39e9c3b4dad05a0b";
+      meta = with lib;
+      {
+        description = "Ever wish that Firefox didn't use color management when viewing images or video? Turn it off easily with this add-on.";
+        license = licenses.mpl20;
+        mozPermissions = [
+          "browserSettings"
+          "notifications"
+          "storage"
+          "<all_urls>"
+        ];
+        platforms = platforms.all;
+      };
+    };
     "get-rss-feed-url" = buildFirefoxXpiAddon {
       pname = "get-rss-feed-url";
       version = "2.2";
@@ -40,6 +59,29 @@
           "webRequestBlocking"
           "webRequest"
           "storage"
+        ];
+        platforms = platforms.all;
+      };
+    };
+    "microsoft-container" = buildFirefoxXpiAddon {
+      pname = "microsoft-container";
+      version = "1.0.4";
+      addonId = "@contain-microsoft";
+      url = "https://addons.mozilla.org/firefox/downloads/file/3711415/microsoft_container-1.0.4.xpi";
+      sha256 = "8780c9edcfa77a9f3eaa7da228a351400c42a884fec732cafc316e07f55018d3";
+      meta = with lib;
+      {
+        homepage = "https://github.com/kouassi-goli/contain-microsoft";
+        description = "This add-on is an unofficial fork of Mozilla's Facebook Container designed for Microsoft. \n Microsoft Container isolates your Microsoft activity from the rest of your web activity and prevent Microsoft from tracking you outside of the its website.";
+        license = licenses.mpl20;
+        mozPermissions = [
+          "<all_urls>"
+          "contextualIdentities"
+          "cookies"
+          "management"
+          "tabs"
+          "webRequestBlocking"
+          "webRequest"
         ];
         platforms = platforms.all;
       };

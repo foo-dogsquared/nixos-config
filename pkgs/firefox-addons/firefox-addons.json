@@ -2,31 +2,30 @@
   {
     "slug": "updateswh"
   },
-
   {
     "slug": "zhongwen"
   },
-
   {
     "slug": "get-rss-feed-url"
   },
-
   {
     "slug": "regretsreporter"
   },
-
+  {
+    "slug": "extended-color-management"
+  },
   {
     "slug": "simple-translate"
   },
-
   {
     "slug": "tineye-reverse-image-search"
   },
-
   {
     "slug": "google-container"
   },
-
+  {
+    "slug": "microsoft-container"
+  },
   {
     "slug": "sourcegraph-for-firefox"
   }
