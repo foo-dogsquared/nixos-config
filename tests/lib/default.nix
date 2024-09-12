@@ -20,6 +20,7 @@ in
   builders = callLib ./builders.nix;
   trivial = callLib ./trivial.nix;
   data = callLib ./data;
+  math = callLib ./math.nix;
 
   # Environment-specific subset.
   home-manager = callLib ./home-manager.nix;

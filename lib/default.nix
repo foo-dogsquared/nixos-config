@@ -17,11 +17,12 @@ pkgs.lib.makeExtensible
     builders = callLib ./builders;
     trivial = callLib ./trivial.nix;
     data = callLib ./data.nix;
+    math = callLib ./math.nix;
     fetchers = callLib ./fetchers;
 
     inherit (self.builders) makeXDGMimeAssociationList
       makeXDGPortalConfiguration makeXDGDesktopEntry;
-    inherit (self.trivial) countAttrs;
+    inherit (self.trivial) countAttrs filterAttrs';
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
     inherit (self.fetchers) fetchInternetArchive;
   } // lib.optionalAttrs (builtins ? fetchTree) {
