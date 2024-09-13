@@ -1,6 +1,7 @@
 { config, lib, pkgs, foodogsquaredLib, ... }@attrs:
 
 let
+  inherit (foodogsquaredLib.trivial) unitsToInt;
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.music;
 
@@ -119,8 +120,12 @@ in
     (lib.mkIf cfg.spotify.enable {
       home.packages = with pkgs; [ spotify ];
 
-      state.ports.spotifyd.value = 9009;
+      state.ports.spotifyd.value = attrs.nixosConfig.services.spotifyd.value or 9009;
 
+      services.mopidy.extensionPackages = [ pkgs.mopidy-spotify ];
+    })
+
+    (lib.mkIf (cfg.spotify.enable && !(attrs.nixosConfig.services.spotifyd.enable or false)) {
       services.spotifyd = {
         enable = true;
         settings.global = {
@@ -129,10 +134,11 @@ in
           bitrate = 320;
           device_type = "computer";
           zeroconf_port = config.state.ports.spotifyd.value;
+
+          cache_path = "${config.xdg.cacheHome}/spotifyd";
+          max_cache_size = unitsToInt { size = 4; prefix = "G"; };
         };
       };
-
-      services.mopidy.extensionPackages = [ pkgs.mopidy-spotify ];
     })
 
     (lib.mkIf cfg.mpd.enable {
