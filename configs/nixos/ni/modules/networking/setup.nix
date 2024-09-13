@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.ni;
@@ -168,6 +168,13 @@ in
         https = {
           value = 443;
           protocols = [ "tcp" ];
+          openFirewall = true;
+        };
+
+        # This is for user-specific services that would need to be exposed to
+        # the local network.
+        userland = {
+          value = foodogsquaredLib.nixos.makeRange 20000 30000;
           openFirewall = true;
         };
       };
