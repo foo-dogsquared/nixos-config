@@ -6,7 +6,7 @@
       pathsSubmodule = { lib, ... }: {
         options = {
           paths = lib.mkOption {
-            type = with lib.types; attrsOf (listOf str);
+            type = with lib.types; attrsOf (either path (listOf str));
             default = { };
             description = ''
               Set of paths to hold as a single source of truth for path-related
