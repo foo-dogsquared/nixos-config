@@ -86,6 +86,28 @@
         platforms = platforms.all;
       };
     };
+    "open-access-helper" = buildFirefoxXpiAddon {
+      pname = "open-access-helper";
+      version = "2024.1";
+      addonId = "info@oahelper.org";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4334632/open_access_helper-2024.1.xpi";
+      sha256 = "9f0a4fd3f45fd5c863815971062c1b1d1207de20ffa79a0dbfdadaa86cab996c";
+      meta = with lib;
+      {
+        homepage = "https://www.oahelper.org";
+        description = "Effortless legal access to full text scholarly articles: \nOpen Access Helper will help you identify legal open access copies of academic articles, using <a href=\"https://prod.outgoing.prod.webservices.mozgcp.net/v1/a9dd1cf69a45d4411a16fb829f61053e5a23ee20d67c26bf08528b5f26681fe4/http%3A//unpaywall.org\" rel=\"nofollow\">unpaywall.org</a> and <a href=\"https://prod.outgoing.prod.webservices.mozgcp.net/v1/9afdf2baa9ebaf36e09ce3b3c9b4514a29c2a2a619599a70001cbbae1be8448f/http%3A//core.ac.uk\" rel=\"nofollow\">core.ac.uk</a>";
+        mozPermissions = [
+          "tabs"
+          "storage"
+          "contextMenus"
+          "http://*/*"
+          "https://*/*"
+          "*://*/*"
+          "https://www.oahelper.org/backend/institutes/"
+        ];
+        platforms = platforms.all;
+      };
+    };
     "regretsreporter" = buildFirefoxXpiAddon {
       pname = "regretsreporter";
       version = "2.1.2";
