@@ -67,6 +67,10 @@ final: prev:
               default_area = "navbar";
             };
             "zotero@chnm.gmu.edu".install_url = "https://www.zotero.org/download/connector/dl?browser=firefox";
+            "info@oahelper.org" = {
+              install_url = mozillaAddon "open-access-helper";
+              default_area = "navbar";
+            };
           };
 
           applyInstallationMode = name: value:
