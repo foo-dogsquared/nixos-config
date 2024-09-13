@@ -43,6 +43,7 @@ in
         regex-cli # Save some face of confusion for yourself.
         dt # Get that functional gawk.
         recode # Convert between different encodings.
+        go-migrate # Go potential migraines.
       ];
     }
 

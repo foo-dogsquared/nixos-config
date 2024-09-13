@@ -112,6 +112,7 @@ in
           ] ++ (with pkgs.firefox-addons; [
             get-rss-feed-url
             google-container
+            microsoft-container
             regretsreporter
             simple-translate
             sourcegraph-for-firefox
