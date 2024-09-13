@@ -1,5 +1,6 @@
 # A re-implementation of the Borgmatic service home-manager module. The
-# reimplementation basically separates all of the configurations instead of a oneshot where it will execute Borgmatic with all present configurations
+# reimplementation basically separates all of the configurations instead of a
+# oneshot where it will execute Borgmatic with all present configurations
 # (which is fine but too overwhelming for my taste).
 #
 # It has an added integration for individual Borgmatic configurations from
@@ -45,8 +46,25 @@ let
           SETTINGSFILE`) in the service script.
         '';
         default = { };
-        example = {
-        };
+        example = lib.literalExpression ''
+          {
+            source_directories = [
+              config.xdg.userDirs.document
+              config.xdg.userDirs.download
+              config.xdg.userDirs.music
+              config.xdg.userDirs.video
+            ];
+
+            keep_daily = 5;
+            keep_weekly = 10;
+            keep_monthly = 20;
+
+            repositories = lib.singleton {
+              path = "ssh://asodajdoiasjdoij";
+              label = "remote";
+            };
+          }
+        '';
       };
 
       startAt = lib.mkOption {
@@ -111,6 +129,8 @@ let
         IOWeight = 100;
 
         Restart = "on-failure";
+        LogRateLimitIntervalSec = 0;
+
         ExecStart = ''
           ${lib.getExe' cfg.package "borgmatic"} ${lib.concatStringsSep " " v.extraArgs}
         '';
