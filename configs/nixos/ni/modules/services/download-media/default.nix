@@ -154,12 +154,12 @@ in
 
       services.gallery-dl = {
         enable = true;
-        archivePath = "${mountName}/gallery-dl-service";
+        downloadPath = "${mountName}/gallery-dl-service";
 
         extraArgs = galleryDlArgs ++ [
           # Record all downloaded files in an archive file.
           "--download-archive"
-          "${config.services.gallery-dl.archivePath}/photos"
+          "${config.services.gallery-dl.downloadPath}/photos"
         ];
 
         settings.extractor = {
