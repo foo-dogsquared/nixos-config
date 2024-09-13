@@ -1,6 +1,17 @@
 { pkgs, lib, self }:
 
 rec {
+  /* Force a numerical value to be a floating value.
+
+     Example:
+       toFloat 5698
+       => 5698.0
+
+       toFloat 9859.55
+       => 9859.55
+  */
+  toFloat = x: x / 1.0;
+
   /* Count the attributes with the given predicate.
 
      Examples:
@@ -130,4 +141,53 @@ rec {
   */
   binaryPrefixMultiplier = c:
     self.math.pow 2 (binaryPrefixExponent c);
+
+  /* Parse the given string containing the size into its appropriate value.
+     Returns the value in number of bytes.
+
+     Example:
+      parseBytesSizeIntoInt "4GiB"
+      => 4294967296
+
+      parseBytesSizeIntoInt "2 MB"
+      => 2000000
+
+      parseBytesSizeIntoInt "2 Mb"
+      => 250000
+  */
+  parseBytesSizeIntoInt = str:
+    let
+      matches = builtins.match "([[:digit:]]+)[[:space:]]*([[:alpha:]]{1})(i?[B|b])" str;
+      numeral = lib.toInt (lib.lists.head matches);
+      prefix = lib.lists.elemAt matches 1;
+      suffix = lib.lists.last matches;
+      isBinary = lib.hasPrefix "i" suffix;
+
+      multiplier =
+        let
+          multiplierFn = if isBinary then binaryPrefixMultiplier else metricPrefixMultiplier;
+        in
+          multiplierFn prefix;
+      bitDivider = if lib.hasSuffix "b" suffix then 8 else 1;
+    in
+      numeral * multiplier / bitDivider;
+
+  /*
+    Given an attrset of unit size object, return the size in bytes.
+
+    Example:
+      unitsToInt { size = 4; prefix = "G"; type = "binary"; }
+      => 4294967296
+
+      unitsToInt { size = 4; prefix = "G"; type = "metric"; }
+      => 4000000000
+  */
+  unitsToInt = { size, prefix, type ? "binary" }:
+    let
+      multiplierFn =
+        if type == "binary" then binaryPrefixMultiplier
+        else if type == "metric" then metricPrefixMultiplier
+        else builtins.throw "no multiplier type ${type}";
+    in
+      size * (multiplierFn prefix);
 }
