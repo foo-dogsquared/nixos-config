@@ -7,6 +7,7 @@ links = [
   { url = "org-protocol://wiki-open-up-b4-u-todo-anything?where=latest", text = "YOUR GODFORSAKEN TODO LIST" },
   { url = "org-protocol://wiki-open-journal?when=today", text = "Open journal for today" },
   { url = "org-protocol://roam-node?node=41da43fe-a8a9-4a2e-a361-05a11ce8b318", text = "Open todo for today" },
+  { url = "https://search.brave.com", text = "Brave Search" },
   { url = "https://login.tailscale.com", text = "Tailscale" },
   { url = "https://devdocs.io", text = "Devdocs" },
 ]
@@ -31,6 +32,7 @@ icon.name = "developer-board"
 name = "Software dev"
 flavorText = "...is just standing on a house of cards"
 textOnly = true
+weight = -25
 links = [
   { url = "https://github.com", text = "GitHub" },
   { url = "https://sourcegraph.com", text = "SourceGraph" },

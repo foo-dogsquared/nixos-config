@@ -83,10 +83,6 @@
   }
 
   {{- if eq $name "_light" }}
-    :root {
-      @include createColorScheme
-    }
-
     @media (prefers-color-scheme: light) {
       :root, ::backdrop {
         @include createColorScheme
