@@ -17,12 +17,22 @@ in
         };
       };
 
-      plugins = {
+      notificationPlugins = {
         http = {
           settings = {
             type = "http";
             log_level = "info";
           };
+        };
+      };
+
+      dataSources = {
+        ssh = lib.mkIf config.services.sshd.enable {
+          source = "journalctl";
+          journalctl_filter = [
+            "_SYSTEMD_UNIT=ssh.service"
+          ];
+          labels.type = "syslog";
         };
       };
     };
