@@ -1,6 +1,7 @@
 {
   imports = [
     ./extra-arguments.nix
+    ./shared-setups/server
     ./state
     ./suites/archiving.nix
     ./suites/browsers.nix
