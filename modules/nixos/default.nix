@@ -7,6 +7,7 @@
     ./programs/sessiond
     ./programs/wezterm.nix
     ./services/archivebox.nix
+    ./services/crowdsec.nix
     ./services/ctrld.nix
     ./services/gallery-dl.nix
     ./services/uxplay.nix
