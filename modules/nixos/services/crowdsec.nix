@@ -16,7 +16,7 @@ let
         default = pluginsConfigDrv;
         defaultText = ''
           All of the compiled configuration files from
-          {option}`services.crowdsec.plugins.settings`.
+          {option}`services.crowdsec.plugins.<name>.settings`.
         '';
         example = "./config/crowdsec/plugins";
       };
@@ -29,26 +29,54 @@ let
         default = pluginsDir;
         defaultText = ''
           All of the compiled plugins from
-          {options}`services.crowdsec.plugins.package`.
+          {options}`services.crowdsec.plugins.<name>.package`.
         '';
+      };
+    };
+
+    options.crowdsec_service = {
+      acqusition_dir = lib.mkOption {
+        type = lib.types.path;
+        description = ''
+          Directory containing acqusition configurations.
+        '';
+        default = acqusitionsDir;
+        defaultText = ''
+          All of the compiled configuration from
+          {options}`services.crowdsec.acqusitions.<name>.settings`.
+        '';
+        example = "./config/crowdsec/acqusitions";
       };
     };
   };
 
   pluginsDir = pkgs.symlinkJoin {
     name = "crowdsec-system-plugins";
-    paths = lib.mapAttrsToList (n: v: "${v.package}/share/crowdsec") cfg.plugins;
+    paths =
+      let
+        plugins = lib.filterAttrs (n: v: v.package != null) cfg.plugins;
+      in
+        lib.mapAttrsToList (n: v: "${v.package}/share/crowdsec") plugins;
   };
 
   pluginsConfigDrv = let
     pluginsConfigs =
       lib.mapAttrsToList
-        (n: v:
-          pkgs.writeTextDir "/notifications/${n}.yaml" (lib.generators.toYAML { } v.settings))
+        (n: v: settingsFormat.generate "crowdsec-system-plugin-config-${n}" v.settings)
         cfg.plugins;
   in pkgs.symlinkJoin {
     name = "crowdsec-system-plugins-configs";
     paths = pluginsConfigs;
+  };
+
+  acqusitionsDir = let
+    acqusitionConfigs =
+      lib.mapAttrsToList
+        (n: v: settingsFormat.generate "crowdsec-system-acqusition-config-${n}" v.settings)
+        cfg.dataSources;
+  in pkgs.symlinkJoin {
+    name = "crowdsec-system-acqusitions-configs";
+    paths = acqusitionConfigs;
   };
 
   crowdsecPluginsModule = { name, config, ... }: {
@@ -78,6 +106,22 @@ let
         '';
         default = null;
         example = lib.literalExpression "pkgs.crowdsec-slack-notification";
+      };
+    };
+  };
+
+  acqusitionsSubmodule = { name, config, ... }: {
+    options.settings = lib.mkOption {
+      type = settingsFormat.type;
+      description = ''
+        Configuration associated with each data source.
+      '';
+      default = { };
+      example = {
+        source = "journalctl";
+        journalctl_filter = [
+          "_SYSTEMD_UNIT=ssh.service"
+        ];
       };
     };
   };
@@ -139,6 +183,31 @@ in
           };
         }
       '';
+    };
+
+    dataSources = lib.mkOption {
+      type = with lib.types; attrsOf (submodule acqusitionsSubmodule);
+      description = ''
+        Set of data sources where logs are to be analyzed from.
+
+        ::: {.caution}
+        This is to be included as part of the default acqusition configuration
+        directory.
+
+        If {option}`services.crowdsec.settings.crowdsec_agent.acqusition_dir`
+        is set by the user, this option is effectively ignored.
+        :::
+      '';
+      default = { };
+      example = {
+        ssh = {
+          source = "journalctl";
+          journalctl_filter = [
+            "_SYSTEMD_UNIT=ssh.service"
+          ];
+          labels.type = "syslog";
+        };
+      };
     };
   };
 
