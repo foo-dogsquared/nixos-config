@@ -29,7 +29,7 @@ let
         default = pluginsDir;
         defaultText = ''
           All of the compiled plugins from
-          {options}`services.crowdsec.plugins.<name>.package`.
+          {options}`services.crowdsec.notificationPlugins.<name>.package`.
         '';
       };
     };
@@ -51,10 +51,10 @@ let
   };
 
   pluginsDir = pkgs.symlinkJoin {
-    name = "crowdsec-system-plugins";
+    name = "crowdsec-system-notification-plugins";
     paths =
       let
-        plugins = lib.filterAttrs (n: v: v.package != null) cfg.plugins;
+        plugins = lib.filterAttrs (n: v: v.package != null) cfg.notificationPlugins;
       in
         lib.mapAttrsToList (n: v: "${v.package}/share/crowdsec") plugins;
   };
@@ -63,9 +63,9 @@ let
     pluginsConfigs =
       lib.mapAttrsToList
         (n: v: settingsFormat.generate "crowdsec-system-plugin-config-${n}" v.settings)
-        cfg.plugins;
+        cfg.notificationPlugins;
   in pkgs.symlinkJoin {
-    name = "crowdsec-system-plugins-configs";
+    name = "crowdsec-system-notification-plugins-configs";
     paths = pluginsConfigs;
   };
 
@@ -159,10 +159,11 @@ in
       '';
     };
 
-    plugins = lib.mkOption {
+    notificationPlugins = lib.mkOption {
       type = with lib.types; attrsOf (submodule crowdsecPluginsModule);
       description = ''
-        Set of Crowdsec plugins and their configuration (if given).
+        Set of Crowdsec notification plugins and their configuration (if
+        given).
       '';
       default = { };
       example = lib.literalExpression ''
