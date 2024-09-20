@@ -33,7 +33,6 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       state.ports = {
-        bindStatistics.value = 9423;
         dns.value = 53;
         dnsOverHTTPS.value = 8443;
         dnsOverTLS.value = 853;
@@ -282,11 +281,20 @@ in
     }
 
     (lib.mkIf hostCfg.setups.monitoring.enable {
+      state.ports.bindStatistics.value = 9423;
+
       services.bind.extraConfig = ''
         statistics-channels {
           inet 127.0.0.1 port ${builtins.toString config.state.ports.bindStatistics.value} allow { 127.0.0.1; };
         };
       '';
+
+      services.prometheus.exporters = {
+        bind = {
+          enable = true;
+          bindURI = "http://127.0.0.1/${builtins.toString config.state.ports.bindStatistics.value}";
+        };
+      };
     })
 
     (lib.mkIf hostCfg.services.reverse-proxy.enable {

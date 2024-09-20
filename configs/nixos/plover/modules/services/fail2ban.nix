@@ -20,11 +20,7 @@ in
         overalljails = true;
       };
       extraPackages = with pkgs; [ ipset ];
-      ignoreIP = [
-        # VPN clients.
-        "${interfaces.wireguard0.IPv4.address}/13"
-        "${interfaces.wireguard0.IPv6.address}/64"
-      ];
+      ignoreIP = [ "10.0.0.0/8" ];
 
       # We're going to be unforgiving with this one since we only have key
       # authentication and password authentication is disabled anyways.
