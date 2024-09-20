@@ -33,8 +33,10 @@
 
     # The self-hosted services.
     grafana.enable = true;
-    tailscale.enable = true;
   };
+
+  # We're using our own VPN configuration for this one.
+  suites.vpn.enable = true;
 
   state.network = {
     ipv4 = lib.mkDefault "65.109.224.213";

@@ -22,9 +22,6 @@
     # The firewall of choice.
     ./services/firewall.nix
 
-    # The VPN setup of choice.
-    ./services/wireguard.nix
-
     # The rest of the self-hosted applications.
     ./services/atuin.nix
     ./services/fail2ban.nix
