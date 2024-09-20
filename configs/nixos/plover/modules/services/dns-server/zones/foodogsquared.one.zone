@@ -4,7 +4,7 @@ $TTL 12h
 $ORIGIN foodogsquared.one.
 
 @	3600	IN	SOA	ns1 hostmaster (
-				2023100801 	; serial number
+				2024091701 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -15,28 +15,21 @@ $ORIGIN foodogsquared.one.
 	3600	IN	NS	robotns3.second-ns.com.
 
 ; Setting up the mail-related DNS entries.
-; For future references, please the see the following document at
-; https://kb.mailbox.org/en/private/e-mail-article/using-e-mail-addresses-of-your-domain
-@	IN	MX	10 mxext1.mailbox.org.
-	IN	MX	10 mxext2.mailbox.org.
-	IN	MX	20 mxext3.mailbox.org.
-	IN	TXT	v=spf1 include:mailbox.org ~all
+; https://mxroutedocs.com/
+@	IN	MX	10 heracles.mxrouting.net.
+	IN	MX	20 heracles-relay.mxrouting.net.
+	IN	TXT	"v=spf1 include:mxlogin.com -all"
+
+; Protect the validity of my emails sent by me!!!!
+x._domainkey	3600	IN	TXT	"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyLlrgdsO4jLncMoGAowlE14oB9R2ESxNLRBtkzc24LOPJ1CwEIE+5AHZd+ZRMwiD7fdXcyCH7/E1BRXWT+TtLnKnBgf5I0z6EbPqiPPb6nmpDWrbZzA2mdKetAKz0kFJC8oYK7lQF7Bdh57y/HWksoH6yjl1E88m8tEQ/thlyABGjqzV+txgmc1BryFu23KasqI2c4We/KgvsoSSAaUHkjpAMCuJck/P0G9mJWyTHrnZN2gCotyenLBZew0BIbiA2XYp6dQW4sU+MawfZ0E1KA0lem0SRYCB+sGD248uj4xVo9sIiCVyO9EQXy/YCZTeuTQHf1+QeFzI82vIrlv63QIDAQAB"
+
+; Protect my domain email from spoofing.
+_dmarc	400	IN	TXT	"v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one;ruf=mailto:admin@foodogsquared.one"
+
+
 
 ; Keybase verification key.
 @	3600	IN	TXT	#keybaseVerificationKey#
-
-; This is something that is needed for mailbox.org to verify it is indeed in my
-; domain.
-#mailboxSecurityKey#	3600	IN	TXT	#mailboxSecurityKeyRecord#
-
-; Protect the validity of my emails sent by me!!!!
-MBO0001._domainkey	IN	CNAME	MBO0001._domainkey.mailbox.org.
-MBO0002._domainkey	IN	CNAME	MBO0002._domainkey.mailbox.org.
-MBO0003._domainkey	IN	CNAME	MBO0003._domainkey.mailbox.org.
-MBO0004._domainkey	IN	CNAME	MBO0004._domainkey.mailbox.org.
-
-; Protect my domain email from spoofing.
-_dmarc	400	IN	TXT	v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one;ruf=mailto:admin@foodogsquared.one
 
 ; This will make PGP clients find my public key for the email.
 _hkps._tcp	IN	SRV	1 1 443 pgp.mailbox.org.

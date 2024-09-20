@@ -8,29 +8,23 @@ let
   cfg = hostCfg.services.dns-server;
 
   inherit (config.networking) domain fqdn;
-  inherit (import ../hardware/networks.nix) interfaces clientNetworks serverNetworks secondaryNameServers;
-  secondaryNameServersIPs = lib.foldl'
-    (total: addresses: total ++ addresses.IPv4 ++ addresses.IPv6)
-    [ ]
-    (lib.attrValues secondaryNameServers);
 
-  domainZone = pkgs.substituteAll {
-    src = ../../config/dns/${domain}.zone;
-    ploverWANIPv4 = interfaces.wan.IPv4.address;
-    ploverWANIPv6 = interfaces.wan.IPv6.address;
+  zonesDir = "/etc/bind/zones";
+  getZoneFile = domain: "${zonesDir}/${domain}.zone";
+
+  zonefile = pkgs.substituteAll {
+    src = ../setups/dns/zones/${domain}.zone;
+    ploverWANIPv4 = config.state.network.ipv4;
+    ploverWANIPv6 = config.state.network.ipv6;
   };
 
   fqdnZone = pkgs.substituteAll {
-    src = ../../config/dns/${fqdn}.zone;
-    ploverLANIPv4 = interfaces.lan.IPv4.address;
-    ploverLANIPv6 = interfaces.lan.IPv6.address;
+    src = ../setups/dns/zones/${fqdn}.zone;
+    ploverWANIPv4 = config.state.network.ipv4;
+    ploverWANIPv6 = config.state.network.ipv6;
   };
 
-  zonesDir = "/etc/bind/zones";
-  zoneFile = domain: "${zonesDir}/${domain}.zone";
-
   dnsSubdomain = "ns1.${domain}";
-  dnsOverHTTPSPort = 8443;
 in
 {
   options.hosts.plover.services.dns-server.enable =
@@ -38,6 +32,13 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
+      state.ports = {
+        bindStatistics.value = 9423;
+        dns.value = 53;
+        dnsOverHTTPS.value = 8443;
+        dnsOverTLS.value = 853;
+      };
+
       sops.secrets =
         let
           dnsFileAttribute = {
@@ -46,10 +47,7 @@ in
             mode = "0400";
           };
         in
-        foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
-          "dns/${domain}/mailbox-security-key" = dnsFileAttribute;
-          "dns/${domain}/mailbox-security-key-record" = dnsFileAttribute;
-          "dns/${domain}/keybase-verification-key" = dnsFileAttribute;
+        foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml {
           "dns/${domain}/rfc2136-key" = dnsFileAttribute // {
             reloadUnits = [ "bind.service" ];
           };
@@ -69,15 +67,17 @@ in
 
         listenOn = [
           "127.0.0.1"
-          interfaces.lan.IPv4.address
-          interfaces.wan.IPv4.address
+          config.state.network.ipv4
         ];
 
         listenOnIpv6 = [
           "::1"
-          interfaces.lan.IPv6.address
-          interfaces.wan.IPv6.address
+          config.state.network.ipv6
         ];
+
+        extraConfig = ''
+          include "${config.state.paths.dataDir}/dns/*-dnskeys.conf";
+        '';
 
         # Welp, since the template is pretty limited, we'll have to go with our
         # own. This is partially based from the NixOS Bind module except without
@@ -110,7 +110,7 @@ in
               endpoints { "/dns-query"; };
             };
 
-            acl trusted { ${lib.concatStringsSep "; " (clientNetworks ++ serverNetworks)}; localhost; };
+            acl trusted { ${lib.concatStringsSep "; " [ "10.0.0.0/8" ]}; localhost; };
             acl cachenetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.cacheNetworks} };
             acl badnetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.blockedNetworks} };
 
@@ -124,7 +124,8 @@ in
               listen-on-v6 tls ${dnsSubdomain} { ${listenInterfacesIpv6} };
 
               # DNS-over-HTTPS.
-              https-port ${builtins.toString dnsOverHTTPSPort};
+              tls-port ${builtins.toString config.state.ports.dnsOverTLS.value};
+              https-port ${builtins.toString config.state.ports.dnsOverHTTPS.value};
               listen-on tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfaces} };
               listen-on-v6 tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfacesIpv6} };
 
@@ -147,14 +148,14 @@ in
 
               zone "${fqdn}" {
                 type primary;
-                file "${zoneFile fqdn}";
+                file "${getZoneFile fqdn}";
               };
 
               zone "${domain}" {
                 type primary;
 
-                file "${zoneFile domain}";
-                allow-transfer { ${lib.concatStringsSep "; " secondaryNameServersIPs}; };
+                file "${getZoneFile domain}";
+                allow-transfer { ${lib.concatStringsSep "; " config.state.network.secondaryNameservers}; };
                 update-policy {
                   grant rfc2136key.${domain}. zonesub TXT;
                 };
@@ -182,22 +183,15 @@ in
         path = with pkgs; [ replace-secret ];
         preStart =
           let
-            domainZone' = zoneFile domain;
-            fqdnZone' = zoneFile fqdn;
-            secretPath = path: config.sops.secrets."dns/${path}".path;
-            rndc = lib.getExe' config.services.bind.package "rndc";
+            domainZone' = getZoneFile domain;
+            fqdnZone' = getZoneFile fqdn;
           in
           lib.mkAfter ''
             # Install the domain zone.
-            {
-              install -Dm0600 '${domainZone}' '${domainZone'}'
-              replace-secret '#mailboxSecurityKey#' '${secretPath "${domain}/mailbox-security-key"}' '${domainZone'}'
-              replace-secret '#mailboxSecurityKeyRecord#' '${secretPath "${domain}/mailbox-security-key-record"}' '${domainZone'}'
-              #${rndc} sync "${domain}" IN external
-            }
+            [ -f ${lib.escapeShellArg domainZone'} ] && install -Dm0600 ${zonefile} ${lib.escapeShellArg domainZone'}
 
             # Install the internal DNS zones.
-            install -Dm0600 '${fqdnZone}' '${fqdnZone'}'
+            [ -f ${lib.escapeShellArg fqdnZone'} ] && install -Dm0600 '${fqdnZone}' ${lib.escapeShellArg fqdnZone'}
           '';
 
         serviceConfig = {
@@ -287,6 +281,14 @@ in
       security.dhparams.params.bind.bits = 4096;
     }
 
+    (lib.mkIf hostCfg.setups.monitoring.enable {
+      services.bind.extraConfig = ''
+        statistics-channels {
+          inet 127.0.0.1 port ${builtins.toString config.state.ports.bindStatistics.value} allow { 127.0.0.1; };
+        };
+      '';
+    })
+
     (lib.mkIf hostCfg.services.reverse-proxy.enable {
       # Making this with nginx.
       services.nginx.upstreams.local-dns = {
@@ -294,7 +296,7 @@ in
           zone dns 64k;
         '';
         servers = {
-          "127.0.0.1:${builtins.toString dnsOverHTTPSPort}" = { };
+          "127.0.0.1:${builtins.toString config.state.ports.dnsOverHTTPS.value}" = { };
         };
       };
 
@@ -329,23 +331,19 @@ in
           proxy_pass dns_servers;
         }
       '';
-
     })
 
     # Set up the firewall. Take note the ports with the transport layer being
     # accepted in Bind.
     (lib.mkIf hostCfg.services.firewall.enable {
-      networking.firewall =
-        let
-          ports = [
-            53 # DNS
-            853 # DNS-over-TLS/DNS-over-QUIC
-          ];
-        in
-        {
-          allowedUDPPorts = ports;
-          allowedTCPPorts = ports;
-        };
+      networking.firewall = {
+        allowedUDPPorts = [ config.state.ports.dns.value ];
+        allowedTCPPorts = with config.state.ports; [
+          dns.value
+          dnsOverHTTPS.value
+          dnsOverTLS.value
+        ];
+      };
     })
 
     # Add the following to be backed up.
