@@ -1,0 +1,9 @@
+{{- /*
+This template applies an ID to an SVG from the Heroicons set to be used with `<use>` element.
+*/ -}}
+{{- $match := "^\\s*<svg (.*)?>" }}
+{{- $name := default .id .name }}
+{{- $icon := resources.Get (printf "svg/heroicons/24/solid/%s.svg" .id) }}
+{{- $replaceWith := printf `<svg id="%s" ${1}>` $name }}
+
+{{- replaceRE $match $replaceWith $icon.Content | safeHTML -}}

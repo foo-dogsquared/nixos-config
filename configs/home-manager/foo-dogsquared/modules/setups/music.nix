@@ -1,12 +1,12 @@
-{ config, lib, pkgs, ... }@attrs:
+{ config, lib, pkgs, foodogsquaredLib, ... }@attrs:
 
 let
+  inherit (foodogsquaredLib.trivial) unitsToInt;
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.music;
 
-  ytdlpAudio = pkgs.writeScriptBin "yt-dlp-audio" ''
-    ${pkgs.yt-dlp}/bin/yt-dlp --config-location "${../../config/yt-dlp/audio.conf}" $@
-  '';
+  isFilesystemSet = setupName:
+    attrs.nixosConfig.suites.filesystem.setups.${setupName}.enable or false;
 
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";
@@ -15,15 +15,24 @@ in
   options.users.foo-dogsquared.setups.music = {
     enable = lib.mkEnableOption "foo-dogsquared's music setup";
     mpd.enable = lib.mkEnableOption "foo-dogsquared's MPD server setup";
+    spotify.enable = lib.mkEnableOption "music streaming setup with Spotify";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = with pkgs; [
         songrec # SHAZAM!
-        ytdlpAudio # My custom script for downloading music with yt-dlp.
         picard # Graphical beets.
       ];
+
+      wrapper-manager.packages.music-setup = {
+        wrappers.yt-dlp-audio = {
+          arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
+          prependArgs = [
+            "--config-location" ../../config/yt-dlp/audio.conf
+          ];
+        };
+      };
 
       # Enable the desktop audio profile for extra auditorial goodies.
       suites.desktop.audio = {
@@ -92,9 +101,49 @@ in
         "vlc.memory_dump"
         "vlc.mru"
       ];
+
+      # Set every music-related services from the encompassing NixOS
+      # configuration.
+      users.foo-dogsquared.programs.custom-homepage.sections = lib.mkMerge [
+        (lib.mkIf (attrs.nixosConfig.services.gonic.enable or false) (let
+          subsonicLink = {
+            url = "http://localhost:${builtins.toString attrs.nixosConfig.state.ports.gonic.value}";
+            text = "Jukebox server";
+          };
+        in {
+          services.links = lib.singleton subsonicLink;
+          music.links = lib.mkBefore [ (subsonicLink // { text = "Subsonic music server"; }) ];
+        }))
+      ];
     }
 
+    (lib.mkIf cfg.spotify.enable {
+      home.packages = with pkgs; [ spotify ];
+
+      state.ports.spotifyd.value = attrs.nixosConfig.services.spotifyd.value or 9009;
+
+      services.mopidy.extensionPackages = [ pkgs.mopidy-spotify ];
+    })
+
+    (lib.mkIf (cfg.spotify.enable && !(attrs.nixosConfig.services.spotifyd.enable or false)) {
+      services.spotifyd = {
+        enable = true;
+        settings.global = {
+          use_mpris = true;
+          device_name = "My laptop";
+          bitrate = 320;
+          device_type = "computer";
+          zeroconf_port = config.state.ports.spotifyd.value;
+
+          cache_path = "${config.xdg.cacheHome}/spotifyd";
+          max_cache_size = unitsToInt { size = 4; prefix = "G"; };
+        };
+      };
+    })
+
     (lib.mkIf cfg.mpd.enable {
+      state.ports.mopidy.value = 6680;
+
       services.mopidy = {
         enable = true;
         extensionPackages = with pkgs; [
@@ -110,7 +159,7 @@ in
         settings = {
           http = {
             hostname = "127.0.0.1";
-            port = 6680;
+            port = config.state.ports.mopidy.value;
             default_app = "iris";
           };
 
@@ -120,10 +169,10 @@ in
               "$XDG_MUSIC_DIR|Music"
               "~/library/music|Library"
             ]
-            ++ lib.optional (attrs?nixosConfig.suites.filesystem.setups.external-hdd.enable)
-              "/mnt/external-storage/Music|External storage"
-            ++ lib.optional (attrs?nixosConfig.suites.filesystem.setups.archive.enable)
-              "/mnt/archives/Music|Archive";
+            ++ lib.optional (isFilesystemSet "external-hdd")
+              "${attrs.nixosConfig.state.paths.external-hdd}/Music|External storage"
+            ++ lib.optional (isFilesystemSet "archive")
+              "${attrs.nixosConfig.state.paths.archive}/Music|Archive";
           };
 
           internetarchive = {
@@ -153,6 +202,17 @@ in
       programs.ncmpcpp = {
         enable = true;
         mpdMusicDir = musicDir;
+      };
+
+      # Set this to the custom homepage.
+      users.foo-dogsquared.programs.custom-homepage.sections = let
+        mopidyLink = {
+          url = "http://localhost:${builtins.toString config.state.ports.mopidy.value}";
+          text = "Music streaming server";
+        };
+      in {
+        services.links = lib.singleton mopidyLink;
+        music.links = lib.mkBefore [ (mopidyLink // { text = "Mopidy server"; }) ];
       };
     })
   ]);

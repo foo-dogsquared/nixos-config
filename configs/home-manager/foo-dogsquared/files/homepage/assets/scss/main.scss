@@ -1,0 +1,71 @@
+:root {
+  height: 100%;
+  font-size: 1.1em;
+
+  --background: var(--base00);
+  --foreground: var(--base05);
+  --accent-color: var(--base0C);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--background);
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+#links {
+  --width: 30ch;
+  --gap: 0.5em;
+  --header-font-size: 1.5em;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
+  grid-template-rows: max-content;
+  gap: var(--gap);
+  margin: calc(var(--gap) * 2);
+
+  section[id^="section-"] {
+    background: var(--foreground);
+    color: var(--background);
+
+    border: var(--gap) solid var(--accent-color);
+    padding: calc(var(--gap) * 2);
+    text-align: center;
+
+    .nav-icon {
+      color: currentColor;
+      fill: currentColor;
+
+      svg {
+        --size: calc(var(--header-font-size) * 2);
+        width: var(--size);
+        height: var(--size);
+      }
+    }
+
+    .nav-header {
+      font-size: var(--header-font-size);
+      font-weight: bolder;
+    }
+
+    .flavor-text {
+      font-size: 0.9em;
+      font-style: italic;
+      display: inline-block;
+      width: 100%;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: var(--background);
+
+      &:hover {
+        color: var(--accent-color);
+      }
+    }
+  }
+}

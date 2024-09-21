@@ -13,9 +13,12 @@ pkgs.mkShell {
     asciidoctor
     disko
     deploy-rs
+    npins
+    nixos-anywhere
     home-manager
     git
     sops
+    nix-update
 
     bind
     opentofu
@@ -33,6 +36,6 @@ pkgs.mkShell {
     treefmt # The universal formatter (if you configured it).
     stylua # ...for Lua.
     black # ...for Python.
-    nixpkgs-fmt # ...for Nix.
+    nixfmt # ...for Nix.
   ] ++ extraPackages;
 }

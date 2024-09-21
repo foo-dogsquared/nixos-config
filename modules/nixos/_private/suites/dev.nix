@@ -72,6 +72,7 @@ in {
         bandwhich # Sniffing your packets.
         cachix # Compile no more by using someone's binary cache!
         direnv # The power of local development environment.
+        difftastic # Cracked version of diff.
         lazygit # Git interface for the lazy.
         lazydocker # Git interface for the lazy.
         fd # Oh nice, a more reliable `find`.
@@ -90,7 +91,7 @@ in {
       ++ (lib.optionals config.programs.git.enable (with pkgs; [
         tea # Make some Tea...
         hut # ...in the Hut...
-        github-cli # ...in the GitHub CLI.
+        github-cli # ...in the Git Hub...
         git-filter-repo # History is written by the victors (and force-pushers which are surely not victors).
       ]));
 

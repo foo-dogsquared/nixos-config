@@ -1,0 +1,9 @@
+{{- /*
+This template applies an ID to an SVG from the Simple Icons set to be used with `<use>` element.
+*/ -}}
+{{- $match := "<svg (.*)?>\\s*(.*)\\s*</svg>" }}
+{{- $name := default .id .name }}
+{{- $icon := resources.Get (printf "svg/simple-icons/%s.svg" .id) }}
+{{- $replaceWith := printf `<svg id="%s" ${1}>${2}</svg>` $name }}
+
+{{- replaceRE $match $replaceWith $icon.Content | safeHTML }}

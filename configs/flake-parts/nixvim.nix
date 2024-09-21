@@ -1,23 +1,30 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 
 {
   setups.nixvim.configs = {
     fiesta = {
-      nixpkgsBranches = [
-        "nixos-unstable"
-      ];
-      neovimPackages = p: with p; [
-        neovim-nightly
+      components = [
+        {
+          nixpkgsBranch = "nixos-unstable";
+          nixvimBranch = "nixvim-unstable";
+          neovimPackage = pkgs: pkgs.neovim;
+          overlays = [
+            inputs.neovim-nightly-overlay.overlays.default
+          ];
+        }
       ];
     };
 
     trovebelt = {
-      nixpkgsBranches = [
-        "nixos-unstable"
-      ];
-      neovimPackages = p: with p; [
-        neovim-nightly
-      ];
+      components = lib.cartesianProduct {
+        nixpkgsBranch = [ "nixos-unstable" ];
+        nixvimBranch = [ "nixvim-unstable" ];
+        neovimPackage = [ (pkgs: pkgs.neovim) ];
+        overlays = [
+          [ inputs.neovim-nightly-overlay.overlays.default ]
+          [ ]
+        ];
+      };
     };
   };
 

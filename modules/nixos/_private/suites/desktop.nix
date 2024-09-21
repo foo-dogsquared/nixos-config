@@ -1,7 +1,7 @@
 # This is where extra desktop goodies can be found.
 # As a note, this is not where you set the aesthetics of your graphical sessions.
 # That can be found in the `themes` module.
-{ config, lib, pkgs, options, ... }:
+{ config, lib, pkgs, ... }:
 
 let cfg = config.suites.desktop;
 in {
@@ -86,7 +86,7 @@ in {
               pipewire
             ];
           in
-          commonLibs ++ xorgLibs ++ options.programs.nix-ld.libraries.default;
+          commonLibs ++ xorgLibs;
       };
 
       environment.systemPackages = with pkgs; [

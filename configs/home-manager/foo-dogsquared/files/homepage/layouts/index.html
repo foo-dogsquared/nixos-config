@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default " en" }}">
+
+<head>
+    {{ partial "head.html" . -}}
+</head>
+
+<body>
+    <div id="links">
+        {{ range $key, $value := sort (index $.Site.Data (slice "foodogsquared-homepage" "links")) "weight" }}
+            {{- $name := default $key $value.name -}}
+            <section
+                id="section-{{ $name }}"
+                {{ with $value.grid }}
+                style="{{ with .column }}grid-column: span {{ . }};{{ end }}{{ with .row }}grid-row: span {{ . }};{{ end }}"
+                {{ end }}
+            >
+                {{ with $value.icon }}
+                    <div class="nav-icon">{{ partial "icon.html" . }}</div>
+                {{ end }}
+                <div class="nav-header">{{ $name }}</div>
+                {{ with $value.flavorText }}
+                    <div class="flavor-text">{{ . }}</div>
+                {{ end }}
+                <hr />
+
+                <nav>
+                {{ range $link := $value.links }}
+                    <a href="{{ safeURL $link.url }}">{{ $link.text }}</a>
+                {{ end }}
+                </nav>
+            </section>
+        {{ end }}
+    </div>
+</body>
+
+</html>

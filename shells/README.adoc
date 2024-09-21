@@ -3,6 +3,7 @@
 
 My development shells for usual type of projects to quickly spawn one when spelunking other peoples' projects.
 This can be easily spawned from the `devShells` attribute from the flake output (i.e., `nix develop $FLAKE#$DEVENV`).
+But if you are using a non-flake setup and the channels are set correctly, it should still be usable with `nix-shell <config/shells> -A $SHELL_NAME`.
 
 CAUTION: This is not supposed to be a list of development environment encompassing all type of projects but rather it is just for quickly spawning one for spelunking.
 

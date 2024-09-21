@@ -1,5 +1,24 @@
 { buildFirefoxXpiAddon, fetchurl, lib, stdenv }:
   {
+    "extended-color-management" = buildFirefoxXpiAddon {
+      pname = "extended-color-management";
+      version = "1.1.1";
+      addonId = "{816dd215-0e91-4621-9d89-3bac78798e6f}";
+      url = "https://addons.mozilla.org/firefox/downloads/file/3966904/extended_color_management-1.1.1.xpi";
+      sha256 = "8b09d9fb312635c428571bd74beacf67e426089ebc812c7f39e9c3b4dad05a0b";
+      meta = with lib;
+      {
+        description = "Ever wish that Firefox didn't use color management when viewing images or video? Turn it off easily with this add-on.";
+        license = licenses.mpl20;
+        mozPermissions = [
+          "browserSettings"
+          "notifications"
+          "storage"
+          "<all_urls>"
+        ];
+        platforms = platforms.all;
+      };
+    };
     "get-rss-feed-url" = buildFirefoxXpiAddon {
       pname = "get-rss-feed-url";
       version = "2.2";
@@ -40,6 +59,51 @@
           "webRequestBlocking"
           "webRequest"
           "storage"
+        ];
+        platforms = platforms.all;
+      };
+    };
+    "microsoft-container" = buildFirefoxXpiAddon {
+      pname = "microsoft-container";
+      version = "1.0.4";
+      addonId = "@contain-microsoft";
+      url = "https://addons.mozilla.org/firefox/downloads/file/3711415/microsoft_container-1.0.4.xpi";
+      sha256 = "8780c9edcfa77a9f3eaa7da228a351400c42a884fec732cafc316e07f55018d3";
+      meta = with lib;
+      {
+        homepage = "https://github.com/kouassi-goli/contain-microsoft";
+        description = "This add-on is an unofficial fork of Mozilla's Facebook Container designed for Microsoft. \n Microsoft Container isolates your Microsoft activity from the rest of your web activity and prevent Microsoft from tracking you outside of the its website.";
+        license = licenses.mpl20;
+        mozPermissions = [
+          "<all_urls>"
+          "contextualIdentities"
+          "cookies"
+          "management"
+          "tabs"
+          "webRequestBlocking"
+          "webRequest"
+        ];
+        platforms = platforms.all;
+      };
+    };
+    "open-access-helper" = buildFirefoxXpiAddon {
+      pname = "open-access-helper";
+      version = "2024.1";
+      addonId = "info@oahelper.org";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4334632/open_access_helper-2024.1.xpi";
+      sha256 = "9f0a4fd3f45fd5c863815971062c1b1d1207de20ffa79a0dbfdadaa86cab996c";
+      meta = with lib;
+      {
+        homepage = "https://www.oahelper.org";
+        description = "Effortless legal access to full text scholarly articles: \nOpen Access Helper will help you identify legal open access copies of academic articles, using <a href=\"https://prod.outgoing.prod.webservices.mozgcp.net/v1/a9dd1cf69a45d4411a16fb829f61053e5a23ee20d67c26bf08528b5f26681fe4/http%3A//unpaywall.org\" rel=\"nofollow\">unpaywall.org</a> and <a href=\"https://prod.outgoing.prod.webservices.mozgcp.net/v1/9afdf2baa9ebaf36e09ce3b3c9b4514a29c2a2a619599a70001cbbae1be8448f/http%3A//core.ac.uk\" rel=\"nofollow\">core.ac.uk</a>";
+        mozPermissions = [
+          "tabs"
+          "storage"
+          "contextMenus"
+          "http://*/*"
+          "https://*/*"
+          "*://*/*"
+          "https://www.oahelper.org/backend/institutes/"
         ];
         platforms = platforms.all;
       };

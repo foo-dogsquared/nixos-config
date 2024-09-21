@@ -1,11 +1,10 @@
-{ config, lib, ... }:
+{ config, lib, helpers, ... }:
 
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.snippets;
 
   luasnipKeymapConfig = {
-    lua = true;
     mode = [ "i" "s" ];
   };
 in
@@ -40,7 +39,7 @@ in
       (luasnipKeymapConfig // {
         key = "<C-j>";
         options.desc = "Jump to next node";
-        action = ''
+        action = helpers.mkRaw ''
           function()
             ls = require("luasnip")
             if ls.jumpable(1) then
@@ -53,7 +52,7 @@ in
       (luasnipKeymapConfig // {
         key = "<C-k>";
         options.desc = "Jump to previous node";
-        action = ''
+        action = helpers.mkRaw ''
           function()
             ls = require("luasnip")
             if ls.jumpable(-1) then
@@ -66,7 +65,7 @@ in
       (luasnipKeymapConfig // {
         key = "<C-l>";
         options.desc = "Expand or jump to next node";
-        action = ''
+        action = helpers.mkRaw ''
           function()
             ls = require("luasnip")
             if ls.expand_or_jumpable() then
@@ -79,7 +78,7 @@ in
       (luasnipKeymapConfig // {
         key = "<C-u>";
         options.desc = "Show extra choices";
-        action = ''
+        action = helpers.mkRaw ''
           function()
             require("luasnip.extras.select_choice")()
           end

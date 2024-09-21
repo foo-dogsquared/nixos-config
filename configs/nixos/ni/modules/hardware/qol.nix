@@ -19,13 +19,9 @@ in
       browsing = true;
       drivers = with pkgs; [
         gutenprint
-        hplip
         splix
       ];
     };
-
-    # Make your CPU more useful.
-    services.auto-cpufreq.enable = true;
 
     # Extend the life of an SSD.
     services.fstrim.enable = true;

@@ -1,33 +1,31 @@
 { lib
 , rustPlatform
 , fetchFromGitHub
+, cmake
 , pkg-config
 , openssl
 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "fastn";
-  version = "0.3.9";
+  version = "0.4.75";
 
   src = fetchFromGitHub {
     owner = "fastn-stack";
     repo = pname;
     rev = version;
-    hash = "sha256-KhJc6cM1KnJSoaD3a0uRwlObGsu8p66gn4XAtFTHlVg=";
+    hash = "sha256-8/0fOpZhboBJWN2sNrVD54uW3J3UPxGW9wil0UfdfuM=";
   };
 
   cargoLock = {
     lockFile = ./Cargo.lock;
     outputHashes = {
-      "deadpool-0.9.5" = "sha256-4M2+nVVG/w0gnHkxTWVnfvy5HegW9A+nlWAkMltapeI=";
-      "dioxus-core-0.3.2" = "sha256-jOVkqWPcGa/GGeZiQji7JbD2YF+qrXC9AZGozZg47+c=";
-      "fbt-lib-0.1.18" = "sha256-xzhApWSVsVelii0R8vfB60kj0gA87MRTEplmX+UT96A=";
-      "ftd-0.2.0" = "sha256-iHWR5KMgmo1QfLPc8ZKS4NvshXEg/OJw7c7fy3bs8v0=";
+      "fastn-observer-0.1.0" = "sha256-D7ch6zB1xw54vGbpcQ3hf+zG11Le/Fy01W3kHhc8bOg=";
     };
   };
 
   OPENSSL_NO_VENDOR = "1";
-  nativeBuildInputs = [ pkg-config ];
+  nativeBuildInputs = [ cmake pkg-config ];
   buildInputs = [ openssl ];
 
   checkFlags = [
@@ -39,5 +37,6 @@ rustPlatform.buildRustPackage rec {
     description = "An integrated development environment for FTD";
     license = licenses.bsd3;
     maintainers = with maintainers; [ foo-dogsquared ];
+    mainProgram = "fastn";
   };
 }

@@ -21,7 +21,6 @@ in
 
       lldb = {
         command = "lldb-dap";
-        name = "lldb";
       };
 
       dart = {

@@ -10,12 +10,12 @@ in
   options.suites.i18n = {
     enable = lib.mkEnableOption "main i18n config";
     setup = lib.mkOption {
-      type = lib.types.enum [ "fcitx5" "ibus" ];
+      type = with lib.types; nullOr (enum [ "fcitx5" "ibus" ]);
       description = ''
         The primary input method engine to be used and its related
         configuration and setup.
       '';
-      default = "fcitx5";
+      default = null;
       example = "ibus";
     };
   };

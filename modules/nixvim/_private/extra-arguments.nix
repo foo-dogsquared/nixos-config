@@ -7,6 +7,6 @@ in
 {
   _module.args.foodogsquaredLib =
     foodogsquaredLib.extend (final: prev: {
-      nixvim = import ../../../lib/nixvim.nix { inherit pkgs lib; self = final; };
+      nixvim = import ../../../lib/env-specific/nixvim.nix { inherit pkgs lib; self = final; };
     });
 }

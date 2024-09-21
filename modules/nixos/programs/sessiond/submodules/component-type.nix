@@ -13,6 +13,7 @@ let
         `restartTriggers`.
         :::
       '';
+      visible = "shallow";
       default = null;
     };
 in
@@ -61,6 +62,7 @@ in
         service unit. You should configure `targetUnit` for that instead.
         :::
       '';
+      visible = "shallow";
     };
 
     targetUnit = lib.mkOption {
@@ -84,6 +86,7 @@ in
         `reloadTriggers` and `restartTriggers`.
         :::
       '';
+      visible = "shallow";
     };
 
     timerUnit = optionalSystemdUnitOption "timer" "timers" // {

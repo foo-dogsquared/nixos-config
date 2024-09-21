@@ -12,4 +12,6 @@ in
   math = callLib ./math.nix;
   trivial = callLib ./trivial;
   tinted-theming = callLib ./tinted-theming;
+  rgb = callLib ./rgb.nix;
+  hsl = callLib ./hsl.nix;
 }

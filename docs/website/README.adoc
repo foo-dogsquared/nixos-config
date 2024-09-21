@@ -1,0 +1,17 @@
+= Project documentation
+:toc:
+
+
+It's the documentation for my project rendered with Hugo and written with Asciidoctor format.
+There are some things you need to be aware of.
+
+* This is basically an extended theme using https://github.com/foo-dogsquared/website[my website].
+It is built on top of it so every single change will have to be adapted to it including the assets (especially).
+
+* This heavily uses my https://github.com/foo-dogsquared/asciidoctor-foodogsquared-extensions[own set of Asciidoctor extensions].
+
+* This uses my custom Asciidoctor templates.
+Unfortunately, this is not doable with Hugo so it is done primarily with a hack that shadows the original `asciidoctor` executable with a custom script of the same name.
+
+* This also uses nixpkgs with their Ruby packaging infrastructure.
+You can see more details about developing and maintaining them in https://nixos.org/manual/nixpkgs/stable/#sec-language-ruby[the respective manual].

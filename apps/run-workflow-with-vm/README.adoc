@@ -24,8 +24,11 @@ It is expected that the extra configuration folder is structured similarly to th
 ./extra-config-stuff
 └── modules
     ├── home-manager
+    │   └── default.nix
     ├── nixvim
+    │   └── default.nix
     └── nixos
+        └── default.nix
 ----
 
 Once you have an folder containing those extra snippets, you can simply include them like so.
@@ -34,3 +37,12 @@ Once you have an folder containing those extra snippets, you can simply include 
 ----
 run-workflow-with-vm a-happy-gnome -I extra-config=./extra-config-stuff
 ----
+
+Another thing, this script is using https://github.com/nix-community/nixos-generators[nixos-generators] to build the VM which in turn basically uses nixpkgs' integration of it (at `${pkgs.path}/nixos/modules/virtualisation/build-vm.nix`).
+You can extend it either by adding NixOS modules configuring the virtual machine or by adding certain arguments to the script.
+This won't be an exhaustive list of niceties as it involves a script that may change but here's some things you can do.
+
+* You can pass the `SHARED_DIR` environment variable to add a directory to be shared from the host and the guest.
+This is useful for testing out spontaneous changes as if you're booting into the system itself.
+
+* You can pass additional arguments as if you're using `qemu-*` utilities which would be useful for changing graphical drivers and all that jazz.

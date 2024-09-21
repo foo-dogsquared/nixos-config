@@ -2,7 +2,7 @@
 
 {
   # The main star of the show.
-  plugins.neorg.enable = true;
+  plugins.neorg.enable = false;
 
   # Set it up, set it up, set it up.
   plugins.neorg.extraOptions = {

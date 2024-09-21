@@ -3,7 +3,6 @@
 
 let
   cfg = config.suites.desktop;
-  nixosCfg = attrs.nixosConfig;
 in
 {
   options.suites.desktop = {
@@ -14,7 +13,7 @@ in
       enable = lib.mkEnableOption "installations of audio-related apps";
       pipewire.enable = lib.mkOption {
         type = lib.types.bool;
-        default = nixosCfg.services.pipewire.enable or false;
+        default = attrs.nixosConfig.services.pipewire.enable or false;
         description = ''
           Enable whether to install Pipewire-related applications.
 
@@ -44,7 +43,7 @@ in
       ]
       ++ (
         let
-          hasBlenderNixOSModule = nixosCfg.programs.blender.enable or false;
+          hasBlenderNixOSModule = attrs.nixosConfig.programs.blender.enable or false;
         in
         lib.optional (!hasBlenderNixOSModule) pkgs.blender
       );
@@ -54,15 +53,14 @@ in
       home.packages = with pkgs; [
         audacity # EGADS!!!
         musescore # You won't find muses to score, only music: a common misconception.
-        #zrythm # The freer FL Studio (if you're sailing by the high seven seas).
+        zrythm # The freer FL Studio (if you're sailing by the high seven seas).
         supercollider # Not to be confused with the other Super Collider.
         sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
-
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
       ]
       ++ (
         let
-          hasDesktopSuiteEnabled = nixosCfg.suites.desktop.enable or false;
+          hasDesktopSuiteEnabled = attrs.nixosConfig.suites.desktop.enable or false;
         in
         lib.optionals hasDesktopSuiteEnabled (with pkgs; [
           yabridge # Building bridges to Windows and Linux audio tools.
@@ -184,7 +182,6 @@ in
       home.packages = with pkgs; [
         dino # Some modern chat client featuring a dinosaur mascot for what could be considered a dinosaur.
         foliate # The prettier PDF viewer (if you're OK with a mixed bag of GTK3+GTK4 apps).
-        thunderbird # Email and web feed checks.
         languagetool # You're personal assistant for proper grammar,
         vale # Elevate your fanfics to a frivolously higher caliber!
       ];

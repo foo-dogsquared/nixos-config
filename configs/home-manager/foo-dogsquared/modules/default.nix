@@ -8,16 +8,19 @@
     ./programs/doom-emacs.nix
     ./programs/email.nix
     ./programs/git.nix
+    ./programs/jujutsu.nix
     ./programs/keys.nix
     ./programs/nixvim
-    ./programs/research.nix
+    ./programs/custom-homepage.nix
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
     ./programs/vs-code.nix
+    ./services/backup
 
     ./setups/desktop.nix
     ./setups/development.nix
     ./setups/fonts.nix
     ./setups/music.nix
+    ./setups/research.nix
   ];
 }

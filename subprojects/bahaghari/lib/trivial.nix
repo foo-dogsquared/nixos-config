@@ -160,4 +160,71 @@ rec {
   */
   clamp = min: max: value:
     lib.min max (lib.max min value);
+
+  /* Given a value, check if it's a number type.
+
+     Type: isNumber :: Number -> bool
+
+     Example:
+       isNumber 3.0
+       => true
+
+       isNumber 653
+       => true
+
+       isNumber true
+       => false
+  */
+  isNumber = v:
+    lib.isInt v || lib.isFloat v;
+
+  /* Given a Nix number, force it to be a floating value.
+
+     Type: toFloat :: Number -> Float
+
+     Example:
+       toFloat 5
+       => 5.0
+
+       toFloat 59.0
+       => 59.0
+  */
+  toFloat = x:
+    1.0 * x;
+
+  /* Given an initial range of integers, scale the given number with its own
+     set of range.
+
+     Type: scale :: Attrs -> Number -> Number
+
+     Example:
+       scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 4
+       => 68
+
+       scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } (-4)
+       => -68
+
+       scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 15
+       => 255
+  */
+  scale = { inMin, inMax, outMin, outMax }: v:
+    ((v - inMin) * (outMax - outMin)) / ((inMax - inMin) + outMin);
+
+  /* Returns a null value if the condition fails. Otherwise, returns the given
+     value `as`.
+
+     Type: optionalNull :: Bool -> Any -> Any
+
+     Example:
+      optionalNull true "HELLO"
+      => "HELLO"
+
+      optionalNull (null != null) "HELLO"
+      => null
+  */
+  optionalNull = cond: as:
+    if cond then
+      as
+    else
+      null;
 }

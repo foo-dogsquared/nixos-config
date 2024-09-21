@@ -1,0 +1,3 @@
+{
+  ludusavi-basic = ./basic.nix;
+}

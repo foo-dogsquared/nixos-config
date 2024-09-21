@@ -7,7 +7,7 @@ in
   options.plugins.dressing-nvim = {
     enable = lib.mkEnableOption "dressing.nvim configuration";
 
-    package = helpers.mkPackageOption "dressing.nvim" pkgs.vimPlugins.dressing-nvim;
+    package = helpers.mkPluginPackageOption "dressing.nvim" pkgs.vimPlugins.dressing-nvim;
 
     settings = lib.mkOption {
       type = with lib.types; attrsOf anything;

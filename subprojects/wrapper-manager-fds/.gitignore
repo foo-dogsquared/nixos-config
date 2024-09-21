@@ -1,0 +1,6 @@
+# The typical output name for Nix builds.
+result*
+
+### direnv ###
+.direnv
+.envrc

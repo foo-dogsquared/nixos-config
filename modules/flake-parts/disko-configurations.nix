@@ -9,7 +9,7 @@
         description = ''
           A set of [disko](https://github.com/nix-community/disko)
           configurations readily available as part of the flake output to be
-          used by {program}`disko`. Could be useful as backup initialization
+          used by {command}`disko`. Could be useful as backup initialization
           scripts for individual storage drives.
         '';
       };

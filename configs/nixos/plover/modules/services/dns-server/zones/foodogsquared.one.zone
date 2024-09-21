@@ -1,0 +1,77 @@
+; This is trying to be discrete with certain information. This should be copied
+; and replaced with more confidential information somewhere.
+$TTL 12h
+$ORIGIN foodogsquared.one.
+
+@	3600	IN	SOA	ns1 hostmaster (
+				2024091701 	; serial number
+				1h		; refresh
+				15m		; update retry
+				3w		; expiry
+				3h		; nx = nxdomain ttl
+			)
+	3600	IN	NS	ns1.first-ns.de.
+	3600	IN	NS	robotns2.second-ns.de.
+	3600	IN	NS	robotns3.second-ns.com.
+
+; Setting up the mail-related DNS entries.
+; https://mxroutedocs.com/
+@	IN	MX	10 heracles.mxrouting.net.
+	IN	MX	20 heracles-relay.mxrouting.net.
+	IN	TXT	"v=spf1 include:mxlogin.com -all"
+
+; Protect the validity of my emails sent by me!!!!
+x._domainkey	3600	IN	TXT	"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyLlrgdsO4jLncMoGAowlE14oB9R2ESxNLRBtkzc24LOPJ1CwEIE+5AHZd+ZRMwiD7fdXcyCH7/E1BRXWT+TtLnKnBgf5I0z6EbPqiPPb6nmpDWrbZzA2mdKetAKz0kFJC8oYK7lQF7Bdh57y/HWksoH6yjl1E88m8tEQ/thlyABGjqzV+txgmc1BryFu23KasqI2c4We/KgvsoSSAaUHkjpAMCuJck/P0G9mJWyTHrnZN2gCotyenLBZew0BIbiA2XYp6dQW4sU+MawfZ0E1KA0lem0SRYCB+sGD248uj4xVo9sIiCVyO9EQXy/YCZTeuTQHf1+QeFzI82vIrlv63QIDAQAB"
+
+; Protect my domain email from spoofing.
+_dmarc	400	IN	TXT	"v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one;ruf=mailto:admin@foodogsquared.one"
+
+
+
+; Keybase verification key.
+@	3600	IN	TXT	#keybaseVerificationKey#
+
+; This will make PGP clients find my public key for the email.
+_hkps._tcp	IN	SRV	1 1 443 pgp.mailbox.org.
+
+; Email clients autoconfiguration. Useful for email clients like Thunderbird.
+autoconfig	IN	CNAME	mailbox.org.
+_autodiscover._tcp	IN	SRV	0 0 443 mailbox.org.
+
+; My websites that are deployed by somewhere else.
+@	IN	A	75.2.60.5
+www	IN	CNAME	foodogsquared.netlify.app.
+wiki	IN	CNAME	foodogsquared-wiki.netlify.app.
+
+; Public-facing services from this server. Just remember to increment the
+; serial number once the public IPs changes. PLEEEEEEEEEEEAAAAAAAAASE!
+plover	IN	A	@ploverWANIPv4@
+        IN	AAAA	@ploverWANIPv6@
+
+ns1     IN      A       @ploverWANIPv4@
+        IN      AAAA    @ploverWANIPv6@
+
+auth	IN	CNAME	plover
+pass	IN	CNAME	plover
+code	IN	CNAME	plover
+vpn	IN	CNAME	plover
+mux	IN	CNAME	plover
+vouch	IN	CNAME	plover
+
+postgres	IN	CNAME	plover
+monitoring	IN	CNAME	plover
+
+; Other things.
+_github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709
+
+; Setting up SendGrid.
+; This is for rewriting tracking links to my domain.
+url2871	IN	CNAME	sendgrid.net.
+30339354	IN	CNAME	sendgrid.net.
+
+; This is for SendGrid sender authentication.
+em1172	IN	CNAME	u30339354.wl105.sendgrid.net.
+s1._domainkey	IN	CNAME	s1.domainkey.u30339354.wl105.sendgrid.net.
+s2._domainkey	IN	CNAME	s2.domainkey.u30339354.wl105.sendgrid.net.
+
+; vim: expandtab! tabstop=8 shiftwidth=8 filetype=dns

@@ -9,11 +9,16 @@
       "required": true,
       "properties": {
         "extraArgs": {
+          "$comment": "Extra arguments to be passed to the associated service.",
           "type": "array",
           "items": {
             "type": "string"
           },
           "uniqueItems": true
+        },
+        "downloadPath": {
+          "$comment": "Job-specific download path of the associated service.",
+          "type": "string"
         },
         "subscriptions": {
           "$comment": "While it is easy to think this could be an object, some exports and applications allow the data to have the same name but points to different URLs. For example, NewPipe has support for multiple services other than YouTube which the same creator could have accounts on multiple platforms. Overriding it would be troublesome in case I want to follow the same creator on multiple platforms.",
@@ -28,11 +33,16 @@
                 "type": "string"
               }
             },
-            "required": [ "name", "url" ]
+            "required": [
+              "name",
+              "url"
+            ]
           }
         }
       },
-      "required": [ "subscriptions" ]
+      "required": [
+        "subscriptions"
+      ]
     }
   }
 }

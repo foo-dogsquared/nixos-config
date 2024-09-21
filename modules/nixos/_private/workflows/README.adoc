@@ -13,14 +13,13 @@ This is where modules will define how you're going to interact with the computer
 
 The following list is the summary which can also serve as a guideline to developing a workflow module.
 
-* All workflow modules should be under `workflows.workflows.<name>` namespace with an `enable` option.
+* All workflow modules should be enabled through `workflows.enable` option containing the names of the workflows to be used.=
 
-* Due to the bigger scope and importance of this module, there is a limit where you can only enable one theme at a time.
-You can disable this with `config.workflows.disableLimit` set to `true`.
+* While there is no convention for naming workflow modules, they are mostly expected to be enabled with a reverse DNS-like scheme (e.g., `workflows.enable = [ "one.foodogsquared.MoseyBranch" ]`).
+This is mainly to easily create custom desktop sessions where they are typically named this way.
 
-* Custom themes should be defined in `config.workflows.workflows` attribute (e.g., `options.workflows.workflows.a-happy-gnome`, `options.workflows.workflows.simple-way`).
-This makes up for a namespace entirely dedicated for setting themes.
+* Custom themes should be configured in `workflows.workflows` namespace (e.g., `options.workflows.workflows.a-happy-gnome`, `options.workflows.workflows.simple-way`).
+This is expected to contain options specific for that workflow module such as an extra list of applications to be installed, additional extensions, and hardware-specific options.
 
-* Using link:../profiles[profiles] are heavily discouraged and it is better assumed to design and create workflows as if profiles are not imported.
-This is because profiles are not exported in the flake output.
-If it's something you have to use (e.g., setting up i18n configuration), you have to conditionally set a profile as seen from link:../profiles/README.adoc[../profiles/README.adoc].
+* No configuring display managers or localization.
+This is expected more to be configured by the user themselves and it makes the workflow modules more composable.

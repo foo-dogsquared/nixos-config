@@ -8,13 +8,16 @@
     "${modulesPath}/profiles/headless.nix"
   ];
 
-  # So does sounds...
+  # Sounds? We don't need in this void world of OURS!
   sound.enable = lib.mkDefault false;
 
-  # ...and Bluetooth because it's so insecure.
+  # Bluetooth is so 2000s, my wireless earbuds are scratching all to hell.
   hardware.bluetooth.enable = lib.mkDefault false;
 
-  # And other devices...
+  # You can draw from your imagination instead.
   hardware.opentabletdriver.enable = lib.mkDefault false;
+
+  # Printers? In our godforsaken headless setups. (Ok there are servers that
+  # handle this but you know...)
   services.printing.enable = lib.mkDefault false;
 }

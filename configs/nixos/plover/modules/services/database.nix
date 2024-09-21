@@ -14,38 +14,20 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
+      state.ports.postgresql.value = 5432;
+
       services.postgresql = {
         enable = true;
         package = pkgs.postgresql_16;
         enableTCPIP = true;
-
-        # Create per-user schema as documented from Usage Patterns. This is to make
-        # use of the secure schema usage pattern they encouraged to do.
-        #
-        # Now, you just have to keep in mind about applications making use of them.
-        # Most of them should have the setting to set the schema to be used. If
-        # not, then screw them (or just file an issue and politely ask for the
-        # feature).
-        initialScript =
-          let
-            # This will be run once anyways so it is acceptable to create users
-            # "forcibly".
-            perUserSchemas = lib.lists.map
-              (user: ''
-                CREATE USER ${user.name};
-                CREATE SCHEMA AUTHORIZATION ${user.name};
-              '')
-              config.services.postgresql.ensureUsers;
-          in
-          pkgs.writeText "plover-initial-postgresql-script" ''
-            ${lib.concatStringsSep "\n" perUserSchemas}
-          '';
 
         settings =
           let
             credsDir = path: "/run/credentials/postgresql.service/${path}";
           in
           {
+            port = config.state.ports.postgresql.value;
+
             # Still doing the secure schema usage pattern.
             search_path = ''"$user"'';
 

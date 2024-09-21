@@ -1,13 +1,35 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, options, pkgs, ... }:
 
 let
   cfg = config.services.yt-dlp;
 
-  serviceLevelArgs = lib.escapeShellArgs cfg.extraArgs;
-
   jobUnitName = name: "yt-dlp-archive-service-${name}";
 
-  jobType = { name, config, options, ... }: {
+  metadataType = { lib, ... }: {
+    options = {
+      path = lib.mkOption {
+        type = with lib.types; nullOr path;
+        description = ''
+          Associated path of the metadata to be downloaded. This will be passed to
+          the appropriate `--paths` option of yt-dlp.
+        '';
+        default = null;
+        example = "/var/yt-dlp/thumbnails";
+      };
+
+      output = lib.mkOption {
+        type = with lib.types; nullOr str;
+        description = ''
+          Associated output name for the metadata. This is passed to the
+          appropriate `--output` option of yt-dlp.
+        '';
+        default = null;
+        example = "%(title)s.%(ext)s";
+      };
+    };
+  };
+
+  jobType = { name, config, ... }: {
     options = {
       urls = lib.mkOption {
         type = with lib.types; listOf str;
@@ -35,18 +57,30 @@ let
         example = "*-*-3/4";
       };
 
-      extraArgs = lib.mkOption {
-        type = with lib.types; listOf str;
-        description =
-          "Job-specific extra arguments to be passed to the {command}`yt-dlp`.";
-        default = [ ];
-        example = lib.literalExpression ''
-          [
-            "--date" "today"
-          ]
+      extraArgs = options.services.yt-dlp.extraArgs;
+
+      downloadPath = options.services.yt-dlp.downloadPath // {
+        default = cfg.downloadPath;
+        description = "Job-specific download path of the service.";
+      };
+
+      metadata = options.services.yt-dlp.metadata // {
+        default = cfg.metadata;
+        description = ''
+          Per-job set of metadata with their associated options.
         '';
       };
     };
+
+    config.extraArgs =
+      let
+        mkPathArg = n: v:
+          lib.optionals (v.output != null) [ "--output" "${n}:${v.output}" ]
+          ++ lib.optionals (v.path != null) [ "--paths" "${n}:${v.path}" ];
+      in
+        cfg.extraArgs
+        ++ (lib.lists.flatten (lib.mapAttrsToList mkPathArg config.metadata))
+        ++ [ "--paths" config.downloadPath ];
   };
 in
 {
@@ -63,25 +97,39 @@ in
         "pkgs.yt-dlp.override { phantomjsSupport = true; }";
     };
 
-    archivePath = lib.mkOption {
-      type = lib.types.str;
+    downloadPath = lib.mkOption {
+      type = lib.types.path;
+      description = "Download path of the service to be given per job (unless overridden).";
+      default = "/var/yt-dlp";
+      example = "/srv/Videos";
+    };
+
+    metadata = lib.mkOption {
+      type = with lib.types; attrsOf (submodule metadataType);
       description = ''
-        The location of the archive to be downloaded. Must be an absolute path.
+        Global set of metadata with their appropriate options to be set.
       '';
-      example = "/var/archives/yt-dlp-service";
+      default = { };
+      example = {
+        thumbnail = {
+          path = "/var/yt-dlp/thumbnails";
+          output = "%(uploader,artist,creator,Unknown)s/%(title)s.%(ext)s";
+        };
+        infojson.path = "/var/yt-dlp/infojson";
+      };
     };
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       description =
-        "List of arguments to be passed to {command}`yt-dlp`.";
-      default = [ "--download-archive videos" ];
+        "Global list of arguments to be passed to each yt-dlp job.";
+      default = [ ];
       example = lib.literalExpression ''
         [
           "--verbose"
-          "--download-archive" "''${cfg.archivePath}/download-list"
           "--concurrent-fragments" "2"
           "--retries" "20"
+          "--download-archive" "videos"
         ]
       '';
     };
@@ -114,43 +162,56 @@ in
     };
   };
 
-  # There's no need to go to the working directory since yt-dlp has the
-  # `--paths` flag.
   config = lib.mkIf cfg.enable {
     systemd.services = lib.mapAttrs'
-      (name: value:
-        let
-          jobLevelArgs = lib.escapeShellArgs value.extraArgs;
-        in
+      (name: job:
         lib.nameValuePair (jobUnitName name) {
+          inherit (job) startAt;
           wantedBy = [ "multi-user.target" ];
+          wants = [ "network-online.target" ];
+          after = [ "network-online.target" ];
           description = "yt-dlp archive job for group '${name}'";
           documentation = [ "man:yt-dlp(1)" ];
           enable = true;
-          path = [ cfg.package pkgs.coreutils ];
-          preStart = ''
-            mkdir -p ${lib.escapeShellArg cfg.archivePath}
-          '';
           script = ''
-            yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
-                   ${lib.escapeShellArgs value.urls} --paths ${lib.escapeShellArg cfg.archivePath}
+            ${lib.getExe' cfg.package "yt-dlp"} \
+              ${lib.escapeShellArgs job.extraArgs} \
+              ${lib.escapeShellArgs job.urls}
           '';
-          startAt = value.startAt;
           serviceConfig = {
+            ReadWritePaths =
+              [ job.downloadPath ]
+              ++ lib.lists.flatten (lib.mapAttrsToList (n: v: lib.optionals (v.path != null) v.path) job.metadata);
+
             LockPersonality = true;
             NoNewPrivileges = true;
+            PrivateDevices = true;
             PrivateTmp = true;
             PrivateUsers = true;
-            PrivateDevices = true;
-            ProtectControlGroups = true;
+            PrivateMounts = true;
             ProtectClock = true;
+            ProtectControlGroups = true;
+            ProtectHome = true;
             ProtectKernelLogs = true;
             ProtectKernelModules = true;
             ProtectKernelTunables = true;
+            ProtectSystem = "full";
+            RemoveIPC = true;
             StandardOutput = "journal";
             StandardError = "journal";
             SystemCallFilter = "@system-service";
             SystemCallErrorNumber = "EPERM";
+
+            CapabilityBoundingSet = lib.mkDefault [ ];
+            AmbientCapabilities = lib.mkDefault [ ];
+            RestrictAddressFamilies = [
+              "AF_LOCAL"
+              "AF_INET"
+              "AF_INET6"
+            ];
+            RestrictNamespaces = true;
+            RestrictSUIDGUID = true;
+            MemoryDenyWriteExecute = true;
           };
         })
       cfg.jobs;

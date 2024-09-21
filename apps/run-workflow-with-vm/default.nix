@@ -2,8 +2,6 @@
 , lib
 , meson
 , ninja
-, nix
-, makeWrapper
 , inputs ? [ ]
 }:
 
@@ -16,16 +14,10 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs = [
     meson
     ninja
-    makeWrapper
   ];
 
   preConfigure = ''
     mesonFlagsArray+=("-Dinputs=[${lib.concatStringsSep "," inputs}]")
-  '';
-
-  postInstall = ''
-    wrapProgram $out/bin/${finalAttrs.pname} \
-      --prefix PATH ':' '${lib.makeBinPath [ nix ]}'
   '';
 
   meta = with lib; {

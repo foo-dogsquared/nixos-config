@@ -6,7 +6,7 @@
 , python3Packages
 , glib
 , gobject-introspection
-, wrapGAppsHook
+, wrapGAppsHook3
 , gnome
 }:
 
@@ -23,7 +23,7 @@ python3Packages.buildPythonPackage rec {
   format = "other";
   strictDeps = false;
   dontWrapGApps = true;
-  nativeBuildInputs = [ wrapGAppsHook autoreconfHook gobject-introspection ];
+  nativeBuildInputs = [ wrapGAppsHook3 autoreconfHook gobject-introspection ];
   propagatedBuildInputs = [ recoll ]
     ++ (with python3Packages; [ pydbus pygobject3 ]);
   buildInputs = [ glib ];

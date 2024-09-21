@@ -1,0 +1,24 @@
+baseURL = 'https://foo-dogsquared.github.io/wrapper-manager-fds'
+defaultContentLanguage = 'en'
+title = "wrapper-manager-fds"
+timeZone = "UTC"
+
+[params]
+toc = true
+
+[security.exec]
+allow = [
+  "^go$",
+  "^asciidoctor$",
+]
+osEnv = [
+  '^LAST_COMMIT_DATE$',
+  '^PATH$',
+  '^GOPATH$',
+  '^GOPROXY$',
+  '^HTTP_PROXY$',
+  '^HTTPS_PROXY$',
+]
+
+[security.funcs]
+getenv = [ "^LAST_COMMIT_DATE$" ]

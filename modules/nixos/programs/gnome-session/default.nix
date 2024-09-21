@@ -8,25 +8,49 @@
 let
   cfg = config.programs.gnome-session;
 
+  # The gnome-session config files uses one from GLib. See the following link
+  # at <https://docs.gtk.org/glib/struct.KeyFile.html> for details about the
+  # keyfile formatting and possibly the Desktop Entry specification at
+  # <https://freedesktop.org/wiki/Specifications/desktop-entry-spec>.
+  glibKeyfileFormat = {
+    type = with lib.types;
+      let
+        valueType = oneOf [
+          bool
+          float
+          int
+          str
+          (listOf valueType)
+        ] // {
+          description = "GLib keyfile atom (bool, int, float, string, or a list of the previous atoms)";
+        };
+      in
+        attrsOf (attrsOf valueType);
+
+    generate = name: value:
+      pkgs.callPackage ({ writeText }:
+        writeText name (lib.generators.toDconfINI value));
+  };
+
   # The bulk of the work. Pretty much the main purpose of this module.
   sessionPackages = lib.mapAttrsToList
     (_: session:
       let
-        gnomeSession = ''
-          [GNOME Session]
-          Name=${session.fullName} session
-          RequiredComponents=${lib.concatStringsSep ";" session.requiredComponents};
-        '';
+        gnomeSession = glibKeyfileFormat.generate "session-${session.name}" session.settings;
 
+        # For now, we set this as a static template since there's not much
+        # things to configure especially for a desktop session anyways.
         displaySession = ''
           [Desktop Entry]
-          Name=@fullName@
+          Name=${session.fullName}
           Comment=${session.description}
           Exec="@out@/libexec/${session.name}-session"
           Type=Application
-          DesktopNames=${lib.concatStringsSep ";" session.desktopNames};
+          DesktopNames=${lib.concatStringsSep ";" session.desktopNames}
         '';
 
+        # Similarly to the desktop session template, this is also set as a
+        # static template.
         sessionScript = ''
           #!${pkgs.runtimeShell}
 
@@ -39,61 +63,24 @@ let
           ${lib.getExe' cfg.package "gnome-session"} ${lib.escapeShellArgs session.extraArgs}
         '';
 
-        displayScripts =
-          let
-            hasMoreDisplays = protocol: lib.optionalString (lib.length session.display > 1) "fullName='${session.fullName} (${protocol})'";
-          in
-          {
-            wayland = ''
-              (
-                DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${session.name}.desktop"
-                install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
-                ${hasMoreDisplays "Wayland"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
-              )
-            '';
-            x11 = ''
-              (
-                DISPLAY_SESSION_FILE="$out/share/xsessions/${session.name}.desktop"
-                install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
-                ${hasMoreDisplays "X11"} substituteAllInPlace "$DISPLAY_SESSION_FILE"
-              )
-            '';
-          };
-
-        installDesktopSessions = builtins.map
-          (display:
-            displayScripts.${display})
-          session.display;
-
-        installDesktops =
+        installDesktopFiles =
           lib.mapAttrsToList
             (name: component:
               let
-                scriptName = "${session.name}-${component.name}-script";
-
-                # There's already a lot of bad bad things in this world, we
-                # don't to add more of it here (only a fraction of it, though).
-                scriptPackage = pkgs.writeShellApplication {
-                  name = scriptName;
-                  text = component.script;
-                };
-
-                script = "${scriptPackage}/bin/${scriptName}";
-                desktopConfig = lib.mergeAttrs component.desktopConfig { exec = script; };
-                desktopPackage = pkgs.makeDesktopItem desktopConfig;
+                desktopPackage = pkgs.makeDesktopItem component.desktopConfig;
               in
               ''
                 install -Dm0644 ${desktopPackage}/share/applications/*.desktop -t $out/share/applications
               '')
             session.components;
       in
-      pkgs.runCommandLocal "${session.name}-desktop-session-files"
+      pkgs.runCommand "${session.name}-desktop-session-files"
         {
           env = {
             inherit (session) fullName;
           };
           inherit displaySession gnomeSession sessionScript;
-          passAsFile = [ "displaySession" "gnomeSession" "sessionScript" ];
+          passAsFile = [ "displaySession" "sessionScript" ];
           passthru.providedSessions = [ session.name ];
         }
         ''
@@ -102,12 +89,13 @@ let
           substituteAllInPlace "$SESSION_SCRIPT"
 
           GNOME_SESSION_FILE="$out/share/gnome-session/sessions/${session.name}.session"
-          install -Dm0644 "$gnomeSessionPath" "$GNOME_SESSION_FILE"
-          substituteAllInPlace "$GNOME_SESSION_FILE"
+          install -Dm0644 "$gnomeSession" "$GNOME_SESSION_FILE"
 
-          ${lib.concatStringsSep "\n" installDesktopSessions}
+          DISPLAY_SESSION_FILE="$out/share/wayland-sessions/${session.name}.desktop"
+          install -Dm0644 "$displaySessionPath" "$DISPLAY_SESSION_FILE"
+          substituteAllInPlace "$DISPLAY_SESSION_FILE"
 
-          ${lib.concatStringsSep "\n" installDesktops}
+          ${lib.concatStringsSep "\n" installDesktopFiles}
         ''
     )
     cfg.sessions;
@@ -119,20 +107,20 @@ let
           pathToUnit serviceToUnit targetToUnit timerToUnit socketToUnit;
 
         mkSystemdUnits = name: component: {
-          "${component.id}.service" = serviceToUnit component.serviceUnit;
-          "${component.id}.target" = targetToUnit component.targetUnit;
-        } // lib.optionalAttrs (component.socketUnit != null) {
-          "${component.id}.socket" = socketToUnit component.socketUnit;
-        } // lib.optionalAttrs (component.timerUnit != null) {
-          "${component.id}.timer" = timerToUnit component.timerUnit;
-        } // lib.optionalAttrs (component.pathUnit != null) {
-          "${component.id}.path" = pathToUnit component.pathUnit;
+          "${component.id}.service" = serviceToUnit component.systemd.serviceUnit;
+          "${component.id}.target" = targetToUnit component.systemd.targetUnit;
+        } // lib.optionalAttrs (component.systemd.socketUnit != null) {
+          "${component.id}.socket" = socketToUnit component.systemd.socketUnit;
+        } // lib.optionalAttrs (component.systemd.timerUnit != null) {
+          "${component.id}.timer" = timerToUnit component.systemd.timerUnit;
+        } // lib.optionalAttrs (component.systemd.pathUnit != null) {
+          "${component.id}.path" = pathToUnit component.systemd.pathUnit;
         };
 
         componentsUnits = lib.concatMapAttrs mkSystemdUnits session.components;
       in
       componentsUnits // {
-        "gnome-session@${session.name}.target" = targetToUnit session.targetUnit;
+        "gnome-session@${session.name}.target" = targetToUnit session.systemd.targetUnit;
       }
     )
     cfg.sessions;
@@ -152,8 +140,9 @@ in
 
     sessions = lib.mkOption {
       type = with lib.types; attrsOf (submoduleWith {
-        specialArgs = { inherit utils; };
+        specialArgs = { inherit utils glibKeyfileFormat pkgs; };
         modules = [ ./submodules/session-type.nix ];
+        shorthandOnlyDefinesConfig = true;
       });
       description = ''
         A set of desktop sessions to be created with

@@ -1,0 +1,8 @@
+= Utilities
+:toc:
+
+Bahaghari separates its function set as either part of the library subset or utilities subset patterned after the NixOS environment of adding `utils` module argument.
+The main difference between these two is the utilities subset depends on the environment configuration (for example, using `config.bahaghari.tinted-theming.schemes`) while those in library subset does not.
+We just separate these for easier maintenance.
+
+Just like the library subset, these are expected to be included as a module argument modularly so there should be no functions that generates Nix modules or anything that requires `bahagariUtils` to be fully evaluated (such as putting it in `imports` top-level module attribute).

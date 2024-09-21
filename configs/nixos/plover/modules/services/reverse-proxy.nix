@@ -83,5 +83,15 @@ in
         nginx-bad-request.settings = { enabled = true; };
       };
     })
+
+    (lib.mkIf hostCfg.services.monitoring.enable {
+      # Requiring this for Prometheus being able to monitor my services.
+      services.nginx.statusPage = true;
+
+      services.prometheus.exporters = {
+        nginx.enable = true;
+        nginxlog.enable = true;
+      };
+    })
   ]);
 }

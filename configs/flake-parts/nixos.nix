@@ -10,13 +10,17 @@
     configs = {
       # The main desktop.
       ni = {
+        nixpkgs.branch = "nixos-unstable";
         systems = [ "x86_64-linux" ];
         formats = null;
         modules = [
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
+          inputs.self.nixosModules.wrapper-manager
+          { wrapper-manager.documentation.manpage.enable = true; }
         ];
-        homeManagerUsers = {
+        home-manager = {
+          branch = "home-manager-unstable";
           nixpkgsInstance = "global";
           users.foo-dogsquared = {
             userConfig = {
@@ -42,6 +46,8 @@
 
       # A remote server.
       plover = {
+        nixpkgs.branch = "nixos-unstable";
+        home-manager.branch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];
         formats = null;
         domain = "foodogsquared.one";
@@ -59,6 +65,8 @@
       # TODO: Remove extra newlines that are here for whatever reason.
       #{{{
       void = {
+        nixpkgs.branch = "nixos-unstable";
+        home-manager.branch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];
         formats = [ "vm" ];
       };
@@ -66,13 +74,15 @@
 
       # The barely customized non-graphical installer.
       bootstrap = {
+        nixpkgs.branch = "nixos-unstable-small";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso" ];
-        nixpkgsBranch = "nixos-unstable-small";
       };
 
       # The barely customized graphical installer.
       graphical-installer = {
+        nixpkgs.branch = "nixos-unstable";
+        home-manager.branch = "home-manager-unstable";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso-graphical" ];
         diskoConfigs = [ "external-hdd" ];
@@ -81,11 +91,15 @@
 
       # The WSL system (that is yet to be used).
       winnowing = {
+        nixpkgs = {
+          branch = "nixos-unstable";
+          overlays = [
+            inputs.neovim-nightly-overlay.overlays.default
+          ];
+        };
+        home-manager.branch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];
         formats = null;
-        overlays = [
-          inputs.neovim-nightly-overlay.overlays.default
-        ];
         modules = [
           # Well, well, well...
           inputs.nixos-wsl.nixosModules.default
@@ -105,6 +119,15 @@
       defaultNixConf
       ../../modules/nixos/profiles/generic.nix
       ../../modules/nixos/profiles/nix-conf.nix
+
+      {
+        config.documentation.nixos = {
+          extraModules = [
+            ../../modules/nixos
+            ../../modules/nixos/_private
+          ];
+        };
+      }
     ];
   };
 

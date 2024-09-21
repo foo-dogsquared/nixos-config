@@ -10,6 +10,8 @@ in
     lib.mkEnableOption "a set of usual desktop productivity services";
 
   config = lib.mkIf cfg.enable {
+    state.ports.activitywatch.value = 5600;
+
     # Install all of the desktop stuff.
     suites.desktop = {
       enable = true;
@@ -29,6 +31,7 @@ in
     # Self-inflicted telemetry.
     services.activitywatch = {
       enable = true;
+      settings.server.port = config.state.ports.activitywatch.value;
       watchers = {
         aw-watcher-afk.package = pkgs.activitywatch;
         aw-watcher-window.package = pkgs.activitywatch;
@@ -60,7 +63,7 @@ in
         topdirs = "~/Downloads ~/Documents ~/library";
         "skippedNames+" =
           let
-            inherit (config.state) ignoreDirectories;
+            inherit (config.state.paths) ignoreDirectories;
           in
           lib.concatStringsSep " " ignoreDirectories;
 
@@ -72,6 +75,11 @@ in
           "skippedNames+" = "target result";
         };
       };
+    };
+
+    users.foo-dogsquared.programs.custom-homepage.sections.services.links = lib.singleton {
+      url = "http://localhost:${builtins.toString config.state.ports.activitywatch.value}";
+      text = "Telemetry server";
     };
   };
 }

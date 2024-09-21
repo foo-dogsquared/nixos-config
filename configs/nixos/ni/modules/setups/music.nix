@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.ni;
@@ -9,18 +9,31 @@ in
     lib.mkEnableOption "music streaming and organizing setup";
 
   config = lib.mkIf cfg.enable {
+    state.ports = rec {
+      gonic = {
+        value = 4747;
+        protocols = [ "tcp" ];
+        openFirewall = true;
+      };
+      uxplay = {
+        value = 10001;
+        openFirewall = true;
+      };
+      uxplayClients = {
+        value = foodogsquaredLib.nixos.makeRange' uxplay.value 10;
+        openFirewall = true;
+      };
+    };
+
     # My portable music streaming server.
     services.gonic = {
       enable = true;
       settings = rec {
-        listen-addr = "localhost:4747";
+        listen-addr = "localhost:${builtins.toString config.state.ports.gonic.value}";
         cache-path = "/var/cache/gonic";
         music-path =
           [
             "/srv/Music"
-          ]
-          ++ lib.optionals config.suites.filesystem.setups.external-hdd.enable [
-            "/mnt/external-storage/Music"
           ];
         podcast-path = "${cache-path}/podcasts";
         playlists-path = "${cache-path}/playlists";
@@ -30,6 +43,15 @@ in
         scan-interval = 1;
         scan-at-start-enabled = true;
       };
+    };
+
+    # My AirPlay mirroring server.
+    services.uxplay = {
+      enable = true;
+      extraArgs = [
+        "-p" (builtins.toString config.state.ports.uxplay.value)
+        "-reset" "30"
+      ];
     };
   };
 }

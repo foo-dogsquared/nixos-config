@@ -1,6 +1,10 @@
 { pkgs, lib, self }:
 
 let
+  # The typical rounding procedure for our results. 10 decimal places should be
+  # enough to test accuracy at least for a basic math subset like this.
+  round' = self.math.round' (-6);
+
   customOctalGlyphs = {
     "0" = "A";
     "1" = "B";
@@ -224,5 +228,75 @@ lib.runTests {
   testNumberClampMax = {
     expr = self.trivial.clamp 1 10 453;
     expected = 10;
+  };
+
+  testNumberScale = {
+    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 15;
+    expected = 255;
+  };
+
+  testNumberScale2 = {
+    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 4;
+    expected = 68;
+  };
+
+  testNumberScale3 = {
+    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } (-4);
+    expected = (-68);
+  };
+
+  testNumberScaleFloat = {
+    expr = self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 255;
+    expected = 1.0;
+  };
+
+  testNumberScaleFloat2 = {
+    expr = self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 127.5;
+    expected = 0.5;
+  };
+
+  testNumberScaleFloat3 = {
+    expr = round' (self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 53);
+    expected = round' 0.207843;
+  };
+
+  testIsNumber1 = {
+    expr = self.trivial.isNumber 3;
+    expected = true;
+  };
+
+  testIsNumber2 = {
+    expr = self.trivial.isNumber 4.09;
+    expected = true;
+  };
+
+  testIsNumber3 = {
+    expr = self.trivial.isNumber "HELLO";
+    expected = false;
+  };
+
+  testIsNumber4 = {
+    expr = self.trivial.isNumber true;
+    expected = false;
+  };
+
+  testOptionalNull = {
+    expr = self.trivial.optionalNull true "HELLO";
+    expected = "HELLO";
+  };
+
+  testOptionalNull2 = {
+    expr = self.trivial.optionalNull false "HELLO";
+    expected = null;
+  };
+
+  testToFloat = {
+    expr = self.trivial.toFloat 46;
+    expected = 46.0;
+  };
+
+  testToFloat2 = {
+    expr = self.trivial.toFloat 26.5;
+    expected = 26.5;
   };
 }

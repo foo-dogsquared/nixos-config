@@ -31,7 +31,7 @@ in
     # Show them hidden suckers.
     opts.list = true;
     opts.listchars = {
-      tab = "↦ *";
+      tab = "↦ ";
       trail = "·";
       nbsp = "%";
     };

@@ -1,4 +1,4 @@
-{ lib, config, pkgs, foodogsquaredModulesPath, ... }:
+{ lib, config, pkgs, foodogsquaredLib, foodogsquaredModulesPath, ... }:
 
 # Since this will be exported as an installer ISO, you'll have to keep in mind
 # about the added imports from nixos-generators. In this case, it simply adds
@@ -23,9 +23,10 @@
       system.stateVersion = "23.11";
     }
 
-    (lib.mkIf (config.formatAttr == "isoImage") {
+    (lib.mkIf (foodogsquaredLib.nixos.isFormat config "isoImage") {
       isoImage = {
         isoBaseName = config.networking.hostName;
+        edition = "minimal";
 
         squashfsCompression = "zstd -Xcompression-level 11";
 

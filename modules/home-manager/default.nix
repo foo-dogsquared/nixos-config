@@ -5,10 +5,14 @@
     ./programs/pipewire.nix
     ./programs/pop-launcher.nix
     ./programs/zed-editor.nix
+    ./programs/borgmatic.nix
     ./services/archivebox.nix
+    ./services/borgmatic.nix
     ./services/bleachbit.nix
     ./services/distant.nix
     ./services/gallery-dl.nix
+    ./services/gonic.nix
+    ./services/ludusavi.nix
     ./services/matcha.nix
     ./services/plover.nix
     ./services/yt-dlp.nix

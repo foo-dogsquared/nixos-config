@@ -10,6 +10,8 @@ in
     firefox.enable = lib.mkEnableOption "foo-dogsquared's Firefox setup";
     brave.enable = lib.mkEnableOption "foo-dogsquared's Brave setup";
     misc.enable = lib.mkEnableOption "foo-dogsquared's miscellaneous browsers setup";
+
+    plugins.firenvim.enable = lib.mkEnableOption "setting up Firenvim";
   };
 
   config = lib.mkMerge [
@@ -110,6 +112,7 @@ in
           ] ++ (with pkgs.firefox-addons; [
             get-rss-feed-url
             google-container
+            microsoft-container
             regretsreporter
             simple-translate
             sourcegraph-for-firefox
@@ -128,6 +131,8 @@ in
             # Some quality of lifes.
             "browser.search.widget.inNavBar" = true;
             "browser.search.openintab" = true;
+            "browser.startup.homepage" =
+              lib.mkIf userCfg.programs.custom-homepage.enable "file://${userCfg.programs.custom-homepage.finalPackage}/index.html";
 
             # Some privacy settings...
             "privacy.donottrackheader.enabled" = true;
@@ -195,7 +200,19 @@ in
       };
 
       # Configuring Tridactyl.
-      xdg.configFile.tridactyl.source = ../../config/tridactyl;
+      xdg.configFile."tridactyl/tridactylrc".source = pkgs.concatTextFile {
+        name = "tridactyl-config";
+        files = [
+          ../../config/tridactyl/tridactylrc
+
+          (pkgs.writeTextFile {
+            name = "tridactyl-nix-generated";
+            text = ''
+              set newtab file://${userCfg.programs.custom-homepage.finalPackage}/index.html
+            '';
+          })
+        ];
+      };
 
       # Configuring Bleachbit for Firefox cleaning.
       services.bleachbit.cleaners = [
@@ -215,7 +232,7 @@ in
     (lib.mkIf cfg.misc.enable {
       home.packages = with pkgs; [
         google-chrome
-        nyxt
+        #nyxt
       ];
 
       services.bleachbit.cleaners = [
@@ -229,5 +246,25 @@ in
         "google_chrome.vacuum"
       ];
     })
+
+    (lib.mkIf cfg.plugins.firenvim.enable
+      (let
+        supportedBrowsers = [
+          "brave"
+          "chromium"
+          "google-chrome"
+          "vivaldi"
+        ];
+        enableSupportedBrowser = acc: name: acc // {
+          programs.${name}.extensions = [
+            { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; }
+          ];
+        };
+      in
+      lib.foldl' enableSupportedBrowser { } supportedBrowsers // {
+        programs.firefox.profiles.personal.extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          firenvim
+        ];
+      }))
   ];
 }

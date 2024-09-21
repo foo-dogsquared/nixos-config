@@ -109,12 +109,20 @@ autocontain -s github\.com Work
 autocontain -s gitlab\.com Work
 autocontain -s app\.netlify\.com Work
 autocontain -s archive\.softwareheritage\.com Work
+autocontain -s sourcegraph\.com Work
 
 " So does most freelancing sites.
 autocontain -s upwork\.com Work
 autocontain -s monster\.com Work
 autocontain -s foundit\.com(\.ph?) Work
 autocontain -s fiverr\.com Work
+autocontain -s (ph\.?)linkedin\.com Work
+autocontain -s jobstreet\.com(\.ph?) Work
+autocontain -s (ph\.?)jobstreet\.com(\.ph?) Work
+
+autocontain -s mxroute\.com Work
+autocontain -s mailbox\.org Work
+autocontain -s cloud\.google\.com Work
 
 " Shopping, shopping, shopping!
 autocontain -s yelp\.com Shopping

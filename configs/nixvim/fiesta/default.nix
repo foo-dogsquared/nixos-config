@@ -1,10 +1,11 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, helpers, ... }:
 
 {
   imports = [ ./modules ];
 
   config = {
     nixvimConfigs.fiesta.setups = {
+      devenvs.enable = true;
       snippets.enable = true;
       ui.enable = true;
       completion.enable = true;
@@ -41,8 +42,7 @@
       {
         mode = "n";
         key = "<leader>bd";
-        action = "vim.cmd.bdelete";
-        lua = true;
+        action = helpers.mkRaw "vim.cmd.bdelete";
         options.desc = "Delete current buffer";
       }
     ];

@@ -68,6 +68,7 @@ in
     (lib.mkIf cfg.thunderbird.enable {
       programs.thunderbird = {
         enable = true;
+        package = pkgs.thunderbird-foodogsquared;
         profiles.personal = {
           isDefault = true;
           settings = {

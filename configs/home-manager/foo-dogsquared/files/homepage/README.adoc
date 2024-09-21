@@ -1,0 +1,33 @@
+= foodogsquared's custom homepage
+:toc:
+
+My custom homepage intended to be deployed alongside my home-manager configuration.
+In theory, you could deploy this outside of the home-manager config but that's on you (READ: anyone that is not foodogsquared) to figure out.
+It should be fairly easy to do that though since all you need is the following list of components to successfully build the website:
+
+* GNU Make for its build automation.
+This is structured in this way to make building consistent either with Nix and non-Nix'd environments.
+
+* https://gohugo.io/[Hugo] is the site generator mainly designed to be deployed with one binary.
+
+* https://foo-dogsquared.github.io/panapton[Panapton] to compile the stylesheet with my custom scheme.
+In place of this, you could use other Base16 builders but you'll have to recreate the stylesheet template for that particular builder.
+
+There are some design constraints when developing this website.
+
+* This homepage is pretty much designed to be completely possible to use entirely offline.
+As such, it has a design constraint of using less (zero as much as possible) remote resources such as a CDN.
+Usage of third-party libraries are fine as long as it is bundled nicely (we'll probably use something like https://bun.sh/[Bun] for this).
+
+* We cannot use anything within the site generator requiring a network access mostly because we're relying on the Nix which has sandboxing by default including networking isolation. footnote:[While we can remove it ourselves, it isn't really good practice.]
+As a neat side effect, it also strengthens the previous goal of keeping it as offline as possible.
+
+
+[#development]
+== Development
+
+It is recommended to set up the development environment with https://nixos.org/[Nix package manager].
+In case it isn't possible to use it, you'll have to install the following tools.
+
+* Hugo v0.130.0 and above
+* https://treefmt.com/[treefmt]

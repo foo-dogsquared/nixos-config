@@ -26,6 +26,13 @@
     };
   };
 
+  state.paths = {
+    cacheDir = "/var/cache";
+    dataDir = "/var/lib";
+    logDir = "/var/log";
+    runtimeDir = "/run";
+  };
+
   # Enable the display manager of choice.
   services.xserver.displayManager.gdm.enable = true;
 

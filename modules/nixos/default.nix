@@ -7,9 +7,13 @@
     ./programs/sessiond
     ./programs/wezterm.nix
     ./services/archivebox.nix
+    ./services/crowdsec.nix
+    ./services/ctrld.nix
     ./services/gallery-dl.nix
+    ./services/uxplay.nix
     ./services/wezterm-mux-server.nix
     ./services/vouch-proxy.nix
     ./services/yt-dlp.nix
+    ./xdg/mime-desktop-specific.nix
   ];
 }

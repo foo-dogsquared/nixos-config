@@ -1,0 +1,11 @@
+= foodogsquared-wrapper-manager-extra-modules(5)
+:doctype: manpage
+:manmanual: foodogsquared's wrapper-manager extra module
+:mansource: foodogsquared's wrapper-manager extra module
+
+
+== Name
+
+wrapper-manager-foodogsquared-modules.nix - foodogsquared's extra *wrapper-manager.nix(5)* modules
+
+== Options

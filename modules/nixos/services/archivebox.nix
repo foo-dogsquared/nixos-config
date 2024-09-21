@@ -46,7 +46,8 @@ let
       (jobUnitName name)
       {
         description = "Archivebox download group '${name}'";
-        after = [ "network.target" ];
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
         preStart = ''
           mkdir -p ${lib.escapeShellArg cfg.archivePath}
@@ -151,6 +152,9 @@ in
         curl
         yt-dlp
       ] ++ lib.optional config.programs.git.enable config.programs.git.package;
+      defaultText = ''
+        Chromium, NodeJS, wget, yt-dlp, and git if enabled.
+      '';
       example = lib.literalExpression ''
         with pkgs; [
           curl
@@ -186,14 +190,15 @@ in
     (lib.mkIf cfg.webserver.enable {
       systemd.services.archivebox-server = {
         description = "Archivebox web server";
-        after = [ "network.target" ];
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
         wantedBy = [ "graphical-session.target" ];
         serviceConfig = {
           User = "archivebox";
           Group = "archivebox";
 
-          ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${
+          ExecStart = "${lib.getExe' cfg.package "archivebox"} server localhost:${
             toString cfg.webserver.port
           }";
 

@@ -1,0 +1,3 @@
+{
+  gonic-basic = ./basic.nix;
+}

@@ -1,4 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, hmConfig, ... }:
+
+let
+  userConfig = hmConfig.users.foo-dogsquared;
+in
 {
   extraPlugins = builtins.map
     (path:
@@ -12,7 +16,15 @@
     ]);
 
   # Light your browser on fire, bebe.
-  plugins.firenvim.enable = true;
+  plugins.firenvim = {
+    enable = userConfig.programs.browsers.plugins.firenvim.enable;
+    settings = {
+      localSettings.".*" = {
+        selector = "textarea";
+        content = "text";
+      };
+    };
+  };
 
   plugins.legendary-nvim = {
     enable = true;

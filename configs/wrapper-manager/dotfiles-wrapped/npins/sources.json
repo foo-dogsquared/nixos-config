@@ -1,0 +1,41 @@
+{
+  "pins": {
+    "doom-emacs": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "doomemacs",
+        "repo": "doomemacs"
+      },
+      "branch": "master",
+      "revision": "0f30e1eca5f7cb9220d2d1caf4fef7214a86c339",
+      "url": "https://github.com/doomemacs/doomemacs/archive/0f30e1eca5f7cb9220d2d1caf4fef7214a86c339.tar.gz",
+      "hash": "004xf0681rizdavl0krpx015h9zyb12ma4gq11nazcy8547qg3kl"
+    },
+    "dotfiles": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "foo-dogsquared",
+        "repo": "dotfiles"
+      },
+      "branch": "master",
+      "revision": "c0c64c9f9dae40c7041933851894e14601b56ba7",
+      "url": "https://github.com/foo-dogsquared/dotfiles/archive/c0c64c9f9dae40c7041933851894e14601b56ba7.tar.gz",
+      "hash": "1sm00fxajqhrccbxl5647na4fw9cha6w8jvarg5p4kvs3rrwh5p2"
+    },
+    "nixgl": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "nixGL"
+      },
+      "branch": "main",
+      "revision": "310f8e49a149e4c9ea52f1adf70cdc768ec53f8a",
+      "url": "https://github.com/nix-community/nixGL/archive/310f8e49a149e4c9ea52f1adf70cdc768ec53f8a.tar.gz",
+      "hash": "1crnbv3mdx83xjwl2j63rwwl9qfgi2f1lr53zzjlby5lh50xjz4n"
+    }
+  },
+  "version": 3
+}

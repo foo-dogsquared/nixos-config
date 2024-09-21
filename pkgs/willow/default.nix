@@ -5,16 +5,16 @@
 
 buildGoModule {
   pname = "willow";
-  version = "unstable-2024-05-17";
+  version = "unstable-2024-08-15";
 
   src = fetchFromGitHub {
     owner = "Amolith";
     repo = "willow";
-    rev = "5219377958faf103e16f16c29b2eb82f33a4f1c4";
-    hash = "sha256-MGz+X8Az2Cqzp5SB7L/RU18m15WOIS8vnAjCJwcTQ/s=";
+    rev = "af7202f230e42808b705bb9d4ddd04cfa28b401b";
+    hash = "sha256-ewXYkx2P2LO6Stg4P4WuVeDLgy2Zh/NYGkMl43DJ+Es=";
   };
 
-  vendorHash = "sha256-DCqD9GTszw7KJ+BlEX4T1Mra/D7uAFcWsMXg73V8a7k=";
+  vendorHash = "sha256-KLDoAd/YbQGW1v8bxffJS1PC8fJyEwWT5vT7g0a7rsg=";
 
   meta = with lib; {
     homepage = "https://github.com/Amolith/willow";

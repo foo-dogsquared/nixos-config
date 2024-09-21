@@ -1,4 +1,6 @@
-{ lib, name, systems, ... }: {
+{ systems }:
+
+{ lib, name, ... }: {
   options = {
     systems = lib.mkOption {
       type = with lib.types; listOf str;
@@ -6,7 +8,7 @@
       defaultText = "config.systems";
       example = [ "x86_64-linux" "aarch64-linux" ];
       description = ''
-        A list of platforms that the NixOS configuration is supposed to be
+        A list of platforms that the environment config is supposed to be
         deployed on.
       '';
     };
@@ -15,7 +17,7 @@
       type = with lib.types; listOf raw;
       default = [ ];
       description = ''
-        A list of NixOS modules specific for that host.
+        A list of modules specific for that environment.
       '';
     };
 

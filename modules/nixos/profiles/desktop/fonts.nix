@@ -23,7 +23,7 @@
     monaspace
     jetbrains-mono
 
-    # Noto font family
+    # Noto font family with the MR. WORLDWIDE settings.
     noto-fonts
     noto-fonts-cjk
     noto-fonts-cjk-sans

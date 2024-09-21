@@ -17,6 +17,9 @@
   programs.command-not-found.enable = false;
   programs.nix-index.enable = true;
 
+  # Improve the state of documentation (even if it's just a bit out-of-date).
+  documentation.man.generateCaches = true;
+
   # BOOOOOOOOOOOOO! Somebody give me a tomato!
   services.xserver.excludePackages = with pkgs; [ xterm ];
 

@@ -9,8 +9,9 @@ in
     lib.mkEnableOption "foo-dogsquared's Visual Studio Code setup";
 
   config = lib.mkIf cfg.enable {
+    suites.editors.vscode.enable = true;
     programs.vscode = {
-      extensions = with pkgs; [
+      extensions = with pkgs.vscode-extensions; [
         # Additional language support.
         bbenoist.nix
         graphql.vscode-graphql

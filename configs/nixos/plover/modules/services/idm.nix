@@ -5,7 +5,7 @@ let
   cfg = hostCfg.services.idm;
 
   authDomain = "auth.${config.networking.domain}";
-  port = 9443;
+  port = config.state.ports.kanidm.value;
 
   certsDir = config.security.acme.certs."${authDomain}".directory;
 
@@ -16,6 +16,7 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
+      state.ports.kanidm.value = 9443;
       hosts.plover.services.vouch-proxy.enable = lib.mkDefault true;
 
       services.kanidm = {

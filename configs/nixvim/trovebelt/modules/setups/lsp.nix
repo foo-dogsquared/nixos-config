@@ -31,7 +31,7 @@ in
           "efm" # For whatever.
           "elixirls" # For Elixir.
           "elmls" # For Elm.
-          "emmet_ls" # For Emmet support.
+          "emmet-ls" # For Emmet support.
           "eslint" # For JavaScript.
           "gdscript" # For Godot.
           "gopls" # For Go.
@@ -45,7 +45,7 @@ in
           "kotlin-language-server" # For Kotlin.
           "lemminx" # For XML.
           "lua-ls" # For Lua.
-          "nil_ls" # For Nix.
+          "nil-ls" # For Nix.
           "nushell" # For Nushell.
           "perlpls" # For Perl.
           "phpactor" # For PHP.

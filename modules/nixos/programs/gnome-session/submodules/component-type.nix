@@ -1,10 +1,13 @@
-{ name, config, lib, utils, session, ... }:
+{ name, config, pkgs, lib, utils, session, ... }:
 
 let
-  optionalSystemdUnitOption = type: systemdModuleAttribute:
+  optionalSystemdUnitOption = {
+    unitType, systemdModuleAttribute, otherType,
+  }:
     lib.mkOption {
+      type = lib.types.nullOr otherType;
       description = ''
-        An optional systemd ${type} configuration to be generated. This should
+        An optional systemd ${unitType} configuration to be generated. This should
         be configured if the session is managed by systemd.
 
         :::{.note}
@@ -14,6 +17,7 @@ let
         `restartTriggers`.
         :::
       '';
+      visible = "shallow";
       default = null;
     };
 in
@@ -29,14 +33,22 @@ in
     description = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = "One-sentence description of the component.";
+      default = name;
       example = "Desktop widgets";
     };
 
     script = lib.mkOption {
       type = lib.types.lines;
       description = ''
-        Shell script fragment of the component. Take note this will be
-        wrapped in a script for proper integration with `gnome-session`.
+        Shell script fragment of the component.
+
+        The way it is handled is different per startup methods.
+
+        * This will be wrapped in a script for proper integration with the
+        legacy non-systemd session management.
+
+        * For systemd-managed sessions, it will be part of
+        {option}`programs.gnome-session.sessions.<sessions>.components.<name>.serviceUnit.script`.
       '';
     };
 
@@ -64,104 +76,114 @@ in
       };
     };
 
-    # Most of the systemd config types are trying to eliminate as much of the
-    # NixOS systemd extensions as much as possible. For more details, see
-    # `config` attribute of the `sessionType`.
-    serviceUnit = lib.mkOption {
-      type =
-        let
-          inherit (utils.systemdUtils.lib) unitConfig serviceConfig;
-          inherit (utils.systemdUtils.unitOptions) commonUnitOptions serviceOptions;
-        in
-        lib.types.submodule [
-          commonUnitOptions
-          serviceOptions
-          serviceConfig
-          unitConfig
-        ];
-      description = ''
-        systemd service configuration to be generated. This should be
-        configured if the session is managed by systemd.
+    systemd = {
+      # Most of the systemd config types are trying to eliminate as much of the
+      # NixOS systemd extensions as much as possible. For more details, see
+      # `config` attribute of the `sessionType`.
+      serviceUnit = lib.mkOption {
+        type =
+          let
+            inherit (utils.systemdUtils.lib) unitConfig serviceConfig;
+            inherit (utils.systemdUtils.unitOptions) commonUnitOptions serviceOptions;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            serviceOptions
+            serviceConfig
+            unitConfig
+          ];
+        description = ''
+          systemd service configuration to be generated. This should be
+          configured if the session is managed by systemd.
 
-        :::{.note}
-        This has the same options as {option}`systemd.user.services.<name>`
-        but without certain options from stage 2 counterparts such as
-        `reloadTriggers` and `restartTriggers`.
+          :::{.note}
+          This has the same options as {option}`systemd.user.services.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
 
-        By default, this module sets the service unit as part of the respective
-        target unit (i.e., `PartOf=$COMPONENTID.target`).
+          By default, this module sets the service unit as part of the respective
+          target unit (i.e., `PartOf=$COMPONENTID.target`).
 
-        On a typical case, you shouldn't mess with much of the dependency
-        ordering of the service unit. You should configure `targetUnit` for
-        that instead.
-        :::
-      '';
-      default = { };
-    };
+          On a typical case, you shouldn't mess with much of the dependency
+          ordering of the service unit. You should configure `targetUnit` for
+          that instead.
+          :::
+        '';
+        default = { };
+        visible = "shallow";
+      };
 
-    targetUnit = lib.mkOption {
-      type =
-        let
-          inherit (utils.systemdUtils.lib) unitConfig;
-          inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
-        in
-        lib.types.submodule [
-          commonUnitOptions
-          unitConfig
-        ];
-      description = ''
-        systemd target configuration to be generated. This should be
-        configured if the session is managed by systemd.
+      targetUnit = lib.mkOption {
+        type =
+          let
+            inherit (utils.systemdUtils.lib) unitConfig;
+            inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            unitConfig
+          ];
+        description = ''
+          systemd target configuration to be generated. This should be
+          configured if the session is managed by systemd.
 
-        :::{.note}
-        This has the same options as {option}`systemd.user.targets.<name>`
-        but without certain options from stage 2 counterparts such as
-        `reloadTriggers` and `restartTriggers`.
+          :::{.note}
+          This has the same options as {option}`systemd.user.targets.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
 
-        This module doesn't set the typical dependency ordering relative to
-        gnome-session targets. This is on the user to manually set them.
-        :::
-      '';
-      default = { };
-    };
+          This module doesn't set the typical dependency ordering relative to
+          gnome-session targets. This is on the user to manually set them.
+          :::
+        '';
+        default = { };
+        visible = "shallow";
+      };
 
-    timerUnit = optionalSystemdUnitOption "timer" "timers" // {
-      type =
-        let
-          inherit (utils.systemdUtils.unitOptions) timerOptions commonUnitOptions;
-          inherit (utils.systemdUtils.lib) unitConfig;
-        in
-        with lib.types; nullOr (submodule [
-          commonUnitOptions
-          timerOptions
-          unitConfig
-        ]);
-    };
+      timerUnit = optionalSystemdUnitOption {
+        unitType = "timer";
+        systemdModuleAttribute = "timers";
+        otherType =
+          let
+            inherit (utils.systemdUtils.unitOptions) timerOptions commonUnitOptions;
+            inherit (utils.systemdUtils.lib) unitConfig;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            timerOptions
+            unitConfig
+          ];
+      };
 
-    socketUnit = optionalSystemdUnitOption "socket" "sockets" // {
-      type =
-        let
-          inherit (utils.systemdUtils.unitOptions) socketOptions commonUnitOptions;
-          inherit (utils.systemdUtils.lib) unitConfig;
-        in
-        with lib.types; nullOr (submodule [
-          commonUnitOptions
-          socketOptions
-          unitConfig
-        ]);
-    };
+      socketUnit = optionalSystemdUnitOption {
+        unitType = "socket";
+        systemdModuleAttribute = "sockets";
+        otherType =
+          let
+            inherit (utils.systemdUtils.unitOptions) socketOptions commonUnitOptions;
+            inherit (utils.systemdUtils.lib) unitConfig;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            socketOptions
+            unitConfig
+          ];
+      };
 
-    pathUnit = optionalSystemdUnitOption "path" "paths" // {
-      type =
-        let
-          inherit (utils.systemdUtils.unitOptions) pathOptions commonUnitOptions;
-          inherit (utils.systemdUtils.lib) unitConfig;
-        in
-        with lib.types; nullOr (submodule [
-          commonUnitOptions
-          pathOptions
-          unitConfig
-        ]);
+      pathUnit = optionalSystemdUnitOption {
+        unitType = "path";
+        systemdModuleAttribute = "paths";
+        otherType =
+          let
+            inherit (utils.systemdUtils.unitOptions) pathOptions commonUnitOptions;
+            inherit (utils.systemdUtils.lib) unitConfig;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            pathOptions
+            unitConfig
+          ];
+      };
     };
 
     id = lib.mkOption {
@@ -182,6 +204,7 @@ in
     desktopConfig = {
       name = lib.mkForce config.id;
       desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
+      exec = lib.mkDefault (pkgs.writeShellScript "${session.name}-${config.name}-script" config.script);
       noDisplay = lib.mkForce true;
       onlyShowIn = session.desktopNames;
 
@@ -213,7 +236,6 @@ in
       NixOS-module-generated gnome-session sessions so we're not bothering with
       those.
 
-      TODO: Is `Type=notify` a good default?
       * `Service.Type=` is obviously not included since not all desktop
       components are the same either. Some of them could be a D-Bus service,
       some of them are oneshots, etc. Though, it might be better to have this
@@ -224,7 +246,7 @@ in
       systemd user unit, much of them are unnecessary and rarely needed (if
       ever like `Service.PrivateTmp=`?) so we didn't set such defaults here.
     */
-    serviceUnit = {
+    systemd.serviceUnit = {
       script = lib.mkAfter config.script;
       description = lib.mkDefault config.description;
 
@@ -271,7 +293,7 @@ in
       likely for a user to design their own desktop session with full control
       so it would be better for these options to be empty for less confusion.
     */
-    targetUnit = {
+    systemd.targetUnit = {
       # This should be the dependency-related directive to be configured. The
       # rest is for the user to judge.
       wants = [ "${config.id}.service" ];

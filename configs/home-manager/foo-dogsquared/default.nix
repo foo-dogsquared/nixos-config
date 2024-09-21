@@ -1,7 +1,8 @@
-{ config, lib, pkgs, foodogsquaredLib, bahaghariLib, ... }:
+{ config, lib, pkgs, foodogsquaredLib, bahaghariLib, ... }@attrs:
 
 let
   inherit (bahaghariLib.tinted-theming) importScheme;
+  userCfg = config.users.foo-dogsquared;
 in
 {
   imports = [ ./modules ];
@@ -19,9 +20,53 @@ in
       nixvim.enable = true;
       email.enable = true;
       email.thunderbird.enable = true;
-      research.enable = true;
       vs-code.enable = true;
+
+      custom-homepage = {
+        enable = true;
+        sections = lib.mkMerge [
+          # Merge the upstream since any new files will be overridden. It also
+          # allows us to attach data to it such as new links to the hardcoded
+          # sections.
+          (lib.importTOML "${config.users.foo-dogsquared.programs.custom-homepage.package.src}/data/foodogsquared-homepage/links.toml")
+
+          {
+            services = {
+              name = "Local services";
+              flavorText = "For your local productivity";
+              textOnly = true;
+              weight = (-50);
+
+              icon = {
+                iconset = "material-design-icons";
+                name = "room-service";
+              };
+            };
+          }
+
+          (lib.mkIf config.services.archivebox.webserver.enable {
+            services.links = lib.singleton {
+              url = "http://localhost:${builtins.toString config.state.ports.archivebox-webserver.value}";
+              text = "Archive webserver";
+            };
+
+            YOHOOHOOHOOHOO.links = lib.mkBefore (lib.singleton {
+              url = "http://localhost:${builtins.toString config.state.ports.archivebox-webserver.value}";
+              text = "ArchiveBox webserver";
+            });
+          })
+
+          (lib.mkIf (attrs.nixosConfig.suites.filesystem.setups.archive.enable or false) {
+            YOHOOHOOHOOHOO.links = lib.mkBefore (lib.singleton {
+              url = "file://${attrs.nixosConfig.state.paths.archive}";
+              text = "Personal archive";
+            });
+          })
+        ];
+      };
     };
+
+    services.backup.enable = true;
 
     setups = {
       desktop.enable = true;
@@ -29,6 +74,8 @@ in
       fonts.enable = true;
       music.enable = true;
       music.mpd.enable = true;
+      music.spotify.enable = true;
+      research.enable = true;
     };
   };
 
@@ -38,12 +85,6 @@ in
 
   # The keyfile required to decrypt the secrets.
   sops.age.keyFile = "${config.xdg.configHome}/age/user";
-
-  sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets/secrets.yaml {
-    davfs2-credentials = {
-      path = "${config.home.homeDirectory}/.davfs2/davfs2.conf";
-    };
-  };
 
   # Add our own projects directory since most programs can't decide where it is
   # properly.
@@ -63,6 +104,17 @@ in
   xdg.configFile = {
     distrobox.source = ./config/distrobox;
     kanidm.source = ./config/kanidm/config;
+  };
+
+  # Holding these in for whatever reason.
+  state.packages = {
+    diff = pkgs.diffoscope;
+    pager = config.programs.bat.package;
+    editor =
+      if userCfg.programs.nixvim.enable then
+        config.programs.nixvim.finalPackage
+      else
+        config.programs.neovim.package;
   };
 
   # Automating some files to be fetched on activation.

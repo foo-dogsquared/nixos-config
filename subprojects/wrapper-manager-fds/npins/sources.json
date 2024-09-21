@@ -1,0 +1,65 @@
+{
+  "pins": {
+    "home-manager-stable": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "home-manager"
+      },
+      "branch": "release-24.05",
+      "revision": "e1391fb22e18a36f57e6999c7a9f966dc80ac073",
+      "url": "https://github.com/nix-community/home-manager/archive/e1391fb22e18a36f57e6999c7a9f966dc80ac073.tar.gz",
+      "hash": "0c83di08nhkzq0cwc3v7aax3x8y5m7qahyzxppinzwxi3r8fnjq3"
+    },
+    "home-manager-unstable": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "home-manager"
+      },
+      "branch": "master",
+      "revision": "471e3eb0a114265bcd62d11d58ba8d3421ee68eb",
+      "url": "https://github.com/nix-community/home-manager/archive/471e3eb0a114265bcd62d11d58ba8d3421ee68eb.tar.gz",
+      "hash": "1smfj6fb3jc80gbavdf603nz782fb96d9k5w36g61zliw5g2qfvz"
+    },
+    "nixos-stable": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixpkgs"
+      },
+      "branch": "nixos-24.05",
+      "revision": "6e99f2a27d600612004fbd2c3282d614bfee6421",
+      "url": "https://github.com/NixOS/nixpkgs/archive/6e99f2a27d600612004fbd2c3282d614bfee6421.tar.gz",
+      "hash": "1qwbrn2cb1x9clkhqmdnx5r8v11168p3nx14h3r9wcml0bgblpvr"
+    },
+    "nixos-unstable": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixpkgs"
+      },
+      "branch": "nixos-unstable",
+      "revision": "12228ff1752d7b7624a54e9c1af4b222b3c1073b",
+      "url": "https://github.com/NixOS/nixpkgs/archive/12228ff1752d7b7624a54e9c1af4b222b3c1073b.tar.gz",
+      "hash": "1dmng7f5rv4hgd0b61chqx589ra7jajsrzw21n8gp8makw5khvb2"
+    },
+    "website": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "foo-dogsquared",
+        "repo": "website"
+      },
+      "branch": "master",
+      "revision": "1195855a64b2fe010caad45fe518af986db7afb7",
+      "url": "https://github.com/foo-dogsquared/website/archive/1195855a64b2fe010caad45fe518af986db7afb7.tar.gz",
+      "hash": "1dhai90in478d2ax2s927nsf95cf7xngkmfy55ws3hl2pfycan5f"
+    }
+  },
+  "version": 3
+}

@@ -1,0 +1,8 @@
+= Bahaghari library: Colors subset
+:toc:
+
+The colors subset of the Bahaghari library.
+It's not on the level of https://www.colour-science.org/[Color Science for Python] or https://crates.io/crates/palette[palette library for Rust] where it gives you a complete toolkit for manipulating a lot of aspects of colors.
+Rather, this is only in relation to generating them colors to be pressed onto a template like program configurations from Nix modules and even some light templating for some.
+Its API should only limit on that aspect.
+No way in hell we're trying to reimplment that in Nix, lol.

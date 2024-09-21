@@ -37,31 +37,33 @@ let
     in
     # This is based from rktjmp/lush-template. We'll improve on things from
       # here whenever necessary.
-    lib.nameValuePair "colors/${name}.lua" ''
-      ${cfg.extraConfigLua}
-      ${theme.extraConfigLua}
+    lib.nameValuePair "colors/${name}.lua" {
+      text = ''
+        ${cfg.extraConfigLua}
+        ${theme.extraConfigLua}
 
-      vim.g.colors_name = '${name}'
-      vim.o.termguicolors = true
+        vim.g.colors_name = '${name}'
+        vim.o.termguicolors = true
 
-      -- This needs to be parsed twice: once to generate the Lush spec
-      -- and the other to actually apply the spec.
-      --
-      -- @diagnostic disable: undefined-global
-      local spec = lush(function(injected_functions)
-        local sym = injected_functions.sym
-        return { ${lib.concatStringsSep "," highlightList} }
-      end)
+        -- This needs to be parsed twice: once to generate the Lush spec
+        -- and the other to actually apply the spec.
+        --
+        -- @diagnostic disable: undefined-global
+        local spec = lush(function(injected_functions)
+          local sym = injected_functions.sym
+          return { ${lib.concatStringsSep "," highlightList} }
+        end)
 
-      -- We then apply the theme.
-      lush(spec)
-    '';
+        -- We then apply the theme.
+        lush(spec)
+      '';
+    };
 in
 {
   options.colorschemes.lush = {
     enable = lib.mkEnableOption "theming with lush.nvim";
 
-    package = helpers.mkPackageOption "lush.nvim" pkgs.vimPlugins.lush-nvim;
+    package = helpers.mkPluginPackageOption "lush.nvim" pkgs.vimPlugins.lush-nvim;
 
     extraConfigLua = lib.mkOption {
       type = lib.types.lines;

@@ -1,4 +1,4 @@
-{ name, config, lib, utils, ... }:
+{ name, config, pkgs, lib, utils, glibKeyfileFormat, ... }:
 
 let
   # For an updated list, see `menu/menu-spec.xml` from
@@ -78,16 +78,6 @@ in
       example = [ "GNOME" "Garden" ];
     };
 
-    display = lib.mkOption {
-      type = with lib.types; listOf (enum [ "wayland" "x11" ]);
-      description = ''
-        A list of display server protocols supported by the desktop
-        environment.
-      '';
-      default = [ "wayland" ];
-      example = [ "wayland" "x11" ];
-    };
-
     description = lib.mkOption {
       type = lib.types.nonEmptyStr;
       description = ''
@@ -101,13 +91,14 @@ in
     components = lib.mkOption {
       type = with lib.types; attrsOf (submoduleWith {
         specialArgs = {
-          inherit utils;
+          inherit utils pkgs;
           session = {
             inherit (config) fullName desktopNames description;
             inherit name;
           };
         };
         modules = [ ./component-type.nix ];
+        shorthandOnlyDefinesConfig = true;
       });
       description = ''
         The individual components to be launched with the desktop session.
@@ -132,7 +123,7 @@ in
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       description = ''
-        A list of arguments from {program}`gnome-session` to be added for the session
+        A list of arguments from {command}`gnome-session` to be added for the session
         script.
 
         ::: {.note}
@@ -144,6 +135,28 @@ in
         "--systemd"
         "--disable-acceleration-check"
       ];
+    };
+
+    settings = lib.mkOption {
+      type = glibKeyfileFormat.type;
+      description = ''
+        Settings to be included to the gnome-session keyfile of the session.
+
+        Generally, you won't need to set this since the module will set the
+        common settings such as the `RequiredComponents=` key.
+      '';
+      default = { };
+      example = lib.literalExpression ''
+        {
+          "GNOME Session" = {
+            # A helper script to check if the session is runnable.
+            IsRunnableHelper = "''${lib.getExe' pkgs.niri "niri"} --validate config";
+
+            # A fallback session in case it failed.
+            FallbackSession = "gnome";
+          };
+        }
+      '';
     };
 
     requiredComponents = lib.mkOption {
@@ -162,6 +175,7 @@ in
         customized version of GNOME.
         :::
       '';
+      default = lib.mapAttrsToList (_: component: component.id) config.components;
       example = [
         "org.gnome.Shell"
         "org.gnome.SettingsDaemon.A11ySettings"
@@ -170,39 +184,42 @@ in
       ];
     };
 
-    targetUnit = lib.mkOption {
-      type =
-        let
-          inherit (utils.systemdUtils.lib) unitConfig;
-          inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
-        in
-        lib.types.submodule [
-          commonUnitOptions
-          unitConfig
-        ];
-      description = ''
-        systemd target configuration to be generated for
-        `gnome-session@<name>.target`. This should be configured if the
-        session is managed by systemd and you want to control the session
-        further (which is recommended since this module don't know what
-        components are more important, etc.).
+    systemd = {
+      targetUnit = lib.mkOption {
+        type =
+          let
+            inherit (utils.systemdUtils.lib) unitConfig;
+            inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
+          in
+          lib.types.submodule [
+            commonUnitOptions
+            unitConfig
+          ];
+        description = ''
+          systemd target configuration to be generated for
+          `gnome-session@<name>.target`. This should be configured if the
+          session is managed by systemd and you want to control the session
+          further (which is recommended since this module don't know what
+          components are more important, etc.).
 
-        By default, the session target will have all of its components from
-        {option}`<session>.requiredComponents` under `Wants=` directive. It
-        also assumes all of them have a target unit at
-        `''${requiredComponent}.target`.
+          By default, the session target will have all of its components from
+          {option}`<session>.requiredComponents` under `Wants=` directive. It
+          also assumes all of them have a target unit at
+          `''${requiredComponent}.target`.
 
-        :::{.note}
-        This has the same options as {option}`systemd.user.targets.<name>`
-        but without certain options from stage 2 counterparts such as
-        `reloadTriggers` and `restartTriggers`.
-        :::
-      '';
-      defaultText = ''
-        {
-          wants = ... # All of the required components as a target unit.
-        }
-      '';
+          :::{.note}
+          This has the same options as {option}`systemd.user.targets.<name>`
+          but without certain options from stage 2 counterparts such as
+          `reloadTriggers` and `restartTriggers`.
+          :::
+        '';
+        visible = "shallow";
+        defaultText = ''
+          {
+            wants = ... # All of the required components as a target unit.
+          }
+        '';
+      };
     };
   };
 
@@ -210,13 +227,14 @@ in
     # Append the session argument.
     extraArgs = [ "--session=${name}" ];
 
-    # By default. set the required components from the given desktop
-    # components.
-    requiredComponents = lib.mapAttrsToList (_: component: component.id) config.components;
-
-    targetUnit = {
+    systemd.targetUnit = {
       overrideStrategy = lib.mkForce "asDropin";
       wants = lib.mkDefault (builtins.map (c: "${c}.target") config.requiredComponents);
+    };
+
+    settings."GNOME Session" = {
+      Name = lib.mkDefault "${config.fullName} session";
+      RequiredComponents = config.requiredComponents;
     };
   };
 }

@@ -11,7 +11,7 @@
     ./services/database.nix
 
     # The primary DNS server that is completely hidden.
-    ./services/dns-server.nix
+    ./services/dns-server
 
     # The single-sign on setup.
     ./services/idm.nix
@@ -21,9 +21,6 @@
 
     # The firewall of choice.
     ./services/firewall.nix
-
-    # The VPN setup of choice.
-    ./services/wireguard.nix
 
     # The rest of the self-hosted applications.
     ./services/atuin.nix

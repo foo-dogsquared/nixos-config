@@ -159,6 +159,8 @@ in
         `reloadTriggers` and `restartTriggers`.
         :::
       '';
+      visible = "shallow";
+      default = { };
       defaultText = ''
         {
           wants = ... # All of the required components as a target unit.
@@ -178,6 +180,8 @@ in
           serviceConfig
           unitConfig
         ];
+      default = { };
+      visible = "shallow";
       description = ''
         systemd service configuration to be generated for the sessiond session
         itself.
@@ -200,9 +204,10 @@ in
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       description = ''
-        A list of arguments from {program}`sessiond` to be added for the session
+        A list of arguments from {command}`sessiond` to be added for the session
         script.
       '';
+      default = [ ];
       example = lib.literalExpression ''
         [
           "--hooksd=''${./config/sessiond/hooks.d}"

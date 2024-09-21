@@ -8,6 +8,6 @@ in
   # largely based from the `utils` module argument found in NixOS systems.
   _module.args = {
     inherit bahaghariLib;
-    bahaghariUtils = import ../lib/utils { inherit config pkgs lib bahaghariLib; };
+    bahaghariUtils = import ../utils { inherit config pkgs lib bahaghariLib; };
   };
 }

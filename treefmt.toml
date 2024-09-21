@@ -1,6 +1,7 @@
 [global]
 excludes = [
   "pkgs/firefox-addons/default.nix"
+  "subprojects"
 ]
 
 [formatter.lua]
@@ -8,7 +9,7 @@ command = "stylua"
 includes = [ "*.lua" ]
 
 [formatter.nix]
-command = "nixpkgs-fmt"
+command = "nixfmt"
 includes = [ "*.nix" ]
 
 [formatter.python]

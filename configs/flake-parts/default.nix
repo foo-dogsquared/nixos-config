@@ -1,17 +1,19 @@
-{ inputs, lib, ... }: {
+{ inputs, config, lib, ... }: {
   imports = [
     ./dev.nix
     ./packages.nix
     ./templates.nix
 
-    # The environment configurations.
+    # Environment configurations.
     ./disko.nix
     ./home-manager.nix
     ./nixos.nix
     ./nixvim.nix
+    ./wrapper-manager.nix
 
     # Subprojects.
     ./bahaghari.nix
+    ./wrapper-manager-fds.nix
   ];
 
   _module.args = {
@@ -23,6 +25,12 @@
     };
 
     defaultOverlays = lib.attrValues inputs.self.overlays;
+
+    defaultSystems = [ "x86_64-linux" ];
+  };
+
+  setups.sharedNixpkgsConfig = {
+    allowUnfree = true;
   };
 
   perSystem = { lib, system, ... }: {
@@ -31,7 +39,7 @@
       # for building NixOS and home-manager systems.
       pkgs = import inputs.nixpkgs {
         inherit system;
-        config.allowUnfree = true;
+        config = config.setups.sharedNixpkgsConfig;
         overlays = lib.attrValues inputs.self.overlays ++ [
           inputs.nur.overlay
         ];

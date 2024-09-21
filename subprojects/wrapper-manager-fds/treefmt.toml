@@ -1,0 +1,8 @@
+[global]
+excludes = [
+  "npins/default.nix"
+]
+
+[formatter.nix]
+command = "nixfmt"
+includes = [ "*.nix" ]

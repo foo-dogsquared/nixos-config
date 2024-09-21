@@ -29,11 +29,14 @@ in
       # Installing filesystem debugging utilities.
       environment.systemPackages = with pkgs; [
         afuse
+        ntfs3g
       ];
     })
 
     (lib.mkIf cfg.setups.archive.enable {
-      fileSystems."/mnt/archives" = {
+      state.paths.archive = "/mnt/archives";
+
+      fileSystems."${config.state.paths.archive}" = {
         device = "/dev/disk/by-partlabel/disk-archive-root";
         fsType = "btrfs";
         noCheck = true;
@@ -56,7 +59,9 @@ in
     })
 
     (lib.mkIf cfg.setups.external-hdd.enable {
-      fileSystems."/mnt/external-storage" = {
+      state.paths.external-hdd = "/mnt/external-storage";
+
+      fileSystems."${config.state.paths.external-hdd}" = {
         device = "/dev/disk/by-partlabel/disk-live-installer-root";
         fsType = "btrfs";
         noCheck = true;

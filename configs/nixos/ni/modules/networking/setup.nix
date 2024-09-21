@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.ni;
@@ -7,6 +7,17 @@ in
 {
   options.hosts.ni.networking = {
     enable = lib.mkEnableOption "networking setup";
+
+    enableCommonSetup = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether to enable opening TCP ports and configuring network-related
+        settings typically used for easy networking with clients.
+      '';
+      example = false;
+    };
+
     setup = lib.mkOption {
       type = lib.types.enum [ "networkd" "networkmanager" ];
       description = ''
@@ -19,7 +30,14 @@ in
         risk.
         :::
       '';
-      default = "networkmanager";
+      default =
+        if config.networking.useNetworkd
+        then "networkd"
+        else "networkmanager";
+      defaultText = ''
+        When networkd is enabled, `networkd`, otherwise `networkmanager` as the
+        general fallback value.
+      '';
       example = "networkd";
     };
   };
@@ -137,6 +155,28 @@ in
           mode = "active-backup";
         };
         interfaces = [ "enp1s0" "wlp2s0" ];
+      };
+    })
+
+    (lib.mkIf cfg.enableCommonSetup {
+      state.ports = {
+        http = {
+          value = 80;
+          protocols = [ "tcp" ];
+          openFirewall = true;
+        };
+        https = {
+          value = 443;
+          protocols = [ "tcp" ];
+          openFirewall = true;
+        };
+
+        # This is for user-specific services that would need to be exposed to
+        # the local network.
+        userland = {
+          value = foodogsquaredLib.nixos.makeRange 20000 30000;
+          openFirewall = true;
+        };
       };
     })
   ]);

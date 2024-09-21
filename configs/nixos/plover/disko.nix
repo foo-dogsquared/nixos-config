@@ -1,47 +1,59 @@
-{ config, lib, ... }:
+{ disk ? "/dev/sda", ... }:
 
 {
   disko.devices = {
-    disk.sda = {
-      device = [ "/dev/sda" ];
+    disk.primary = {
+      device = disk;
       type = "disk";
       content = {
         type = "gpt";
-        partitions = [
-          {
-            name = "boot";
+        partitions = {
+          boot = {
             start = "0";
             end = "1MiB";
-            part-type = "primary";
-            flags = [ "bios_grub" ];
-          }
+            type = "EF02";
+          };
 
-          {
-            name = "ESP";
+          # You can't really have a btrfs-layered boot so this'll have to do.
+          ESP = {
+            priority = 1;
             start = "1MiB";
             end = "256MiB";
-            bootable = true;
+            type = "EF00";
             content = {
               type = "filesystem";
-              format = "vfat";
               mountpoint = "/boot";
+              format = "vfat";
             };
-            flags = [ "esp" ];
-          }
+          };
 
-          {
-            name = "root";
+          root = {
             start = "256MiB";
             end = "100%";
-            part-type = "primary";
-            bootable = true;
+            type = "8300";
             content = {
-              type = "filesystem";
-              format = "ext4";
-              mountpoint = "/";
+              type = "btrfs";
+              extraArgs = [ "-f" ];
+
+              subvolumes = [
+                {
+                  "/root" = {
+                    mountOptions = [ "compress=zstd" ];
+                    mountpoint = "/";
+                  };
+                  "/home" = {
+                    mountOptions = [ "compress=zstd" ];
+                    mountpoint = "/home";
+                  };
+                  "/nix" = {
+                    mountOptions = [ "compress=zstd" "noatime" "noacl" ];
+                    mountpoint = "/nix";
+                  };
+                }
+              ];
             };
-          }
-        ];
+          };
+        };
       };
     };
   };

@@ -1,6 +1,7 @@
 # We're basically reimplmenting parts from the home-manager test suite here
 # just with our own modules included.
 { pkgs ? import <nixpkgs> { }
+, utils ? import ../../utils.nix { inherit pkgs; }
 , homeManagerSrc ? <home-manager>
 , enableBig ? true
 }:
@@ -50,7 +51,9 @@ in
 import nmt {
   inherit pkgs lib modules;
   testedAttrPath = [ "home" "activationPackage" ];
+  # TODO: Fix nmt to accept specialArgs or something.
   tests = builtins.foldl' (a: b: a // (import b)) { } ([
+    #./programs/borgmatic
     ./programs/neovide
     ./programs/pipewire
     ./programs/pop-launcher
@@ -58,8 +61,11 @@ import nmt {
   ]
   ++ lib.optionals isLinux [
     ./services/archivebox
+    #./services/borgmatic
     ./services/bleachbit
     ./services/gallery-dl
+    ./services/gonic
+    ./services/ludusavi
     ./services/matcha
     ./services/plover
     ./services/yt-dlp

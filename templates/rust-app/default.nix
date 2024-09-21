@@ -11,7 +11,7 @@ rustPlatform.buildRustPackage {
 
   src = lib.fileset.toSource {
     root = ./.;
-    fileset = lib.fs.unions [
+    fileset = lib.fileset.unions [
       ./Cargo.lock
       ./Cargo.toml
       ./LICENSE

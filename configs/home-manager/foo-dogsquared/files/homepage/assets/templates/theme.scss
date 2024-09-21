@@ -1,0 +1,102 @@
+{{ $data := newScratch }}
+
+{{/*
+  Create an automatic way of generating system color schemes, if set by the user.
+
+  * If either only one is set, generate an appropriate color scheme with the given color scheme.
+    For example, if there is only a given dark theme, the theme will generate a light color scheme.
+  * If given neither, go with the fallback themes.
+*/}}
+{{ $themes := (index $.Site.Data "foodogsquared-homepage").themes }}
+{{ $hasLight := $themes._light }}
+{{ $hasDark := $themes._dark }}
+{{ $hasSystemTheme := or $hasLight $hasDark }}
+
+{{/*
+    Take note how the other half get its colors. It's not exactly a color
+    string but it is a SASS expression to be evaluated and put into string
+    interpolation in SASS.
+*/}}
+{{ if (and $hasLight (not $hasDark)) }}
+  {{- warnf "No given dark theme. Generating one from the light theme..." }}
+  {{ $palette := $hasLight.palette }}
+  {{ $darkTheme := dict
+      "scheme" (printf "%s (light)" $hasLight.scheme)
+      "base00" $palette.base07
+      "base01" $palette.base06
+      "base02" $palette.base05
+      "base03" $palette.base04
+      "base04" $palette.base03
+      "base05" $palette.base02
+      "base06" $palette.base01
+      "base07" $palette.base00
+      "base08" (print "{lighten(saturate(#" $palette.base08 ", 10%), 15%)}")
+      "base09" (print "{lighten(saturate(#" $palette.base09 ", 10%), 15%)}")
+      "base0A" (print "{lighten(saturate(#" $palette.base0A ", 10%), 15%)}")
+      "base0B" (print "{lighten(saturate(#" $palette.base0B ", 10%), 15%)}")
+      "base0C" (print "{lighten(saturate(#" $palette.base0C ", 10%), 15%)}")
+      "base0D" (print "{lighten(saturate(#" $palette.base0D ", 10%), 15%)}")
+      "base0E" (print "{lighten(saturate(#" $palette.base0E ", 10%), 15%)}")
+      "base0F" (print "{lighten(saturate(#" $palette.base0F ", 10%), 15%)}")
+  }}
+  {{ $themes = merge $themes (dict "_dark" $darkTheme) }}
+{{ else if (and $hasDark (not $hasLight)) }}
+  {{- warnf "No given light theme. Generating one from the dark theme..." }}
+  {{ $palette := $hasDark.palette }}
+  {{ $lightTheme := dict
+      "scheme" (printf "%s (light)" $hasDark.scheme)
+      "base00" $palette.base07
+      "base01" $palette.base06
+      "base02" $palette.base05
+      "base03" $palette.base04
+      "base04" $palette.base03
+      "base05" $palette.base02
+      "base06" $palette.base01
+      "base07" $palette.base00
+      "base08" (print "{darken(saturate(#" $palette.base08 ", 10%), 15%)}")
+      "base09" (print "{darken(saturate(#" $palette.base09 ", 10%), 15%)}")
+      "base0A" (print "{darken(saturate(#" $palette.base0A ", 10%), 15%)}")
+      "base0B" (print "{darken(saturate(#" $palette.base0B ", 10%), 15%)}")
+      "base0C" (print "{darken(saturate(#" $palette.base0C ", 10%), 15%)}")
+      "base0D" (print "{darken(saturate(#" $palette.base0D ", 10%), 15%)}")
+      "base0E" (print "{darken(saturate(#" $palette.base0E ", 10%), 15%)}")
+      "base0F" (print "{darken(saturate(#" $palette.base0F ", 10%), 15%)}")
+  }}
+  {{ $themes = merge $themes (dict "_light" $lightTheme) }}
+{{ end }}
+
+{{- range $name, $scheme := $themes }}
+  // This is a template for a colorscheme based from a Base16 data file from
+  // https://github.com/chriskempson/base16.
+  @mixin createColorScheme {
+    {{ $palette := $scheme.palette }}
+    {{- range $i := seq 0 15 }}
+      {{- $hex := upper (printf "%02x" $i) }}
+      {{- $key := printf "base%s" $hex }}
+
+      // TODO: Make a better way to interpolate the color strings.
+      {{/* We're just taking advantage the fact that the SASS color functions
+      returns the colors in the same format we needed. */}}
+      {{- $color := printf "#%s" (index $palette $key) }}
+      --{{ $key }}: {{ $color }};
+    {{- end }}
+  }
+
+  {{- if eq $name "_light" }}
+    @media (prefers-color-scheme: light) {
+      :root, ::backdrop {
+        @include createColorScheme
+      }
+    }
+  {{- else if eq $name "_dark" }}
+    @media (prefers-color-scheme: dark) {
+      :root, ::backdrop {
+        @include createColorScheme
+      }
+    }
+  {{- end }}
+
+  [data-theme="{{ .name }}"]:root, [data-theme="{{ .name }}"]::backdrop {
+    @include createColorScheme;
+  }
+{{- end }}

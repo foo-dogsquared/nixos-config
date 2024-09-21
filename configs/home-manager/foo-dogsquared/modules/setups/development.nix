@@ -10,7 +10,7 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      state.ignoreDirectories = [
+      state.paths.ignoreDirectories = [
         "node_modules" # For Node projects.
         "result" # For Nix builds.
         "target" # For Rust builds.
@@ -19,6 +19,7 @@ in
       users.foo-dogsquared.programs = {
         shell.enable = lib.mkDefault true;
         git.enable = lib.mkDefault true;
+        jujutsu.enable = lib.mkDefault true;
         keys.gpg.enable = true;
         keys.ssh.enable = true;
         terminal-multiplexer.enable = lib.mkDefault true;
@@ -42,6 +43,7 @@ in
         regex-cli # Save some face of confusion for yourself.
         dt # Get that functional gawk.
         recode # Convert between different encodings.
+        go-migrate # Go potential migraines.
       ];
     }
 

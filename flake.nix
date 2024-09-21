@@ -23,7 +23,7 @@
 
     # ...except we allow other configurations to use other nixpkgs branch so
     # that may not matter anyways.
-    nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixos-stable.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -34,16 +34,22 @@
     # Managing home configurations.
     home-manager.follows = "home-manager-unstable";
 
-    home-manager-stable.url = "github:nix-community/home-manager/release-23.11";
+    home-manager-stable.url = "github:nix-community/home-manager/release-24.05";
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager-unstable.url = "github:nix-community/home-manager";
     home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs";
 
     # Make a Neovim distro.
-    nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
-    nixvim.inputs.home-manager.follows = "home-manager";
+    nixvim.follows = "nixvim-unstable";
+
+    nixvim-stable.url = "github:nix-community/nixvim/nixos-24.05";
+    nixvim-stable.inputs.nixpkgs.follows = "nixos-stable";
+    nixvim-stable.inputs.home-manager.follows = "home-manager-stable";
+
+    nixvim-unstable.url = "github:nix-community/nixvim";
+    nixvim-unstable.inputs.nixpkgs.follows = "nixos-unstable";
+    nixvim-unstable.inputs.home-manager.follows = "home-manager-unstable";
 
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
@@ -84,7 +90,9 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Make a default.nix compatible stuff.
+    # Make a default.nix compatible stuff. Take note, we're giving this a
+    # unique suffix since there are other flake inputs that uses the same flake
+    # and we want our `default.nix` to refer to our version.
     flake-compat-fds.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
 
     # Someone had the idea to make the flake outputs be configured as a Nix
