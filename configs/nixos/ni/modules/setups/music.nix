@@ -1,4 +1,4 @@
-{ config, lib, foodogsquaredLib, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   hostCfg = config.hosts.ni;
@@ -15,10 +15,21 @@ in
         protocols = [ "tcp" ];
         openFirewall = true;
       };
-      uxplay = {
-        value = 10001;
+      spotifyd = {
+        value = 9009;
         openFirewall = true;
       };
+      snapserver-tcp = {
+        value = 9080;
+        openFirewall = true;
+      };
+      snapserver-http = {
+        value = 9011;
+        openFirewall = true;
+      };
+      uxplay = {
+        value = 10001;
+        openFirewall = true; };
       uxplayClients = {
         value = foodogsquaredLib.nixos.makeRange' uxplay.value 10;
         openFirewall = true;
@@ -30,7 +41,7 @@ in
       enable = true;
       settings = rec {
         listen-addr = "localhost:${builtins.toString config.state.ports.gonic.value}";
-        cache-path = "/var/cache/gonic";
+        cache-path = "${config.state.paths.cacheDir}/gonic";
         music-path =
           [
             "/srv/Music"
@@ -39,19 +50,84 @@ in
         playlists-path = "${cache-path}/playlists";
 
         jukebox-enabled = true;
+        jukebox-mpv-extra-args = let
+          args = [
+            "--ao=pcm"
+            "--ao-pcm-file=${config.state.paths.runtimeDir}/snapserver/jukebox"
+          ];
+        in lib.concatStringsSep " " args;
 
         scan-interval = 1;
         scan-at-start-enabled = true;
       };
     };
 
-    # My AirPlay mirroring server.
-    services.uxplay = {
+    services.spotifyd = {
+      enable = false;
+      settings.global = {
+        autoplay = true;
+        device_name = "My laptop";
+        bitrate = 320;
+        device_type = "computer";
+        use_keyring = false;
+        use_mpris = false;
+
+        # We're relying on the local discovery.
+        zeroconf_port = config.state.ports.spotifyd.value;
+        no_audio_cache = true;
+      };
+    };
+
+    services.snapserver = {
       enable = true;
-      extraArgs = [
-        "-p" (builtins.toString config.state.ports.uxplay.value)
-        "-reset" "30"
-      ];
+      http = {
+        enable = true;
+        port = config.state.ports.snapserver-http.value;
+        docRoot = "${pkgs.snapcast}/share/snapserver/snapweb";
+      };
+      tcp = {
+        enable = true;
+        port = config.state.ports.snapserver-tcp.value;
+      };
+      listenAddress = "127.0.0.1";
+
+      streams = {
+        gonic-jukebox = {
+          type = "pipe";
+          location = "/run/snapserver/jukebox";
+          sampleFormat = "48000:16:2";
+          codec = "pcm";
+        };
+
+        airplay = {
+          type = "airplay";
+          location = lib.getExe' pkgs.shairport-sync "shairport-sync";
+          query = {
+            devicename = "Snapcast";
+          };
+        };
+
+        spotify = {
+          type = "librespot";
+          location = lib.getExe' pkgs.librespot "librespot";
+          query = {
+            devicename = "Snapcast";
+            bitrate = "320";
+            volume = "50";
+            normalize = "true";
+            autoplay = "true";
+          };
+        };
+      };
+    };
+
+    systemd.services.snapserver.serviceConfig = {
+      SupplementaryGroups = [ "audio" ];
+      RuntimeDirectoryMode = "0775";
+    };
+
+    systemd.services.gonic.serviceConfig = {
+      SupplementaryGroups = [ "audio" ];
     };
   };
 }
