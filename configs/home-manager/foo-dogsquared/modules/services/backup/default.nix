@@ -78,12 +78,15 @@ in
       {
         remote-hetzner-boxes-personal = {
           initService.enable = true;
-          initService.startAt = "04:30";
+          initService.startAt = "06:30";
           settings = borgmaticCommonConfig {
             encryption_passcommand = "cat ${getPath "repos/remote-hetzner-boxes-personal/password"}";
             repositories = lib.singleton {
               path = "ssh://${hetznerBoxesUser}@${hetznerBoxesServer}:23/./borg/users/${config.home.username}";
               label = "remote-hetzner-boxes";
+            };
+            extra_borg_options = {
+              init = "--make-parent-dirs";
             };
           };
         };

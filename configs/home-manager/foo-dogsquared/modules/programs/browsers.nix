@@ -119,6 +119,7 @@ in
             tineye-reverse-image-search
             updateswh
             zhongwen
+            open-access-helper
           ]);
 
           # Much of the settings are affected by the policies set in the

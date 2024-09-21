@@ -9,7 +9,6 @@ pkgs.mkShell {
     run-workflow-in-vm
 
     age
-    fh
     asciidoctor
     disko
     deploy-rs
