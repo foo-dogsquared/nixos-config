@@ -37,7 +37,7 @@
     WHAT
   '';
 
-  build.extraPassthru.tests = {
+  build.extraPassthru.wrapperManagerTests = {
     actuallyBuilt =
       let
         wrapper = config.build.toplevel;

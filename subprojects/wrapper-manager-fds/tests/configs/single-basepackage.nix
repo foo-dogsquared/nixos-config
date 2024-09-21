@@ -13,7 +13,7 @@
     xdg.desktopEntry.enable = true;
   };
 
-  build.extraPassthru.tests = {
+  build.extraPassthru.wrapperManagerTests = {
     singleBasePackage =
       let
         wrapper = config.build.toplevel;

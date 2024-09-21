@@ -7,11 +7,14 @@ in
 
 let
   wmLib = (import ../../. { }).lib;
-  build = modules: wmLib.build { inherit pkgs modules; };
+  build = args: wmLib.build (args // { inherit pkgs; });
 in
 {
-  fastfetch = build [ ./wrapper-fastfetch.nix ];
-  neofetch = build [ ./wrapper-neofetch.nix ];
-  single-basepackage = build [ ./single-basepackage.nix ];
-  neofetch-with-additional-files = build [ ./neofetch-with-additional-files.nix ];
+  fastfetch = build { modules = [ ./wrapper-fastfetch.nix ]; };
+  neofetch = build {
+    modules = [ ./wrapper-neofetch.nix ];
+    specialArgs.yourMomName = "Yor mom";
+  };
+  single-basepackage = build { modules = [ ./single-basepackage.nix ]; };
+  neofetch-with-additional-files = build { modules = [ ./neofetch-with-additional-files.nix ]; };
 }

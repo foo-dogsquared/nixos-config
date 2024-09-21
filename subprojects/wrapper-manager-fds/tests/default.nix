@@ -6,14 +6,20 @@ in
 }:
 
 let
-  lib = import ./lib { inherit pkgs; };
+  wrapperManagerLibTests = import ./lib { inherit pkgs; };
+  inherit (pkgs) lib;
 in
 {
-  inherit lib;
-  libTestPkg =
+  configs = let
+    configs' = import ./configs { inherit pkgs; };
+    updateTestName = configName: package: lib.mapAttrs' (n: v: lib.nameValuePair "${configName}-${n}" v) package.wrapperManagerTests;
+  in
+    lib.concatMapAttrs updateTestName configs';
+
+  lib =
     pkgs.runCommand "wrapper-manager-fds-lib-test"
       {
-        testData = builtins.toJSON lib;
+        testData = builtins.toJSON wrapperManagerLibTests;
         passAsFile = [ "testData" ];
         nativeBuildInputs = with pkgs; [
           yajsv
@@ -23,5 +29,4 @@ in
       ''
         yajsv -s "${./lib/tests.schema.json}" "$testDataPath" && touch $out || jq . "$testDataPath"
       '';
-  configs = import ./configs { inherit pkgs; };
 }

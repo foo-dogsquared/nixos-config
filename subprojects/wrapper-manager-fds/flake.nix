@@ -45,6 +45,7 @@
       system:
       let
         pkgs = import sources.nixos-unstable { inherit system; };
+        inherit (pkgs) lib;
         tests = import ./tests { inherit pkgs; };
         docs = import ./docs { inherit pkgs; };
       in
@@ -60,7 +61,9 @@
           website = docs.website;
         };
 
-        checks.wrapperManagerLibrarySetPkg = tests.libTestPkg;
+        checks =
+          { inherit (tests) lib; }
+          // lib.mapAttrs' (n: v: lib.nameValuePair "config-test-${n}" v) tests.configs;
       }
     ));
 }
