@@ -22,8 +22,10 @@ pkgs.lib.makeExtensible (
   {
     env = import ./env.nix;
     utils = callLibs ./utils.nix;
+    modules = callLibs ./modules.nix;
 
     inherit (self.env) build eval;
     inherit (self.utils) getBin getLibexec;
+    inherit (self.modules) makeWraparound;
   }
 )
