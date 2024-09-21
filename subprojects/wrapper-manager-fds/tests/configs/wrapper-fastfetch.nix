@@ -7,7 +7,7 @@
 }:
 
 {
-  build.isBinary = false;
+  build.variant = "shell";
 
   wrappers.fastfetch = {
     arg0 = lib.getExe' pkgs.fastfetch "fastfetch";

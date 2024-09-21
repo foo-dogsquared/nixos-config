@@ -40,7 +40,7 @@ in
         [
           {
             config.build = {
-              isBinary = true;
+              variant = "shell";
             };
           }
         ]

@@ -26,7 +26,7 @@
         wrapper = config.build.toplevel;
       in
       pkgs.runCommand "wrapper-manager-neofetch-actually-built" { } ''
-        [ -x "${wrapper}/bin/${config.wrappers.fastfetch.executableName}" ] && touch $out
+        [ -x "${wrapper}/bin/${config.wrappers.neofetch.executableName}" ] && touch $out
       '';
   };
 }

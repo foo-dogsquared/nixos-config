@@ -7,21 +7,14 @@
 
 {
   options.build = {
-    isBinary = lib.mkOption {
-      type = lib.types.bool;
+    variant = lib.mkOption {
+      type = lib.types.enum [ "binary" "shell" ];
       description = ''
-        Sets the build step to create a tiny compiled executable for the
-        wrapper. By default, it is set to `true`.
-
-        ::: {.warning}
-        Binary wrappers cannot have runtime expansion in its arguments
-        especially when setting environment variables that needs it. For this,
-        you'll have to switch to shell wrappers (e.g., `build.isBinary =
-        false`).
-        :::
+        Indicates the type of wrapper to be made. By default, wrapper-manager
+        sets this to `binary`.
       '';
-      default = true;
-      example = false;
+      default = "binary";
+      example = "shell";
     };
 
     extraSetup = lib.mkOption {
@@ -53,8 +46,11 @@
     build = {
       toplevel =
         let
+          inherit (config.build) variant;
           makeWrapperArg0 =
-            if config.build.isBinary then "makeBinaryWrapper" else "makeShellWrapper";
+              if variant == "binary" then "makeBinaryWrapper"
+              else if variant == "shell" then "makeShellWrapper"
+              else "makeWrapper";
 
           mkWrapBuild =
             wrappers:
@@ -72,7 +68,9 @@
               name = "wrapper-manager-fds-wrapped-package";
               paths = desktopEntries ++ config.basePackages;
               nativeBuildInputs =
-                if config.build.isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeShellWrapper ];
+                if variant == "binary" then [ pkgs.makeBinaryWrapper ]
+                else if variant == "shell" then [ pkgs.makeShellWrapper ]
+                else [ ];
               postBuild = ''
                 ${config.build.extraSetup}
                 ${mkWrapBuild (lib.attrValues config.wrappers)}
@@ -82,7 +80,11 @@
             config.basePackages.overrideAttrs (final: prev: {
               nativeBuildInputs =
                 (prev.nativeBuildInputs or [ ])
-                ++ (if config.build.isBinary then [ pkgs.makeBinaryWrapper ] else [ pkgs.makeWrapper ])
+                ++ (
+                  if variant == "binary" then [ pkgs.makeBinaryWrapper ]
+                  else if variant == "shell" then [ pkgs.makeShellWrapper ]
+                  else [ ]
+                )
                 ++ lib.optionals (config.xdg.desktopEntries != { }) [ pkgs.copyDesktopItems ];
               desktopItems = (prev.desktopItems or [ ]) ++ desktopEntries;
               postFixup = ''

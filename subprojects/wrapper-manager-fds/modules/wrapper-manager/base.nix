@@ -141,8 +141,8 @@ let
             Script fragments to run before the main executable.
 
             ::: {.note}
-            This option is only used when {option}`build.isBinary` is set to
-            `false`.
+            This option is only used when {option}`build.variant` is set to
+            `shell`.
             :::
           '';
           default = "";
@@ -181,7 +181,7 @@ let
             ) config.env
             ++ (builtins.map (v: "--add-flags ${lib.escapeShellArg v}") config.prependArgs)
             ++ (builtins.map (v: "--append-flags ${lib.escapeShellArg v}") config.appendArgs)
-            ++ (lib.optionals (!envConfig.build.isBinary && config.preScript != "") (
+            ++ (lib.optionals (envConfig.build.variant == "shell" && config.preScript != "") (
               let
                 preScript =
                   pkgs.runCommand "wrapper-script-prescript-${config.executableName}" { }
