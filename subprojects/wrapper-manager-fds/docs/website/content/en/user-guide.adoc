@@ -1,0 +1,383 @@
+---
+title: User guide
+---
+= User guide
+
+
+While the link:./project-overview.adoc[project overview] should be enough to get you started, this document contain all of the information you may need to make full use of wrapper-manager.
+
+
+[#what-is-wrapper-manager]
+== What is wrapper-manager?
+
+Simply put, this is a declarative interface built on top of https://nixos.org/manual/nixpkgs/stable/#fun-makeWrapper[`makeWrapper` and company] plus some other integrations as we'll explore in this document.
+
+It is comparable to NixOS and home-manager in a way that it compiles into an operating system and a home environment respectively, wrapper-manager compiles the module environment into a package.
+Speaking of which, wrapper-manager is meant to be composed in larger-scoped environments such as NixOS and home-manager, mainly by including wrapper-manager packages in `environment.systemPackages` and `home.packages` but you could also make them as a standalone package.
+
+
+[#using-wrapper-manager]
+== Using wrapper-manager
+
+The module environment of wrapper-manager is the main interface of the project.
+In the following code, we'll define two wrappers around github:yt-dlp/yt-dlp[opts=repo].
+
+.A package containing two wrapper scripts for yt-dlp
+[source, nix]
+----
+{ lib, pkgs, ... }:
+
+{
+  wrappers.yt-dlp-audio = {
+    arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
+    prependArgs = [
+      "--no-overwrite"
+      "--extract-audio"
+      "--format" "bestaudio"
+      "--audio-format" "opus"
+      "--output" "'%(album_artists.0,artists.0)s/%(album,playlist)s/%(track_number,playlist_index)d-%(track,title)s.%(ext)s'"
+      "--download-archive" "archive"
+      "--embed-thumbnail"
+      "--add-metadata"
+    ];
+  };
+
+  # You could also lessen the code above by passing `--config-location` to
+  # yt-dlp and move them into a separate file. This is what wrapper-manager is
+  # made for, after all.
+  wrappers.yt-dlp-video = {
+    arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
+    prependArgs = [
+      "--config-location" ../../config/yt-dlp/video.conf
+    ];
+  };
+}
+----
+
+If we build the configuration, it should result in a derivation containing two executables.
+
+[source, shell]
+----
+$ ls ./result/bin
+yt-dlp-audio  yt-dlp-video
+----
+
+By default, these wrappers are compiled with `makeBinaryWrapper`.
+You could make into a shell-based wrapper by changing `build.variant` value into `shell`.
+
+If you want to include the original yt-dlp package as part of the standalone package, just pass the package as part of `basePackages`.
+
+[CAUTION]
+====
+By evaluating the following code, you'll be losing metadata for the `yt-dlp` package (e.g., `version`, `meta`, `src`) since it is linked together through `symlinkJoin`.
+
+wrapper-manager also has a way to make overridden packages by passing `basePackages` with a bare package instead of a list of packages (e.g., `basePackages = pkgs.yt-dlp;` instead of `basePackages = [ pkgs.yt-dlp ];`).
+This method makes it suitable to pass `programs.<name>.package` module options typically found from NixOS and home-manager but at the cost of a rebuild and may interfere with the build steps already defined from its package authors.
+====
+
+[source, nix]
+----
+{ lib, pkgs, ... }:
+
+{
+  # ...
+
+  basePackages = [ pkgs.yt-dlp ];
+}
+----
+
+Another thing to keep in mind is wrapper-manager packages have the library set available as `wrapperManagerLib` module argument.
+This is mainly useful for setting values within the configuration.
+
+.Some uses of the wrapper-manager library set
+[source, nix]
+----
+{ config, lib, pkgs, wrapperManagerLib, ... }:
+
+{
+  # It is used for setting values in certain modules options.
+  wrappers.yt-dlp-video = {
+    xdg.dataDirs = wrapperManagerLib.getXdgDataDirs [
+      pkgs.emacs
+      pkgs.neovim
+    ];
+
+    pathAdd = wrapperManagerLib.getBin (with pkgs; [
+      yt-dlp
+      gallery-dl
+    ]);
+  };
+
+  # Another nicety is to create a wraparound wrapper like in the following code
+  # where we wrap tmux to be used with boxxy.
+  wrappers.tmux = wrapperManagerLib.makeWraparound {
+    arg0 = lib.getExe' pkgs.tmux "tmux";
+    under = lib.getExe' pkgs.boxxy "boxxy";
+    underFlags = [ "--rule" "~/.tmux.conf:~/.config/tmux/tmux.conf" ];
+    underSeparator = "--";
+  };
+}
+----
+
+
+[#as-a-standalone-package]
+=== As a standalone package
+
+wrapper-manager packages can be compiled as a standalone package to be included as part of the typical Nix operations (e.g., `makeShell`, as part of `packages` flake output, as part of `environment.systemPackages` in NixOS).
+That part is easy, just build it with wrapper-manager `build` function located at its library set.
+
+The following code listing shows an example of it including a wrapper-manager config as part of the devshell.
+Just remember that wrapper-manager configurations primarily ends as a package.
+
+[source, nix]
+----
+{ pkgs ? import <nixpkgs> { }, wrapperManager ? import <wrapper-manager-fds> { } }:
+
+let
+  inherit (pkgs) lib;
+  gems = pkgs.bundlerEnv {
+    name = "wrapper-manager-fds-gem-env";
+    ruby = pkgs.ruby_3_1;
+    gemdir = ./.;
+  };
+  asciidoctorWrapped = wrapperManager.lib.build {
+    inherit pkgs;
+    modules = lib.singleton {
+      wrappers.asciidoctor = {
+        arg0 = lib.getExe' gems "asciidoctor";
+        prependArgs = [ "-r" "asciidoctor-diagram" "-T" ./templates ];
+      };
+    };
+  };
+in
+pkgs.mkShell {
+  packages = with pkgs; [
+    asciidoctorWrapped
+    treefmt
+    gems
+    gems.wrappedRuby
+  ];
+}
+----
+
+
+[#with-nixos-and-home-manager]
+=== With NixOS and home-manager
+
+wrapper-manager also comes with integrations for NixOS and home-manager.
+You'll have to import the respective environment modules for them somewhere in your configuration.
+Here's an example of importing it into a NixOS and home-manager config with flakes.
+
+.Importing wrapper-manager integration modules
+[source, nix]
+----
+{
+  # ...
+  inputs.wrapper-manager.url = "github:foo-dogsquared/nix-wrapper-manager";
+
+  outputs = inputs:
+    let
+      inherit (inputs.nixpkgs) lib;
+      inherit (lib) nixosSystem;
+      inherit (inputs.home-manager.lib) homeManagerConfiguration;
+    in
+      {
+        nixosConfigurations.desktop = nixosSystem {
+          modules = [
+            inputs.wrapper-manager.nixosModules.wrapper-manager
+          ];
+        };
+
+        homeConfigurations.user = homeConfigurations {
+          modules = [
+            inputs.wrapper-manager.homeModules.wrapper-manager
+          ];
+        };
+      };
+}
+----
+
+For the most part, the integration modules are mostly the same.
+As an example, you can create wrappers through `wrapper-manager.packages` where it is expected to be an attribute set of wrapper-manager configurations.
+
+[source, nix]
+----
+{ lib, config, ... }:
+
+{
+  wrapper-manager.packages.writing.imports = [
+    ../configs/wrapper-manager/writing
+  ];
+
+  wrapper-manager.packages.music-setup = {
+    wrappers.beets = {
+      arg0 = lib.getExe' pkgs.beets "beet";
+      prependArgs = [ "--config" ./config/beets/config.yml ];
+    };
+  };
+
+  wrapper-manager.packages.archive-setup = { lib, pkgs, ... }: {
+    wrappers.gallery-dl = {
+      arg0 = lib.getExe' pkgs.gallery-dl "gallery-dl";
+      prependArgs = [ ];
+    };
+
+    wrappers.yt-dlp-audio = {
+      arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
+      prependArgs = [
+        "--config-location" ./configs/yt-dlp/audio.conf
+      ];
+    };
+  };
+}
+----
+
+Aside from an easy way to create wrappers instead of manually invoking the building function from wrapper-manager, there's also another nicety with the integration module.
+The wrapper-manager configuration will have an additional module argument depending on the environment: `nixosConfig` for NixOS and `hmConfig` for home-manager.
+This is useful for dynamic and conditional configurations with the wider-scoped environment.
+
+
+[#differences-from-original-wrapper-manager]
+== Differences from original wrapper-manager
+
+Being a reimagining of wrapper-manager, there are some major differences between them.
+
+[NOTE]
+====
+The recorded differences are noted as of github:viperML/wrapper-manager[this commit, rev=c936f9203217e654a6074d206505c16432edbc70, opts=repo].
+It may be revised that renders part of the following list to be outdated.
+Feel free to correct them in the source code repo.
+====
+
+The main difference is the way how the final output is built.
+In the original version, each of the specified wrappers under `wrappers` are individually built.
+In the reimagined version, these are consolidated into one build step since `makeWrapper` allows us to do so.
+As a side effect, there's no options that could require to be built individually such as `wrappers.<name>.basePackage`, `wrappers.<name>.renames`, `wrappers.<name>.overrideAttrs`, and `wrappers.<name>.extraPackages`.
+
+Another difference is the original version also handles some cases of fixing XDG desktop entries in the final output.
+In wrapper-manager-fds, this case is absent since its maintainer at the time (foo-dogsquared) deemed it "a pain in the ass" to handle especially that...
+
+* There are more use cases to handle such as multiple desktop entries for multiple reasons.
+* Most desktop metadata is pretty much usable even with the custom wrapper without cleaning them.
+* This need is less emphasized since wrapper-manager-fds also allows you to make XDG desktop entries in the config itself anyways.
+
+[NOTE]
+====
+A possible consideration is to make a build option toggle to handle this but it would involve "cleaning" the `Exec=` desktop entry directive to use the executable name instead of the full path.
+====
+
+
+If you're interested in migrating to this version, here's a quicktable of individual differences that might interest you.
+
+[discrete]
+=== How `arg0` is set per-wrapper
+
+.In the original version...
+[source, nix]
+----
+{ lib, pkgs, ... }:
+{
+  wrappers.hello.basePackage = pkgs.hello;
+}
+----
+
+.And in wrapper-manager-fds.
+[source, nix]
+----
+{ lib, pkgs, ... }:
+{
+  wrappers.hello.arg0 = lib.getExe' pkgs.hello "hello";
+}
+----
+
+[discrete]
+=== Renaming executables per-wrapper
+
+.In the original version...
+[source, nix]
+----
+{ lib, pkgs, ... }:
+
+{
+  wrappers.hello.renames.hello = "hello-customized";
+}
+----
+
+In wrapper-manager-fds, there's no renaming step as we already let the user name the executable.
+
+.And in wrapper-manager-fds.
+[source, nix]
+----
+{ lib, pkgs, ... }:
+
+{
+  wrappers.hello.executableName = "hello-customized";
+
+  # You could also change the attrname.
+  wrappers.hello-customized.arg0 = "${pkgs.hello}/bin/hello";
+}
+----
+
+[discrete]
+=== Setting (and unsetting) environment variables per-wrapper
+
+.In the original version...
+[source, nix]
+----
+{ lib, pkgs, ... }:
+
+{
+  # The default action is to set the value if not yet set.
+  wrappers.hello.env.CUSTOM_ENV_VAR.value = "HELLO";
+
+  # You can force it with the following.
+  wrappers.hello.env.CUSTOM_ENV_VAR.force = true;
+
+  # You can also unset it by setting the value to null.
+  wrappers.hello.env.CUSTOM_ENV_VAR.value = lib.mkForce null;
+}
+----
+
+.And for wrapper-manager-fds.
+[source, nix]
+----
+{ lib, pkgs, ... }:
+
+{
+  # On the other hand, wrapper-manager-fds forces it by default.
+  wrappers.hello.env.CUSTOM_ENV_VAR.value = "HELLO";
+
+  # But you can conditionally set it with...
+  wrappers.hello.env.CUSTOM_ENV_VAR.action = "set-default";
+
+  # If you want to unset it, set the following code.
+  wrappers.hello.env.CUSTOM_ENV_VAR.action = lib.mkForce "unset";
+}
+----
+
+[discrete]
+=== Adding PATH env values
+
+.In the original version...
+[source, nix]
+----
+{ config, lib, pkgs, ... }:
+{
+  wrappers.hello.pathAdd = with pkgs; [
+    yt-dlp
+    gallery-dl
+  ];
+}
+----
+
+.And for wrapper-manager-fds.
+[source, nix]
+----
+{ config, lib, pkgs, wrapperManagerLib, ... }:
+{
+  wrappers.hello.pathAdd = wrapperManagerLib.getBin (with pkgs; [
+    yt-dlp
+    gallery-dl
+  ]);
+}
+----
