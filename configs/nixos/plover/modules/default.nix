@@ -1,6 +1,9 @@
 # Take note only optional modules should be imported here.
 {
   imports = [
+    # Networking setup.
+    ./services/networking.nix
+
     # Of course, what is a server without a backup? A professionally-handled
     # production system. However, we're not professionals so we do have
     # backups.

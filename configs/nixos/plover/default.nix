@@ -5,7 +5,7 @@
     # Since this will be rarely configured, make sure to import the appropriate
     # hardware modules depending on the hosting provider (and even just the
     # server).
-    ./modules/profiles/hetzner-cloud-cx21.nix
+    ./modules/profiles/hetzner-cloud-cx22.nix
 
     # The users for this host.
     (foodogsquaredUtils.getUser "nixos" "admin")
@@ -21,7 +21,7 @@
 
   # Host-specific modules structuring.
   hosts.plover.services = {
-    # The essential services.
+    networking.enable = true;
     backup.enable = true;
     database.enable = true;
     firewall.enable = true;
