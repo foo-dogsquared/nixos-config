@@ -38,14 +38,24 @@
   # We're using our own VPN configuration for this one.
   suites.vpn.enable = true;
 
-  state.network = {
-    ipv4 = lib.mkDefault "65.109.224.213";
-    ipv6 = lib.mkDefault "2a01:4f9:c012:607a::1";
+  state.network = rec {
+    ipv4 = "135.181.26.192";
+    ipv6 = "2a01:4f9:c011:b61e::1";
 
     interfaces = {
       lan = {
+        ifname = "enp7s0";
         ipv4 = "10.0.0.2";
-        ipv6 = "";
+        ipv6 = "fe80::8400:ff:fef7:864";
+        ipv4Gateway = "10.0.0.1";
+        ipv6Gateway = "fe80::1";
+      };
+
+      wan = {
+        ifname = "eth0";
+        inherit ipv4 ipv6;
+        ipv4Gateway = "172.31.1.1";
+        ipv6Gateway = "fe80::1";
       };
     };
 
