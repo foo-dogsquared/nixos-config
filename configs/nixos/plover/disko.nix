@@ -1,9 +1,9 @@
-{ disk ? "/dev/sda", ... }:
+{ ... }:
 
 {
   disko.devices = {
     disk.primary = {
-      device = disk;
+      device = "/dev/sda";
       type = "disk";
       content = {
         type = "gpt";
@@ -28,29 +28,26 @@
           };
 
           root = {
-            start = "256MiB";
-            end = "100%";
+            size = "100%";
             type = "8300";
             content = {
               type = "btrfs";
               extraArgs = [ "-f" ];
 
-              subvolumes = [
-                {
-                  "/root" = {
-                    mountOptions = [ "compress=zstd" ];
-                    mountpoint = "/";
-                  };
-                  "/home" = {
-                    mountOptions = [ "compress=zstd" ];
-                    mountpoint = "/home";
-                  };
-                  "/nix" = {
-                    mountOptions = [ "compress=zstd" "noatime" "noacl" ];
-                    mountpoint = "/nix";
-                  };
-                }
-              ];
+              subvolumes = {
+                "/root" = {
+                  mountOptions = [ "compress=zstd:10" ];
+                  mountpoint = "/";
+                };
+                "/home" = {
+                  mountOptions = [ "compress=zstd:10" ];
+                  mountpoint = "/home";
+                };
+                "/nix" = {
+                  mountOptions = [ "compress=zstd:8" "noatime" "noacl" ];
+                  mountpoint = "/nix";
+                };
+              };
             };
           };
         };
