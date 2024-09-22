@@ -43,7 +43,13 @@
           nur.repos.rycee.mozilla-addons-to-nix
         ];
       };
-      docs = import ../../docs/shell.nix { inherit pkgs; };
+      website = import ../../docs/website/shell.nix { inherit pkgs; };
+    };
+
+    # Packages that are meant to be consumed inside of a development
+    # environment.
+    devPackages = {
+      inherit (import ../../docs { inherit pkgs; }) website;
     };
   };
 }
