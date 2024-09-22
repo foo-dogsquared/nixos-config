@@ -13,10 +13,10 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@v8
       - env:
           NIXPKGS_ALLOW_UNFREE: "1"
-        run: nix develop .#docs --impure -c hugo -s ./docs/
+        run: nix build .#devPackages.x86_64-linux.website
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: "docs/public"
+          path: "result/"
           retention-days: 7
 
   deploy:
