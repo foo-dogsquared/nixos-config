@@ -55,7 +55,7 @@
           website = import ./docs/website/shell.nix { inherit pkgs; };
         };
 
-        packages = {
+        devPackages = {
           manpage-reference = docs.outputs.manpage;
           html-reference = docs.outputs.html;
           website = docs.website;
