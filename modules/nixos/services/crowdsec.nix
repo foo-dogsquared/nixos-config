@@ -7,47 +7,32 @@ let
 
   settingsSubmodule = { lib, ... }: {
     freeformType = settingsFormat.type;
-    options.config_paths = {
-      notification_dir = lib.mkOption {
-        type = lib.types.path;
-        description = ''
-          Directory where configuration files of notification plugins are kept.
-        '';
-        default = pluginsConfigDrv;
-        defaultText = ''
-          All of the compiled configuration files from
-          {option}`services.crowdsec.plugins.<name>.settings`.
-        '';
-        example = "./config/crowdsec/plugins";
-      };
 
-      plugin_dir = lib.mkOption {
-        type = lib.types.path;
-        description = ''
-          Directory where plugin executables are kept.
-        '';
-        default = pluginsDir;
-        defaultText = ''
-          All of the compiled plugins from
-          {options}`services.crowdsec.notificationPlugins.<name>.package`.
-        '';
-      };
-    };
+    # Set all of the related Crowdsec configuration options from the user-given
+    # service module config.
+    config = lib.mkMerge [
+      (
+        let
+          plugins = lib.filterAttrs (n: v: v.package != null) cfg.notificationPlugins;
+        in
+          lib.mkIf (plugins != { }) {
+            config_paths.plugin_dir = lib.mkDefault pluginsDir;
+          }
+      )
 
-    options.crowdsec_service = {
-      acqusition_dir = lib.mkOption {
-        type = lib.types.path;
-        description = ''
-          Directory containing acqusition configurations.
-        '';
-        default = acqusitionsDir;
-        defaultText = ''
-          All of the compiled configuration from
-          {options}`services.crowdsec.acqusitions.<name>.settings`.
-        '';
-        example = "./config/crowdsec/acqusitions";
-      };
-    };
+      (
+        let
+          pluginsSettings = lib.filterAttrs (n: v: v.settings != { }) cfg.notificationPlugins;
+        in
+          lib.mkIf (pluginsSettings != { }) {
+            config_paths.notification_dir = lib.mkDefault pluginsConfigDrv;
+          }
+      )
+
+      (lib.mkIf (cfg.dataSources != { }) {
+        crowdsec_service.acqusition_dir = lib.mkDefault acqusitionsDir;
+      })
+    ];
   };
 
   pluginsDir = pkgs.symlinkJoin {
@@ -89,7 +74,7 @@ let
           ::: {.caution}
           This setting is effectively ignored if
           {option}`services.crowdsec.settings.config_paths.notification_dir` is
-          set.
+          set manually.
           :::
         '';
         default = { };
