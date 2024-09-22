@@ -1,0 +1,12 @@
+= foodogsquared-nixos-extra-modules(5)
+:doctype: manpage
+:mantitle: FDS-NIXOS-MODULES.NIX(5)
+:manmanual: foodogsquared's NixOS extra module
+:mansource: foodogsquared's NixOS extra module
+
+
+== Name
+
+nixos-foodogsquared-modules.nix - foodogsquared's extra *configuration.nix(5)* modules
+
+== Options

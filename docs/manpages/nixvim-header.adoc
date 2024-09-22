@@ -1,0 +1,12 @@
+= foodogsquared-nixvim-extra-modules(5)
+:doctype: manpage
+:mantitle: FDS-NIXVIM-MODULES.NIX(5)
+:manmanual: foodogsquared's NixVim extra module
+:mansource: foodogsquared's NixVim extra module
+
+
+== Name
+
+nixvim-foodogsquared-modules.nix - foodogsquared's extra *nixvim(5)* modules
+
+== Options

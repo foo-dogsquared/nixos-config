@@ -1,5 +1,6 @@
 = foodogsquared-wrapper-manager-extra-modules(5)
 :doctype: manpage
+:mantitle: FDS-WRAPPER-MANAGER-MODULES.NIX(5)
 :manmanual: foodogsquared's wrapper-manager extra module
 :mansource: foodogsquared's wrapper-manager extra module
 

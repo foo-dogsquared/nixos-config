@@ -1,0 +1,12 @@
+= foodogsquared-home-manager-extra-modules(5)
+:doctype: manpage
+:mantitle: FDS-HM-MODULES.NIX(5)
+:manmanual: foodogsquared's home-manager extra module
+:mansource: foodogsquared's home-manager extra module
+
+
+== Name
+
+home-manager-foodogsquared-modules.nix - foodogsquared's extra *home-configuration.nix(5)* modules
+
+== Options
