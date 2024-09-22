@@ -25,11 +25,16 @@ resource "hetznerdns_primary_server" "main" {
   zone_id = hetznerdns_zone.main.id
 }
 
+resource "hetznerdns_primary_server" "main_ipv6" {
+  address = hcloud_server.plover.ipv6_address
+  port = 53
+  zone_id = hetznerdns_zone.main.id
+}
+
 resource "hcloud_server" "plover" {
   name        = "plover"
   image       = "debian-12"
   server_type = "cx22"
-  location    = "hel1"
   datacenter  = "hel1-dc2"
 
   ssh_keys = [hcloud_ssh_key.foodogsquared.id]
@@ -44,7 +49,7 @@ resource "hcloud_server" "plover" {
 
   network {
     network_id = hcloud_network.plover.id
-    ip         = "10.0.0.1"
+    ip         = "10.0.0.2"
   }
 
   depends_on = [
