@@ -1,9 +1,9 @@
 # This is the user that is often used for servers.
-{ lib, pkgs, foodogsquaredLib, ... }:
+{ foodogsquaredUtils, ... }:
 
 let
   user = "plover";
-  homeManagerUser = foodogsquaredLib.getConfig "home-manager" user;
+  homeManagerUser = foodogsquaredUtils.getConfig "home-manager" user;
 in
 {
   users.users.${user} = {
@@ -17,13 +17,12 @@ in
     openssh.authorizedKeys.keyFiles = [
       ../../../home-manager/foo-dogsquared/files/ssh-key.pub
       ../../../home-manager/foo-dogsquared/files/ssh-key-2.pub
-      ../../ni/files/ssh-key.pub
     ];
   };
 
   programs.wireshark.enable = true;
 
-  home-manager.users.${user} = { lib, ... }: {
+  home-manager.users.${user} = {
     imports = [ homeManagerUser ];
   };
 }
