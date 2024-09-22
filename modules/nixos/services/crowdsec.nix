@@ -213,10 +213,19 @@ in
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
+        ExecReload = "kill -HUP $MAINPID";
         ReadWritePaths =
           lib.optionals (cfg.settings.common.log_media or "" == "file") [
             cfg.settings.common.log_folder
           ];
+
+        User = "crowdsec";
+        Group = "crowdsec";
+
+        # TODO: Ideally, this should be set conditionally.
+        # To enable access to systemd journal files.
+        SupplementaryGroups = [ "systemd-journal" ];
+        DynamicUser = true;
 
         Type = "notify";
         Restart = "always";
@@ -237,7 +246,7 @@ in
         RemoveIPC = true;
         StandardOutput = "journal";
         StandardError = "journal";
-        SystemCallFilter = "@system-service";
+        SystemCallFilter = [ "@system-service" ];
         SystemCallErrorNumber = "EPERM";
 
         RestrictAddressFamilies = [
