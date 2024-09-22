@@ -351,7 +351,7 @@ Most likely, you don't even need to interact with it since handling update caden
 Setting up the development environment should be easy enough.
 
 * For flake users, you can just reproduce the development environment with `nix develop`.
-* For non-flake users, you can do the same with `nix-develop`.
+* For non-flake users, you can do the same with `nix-shell`.
 
 As an additional note, it is recommended to use something like direnv with `use flake` or `use nix` depending on your personal preferences to use flake or not.
 
@@ -368,7 +368,13 @@ For its library set, it makes use of the nixpkgs library and a JSON schema to va
 To make use of it, just run the following commands.
 
 * For flake users, you can run `nix flake check`.
-* For non-flake users, you can do the same with `nix-build tests/ -A libTestPkg` or `nix build -f tests/ libTestPkg`.
+* For non-flake users, you can do the same with `nix-build tests/ -A lib` or `nix build -f tests/ lib`.
+
+There is also a test suite for different types of wrapper-manager configurations at
+ifdef::env-hugo[github:{github-full}[test directory, rev=main, path=tests/configs]]
+ifndef::env-hugo[link:./tests/configs[`./tests/configs`]]
+from the source code.
+You can check them the same way as before (e.g., it's the same for flake-using contributors, `nix-build tests/ -A configs` for non-flake-using contributors).
 
 The derivation output should be successfully built if all of the tests in the suite passes.
 Otherwise, it should fail and you'll have to see the build log containing all of the tests that failed.
@@ -381,15 +387,15 @@ It is also quicker to eyeball results in this way especially if you're always wo
 
 This project also has a website set up with https://gohugo.io/[Hugo].
 The files that you need to see are in
-ifdef::env-hugo[github:{github-full}[`docs`, rev=main, path=docs]]
-ifndef::env-hugo[link:./docs[`./docs`]]
+ifdef::env-hugo[github:{github-full}[`docs/website`, rev=main, path=docs/website]]
+ifndef::env-hugo[link:./docs/website[`./docs/website`]]
 directory.
 
-* For flake users, you can build the website with `nix build .#website`.
-* For non-flake users, you can do the same with `nix-build docs/`.
+* For flake users, you can build the website with `nix build .#devPackages.${SYSTEM}.website`.
+* For non-flake users, you can do the same with `nix-build docs/ -A website`.
 
-There is also a dedicated development environment placed in `docs/shell.nix` but this should be a part of the primary development environment already.
-You can enter it with `nix develop .#website` or `nix-shell docs/`.
+There is also a dedicated development environment placed in `docs/website/shell.nix` but this should be a part of the primary development environment already.
+You can enter it with `nix develop .#devPackages.${SYSTEM}.website` or `nix-shell docs/website`.
 
 Just take note that the website also requires the NixOS options which comes in a JSON file.
 This should be already taken care of in the package definition of the website but otherwise it is something that you'll have to be aware of.
@@ -470,6 +476,21 @@ It is a reimagining with a completely different way of using it so it won't be f
 Why reimplement this anyways?::
 For funsies and also because there are some things I find not so great with using the project.
 https://github.com/viperML/wrapper-manager/tree/307eb5c38c8b5102c39617a59b63929efac7b1a7[As of this writing], using wrapper-manager to simply create wrappers anywhere is a pain.
++
+--
+To put it in more details, here are my complaints from using the original version:
+
+* First and foremost, for whatever reason, the original version revolves around `wrapProgram` instead of the generalized `makeWrapper`.
+This decision bled into the module environment with unnecessary options such as https://viperml.github.io/wrapper-manager/docs/module/#wrappersnamerenames[renaming binaries] from a https://viperml.github.io/wrapper-manager/docs/module/#wrappersnamebasepackage[given base package] which hurts the user experience of configuring these wrappers.
+
+* There's no option to create other types of wrappers, only shell-based wrappers is supported.
+
+* It is impossible to create a derivation consisting of only wrappers which is useful for installing wrappers in an environment alongside its original version.
+An example would be installing yt-dlp alongside its variants that are configured through wrapper-manager.
+In the original wrapper-manager, each of these wrapper would require a base package which will be included in the output.
+
+* No integration with NixOS/home-manager.
+--
 
 Why not just incorporate the wanted changes into the original implementation?::
 While it could be done, there will be some unwanted major changes into the project which would cause inconvenience to its users anyways so it isn't a good idea.
@@ -479,7 +500,7 @@ Can't you just create a wrapper with `pkgs.makeWrapper` and such from nixpkgs?::
 Yeah, you can.
 There's nobody stopping you from doing so and surely there's no hitman preparing to assissinate right behind you as you about to deny wrapper-manager-fds and smugly type `make` in `makeWrapper`.
 In fact, wrapper-manager uses `makeWrapper` as the main ingredient.
-Just think of wrapper-manager as a declarative version of that among the bajillion ways of making wrappers in the Nix ecosystem.
+Just think of wrapper-manager as a declarative version of that among the bajillion ways of making wrappers in the Nix ecosystem plus some other integrations (e.g., XDG).
 +
 As an additional point, there are still use cases for it even with a simple `pkgs.writeShellScriptBin`.
 In fact, if you have a situation like say having to create a one-off wrapper script to be added in a NixOS system, you can simply do the following:
@@ -522,7 +543,11 @@ This is especially noticeable in large desktop-adjacent packages such as Inkscap
 This means you cannot set `programs.NAME.package` or something similar with it.
 
 * The build step isn't enough to completely let the user replace the arguments found in `programs.<name>.package` (e.g., `programs.kitty.package = wrapperManagerLib.env.build { }`).
-For now, the project focuses on making a nice declarative environment allowing the user to create a wrapper meant to work without adding configuration files into arbitrary locations in the filesystem (e.g., `$XDG_CONFIG_HOME`).
+Right now, wrapper-manager-fds can rebuild the package if the `basePackage` module value is a bare package instead of the typical list of package but at the cost of an entire rebuild of that package.
+Not a great experience to have especially if you're making a wrapper for larger applications.
+There's no in-betweensies for this unfortunately (at least until I can think of a solution).
++
+With all that said, the project exclusively (and currently) focuses on making a nice declarative environment allowing the user to create a wrapper meant to work without adding configuration files into arbitrary locations in the filesystem (e.g., `$XDG_CONFIG_HOME`).
 --
 
 
@@ -537,6 +562,10 @@ Here's a list of resources I've found.
 * https://github.com/NixOS/rfcs/pull/75[Nix RFC 75] which also comes https://github.com/NixOS/nixpkgs/pull/85103[with its implementation and discussion around what works and whatnot].
 
 * https://discourse.nixos.org/t/pre-rfc-module-system-for-wrappers-in-nixpkgs/42281[This NixOS Discourse post loudly thinking about the same idea.]
+
+Aside from the listed resources, here's more unrelated resources I've found that can/would've/doesn't/you-get-what-I-mean-right influence the project.
+
+* https://git.auxolotl.org/auxolotl/labs/src/commit/cadfaabc853d20f2bc20bad794fcbe520ea48f13/tidepool/README.md[Aux Tidepool] seems to be interesting by applying the module system in package definitions.
 
 
 [#copyright]
