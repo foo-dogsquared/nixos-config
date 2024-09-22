@@ -155,13 +155,10 @@ in
       # Setting up PostgreSQL with secure schema.
       services.postgresql = {
         ensureDatabases = [ grafanaDatabaseName ];
-        ensureUsers = [{
+        ensureUsers = lib.singleton {
           name = grafanaDatabaseName;
-          ensurePermissions = {
-            "DATABASE ${grafanaDatabaseName}" = "ALL PRIVILEGES";
-            "SCHEMA ${grafanaDatabaseUser}" = "ALL PRIVILEGES";
-          };
-        }];
+          ensureDBOwnership = true;
+        };
       };
     })
 

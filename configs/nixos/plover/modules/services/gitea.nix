@@ -153,12 +153,11 @@ in
       # the PostgreSQL documentation at
       # https://www.postgresql.org/docs/15/ddl-schemas.html#DDL-SCHEMAS-PATTERNS.
       services.postgresql = {
-        ensureUsers = [{
+        ensureDatabases = [ config.services.gitea.user ];
+        ensureUsers = lib.singleton {
           name = config.services.gitea.user;
-          ensurePermissions = {
-            "SCHEMA ${config.services.gitea.user}" = "ALL PRIVILEGES";
-          };
-        }];
+          ensureDBOwnership = true;
+        };
       };
 
       # Setting up Gitea for PostgreSQL secure schema usage.

@@ -9,7 +9,7 @@ let
 
   certsDir = config.security.acme.certs."${authDomain}".directory;
 
-  backupsDir = "/var/lib/kanidm/backups";
+  backupsDir = "${config.state.paths.dataDir}/kanidm/backups";
 in
 {
   options.hosts.plover.services.idm.enable = lib.mkEnableOption "preferred IDM server";

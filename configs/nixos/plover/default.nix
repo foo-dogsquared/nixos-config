@@ -30,13 +30,11 @@
     monitoring.enable = true;
     reverse-proxy.enable = true;
     fail2ban.enable = true;
-
-    # The self-hosted services.
     grafana.enable = true;
   };
 
   # We're using our own VPN configuration for this one.
-  suites.vpn.enable = true;
+  suites.vpn.personal.enable = true;
 
   state.network = rec {
     ipv4 = "135.181.26.192";
@@ -115,8 +113,5 @@
     type = "ed25519";
   }];
 
-  # Make Nix experimental.
-  nix.package = pkgs.nixUnstable;
-
-  system.stateVersion = "23.05";
+  system.stateVersion = "24.11";
 }

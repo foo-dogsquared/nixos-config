@@ -120,13 +120,10 @@ in
 
       services.postgresql = {
         ensureDatabases = [ vaultwardenDbName ];
-        ensureUsers = [{
+        ensureUsers = lib.singleton {
           name = vaultwardenUser;
-          ensurePermissions = {
-            "DATABASE ${vaultwardenDbName}" = "ALL PRIVILEGES";
-            "SCHEMA ${vaultwardenDbName}" = "ALL PRIVILEGES";
-          };
-        }];
+          ensureDBOwnership = true;
+        };
       };
 
       systemd.services.vaultwarden = {

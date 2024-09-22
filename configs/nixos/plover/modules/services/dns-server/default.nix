@@ -13,13 +13,13 @@ let
   getZoneFile = domain: "${zonesDir}/${domain}.zone";
 
   zonefile = pkgs.substituteAll {
-    src = ../setups/dns/zones/${domain}.zone;
+    src = ./zones/${domain}.zone;
     ploverWANIPv4 = config.state.network.ipv4;
     ploverWANIPv6 = config.state.network.ipv6;
   };
 
   fqdnZone = pkgs.substituteAll {
-    src = ../setups/dns/zones/${fqdn}.zone;
+    src = ./zones/${fqdn}.zone;
     ploverWANIPv4 = config.state.network.ipv4;
     ploverWANIPv6 = config.state.network.ipv6;
   };
@@ -280,7 +280,7 @@ in
       security.dhparams.params.bind.bits = 4096;
     }
 
-    (lib.mkIf hostCfg.setups.monitoring.enable {
+    (lib.mkIf hostCfg.services.monitoring.enable {
       state.ports.bindStatistics.value = 9423;
 
       services.bind.extraConfig = ''
