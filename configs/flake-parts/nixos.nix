@@ -5,6 +5,10 @@
 , ...
 }:
 
+let
+  domain = "foodogsquared.one";
+  subdomain = name: "${name}.${domain}";
+in
 {
   setups.nixos = {
     configs = {
@@ -49,8 +53,15 @@
         nixpkgs.branch = "nixos-unstable";
         home-manager.branch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];
+        inherit domain;
+
         formats = null;
-        domain = "foodogsquared.one";
+        deploy = {
+          hostname = subdomain "plover";
+          autoRollback = true;
+          magicRollback = true;
+        };
+
         modules = [
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
