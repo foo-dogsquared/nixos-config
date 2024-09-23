@@ -37,7 +37,10 @@ resource "hcloud_server" "plover" {
   server_type = "cx22"
   datacenter  = "hel1-dc2"
 
-  ssh_keys = [hcloud_ssh_key.foodogsquared.id]
+  ssh_keys = [
+    hcloud_ssh_key.foodogsquared.id,
+    hcloud_ssh_key.plover.id
+  ]
 
   delete_protection  = true
   rebuild_protection = true
@@ -60,6 +63,11 @@ resource "hcloud_server" "plover" {
 resource "hcloud_ssh_key" "foodogsquared" {
   name       = "foodogsquared@foodogsquared.one"
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILPR52KfVODfKsgdvYSoQinV3kyOTZ4mtKa0fah5Wkfr foodogsquared@foodogsquared.one"
+}
+
+resource "hcloud_ssh_key" "plover" {
+  name = "plover.foodogsquared.one"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGo3tfNQjWZ5pxlqREfBgQJxdNzGHKJIy5hDS9Z+Hpth plover.foodogsquared.one"
 }
 
 resource "hcloud_network" "plover" {
