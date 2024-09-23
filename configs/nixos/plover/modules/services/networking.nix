@@ -74,24 +74,24 @@ in
           address = [ "${wan.ipv6}/64" ];
           gateway = [ wan.ipv6Gateway ];
 
+          dns = [
+            "2a01:4ff:ff00::add:2"
+            "2a01:4ff:ff00::add:1"
+          ]
+          ++ lib.optionals hostCfg.services.dns-server.enable [
+            wan.ipv4
+            wan.ipv6
+          ];
+
           # Setting up some other networking thingy.
           domains = [ config.networking.domain ];
           networkConfig = {
-            # IPv6 has to be manually configured.
             DHCP = "ipv4";
-            IPForward = true;
+            IPv4Forwarding = true;
+            IPv6Forwarding = true;
 
             LinkLocalAddressing = "ipv6";
             IPv6AcceptRA = true;
-
-            DNS = [
-              # The custom DNS servers.
-              wan.ipv4
-              wan.ipv6
-
-              "2a01:4ff:ff00::add:2"
-              "2a01:4ff:ff00::add:1"
-            ];
           };
         };
 
