@@ -14,6 +14,7 @@
             '';
             example = lib.literalExpression ''
               {
+                cacheDir = config.xdg.cacheHome;
                 ignoreDirectories = [ "''${config.home.homeDirectory}/Nodes" ];
                 ignorePaths = [ ".gitignore" "node_modules" "result" ];
               }

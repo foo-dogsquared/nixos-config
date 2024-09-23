@@ -13,6 +13,7 @@
             '';
             default = { };
             example = {
+              cacheDir = "/var/cache";
               ignoreDirectories = [ "/var/log" ];
               ignoreFiles = [ "node_modules" ".gitignore" ".bak" ];
             };
