@@ -5,6 +5,7 @@ let
   cfg = hostCfg.services.vouch-proxy;
 
   inherit (config.services.vouch-proxy.instances."${vouchDomain}") settings;
+  inherit (config.networking) domain;
   vouchDomain = "vouch.${config.networking.domain}";
   authDomain = config.services.kanidm.serverSettings.domain;
 in
@@ -14,6 +15,10 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
+      state.ports = {
+        "vouch-proxy-${domain}".value = 19900;
+      };
+
       sops.secrets =
         let
           vouchPermissions = rec {
@@ -23,8 +28,8 @@ in
           };
         in
         foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
-          "vouch-proxy/jwt/secret" = vouchPermissions;
-          "vouch-proxy/client/secret" = vouchPermissions;
+          "vouch-proxy/domains/${domain}/jwt-secret" = vouchPermissions;
+          "vouch-proxy/domains/${domain}/client-secret" = vouchPermissions;
         };
 
       services.vouch-proxy = {
@@ -32,16 +37,17 @@ in
         instances."${vouchDomain}".settings = {
           vouch = {
             listen = "127.0.0.1";
-            port = 19900;
+            port = config.state.ports."vouch-proxy-${domain}".value;
 
             domains = [ "foodogsquared.one" ];
-            jwt.secret._secret = config.sops.secrets."vouch-proxy/jwt/secret".path;
+            jwt.secret._secret = config.sops.secrets."vouch-proxy/domains/${domain}/jwt-secret".path;
+            cookie.secure = true;
           };
 
           oauth = rec {
             provider = "oidc";
             client_id = "vouch";
-            client_secret._secret = config.sops.secrets."vouch-proxy/client/secret".path;
+            client_secret._secret = config.sops.secrets."vouch-proxy/domains/${domain}/client-secret".path;
             code_challenge_method = "S256";
             auth_url = "https://${authDomain}/ui/oauth2";
             token_url = "https://${authDomain}/oauth2/token";

@@ -23,7 +23,7 @@ in
         enableServer = true;
         serverSettings = {
           domain = authDomain;
-          origin = "https://${authDomain}:${builtins.toString port}";
+          origin = "https://${authDomain}";
           bindaddress = "127.0.0.1:${builtins.toString port}";
           ldapbindaddress = "127.0.0.1:3636";
           role = "WriteReplica";

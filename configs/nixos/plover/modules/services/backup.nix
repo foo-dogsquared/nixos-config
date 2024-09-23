@@ -41,7 +41,7 @@ let
       yearly = 6;
     };
     startAt = "monthly";
-    environment.BORG_RSH = "ssh -i ${config.sops.secrets."borg/ssh-key".path}";
+    environment.BORG_RSH = "ssh -i ${config.sops.secrets."ssh-key".path}";
   };
 in
 {
@@ -50,23 +50,10 @@ in
 
   config = lib.mkIf cfg.enable {
     sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
-      "borg/repos/host/patterns/keys" = { };
-      "borg/repos/host/password" = { };
       "borg/repos/services/password" = { };
-      "borg/ssh-key" = { };
     };
 
     services.borgbackup.jobs = {
-      # Backup for host-specific files. They don't change much so it is
-      # acceptable for it to be backed up monthly.
-      host-backup = jobCommonSettings {
-        patternFiles = [
-          config.sops.secrets."borg/repos/host/patterns/keys".path
-        ];
-        repo = borgRepo "host";
-        passCommand = "cat ${config.sops.secrets."borg/repos/host/password".path}";
-      };
-
       # Backups for various services.
       services-backup = jobCommonSettings
         {
@@ -81,7 +68,7 @@ in
 
     programs.ssh.extraConfig = ''
       Host ${hetzner-boxes-server}
-       IdentityFile ${config.sops.secrets."borg/ssh-key".path}
+       IdentityFile ${config.sops.secrets."ssh-key".path}
     '';
   };
 }

@@ -166,7 +166,7 @@ in
       services.grafana.settings."auth.generic_oauth" = {
         api_url = authSubpath "oauth2/authorise";
         client_id = "grafana";
-        client_secret = "$__file{${config.sops.secrets."vouch-proxy/client/secret".path}";
+        client_secret = "$__file{${config.sops.secrets."vouch-proxy/domains/${config.networking.domain}/jwt-secret".path}";
         enabled = true;
         name = "Kanidm";
         oauth_url = authSubpath "ui/oauth2";
