@@ -55,6 +55,7 @@ in
             description = ''
               A set of ports indicating what goes where in the NixOS system.
             '';
+            default = { };
             example = lib.literalExpression ''
               rec {
                 gonic = {
