@@ -55,7 +55,14 @@ in
   options.files = lib.mkOption {
     type = with lib.types; attrsOf (submodule filesModule);
     description = ''
-      A set of files to be exported within the derivation.
+      Extra set of files to be exported within the derivation.
+
+      ::: {.caution}
+      Be careful when placing executables in `$out/bin` as it is handled by
+      wrapper-manager build step. Any files in `$out/bin` that have a
+      configured wrapper will be overwritten since building the wrapper comes
+      after installing the files.
+      :::
     '';
     default = { };
     example = lib.literalExpression ''
@@ -63,10 +70,10 @@ in
         "share/example-app/docs".source = ./docs;
         "etc/xdg".source = ./config;
 
-        "share/example-app/example-config".text = ''''''
+        "share/example-app/example-config".text = ''''
           hello=world
-          location=your-home
-        '''''';
+          location=INSIDE OF YOUR WALLS
+        '''';
       }
     '';
   };
