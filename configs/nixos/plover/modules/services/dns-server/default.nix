@@ -8,20 +8,21 @@ let
   cfg = hostCfg.services.dns-server;
 
   inherit (config.networking) domain fqdn;
+  inherit (config.state.network.interfaces) wan lan;
 
   zonesDir = "/etc/bind/zones";
   getZoneFile = domain: "${zonesDir}/${domain}.zone";
 
   zonefile = pkgs.substituteAll {
     src = ./zones/${domain}.zone;
-    ploverWANIPv4 = config.state.network.ipv4;
-    ploverWANIPv6 = config.state.network.ipv6;
+    ploverWANIPv4 = wan.ipv4;
+    ploverWANIPv6 = wan.ipv6;
   };
 
   fqdnZone = pkgs.substituteAll {
     src = ./zones/${fqdn}.zone;
-    ploverWANIPv4 = config.state.network.ipv4;
-    ploverWANIPv6 = config.state.network.ipv6;
+    ploverLANIPv4 = wan.ipv4;
+    ploverLANIPv6 = wan.ipv6;
   };
 
   dnsSubdomain = "ns1.${domain}";
@@ -66,17 +67,15 @@ in
 
         listenOn = [
           "127.0.0.1"
-          config.state.network.ipv4
+          wan.ipv4
+          lan.ipv4
         ];
 
         listenOnIpv6 = [
           "::1"
-          config.state.network.ipv6
+          wan.ipv6
+          lan.ipv6
         ];
-
-        extraConfig = ''
-          include "${config.state.paths.dataDir}/dns/*-dnskeys.conf";
-        '';
 
         # Welp, since the template is pretty limited, we'll have to go with our
         # own. This is partially based from the NixOS Bind module except without
@@ -187,10 +186,10 @@ in
           in
           lib.mkAfter ''
             # Install the domain zone.
-            [ -f ${lib.escapeShellArg domainZone'} ] && install -Dm0600 ${zonefile} ${lib.escapeShellArg domainZone'}
+            [ -f ${lib.escapeShellArg domainZone'} ] || install -Dm0600 ${zonefile} ${lib.escapeShellArg domainZone'}
 
             # Install the internal DNS zones.
-            [ -f ${lib.escapeShellArg fqdnZone'} ] && install -Dm0600 '${fqdnZone}' ${lib.escapeShellArg fqdnZone'}
+            [ -f ${lib.escapeShellArg fqdnZone'} ] || install -Dm0600 '${fqdnZone}' ${lib.escapeShellArg fqdnZone'}
           '';
 
         serviceConfig = {
