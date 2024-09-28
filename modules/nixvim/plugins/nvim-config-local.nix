@@ -7,7 +7,7 @@ in
   options.plugins.nvim-config-local = {
     enable = lib.mkEnableOption "nvim-config-local";
 
-    package = helpers.mkPluginPackageOption "nvim-config-local" pkgs.vimPlugins.nvim-config-local;
+    package = lib.mkPackageOption pkgs [ "vimPlugins" "nvim-config-local" ] { };
 
     settings = lib.mkOption {
       type = lib.types.submodule {
