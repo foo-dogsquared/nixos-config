@@ -14,22 +14,6 @@ in
     lib.mkEnableOption "preferred networking setup";
 
   config = lib.mkIf cfg.enable {
-    # Hetzner can only support non-UEFI bootloader (or at least it doesn't with
-    # systemd-boot).
-    boot.loader.grub = {
-      enable = lib.mkForce true;
-      device = "/dev/sda";
-      efiSupport = true;
-      efiInstallAsRemovable = true;
-    };
-
-    boot.initrd.availableKernelModules = [ "ata_piix" "virtio_pci" "virtio_scsi" "xhci_pci" "sd_mod" "sr_mod" ];
-    boot.initrd.kernelModules = [ "nvme" ];
-
-    zramSwap.enable = true;
-
-    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
     networking = {
       enableIPv6 = true;
       usePredictableInterfaceNames = lib.mkDefault true;
