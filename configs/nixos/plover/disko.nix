@@ -2,23 +2,20 @@
 
 {
   disko.devices = {
-    disk.primary = {
+    disk.disk1 = {
       device = "/dev/sda";
       type = "disk";
       content = {
         type = "gpt";
         partitions = {
           boot = {
-            start = "0";
-            end = "1MiB";
+            priority = 1;
+            size = "1M";
             type = "EF02";
           };
 
-          # You can't really have a btrfs-layered boot so this'll have to do.
           ESP = {
-            priority = 1;
-            start = "1MiB";
-            end = "256MiB";
+            size = "500M";
             type = "EF00";
             content = {
               type = "filesystem";
