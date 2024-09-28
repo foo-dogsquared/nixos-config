@@ -1,11 +1,11 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, ... }:
 
 let
   hostCfg = config.hosts.plover;
   cfg = hostCfg.services.networking;
 
   # This is just referring to the same interface just with alternative names.
-  mainEthernetInterfaceNames = [ "eth0" ];
+  mainEthernetInterfaceNames = [ "eth0" "enp1s0" ];
   internalEthernetInterfaceNames = [ "enp7s0" ];
   inherit (config.state.network) interfaces;
 in
@@ -60,7 +60,7 @@ in
     # https://discourse.nixos.org/t/nixos-on-hetzner-cloud-servers-ipv6/221/
     systemd.network = {
       enable = true;
-      wait-online.ignoredInterfaces = [ "lo" interfaces.lan.ifname ];
+      wait-online.ignoredInterfaces = [ "lo" ];
 
       # For more information, you can look at Hetzner documentation from
       # https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/
@@ -71,10 +71,16 @@ in
           matchConfig.Name = lib.concatStringsSep " " mainEthernetInterfaceNames;
 
           # Setting up IPv6.
-          address = [ "${wan.ipv6}/64" ];
+          address = [
+            "${wan.ipv4}/32"
+            "${wan.ipv6}/64"
+          ];
           gateway = [ wan.ipv6Gateway ];
 
           dns = [
+            "185.12.64.1"
+            "185.12.64.2"
+
             "2a01:4ff:ff00::add:2"
             "2a01:4ff:ff00::add:1"
           ]
@@ -85,14 +91,15 @@ in
 
           # Setting up some other networking thingy.
           domains = [ config.networking.domain ];
-          networkConfig = {
-            DHCP = "ipv4";
-            IPv4Forwarding = true;
-            IPv6Forwarding = true;
 
-            LinkLocalAddressing = "ipv6";
-            IPv6AcceptRA = true;
+          routes = lib.singleton {
+            routeConfig = {
+              Gateway = wan.ipv4Gateway;
+              GatewayOnLink = true;
+            };
           };
+
+          linkConfig.RequiredForOnline = "routable";
         };
 
         # The interface for our LAN.
@@ -125,6 +132,7 @@ in
           ];
 
           networkConfig.IPv6AcceptRA = true;
+          linkConfig.RequiredForOnline = "routable";
         };
       };
     };
