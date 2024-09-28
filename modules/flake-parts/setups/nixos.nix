@@ -170,6 +170,7 @@ let
     };
 
     config.nixpkgs.config = cfg.sharedNixpkgsConfig;
+    config.specialArgs = cfg.sharedSpecialArgs;
 
     config.modules = [
       # Bring in the required modules.
@@ -209,6 +210,13 @@ in
       '';
     };
 
+    sharedSpecialArgs = options.setups.sharedSpecialArgs // {
+      description = ''
+        Shared set of module arguments as part of `_module.specialArgs` of the
+        configuration.
+      '';
+    };
+
     sharedModules = lib.mkOption {
       type = with lib.types; listOf deferredModule;
       default = [ ];
@@ -222,6 +230,7 @@ in
         (import ./shared/nix-conf.nix { inherit inputs; })
         (import ./shared/config-options.nix { inherit (config) systems; })
         ./shared/nixpkgs-options.nix
+        ./shared/special-args-options.nix
         configType
       ]);
       default = { };
@@ -318,6 +327,7 @@ in
                     in
                     lib.nameValuePair system (mkHost {
                       inherit pkgs system;
+                      inherit (metadata) specialArgs;
                       extraModules = cfg.sharedModules ++ metadata.modules;
                     })
                   )

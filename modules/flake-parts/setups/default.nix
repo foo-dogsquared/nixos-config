@@ -39,5 +39,20 @@
         allowUnfree = true;
       };
     };
+
+    sharedSpecialArgs = lib.mkOption {
+      type = with lib.types; attrsOf anything;
+      description = ''
+        Shared set of arguments to be assigned as part of `_module.specialArgs`
+        of each of the declarative setups.
+      '';
+      default = { };
+      example = lib.literalExpression ''
+        {
+          location = "Inside of your walls";
+          utilsLib = import ./lib/utils.nix;
+        }
+      '';
+    };
   };
 }
