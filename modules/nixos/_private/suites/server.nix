@@ -14,15 +14,15 @@ in
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
-    ({
-      assertions = [{
+    {
+      assertions = lib.singleton {
         assertion =
           !config.suites.desktop.enable || !config.suites.server.enable;
         message = ''
           Desktop profile is also enabled. The profiles `desktop` and `server`
           are mutually exclusive.
         '';
-      }];
+      };
 
       # Set the time zone. We're making it easier to track by assigning a
       # universal time zone and what could be more universal than the
@@ -36,15 +36,15 @@ in
       # Most servers will have to be accessed for debugging so it is here. But
       # be sure to set the appropriate public keys for the users from that
       # server.
-      services.openssh = lib.mkDefault {
-        enable = true;
+      services.openssh = {
+        enable = lib.mkDefault true;
 
         settings = {
           # Making it verbose for services such as fail2ban.
           LogLevel = "VERBOSE";
 
           # Both are good for hardening as it only requires the keyfiles.
-          PasswordAuthentication = "no";
+          PasswordAuthentication = false;
           PermitRootLogin = "no";
         };
       };
@@ -67,7 +67,7 @@ in
       # We're only going to deal with servers in English.
       i18n.defaultLocale = lib.mkForce "en_US.UTF-8";
       i18n.supportedLocales = lib.mkForce [ "en_US.UTF-8/UTF-8" ];
-    })
+    }
 
     (lib.mkIf cfg.auto-upgrade.enable {
       system.autoUpgrade = {
