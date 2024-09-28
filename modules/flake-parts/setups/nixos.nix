@@ -79,8 +79,8 @@ let
         type = with lib.types; functionTo (attrsOf anything);
         default = os: {
           system = {
-            sshUser = "root";
-            user = "admin";
+            sshUser = "admin";
+            user = "root";
             path = inputs.deploy.lib.${os.system}.activate.nixos os.config;
           };
         };
