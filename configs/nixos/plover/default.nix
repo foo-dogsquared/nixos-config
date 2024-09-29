@@ -11,13 +11,14 @@
     (foodogsquaredUtils.getUser "nixos" "admin")
     (foodogsquaredUtils.getUser "nixos" "plover")
 
-    "${foodogsquaredModulesPath}/profiles/headless.nix"
     "${foodogsquaredModulesPath}/profiles/hardened.nix"
 
     ./disko.nix
 
     ./modules
   ];
+
+  boot.supportedFilesystems = [ "btrfs" ];
 
   # Host-specific modules structuring.
   hosts.plover.services = {
@@ -36,9 +37,22 @@
   # We're using our own VPN configuration for this one.
   suites.vpn.personal.enable = true;
 
+  # Post installation script to be executed manually by the provisioner.
+  system.build.postInstallationScript = pkgs.writeShellApplication {
+    name = "post-installation-script";
+    runtimeInputs = with pkgs; [
+      openssh
+    ];
+    text = ''
+      sopsPrivateKey="''${1:-"key.txt"}"
+      sopsKeyfileDir="$(dirname ${lib.escapeShellArg config.sops.age.keyFile})"
+      mkdir -p "$sopsKeyfileDir" && mv "$sopsPrivateKey" "$sopsKeyfileDir"
+    '';
+  };
+
   state.network = rec {
-    ipv4 = "135.181.26.192";
-    ipv6 = "2a01:4f9:c011:b61e::1";
+    ipv4 = "135.181.93.101";
+    ipv6 = "2a01:4f9:c012:f88c::1";
 
     interfaces = {
       lan = {
@@ -50,7 +64,7 @@
       };
 
       wan = {
-        ifname = "eth0";
+        ifname = "enp1s0";
         inherit ipv4 ipv6;
         ipv4Gateway = "172.31.1.1";
         ipv6Gateway = "fe80::1";
@@ -63,8 +77,8 @@
       "2a01:4f8:0:a101::a:1"
 
       # robotns2.second-ns.de
-      "213.133.105.6"
-      "2a01:4f8:d0a:2004::2"
+      "213.133.100.103"
+      "2a01:4f8:0:1::5ddc:2"
 
       # robotns3.second-ns.com
       "193.47.99.3"
@@ -108,10 +122,10 @@
   security.dhparams.enable = true;
 
   # !!! The keys should be rotated at an interval here.
-  services.openssh.hostKeys = [{
+  services.openssh.hostKeys = lib.singleton {
     path = config.sops.secrets."ssh-key".path;
     type = "ed25519";
-  }];
+  };
 
   system.stateVersion = "24.11";
 }
