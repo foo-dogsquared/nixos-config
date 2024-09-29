@@ -8,19 +8,21 @@ in
 {
   users.users.${user} = {
     home = "/home/${user}";
-    hashedPassword = "$6$gpgBrL3.RAGa9NBp$93Ac5ZW53KcgbA9q4awVKA.bVArP7Hw1NbyakT30Mav.7obIuN17WWijT.EaBSJU6ArvdXTehC3xZ9/9oZPDR0";
-    extraGroups = [ "wheel" "wireshark" ];
+    hashedPassword = "$y$j9T$43ExH5GLbEGwgnNGhmcTD/$qXoZE5Cm9O2Z3zMM/VyCZ18qN2Hc9.KvCnVz6tmjVVD";
+    extraGroups = [ "wheel" ];
     useDefaultShell = true;
     isNormalUser = true;
     description = "The go-to user for server systems.";
+
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGo3tfNQjWZ5pxlqREfBgQJxdNzGHKJIy5hDS9Z+Hpth plover.foodogsquared.one"
+    ];
 
     openssh.authorizedKeys.keyFiles = [
       ../../../home-manager/foo-dogsquared/files/ssh-key.pub
       ../../../home-manager/foo-dogsquared/files/ssh-key-2.pub
     ];
   };
-
-  programs.wireshark.enable = true;
 
   home-manager.users.${user} = {
     imports = [ homeManagerUser ];
