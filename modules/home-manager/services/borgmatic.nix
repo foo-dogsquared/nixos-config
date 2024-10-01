@@ -123,7 +123,6 @@ let
         # TODO: Just cargo-culted from the upstream home-manager module. Will
         # need more info on this.
         Nice = 19;
-        CPUSchedulingPolicy = "batch";
         IOSchedulingClass = "best-effort";
         IOSchedulingPriority = 7;
         IOWeight = 100;
