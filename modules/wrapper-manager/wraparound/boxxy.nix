@@ -1,7 +1,7 @@
 { lib, pkgs, config, ... }:
 
 let
-  cfg = config.sandboxing.boxxy;
+  cfg = config.wraparound.boxxy;
 
   boxxyRuleModule = { name, lib, ... }: {
     options = {
@@ -75,25 +75,25 @@ let
   };
 in
 {
-  options.sandboxing.boxxy = boxxyModuleFactory { isGlobal = true; };
+  options.wraparound.boxxy = boxxyModuleFactory { isGlobal = true; };
 
   options.wrappers =
     let
       boxxySandboxModule = { name, lib, config, pkgs, ... }:
         let
-          submoduleCfg = config.sandboxing.boxxy;
+          submoduleCfg = config.wraparound.boxxy;
         in
         {
-          options.sandboxing.variant = lib.mkOption {
+          options.wraparound.variant = lib.mkOption {
             type = with lib.types; nullOr (enum [ "boxxy" ]);
           };
 
-          options.sandboxing.boxxy = boxxyModuleFactory { isGlobal = false; };
+          options.wraparound.boxxy = boxxyModuleFactory { isGlobal = false; };
 
-          config = lib.mkIf (config.sandboxing.variant == "boxxy") {
-            sandboxing.boxxy.rules = cfg.rules;
+          config = lib.mkIf (config.wraparound.variant == "boxxy") {
+            wraparound.boxxy.rules = cfg.rules;
 
-            sandboxing.boxxy.extraArgs =
+            wraparound.boxxy.extraArgs =
               cfg.extraArgs
               ++ (lib.mapAttrsToList
                 (_: metadata:
@@ -110,8 +110,8 @@ in
             arg0 = lib.getExe' submoduleCfg.package "boxxy";
             prependArgs = lib.mkBefore
               (submoduleCfg.extraArgs
-                ++ [ "--" config.sandboxing.wraparound.arg0 ]
-                ++ config.sandboxing.wraparound.extraArgs);
+                ++ [ "--" config.wraparound.subwrapper.arg0 ]
+                ++ config.wraparound.subwrapper.extraArgs);
           };
         };
     in

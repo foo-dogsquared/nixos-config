@@ -6,6 +6,6 @@
     ./programs/jujutsu.nix
     ./nixgl.nix
     ./dconf.nix
-    ./sandboxing
+    ./wraparound
   ];
 }

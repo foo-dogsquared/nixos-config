@@ -6,7 +6,7 @@
 { config, lib, options, pkgs, ... }:
 
 let
-  cfg = config.sandboxing.bubblewrap.launcher;
+  cfg = config.wraparound.bubblewrap.launcher;
 
   bubblewrapModuleFactory = { isGlobal ? false }: {
     package = lib.mkOption {
@@ -31,36 +31,36 @@ let
   };
 in
 {
-  options.sandboxing.bubblewrap.launcher = bubblewrapModuleFactory { isGlobal = true; };
+  options.wraparound.bubblewrap.launcher = bubblewrapModuleFactory { isGlobal = true; };
 
   options.wrappers =
     let
       bubblewrapLauncherSubmodule = { config, lib, name, ... }: let
-        submoduleCfg = config.sandboxing.bubblewrap.launcher;
+        submoduleCfg = config.wraparound.bubblewrap.launcher;
         envSuffix = word: "WRAPPER_MANAGER_BWRAP_LAUNCHER_${word}";
       in {
-        options.sandboxing.bubblewrap.launcher = bubblewrapModuleFactory { isGlobal = false; };
+        options.wraparound.bubblewrap.launcher = bubblewrapModuleFactory { isGlobal = false; };
 
-        config = lib.mkIf (config.sandboxing.variant == "bubblewrap") (lib.mkMerge [
+        config = lib.mkIf (config.wraparound.variant == "bubblewrap") (lib.mkMerge [
           {
             arg0 = lib.getExe' submoduleCfg.package "wrapper-manager-bubblewrap-launcher";
             prependArgs = lib.mkBefore
-              (config.sandboxing.bubblewrap.extraArgs
-                ++ [ "--" config.sandboxing.wraparound.arg0 ]
-                ++ config.sandboxing.wraparound.extraArgs);
+              (config.wraparound.bubblewrap.extraArgs
+                ++ [ "--" config.wraparound.subwrapper.arg0 ]
+                ++ config.wraparound.subwrapper.extraArgs);
             env = {
-              "${envSuffix "BWRAP"}".value = lib.getExe' config.sandboxing.bubblewrap.package "bwrap";
+              "${envSuffix "BWRAP"}".value = lib.getExe' config.wraparound.bubblewrap.package "bwrap";
               # We're just unsetting autoconfigure since we're configuring this
               # through the module system anyways and would allow the user to
               # have some more control over what can be enabled.
-              "${envSuffix "AUTOCONFIGURE"}".value = "0";
+              "${envSuffix "AUTOCONFIGURE"}".value = lib.mkDefault "0";
             };
           }
 
-          (lib.mkIf config.sandboxing.bubblewrap.dbus.enable {
-            env.${envSuffix "DBUS_PROXY"}.value = lib.getExe' config.sandboxing.bubblewrap.dbus.filter.package "xdg-dbus-proxy";
-            env.${envSuffix "DBUS_PROXY_ARGS"}.value = lib.concatStringsSep " " config.sandboxing.bubblewrap.dbus.filter.extraArgs;
-            env.${envSuffix "DBUS_PROXY_BWRAP_ARGS"}.value = lib.concatStringsSep " " config.sandboxing.bubblewrap.dbus.filter.bwrapArgs;
+          (lib.mkIf config.wraparound.bubblewrap.dbus.enable {
+            env.${envSuffix "DBUS_PROXY"}.value = lib.getExe' config.wraparound.bubblewrap.dbus.filter.package "xdg-dbus-proxy";
+            env.${envSuffix "DBUS_PROXY_ARGS"}.value = lib.concatStringsSep " " config.wraparound.bubblewrap.dbus.filter.extraArgs;
+            env.${envSuffix "DBUS_PROXY_BWRAP_ARGS"}.value = lib.concatStringsSep " " config.wraparound.bubblewrap.dbus.filter.bwrapArgs;
           })
 
           (lib.mkIf submoduleCfg.integrations.pulseaudio.enable {

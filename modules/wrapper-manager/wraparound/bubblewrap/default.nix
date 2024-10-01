@@ -18,7 +18,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.sandboxing.bubblewrap;
+  cfg = config.wraparound.bubblewrap;
 
   bubblewrapModuleFactory = { isGlobal ? false }: {
     package = lib.mkPackageOption pkgs "bubblewrap" { } // lib.optionalAttrs isGlobal {
@@ -63,26 +63,26 @@ in
     ./filesystem.nix
   ];
 
-  options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
+  options.wraparound.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
 
   options.wrappers =
     let
       bubblewrapModule = { name, config, lib, ... }:
         let
-          submoduleCfg = config.sandboxing.bubblewrap;
+          submoduleCfg = config.wraparound.bubblewrap;
           env' = lib.filterAttrs (n: _: !(lib.strings.hasPrefix "WRAPPER_MANAGER_BWRAP_LAUNCHER" n)) config.env;
         in
         {
-          options.sandboxing.variant = lib.mkOption {
+          options.wraparound.variant = lib.mkOption {
             type = with lib.types; nullOr (enum [ "bubblewrap" ]);
           };
 
-          options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = false; };
+          options.wraparound.bubblewrap = bubblewrapModuleFactory { isGlobal = false; };
 
-          config = lib.mkIf (config.sandboxing.variant == "bubblewrap") (lib.mkMerge [
+          config = lib.mkIf (config.wraparound.variant == "bubblewrap") (lib.mkMerge [
             {
               # Ordering of the arguments here matter(?).
-              sandboxing.bubblewrap.extraArgs =
+              wraparound.bubblewrap.extraArgs =
                 cfg.extraArgs
                 ++ lib.mapAttrsToList
                   (var: metadata:
@@ -98,12 +98,12 @@ in
             (lib.mkIf submoduleCfg.enableNetwork {
               # In case isolation is also enabled, we'll have this still
               # enabled at least.
-              sandboxing.bubblewrap.extraArgs = lib.mkAfter [ "--share-net" ];
+              wraparound.bubblewrap.extraArgs = lib.mkAfter [ "--share-net" ];
 
               # The most common network-related files found on most
               # distributions. This should be enough in most cases. If not,
               # we'll probably let the launcher handle this.
-              sandboxing.bubblewrap.binds.ro = [
+              wraparound.bubblewrap.binds.ro = [
                 "/etc/ssh"
                 "/etc/ssl"
                 "/etc/hosts"
@@ -112,19 +112,19 @@ in
             })
 
             (lib.mkIf submoduleCfg.enableBundledCertificates {
-              sandboxing.bubblewrap.sharedNixPaths = [ pkgs.cacert ];
+              wraparound.bubblewrap.sharedNixPaths = [ pkgs.cacert ];
             })
 
             (lib.mkIf config.locale.enable {
-              sandboxing.bubblewrap.sharedNixPaths = [ config.locale.package ];
+              wraparound.bubblewrap.sharedNixPaths = [ config.locale.package ];
             })
 
             (lib.mkIf submoduleCfg.enableIsolation {
-              sandboxing.bubblewrap.extraArgs = lib.mkBefore [ "--unshare-all" ];
+              wraparound.bubblewrap.extraArgs = lib.mkBefore [ "--unshare-all" ];
             })
 
             (lib.mkIf submoduleCfg.enableEnsureChildDiesWithParent {
-              sandboxing.bubblewrap.extraArgs = lib.mkBefore [ "--die-with-parent" ];
+              wraparound.bubblewrap.extraArgs = lib.mkBefore [ "--die-with-parent" ];
             })
           ]);
         };

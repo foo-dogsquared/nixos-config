@@ -4,7 +4,7 @@
 { config, lib, options, pkgs, ... }:
 
 let
-  cfg = config.sandboxing.bubblewrap;
+  cfg = config.wraparound.bubblewrap;
 
   dbusFilterType = { lib, ... }:
     let
@@ -56,7 +56,7 @@ let
   };
 in
 {
-  options.sandboxing.bubblewrap =
+  options.wraparound.bubblewrap =
     lib.recursiveUpdate
       (bubblewrapModuleFactory { isGlobal = true; })
       {
@@ -126,10 +126,10 @@ in
 
       bubblewrapModule = { config, lib, pkgs, name, ... }:
         let
-          submoduleCfg = config.sandboxing.bubblewrap;
+          submoduleCfg = config.wraparound.bubblewrap;
         in
           {
-            options.sandboxing.bubblewrap =
+            options.wraparound.bubblewrap =
               lib.recursiveUpdate
                 (bubblewrapModuleFactory { isGlobal = false; })
                 {
@@ -168,15 +168,15 @@ in
                   };
                 };
 
-              config = lib.mkIf (config.sandboxing.variant == "bubblewrap") {
-                sandboxing.bubblewrap.dbus.filter.extraArgs =
+              config = lib.mkIf (config.wraparound.variant == "bubblewrap") {
+                wraparound.bubblewrap.dbus.filter.extraArgs =
                   let
                     makeDbusProxyArgs = address: metadata:
                       [ address (builtins.toString metadata.path) ] ++ metadata.extraArgs;
                   in
                   lib.lists.flatten (lib.mapAttrsToList makeDbusProxyArgs submoduleCfg.dbus.filter.addresses);
 
-                sandboxing.bubblewrap.sharedNixPaths = [
+                wraparound.bubblewrap.sharedNixPaths = [
                   submoduleCfg.dbus.filter.package
                 ];
               };

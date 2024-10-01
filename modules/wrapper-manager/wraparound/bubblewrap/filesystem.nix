@@ -4,7 +4,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.sandboxing.bubblewrap;
+  cfg = config.wraparound.bubblewrap;
 
   fileOperationsWithPerms = [
     "file" "dir" "remount-ro"
@@ -53,7 +53,7 @@ let
           description = ''
             Specify what filesystem-related operations to be done for the given
             filesystem object. Only certain operations accept permissions given
-            from {option}`sandboxing.bubblewrap.filesystem.<name>.permissions`.
+            from {option}`wraparound.bubblewrap.filesystem.<name>.permissions`.
           '';
           default = "ro-bind-try";
           example = "bind";
@@ -181,24 +181,24 @@ let
       lib.lists.filter (p: p != "") (lib.splitString "\n" closurePaths);
 in
 {
-  options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
+  options.wraparound.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
 
   options.wrappers =
     let
       bubblewrapModule = { config, lib, name, ... }: let
-        submoduleCfg = config.sandboxing.bubblewrap;
+        submoduleCfg = config.wraparound.bubblewrap;
       in {
-        options.sandboxing.bubblewrap = bubblewrapModuleFactory { isGlobal = false; };
+        options.wraparound.bubblewrap = bubblewrapModuleFactory { isGlobal = false; };
 
-        config = lib.mkIf (config.sandboxing.variant == "bubblewrap") (lib.mkMerge [
+        config = lib.mkIf (config.wraparound.variant == "bubblewrap") (lib.mkMerge [
           {
-            sandboxing.bubblewrap.binds = cfg.binds;
-            sandboxing.bubblewrap.sharedNixPaths = cfg.sharedNixPaths;
-            sandboxing.bubblewrap.filesystem = cfg.filesystem;
+            wraparound.bubblewrap.binds = cfg.binds;
+            wraparound.bubblewrap.sharedNixPaths = cfg.sharedNixPaths;
+            wraparound.bubblewrap.filesystem = cfg.filesystem;
           }
 
           {
-            sandboxing.bubblewrap.filesystem =
+            wraparound.bubblewrap.filesystem =
               let
                 renameNixStorePaths = path:
                   if lib.isDerivation path then path.pname else path;
@@ -215,7 +215,7 @@ in
               in
               builtins.listToAttrs filesystemMappings;
 
-            sandboxing.bubblewrap.extraArgs =
+            wraparound.bubblewrap.extraArgs =
               let
                 makeFilesystemArgs = _: metadata:
                   let
@@ -238,11 +238,11 @@ in
           }
 
           (lib.mkIf submoduleCfg.enableSharedNixStore {
-            sandboxing.bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
+            wraparound.bubblewrap.binds.ro = [ builtins.storeDir ] ++ lib.optionals (builtins.storeDir != "/nix/store") [ "/nix/store" ];
           })
 
           (lib.mkIf (submoduleCfg.sharedNixPaths != [ ]) {
-            sandboxing.bubblewrap.extraArgs =
+            wraparound.bubblewrap.extraArgs =
               let
                 closurePaths = getClosurePaths submoduleCfg.sharedNixPaths;
               in
@@ -250,7 +250,7 @@ in
           })
 
           (lib.mkIf submoduleCfg.dbus.enable {
-            sandboxing.bubblewrap.dbus.filter.bwrapArgs =
+            wraparound.bubblewrap.dbus.filter.bwrapArgs =
               let
                 closurePaths = getClosurePaths submoduleCfg.sharedNixPaths;
               in
