@@ -8,9 +8,6 @@
     "${modulesPath}/profiles/headless.nix"
   ];
 
-  # Sounds? We don't need in this void world of OURS!
-  sound.enable = lib.mkDefault false;
-
   # Bluetooth is so 2000s, my wireless earbuds are scratching all to hell.
   hardware.bluetooth.enable = lib.mkDefault false;
 
