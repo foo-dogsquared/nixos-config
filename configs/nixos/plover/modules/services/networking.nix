@@ -77,10 +77,8 @@ in
           domains = [ config.networking.domain ];
 
           routes = lib.singleton {
-            routeConfig = {
-              Gateway = wan.ipv4Gateway;
-              GatewayOnLink = true;
-            };
+            Gateway = wan.ipv4Gateway;
+            GatewayOnLink = true;
           };
 
           linkConfig.RequiredForOnline = "routable";

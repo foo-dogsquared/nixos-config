@@ -10,12 +10,12 @@ in
   config = lib.mkIf cfg.enable {
     networking = {
       nftables.enable = true;
-      domain = "foodogsquared.one";
       firewall = {
         enable = true;
-        allowedTCPPorts = [
-          22 # Secure Shells.
-        ];
+
+        # Secure Shells
+        allowedTCPPorts = [ 22 ];
+        allowedUDPPorts = [ 22 ];
       };
     };
   };
