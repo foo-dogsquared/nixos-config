@@ -4,7 +4,7 @@ $TTL 12h
 $ORIGIN foodogsquared.one.
 
 @	3600	IN	SOA	ns1 hostmaster (
-				2024091701 	; serial number
+				2024100201 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -19,6 +19,11 @@ $ORIGIN foodogsquared.one.
 @	IN	MX	10 heracles.mxrouting.net.
 	IN	MX	20 heracles-relay.mxrouting.net.
 	IN	TXT	v=spf1 include:mxlogin.com -all
+
+; Setting up custom hostnames for our domain, hell yeah.
+; For more information, see https://mxroutedocs.com/branding/customhostnames/.
+mail	IN	CNAME	heracles.mxrouting.net.
+webmail	IN	CNAME	heracles.mxrouting.net.
 
 ; Protect the validity of my emails sent by me!!!!
 x._domainkey	3600	IN	TXT	v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyLlrgdsO4jLncMoGAowlE14oB9R2ESxNLRBtkzc24LOPJ1CwEIE+5AHZd+ZRMwiD7fdXcyCH7/E1BRXWT+TtLnKnBgf5I0z6EbPqiPPb6nmpDWrbZzA2mdKetAKz0kFJC8oYK7lQF7Bdh57y/HWksoH6yjl1E88m8tEQ/thlyABGjqzV+txgmc1BryFu23KasqI2c4We/KgvsoSSAaUHkjpAMCuJck/P0G9mJWyTHrnZN2gCotyenLBZew0BIbiA2XYp6dQW4sU+MawfZ0E1KA0lem0SRYCB+sGD248uj4xVo9sIiCVyO9EQXy/YCZTeuTQHf1+QeFzI82vIrlv63QIDAQAB
