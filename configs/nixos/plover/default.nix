@@ -2,16 +2,12 @@
 
 {
   imports = [
-    # Since this will be rarely configured, make sure to import the appropriate
-    # hardware modules depending on the hosting provider (and even just the
-    # server).
-    ./modules/profiles/hetzner-cloud-cx22.nix
-
     # The users for this host.
     (foodogsquaredUtils.getUser "nixos" "admin")
     (foodogsquaredUtils.getUser "nixos" "plover")
 
     "${foodogsquaredModulesPath}/profiles/hardened.nix"
+    "${foodogsquaredModulesPath}/profiles/hetzner-cloud-cx22.nix"
 
     ./disko.nix
 
