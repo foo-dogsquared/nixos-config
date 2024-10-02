@@ -5,33 +5,31 @@ let
   cfg = hostCfg.services.grafana;
 
   monitoringDomain = "monitoring.${config.networking.domain}";
-  grafanaDatabaseUser = config.services.grafana.settings.database.user;
-  grafanaDatabaseName = config.services.grafana.settings.database.name;
 
   authDomain = "auth.${config.networking.domain}";
   authSubpath = path: "${authDomain}/${path}";
 
   vouchDomain = "vouch.${config.networking.domain}";
-  vouchSettings = config.services.vouch-proxy.instances."${vouchDomain}".settings;
-in
-{
+  vouchSettings =
+    config.services.vouch-proxy.instances."${vouchDomain}".settings;
+in {
   options.hosts.plover.services.grafana.enable =
     lib.mkEnableOption "monitoring dashboard for ${config.networking.hostName}";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      sops.secrets =
-        let
-          grafanaFileAttributes = {
-            owner = config.users.users.grafana.name;
-            group = config.users.users.grafana.group;
-            mode = "0400";
-          };
-        in
-        foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
-          "grafana/database/password" = grafanaFileAttributes;
-          "grafana/users/admin/password" = grafanaFileAttributes;
+      state.ports.grafana.value = 3000;
+
+      sops.secrets = let
+        grafanaFileAttributes = {
+          owner = config.users.users.grafana.name;
+          group = config.users.users.grafana.group;
+          mode = "0400";
         };
+      in foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
+        "grafana/database/password" = grafanaFileAttributes;
+        "grafana/users/admin/password" = grafanaFileAttributes;
+      };
 
       services.grafana = {
         enable = true;
@@ -44,8 +42,11 @@ in
           };
 
           database = rec {
-            host = "127.0.0.1:${builtins.toString config.services.postgresql.port}";
-            password = "$__file{${config.sops.secrets."grafana/database/password".path}}";
+            host =
+              "127.0.0.1:${builtins.toString config.services.postgresql.port}";
+            password = "$__file{${
+                config.sops.secrets."grafana/database/password".path
+              }}";
             type = "postgres";
             name = "grafana";
             user = name;
@@ -58,12 +59,12 @@ in
 
           security = {
             admin_email = config.security.acme.defaults.email;
-            admin_password = "$__file{${config.sops.secrets."grafana/users/admin/password".path}}";
+            admin_password = "$__file{${
+                config.sops.secrets."grafana/users/admin/password".path
+              }}";
             cookie_secure = true;
-            csrf_trusted_origins = [
-              vouchDomain
-              "auth.${config.networking.domain}"
-            ];
+            csrf_trusted_origins =
+              [ vouchDomain "auth.${config.networking.domain}" ];
             strict_transport_security = true;
             strict_transport_security_subdomains = true;
           };
@@ -77,7 +78,7 @@ in
             enable_gzip = true;
             enforce_domain = true;
             http_addr = "127.0.0.1";
-            http_port = 3000;
+            http_port = config.state.ports.grafana.value;
             root_url = "${monitoringDomain}/grafana";
             serve_from_sub_path = true;
           };
@@ -103,7 +104,9 @@ in
 
         locations = {
           "= /validate" = {
-            proxyPass = "http://${vouchSettings.vouch.listen}:${builtins.toString vouchSettings.vouch.port}";
+            proxyPass = "http://${vouchSettings.vouch.listen}:${
+                builtins.toString vouchSettings.vouch.port
+              }";
             extraConfig = ''
               proxy_pass_request_body off;
 
@@ -133,27 +136,18 @@ in
           zone services;
         '';
         servers = {
-          "localhost:${builtins.toString config.services.grafana.settings.server.http_port}" = { };
+          "localhost:${
+            builtins.toString config.services.grafana.settings.server.http_port
+          }" = { };
         };
       };
 
     })
 
     (lib.mkIf hostCfg.services.database.enable {
-      # Setting up with secure schema usage pattern.
-      systemd.services.grafana = {
-        preStart =
-          let
-            psql = lib.getExe' config.services.postgresql.package "psql";
-          in
-          lib.mkBefore ''
-            # Setting up the appropriate schema for PostgreSQL secure schema usage.
-            ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${grafanaDatabaseUser};"
-          '';
-      };
-
-      # Setting up PostgreSQL with secure schema.
-      services.postgresql = {
+      services.postgresql = let
+        grafanaDatabaseName = config.services.grafana.settings.database.name;
+      in {
         ensureDatabases = [ grafanaDatabaseName ];
         ensureUsers = lib.singleton {
           name = grafanaDatabaseName;
@@ -163,10 +157,14 @@ in
     })
 
     (lib.mkIf hostCfg.services.vouch-proxy.enable {
+      systemd.services.grafana.serviceConfig.SupplementaryGroups = [ "vouch-proxy" ];
+
       services.grafana.settings."auth.generic_oauth" = {
         api_url = authSubpath "oauth2/authorise";
         client_id = "grafana";
-        client_secret = "$__file{${config.sops.secrets."vouch-proxy/domains/${config.networking.domain}/jwt-secret".path}";
+        client_secret = "$__file{${
+            config.sops.secrets."vouch-proxy/domains/${config.networking.domain}/jwt-secret".path
+          }}";
         enabled = true;
         name = "Kanidm";
         oauth_url = authSubpath "ui/oauth2";
