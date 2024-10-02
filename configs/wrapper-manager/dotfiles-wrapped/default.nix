@@ -26,7 +26,7 @@ in
 {
   # This wrapper needs runtime expansion which is not possible with binary
   # wrappers.
-  build.isBinary = false;
+  build.variant = "shell";
 
   nixgl.src = nixgl;
 
