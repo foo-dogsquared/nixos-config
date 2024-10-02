@@ -1,7 +1,6 @@
 {
   imports = [
     ./files/mutable-files.nix
-    ./programs/neovide.nix
     ./programs/pipewire.nix
     ./programs/pop-launcher.nix
     ./programs/zed-editor.nix
