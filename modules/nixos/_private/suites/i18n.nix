@@ -46,9 +46,13 @@ in
       ];
     }
 
+    (lib.mkIf (cfg.setup != null) {
+      i18n.inputMethod.enable = true;
+    })
+
     (lib.mkIf (cfg.setup == "ibus") {
       i18n.inputMethod = {
-        enabled = "ibus";
+        type = "ibus";
         ibus.engines = with pkgs.ibus-engines; [
           mozc
           rime
@@ -63,7 +67,7 @@ in
 
     (lib.mkIf (cfg.setup == "fcitx5") {
       i18n.inputMethod = {
-        enabled = "fcitx5";
+        type = "fcitx5";
         fcitx5.addons = with pkgs; [
           fcitx5-lua
           fcitx5-mozc
