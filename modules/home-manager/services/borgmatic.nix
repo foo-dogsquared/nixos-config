@@ -155,7 +155,7 @@ let
     lib.nameValuePair "borgmatic-config-${n}" {
       inherit (v.initService) startAt;
       extraArgs = [
-        "--config" "${config.xdg.configHome}/borgmatic.d/${n}"
+        "--config" "${config.xdg.configHome}/borgmatic.d/${n}.yaml"
       ];
     };
 in
