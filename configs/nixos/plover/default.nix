@@ -30,6 +30,7 @@
     grafana.enable = true;
 
     # All of the self-hosted applications belong in here.
+    gitea.enable = true;
     vaultwarden.enable = true;
   };
 

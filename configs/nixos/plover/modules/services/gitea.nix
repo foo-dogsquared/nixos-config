@@ -10,7 +10,6 @@ let
   codeForgeDomain = "code.${config.networking.domain}";
 
   giteaUser = config.users.users."${config.services.gitea.user}".name;
-  giteaDatabaseUser = config.services.gitea.user;
 in
 {
   options.hosts.plover.services.gitea.enable =
@@ -19,17 +18,14 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
-        "gitea/db/password".owner = giteaUser;
-        "gitea/smtp/password".owner = giteaUser;
+        "gitea/smtp_password".owner = giteaUser;
       };
+
+      state.ports.gitea.value = 8432;
 
       services.gitea = {
         enable = true;
         appName = "foodogsquared's code forge";
-        database = {
-          type = "postgres";
-          passwordFile = config.sops.secrets."gitea/db/password".path;
-        };
 
         # Allow Gitea to take a dump.
         dump = {
@@ -40,14 +36,14 @@ in
         # There are a lot of services in port 3000 so we'll change it.
         lfs.enable = true;
 
-        mailerPasswordFile = config.sops.secrets."gitea/smtp/password".path;
+        mailerPasswordFile = config.sops.secrets."gitea/smtp_password".path;
 
         # You can see the available configuration options at
         # https://docs.gitea.io/en-us/config-cheat-sheet/.
         settings = {
           server = {
             ROOT_URL = "https://${codeForgeDomain}";
-            HTTP_PORT = 8432;
+            HTTP_PORT = config.state.ports.gitea.value;
             DOMAIN = codeForgeDomain;
           };
 
@@ -89,12 +85,12 @@ in
           mailer = {
             ENABLED = true;
             PROTOCOL = "smtp+starttls";
-            SMTP_ADDRESS = "smtp.sendgrid.net";
+            SMTP_ADDRESS = "mail.foodogsquared.one";
             SMTP_PORT = 587;
-            USER = "apikey";
+            USER = "bot@foodogsquared.one";
             FROM = "bot+gitea@foodogsquared.one";
             SEND_AS_PLAIN_TEXT = true;
-            SENDMAIL_PATH = "${pkgs.system-sendmail}/bin/sendmail";
+            SENDMAIL_PATH = lib.getExe' pkgs.system-sendmail "sendmail";
           };
 
           # Reduce the logs to be filled with. You also have to keep in mind this
@@ -111,7 +107,6 @@ in
           session.COOKIE_SECURE = true;
 
           # Some more database configuration.
-          database.SCHEMA = config.services.gitea.user;
 
           # Run various periodic services.
           "cron.update_mirrors".SCHEDULE = "@every 3h";
@@ -148,6 +143,20 @@ in
     }
 
     (lib.mkIf hostCfg.services.database.enable {
+      sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
+        "gitea/db_password".owner = giteaUser;
+      };
+
+      services.gitea.database = {
+        type = "postgres";
+        passwordFile = config.sops.secrets."gitea/db_password".path;
+        port = config.state.ports.postgresql.value;
+      };
+
+      services.gitea.settings.database = {
+        SCHEMA = config.services.gitea.user;
+      };
+
       # Making sure this plays nicely with the database service of choice. Take
       # note, we're mainly using secure schema usage pattern here as described from
       # the PostgreSQL documentation at
@@ -158,32 +167,6 @@ in
           name = config.services.gitea.user;
           ensureDBOwnership = true;
         };
-      };
-
-      # Setting up Gitea for PostgreSQL secure schema usage.
-      systemd.services.gitea = {
-        # Gitea service module will have to set up certain things first which is
-        # why we have to go first.
-        preStart =
-          let
-            gitea = lib.getExe' config.services.gitea.package "gitea";
-            giteaAdminUsername = lib.escapeShellArg "foodogsquared";
-            psql = lib.getExe' config.services.postgresql.package "psql";
-          in
-          lib.mkMerge [
-            (lib.mkBefore ''
-              # Setting up the appropriate schema for PostgreSQL secure schema usage.
-              ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${giteaDatabaseUser};"
-            '')
-
-            (lib.mkAfter ''
-              # Setting up the administrator account automated.
-              ${gitea} admin user list --admin | grep -q ${giteaAdminUsername} \
-                || ${gitea} admin user create \
-                  --username ${giteaAdminUsername} --email foodogsquared@${config.networking.domain} \
-                  --random-password --random-password-length 76 --admin
-            '')
-          ];
       };
     })
 
