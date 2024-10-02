@@ -36,6 +36,7 @@
 
   # We're using our own VPN configuration for this one.
   suites.vpn.personal.enable = true;
+  services.tailscale.useRoutingFeatures = "server";
 
   # Post installation script to be executed manually by the provisioner.
   system.build.postInstallationScript = pkgs.writeShellApplication {
