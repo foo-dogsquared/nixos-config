@@ -20,6 +20,8 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
+      state.ports.vaultwarden.value = 8222;
+
       sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
         "vaultwarden/env".owner = vaultwardenUser;
       };
@@ -32,7 +34,7 @@ in
 
           # Configuring the server.
           ROCKET_ADDRESS = "127.0.0.1";
-          ROCKET_PORT = 8222;
+          ROCKET_PORT = config.state.ports.vaultwarden.value;
 
           # Ehh... It's only a few (or even one) users anyways so nah. Since this
           # instance will not configure SMTP server, this pretty much means
@@ -55,12 +57,6 @@ in
 
           # Enabling web vault with whatever nixpkgs comes in.
           WEB_VAULT_ENABLED = true;
-
-          # Mailer service configuration (except the user and password).
-          SMTP_HOST = "smtp.sendgrid.net";
-          SMTP_PORT = 587;
-          SMTP_FROM_NAME = "Vaultwarden";
-          SMTP_FROM = "bot+vaultwarden@foodogsquared.one";
         };
       };
 

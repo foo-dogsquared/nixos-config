@@ -28,6 +28,9 @@
     reverse-proxy.enable = true;
     fail2ban.enable = true;
     grafana.enable = true;
+
+    # All of the self-hosted applications belong in here.
+    vaultwarden.enable = true;
   };
 
   # We're using our own VPN configuration for this one.
