@@ -86,7 +86,10 @@ in
               label = "remote-hetzner-boxes";
             };
             extra_borg_options = {
-              init = "--make-parent-dirs";
+              init = builtins.toString [
+                "--make-parent-dirs"
+                "--encryption" "repokey-blake2"
+              ];
             };
           };
         };
@@ -126,5 +129,23 @@ in
         };
       })
     ];
+
+    # My game backups.
+    services.ludusavi = {
+      enable = true;
+      startAt = "daily";
+
+      settings = let
+        backup_path = "${config.xdg.cacheHome}/ludusavi/backups";
+      in {
+        manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
+        roots = [
+          { path = "${config.home.homeDirectory}/.steam"; store = "steam"; }
+          { path = "${config.xdg.dataHome}/lutris"; store = "lutris"; }
+        ];
+        backup.path = backup_path;
+        restore.path = backup_path;
+      };
+    };
   };
 }
