@@ -157,13 +157,21 @@ in {
     })
 
     (lib.mkIf hostCfg.services.vouch-proxy.enable {
-      systemd.services.grafana.serviceConfig.SupplementaryGroups = [ "vouch-proxy" ];
+      sops.secrets = let
+        grafanaFileAttributes = {
+          owner = config.users.users.grafana.name;
+          group = config.users.users.grafana.group;
+          mode = "0400";
+        };
+      in foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
+        "grafana/oauth_client_secret" = grafanaFileAttributes;
+      };
 
       services.grafana.settings."auth.generic_oauth" = {
         api_url = authSubpath "oauth2/authorise";
         client_id = "grafana";
         client_secret = "$__file{${
-            config.sops.secrets."vouch-proxy/domains/${config.networking.domain}/jwt-secret".path
+            config.sops.secrets."grafana/oauth_client_secret".path
           }}";
         enabled = true;
         name = "Kanidm";
