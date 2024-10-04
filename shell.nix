@@ -12,6 +12,7 @@ pkgs.mkShell {
     asciidoctor
     disko
     deploy-rs
+    hcloud
     npins
     nixos-anywhere
     home-manager
