@@ -115,6 +115,7 @@ autocontain -s mxroute\.com Work
 autocontain -s mailbox\.org Work
 autocontain -s cloud\.oracle\.com Work
 autocontain -s tailscale\.com Work
+autocontain -s cloudflare\.com Work
 
 " So does most freelancing sites.
 autocontain -s upwork\.com Work
