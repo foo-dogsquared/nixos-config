@@ -63,15 +63,15 @@ in
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         dconf-editor # A saner version of Windows registry.
-        gnome.gnome-boxes # Virtual machines, son.
-        gnome.polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
+        gnome-boxes # Virtual machines, son.
+        polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
         gradience # Make it rain!
         handbrake # Take a break from those custom ffmpeg conversion scripts.
         shortwave # Yer' humble internet radio.
         tangram # Your social media manager, probably.
         ymuse # Simple MPD client.
 
-        gnome.gnome-backgrounds # Default backgrounds.
+        gnome-backgrounds # Default backgrounds.
 
         gnome-menus # It is required for custom menus in extensions.
         gnome-extension-manager # The cooler GNOME extensions app.
