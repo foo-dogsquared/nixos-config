@@ -30,6 +30,10 @@ let
         "+ ${config.xdg.userDirs.pictures}"
         "+ ${config.xdg.userDirs.templates}"
         "+ ${config.xdg.userDirs.videos}"
+        "+ ${config.home.homeDirectory}/.thunderbird"
+        "+ ${config.xdg.dataHome}/gopass"
+        "+ ${config.xdg.configHome}/age"
+        "+ ${config.xdg.configHome}/sops"
       ];
       exclude_if_present = [
         ".nobackup"
