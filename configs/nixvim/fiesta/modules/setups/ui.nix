@@ -45,29 +45,33 @@ in
     # Enable them status bars.
     plugins.lualine = {
       enable = true;
-      iconsEnabled = true;
-      globalstatus = true;
-      alwaysDivideMiddle = true;
+      settings = {
+        options = {
+          icons_enabled = true;
+          globalstatus = true;
+          always_divide_middle = true;
+        };
 
-      # Disable the section separators.
-      sectionSeparators = {
-        left = "";
-        right = "";
-      };
+        # Disable the section separators.
+        section_separators = {
+          left = "";
+          right = "";
+        };
 
-      sections = {
-        lualine_a = [ "mode" ];
-        lualine_c = [
-          {
-            name = "filename";
-            extraConfig = {
-              newfile_status = true;
-              shorting_target = 10;
-              path = 1;
-            };
-          }
-        ];
-        lualine_z = [ "location" ];
+        sections = {
+          lualine_a = [ "mode" ];
+          lualine_c = [
+            {
+              name = "filename";
+              extraConfig = {
+                newfile_status = true;
+                shorting_target = 10;
+                path = 1;
+              };
+            }
+          ];
+          lualine_z = [ "location" ];
+        };
       };
     };
   };
