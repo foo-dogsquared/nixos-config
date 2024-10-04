@@ -80,6 +80,11 @@ in
       Unit = {
         Description = "Periodic game backup";
         Documentation = [ "https://github.com/mtkennerly/ludusavi" ];
+
+        After = [
+          "network-online.target"
+          "default.target"
+        ];
       };
 
       Service = {
