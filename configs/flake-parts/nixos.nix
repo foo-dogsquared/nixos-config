@@ -20,8 +20,13 @@ in
         modules = [
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
+
           inputs.self.nixosModules.wrapper-manager
           {
+            documentation.nixos.extraModules = [
+              ../../modules/nixos
+              ../../modules/nixos/_private
+            ];
             wrapper-manager.documentation.manpage.enable = true;
             wrapper-manager.documentation.extraModules = [
               ../../modules/wrapper-manager
@@ -72,11 +77,6 @@ in
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
         ];
-        deploy = {
-          hostname = "plover.foodogsquared.one";
-          autoRollback = true;
-          magicRollback = true;
-        };
       };
 
       # TODO: Remove extra newlines that are here for whatever reason.
@@ -136,15 +136,6 @@ in
       defaultNixConf
       ../../modules/nixos/profiles/generic.nix
       ../../modules/nixos/profiles/nix-conf.nix
-
-      {
-        config.documentation.nixos = {
-          extraModules = [
-            ../../modules/nixos
-            ../../modules/nixos/_private
-          ];
-        };
-      }
     ];
   };
 
