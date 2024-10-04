@@ -117,6 +117,7 @@ let
           "https://torsion.org/borgmatic/docs/reference/configuration"
         ];
         ConditionACPower = true;
+        StartLimitBurst = 5;
       };
 
       Service = {
