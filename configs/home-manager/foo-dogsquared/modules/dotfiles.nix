@@ -32,7 +32,7 @@ in
 
     (lib.mkIf (userCfg.setups.development.enable) {
       xdg.configFile = {
-        kitty.source = getDotfiles "emacs";
+        kitty.source = getDotfiles "kitty";
         wezterm.source = getDotfiles "wezterm";
       };
     })
