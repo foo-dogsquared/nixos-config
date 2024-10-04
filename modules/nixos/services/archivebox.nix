@@ -97,7 +97,6 @@ let
     lib.nameValuePair (jobUnitName name) {
       description =
         "Archivebox download job '${name}'";
-      after = [ "network.target" ];
       documentation = [ "https://docs.archivebox.io/" ];
       timerConfig = {
         Persistent = true;
