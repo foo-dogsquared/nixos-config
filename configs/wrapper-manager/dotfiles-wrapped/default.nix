@@ -4,10 +4,8 @@
 # parts from the config are conditionally setting up NixGL wrapping. Though,
 # you have to use NixOS systems in order to actually use it. We probably should
 # have a specialized launcher for this.
-let
-  sources = import ./npins;
-in
-{ lib, pkgs, wrapperManagerLib, ... }@moduleArgs:
+let sources = import ./npins;
+in { lib, pkgs, wrapperManagerLib, ... }@moduleArgs:
 
 let
   inherit (sources) dotfiles nixgl;
@@ -22,8 +20,7 @@ let
     } else {
       inherit arg0;
     };
-in
-{
+in {
   # This wrapper needs runtime expansion which is not possible with binary
   # wrappers.
   build.variant = "shell";
@@ -31,17 +28,13 @@ in
   nixgl.src = nixgl;
 
   wrappers.wezterm = lib.mkMerge [
-    {
-      env.WEZTERM_CONFIG_FILE.value = getDotfiles "wezterm/wezterm.lua";
-    }
+    { env.WEZTERM_CONFIG_FILE.value = getDotfiles "wezterm/wezterm.lua"; }
 
     (wrapNixGL (lib.getExe' pkgs.wezterm "wezterm"))
   ];
 
   wrappers.kitty = lib.mkMerge [
-    {
-      env.KITTY_CONFIG_DIRECTORY.value = getDotfiles "kitty";
-    }
+    { env.KITTY_CONFIG_DIRECTORY.value = getDotfiles "kitty"; }
 
     (wrapNixGL (lib.getExe' pkgs.kitty "kitty"))
   ];
@@ -56,19 +49,23 @@ in
     {
       env.EMACSDIR.value = builtins.toString sources.doom-emacs;
       env.DOOMDIR.value = getDotfiles "emacs";
-      env.DOOMPROFILELOADFILE.value = lib.escapeShellArg "$XDG_CACHE_HOME/doom/profiles.el";
+      env.DOOMPROFILELOADFILE.value =
+        lib.escapeShellArg "$XDG_CACHE_HOME/doom/profiles.el";
 
       # TODO: This will be removed in Doom Emacs 3.0 as far as I can tell so we'll
       # remove it once that happens.
       env.DOOMLOCALDIR.value = lib.escapeShellArg "$XDG_CONFIG_HOME/emacs/";
 
-      pathAdd = wrapperManagerLib.getBin [
-        sources.doom-emacs
-      ];
+      pathAdd = wrapperManagerLib.getBin [ sources.doom-emacs ];
     }
 
     (wrapNixGL (lib.getExe' pkgs.emacs "emacs"))
   ];
+
+  wrappers.zellij = {
+    arg0 = lib.getExe' pkgs.zellij "zellij";
+    env.ZELLIJ_CONFIG_DIR.value = getDotfiles "zellij";
+  };
 
   build.extraSetup = ''
     install -Dm0755 ${getDotfiles "bin"}/* -t $out/bin
