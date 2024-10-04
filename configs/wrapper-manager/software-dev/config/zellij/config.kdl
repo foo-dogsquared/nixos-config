@@ -1,0 +1,4 @@
+simplified_ui true
+on_force_close "quit"
+default_mode "locked"
+mouse_mode false

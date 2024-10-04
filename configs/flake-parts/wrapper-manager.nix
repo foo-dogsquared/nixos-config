@@ -12,6 +12,11 @@
         systems = [ "x86_64-linux" ];
         nixpkgs.branch = "nixos-unstable";
       };
+
+      software-dev = {
+        systems = [ "x86_64-linux" ];
+        nixpkgs.branch = "nixos-unstable";
+      };
     };
   };
 
