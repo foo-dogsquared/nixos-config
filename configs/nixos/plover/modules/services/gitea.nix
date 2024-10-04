@@ -106,8 +106,6 @@ in
           # Session configuration.
           session.COOKIE_SECURE = true;
 
-          # Some more database configuration.
-
           # Run various periodic services.
           "cron.update_mirrors".SCHEDULE = "@every 3h";
 
@@ -168,6 +166,13 @@ in
           ensureDBOwnership = true;
         };
       };
+
+      systemd.services.gitea.preStart = let
+        psql = lib.getExe' config.services.postgresql.package "psql";
+        schema = config.services.gitea.user;
+      in lib.mkBefore ''
+        ${psql} -tAc "CREATE SCHEMA IF NOT EXISTS AUTHORIZATION ${schema};"
+      '';
     })
 
     (lib.mkIf hostCfg.services.reverse-proxy.enable {
