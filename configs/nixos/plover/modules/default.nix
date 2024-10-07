@@ -30,6 +30,7 @@
     ./services/fail2ban.nix
     ./services/gitea.nix
     ./services/grafana.nix
+    ./services/crowdsec.nix
     ./services/monitoring.nix
     ./services/vouch-proxy.nix
     ./services/vaultwarden.nix
