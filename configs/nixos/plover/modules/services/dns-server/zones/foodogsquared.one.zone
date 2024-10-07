@@ -3,8 +3,8 @@
 $TTL 12h
 $ORIGIN foodogsquared.one.
 
-@	3600	IN	SOA	ns1 hostmaster (
-				2024100201 	; serial number
+@	3600	IN	SOA	ns1.first-ns.de. hostmaster (
+				2024100601 	; serial number
 				1h		; refresh
 				15m		; update retry
 				3w		; expiry
@@ -31,13 +31,6 @@ x._domainkey	3600	IN	TXT	v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBC
 ; Protect my domain email from spoofing.
 _dmarc	400	IN	TXT	v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one;ruf=mailto:admin@foodogsquared.one
 
-; This will make PGP clients find my public key for the email.
-_hkps._tcp	IN	SRV	1 1 443 pgp.mailbox.org.
-
-; Email clients autoconfiguration. Useful for email clients like Thunderbird.
-autoconfig	IN	CNAME	mailbox.org.
-_autodiscover._tcp	IN	SRV	0 0 443 mailbox.org.
-
 ; My websites that are deployed by somewhere else.
 @	IN	A	75.2.60.5
 www	IN	CNAME	foodogsquared.netlify.app.
@@ -63,15 +56,5 @@ monitoring	IN	CNAME	plover
 
 ; Other things.
 _github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709
-
-; Setting up SendGrid.
-; This is for rewriting tracking links to my domain.
-url2871	IN	CNAME	sendgrid.net.
-30339354	IN	CNAME	sendgrid.net.
-
-; This is for SendGrid sender authentication.
-em1172	IN	CNAME	u30339354.wl105.sendgrid.net.
-s1._domainkey	IN	CNAME	s1.domainkey.u30339354.wl105.sendgrid.net.
-s2._domainkey	IN	CNAME	s2.domainkey.u30339354.wl105.sendgrid.net.
 
 ; vim: expandtab! tabstop=8 shiftwidth=8 filetype=dns
