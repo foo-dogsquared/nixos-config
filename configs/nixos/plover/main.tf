@@ -33,7 +33,7 @@ resource "hetznerdns_primary_server" "main_ipv6" {
 
 resource "hcloud_server" "plover" {
   name        = "plover"
-  image       = "debian-12"
+  image       = "ubuntu-24.04"
   server_type = "cx22"
   datacenter  = "hel1-dc2"
 
@@ -42,8 +42,8 @@ resource "hcloud_server" "plover" {
     hcloud_ssh_key.plover.id
   ]
 
-  delete_protection  = true
-  rebuild_protection = true
+  delete_protection  = false
+  rebuild_protection = false
 
   public_net {
     ipv4_enabled = true
@@ -71,9 +71,9 @@ resource "hcloud_ssh_key" "plover" {
 }
 
 resource "hcloud_network" "plover" {
-  name     = "plover"
+  name     = "personal"
   ip_range = "10.0.0.0/8"
-  delete_protection = true
+  delete_protection = false
 }
 
 resource "hcloud_network_subnet" "plover-subnet" {
