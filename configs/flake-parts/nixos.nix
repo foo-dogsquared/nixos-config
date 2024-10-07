@@ -71,6 +71,7 @@ in
           hostname = subdomain "plover";
           autoRollback = true;
           magicRollback = true;
+          activationTimeout = 1200;
         };
 
         modules = [
