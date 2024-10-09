@@ -1,0 +1,42 @@
+; This is trying to be discrete with certain information. This should be copied
+; and replaced with more confidential information somewhere.
+$TTL 12h
+$ORIGIN foodogsquared.one.
+
+@	3600	IN	SOA	ns1.first-ns.de. hostmaster (
+				2024100601 	; serial number
+				1h		; refresh
+				15m		; update retry
+				3w		; expiry
+				3h		; nx = nxdomain ttl
+			)
+	3600	IN	NS	ns1.first-ns.de.
+	3600	IN	NS	robotns2.second-ns.de.
+	3600	IN	NS	robotns3.second-ns.com.
+
+; Setting up the mail-related DNS entries.
+; https://mxroutedocs.com/
+@	IN	MX	10 heracles.mxrouting.net.
+	IN	MX	20 heracles-relay.mxrouting.net.
+	IN	TXT	"v=spf1 include:mxlogin.com -all"
+
+; Setting up custom hostnames for our domain, hell yeah.
+; For more information, see https://mxroutedocs.com/branding/customhostnames/.
+mail	IN	CNAME	heracles.mxrouting.net.
+webmail	IN	CNAME	heracles.mxrouting.net.
+
+; Protect the validity of my emails sent by me!!!!
+x._domainkey	3600	IN	TXT	"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyLlrgdsO4jLncMoGAowlE14oB9R2ESxNLRBtkzc24LOPJ1CwEIE+5AHZd+ZRMwiD7fdXcyCH7/E1BRXWT+TtLnKnBgf5I0z6EbPqiPPb6nmpDWrbZzA2mdKetAKz0kFJC8oYK7lQF7Bdh57y/HWksoH6yjl1E88m8tEQ/thlyABGjqzV+txgmc1BryFu23KasqI2c4We/KgvsoSSAaUHkjpAMCuJck/P0G9mJWyTHrnZN2gCotyenLBZew0BIbiA2XYp6dQW4sU+MawfZ0E1KA0lem0SRYCB+sGD248uj4xVo9sIiCVyO9EQXy/YCZTeuTQHf1+QeFzI82vIrlv63QIDAQAB"
+
+; Protect my domain email from spoofing.
+_dmarc	400	IN	TXT	"v=DMARC1;p=none;rua=mailto:postmaster@foodogsquared.one;ruf=mailto:admin@foodogsquared.one"
+
+; My websites that are deployed by somewhere else.
+@	IN	A	75.2.60.5
+www	IN	CNAME	foodogsquared.netlify.app.
+wiki	IN	CNAME	foodogsquared-wiki.netlify.app.
+
+; Other things.
+_github-pages-challenge-foo-dogsquared	IN	TXT	673febae1ea0095e76d1e02a7a1709
+
+; vim: expandtab! tabstop=8 shiftwidth=8 filetype=dns
