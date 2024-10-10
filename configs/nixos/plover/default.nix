@@ -18,7 +18,11 @@
 
   # Host-specific modules structuring.
   hosts.plover.services = {
-    networking.enable = true;
+    networking = {
+      enable = true;
+      macAddress = "96:00:03:c3:99:93";
+    };
+
     backup.enable = true;
     database.enable = true;
     firewall.enable = true;

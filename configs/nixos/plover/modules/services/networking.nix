@@ -10,8 +10,26 @@ let
   inherit (config.state.network) interfaces;
 in
 {
-  options.hosts.plover.services.networking.enable =
-    lib.mkEnableOption "preferred networking setup";
+  options.hosts.plover.services.networking = {
+    enable = lib.mkEnableOption "preferred networking setup";
+
+    restrictLocalOnWAN = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      example = false;
+      description = ''
+        Whether to disable local networking on the public-facing network
+        interface. The recommended practice for this is to create another
+        network interface with the local network.
+      '';
+    };
+
+    macAddress = lib.mkOption {
+      type = lib.types.nonEmptyStr;
+      description = "MAC address of the public-facing network interface";
+      example = "00:00:00:00:c3:54:93";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     networking = {
@@ -52,68 +70,61 @@ in
         "10-wan" = let
           inherit (interfaces) wan;
         in {
-          matchConfig.Name = lib.concatStringsSep " " mainEthernetInterfaceNames;
-
-          # Setting up IPv6.
-          address = [
-            "${wan.ipv4}/32"
-            "${wan.ipv6}/64"
-          ];
-          gateway = [ wan.ipv6Gateway ];
-
-          dns = [
-            "185.12.64.1"
-            "185.12.64.2"
-
-            "2a01:4ff:ff00::add:2"
-            "2a01:4ff:ff00::add:1"
-          ]
-          ++ lib.optionals hostCfg.services.dns-server.enable [
-            wan.ipv4
-            wan.ipv6
-          ];
-
-          # Setting up some other networking thingy.
-          domains = [ config.networking.domain ];
-
-          routes = lib.singleton {
-            Gateway = wan.ipv4Gateway;
-            GatewayOnLink = true;
+          matchConfig = {
+            Name = lib.concatStringsSep " " mainEthernetInterfaceNames;
+            PermanentMACAddress = cfg.macAddress;
           };
 
-          linkConfig.RequiredForOnline = "routable";
-        };
+          networkConfig = {
+            DHCP = "ipv4";
+            LinkLocalAddressing = "ipv6";
+            IPv6AcceptRA = true;
+          };
 
-        # The interface for our LAN.
-        "20-lan" = let
-          inherit (interfaces) lan;
-        in {
-          matchConfig.Name = lib.concatStringsSep " " internalEthernetInterfaceNames;
+          dhcpV4Config = {
+            RouteMetric = 100;
+            UseMTU = true;
+          };
 
-          # Take note of the private subnets set in your Hetzner Cloud instance
-          # (at least for IPv4 addresses)..
-          address = [
-            "${lan.ipv4}/16"
-            "${lan.ipv6}/64"
-          ];
-
-          # Using the authoritative DNS server to enable accessing them nice
-          # internal services with domain names.
+          address = [ "${wan.ipv6}/64" ];
           dns = [
-            lan.ipv4
-            lan.ipv6
+            "2a01:4ff:ff00::add:2"
+            "2a01:4ff:ff00::add:1"
           ];
 
-          # Force our own internal domain to be used in the system.
-          domains = [ config.networking.fqdn ];
+          routes = [
+            {
+              Gateway = wan.ipv4Gateway;
+              GatewayOnLink = true;
+            }
 
-          # Use the gateway to enable resolution of external domains.
-          gateway = [
-            lan.ipv4Gateway
-            lan.ipv6Gateway
-          ];
+            {
+              Gateway = wan.ipv6Gateway;
+              GatewayOnLink = true;
+            }
+          ]
+            ++ lib.optionals cfg.restrictLocalOnWAN [
+              {
+                Destination = "176.16.0.0/12";
+                Type = "unreachable";
+              }
 
-          networkConfig.IPv6AcceptRA = true;
+              {
+                Destination = "10.0.0.0/8";
+                Type = "unreachable";
+              }
+
+              {
+                Destination = "192.168.0.0/16";
+                Type = "unreachable";
+              }
+
+              {
+                Destination = "fc00::/7";
+                Type = "unreachable";
+              }
+            ];
+
           linkConfig.RequiredForOnline = "routable";
         };
       };
