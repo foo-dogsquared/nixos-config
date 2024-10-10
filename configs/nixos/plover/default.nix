@@ -26,7 +26,6 @@
     backup.enable = true;
     database.enable = true;
     firewall.enable = true;
-    dns-server.enable = true;
     idm.enable = true;
     monitoring.enable = true;
     reverse-proxy.enable = true;
@@ -118,9 +117,10 @@
   # self-hosted DNS server.
   security.acme.defaults = {
     email = "admin+acme@foodogsquared.one";
-    dnsProvider = "rfc2136";
-    dnsResolver = "1.1.1.1";
-    credentialsFile = config.sops.secrets."lego/env".path or "/var/lib/secrets/acme.env";
+    server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+    dnsProvider = "hetzner";
+    environmentFile = config.sops.secrets."lego/env".path or "/var/lib/secrets/acme.env";
+    enableDebugLogs = true;
   };
 
   # Enable generating new DH params.
