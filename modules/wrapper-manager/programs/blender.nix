@@ -26,7 +26,7 @@ in
     enable = lib.mkEnableOption "Blender, a 3D computer graphics tool";
 
     package = lib.mkPackageOption pkgs "blender" {
-      example = lib.literalExpression ''
+      example = ''
         pkgs.blender-with-packages {
           name = "sample-studio-wrapped";
           packages = with pkgs.python3Packages; [ pandas ];

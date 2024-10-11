@@ -22,7 +22,7 @@
 
           subwrapper = {
             arg0 = options.arg0;
-            extraArgs = options.appendArgs;
+            extraArgs = options.prependArgs;
           };
         };
       };
