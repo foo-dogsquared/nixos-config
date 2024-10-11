@@ -25,12 +25,12 @@ resource "gitea_user" "foodogsquared" {
 
 resource "gitea_public_key" "foodogsquared" {
   title = "main public key"
-  username = "foodogsquared"
-  key = file("${path.module}/id")
+  username = gitea_user.foodogsquared.username
+  key = file("../../../../home-manager/foo-dogsquared/files/ssh-key.pub")
 }
 
 resource "gitea_repository" "nixos-config" {
-  username = "foodogsquared"
+  username = gitea_user.foodogsquared.username
   name = "nixos-config"
   mirror = true
   migration_clone_address = "https://github.com/foo-dogsquared/nixos-config.git"
@@ -38,31 +38,34 @@ resource "gitea_repository" "nixos-config" {
   migration_service_auth_token = var.github_clone_token
   migration_mirror_interval = "4h"
   website = "https://foo-dogsquared.github.io/nixos-config"
+  private = false
 }
 
-resource "gitea_repository" "blog" {
-  username = "foodogsquared"
-  name = "blog"
+resource "gitea_repository" "website" {
+  username = gitea_user.foodogsquared.username
+  name = "website"
   mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/blog.git"
+  migration_clone_address = "https://github.com/foo-dogsquared/website.git"
   migration_service = "github"
   migration_service_auth_token = var.github_clone_token
   migration_mirror_interval = "4h"
   website = "https://foodogsquared.one"
+  private = false
 }
 
 resource "gitea_repository" "asciidoctor-foodogsquared-extensions" {
-  username = "foodogsquared"
+  username = gitea_user.foodogsquared.username
   name = "asciidoctor-foodogsquared-extensions"
   mirror = true
   migration_clone_address = "https://github.com/foo-dogsquared/asciidoctor-foodogsquared-extensions.git"
   migration_service = "github"
   migration_service_auth_token = var.github_clone_token
   migration_mirror_interval = "4h"
+  private = false
 }
 
 resource "gitea_repository" "wiki" {
-  username = "foodogsquared"
+  username = gitea_user.foodogsquared.username
   name = "wiki"
   mirror = true
   migration_clone_address = "https://github.com/foo-dogsquared/wiki.git"
@@ -70,4 +73,17 @@ resource "gitea_repository" "wiki" {
   migration_service_auth_token = var.github_clone_token
   migration_mirror_interval = "4h"
   website = "https://wiki.foodogsquared.one"
+  private = false
+}
+
+resource "gitea_repository" "dotfiles" {
+  username = gitea_user.foodogsquared.username
+  name = "dotfiles"
+  mirror = true
+  migration_clone_address = "https://github.com/foo-dogsquared/dotfiles.git"
+  migration_service = "github"
+  migration_service_auth_token = var.github_clone_token
+  migration_mirror_interval = "4h"
+  website = "https://wiki.foodogsquared.one"
+  private = false
 }
