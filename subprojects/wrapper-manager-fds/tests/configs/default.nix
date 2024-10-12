@@ -15,6 +15,7 @@ in
     modules = [ ./wrapper-neofetch.nix ];
     specialArgs.yourMomName = "Yor mom";
   };
+  xdg-desktop-entry = build { modules = [ ./xdg-desktop-entry.nix ]; };
   single-basepackage = build { modules = [ ./single-basepackage.nix ]; };
   neofetch-with-additional-files = build { modules = [ ./neofetch-with-additional-files.nix ]; };
   lib-modules-make-wraparound = build { modules = [ ./lib-modules-subset/make-wraparound.nix ]; };
