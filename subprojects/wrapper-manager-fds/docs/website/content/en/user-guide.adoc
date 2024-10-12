@@ -3,6 +3,8 @@ title: User guide
 ---
 = User guide
 
+:module_options_link: ../wrapper-manager-env-options#_
+
 
 While the link:./project-overview.adoc[project overview] should be enough to get you started, this document contain all of the information you may need to make full use of wrapper-manager.
 
@@ -119,6 +121,139 @@ This is mainly useful for setting values within the configuration.
 }
 ----
 
+One of the typical thing to set in a wrapper script is the environment variables.
+You could set them from link:{module_options_link}environment_variables[`environment.variables`] to set it for all of the wrappers.
+For wrapper-specific values, just go for link:{module_options_link}wrappers_name_env[`wrappers.<name>.env`].
+
+[source, nix]
+----
+{ config, lib, pkgs, wrapperManagerLib, ... }: {
+  # Set a envvar and its value.
+  environment.variables.LOG_STYLE.value = "systemd";
+
+  # By default, the values are forcibly set. You could set as the default value
+  # if unset by setting the action to `set-default`.
+  environment.variables.LOG_STYLE.action = "set-default";
+
+  # Unset an environment variable. Its value will be ignored.
+  environment.variables.MODS_DIR.action = "unset";
+
+  # Set a list of separator-delimited values, typically for PATH,
+  # XDG_CONFIG_DIRS, XDG_DATA_DIRS, and the like.
+  environment.variables.PATH = {
+    action = "prefix";
+    separator = ":";
+    value = wrapperManagerLib.getBin (with pkgs; [
+      yt-dlp
+      neofetch
+    ]);
+  };
+
+  # For wrapper-specific values, it has the same interface, just different attribute.
+  wrappers.name.env.LOG_STYLE.value = "systemd";
+}
+----
+
+
+
+[#xdg-integration]
+=== XDG integration
+
+This environment comes with various features for XDG desktop integrations.
+These does not necessarily implements the feature itself but rather creates the files typically recognized with the wider-scoped list of packages (e.g., `home.packages` for home-manager, `environment.systemPackages` for NixOS).
+
+As one of those features, you can create https://www.freedesktop.org/wiki/Specifications/desktop-entry-spec/[XDG desktop entries] to be exported to `$out/share/applications/$NAME.desktop` in the output path.
+This uses the `makeDesktopItem` builder from nixpkgs so the settings should be the same with those.
+Here's an example of creating a wrapper-manager package with a sole desktop entry for Firefox with the additional configuration to be opened within GNOME Shell.
+
+[source, nix]
+----
+{ config, lib, pkgs, ... }: {
+  xdg.desktopEntries.firefox = {
+    name = "Firefox";
+    genericName = "Web browser";
+    exec = "firefox %u";
+    terminal = false;
+    categories = [ "Application" "Network" "WebBrowser" ];
+    mimeTypes = [ "text/html" "text/xml" ];
+    extraConfig."X-GNOME-Autostart-Phase" = "WindowManager";
+    keywords = [ "Web" "Browser" ];
+    startupNotify = false;
+    startupWMClass = "MyOwnClass";
+  };
+}
+----
+
+You could also automatically create a desktop entry for one of your wrappers by setting link:{module_options_link}wrappers_name_xdg_desktopentry_enable[`wrappers.<name>.xdg.desktopEntry.enable`] to `true` and configuring the entry with link:{module_options_link}wrappers_name_xdg_desktopentry_settings[`wrappers.<name>.xdg.desktopEntry.settings`].
+It simply sets some of those settings automatically for you such as the `Name=`, `DesktopName=`, and `Exec=` but you'll have to set the rest of it yourself for full control what's in there.
+
+[source, nix]
+----
+{ lib, pkgs, ... }: {
+  wrappers.nvim = {
+    arg0 = lib.getExe' pkgs.neovim "nvim";
+    xdg.desktopEntry = {
+      enable = true;
+      settings = {
+        terminal = true;
+        extraConfig."X-GNOME-Autostart-Phase" = "WindowManager";
+        keywords = [ "Text editor" ];
+        startupNotify = false;
+        startupWMClass = "MyOwnClass";
+      };
+    };
+  };
+}
+----
+
+Another XDG-related feature for wrapper-manager is adding paths to a couple of https://specifications.freedesktop.org/basedir-spec/latest/[XDG search paths] including for `XDG_CONFIG_DIRS` and `XDG_DATA_DIRS`.
+You can either add them for all wrappers or set them per-wrapper.
+
+[source, nix]
+----
+{ config, lib, pkgs, wrapperManagerLib, ... }: let
+  inherit (wrapperManagerLib) getXdgDataDirs getXdgConfigDirs;
+  searchPaths = with pkgs; [ yt-dlp neofetch ];
+in {
+  xdg.configDirs = getXdgConfigDirs searchPaths;
+  xdg.dataDirs = getXdgDataDirs searchPaths;
+
+  wrappers.nvim.xdg.configDirs = getXdgConfigDirs searchPaths;
+  wrappers.emacs.xdg.dataDirs = getXdgDataDirs searchPaths;
+}
+----
+
+
+[#some-more-other-integrations]
+=== Some more other integrations
+
+Being a module environment specializing on creating wrappers, there are some other integrations that you could use.
+One of them is setting arbitrary files within the output path of the derivation with link:{module_options_link}files[`files`].
+The interface should be similar to NixOS' `environment.etc` or home-manager's `home.file` module option.
+
+[source, nix]
+----
+{ config, lib, ... }: {
+  files."etc/xdg/custom-application".text = ''
+    HELLO=WORLD
+    LOCATION=Inside of your house
+  '';
+
+  # Just take note any files in `$out/bin` will be overridden by the wrappers
+  # if they have the same name.
+  files."bin/what" = {
+    text = "echo WHAT $@";
+    mode = "0755";
+  };
+
+  files."share/example".source = ./docs/example;
+}
+----
+
+One of them is the setting the locale archive which is practically required for every Nix-built applications.
+To enable them, you'll have to set link:{module_options_link}locale_enable[`locale.enable`] to `true` to set it for all wrappers but you can specifically set them with link:{module_options_link}wrappers_name_locale_enable[`wrappers.<name>.locale.enable`].
+You could also change the locale archive package with link:{module_options_link}locale_package[`locale.package`].
+
 
 [#as-a-standalone-package]
 === As a standalone package
@@ -159,6 +294,7 @@ pkgs.mkShell {
   ];
 }
 ----
+
 
 
 [#with-nixos-and-home-manager]
@@ -235,6 +371,16 @@ As an example, you can create wrappers through `wrapper-manager.packages` where 
 Aside from an easy way to create wrappers instead of manually invoking the building function from wrapper-manager, there's also another nicety with the integration module.
 The wrapper-manager configuration will have an additional module argument depending on the environment: `nixosConfig` for NixOS and `hmConfig` for home-manager.
 This is useful for dynamic and conditional configurations with the wider-scoped environment.
+
+Additionally, with  documentation packages alongside the environment similar to NixOS and home-manager.
+
+* There is a manpage which you can install by setting `wrapper-manager.documentation.manpage.enable` to `true`.
+It is available to be viewed as `wrapper-manager.nix(5)` (i.e., `man 5 wrapper-manager.nix`).
+
+* An HTML manual can be brought over by setting `wrapper-manager.documentation.html.enable` to `true`.
+The HTML manual package has a desktop entry file titled `wrapper-manager manual` in the common application launchers (e.g., rofi, GNOME Shell app launcher).
+
+You can also set additional modules to be included with `wrapper-manager.documentation.extraModules` in case you have custom wrapper-manager modules that you want to be nicely integrated.
 
 
 [#differences-from-original-wrapper-manager]
