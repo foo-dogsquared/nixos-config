@@ -9,5 +9,15 @@ terraform {
       source = "timohirt/hetznerdns"
       version = "2.2.0"
     }
+
+    tailscale = {
+      source = "tailscale/tailscale"
+      version = "0.17.2"
+    }
+
+    local = {
+      source = "hashicorp/local"
+      version = "2.5.2"
+    }
   }
 }
