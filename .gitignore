@@ -2,6 +2,12 @@
 result*
 *.qcow2
 
+# Generated Tailscale authentication keys.
+*-tailscale-auth-key
+
+# Generated network files.
+configs/nixos/*/terraform/network.json
+
 # My todo-lists.
 todo.*
 
