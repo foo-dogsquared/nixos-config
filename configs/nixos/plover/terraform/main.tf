@@ -26,3 +26,15 @@ resource "hcloud_ssh_key" "plover" {
   name = "plover.foodogsquared.one"
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGo3tfNQjWZ5pxlqREfBgQJxdNzGHKJIy5hDS9Z+Hpth plover.foodogsquared.one"
 }
+
+resource "local_file" "network_file" {
+  content = jsonencode({
+    interfaces = {
+      wan = {
+        ipv4 = hcloud_server.plover.ipv4_address
+        ipv6 = hcloud_server.plover.ipv6_address
+      }
+    }
+  })
+  filename = "${path.module}/network.json"
+}

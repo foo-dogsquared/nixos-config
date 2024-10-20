@@ -16,6 +16,11 @@ resource "tailscale_tailnet_key" "plover" {
   description = "Plover"
 }
 
+resource "tailscale_device_tags" "hcloud_plover" {
+  device_id = data.tailscale_device.plover.id
+  tags = [ "tag:server" ]
+}
+
 resource "local_file" "tailscale_auth_key" {
   content = tailscale_tailnet_key.plover.key
   filename = "${path.module}/plover-tailscale-auth-key"
