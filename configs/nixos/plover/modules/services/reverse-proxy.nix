@@ -4,8 +4,7 @@
 let
   hostCfg = config.hosts.plover;
   cfg = hostCfg.services.reverse-proxy;
-in
-{
+in {
   options.hosts.plover.services.reverse-proxy.enable =
     lib.mkEnableOption "preferred public-facing reverse proxy";
 
@@ -60,9 +59,7 @@ in
           extraConfig = ''
             zone services 64k;
           '';
-          servers = {
-            "localhost:80" = { };
-          };
+          servers = { "localhost:80" = { }; };
         };
       };
 

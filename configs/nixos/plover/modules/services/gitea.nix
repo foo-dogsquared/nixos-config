@@ -10,16 +10,16 @@ let
   codeForgeDomain = "code.${config.networking.domain}";
 
   giteaUser = config.users.users."${config.services.gitea.user}".name;
-in
-{
+in {
   options.hosts.plover.services.gitea.enable =
     lib.mkEnableOption "Gitea server for ${config.networking.domain}";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
-        "gitea/smtp_password".owner = giteaUser;
-      };
+      sops.secrets =
+        foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
+          "gitea/smtp_password".owner = giteaUser;
+        };
 
       state.ports.gitea.value = 8432;
 
@@ -60,7 +60,8 @@ in
 
           "ui.meta" = {
             AUTHOR = "foodogsquared's code forge";
-            DESCRIPTION = "foodogsquared's personal projects and some archived and mirrored codebases.";
+            DESCRIPTION =
+              "foodogsquared's personal projects and some archived and mirrored codebases.";
             KEYWORDS = "foodogsquared,gitea,self-hosted";
           };
 
@@ -77,7 +78,8 @@ in
             ENABLED = true;
             NEED_POSTPROCESS = true;
             FILE_EXTENSIONS = ".adoc,.asciidoc";
-            RENDER_COMMAND = "${pkgs.asciidoctor}/bin/asciidoctor --embedded --out-file=- -";
+            RENDER_COMMAND =
+              "${pkgs.asciidoctor}/bin/asciidoctor --embedded --out-file=- -";
             IS_INPUT_FILE = false;
           };
 
@@ -120,7 +122,9 @@ in
       # Disk space is always assumed to be limited so we're really only limited
       # with 2 dumps.
       systemd.services.gitea-dump.preStart = lib.mkAfter ''
-        ${pkgs.findutils}/bin/find ${lib.escapeShellArg config.services.gitea.dump.backupDir} \
+        ${pkgs.findutils}/bin/find ${
+          lib.escapeShellArg config.services.gitea.dump.backupDir
+        } \
           -maxdepth 1 -type f -iname '*.${config.services.gitea.dump.type}' -ctime 21 \
           | tail -n -3 | xargs rm
       '';
@@ -128,22 +132,27 @@ in
       # Customizing Gitea which you can see more details at
       # https://docs.gitea.io/en-us/customizing-gitea/. We're just using
       # systemd-tmpfiles to make this work which is pretty convenient.
-      systemd.tmpfiles.rules =
-        let
-          # To be used similarly to $GITEA_CUSTOM variable.
-          giteaCustomDir = config.services.gitea.customDir;
-        in
-        [
-          "L+ ${giteaCustomDir}/templates/home.tmpl - - - - ${../../files/gitea/home.tmpl}"
-          "L+ ${giteaCustomDir}/public/img/logo.svg  - - - - ${../../files/gitea/logo.svg}"
-          "L+ ${giteaCustomDir}/public/img/logo.png  - - - - ${../../files/gitea/logo.png}"
-        ];
+      systemd.tmpfiles.rules = let
+        # To be used similarly to $GITEA_CUSTOM variable.
+        giteaCustomDir = config.services.gitea.customDir;
+      in [
+        "L+ ${giteaCustomDir}/templates/home.tmpl - - - - ${
+          ../../files/gitea/home.tmpl
+        }"
+        "L+ ${giteaCustomDir}/public/img/logo.svg  - - - - ${
+          ../../files/gitea/logo.svg
+        }"
+        "L+ ${giteaCustomDir}/public/img/logo.png  - - - - ${
+          ../../files/gitea/logo.png
+        }"
+      ];
     }
 
     (lib.mkIf hostCfg.services.database.enable {
-      sops.secrets = foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
-        "gitea/db_password".owner = giteaUser;
-      };
+      sops.secrets =
+        foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
+          "gitea/db_password".owner = giteaUser;
+        };
 
       services.gitea.database = {
         type = "postgres";
@@ -182,9 +191,7 @@ in
         enableACME = true;
         acmeRoot = null;
         kTLS = true;
-        locations."/" = {
-          proxyPass = "http://gitea";
-        };
+        locations."/" = { proxyPass = "http://gitea"; };
         extraConfig = ''
           proxy_cache ${config.services.nginx.proxyCachePath.apps.keysZoneName};
         '';
@@ -195,7 +202,9 @@ in
           zone services;
         '';
         servers = {
-          "localhost:${builtins.toString config.services.gitea.settings.server.HTTP_PORT}" = { };
+          "localhost:${
+            builtins.toString config.services.gitea.settings.server.HTTP_PORT
+          }" = { };
         };
       };
     })
@@ -207,7 +216,8 @@ in
         gitea.settings = {
           enabled = true;
           backend = "systemd";
-          filter = "gitea[journalmatch='_SYSTEMD_UNIT=gitea.service + _COMM=gitea']";
+          filter =
+            "gitea[journalmatch='_SYSTEMD_UNIT=gitea.service + _COMM=gitea']";
           maxretry = 8;
         };
       };
@@ -228,7 +238,8 @@ in
 
     (lib.mkIf hostCfg.services.backup.enable {
       # Add the following files to be backed up.
-      services.borgbackup.jobs.services-backup.paths = [ config.services.gitea.dump.backupDir ];
+      services.borgbackup.jobs.services-backup.paths =
+        [ config.services.gitea.dump.backupDir ];
     })
   ]);
 }
