@@ -8,29 +8,24 @@ let
   inherit (config.networking) domain;
   vouchDomain = "vouch.${config.networking.domain}";
   authDomain = config.services.kanidm.serverSettings.domain;
-in
-{
+in {
   options.hosts.plover.services.vouch-proxy.enable =
     lib.mkEnableOption "Vouch proxy setup";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      state.ports = {
-        "vouch-proxy-${domain}".value = 19900;
-      };
+      state.ports = { "vouch-proxy-${domain}".value = 19900; };
 
-      sops.secrets =
-        let
-          vouchPermissions = rec {
-            owner = "vouch-proxy";
-            group = owner;
-            mode = "0400";
-          };
-        in
-        foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
-          "vouch-proxy/domains/${domain}/jwt-secret" = vouchPermissions;
-          "vouch-proxy/domains/${domain}/client-secret" = vouchPermissions;
+      sops.secrets = let
+        vouchPermissions = rec {
+          owner = "vouch-proxy";
+          group = owner;
+          mode = "0400";
         };
+      in foodogsquaredLib.sops-nix.getSecrets ../../secrets/secrets.yaml {
+        "vouch-proxy/domains/${domain}/jwt-secret" = vouchPermissions;
+        "vouch-proxy/domains/${domain}/client-secret" = vouchPermissions;
+      };
 
       services.vouch-proxy = {
         enable = true;
@@ -40,20 +35,23 @@ in
             port = config.state.ports."vouch-proxy-${domain}".value;
 
             domains = [ "foodogsquared.one" ];
-            jwt.secret._secret = config.sops.secrets."vouch-proxy/domains/${domain}/jwt-secret".path;
+            jwt.secret._secret =
+              config.sops.secrets."vouch-proxy/domains/${domain}/jwt-secret".path;
             cookie.secure = true;
           };
 
-          oauth = rec {
+          oauth = let authSubpath = path: "https://${authDomain}/${path}";
+          in rec {
             provider = "oidc";
             client_id = "vouch";
-            client_secret._secret = config.sops.secrets."vouch-proxy/domains/${domain}/client-secret".path;
+            client_secret._secret =
+              config.sops.secrets."vouch-proxy/domains/${domain}/client-secret".path;
             code_challenge_method = "S256";
-            auth_url = "https://${authDomain}/ui/oauth2";
-            token_url = "https://${authDomain}/oauth2/token";
-            user_info_url = "https://${authDomain}/oauth2/openid/${client_id}/userinfo";
+            auth_url = authSubpath "ui/oauth2";
+            token_url = authSubpath "oauth2/token";
+            user_info_url = authSubpath "oauth2/openid/${client_id}/userinfo";
             scopes = [ "openid" "email" "profile" ];
-            callback_url = "https://${vouchDomain}/auth";
+            callback_url = authSubpath "auth";
           };
         };
       };
@@ -76,10 +74,12 @@ in
 
       services.nginx.upstreams."vouch-proxy" = {
         extraConfig = ''
-          zone services;
+          zone vouch-proxy 64k;
+          keepalive 2;
         '';
         servers = {
-          "${settings.vouch.listen}:${builtins.toString settings.vouch.port}" = { };
+          "${settings.vouch.listen}:${builtins.toString settings.vouch.port}" =
+            { };
         };
       };
     })
