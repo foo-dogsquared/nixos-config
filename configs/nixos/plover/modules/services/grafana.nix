@@ -41,17 +41,6 @@ in {
             login_maximum_lifetime_duration = "14d";
           };
 
-          database = rec {
-            host =
-              "127.0.0.1:${builtins.toString config.services.postgresql.port}";
-            password = "$__file{${
-                config.sops.secrets."grafana/database/password".path
-              }}";
-            type = "postgres";
-            name = "grafana";
-            user = name;
-          };
-
           log = {
             level = "warn";
             mode = "syslog";
@@ -98,17 +87,16 @@ in {
           # If the user is not logged in, redirect them to Vouch's login URL
           error_page 401 = @error401;
           location @error401 {
-            return 302 http://${vouchDomain}/login?url=$scheme://$http_host$request_uri&vouch-failcount=$auth_resp_failcount&X-Vouch-Token=$auth_resp_jwt&error=$auth_resp_err;
+            return 302 http://vouch-proxy/login?url=$scheme://$http_host$request_uri&vouch-failcount=$auth_resp_failcount&X-Vouch-Token=$auth_resp_jwt&error=$auth_resp_err;
           }
         '';
 
         locations = {
           "= /validate" = {
-            proxyPass = "http://${vouchSettings.vouch.listen}:${
-                builtins.toString vouchSettings.vouch.port
-              }";
+            proxyPass = "http://vouch-proxy";
             extraConfig = ''
               proxy_pass_request_body off;
+              proxy_set_header Content-Length "";
 
               # These will be passed to @error_401 call.
               auth_request_set $auth_resp_x_vouch_user $upstream_http_x_vouch_user;
@@ -154,6 +142,18 @@ in {
           ensureDBOwnership = true;
         };
       };
+
+      services.grafana.settings = {
+        database = rec {
+          host =
+            "127.0.0.1:${builtins.toString config.services.postgresql.port}";
+          password =
+            "$__file{${config.sops.secrets."grafana/database/password".path}}";
+          type = "postgres";
+          name = "grafana";
+          user = name;
+        };
+      };
     })
 
     (lib.mkIf hostCfg.services.vouch-proxy.enable {
@@ -168,16 +168,25 @@ in {
       };
 
       services.grafana.settings."auth.generic_oauth" = {
-        api_url = authSubpath "oauth2/authorise";
-        client_id = "grafana";
-        client_secret = "$__file{${
-            config.sops.secrets."grafana/oauth_client_secret".path
-          }}";
         enabled = true;
         name = "Kanidm";
+        client_id = "grafana";
+        client_secret =
+          "$__file{${config.sops.secrets."grafana/oauth_client_secret".path}}";
+        allow_sign_up = true;
+        use_pkce = true;
+        use_refresh_token = true;
         oauth_url = authSubpath "ui/oauth2";
-        scopes = lib.concatStringsSep " " [ "openid" "email" "profile" ];
         token_url = authSubpath "oauth2/token";
+        api_url = authSubpath "oauth2/openid/grafana/userinfo";
+        login_attribute_path = "preferred_username";
+        groups_attribute_path = "groups";
+        role_attribute_path = ''
+          contains(grafana_role[*], 'GrafanaAdmin') && 'GrafanaAdmin' || contains(grafana_role[*], 'Admin') && 'Admin' || contains(grafana_role[*], 'Editor') && 'Editor' || 'Viewer'
+        '';
+        allow_assign_grafana_admin = true;
+        scopes =
+          lib.concatStringsSep " " [ "openid" "email" "profile" "groups" ];
       };
     })
   ]);
