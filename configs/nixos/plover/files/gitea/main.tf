@@ -87,3 +87,14 @@ resource "gitea_repository" "dotfiles" {
   website = "https://wiki.foodogsquared.one"
   private = false
 }
+
+resource "gitea_repository" "ansible-playbooks" {
+  username = gitea_user.foodogsquared.username
+  name = "ansible-playbooks"
+  mirror = true
+  migration_clone_address = "https://github.com/foo-dogsquared/ansible-playbooks.git"
+  migration_service = "github"
+  migration_service_auth_token = var.github_clone_token
+  migration_mirror_interval = "4h"
+  private = false
+}
