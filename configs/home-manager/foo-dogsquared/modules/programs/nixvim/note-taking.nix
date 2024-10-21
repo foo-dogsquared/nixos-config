@@ -2,7 +2,7 @@
 
 {
   # The main star of the show.
-  plugins.neorg.enable = false;
+  plugins.neorg.enable = true;
 
   # Set it up, set it up, set it up.
   plugins.neorg.extraOptions = {
@@ -18,9 +18,7 @@
         "core.concealer" = helpers.emptyTable;
 
         # Dear diary...
-        "core.journal".config = {
-          strategy = "flat";
-        };
+        "core.journal".config = { strategy = "flat"; };
 
         # Norg ripping a page from org-mode.
         "core.ui.calendar" = helpers.emptyTable;
@@ -42,22 +40,24 @@
   };
 
   # Install the common text markup tree-sitter grammars.
-  plugins.treesitter.grammarPackages = with config.plugins.treesitter.package.builtGrammars; [
-    bibtex
-    cooklang
-    latex
-    ledger
-    markdown
-    markdown_inline
-    org
-    po
-    pod
-    rst
-    tsx
-  ]
-  # Install the tree-sitter parsers required for the core.defaults Neorg
-  # module.
-  ++ lib.optionals (config.plugins.neorg.extraOptions ? load."core.defaults")
+  plugins.treesitter.grammarPackages =
+    with config.plugins.treesitter.package.builtGrammars;
+    [
+      bibtex
+      cooklang
+      latex
+      ledger
+      markdown
+      markdown_inline
+      org
+      po
+      pod
+      rst
+      tsx
+    ]
+    # Install the tree-sitter parsers required for the core.defaults Neorg
+    # module.
+    ++ lib.optionals (config.plugins.neorg.extraOptions ? load."core.defaults")
     (with pkgs.tree-sitter-grammars; [
       tree-sitter-norg
       tree-sitter-norg-meta

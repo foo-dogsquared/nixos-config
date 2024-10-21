@@ -3,8 +3,7 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.development;
-in
-{
+in {
   options.users.foo-dogsquared.setups.development.enable =
     lib.mkEnableOption "foo-dogsquared's software development setup";
 
@@ -44,6 +43,7 @@ in
         dt # Get that functional gawk.
         recode # Convert between different encodings.
         go-migrate # Go potential migraines.
+        oils-for-unix # Rev them up, reverent admin.
       ];
     }
 
@@ -85,9 +85,10 @@ in
     })
 
     (lib.mkIf (userCfg.setups.desktop.enable && pkgs.stdenv.isLinux) {
-      home.packages = with pkgs; [
-        d-spy # Some GNOME dev probably developed this.
-      ];
+      home.packages = with pkgs;
+        [
+          d-spy # Some GNOME dev probably developed this.
+        ];
     })
   ]);
 }
