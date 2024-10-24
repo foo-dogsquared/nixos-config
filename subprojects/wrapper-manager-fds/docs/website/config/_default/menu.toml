@@ -1,8 +1,14 @@
 [[main]]
+identifier = "user-guide"
+name = "User guide"
+url = "user-guide"
+weight = 1
+
+[[main]]
 identifier = "nix-module-options"
 name = "Module options"
 url = "wrapper-manager-env-options/"
-weight = 1
+weight = 2
 
 [[main]]
 identifier = "source-code"

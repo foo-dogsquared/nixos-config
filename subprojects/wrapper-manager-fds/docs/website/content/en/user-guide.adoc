@@ -18,6 +18,37 @@ It is comparable to NixOS and home-manager in a way that it compiles into an ope
 Speaking of which, wrapper-manager is meant to be composed in larger-scoped environments such as NixOS and home-manager, mainly by including wrapper-manager packages in `environment.systemPackages` and `home.packages` but you could also make them as a standalone package.
 
 
+[#getting-started]
+== Getting started
+
+But first, we'll have to have wrapper-manager in our configuration.
+There are multiple ways to do so as already shown from the link:../project-overview#installation[Project overview] so we'll go ahead with what should you do after it.
+There are multiple ways to build a wrapper-manager package:
+
+* You can manually build one with `wrapperManagerLib.env.build`.
+It needs a nixpkgs instance (`pkgs`) and a list of additional modules (`modules`) with an optional attrset of static of module arguments (`specialArgs`).
++
+--
+Here's an example of using the function.
+
+[source, nix]
+----
+{ pkgs ? import <nixpkgs> { } }:
+
+let
+  wrapper-manager = import <wrapper-manager-fds> { };
+  wrapperManagerLib = import wrapper-manager.wrapperManagerLib { inherit pkgs; };
+in
+  wrapperManagerLib.env.build {
+    inherit pkgs;
+    modules = [ ./config/wrapper.nix ];
+    specialArgs = { hello = "WORLD"; };
+  }
+----
+
+--
+
+
 [#using-wrapper-manager]
 == Using wrapper-manager
 
@@ -324,7 +355,7 @@ Here's an example of importing it into a NixOS and home-manager config with flak
           ];
         };
 
-        homeConfigurations.user = homeConfigurations {
+        homeConfigurations.user = homeManagerConfiguration {
           modules = [
             inputs.wrapper-manager.homeModules.wrapper-manager
           ];
@@ -335,6 +366,11 @@ Here's an example of importing it into a NixOS and home-manager config with flak
 
 For the most part, the integration modules are mostly the same.
 As an example, you can create wrappers through `wrapper-manager.packages` where it is expected to be an attribute set of wrapper-manager configurations.
+
+[NOTE]
+====
+Any wrapper-manager packages declared through it are automatically added as part of their respective list of packages (e.g., `home.packages` for home-manager, `environment.systemPackages` for NixOS).
+====
 
 [source, nix]
 ----
