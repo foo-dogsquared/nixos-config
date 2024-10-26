@@ -24,8 +24,8 @@ pkgs.lib.makeExtensible
     # extended version of nixpkgs' version that went overboard with
     # developer-oriented dependencies.
     stdenv = with pkgs;
-      [ stdenv direnv cookiecutter oils-for-unix nushell ipcalc ]
-      ++ lib.optional pkgs.isLinux [
+      [ direnv cookiecutter oils-for-unix nushell ipcalc ]
+      ++ lib.optional stdenv.isLinux [
         gdb
         moreutils
         meson
@@ -33,10 +33,13 @@ pkgs.lib.makeExtensible
         pkg-config
         man-pages
         man-pages-posix
-      ];
+      ] ++ (import "${pkgs.path}/pkgs/stdenv/generic/common-path.nix" {
+        inherit pkgs;
+      });
 
-    inherit (self.builders) makeXDGMimeAssociationList
-      makeXDGPortalConfiguration makeXDGDesktopEntry;
+    inherit (self.builders)
+      makeXDGMimeAssociationList makeXDGPortalConfiguration makeXDGDesktopEntry
+      buildHugoSite buildFDSEnv;
     inherit (self.trivial) countAttrs filterAttrs';
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
     inherit (self.fetchers) fetchInternetArchive;

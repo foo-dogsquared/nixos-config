@@ -1,8 +1,8 @@
 { buildEnv, extendedStdenv }:
 
-{ paths ? [ ], pathsToLink ? [ ], }@args:
+{ paths ? [ ], pathsToLink ? [ ], ... }@args:
 
 buildEnv (args // {
-  paths = paths ++ [ extendedStdenv ];
-  pathsToLink = pathsToLink ++ [ "/bin" "/etc" "/share" "/lib" ];
+  paths = extendedStdenv ++ paths;
+  pathsToLink = [ "/bin" "/etc" "/share" "/lib" "/libexec" ] ++ pathsToLink;
 })
