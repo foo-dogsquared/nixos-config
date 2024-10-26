@@ -51,5 +51,8 @@
     devPackages = {
       inherit (import ../../docs { inherit pkgs; }) website;
     };
+
+    # All of the typical devcontainers to be used.
+    devcontainers = import ../../devcontainers { inherit pkgs; };
   };
 }

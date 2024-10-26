@@ -8,6 +8,7 @@
   imports = [
     ./images.nix
     ./devpackages.nix
+    ./devcontainers.nix
     ./disko-configurations.nix
     ./deploy-rs-nodes.nix
     ./home-configurations.nix
