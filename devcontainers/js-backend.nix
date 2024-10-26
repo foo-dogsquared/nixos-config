@@ -1,13 +1,20 @@
-{ dockerTools, buildEnv, nodejs, bun, pnpm }:
+{ dockerTools, foodogsquaredLib, nodejs, bun, pnpm }:
 
 dockerTools.buildImage {
-  name = "js-backend";
+  name = "fds-js-backend";
 
-  copyToRoot = buildEnv {
-    name = "js-backend-root";
+  copyToRoot = foodogsquaredLib.buildFDSEnv {
+    name = "fds-js-backend-root";
     paths = [ nodejs bun pnpm ];
-    pathsToLink = [ "/bin" "/share" "/etc" "/lib" ];
   };
 
-  config.Cmd = [ "/bin/bash" ];
+  runAsRoot = ''
+    mkdir -p /data
+  '';
+
+  config = {
+    Cmd = [ "/bin/bash" ];
+    WorkingDir = "/data";
+    Volumes."/data" = { };
+  };
 }
