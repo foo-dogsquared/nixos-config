@@ -130,7 +130,7 @@ in
         enable = true;
         settings.global = {
           use_mpris = true;
-          device_name = "My laptop";
+          device_name = "foodogsquared's computer";
           bitrate = 320;
           device_type = "computer";
           zeroconf_port = config.state.ports.spotifyd.value;
