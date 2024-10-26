@@ -20,6 +20,21 @@ pkgs.lib.makeExtensible
     math = callLib ./math.nix;
     fetchers = callLib ./fetchers;
 
+    # foodogsquared's version of a standard environment. Basically just an
+    # extended version of nixpkgs' version that went overboard with
+    # developer-oriented dependencies.
+    stdenv = with pkgs;
+      [ stdenv direnv cookiecutter oils-for-unix nushell ipcalc ]
+      ++ lib.optional pkgs.isLinux [
+        gdb
+        moreutils
+        meson
+        ninja
+        pkg-config
+        man-pages
+        man-pages-posix
+      ];
+
     inherit (self.builders) makeXDGMimeAssociationList
       makeXDGPortalConfiguration makeXDGDesktopEntry;
     inherit (self.trivial) countAttrs filterAttrs';
