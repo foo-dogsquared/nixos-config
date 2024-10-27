@@ -20,10 +20,22 @@ in
         neovim.enable = true;
       };
 
-      environment.systemPackages = with pkgs; [
-        # For debugging build environments in Nix packages.
-        cntr
-      ];
+      # Replace container runtime to Docker.
+      virtualisation.podman.enable = lib.mkForce false;
+      virtualisation.docker = {
+        enable = true;
+        autoPrune = {
+          enable = true;
+          dates = "weekly";
+        };
+        logDriver = "journald";
+      };
+
+      environment.systemPackages = with pkgs;
+        [
+          # For debugging build environments in Nix packages.
+          cntr
+        ];
 
       # Enable the terminal emulator of choice.
       programs.wezterm.enable = true;
