@@ -25,7 +25,6 @@
 
     # Noto font family with the MR. WORLDWIDE settings.
     noto-fonts
-    noto-fonts-cjk
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     noto-fonts-lgc-plus
