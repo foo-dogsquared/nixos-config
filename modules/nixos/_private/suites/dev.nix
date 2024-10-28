@@ -7,6 +7,7 @@ in {
     enable = lib.mkEnableOption "basic configuration for software development";
     extras.enable = lib.mkEnableOption "additional shell utilities";
     hardware.enable = lib.mkEnableOption "additional hardware-related dev utilities";
+    security.enable = lib.mkEnableOption "additional security-oriented tools";
     containers.enable = lib.mkEnableOption "containers setup";
     virtual-machines.enable = lib.mkEnableOption "virtual machines setup";
     neovim.enable = lib.mkEnableOption "Neovim setup";
@@ -130,11 +131,19 @@ in {
       services.sysprof.enable = true;
     })
 
+    (lib.mkIf cfg.security.enable {
+      environment.systemPackages = with pkgs; [
+        libargon2 # The other
+        openssl # The general security-oriented toolkit.
+      ];
+    })
+
     # !!! Please add your user to the "libvirtd" group.
     (lib.mkIf cfg.containers.enable {
-      environment.systemPackages = with pkgs; [
-        dive # Dive into container images.
-      ];
+      environment.systemPackages = with pkgs;
+        [
+          dive # Dive into container images.
+        ];
 
       programs.distrobox = {
         enable = true;
