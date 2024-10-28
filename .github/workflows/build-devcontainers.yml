@@ -1,0 +1,28 @@
+name: "Build devcontainers"
+on:
+  push:
+    branches:
+      - master
+      - develop
+jobs:
+  build-devcontainers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+        with:
+          extra-conf: |
+            keep-going = true
+      - name: Build
+        run: |
+          nix build -f ./pkgs --impure --print-out-paths --no-link > build_paths
+        env:
+          NIXPKGS_ALLOW_UNFREE: "1"
+      - name: Deploy devcontainers to GitHub registry
+        run: |
+          for image_archive in $(< build_paths); do
+            skopeo --insecure-policy copy \
+                --dest-creds="${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}" \
+                "docker-archive:${image_archive}" "docker://${{ github.repository }}"
+          done
