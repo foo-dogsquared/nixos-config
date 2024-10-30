@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import <nixpkgs> { overlays = [ (import ../overlays).default ]; } }:
 
 let inherit (pkgs) callPackage;
 in {
