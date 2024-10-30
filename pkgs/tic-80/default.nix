@@ -5,7 +5,7 @@
 , lib
 , SDL2
 , SDL2_sound
-, alsaLib
+, alsa-lib
 , cmake
 , fetchFromGitHub
 , freeglut
@@ -61,7 +61,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ cmake pkg-config ];
   buildInputs = [
-    alsaLib
+    alsa-lib
     freeglut
     gtk3
     libsamplerate

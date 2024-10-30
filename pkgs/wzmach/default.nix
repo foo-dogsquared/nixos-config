@@ -11,7 +11,7 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-o9fCiuNTyP4vUoUm9etqdAzUnd7PmXbTm7Zhim0y4rE=";
   };
 
-  cargoSha256 = "sha256-MknrsJuNMS5BgCbgMuqSPzxyR70y24TGsKMPOuzfkjY=";
+  cargoHash = "sha256-MknrsJuNMS5BgCbgMuqSPzxyR70y24TGsKMPOuzfkjY=";
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [ libinput udev ];

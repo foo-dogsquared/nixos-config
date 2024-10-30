@@ -8,9 +8,8 @@ lib.makeScope pkgs.newScope (self: {
   foodogsquaredLib = import ../lib { inherit pkgs; };
   inherit (self.foodogsquaredLib.builders)
     makeXDGMimeAssociationList makeXDGPortalConfiguration makeXDGDesktopEntry
-    buildHugoSite;
-  inherit (self.foodogsquaredLib.fetchers)
-    fetchInternetArchive;
+    buildHugoSite buildFDSEnv;
+  inherit (self.foodogsquaredLib.fetchers) fetchInternetArchive;
 
   # My custom packages.
   awesome-cli = callPackage ./awesome-cli { };
