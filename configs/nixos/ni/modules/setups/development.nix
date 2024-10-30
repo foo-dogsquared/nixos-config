@@ -17,6 +17,7 @@ in
         hardware.enable = true;
         containers.enable = true;
         virtual-machines.enable = true;
+        security.enable = true;
         neovim.enable = true;
       };
 
