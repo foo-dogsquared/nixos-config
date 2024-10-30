@@ -3,7 +3,6 @@
     ./files/mutable-files.nix
     ./programs/pipewire.nix
     ./programs/pop-launcher.nix
-    ./programs/zed-editor.nix
     ./programs/borgmatic.nix
     ./services/archivebox.nix
     ./services/borgbackup.nix
