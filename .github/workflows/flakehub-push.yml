@@ -17,3 +17,4 @@ jobs:
           name: "foo-dogsquared/nixos-config"
           rolling: true
           visibility: "public"
+          include-output-paths: false
