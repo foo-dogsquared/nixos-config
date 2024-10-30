@@ -388,8 +388,11 @@ in
                 lib.nameValuePair
                   "${name}-${format}"
                   (mkImage {
-                    inherit (metadata) nixpkgsBranch;
-                    inherit system format;
+                    inherit format system;
+                    pkgs = import inputs.${metadata.nixpkgs.branch} {
+                      inherit system;
+                      inherit (metadata.nixpkgs) config;
+                    };
                     extraModules = cfg.sharedModules ++ metadata.modules;
                   });
 
