@@ -6,19 +6,18 @@
 # If you have to add those functions, you'll have to add them in configUtils.
 { pkgs }:
 
-let
-  inherit (pkgs) lib;
-in
-pkgs.lib.makeExtensible
-(self:
-  let
-    callLib = file: import file { inherit pkgs lib self; };
+let inherit (pkgs) lib;
+in pkgs.lib.makeExtensible (self:
+  let callLib = file: import file { inherit pkgs lib self; };
   in {
-    builders = callLib ./builders;
     trivial = callLib ./trivial.nix;
     data = callLib ./data.nix;
     math = callLib ./math.nix;
+
+    # For future references, these are the only attributes that are going to be
+    # exported as part of nixpkgs overlay.
     fetchers = callLib ./fetchers;
+    builders = callLib ./builders;
 
     # foodogsquared's version of a standard environment. Basically just an
     # extended version of nixpkgs' version that went overboard with
@@ -33,6 +32,7 @@ pkgs.lib.makeExtensible
         pkg-config
         man-pages
         man-pages-posix
+        neovim
       ] ++ (import "${pkgs.path}/pkgs/stdenv/generic/common-path.nix" {
         inherit pkgs;
       });
