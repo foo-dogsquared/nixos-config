@@ -35,9 +35,6 @@ in
       "<leader>k" = "goto_prev";
     };
 
-    # Enable lsp-format
-    plugins.lsp-format.enable = true;
-
     # Make those diagnostics fit the screen, GODDAMNIT!
     plugins.lsp-lines.enable = true;
   };
