@@ -16,7 +16,7 @@ jobs:
             keep-going = true
       - name: Build
         run: |
-          nix build -f ./pkgs --impure --print-out-paths --no-link > build_paths
+          nix build -f ./devcontainers --impure --print-out-paths --no-link > build_paths
         env:
           NIXPKGS_ALLOW_UNFREE: "1"
       - name: Deploy devcontainers to GitHub registry
