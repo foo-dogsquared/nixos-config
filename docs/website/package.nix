@@ -23,7 +23,7 @@ buildHugoSite {
 
   src = lib.cleanSource ./.;
 
-  vendorHash = "";
+  vendorHash = "sha256-3HnyNLHyJDQ8hhZFb3Cu+i75nrUJn/iEV5xNP++di/4=";
 
   buildInputs = [ asciidoctorWrapper gems ];
 
