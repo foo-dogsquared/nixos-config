@@ -44,6 +44,10 @@ in {
         recode # Convert between different encodings.
         go-migrate # Go potential migraines.
         oils-for-unix # Rev them up, reverent admin.
+
+        # Testing REST.
+        httpie
+        httpie-desktop
       ];
     }
 
