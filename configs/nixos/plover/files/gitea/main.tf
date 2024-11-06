@@ -98,3 +98,25 @@ resource "gitea_repository" "ansible-playbooks" {
   migration_mirror_interval = "4h"
   private = false
 }
+
+resource "gitea_repository" "hugo-theme-more-contentful" {
+  username = gitea_user.foodogsquared.username
+  name = "hugo-theme-more-contentful"
+  mirror = true
+  migration_clone_address = "https://github.com/foo-dogsquared/hugo-theme-more-contentful.git"
+  migration_service = "github"
+  migration_service_auth_token = var.github_clone_token
+  migration_mirror_interval = "4h"
+  private = false
+}
+
+resource "gitea_repository" "hugo-theme-contentful" {
+  username = gitea_user.foodogsquared.username
+  name = "hugo-theme-contentful"
+  mirror = true
+  migration_clone_address = "https://github.com/foo-dogsquared/hugo-theme-contentful.git"
+  migration_service = "github"
+  migration_service_auth_token = var.github_clone_token
+  migration_mirror_interval = "4h"
+  private = false
+}
