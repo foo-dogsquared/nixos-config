@@ -190,7 +190,7 @@ in
               in
               gsdComponents ++ [ "org.gnome.Shell" ];
 
-            targetUnit = {
+            systemd.targetUnit = {
               requires = [ "org.gnome.Shell.target" ];
               wants = builtins.map (c: "''${c}.target") (lib.lists.remove "org.gnome.Shell" sessionCfg.requiredComponents);
             };
@@ -210,7 +210,7 @@ in
                 ''';
                 description = "An i3 clone for Wayland.";
 
-                serviceUnit = {
+                systemd.serviceUnit = {
                   serviceConfig = {
                     Type = "notify";
                     NotifyAccess = "all";
@@ -223,7 +223,7 @@ in
                   };
                 };
 
-                targetUnit = {
+                systemd.targetUnit = {
                   requisite = [ "gnome-session-initialized.target" ];
                   partOf = [ "gnome-session-initialized.target" ];
                   before = [ "gnome-session-initialized.target" ];
@@ -236,7 +236,7 @@ in
                 ''';
                 description = "A desktop widget system using layer-shell protocol.";
 
-                serviceUnit = {
+                systemd.serviceUnit = {
                   serviceConfig = {
                     OOMScoreAdjust = -1000;
                   };
@@ -247,7 +247,7 @@ in
                   startLimitIntervalSec = 15;
                 };
 
-                targetUnit = {
+                systemd.targetUnit = {
                   requisite = [ "gnome-session-initialized.target" ];
                   partOf = [ "gnome-session-initialized.target" ];
                   before = [ "gnome-session-initialized.target" ];
@@ -258,12 +258,12 @@ in
                 script = "''${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
                 description = "Authentication agent";
 
-                serviceUnit = {
+                systemd.serviceUnit = {
                   startLimitBurst = 5;
                   startLimitIntervalSec = 15;
                 };
 
-                targetUnit = {
+                systemd.targetUnit = {
                   partOf = [
                     "gnome-session.target"
                     "graphical-session.target"
