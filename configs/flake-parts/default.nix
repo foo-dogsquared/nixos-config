@@ -13,7 +13,6 @@
 
     # Subprojects.
     ./bahaghari.nix
-    ./wrapper-manager-fds.nix
   ];
 
   _module.args = {

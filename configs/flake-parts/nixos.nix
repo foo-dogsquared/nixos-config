@@ -21,7 +21,7 @@ in
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
 
-          inputs.self.nixosModules.wrapper-manager
+          inputs.wrapper-manager-fds.nixosModules.wrapper-manager
           {
             documentation.nixos.extraModules = [
               ../../modules/nixos

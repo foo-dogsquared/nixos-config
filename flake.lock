@@ -1078,7 +1078,8 @@
         "nixvim-stable": "nixvim-stable",
         "nixvim-unstable": "nixvim-unstable",
         "nur": "nur",
-        "sops-nix": "sops-nix"
+        "sops-nix": "sops-nix",
+        "wrapper-manager-fds": "wrapper-manager-fds"
       }
     },
     "rust-overlay": {
@@ -1255,6 +1256,21 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "wrapper-manager-fds": {
+      "locked": {
+        "lastModified": 1731406631,
+        "narHash": "sha256-dra1yDPFNgxMQCRKkWgwEhr2iQlv506hZeEsK7F4U9w=",
+        "owner": "foo-dogsquared",
+        "repo": "nix-module-wrapper-manager-fds",
+        "rev": "94b07876c5b7e69b3e2e83538da72c692f228818",
+        "type": "github"
+      },
+      "original": {
+        "owner": "foo-dogsquared",
+        "repo": "nix-module-wrapper-manager-fds",
         "type": "github"
       }
     }

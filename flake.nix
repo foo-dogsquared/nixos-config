@@ -51,6 +51,9 @@
     nixvim-unstable.inputs.nixpkgs.follows = "nixos-unstable";
     nixvim-unstable.inputs.home-manager.follows = "home-manager-unstable";
 
+    # Make a wrapper.
+    wrapper-manager-fds.url = "github:foo-dogsquared/nix-module-wrapper-manager-fds";
+
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
 
