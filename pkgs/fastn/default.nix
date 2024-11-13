@@ -8,13 +8,13 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "fastn";
-  version = "0.4.75";
+  version = "0.4.79";
 
   src = fetchFromGitHub {
     owner = "fastn-stack";
     repo = pname;
-    rev = version;
-    hash = "sha256-8/0fOpZhboBJWN2sNrVD54uW3J3UPxGW9wil0UfdfuM=";
+    rev = "f405500da3f3263f11b97ded059aeef9866a3454";
+    hash = "sha256-nIq89Owf2znBYsdpq+2LpzplBdrnRldYa1at4VqiD3Q=";
   };
 
   cargoLock = {
@@ -35,7 +35,7 @@ rustPlatform.buildRustPackage rec {
   meta = with lib; {
     homepage = "https://fastn.com/";
     description = "An integrated development environment for FTD";
-    license = licenses.bsd3;
+    license = licenses.agpl3Plus;
     maintainers = with maintainers; [ foo-dogsquared ];
     mainProgram = "fastn";
   };
