@@ -3,8 +3,8 @@
 {
   locale.enable = true;
   wrappers.zellij = {
-    sandboxing.variant = "bubblewrap";
-    sandboxing.wraparound.arg0 = lib.getExe' pkgs.zellij "zellij";
+    wraparound.variant = "bubblewrap";
+    wraparound.subwrapper.arg0 = lib.getExe' pkgs.zellij "zellij";
   };
   build.extraPassthru.tests = {
     zellijWrapperCheck =

@@ -2,11 +2,11 @@
 { config, lib, pkgs, ... }:
 
 {
-  build.isBinary = false;
+  build.variant = "shell";
   wrappers.hello = {
-    sandboxing.variant = "bubblewrap";
-    sandboxing.wraparound.arg0 = lib.getExe' pkgs.hello "hello";
-    sandboxing.bubblewrap.dbus = {
+    wraparound.variant = "bubblewrap";
+    wraparound.subwrapper.arg0 = lib.getExe' pkgs.hello "hello";
+    wraparound.bubblewrap.dbus = {
       enable = true;
       filter.addresses = {
         "org.freedesktop.systemd1".policies.level = "talk";
