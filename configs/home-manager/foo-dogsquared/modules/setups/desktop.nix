@@ -12,6 +12,11 @@ in
   config = lib.mkIf cfg.enable {
     state.ports.activitywatch.value = 5600;
 
+    home.packages = with pkgs; [
+      bitwarden-cli
+      bitwarden-desktop
+    ];
+
     # Install all of the desktop stuff.
     suites.desktop = {
       enable = true;
