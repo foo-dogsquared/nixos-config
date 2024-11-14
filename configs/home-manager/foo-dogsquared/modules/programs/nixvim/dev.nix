@@ -6,7 +6,7 @@
   # Confirming these files are conforming.
   plugins.conform-nvim = {
     enable = true;
-    formatters = rec {
+    settings.formatters = rec {
       bash = [ "shfmt" ];
       c = lib.singleton [ "clang_format" ];
       cpp = c;

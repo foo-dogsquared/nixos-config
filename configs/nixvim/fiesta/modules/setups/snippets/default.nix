@@ -15,7 +15,7 @@ in
   config = lib.mkIf cfg.enable {
     # The main star of the show.
     plugins.luasnip.enable = true;
-    plugins.luasnip.extraConfig = {
+    plugins.luasnip.settings = {
       keep_roots = true;
       link_roots = true;
       link_children = true;
