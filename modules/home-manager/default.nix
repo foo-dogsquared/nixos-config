@@ -4,6 +4,7 @@
     ./programs/pipewire.nix
     ./programs/pop-launcher.nix
     ./programs/borgmatic.nix
+    ./programs/python.nix
     ./services/archivebox.nix
     ./services/borgbackup.nix
     ./services/borgmatic.nix
