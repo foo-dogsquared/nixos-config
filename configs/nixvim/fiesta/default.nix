@@ -14,6 +14,7 @@
       fuzzy-finder.enable = true;
       debugging.enable = true;
       desktop-utils.enable = true;
+      qol.enable = true;
     };
 
     # Some general settings.
@@ -46,7 +47,5 @@
         options.desc = "Delete current buffer";
       }
     ];
-
-    plugins.nvim-autopairs.enable = true;
   };
 }

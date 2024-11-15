@@ -8,6 +8,7 @@
     ./setups/lsp.nix
     ./setups/note-taking.nix
     ./setups/snippets
+    ./setups/qol.nix
     ./setups/treesitter.nix
     ./setups/ui.nix
   ];
