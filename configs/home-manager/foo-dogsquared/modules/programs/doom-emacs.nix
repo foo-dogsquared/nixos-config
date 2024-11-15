@@ -60,10 +60,18 @@ in
 
       # :lang org +roam2
       texlive.combined.scheme-medium
-      (python3.withPackages (ps: with ps; [ jupyter ]))
       sqlite
       anystyle-cli
     ];
+
+    programs.python = {
+      enable = true;
+      package = pkgs.python3;
+      modules = ps: with ps; [
+        jupyter
+        jupyter-book
+      ];
+    };
 
     # Enable Emacs server for them quicknotes.
     services.emacs = {
