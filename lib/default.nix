@@ -42,7 +42,7 @@ in pkgs.lib.makeExtensible (self:
       buildHugoSite buildFDSEnv;
     inherit (self.trivial) countAttrs filterAttrs';
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
-    inherit (self.fetchers) fetchInternetArchive;
+    inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver;
   } // lib.optionalAttrs (builtins ? fetchTree) {
     flake = callLib ./flake.nix;
 
