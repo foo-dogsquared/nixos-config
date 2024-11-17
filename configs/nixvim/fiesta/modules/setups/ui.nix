@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, helpers,... }:
 
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
@@ -41,6 +41,25 @@ in
 
     # Taste the rainbow delimiters.
     plugins.rainbow-delimiters.enable = nixvimCfg.setups.treesitter.enable;
+
+    # Taste the indent guides (with rainbow delimiters).
+    plugins.indent-blankline = {
+      enable = true;
+      settings = {
+        indent = {
+          char = "┊";
+        };
+        scope.char = "┃";
+      };
+    };
+
+    # mini.plugins
+    plugins.mini = {
+      enable = lib.mkDefault true;
+
+      mockDevIcons = true;
+      modules.icons = { };
+    };
 
     # Enable them status bars.
     plugins.lualine = {
