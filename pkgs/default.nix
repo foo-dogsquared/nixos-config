@@ -1,15 +1,13 @@
 { pkgs ? import <nixpkgs> { } }:
 
-let
-  inherit (pkgs) lib callPackage python3Packages qt5;
-in
-lib.makeScope pkgs.newScope (self: {
+let inherit (pkgs) lib callPackage python3Packages qt5;
+in lib.makeScope pkgs.newScope (self: {
   # My custom nixpkgs extensions.
   foodogsquaredLib = import ../lib { inherit pkgs; };
   inherit (self.foodogsquaredLib.builders)
     makeXDGMimeAssociationList makeXDGPortalConfiguration makeXDGDesktopEntry
     buildHugoSite buildFDSEnv;
-  inherit (self.foodogsquaredLib.fetchers) fetchInternetArchive;
+  inherit (self.foodogsquaredLib.fetchers) fetchInternetArchive fetchUgeeDriver;
 
   # My custom packages.
   awesome-cli = callPackage ./awesome-cli { };
@@ -34,12 +32,16 @@ lib.makeScope pkgs.newScope (self: {
   mopidy-internetarchive = callPackage ./mopidy-internetarchive.nix { };
   mopidy-listenbrainz = callPackage ./mopidy-listenbrainz { };
   nautilus-annotations = callPackage ./nautilus-annotations { };
-  pop-launcher-plugin-brightness = callPackage ./pop-launcher-plugin-brightness { };
+  pop-launcher-plugin-brightness =
+    callPackage ./pop-launcher-plugin-brightness { };
   pop-launcher-plugin-duckduckgo-bangs =
     callPackage ./pop-launcher-plugin-duckduckgo-bangs.nix { };
-  pop-launcher-plugin-jetbrains = callPackage ./pop-launcher-plugin-jetbrains { };
+  pop-launcher-plugin-jetbrains =
+    callPackage ./pop-launcher-plugin-jetbrains { };
   pigeon-mail = callPackage ./pigeon-mail { };
-  swh = callPackage ./software-heritage { python3Packages = pkgs.python310Packages; };
+  swh = callPackage ./software-heritage {
+    python3Packages = pkgs.python310Packages;
+  };
   speki = callPackage ./speki { };
   tic-80 = callPackage ./tic-80 { };
   smile = callPackage ./smile { };
