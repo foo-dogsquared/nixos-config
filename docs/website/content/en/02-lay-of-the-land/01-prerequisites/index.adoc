@@ -50,3 +50,22 @@ It has some things needed in the first place to work like my external backup set
 You can see more details from xref:../05-what-should-not-be-here/index.adoc[What should not be here?].
 Nonetheless, the parts is it isn't reproducible is only about 10% of this config.
 Everything else is fine and dandy and can be deployed successfully (but not used as intended).
+
+
+[appendix]
+[#installing-with-a-persistent-nixos-installer]
+== Installing with a persistent NixOS installer
+
+In some cases such as my main desktop configuration, it may be impossible to install it with a typical installer image like the official ISO.
+This is because the typical installer environment boots on a 2GB tmpfs which should be enough for most environments.
+Buuuuuut several of my NixOS configurations are not that, they basically contain at least 24GB of shenanigans and the collective build files resulting from it is simply not enough in a little 2GB tmpfs and most likely creates a system crash.
+For this reason, it is very recommended to create an installer environment with a persistent live installer.
+
+To do so, simply partition your storage device (e.g., a flash drive, external hard drive) of at least >=64GB.
+Then, you'll have to install a NixOS system in the partition with `graphical-installer` NixOS configuration found in the project flake.
+As widespread throughout the project, you can use disko to install the system in a one-liner.
+
+[source, shell, subs=attributes]
+----
+disko --mode disko [--arg disk "/dev/sda"] --flake {canonical_flake_url}#external-hdd && nixos-install --no-root-passwd --root /mnt --flake {canonical_flake_url}#graphical-installer-x86_64-linux
+----
