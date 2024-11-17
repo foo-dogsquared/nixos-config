@@ -315,9 +315,6 @@ in
               GitSignsAdd = { fg = mkRaw "base0B"; };
               GitSignsDelete = { fg = mkRaw "base08"; };
               GitSignsChange = { fg = mkRaw "base03"; };
-
-              # Indent-Blank-Lines
-              IndentGuide = { fg = mkRaw "base01"; bg = mkRaw "base05"; };
             }
 
             (lib.mkIf config.plugins.telescope.enable {
@@ -350,12 +347,16 @@ in
 
             # See `treesitter-highlight-groups` help section for more details.
             (lib.mkIf config.plugins.treesitter.enable {
-              ${sym "@variable"} = { __unkeyed = mkRaw "Normal"; };
+              ${sym "@variable"} = helpers.listToUnkeyedAttrs [ (mkRaw "Normal") ];
               ${sym "@tag.delimiter"} = { fg = mkRaw "base0A"; };
-              ${sym "@text.emphasis"} = { __unkeyed = mkRaw "Italic"; };
-              ${sym "@text.underline"} = { __unkeyed = mkRaw "Underlined"; };
+              ${sym "@text.emphasis"} = helpers.listToUnkeyedAttrs [ (mkRaw "Italic") ];
+              ${sym "@text.underline"} = helpers.listToUnkeyedAttrs [ (mkRaw "Underlined") ];
               ${sym "@text.strike"} = { gui = "strikethrough"; };
               ${sym "@text.uri"} = { fg = mkRaw "base0C"; };
+            })
+
+            (lib.mkIf config.plugins.indent-blankline.enable {
+              IblScope = { fg = mkRaw "base0C"; gui = "bold"; } ;
             })
           ];
         })
