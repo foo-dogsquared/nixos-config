@@ -26,22 +26,9 @@ in
       };
     };
 
-    # Enable some more context for me.
-    plugins.treesitter-context = {
-      enable = true;
-      settings = {
-        separator = "*";
-        mode = "cursor";
-        line_numbers = true;
-        max_lines = 7;
-      };
-    };
-
     # Some niceties for refactoring.
     plugins.treesitter-refactor = {
       enable = true;
-      highlightCurrentScope.enable = true;
-      highlightDefinitions.enable = true;
       navigation.enable = true;
       smartRename.enable = true;
     };
