@@ -36,7 +36,7 @@ resource "hetznerdns_record" "personal_wiki" {
 
 # Mail resources.
 resource "hetznerdns_record" "mail_mx" {
-  for_each = toset([ "10 heracles.mxrouting.net", "20 heracles-relay.mxrouting.net." ])
+  for_each = toset([ "10 heracles.mxrouting.net.", "20 heracles-relay.mxrouting.net." ])
   zone_id = data.hetznerdns_zone.main.id
   name = "@"
   type = "MX"
