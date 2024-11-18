@@ -104,14 +104,20 @@ in
       # Setting up our network manager of choice.
       systemd.network.enable = true;
 
-      # Setting up the bond devices.
+      # Setting up the bond devices. So far it should have 2 Ethernet ports and
+      # one WiFi interface so it should be bond composed of three interfaces.
       systemd.network.networks."40-bond1-dev1" = {
-        matchConfig.Name = "enp1s0";
+        matchConfig.Name = "enp3s0";
+        networkConfig.Bond = "bond1";
+      };
+
+      systemd.network.networks."40-bond1-dev3" = {
+        matchConfig.Name = "enp2s0";
         networkConfig.Bond = "bond1";
       };
 
       systemd.network.networks."40-bond1-dev2" = {
-        matchConfig.Name = "wlp2s0";
+        matchConfig.Name = "wlp4s0";
         networkConfig = {
           Bond = "bond1";
           IgnoreCarrierLoss = "15";
@@ -123,6 +129,7 @@ in
         Name = "bond1";
         Kind = "bond";
       };
+
       systemd.network.networks."40-bond1" = {
         matchConfig.Name = "bond1";
         networkConfig.DHCP = "yes";
@@ -154,7 +161,7 @@ in
           miimon = "100";
           mode = "active-backup";
         };
-        interfaces = [ "enp1s0" "wlp2s0" ];
+        interfaces = [ "enp2s0" "enp3s0" "wlp4s0" ];
       };
     })
 

@@ -2,7 +2,7 @@
 
 {
   disko.devices = {
-    disk.primary = {
+    disk."${config.hostname}-primary" = {
       device = disk;
       type = "disk";
       content = {
