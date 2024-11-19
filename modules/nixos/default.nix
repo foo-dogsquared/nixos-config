@@ -4,6 +4,7 @@
     ./programs/distrobox.nix
     ./programs/gnome-session
     ./programs/pop-launcher.nix
+    ./programs/retroarch.nix
     ./programs/sessiond
     ./programs/wezterm.nix
     ./services/archivebox.nix
