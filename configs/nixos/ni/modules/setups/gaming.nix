@@ -16,12 +16,19 @@ in
       retro-computing.enable = true;
     };
 
+    programs.retroarch.cores = with pkgs.libretro; [
+      pcsx2
+      dolphin
+      citra
+    ];
+
     # Bring more of them games.
     environment.systemPackages = with pkgs; [
       dwarf-fortress # Losing only means more possibilities to play.
       mindustry # Not a Minecraft industry simulator.
       minetest # Free Minecraft.
       the-powder-toy # Free micro-Minecraft.
+      veloren # Free 3D mini-Minecraft.
     ];
 
     # This is somewhat used for streaming games from it.
