@@ -83,7 +83,7 @@ in
     xdg.desktopEntries.org-protocol = {
       name = "Org protocol";
       exec = "emacsclient %u";
-      icon = "emacs-icon";
+      icon = "emacs";
       mimeType = [ "x-scheme-handler/org-protocol" ];
     };
 

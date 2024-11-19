@@ -26,7 +26,7 @@ in
           lfs.enable = true;
           signing.key = "4AA9CDFF7C99DFF9";
           extraConfig = {
-            core.excludesFile = ../../config/git/ignore;
+            core.excludesFile = builtins.toString ../../config/git/ignore;
 
             user = {
               name = config.accounts.email.accounts.personal.realName;

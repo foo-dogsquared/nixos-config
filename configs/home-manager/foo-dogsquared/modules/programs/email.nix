@@ -3,6 +3,27 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.email;
+
+  mkEmailAccount = { domain ? "foodogsquared.one", name }: {
+    thunderbird.enable = lib.mkDefault true;
+    address = "${name}@${domain}";
+    userName = "${name}@${domain}";
+    realName = lib.mkDefault "${name}@${domain}";
+    passwordCommand = lib.mkDefault "gopass show email/${domain}/${name} | head -n 1";
+
+    imap = {
+      host = "heracles.mxrouting.net";
+      port = 993;
+      tls.enable = true;
+    };
+
+    # Set up the outgoing mails.
+    smtp = {
+      host = "heracles.mxrouting.net";
+      port = 465;
+      tls.enable = true;
+    };
+  };
 in
 {
   options.users.foo-dogsquared.programs.email = {
@@ -14,53 +35,39 @@ in
     {
       accounts.email.accounts = {
         # TODO: Enable offlineimap once maildir support is stable in Thunderbird.
-        personal = {
-          address = "foodogsquared@foodogsquared.one";
-          aliases = [
-            "admin@foodogsquared.one"
-            "webmaster@foodogsquared.one"
-            "hostmaster@foodogsquared.one"
-            "postmaster@foodogsquared.one"
-          ];
-          primary = true;
-          realName = "Gabriel Arazas";
-          userName = "foodogsquared@mailbox.org";
-          signature = {
-            delimiter = "--<----<---->---->--";
-            text = ''
-              foodogsquared at foodogsquared dot one
-            '';
-          };
-          passwordCommand = "gopass show personal/websites/mailbox.org/foodogsquared@mailbox.org | head -n 1";
+        personal = lib.mkMerge [
+          (mkEmailAccount { name = "foodogsquared"; })
 
-          # Set up the ingoing mails.
-          imap = {
-            host = "imap.mailbox.org";
-            port = 993;
-            tls.enable = true;
-          };
+          {
+            thunderbird.enable = true;
+            primary = true;
+            realName = "Gabriel Arazas";
+            signature = {
+              delimiter = "--<----<---->---->--";
+              text = ''
+                foodogsquared at foodogsquared dot one
+              '';
+            };
 
-          # Set up the outgoing mails.
-          smtp = {
-            host = "smtp.mailbox.org";
-            port = 465;
-            tls.enable = true;
-          };
+            # GPG settings... wablamo.
+            gpg = {
+              key = "0xADE0C41DAB221FCC";
+              encryptByDefault = false;
+              signByDefault = false;
+            };
+          }
+        ];
 
-          # GPG settings... wablamo.
-          gpg = {
-            key = "0xADE0C41DAB221FCC";
-            encryptByDefault = false;
-            signByDefault = false;
-          };
-        };
+        postmaster = mkEmailAccount { name = "postmaster"; };
+        webmaster = mkEmailAccount { name = "webmaster"; };
 
         old_personal = {
+          thunderbird.enable = true;
           address = "foo.dogsquared@gmail.com";
           realName = config.accounts.email.accounts.personal.realName;
           userName = "foo.dogsquared@gmail.com";
           flavor = "gmail.com";
-          passwordCommand = "gopass show personal/websites/accounts.google.com/foo.dogsquared | head -n 1";
+          passwordCommand = "gopass show websites/accounts.google.com/foo.dogsquared | head -n 1";
         };
       };
     }
