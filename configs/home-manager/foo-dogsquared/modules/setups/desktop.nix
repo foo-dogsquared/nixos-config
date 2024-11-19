@@ -82,6 +82,16 @@ in
       };
     };
 
+    # My daily digital newspaper.
+    services.matcha = {
+      enable = true;
+      settings = {
+        opml_file_path = "${config.xdg.userDirs.documents}/feeds.opml";
+        markdown_dir_path = "${config.xdg.userDirs.documents}/Matcha";
+      };
+      startAt = "daily";
+    };
+
     users.foo-dogsquared.programs.custom-homepage.sections.services.links = lib.singleton {
       url = "http://localhost:${builtins.toString config.state.ports.activitywatch.value}";
       text = "Telemetry server";
