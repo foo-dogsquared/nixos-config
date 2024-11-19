@@ -15,20 +15,17 @@ in
   # Just don't ask where you can sail getting the games. :)
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      environment.systemPackages = with pkgs; [
-        # All-around emulator. Also what I'm mainly using for quickly
-        # initializing sessions.
-        (retroarch.override {
-          cores = with libretro; [
-            bsnes-hd
-            desmume
-            dolphin
-            dosbox-pure
-            pcsx2
-            ppsspp
-          ];
-        })
-      ];
+      # All-around emulator. Also what I'm mainly using for quickly
+      # initializing sessions.
+      programs.retroarch = {
+        enable = true;
+        cores = with pkgs.libretro; [
+          bsnes-hd
+          desmume
+          dosbox-pure
+          ppsspp
+        ];
+      };
 
       # Setup the go-to platform for Linux gaming. Most of the
       # games should work now with Proton integration.
