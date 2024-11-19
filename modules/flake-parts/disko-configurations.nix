@@ -4,7 +4,7 @@
   options = {
     flake = flake-parts-lib.mkSubmoduleOptions {
       diskoConfigurations = lib.mkOption {
-        type = with lib.types; attrsOf (inputs.disko.lib.topLevel);
+        type = with lib.types; attrsOf raw;
         default = { };
         description = ''
           A set of [disko](https://github.com/nix-community/disko)
