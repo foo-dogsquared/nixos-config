@@ -111,11 +111,6 @@ in
         networkConfig.Bond = "bond1";
       };
 
-      systemd.network.networks."40-bond1-dev3" = {
-        matchConfig.Name = "enp2s0";
-        networkConfig.Bond = "bond1";
-      };
-
       systemd.network.networks."40-bond1-dev2" = {
         matchConfig.Name = "wlp4s0";
         networkConfig = {
@@ -161,7 +156,7 @@ in
           miimon = "100";
           mode = "active-backup";
         };
-        interfaces = [ "enp2s0" "enp3s0" "wlp4s0" ];
+        interfaces = [ "eno1" "enp3s0" "wlp4s0" ];
       };
     })
 
