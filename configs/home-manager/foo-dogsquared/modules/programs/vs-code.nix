@@ -33,5 +33,16 @@ in
         "extensions.ignoreRecommendations" = true;
       };
     };
+
+    # We're using Visual Studio Code as a git difftool and mergetool which is
+    # surprisingly good compared to the competition (which is not much).
+    programs.git.extraConfig = {
+      diff.tool = lib.mkDefault "vscode";
+      difftool.vscode.cmd = "code --wait --diff $LOCAL $REMOTE";
+
+      # It has a three-way merge.
+      merge.tool = lib.mkDefault "vscode";
+      mergetool.vscode.cmd = "code --wait --merge $REMOTE $LOCAL $BASE $MERGED";
+    };
   };
 }
