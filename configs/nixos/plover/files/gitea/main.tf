@@ -29,94 +29,48 @@ resource "gitea_public_key" "foodogsquared" {
   key = file("../../../../home-manager/foo-dogsquared/files/ssh-key.pub")
 }
 
-resource "gitea_repository" "nixos-config" {
+resource "gitea_repository" "personal_projects_from_github" {
+  for_each = tomap({
+    hugo-theme-more-contentful = {
+      website = "https://foo-dogsquared.github.io/hugo-theme-more-contentful"
+      interval = null
+    }
+    hugo-theme-contentful = {
+      website = "https://foo-dogsquared.github.io/hugo-theme-contentful"
+      interval = null
+    }
+    ansible-playbooks = {
+      website = null
+      interval = null
+    }
+    dotfiles = {
+      website = null
+      interval = null
+    }
+    wiki = {
+      website = "https://wiki.foodogsquared.one"
+      interval = "1h"
+    }
+    asciidoctor-foodogsquared-extensions = {
+      website = null
+      interval = null
+    }
+    website = {
+      website = "https://foodogsquared.one"
+      interval = "1h"
+    }
+    nixos-config = {
+      website = "https://foo-dogsquared.github.io/nixos-config"
+      interval = null
+    }
+  })
+  name = each.key
   username = gitea_user.foodogsquared.username
-  name = "nixos-config"
   mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/nixos-config.git"
+  migration_clone_address = "https://github.com/foo-dogsquared/${each.key}.git"
   migration_service = "github"
   migration_service_auth_token = var.github_clone_token
-  migration_mirror_interval = "4h"
-  website = "https://foo-dogsquared.github.io/nixos-config"
-  private = false
-}
-
-resource "gitea_repository" "website" {
-  username = gitea_user.foodogsquared.username
-  name = "website"
-  mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/website.git"
-  migration_service = "github"
-  migration_service_auth_token = var.github_clone_token
-  migration_mirror_interval = "4h"
-  website = "https://foodogsquared.one"
-  private = false
-}
-
-resource "gitea_repository" "asciidoctor-foodogsquared-extensions" {
-  username = gitea_user.foodogsquared.username
-  name = "asciidoctor-foodogsquared-extensions"
-  mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/asciidoctor-foodogsquared-extensions.git"
-  migration_service = "github"
-  migration_service_auth_token = var.github_clone_token
-  migration_mirror_interval = "4h"
-  private = false
-}
-
-resource "gitea_repository" "wiki" {
-  username = gitea_user.foodogsquared.username
-  name = "wiki"
-  mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/wiki.git"
-  migration_service = "github"
-  migration_service_auth_token = var.github_clone_token
-  migration_mirror_interval = "4h"
-  website = "https://wiki.foodogsquared.one"
-  private = false
-}
-
-resource "gitea_repository" "dotfiles" {
-  username = gitea_user.foodogsquared.username
-  name = "dotfiles"
-  mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/dotfiles.git"
-  migration_service = "github"
-  migration_service_auth_token = var.github_clone_token
-  migration_mirror_interval = "4h"
-  website = "https://wiki.foodogsquared.one"
-  private = false
-}
-
-resource "gitea_repository" "ansible-playbooks" {
-  username = gitea_user.foodogsquared.username
-  name = "ansible-playbooks"
-  mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/ansible-playbooks.git"
-  migration_service = "github"
-  migration_service_auth_token = var.github_clone_token
-  migration_mirror_interval = "4h"
-  private = false
-}
-
-resource "gitea_repository" "hugo-theme-more-contentful" {
-  username = gitea_user.foodogsquared.username
-  name = "hugo-theme-more-contentful"
-  mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/hugo-theme-more-contentful.git"
-  migration_service = "github"
-  migration_service_auth_token = var.github_clone_token
-  migration_mirror_interval = "4h"
-  private = false
-}
-
-resource "gitea_repository" "hugo-theme-contentful" {
-  username = gitea_user.foodogsquared.username
-  name = "hugo-theme-contentful"
-  mirror = true
-  migration_clone_address = "https://github.com/foo-dogsquared/hugo-theme-contentful.git"
-  migration_service = "github"
-  migration_service_auth_token = var.github_clone_token
-  migration_mirror_interval = "4h"
+  migration_mirror_interval = each.value.interval != null ? each.value.interval : "4h"
+  website = each.value.website
   private = false
 }
