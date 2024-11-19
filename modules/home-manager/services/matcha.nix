@@ -15,8 +15,8 @@ in
         The package containing the {command}`matcha` executable.
       '';
       type = lib.types.package;
-      default = pkgs.matcha;
-      defaultText = "pkgs.matcha";
+      default = pkgs.matcha-rss-digest;
+      defaultText = "pkgs.matcha-rss-digest";
     };
 
     settings = lib.mkOption {
