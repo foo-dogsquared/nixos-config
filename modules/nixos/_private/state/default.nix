@@ -13,6 +13,7 @@
       freeformType = with lib.types; attrsOf anything;
       default = { };
     };
+    default = { };
     description = ''
       A set of values referring to the system state for use in other parts of
       the NixOS system. Useful for consistent values and referring to a single
