@@ -80,13 +80,12 @@ in
         sections = {
           lualine_a = [ "mode" ];
           lualine_c = [
+            "filename"
+
             {
-              name = "filename";
-              extraConfig = {
-                newfile_status = true;
-                shorting_target = 10;
-                path = 1;
-              };
+              newfile_status = true;
+              shorting_target = 10;
+              path = 1;
             }
           ];
           lualine_z = [ "location" ];
