@@ -85,8 +85,14 @@ in {
               pango
               pipewire
             ];
+            desktopLibs = with pkgs; [
+              qt5.full
+              qt6.full
+              gtk3
+              gtk4
+            ];
           in
-          commonLibs ++ xorgLibs;
+          commonLibs ++ xorgLibs ++ desktopLibs;
       };
 
       environment.systemPackages = with pkgs; [
