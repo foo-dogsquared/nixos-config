@@ -27,6 +27,7 @@
     rust_analyzer = {
       enable = true;
       installRustc = false;
+      installCargo = false;
     };
 
     solargraph.enable = true; # For Ruby.
