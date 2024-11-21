@@ -21,9 +21,6 @@ in
       extraPackages = epkgs: with epkgs; [
         org-noter-pdftools
         org-pdftools
-        org-roam
-        org-roam-bibtex
-        org-roam-ui
         pdf-tools
         vterm
       ];
