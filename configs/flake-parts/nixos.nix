@@ -81,16 +81,6 @@ in
         ];
       };
 
-      # TODO: Remove extra newlines that are here for whatever reason.
-      #{{{
-      void = {
-        nixpkgs.branch = "nixos-unstable";
-        home-manager.branch = "home-manager-unstable";
-        systems = [ "x86_64-linux" ];
-        formats = [ "vm" ];
-      };
-      #}}}
-
       # The barely customized non-graphical installer.
       bootstrap = {
         nixpkgs.branch = "nixos-unstable-small";

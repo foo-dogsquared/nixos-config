@@ -1,9 +1,0 @@
-= void, the host that shouldn't exist
-:toc:
-
-It's a host that it's only used for testing and workflow-building.
-That's it.
-
-It shouldn't exist in this Git repo.
-You shouldn't see this nor use this as your daily host.
-If it does, we wouldn't talk about this footnote:[Maybe I've gone lazy and not having to `git add` every time to test something but still... wouldn't talk about this.].
