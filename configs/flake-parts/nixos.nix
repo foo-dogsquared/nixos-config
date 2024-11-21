@@ -57,6 +57,7 @@ in
             };
           };
         };
+        diskoConfigs = [ "laptop-ssd" ];
       };
 
       # A remote server.
