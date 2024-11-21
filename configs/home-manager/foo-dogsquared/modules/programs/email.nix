@@ -5,7 +5,6 @@ let
   cfg = userCfg.programs.email;
 
   mkEmailAccount = { domain ? "foodogsquared.one", name }: {
-    thunderbird.enable = lib.mkDefault true;
     address = "${name}@${domain}";
     userName = "${name}@${domain}";
     realName = lib.mkDefault "${name}@${domain}";
@@ -39,7 +38,6 @@ in
           (mkEmailAccount { name = "foodogsquared"; })
 
           {
-            thunderbird.enable = true;
             primary = true;
             realName = "Gabriel Arazas";
             signature = {
@@ -62,7 +60,6 @@ in
         webmaster = mkEmailAccount { name = "webmaster"; };
 
         old_personal = {
-          thunderbird.enable = true;
           address = "foo.dogsquared@gmail.com";
           realName = config.accounts.email.accounts.personal.realName;
           userName = "foo.dogsquared@gmail.com";
