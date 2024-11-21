@@ -1,5 +1,5 @@
 {{- /* Here's where the customized version should be. */ -}}
-{{ $highlighter := resources.Get "css/rouge.scss" | resources.ToCSS }}
+{{ $highlighter := resources.Get "css/rouge.scss" | toCSS }}
 {{- if hugo.IsProduction }}
   {{ $highlighter = $highlighter | resources.Minify | resources.Fingerprint }}
 {{ end }}

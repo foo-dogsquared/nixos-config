@@ -19,13 +19,14 @@ let
 in
 buildHugoSite {
   pname = "foodogsquared-docs";
-  version = "2024-09-03";
+  version = "2024-11-21";
 
   src = lib.cleanSource ./.;
 
-  vendorHash = "sha256-3HnyNLHyJDQ8hhZFb3Cu+i75nrUJn/iEV5xNP++di/4=";
+  vendorHash = "sha256-HWvwr2n6M84nAZFGESBRCtC0I6MuxnCRljRfhkpZlSo=";
 
-  buildInputs = [ asciidoctorWrapper gems ];
+  nativeBuildInputs = [ asciidoctorWrapper ];
+  buildInputs = [ gems ];
 
   meta = with lib; {
     description = "foodogsquared's NixOS configuration docs";
