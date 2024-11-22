@@ -31,14 +31,18 @@ in
           { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; } # Firenvim
           { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
           { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
-          { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
           { id = "haebnnbpedcbhciplfhjjkbafijpncjl"; } # TinEye Reverse Image Search
           { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; } # Tampermonkey
           { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
           { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
           { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
           { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
-        ];
+          { id = "dgjhfomjieaadpoljlnidmbgkdffpack"; } # Sourcegraph
+          { id = "palihjnakafgffnompkdfgbgdbcagbko"; } # UpdateSWH
+        ]
+          ++ (lib.optionals (lib.elem "a-happy-gnome" attrs.nixosConfig.workflows.workflows) [
+            { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
+          ]);
       };
 
       services.bleachbit.cleaners = [
