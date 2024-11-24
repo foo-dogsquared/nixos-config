@@ -1,8 +1,8 @@
-{ disk ? "/dev/nvme1n1", prefix ? "ni", ... }:
+{ disk ? "/dev/nvme1n1", ... }:
 
 {
   disko.devices = {
-    disk."${prefix}-secondary" = {
+    disk."ni-secondary" = {
       device = disk;
       type = "disk";
       content = {
@@ -18,7 +18,7 @@
               subvolumes = {
                 "/root" = {
                   mountOptions = [ "compress=zstd:10" ];
-                  mountpoint = "/";
+                  mountpoint = "/mnt/laptop-ssd";
                 };
               };
             };
