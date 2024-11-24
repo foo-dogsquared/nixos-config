@@ -118,5 +118,7 @@ in
           ${installThemes}
         '';
       });
+
+    xdg.dataFile."foodogsquared/homepage".source = cfg.finalPackage;
   };
 }

@@ -142,13 +142,14 @@ in
       settings = let
         backup_path = "${config.xdg.cacheHome}/ludusavi/backups";
       in {
-        manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
+        manifest.enable = true;
         roots = [
           { path = "${config.home.homeDirectory}/.steam"; store = "steam"; }
           { path = "${config.xdg.dataHome}/lutris"; store = "lutris"; }
         ];
         backup.path = backup_path;
         restore.path = backup_path;
+        release.check = false;
       };
     };
   };

@@ -51,6 +51,9 @@ in {
         # Testing REST.
         httpie
         httpie-desktop
+
+        # Testing out LLMs.
+        plandex
       ];
     }
 

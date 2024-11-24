@@ -39,10 +39,8 @@ in
           { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
           { id = "dgjhfomjieaadpoljlnidmbgkdffpack"; } # Sourcegraph
           { id = "palihjnakafgffnompkdfgbgdbcagbko"; } # UpdateSWH
-        ]
-          ++ (lib.optionals (lib.elem "a-happy-gnome" attrs.nixosConfig.workflows.workflows) [
-            { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
-          ]);
+          { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
+        ];
       };
 
       services.bleachbit.cleaners = [
@@ -137,7 +135,7 @@ in
             "browser.search.widget.inNavBar" = true;
             "browser.search.openintab" = true;
             "browser.startup.homepage" =
-              lib.mkIf userCfg.programs.custom-homepage.enable "file://${userCfg.programs.custom-homepage.finalPackage}/index.html";
+              lib.mkIf userCfg.programs.custom-homepage.enable "file://${config.xdg.dataHome}/foodogsquared/homepage";
 
             # Some privacy settings...
             "privacy.donottrackheader.enabled" = true;

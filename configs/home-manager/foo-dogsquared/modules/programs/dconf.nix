@@ -16,7 +16,8 @@ in
           lib.optional userCfg.programs.browsers.firefox.enable "firefox.desktop"
           ++ lib.optional userCfg.setups.desktop.enable "thunderbird.desktop"
           ++ lib.optional userCfg.setups.development.enable "org.wezfurlong.wezterm.desktop"
-          ++ lib.optional userCfg.programs.doom-emacs.enable "emacs.desktop";
+          ++ lib.optional userCfg.programs.doom-emacs.enable "emacs.desktop"
+          ++ lib.optional userCfg.programs.vs-code.enable "code.desktop";
       };
 
       "org/gnome/calculator" = {
