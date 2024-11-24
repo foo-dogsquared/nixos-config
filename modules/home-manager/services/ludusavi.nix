@@ -76,6 +76,11 @@ in
       (lib.hm.assertions.assertPlatform "services.ludusavi" pkgs lib.platforms.linux)
     ];
 
+    # We're putting it somewhere in the home directory instead of the typical
+    # Nix store directory since the configuration directory has to be writable
+    # for the manifest file.
+    xdg.dataFile."ludusavi/hm-service-config.yaml".source = configFile;
+
     systemd.user.services.ludusavi = {
       Unit = {
         Description = "Periodic game backup";
@@ -88,7 +93,7 @@ in
       };
 
       Service = {
-        ExecStart = "${lib.getExe' cfg.package "ludusavi"} --config ${configFile} backup ${lib.concatStringsSep " " cfg.extraArgs}";
+        ExecStart = "${lib.getExe' cfg.package "ludusavi"} --config ${config.xdg.dataHome}/ludusavi/hm-service-config.yaml backup ${lib.concatStringsSep " " cfg.extraArgs}";
         Restart = "on-failure";
       };
     };
