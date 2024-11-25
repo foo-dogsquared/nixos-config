@@ -58,13 +58,13 @@ in
         config = lib.mkIf (config.diskoConfigs != [ ]) (
           let
             diskoConfigs =
-              builtins.map (name: import "${partsConfig.setups.configDir}/disko/${name}") config.diskoConfigs;
+              builtins.map (name: "${partsConfig.setups.configDir}/disko/${name}") config.diskoConfigs;
           in
           {
             modules = lib.singleton {
               imports =
                 [ inputs.disko.nixosModules.disko ]
-                ++ (lib.lists.flatten diskoConfigs);
+                ++ diskoConfigs;
             };
           }
         );
