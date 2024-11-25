@@ -179,7 +179,7 @@
       meta = with lib;
       {
         homepage = "https://tineye.com/";
-        description = "Click on any image on the web to search for it on TinEye. Recommended by Firefox! \nDiscover where an image came from, see how it is being used, check if modified versions exist or locate high resolution versions. Made with love by the TinEye team.";
+        description = "Click on any image on the web to search for it on TinEye. Recommended by Firefox! \r\nDiscover where an image came from, see how it is being used, check if modified versions exist or locate high resolution versions. Made with love by the TinEye team.";
         license = licenses.mit;
         mozPermissions = [ "contextMenus" "storage" ];
         platforms = platforms.all;
