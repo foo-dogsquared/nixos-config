@@ -70,6 +70,7 @@ in
     services.backup.enable = true;
 
     setups = {
+      business.enable = true;
       desktop.enable = true;
       development.enable = true;
       fonts.enable = true;

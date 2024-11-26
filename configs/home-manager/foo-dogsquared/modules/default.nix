@@ -17,6 +17,7 @@
     ./programs/vs-code.nix
     ./services/backup
 
+    ./setups/business.nix
     ./setups/desktop.nix
     ./setups/development.nix
     ./setups/fonts.nix
