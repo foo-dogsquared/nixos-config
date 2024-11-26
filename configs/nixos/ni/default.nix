@@ -18,6 +18,7 @@
     hardware.qol.enable = true;
     networking.enable = true;
     services.backup.enable = true;
+    services.monitoring.enable = true;
     setups = {
       desktop.enable = true;
       development.enable = true;

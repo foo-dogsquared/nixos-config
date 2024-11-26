@@ -5,6 +5,7 @@
     ./networking/setup.nix
     ./networking/wireguard.nix
     ./services/backup
+    ./services/monitoring.nix
     ./services/download-media
     ./setups/desktop.nix
     ./setups/development.nix
