@@ -4,11 +4,31 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.browsers;
+
+  commonExtensions = [
+    { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
+    { id = "ekhagklcjbdpajgpjgmbionohlpdbjgc"; } # Zotero connector
+    { id = "jfnifeihccihocjbfcfhicmmgpjicaec"; } # GSConnect
+    { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # Google Translate
+    { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; } # Firenvim
+    { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
+    { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
+    { id = "haebnnbpedcbhciplfhjjkbafijpncjl"; } # TinEye Reverse Image Search
+    { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; } # Tampermonkey
+    { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
+    { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
+    { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
+    { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
+    { id = "dgjhfomjieaadpoljlnidmbgkdffpack"; } # Sourcegraph
+    { id = "palihjnakafgffnompkdfgbgdbcagbko"; } # UpdateSWH
+    { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
+  ];
 in
 {
   options.users.foo-dogsquared.programs.browsers = {
     firefox.enable = lib.mkEnableOption "foo-dogsquared's Firefox setup";
     brave.enable = lib.mkEnableOption "foo-dogsquared's Brave setup";
+    google-chrome.enable = lib.mkEnableOption "foo-dogsquared's Google Chrome setup";
     misc.enable = lib.mkEnableOption "foo-dogsquared's miscellaneous browsers setup";
 
     plugins.firenvim.enable = lib.mkEnableOption "setting up Firenvim";
@@ -23,24 +43,7 @@ in
           "--no-default-browser-check"
           "--use-system-default-printer"
         ];
-        extensions = [
-          { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
-          { id = "ekhagklcjbdpajgpjgmbionohlpdbjgc"; } # Zotero connector
-          { id = "jfnifeihccihocjbfcfhicmmgpjicaec"; } # GSConnect
-          { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # Google Translate
-          { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; } # Firenvim
-          { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
-          { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
-          { id = "haebnnbpedcbhciplfhjjkbafijpncjl"; } # TinEye Reverse Image Search
-          { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; } # Tampermonkey
-          { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
-          { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
-          { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
-          { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
-          { id = "dgjhfomjieaadpoljlnidmbgkdffpack"; } # Sourcegraph
-          { id = "palihjnakafgffnompkdfgbgdbcagbko"; } # UpdateSWH
-          { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
-        ];
+        extensions = commonExtensions;
       };
 
       services.bleachbit.cleaners = [
@@ -211,7 +214,7 @@ in
           (pkgs.writeTextFile {
             name = "tridactyl-nix-generated";
             text = ''
-              set newtab file://${userCfg.programs.custom-homepage.finalPackage}/index.html
+              set newtab ${config.xdg.dataHome}/foodogsquared/homepage
             '';
           })
         ];
@@ -231,11 +234,15 @@ in
       ];
     })
 
-    # Goes with whatever you want to.
-    (lib.mkIf cfg.misc.enable {
-      home.packages = with pkgs; [
-        google-chrome
-        #nyxt
+    (lib.mkIf cfg.google-chrome.enable {
+      programs.google-chrome.enable = true;
+
+      # It's pretty much the same setup anyways.
+      programs.google-chrome.extensions = commonExtensions;
+
+      programs.google-chrome.commandLineArgs = [
+        "--no-default-browser-check"
+        "--use-system-default-printer"
       ];
 
       services.bleachbit.cleaners = [
@@ -247,6 +254,13 @@ in
         "google_chrome.session"
         "google_chrome.sync"
         "google_chrome.vacuum"
+      ];
+    })
+
+    # Goes with whatever you want to.
+    (lib.mkIf cfg.misc.enable {
+      home.packages = with pkgs; [
+        nyxt
       ];
     })
 

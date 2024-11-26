@@ -14,6 +14,7 @@ in
     programs = {
       dconf.enable = true;
       browsers.brave.enable = true;
+      browsers.google-chrome.enable = true;
       browsers.firefox.enable = true;
       browsers.misc.enable = true;
       doom-emacs.enable = true;
