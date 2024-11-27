@@ -2,8 +2,12 @@
 , go
 , gofumpt
 , gopls
+, callPackage
 }:
 
+let
+  nodejsDevshell = callPackage ./nodejs.nix { };
+in
 mkShell {
   packages = [
     go
@@ -11,5 +15,5 @@ mkShell {
     gopls
   ];
 
-  inputsFrom = [ go ];
+  inputsFrom = [ go nodejsDevshell ];
 }

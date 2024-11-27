@@ -1,5 +1,6 @@
 # My usual toolchain for developing Hugo projects.
 { mkShell
+, callPackage
 , hugo
 , asciidoctor
 , pandoc
@@ -9,6 +10,10 @@
 , imagemagick
 }:
 
+let
+  nodejsDevshell = callPackage ./nodejs.nix { };
+  goDevshell = callPackage ./go.nix { };
+in
 mkShell {
   packages = [
     asciidoctor # Some sites use this.
@@ -21,7 +26,7 @@ mkShell {
   ];
 
   inputsFrom = [
-    go
-    nodejs_latest
+    nodejsDevshell
+    goDevshell
   ];
 }
