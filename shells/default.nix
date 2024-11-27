@@ -7,6 +7,8 @@ with pkgs; {
   gnu = callPackage ./gnu.nix { };
   gnome = callPackage ./gnome.nix { };
   nix = callPackage ./nix.nix { };
+  nodejsStable = callPackage ./nodejs.nix { };
+  nodejsLatest = callPackage ./nodejs.nix { nodejs = nodejs_latest; };
   go = callPackage ./go.nix { };
   guile = callPackage ./guile.nix { };
   guile2 = callPackage ./guile.nix { guile = guile_2_2; };
