@@ -33,6 +33,9 @@ in
               ../../modules/wrapper-manager/_private
             ];
           }
+
+          inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+          inputs.nixos-hardware.nixosModules.common-cpu-amd-raphael-igpu
         ];
         home-manager = {
           branch = "home-manager-unstable";

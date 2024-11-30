@@ -57,6 +57,9 @@
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
 
+    # Configure those quirky hardware for you.
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+
     # Generate your NixOS systems to various formats!
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
