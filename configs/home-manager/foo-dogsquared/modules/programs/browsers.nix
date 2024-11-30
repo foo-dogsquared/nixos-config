@@ -237,9 +237,6 @@ in
     (lib.mkIf cfg.google-chrome.enable {
       programs.google-chrome.enable = true;
 
-      # It's pretty much the same setup anyways.
-      programs.google-chrome.extensions = commonExtensions;
-
       programs.google-chrome.commandLineArgs = [
         "--no-default-browser-check"
         "--use-system-default-printer"

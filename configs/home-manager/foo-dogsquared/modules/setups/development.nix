@@ -48,30 +48,19 @@ in {
         go-migrate # Go potential migraines.
         oils-for-unix # Rev them up, reverent admin.
 
-        # Testing REST.
+        # Testing REST and all about backend development.
         httpie
         httpie-desktop
+        hurl
+        grpcurl
+
+        # Testing out Kubernetes.
+        kind
 
         # Testing out LLMs.
         plandex
       ];
     }
-
-    (lib.mkIf userCfg.programs.google-chrome.enable {
-      programs.google-chrome-dev.enable = true;
-
-      programs.google-chrome-dev.commandLineArgs = [
-        "--no-default-browser-check"
-        "--use-system-default-printer"
-      ];
-
-      programs.google-chrome-dev.extensions = [
-        { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
-        { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # Google Translate
-        { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
-        { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
-      ];
-    })
 
     (lib.mkIf (!userCfg.programs.nixvim.enable) {
       programs.neovim = {
