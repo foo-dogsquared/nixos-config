@@ -11,9 +11,8 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       collabora-online
-      libreoffice-fresh
+      libreoffice
       zoom-us
-      teams
     ];
   };
 }

@@ -214,7 +214,7 @@ in
           (pkgs.writeTextFile {
             name = "tridactyl-nix-generated";
             text = ''
-              set newtab ${config.xdg.dataHome}/foodogsquared/homepage
+              set newtab file://${config.xdg.dataHome}/foodogsquared/homepage/index.html
             '';
           })
         ];
