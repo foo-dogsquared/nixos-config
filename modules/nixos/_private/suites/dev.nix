@@ -187,6 +187,7 @@ in {
       environment.systemPackages = with pkgs; [
         virt-top # Monitoring your virtual machines on a terminal, yeah.
         virt-manager # An interface for those who are lazy to read a reference manual and create a 1000-line configuration per machine.
+        quickemu # Faster than a speed'o'sound.
       ];
 
       # Virtual machines, son. They open in response to physical needs to
