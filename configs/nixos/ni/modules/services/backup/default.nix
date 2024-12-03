@@ -22,7 +22,7 @@ let
     extraInitArgs = "--make-parent-dirs";
 
     # We're emptying them since we're specifying them all through the patterns file.
-    paths = [ ];
+    paths = lib.mkForce [ ];
 
     persistentTimer = true;
     preHook = ''
@@ -64,34 +64,19 @@ in
       });
 
     suites.filesystem.setups = {
-      archive.enable = true;
-      external-hdd.enable = true;
+      laptop-ssd.enable = true;
     };
 
     services.borgbackup.jobs = {
-      local-archive = borgJobCommonSetting {
+      local-external-storage = borgJobCommonSetting {
         patterns = with config.sops; [
-          secrets."${pathPrefix}/patterns/home".path
-          secrets."${pathPrefix}/patterns/root".path
-          secrets."${pathPrefix}/patterns/keys".path
-        ];
-        passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/archives/password".path}";
-        removableDevice = true;
-        repo = "/mnt/archives/Backups";
-        startAt = "04:30";
-      };
-
-      local-external-hdd = borgJobCommonSetting {
-        patterns = with config.sops; [
-          secrets."${pathPrefix}/patterns/home".path
           secrets."${pathPrefix}/patterns/root".path
           secrets."${pathPrefix}/patterns/keys".path
         ];
         passCommand = "cat ${config.sops.secrets."${pathPrefix}/repos/external-hdd/password".path}";
         removableDevice = true;
         doInit = true;
-        repo = "/mnt/external-storage/Backups";
-        startAt = "04:30";
+        repo = "${config.state.paths.laptop-ssd}/Backups";
       };
 
       remote-backup-hetzner-box = borgJobCommonSetting {
