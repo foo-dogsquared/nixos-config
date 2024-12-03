@@ -135,7 +135,7 @@ in
 
     instances = lib.mkOption {
       type = with lib.types; attrsOf (submodule instanceType);
-      description = lib.mdDoc "Instances of Vouch proxy to be run.";
+      description = "Instances of Vouch proxy to be run.";
       default = { };
       example = lib.literalExpression ''
         {

@@ -3,15 +3,13 @@
 let
   cfg = config.programs.retroarch;
 
-  finalPkg = cfg.package.override {
+  finalPkg = pkgs.wrapRetroArch {
     inherit (cfg) cores settings;
   };
 in
 {
   options.programs.retroarch = {
     enable = lib.mkEnableOption "configuring Retroarch";
-
-    package = lib.mkPackageOption pkgs "retroarch" { };
 
     cores = lib.mkOption {
       type = with lib.types; listOf package;

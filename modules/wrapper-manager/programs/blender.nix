@@ -36,7 +36,7 @@ in
 
     addons = lib.mkOption {
       type = with lib.types; listOf package;
-      description = lib.mdDoc ''
+      description = ''
         List of packages providing Blender system resources at
         {file}`/share/blender` or at {file}`/share/blender/$MAJORMINORVERSION`.
       '';
