@@ -116,22 +116,19 @@ in
         };
       })
 
-      (lib.mkIf (isFilesystemSet "archive") {
+      {
         local-archive-personal = {
           initService.enable = true;
           initService.startAt = "04:30";
-          settings = let
-            removablePath = "${attrs.nixosConfig.state.paths.archive}/Backups";
-          in borgmaticCommonConfig {
+          settings = borgmaticCommonConfig {
             encryption_passcommand = "cat ${getPath "repos/local-archive-personal/password"}";
             repositories = lib.singleton {
-              path = removablePath;
+              path = "\${BORG_PERSONAL_FDS_PATH:-${attrs.nixosConfig.state.paths.laptop-ssd}/Backups/foodogsquared}";
               label = "local-archive";
             };
-            before_backup = lib.singleton "${checkRemovableMountScript} ${removablePath}";
           };
         };
-      })
+      }
     ];
 
     # My game backups.
