@@ -21,6 +21,9 @@ in
         neovim.enable = true;
       };
 
+      # Allow USB redirections to machines.
+      virtualisation.spiceUSBRedirection.enable = lib.mkDefault true;
+
       # Replace container runtime to Docker.
       virtualisation.podman.enable = lib.mkForce false;
       virtualisation.docker = {

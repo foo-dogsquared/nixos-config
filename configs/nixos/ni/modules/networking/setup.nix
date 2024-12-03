@@ -78,6 +78,13 @@ in
         };
       };
 
+      # Cross-platform filesystem networking.
+      services.samba = {
+        enable = true;
+        nmbd.enable = true;
+        nsswins = true;
+      };
+
       # Set resolved for DNS resolutions.
       services.resolved = {
         enable = true;
