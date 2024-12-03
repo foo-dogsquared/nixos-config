@@ -7,7 +7,7 @@
 , glib
 , gobject-introspection
 , wrapGAppsHook3
-, gnome
+, gnome-shell
 }:
 
 python3Packages.buildPythonPackage rec {
@@ -29,7 +29,7 @@ python3Packages.buildPythonPackage rec {
   buildInputs = [ glib ];
 
   postPatch = ''
-    substituteInPlace gssp-recoll.py --replace "/usr/share" "${gnome.gnome-shell}/share"
+    substituteInPlace gssp-recoll.py --replace "/usr/share" "${gnome-shell}/share"
   '';
 
   meta = with lib; {

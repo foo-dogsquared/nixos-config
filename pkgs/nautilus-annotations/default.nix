@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitLab
 , glib
-, gnome
+, nautilus
 , gtksourceview5
 , libadwaita
 , autoreconfHook
@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     autoreconfHook
     glib
-    gnome.nautilus
+    nautilus
     pkg-config
     wrapGAppsHook4
   ];
