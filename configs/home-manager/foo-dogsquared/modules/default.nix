@@ -14,6 +14,7 @@
     ./programs/custom-homepage.nix
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
+    ./programs/terminal-emulator.nix
     ./programs/vs-code.nix
     ./services/backup
 

@@ -25,6 +25,7 @@ in {
         keys.gpg.enable = true;
         keys.ssh.enable = true;
         terminal-multiplexer.enable = lib.mkDefault true;
+        terminal-emulator.enable = lib.mkDefault true;
       };
 
       suites.dev = {
