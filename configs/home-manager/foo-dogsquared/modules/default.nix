@@ -16,6 +16,7 @@
     ./programs/terminal-multiplexer.nix
     ./programs/terminal-emulator.nix
     ./programs/vs-code.nix
+    ./services/archivebox
     ./services/backup
 
     ./setups/business.nix
