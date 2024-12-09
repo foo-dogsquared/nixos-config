@@ -7,6 +7,7 @@
     ./services/backup
     ./services/monitoring.nix
     ./services/download-media
+    ./services/penpot
     ./setups/desktop.nix
     ./setups/development.nix
     ./setups/gaming.nix
