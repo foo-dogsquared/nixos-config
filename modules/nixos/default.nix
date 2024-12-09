@@ -16,5 +16,6 @@
     ./services/vouch-proxy.nix
     ./services/yt-dlp.nix
     ./xdg/mime-desktop-specific.nix
+    ./virtualisation/oci-containers
   ];
 }
