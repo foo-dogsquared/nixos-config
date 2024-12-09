@@ -161,7 +161,6 @@ in {
       # than nothing.
       virtualisation.podman = {
         enable = true;
-        dockerCompat = true;
         autoPrune = {
           enable = true;
           dates = "weekly";
@@ -186,7 +185,6 @@ in {
     (lib.mkIf cfg.virtual-machines.enable {
       environment.systemPackages = with pkgs; [
         virt-top # Monitoring your virtual machines on a terminal, yeah.
-        virt-manager # An interface for those who are lazy to read a reference manual and create a 1000-line configuration per machine.
         quickemu # Faster than a speed'o'sound.
       ];
 
@@ -197,6 +195,8 @@ in {
         qemu.package = pkgs.qemu_full;
         qemu.ovmf.enable = true;
       };
+
+      programs.virt-manager.enable = true;
     })
 
     (lib.mkIf cfg.neovim.enable {

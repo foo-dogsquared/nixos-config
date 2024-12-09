@@ -18,6 +18,7 @@ in
       archive.enable = lib.mkEnableOption "automounting offline archive";
       external-hdd.enable = lib.mkEnableOption "automounting personal external hard drive";
       personal-webstorage.enable = lib.mkEnableOption "automounting of personal WebDAV directory";
+      laptop-ssd.enable = lib.mkEnableOption "automounting a leftover laptop SSD";
     };
   };
 
@@ -34,13 +35,13 @@ in
     })
 
     (lib.mkIf cfg.setups.archive.enable {
-      state.paths.archive = "/mnt/archives";
+      state.paths.archive = "/media/archives";
 
       fileSystems."${config.state.paths.archive}" = {
-        device = "/dev/disk/by-partlabel/disk-archive-root";
+        device = lib.mkDefault "/dev/disk/by-partlabel/disk-archive-root";
         fsType = "btrfs";
         noCheck = true;
-        options = [
+        options = lib.mkDefault [
           # These are btrfs-specific mount options which can found in btrfs.5
           # manual page.
           "subvol=/root"
@@ -59,22 +60,19 @@ in
     })
 
     (lib.mkIf cfg.setups.external-hdd.enable {
-      state.paths.external-hdd = "/mnt/external-storage";
+      state.paths.external-hdd = "/media/external-storage";
 
       fileSystems."${config.state.paths.external-hdd}" = {
-        device = "/dev/disk/by-partlabel/disk-live-installer-root";
+        device = lib.mkDefault "/dev/disk/by-partlabel/disk-live-installer-root";
         fsType = "btrfs";
         noCheck = true;
-        options = [
+        options = lib.mkDefault [
           "nofail"
           "noauto"
           "user"
 
           "subvol=/data"
           "compress=zstd"
-          "x-systemd.automount"
-          "x-systemd.device-timeout=2"
-          "x-systemd.idle-timeout=2"
         ];
       };
     })
@@ -89,7 +87,7 @@ in
       }];
 
       # You have to set up the secrets for this somewhere.
-      fileSystems."/mnt/personal-webdav" = {
+      fileSystems."/media/personal-webdav" = {
         device = "https://dav.mailbox.org/servlet/webdav.infostore";
         fsType = "davfs";
         noCheck = true;
@@ -103,6 +101,24 @@ in
           "x-systemd.idle-timeout=300"
           "x-systemd.mount-timeout=20"
           "x-systemd.wanted-by=multi-user.target"
+        ];
+      };
+    })
+
+    (lib.mkIf cfg.setups.laptop-ssd.enable {
+      state.paths.laptop-ssd = "/media/laptop-ssd";
+
+      fileSystems."${config.state.paths.laptop-ssd}" = {
+        device = lib.mkDefault "/dev/disk/by-partlabel/disk-ni-secondary-data";
+        fsType = "btrfs";
+        noCheck = true;
+        options = lib.mkDefault [
+          "rw"
+          "user"
+          "noauto"
+          "nofail"
+
+          "compress=zstd:10"
         ];
       };
     })
