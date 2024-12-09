@@ -6,6 +6,7 @@
 
   # Enable all of the LSP servers that I'll likely use.
   plugins.lsp.servers = {
+    astro.enable = true; # For Astro.
     bashls.enable = true; # For Bash.
     clangd.enable = true; # For C/C++.
     cmake.enable = true; # For CMake.
@@ -13,8 +14,13 @@
     denols.enable = true; # For Deno runtime.
     dockerls.enable = true; # For Dockerfiles.
     emmet_ls.enable = true; # For emmet support.
-    eslint.enable = true; # For JavaScript.
-    html.enable = true; # For HTML.
+
+    # For HTML.
+    html = {
+      enable = true; 
+      autostart = false;
+    };
+
     jsonls.enable = true; # There's one for JSON?
     lemminx.enable = true; # And for XML?
     ltex.enable = true; # And for LanguageTool, too?
@@ -22,6 +28,7 @@
     nixd.enable = true; # For Nix.
     nushell.enable = true; # For Nushell.
     pyright.enable = true; # For Python.
+    vale_ls.enable = true; # For Vale.
 
     # For Rust (even though I barely use it).
     rust_analyzer = {
