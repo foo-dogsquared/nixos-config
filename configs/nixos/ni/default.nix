@@ -19,6 +19,7 @@
     networking.enable = true;
     services.backup.enable = true;
     services.monitoring.enable = true;
+    services.penpot.enable = true;
     setups = {
       desktop.enable = true;
       development.enable = true;
