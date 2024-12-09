@@ -42,7 +42,7 @@ in
     # Doom Emacs dependencies for the usual modules.
     home.packages = with pkgs; [
       # :ui doom
-      (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+      nerd-fonts.symbols-only
 
       # :checkers spell
       aspell
