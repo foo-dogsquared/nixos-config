@@ -3,6 +3,34 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.research;
+
+  # Given an attribute set of jobs that contains a list of objects with
+  # their names and URL, create an attrset suitable for declaring the
+  # archiving jobs of several services for `services.yt-dlp`,
+  # `services.gallery-dl`, and `services.archivebox`.
+  mkJobs = { extraArgs ? [ ], db }:
+    let
+      days = [ "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" ];
+      categories = lib.zipListsWith
+        (index: category: { inherit index; data = category; })
+        (lib.lists.range 1 (lib.length (lib.attrValues db)))
+        (lib.mapAttrsToList (name: value: { inherit name; inherit (value) subscriptions extraArgs; }) db);
+      jobsList = builtins.map
+        (category:
+          let
+            jobExtraArgs = lib.attrByPath [ "data" "extraArgs" ] [ ] category;
+          in
+          {
+            name = category.data.name;
+            value = {
+              extraArgs = extraArgs ++ jobExtraArgs;
+              urls = builtins.map (subscription: subscription.url) category.data.subscriptions;
+              startAt = lib.elemAt days (lib.mod category.index (lib.length days));
+            };
+          })
+        categories;
+    in
+    lib.listToAttrs jobsList;
 in
 {
   options.users.foo-dogsquared.setups.research.enable =
@@ -12,7 +40,9 @@ in
     {
       state.ports.syncthing.value = 8384;
 
-      users.foo-dogsquared.services.archivebox.enable = true;
+      users.foo-dogsquared.services.archivebox = {
+        enable = true;
+      };
 
       home.packages = with pkgs; [
         anki # Rise, rinse, and repeat.
