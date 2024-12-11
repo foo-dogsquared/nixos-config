@@ -5,6 +5,7 @@
     ./networking/setup.nix
     ./networking/wireguard.nix
     ./services/backup
+    ./services/reverse-proxy.nix
     ./services/monitoring.nix
     ./services/download-media
     ./services/penpot

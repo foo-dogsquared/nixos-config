@@ -20,6 +20,7 @@
     services.backup.enable = true;
     services.monitoring.enable = true;
     services.penpot.enable = true;
+    services.reverse-proxy.enable = true;
     setups = {
       desktop.enable = true;
       development.enable = true;
