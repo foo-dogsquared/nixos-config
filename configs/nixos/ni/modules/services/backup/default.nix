@@ -90,10 +90,5 @@ in
         environment.BORG_RSH = "ssh -i ${config.sops.secrets."${pathPrefix}/repos/hetzner-box/ssh-key".path}";
       };
     };
-
-    programs.ssh.extraConfig = ''
-      Host ${hetzner-boxes-server}
-        IdentityFile ${config.sops.secrets."${pathPrefix}/repos/hetzner-box/ssh-key".path}
-    '';
   };
 }
