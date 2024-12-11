@@ -10,7 +10,9 @@
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usbhid" "uas" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+
+  services.ddccontrol.enable = true;
+  boot.extraModulePackages = with config.boot.kernelPackages; [ ddcci-driver ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot = {

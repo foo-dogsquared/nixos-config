@@ -1,4 +1,4 @@
-{ primaryDisk ? "/dev/nvme0n1", secondaryDisk ? null, config, lib, ... }:
+{ primaryDisk ? "/dev/nvme0n1", config, lib, ... }:
 
 {
   disko.devices = lib.mkMerge [
