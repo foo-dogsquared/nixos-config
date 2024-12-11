@@ -64,6 +64,25 @@ in
       ];
     }
 
+    (lib.mkIf config.suites.dev.containers.enable {
+      # Setting up a single-node k3s cluster for learning purposes.
+      services.k3s = {
+        enable = true;
+        role = "server";
+        extraFlags = [ "--debug" ];
+      };
+
+      networking.firewall.allowedTCPPorts = [
+        6443 # required so that pods can reach the API server (running on port 6443 by default)
+        2379 # etcd clients: required if using a "High Availability Embedded etcd" configuration
+        2380 # etcd peers: required if using a "High Availability Embedded etcd" configuration
+      ];
+
+      networking.firewall.allowedUDPPorts = [
+        8472 # flannel: required if using multi-node for inter-node networking
+      ];
+    })
+
     # You'll be most likely having these anyways and even if this is disabled,
     # you most likely cannot use the system at all so WHY IS IT HERE?
     (lib.mkIf hostCfg.networking.enable {
