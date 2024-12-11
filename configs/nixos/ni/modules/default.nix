@@ -5,6 +5,7 @@
     ./networking/setup.nix
     ./networking/wireguard.nix
     ./services/backup
+    ./services/mail-archive.nix
     ./services/reverse-proxy.nix
     ./services/monitoring.nix
     ./services/download-media
