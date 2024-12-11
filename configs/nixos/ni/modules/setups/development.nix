@@ -39,6 +39,8 @@ in
           cntr
 
           devpod-desktop
+
+          freecad
         ];
 
       # Enable the terminal emulator of choice.
