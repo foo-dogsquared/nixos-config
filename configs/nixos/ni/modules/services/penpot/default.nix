@@ -17,6 +17,7 @@ in
 
     sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml {
       "penpot/env" = { };
+      "penpot/postgres_env" = { };
     };
 
     virtualisation.oci-containers.networks.penpot = { };
@@ -98,6 +99,9 @@ in
         "penpot_postgres_v15:/var/lib/postgresql/data"
       ];
       extraOptions = [ "--network=penpot" ];
+      environmentFiles = [
+        config.sops.secrets."penpot/postgres_env".path
+      ];
       environment = {
         POSTGRES_INITDB_ARGS = lib.concatStringsSep " " [
           "--data-checksums"
