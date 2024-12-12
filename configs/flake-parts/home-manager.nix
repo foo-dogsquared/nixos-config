@@ -30,7 +30,7 @@
         homeManagerBranch = "home-manager-unstable";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         modules = [
-          inputs.nur.hmModules.nur
+          inputs.nur.modules.homeManager.default
           inputs.sops-nix.homeManagerModules.sops
           inputs.wrapper-manager-fds.homeModules.wrapper-manager
         ];
