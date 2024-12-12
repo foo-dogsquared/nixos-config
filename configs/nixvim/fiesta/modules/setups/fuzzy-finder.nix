@@ -56,11 +56,11 @@ in
             end
           '';
         };
-        "g" = {
+        "v" = {
           options.desc = "Find files tracked by Git";
           action = helpers.mkRaw "require('telescope.builtin').git_files";
         };
-        "G" = {
+        "g" = {
           options.desc = "Live grep for the whole project";
           action = helpers.mkRaw "require('telescope.builtin').live_grep";
         };
