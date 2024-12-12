@@ -15,6 +15,8 @@ in
         # Additional language support.
         bbenoist.nix
         graphql.vscode-graphql
+        ms-python.python
+        ms-azuretools.vscode-docker
         ms-vscode.cmake-tools
         ms-vscode.cpptools
         ms-vscode.powershell
@@ -27,7 +29,15 @@ in
 
         # The other niceties.
         editorconfig.editorconfig
-      ];
+        alefragnani.project-manager
+        fill-labs.dependi
+      ]
+        ++ lib.optionals userCfg.programs.browsers.firefox.enable [
+          firefox-devtools.vscode-firefox-debug
+        ]
+        ++ lib.optionals userCfg.programs.browsers.edge.enable [
+          #ms-edgedevtools.vscode-edge-devtools
+        ];
 
       userSettings = {
         "extensions.ignoreRecommendations" = true;
