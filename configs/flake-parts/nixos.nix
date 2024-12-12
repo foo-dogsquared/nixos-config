@@ -131,6 +131,13 @@ in
       defaultNixConf
       ../../modules/nixos/profiles/generic.nix
       ../../modules/nixos/profiles/nix-conf.nix
+
+      ({ lib, ... }: {
+        home-manager.sharedModules = lib.singleton {
+          xdg.userDirs.createDirectories = lib.mkDefault true;
+          manual.html.enable = false;
+        };
+      })
     ];
   };
 
