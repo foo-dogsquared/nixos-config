@@ -42,8 +42,7 @@ in {
         enable = true;
         extensions = with pkgs.vscode-extensions; [
           # All the niceties for developmenties.
-          ms-vscode-remote.remote-containers
-          ms-vscode-remote.remote-ssh
+          ms-vscode-remote.vscode-remote-extensionpack
           ms-vsliveshare.vsliveshare
           tailscale.vscode-tailscale
 
