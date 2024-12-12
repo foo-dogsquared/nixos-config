@@ -17,6 +17,7 @@ in
       imports =
         [
           ./colorschemes.nix
+          ./fuzzy-finding.nix
           ./misc.nix
           ./note-taking.nix
         ]
