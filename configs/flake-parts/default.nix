@@ -40,7 +40,7 @@
         inherit system;
         config = config.setups.sharedNixpkgsConfig;
         overlays = lib.attrValues inputs.self.overlays ++ [
-          inputs.nur.overlay
+          inputs.nur.overlays.default
         ];
       };
     };

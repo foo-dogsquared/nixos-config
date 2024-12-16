@@ -24,7 +24,7 @@
             inputs.helix-editor.overlays.default
 
             # Get all of the NUR.
-            inputs.nur.overlay
+            inputs.nur.overlays.default
           ];
         };
         homeManagerBranch = "home-manager-unstable";
