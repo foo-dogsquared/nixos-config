@@ -21,6 +21,7 @@
     services.monitoring.enable = true;
     services.mail-archive.enable = true;
     services.reverse-proxy.enable = true;
+    services.download-media.enable = true;
     setups = {
       desktop.enable = true;
       development.enable = true;

@@ -1,9 +1,10 @@
 { config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
+  inherit (foodogsquaredLib.sops-nix) getSecrets attachSopsPathPrefix;
   hostCfg = config.hosts.ni;
   cfg = hostCfg.services.download-media;
-  mountName = "/mnt/archives";
+  mountName = "/media/laptop-ssd/Archives";
 
   deviantArt = name: "https://deviantart.com/${name}";
   artStation = name: "https://www.artstation.com/${name}";
@@ -97,15 +98,10 @@ in
         lib.listToAttrs jobsList;
     in
     {
-      sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml
-        (lib.attachSopsPathPrefix pathPrefix {
+      sops.secrets = getSecrets ./secrets.yaml
+        (attachSopsPathPrefix pathPrefix {
           "secrets-config" = { };
         });
-
-      # This is to make an exception for Archivebox.
-      nixpkgs.config.permittedInsecurePackages = [
-        "python3.12-django-3.1.14"
-      ];
 
       suites.filesystem.setups.archive.enable = true;
 
@@ -211,6 +207,8 @@ in
           prependArgs = galleryDlArgs;
         };
       };
+
+      environment.systemPackages = with pkgs; [ archivebox ];
     }
   );
 }
