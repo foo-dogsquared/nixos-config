@@ -1,4 +1,5 @@
-{ config, lib, pkgs, foodogsquaredLib, foodogsquaredUtils, foodogsquaredModulesPath, ... }:
+{ config, lib, pkgs, foodogsquaredLib, foodogsquaredUtils
+, foodogsquaredModulesPath, ... }:
 
 {
   imports = [
@@ -37,16 +38,18 @@
     vaultwarden.enable = true;
   };
 
+  # Overriding the kernel version for ourselves.
+  boot.kernelPackages = lib.mkOverride 500 pkgs.linuxKernel.packages.linux_6_11_hardened;
+
   # We're using our own VPN configuration for this one.
   suites.vpn.personal.enable = true;
   services.tailscale.useRoutingFeatures = "server";
+  services.tailscaleAuth.enable = true;
 
   # Post installation script to be executed manually by the provisioner.
   system.build.postInstallationScript = pkgs.writeShellApplication {
     name = "post-installation-script";
-    runtimeInputs = with pkgs; [
-      openssh
-    ];
+    runtimeInputs = with pkgs; [ openssh ];
     text = ''
       sopsPrivateKey="''${1:-"key.txt"}"
       sopsKeyfileDir="$(dirname ${lib.escapeShellArg config.sops.age.keyFile})"
@@ -55,8 +58,8 @@
   };
 
   state.network = rec {
-    ipv4 = "135.181.93.101";
-    ipv6 = "2a01:4f9:c012:f88c::1";
+    ipv4 = "135.181.26.192";
+    ipv6 = "2a01:4f9:c010:8db4::1";
 
     interfaces = {
       lan = {
@@ -117,9 +120,9 @@
   # self-hosted DNS server.
   security.acme.defaults = {
     email = "admin+acme@foodogsquared.one";
-    server = "https://acme-staging-v02.api.letsencrypt.org/directory";
     dnsProvider = "hetzner";
-    environmentFile = config.sops.secrets."lego/env".path or "/var/lib/secrets/acme.env";
+    environmentFile =
+      config.sops.secrets."lego/env".path or "/var/lib/secrets/acme.env";
     enableDebugLogs = true;
   };
 
