@@ -1,4 +1,4 @@
-{ config, lib, pkgs, options, ... }:
+{ config, lib, pkgs, options, ... }@attrs:
 
 let
   userCfg = config.users.foo-dogsquared;
@@ -46,6 +46,15 @@ in {
         };
       };
 
+      users.foo-dogsquared.programs.custom-homepage.sections.services.links =
+        let
+          hasCockpitEnabled = attrs.nixosConfig.services.cockpit.enable or false;
+        in
+        lib.optionals hasCockpitEnabled (lib.singleton {
+          url = "http://localhost:${builtins.toString attrs.nixosConfig.services.cockpit.port}";
+          text = "Cockpit WebUI";
+        });
+
       systemd.user.sessionVariables = {
         MANPAGER = "nvim +Man!";
         EDITOR = "nvim";
@@ -59,6 +68,7 @@ in {
         recode # Convert between different encodings.
         go-migrate # Go potential migraines.
         oils-for-unix # Rev them up, reverent admin.
+        lnav # Navigate with some logs like what some pirates do.
 
         # Testing REST and all about backend development.
         httpie
