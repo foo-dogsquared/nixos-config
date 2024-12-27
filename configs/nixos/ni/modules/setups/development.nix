@@ -81,13 +81,23 @@ in
       services.k3s = {
         enable = true;
         role = "server";
-        extraFlags = [ "--debug" ];
       };
+
+      environment.systemPackages = with pkgs; [
+        kubernetes-helm
+        kubernetes-polaris
+        k9s
+      ];
 
       networking.firewall.allowedTCPPorts = [
         6443 # required so that pods can reach the API server (running on port 6443 by default)
         2379 # etcd clients: required if using a "High Availability Embedded etcd" configuration
         2380 # etcd peers: required if using a "High Availability Embedded etcd" configuration
+        8080 # for helm.
+        5001
+        10250
+        51820
+        51821
       ];
 
       networking.firewall.allowedUDPPorts = [
