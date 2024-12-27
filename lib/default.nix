@@ -39,7 +39,7 @@ in pkgs.lib.makeExtensible (self:
 
     inherit (self.builders)
       makeXDGMimeAssociationList makeXDGPortalConfiguration makeXDGDesktopEntry
-      buildHugoSite buildFDSEnv;
+      buildHugoSite buildFDSEnv buildDconfDb;
     inherit (self.trivial) countAttrs filterAttrs';
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
     inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver;
