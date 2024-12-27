@@ -165,4 +165,7 @@ seturl nytimes\.com/games disable true
 seturl merriam-webster\.com/games disable true
 seturl britannica\.com/games disable true
 
+" Ignore all of the keybindings.
+blacklistadd https://design.penpot.app
+
 " vim: ft=vim
