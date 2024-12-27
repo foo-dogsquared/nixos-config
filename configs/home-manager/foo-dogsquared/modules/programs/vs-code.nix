@@ -34,9 +34,6 @@ in
       ]
         ++ lib.optionals userCfg.programs.browsers.firefox.enable [
           firefox-devtools.vscode-firefox-debug
-        ]
-        ++ lib.optionals userCfg.programs.browsers.edge.enable [
-          #ms-edgedevtools.vscode-edge-devtools
         ];
 
       userSettings = {

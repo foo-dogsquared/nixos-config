@@ -17,7 +17,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.emacs = {
       enable = true;
-      package = pkgs.emacs30;
+      package = pkgs.emacs;
       extraPackages = epkgs: with epkgs; [
         org-noter-pdftools
         org-pdftools

@@ -22,21 +22,11 @@ in
     enable = true;
   };
 
-  plugins.telescope.keymaps = lib.mkMerge [
-    (lib.mkIf telescopeExtensions.frecency.enable {
-      "<leader>fp" = {
-        mode = "n";
-        options.desc = "List projects";
-        action = helpers.mkRaw "require('telescope').extensions.project.project{}";
-      };
-    })
-
-    (lib.mkIf telescopeExtensions.live-grep-args.enable {
-      "<leader>fG" = {
-        mode = "n";
-        options.desc = "Live grep (with args) for the whole project";
-        action = helpers.mkRaw "require('telescope').extensions.live_grep_args.live_grep_args";
-      };
-    })
-  ];
+  keymaps =
+    lib.optionals telescopeExtensions.live-grep-args.enable (lib.singleton {
+      mode = "n";
+      key = "<leader>fG";
+      options.desc = "Live grep (with args) for the whole project";
+      action = helpers.mkRaw "require('telescope').extensions.live_grep_args.live_grep_args";
+    });
 }
