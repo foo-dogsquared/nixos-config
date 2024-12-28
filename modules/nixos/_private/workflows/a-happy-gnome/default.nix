@@ -31,6 +31,7 @@ in
         fly-pie
         gsconnect
         just-perfection
+        kando-integration
         kimpanel
         light-style
         paperwm
@@ -63,6 +64,7 @@ in
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         dconf-editor # A saner version of Windows registry.
+        kando
         gnome-boxes # Virtual machines, son.
         polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
         gradience # Make it rain!
