@@ -49,9 +49,6 @@ let
         after = [ "network-online.target" ];
         wants = [ "network-online.target" ];
         documentation = [ "https://docs.archivebox.io/" ];
-        preStart = ''
-          mkdir -p ${lib.escapeShellArg cfg.archivePath}
-        '';
         path = [ cfg.package ] ++ cfg.extraPackages;
         script = ''
           echo "${lib.concatStringsSep "\n" value.urls}" \
@@ -63,9 +60,6 @@ let
 
           LockPersonality = true;
           NoNewPrivileges = true;
-
-          CapabilityBoundingSet = [ ];
-          AmbientCapabilities = [ ];
 
           PrivateTmp = true;
           PrivateDevices = true;
@@ -150,6 +144,7 @@ in
         wget
         curl
         yt-dlp
+        readability-cli
       ] ++ lib.optional config.programs.git.enable config.programs.git.package;
       defaultText = ''
         Chromium, NodeJS, wget, yt-dlp, and git if enabled.
@@ -178,6 +173,8 @@ in
     {
       systemd.services = lib.mapAttrs' mkJobService cfg.jobs;
       systemd.timers = lib.mapAttrs' mkTimerUnit cfg.jobs;
+
+      users.groups.archivebox = { };
 
       users.users.archivebox = {
         group = config.users.groups.archivebox.name;
