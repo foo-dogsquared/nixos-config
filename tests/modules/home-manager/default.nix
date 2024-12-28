@@ -66,6 +66,7 @@ import nmt {
     ./services/gonic
     ./services/ludusavi
     ./services/matcha
+    ./services/openrefine
     ./services/plover
     ./services/yt-dlp
   ]);

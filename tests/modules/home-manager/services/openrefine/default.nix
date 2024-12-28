@@ -1,0 +1,3 @@
+{
+  openrefine-basic = ./basic.nix;
+}
