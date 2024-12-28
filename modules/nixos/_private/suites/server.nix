@@ -39,6 +39,8 @@ in
       services.openssh = {
         enable = lib.mkDefault true;
 
+        openFirewall = true;
+
         settings = {
           # Making it verbose for services such as fail2ban.
           LogLevel = "VERBOSE";
