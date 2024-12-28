@@ -15,6 +15,12 @@ in
       # The main desktop.
       ni = {
         nixpkgs.branch = "nixos-unstable";
+
+        # This is to make an exception for Archivebox.
+        nixpkgs.config.permittedInsecurePackages = [
+          "python3.12-django-3.1.14"
+        ];
+
         systems = [ "x86_64-linux" ];
         formats = null;
         modules = [
