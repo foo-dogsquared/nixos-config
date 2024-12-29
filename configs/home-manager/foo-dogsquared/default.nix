@@ -22,6 +22,7 @@ in
       email.enable = true;
       email.thunderbird.enable = true;
       vs-code.enable = true;
+      hledger.enable = true;
 
       custom-homepage = {
         enable = true;
@@ -98,7 +99,6 @@ in
 
   home.packages = with pkgs; [
     gopass # An improved version of the password manager for hipsters.
-    hledger # Trying to be a good accountant.
   ];
 
   home.stateVersion = "23.11";

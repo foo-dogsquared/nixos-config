@@ -9,6 +9,7 @@
     ./programs/email.nix
     ./programs/git.nix
     ./programs/jujutsu.nix
+    ./programs/hledger.nix
     ./programs/keys.nix
     ./programs/nixvim
     ./programs/custom-homepage.nix
