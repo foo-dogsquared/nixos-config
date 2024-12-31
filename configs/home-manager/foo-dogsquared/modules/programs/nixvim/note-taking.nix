@@ -5,7 +5,7 @@
   plugins.neorg.enable = true;
 
   # Set it up, set it up, set it up.
-  plugins.neorg.extraOptions = {
+  plugins.neorg.settings = {
     lazy_loading = true;
 
     load = lib.mkMerge [
@@ -57,7 +57,7 @@
     ]
     # Install the tree-sitter parsers required for the core.defaults Neorg
     # module.
-    ++ lib.optionals (config.plugins.neorg.extraOptions ? load."core.defaults")
+    ++ lib.optionals (config.plugins.neorg.settings ? load."core.defaults")
     (with pkgs.tree-sitter-grammars; [
       tree-sitter-norg
       tree-sitter-norg-meta

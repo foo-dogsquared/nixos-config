@@ -13,7 +13,7 @@ in
     plugins.neorg.enable = true;
 
     # Set it up, set it up.
-    plugins.neorg.extraOptions = {
+    plugins.neorg.settings = {
       lazy_loading = true;
 
       # The basic bare essentials.
@@ -26,7 +26,7 @@ in
     # Install the tree-sitter parsers.
     plugins.treesitter.grammarPackages =
       lib.mkIf
-        (config.plugins.neorg.extraOptions ? load."core.defaults")
+        (config.plugins.neorg.settings ? load."core.defaults")
         (with pkgs.tree-sitter-grammars; [
           tree-sitter-norg
           tree-sitter-norg-meta
