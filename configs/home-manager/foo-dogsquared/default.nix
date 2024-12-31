@@ -64,6 +64,13 @@ in
               text = "Personal archive";
             });
           })
+
+          (lib.mkIf (attrs.nixosConfig.services.miniflux.enable or false) {
+            services.links = lib.singleton {
+              url = "http://localhost:${builtins.toString attrs.nixosConfig.state.ports.miniflux.value}";
+              text = "RSS reader";
+            };
+          })
         ];
       };
     };
