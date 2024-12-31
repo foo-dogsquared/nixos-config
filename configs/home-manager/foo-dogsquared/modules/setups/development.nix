@@ -4,8 +4,13 @@ let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.development;
 in {
-  options.users.foo-dogsquared.setups.development.enable =
-    lib.mkEnableOption "foo-dogsquared's software development setup";
+  options.users.foo-dogsquared.setups.development = {
+    enable =
+      lib.mkEnableOption "foo-dogsquared's software development setup";
+
+    creative-coding.enable =
+      lib.mkEnableOption "foo-dogsquared's creative coding setup";
+  };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
@@ -75,6 +80,7 @@ in {
         httpie-desktop
         hurl
         grpcurl
+        steampipe
 
         # Testing out Kubernetes.
         kind
@@ -132,6 +138,14 @@ in {
         [
           d-spy # Some GNOME dev probably developed this.
         ];
+    })
+
+    (lib.mkIf cfg.creative-coding.enable {
+      home.packages = with pkgs; [
+        supercollider-with-plugins
+        processing
+        (puredata-with-plugins (with pkgs; [ zexy cyclone ]))
+      ];
     })
   ]);
 }

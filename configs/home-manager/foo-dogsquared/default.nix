@@ -73,7 +73,10 @@ in
     setups = {
       business.enable = true;
       desktop.enable = true;
-      development.enable = true;
+      development = {
+        enable = true;
+        creative-coding.enable = true;
+      };
       fonts.enable = true;
       music.enable = true;
       music.mpd.enable = true;
