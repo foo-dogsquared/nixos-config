@@ -40,10 +40,6 @@ in
     {
       state.ports.syncthing.value = 8384;
 
-      users.foo-dogsquared.services.archivebox = {
-        enable = true;
-      };
-
       home.packages = with pkgs; [
         anki # Rise, rinse, and repeat.
         curl # The general purpose downloader.
