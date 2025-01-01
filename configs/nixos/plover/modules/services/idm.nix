@@ -21,6 +21,8 @@ in
 
       services.kanidm = {
         enableServer = true;
+        enablePam = true;
+
         serverSettings = {
           domain = authDomain;
           origin = "https://${authDomain}";
@@ -37,6 +39,30 @@ in
             schedule = "0 0 * * *";
           };
         };
+
+        clientSettings = {
+          uri = "https://${authDomain}";
+          verify_hostnames = true;
+          verify_ca = true;
+        };
+
+        unixSettings = {
+          use_etc_skel = false;
+          pam_allowed_login_groups = [ "kanidm" ];
+        };
+      };
+
+      # Additional SSH server hardening.
+      services.openssh.settings = {
+        PermitEmptyPasswords = "no";
+        GSSAPIAuthentication = "no";
+        KerberosAuthentication = "no";
+
+        # Integrating kanidm-unixd.
+        UsePAM = true;
+        PubkeyAuthentication = true;
+        AuthorizedKeysCommand = "${lib.getExe' config.services.kanidm.package "kanidm_ssh_authorizedkeys"} %u";
+        AuthorizedKeysCommandUser = "nobody";
       };
 
       # The kanidm Nix module already sets the certificates directory to be
