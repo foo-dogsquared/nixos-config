@@ -9,7 +9,7 @@ in
   users.users.${user} = {
     home = "/home/${user}";
     hashedPassword = "$y$j9T$43ExH5GLbEGwgnNGhmcTD/$qXoZE5Cm9O2Z3zMM/VyCZ18qN2Hc9.KvCnVz6tmjVVD";
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "kanidm" ];
     useDefaultShell = true;
     isNormalUser = true;
     description = "The go-to user for server systems.";
