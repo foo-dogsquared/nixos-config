@@ -23,6 +23,7 @@
     services.reverse-proxy.enable = true;
     services.download-media.enable = true;
     services.rss-reader.enable = true;
+    services.dns-server.enable = true;
     setups = {
       desktop.enable = true;
       development.enable = true;
