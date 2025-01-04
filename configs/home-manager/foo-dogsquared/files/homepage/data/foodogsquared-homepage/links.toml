@@ -89,3 +89,17 @@ links = [
 ]
 icon.iconset = "material-design-icons"
 icon.name = "skull-crossbones"
+
+[Business]
+name = "Business"
+flavorText = "Let's get down to bidness"
+textOnly = true
+weight = 25
+links = [
+  { url = "https://webmail.foodogsquared.one", text = "Mail" },
+  { url = "https://microsoft365.com/", text = "Microsoft 365" },
+  { url = "https://messenger.com/", text = "Messenger" },
+  { url = "https://discord.com/", text = "Discord" },
+]
+icon.iconset = "material-design-icons"
+icon.name = "card-account-details"

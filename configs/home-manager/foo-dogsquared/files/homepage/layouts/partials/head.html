@@ -3,8 +3,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="referrer" content="no-referrer" />
 
-{{ $site := resources.Get "scss/main.scss" | resources.ToCSS }}
-{{ $themes := resources.Get "templates/theme.scss" | resources.ExecuteAsTemplate "css/themes.css" . | resources.ToCSS }}
+{{ $site := resources.Get "scss/main.scss" | css.Sass }}
+{{ $themes := resources.Get "templates/theme.scss" | resources.ExecuteAsTemplate "css/themes.css" . | css.Sass }}
 
 {{ $stylesheets := slice | append $site $themes | resources.Concat "css/main.css" }}
 <link rel="stylesheet" href="{{ $stylesheets.RelPermalink }}" />
