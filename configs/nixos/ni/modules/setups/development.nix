@@ -83,6 +83,11 @@ in
         role = "server";
       };
 
+      services.openiscsi = {
+        enable = true;
+        name = "iqn.2025-01.one.foodogsquared:ni-nixos";
+      };
+
       environment.systemPackages = with pkgs; [
         kubernetes-helm
         kubernetes-polaris
