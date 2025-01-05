@@ -14,7 +14,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/nix-installer-action@v16
       - name: Update flake inputs
         run: |
           nix flake update --commit-lock-file --commit-lockfile-summary "flake.lock: update inputs"
