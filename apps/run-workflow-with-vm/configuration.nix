@@ -47,6 +47,8 @@ import <nixpkgs/nixos/lib/eval-config.nix> {
       ];
 
       config = {
+        nixpkgs.config.allowUnfree = true;
+
         # Enable the display manager of choice.
         services.displayManager.enable = true;
         services.xserver.displayManager.gdm.enable = true;
