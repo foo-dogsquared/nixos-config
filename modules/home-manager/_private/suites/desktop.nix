@@ -36,6 +36,7 @@ in
         inkscape-with-extensions # Illustration wannabe tool.
         gimp-with-plugins # Photo editing wannabe tool.
         krita # Digital art wannabe tool.
+        pureref # Pure references.
 
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         imagemagick # Ah yes, everyman's image manipulation tool.
@@ -54,7 +55,7 @@ in
         audacity # EGADS!!!
         musescore # You won't find muses to score, only music: a common misconception.
         zrythm # The freer FL Studio (if you're sailing by the high seven seas).
-        supercollider # Not to be confused with the other Super Collider.
+        supercollider-with-plugins # Not to be confused with the other Super Collider.
         sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
         ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
       ]
