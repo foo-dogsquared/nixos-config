@@ -1,0 +1,5 @@
+= Horizontal hunger
+:toc:
+
+
+A custom desktop session fully made with https://github.com/YaLTeR/niri[niri] and https://github.com/Aylur/ags[ags].

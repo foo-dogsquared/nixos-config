@@ -88,10 +88,10 @@
     };
     "open-access-helper" = buildFirefoxXpiAddon {
       pname = "open-access-helper";
-      version = "2025.2.1";
+      version = "2025.2";
       addonId = "info@oahelper.org";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4414378/open_access_helper-2025.2.1.xpi";
-      sha256 = "ecba30f17d957323ed0bf9f6c246fba59d1232f42d6f90caa4b8d83716a57783";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4414263/open_access_helper-2025.2.xpi";
+      sha256 = "8acfb2a15b39e406e3b9e59272424e35627892e76acb4b0e3ed42b09968eed4a";
       meta = with lib;
       {
         homepage = "https://www.oahelper.org";
@@ -126,6 +126,20 @@
           "alarms"
           "webRequest"
         ];
+        platforms = platforms.all;
+      };
+    };
+    "rsshub-radar" = buildFirefoxXpiAddon {
+      pname = "rsshub-radar";
+      version = "2.0.21";
+      addonId = "i@diygod.me";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4369623/rsshub_radar-2.0.21.xpi";
+      sha256 = "ffa6bd7d98080feea5e551f4873b02ec923af061f1db79c22accad2e14458e1e";
+      meta = with lib;
+      {
+        homepage = "https://github.com/DIYgod/RSSHub-Radar";
+        description = "Easily find and subscribe to RSS and RSSHub.";
+        mozPermissions = [ "storage" "tabs" "offscreen" "alarms" "<all_urls>" ];
         platforms = platforms.all;
       };
     };
@@ -214,4 +228,3 @@
         platforms = platforms.all;
       };
     };
-  }

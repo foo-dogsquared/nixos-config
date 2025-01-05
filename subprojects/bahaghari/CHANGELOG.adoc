@@ -1,0 +1,25 @@
+= Changelog
+:toc:
+
+All changes in Bahaghari will be documented here for their users to see.
+The structure is loosely based on https://keepachangelog.com/en/1.1.0/[Keep a changelog format] except we separate the sections by the module and the library set instead.
+This is structured like this so it is easier to skim things.
+
+
+// TODO: Update the release date once released.
+[#0-1-0]
+== 0.1.0 (unreleased)
+
+[#0-1-0-module-sets]
+=== Module sets
+
+* Initialize Bahaghari module set including options for its schemes, templates, and builder.
+* Include the Bahaghari library set as part of the module argument.
+
+[#0-1-0-library-set]
+=== Library set
+
+* Initialize Tinted Theming-specific library subset.
+* Implement a basic math subset intended for computing with color namespaces (or whatever use cases for basic mathematics).
+* Implement basic color namespace for RGB, HSL, and HSLUV.
+* Create Tinted Theming-speific utilities subset.
