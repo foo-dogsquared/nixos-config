@@ -23,6 +23,7 @@ in lib.makeScope pkgs.newScope (self: {
   distant = callPackage ./distant.nix { };
   gnome-search-provider-recoll =
     callPackage ./gnome-search-provider-recoll.nix { };
+  go-avahi-cname = callPackage ./go-avahi-cname { };
   hush-shell = callPackage ./hush-shell.nix { };
   lazyjj = callPackage ./lazyjj { };
   lwp = callPackage ./lwp { };
