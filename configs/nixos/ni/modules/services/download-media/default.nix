@@ -65,8 +65,6 @@ in
         # We're putting as a separate config file instead of configuring it
         # in the service properly since secrets decrypted by sops-nix cannot
         # be read in Nix.
-        "--config"
-        "${config.sops.secrets."${pathPrefix}/secrets-config".path}"
       ];
 
       # Given an attribute set of jobs that contains a list of objects with
@@ -98,11 +96,6 @@ in
         lib.listToAttrs jobsList;
     in
     {
-      sops.secrets = getSecrets ./secrets.yaml
-        (attachSopsPathPrefix pathPrefix {
-          "secrets-config" = { };
-        });
-
       suites.filesystem.setups.archive.enable = true;
 
       services.yt-dlp = {

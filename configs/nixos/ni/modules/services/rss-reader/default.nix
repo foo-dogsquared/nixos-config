@@ -22,12 +22,12 @@ in
       adminCredentialsFile = config.sops.secrets."miniflux/admin".path;
       config = {
         LISTEN_ADDR = "127.0.0.1:${builtins.toString port}";
-        BASE_URL = "http://rss.ni.internal";
+        BASE_URL = "http://rss.ni.local";
       };
     };
 
-    services.nginx.virtualHosts."rss.ni.internal" = {
-      locations."/".proxyPass = "http://localhost:${builtins.toString port}";
+    services.nginx.virtualHosts."rss.ni.local" = {
+      locations."/".proxyPass = "http://ni.local:${builtins.toString port}";
     };
   };
 }
