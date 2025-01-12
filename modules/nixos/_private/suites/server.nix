@@ -48,6 +48,7 @@ in
           # Both are good for hardening as it only requires the keyfiles.
           PasswordAuthentication = false;
           PermitRootLogin = "no";
+          PermitEmptyPasswords = "no";
         };
       };
 
