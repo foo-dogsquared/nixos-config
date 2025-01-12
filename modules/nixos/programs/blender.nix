@@ -7,21 +7,12 @@ let
     let
       blenderVersion = lib.versions.majorMinor cfg.package.version;
     in
-    pkgs.runCommand "blender-system-resources"
-      {
-        passAsFile = [ "paths" ];
-        paths = cfg.addons ++ [ cfg.package ];
-        nativeBuildInputs = with pkgs; [ outils ];
-      } ''
-      mkdir -p $out
-      for i in $(cat $pathsPath); do
-        resourcesPath="$i/share/blender"
-        if [ -d $i/share/blender/${blenderVersion} ]; then
-          resourcesPath="$i/share/blender/${blenderVersion}";
-        fi
-        lndir -silent $resourcesPath $out
-      done
-    '';
+    pkgs.symlinkJoin {
+      name = "blender-${blenderVersion}-addons";
+      paths = let
+        _paths = cfg.addons ++ [ cfg.package ];
+      in lib.concatMap (p: [ "${p}/share/blender" ]) _paths;
+    };
 in
 {
   options.programs.blender = {
