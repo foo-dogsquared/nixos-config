@@ -6,7 +6,6 @@
   ];
 
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_12;
-  hardware.xpadneo.enable = lib.mkForce false;
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usbhid" "uas" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];

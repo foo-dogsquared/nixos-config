@@ -31,6 +31,7 @@ in
       mindustry # Not a Minecraft industry simulator.
       minetest # Free Minecraft.
       the-powder-toy # Free micro-Minecraft.
+      rotp-foodogsquared # Free space Minecraft planet colonization simulator.
     ];
 
     # This is somewhat used for streaming games from it.
