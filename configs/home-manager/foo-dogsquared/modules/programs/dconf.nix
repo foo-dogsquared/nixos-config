@@ -1,6 +1,7 @@
 { config, lib, ... }:
 
 let
+  inherit (config.xdg) userDirs;
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.dconf;
 in
@@ -25,6 +26,20 @@ in
         show-thousands = true;
         base = 10;
         word-size = 64;
+      };
+
+      "org/freedesktop/tracker/miner/files" = {
+        index-recursive-directories = [
+          # We could also use the values from home-manager but just to make GNOME Settings happy.
+          "&DESKTOP"
+          "&DOCUMENTS"
+          "&MUSIC"
+          "&PICTURES"
+          "&VIDEOS"
+          "&PUBLIC_SHARE"
+
+          userDirs.extraConfig.XDG_PROJECTS_DIR
+        ];
       };
     };
   };
