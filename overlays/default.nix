@@ -7,5 +7,6 @@
   ffmpeg-foodogsquared = import ./ffmpeg-foodogsquared;
   firefox-foodogsquared = import ./firefox-foodogsquared;
   blender-foodogsquared = import ./blender-foodogsquared;
+  rotp-foodogsquared = import ./rotp-foodogsquared;
   thunderbird-foodogsquared = import ./thunderbird-foodogsquared;
 }
