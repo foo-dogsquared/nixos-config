@@ -55,8 +55,7 @@
        => /nix/store/HASH-mustache-render-template
   */
   renderMustacheTemplate = { template, context, extraArgs ? { } }:
-    let
-      extraArgs' = lib.cli.toGNUCommandLineShell { } extraArgs;
+    let extraArgs' = lib.cli.toGNUCommandLineShell { } extraArgs;
     in pkgs.runCommand "mustache-render-template" {
       nativeBuildInputs = with pkgs; [ mustache-go ];
       context = builtins.toJSON context;

@@ -14,39 +14,30 @@
 
 let
   # A set of nixos-generators modules including our custom ones.
-  nixosGeneratorModules =
-    let
-      officialFormats = builtins.readDir "${sources.nixos-generators}/formats";
-      unofficialFormats = builtins.readDir ../modules/nixos-generators;
-      formats = officialFormats // unofficialFormats;
-    in
-    lib.mapAttrs' (n: _: lib.nameValuePair (lib.removeSuffix ".nix" n) {
+  nixosGeneratorModules = let
+    officialFormats = builtins.readDir "${sources.nixos-generators}/formats";
+    unofficialFormats = builtins.readDir ../modules/nixos-generators;
+    formats = officialFormats // unofficialFormats;
+  in lib.mapAttrs' (n: _:
+    lib.nameValuePair (lib.removeSuffix ".nix" n) {
       imports = [
         "${sources.nixos-generators}/format-module.nix"
-        (
-          if (lib.hasAttr n officialFormats)
-          then "${sources.nixos-generators}/formats/${n}"
-          else "${../modules/nixos-generators}/${n}"
-        )
+        (if (lib.hasAttr n officialFormats) then
+          "${sources.nixos-generators}/formats/${n}"
+        else
+          "${../modules/nixos-generators}/${n}")
       ];
     }) formats;
-in
-rec {
-  mkNixosSystem = {
-    pkgs,
-    lib ? pkgs.lib,
-    system,
-    extraModules ? [ ],
-    specialArgs ? { },
-  }:
+in rec {
+  mkNixosSystem =
+    { pkgs, lib ? pkgs.lib, system, extraModules ? [ ], specialArgs ? { }, }:
     let
       nixosModules = ../modules/nixos;
 
       # Evaluating the system ourselves (which is trivial) instead of relying
       # on nixpkgs.lib.nixosSystem flake output.
       nixosSystem = args: import "${pkgs.path}/nixos/lib/eval-config.nix" args;
-    in
-    (lib.makeOverridable nixosSystem) {
+    in (lib.makeOverridable nixosSystem) {
       inherit pkgs;
       specialArgs = specialArgs // {
         foodogsquaredUtils = import ./utils/nixos.nix { inherit lib; };
@@ -55,9 +46,7 @@ rec {
       modules = extraModules ++ [
         nixosModules
         ../modules/nixos/_private
-        ({ lib, ... }: {
-          nixpkgs.hostPlatform = lib.mkForce system;
-        })
+        ({ lib, ... }: { nixpkgs.hostPlatform = lib.mkForce system; })
       ];
 
       # Since we're setting it through nixpkgs.hostPlatform, we'll have to pass
@@ -66,44 +55,27 @@ rec {
     };
 
   # A very very thin wrapper around `mkNixosSystem` to build with the given format.
-  mkNixosImage = {
-    pkgs,
-    system,
-    lib ? pkgs.lib,
-    extraModules ? [ ],
-    specialArgs ? { },
-    format ? "iso",
-  }:
+  mkNixosImage = { pkgs, system, lib ? pkgs.lib, extraModules ? [ ]
+    , specialArgs ? { }, format ? "iso", }:
     let
       extraModules' = extraModules ++ [ nixosGeneratorModules.${format} ];
       nixosSystem = mkNixosSystem {
         inherit pkgs lib system specialArgs;
         extraModules = extraModules';
       };
-    in
-    nixosSystem.config.system.build.${nixosSystem.config.formatAttr};
+    in nixosSystem.config.system.build.${nixosSystem.config.formatAttr};
 
-  mkHome = {
-    pkgs,
-    homeManagerSrc,
-    lib ? pkgs.lib,
-    modules ? [ ],
-    specialArgs ? { },
-  }:
-    let
-      homeModules = ../modules/home-manager;
-    in
-    import "${homeManagerSrc}/modules" {
+  mkHome =
+    { pkgs, homeManagerSrc, lib ? pkgs.lib, modules ? [ ], specialArgs ? { }, }:
+    let homeModules = ../modules/home-manager;
+    in import "${homeManagerSrc}/modules" {
       inherit pkgs lib;
       check = true;
       extraSpecialArgs = specialArgs // {
         foodogsquaredModulesPath = builtins.toString homeModules;
       };
       configuration = { lib, ... }: {
-        imports = modules ++ [
-          homeModules
-          ../modules/home-manager/_private
-        ];
+        imports = modules ++ [ homeModules ../modules/home-manager/_private ];
 
         config = {
           programs.home-manager.path = homeManagerSrc;
@@ -113,25 +85,17 @@ rec {
       };
     };
 
-  mkWrapper = {
-    pkgs,
-    lib ? pkgs.lib,
-    wrapperManagerSrc,
-    modules ? [ ],
-    specialArgs ? { },
-  }:
+  mkWrapper = { pkgs, lib ? pkgs.lib, wrapperManagerSrc, modules ? [ ]
+    , specialArgs ? { }, }:
     let
       wrapperManagerModules = ../modules/wrapper-manager;
       wrapperManager = import wrapperManagerSrc { };
-    in
-      wrapperManager.lib.build {
-        inherit pkgs lib;
-        specialArgs = specialArgs // {
-          foodogsquaredModulesPath = builtins.toString wrapperManagerModules;
-        };
-        modules = modules ++ [
-          wrapperManagerModules
-          ../modules/wrapper-manager/_private
-        ];
+    in wrapperManager.lib.build {
+      inherit pkgs lib;
+      specialArgs = specialArgs // {
+        foodogsquaredModulesPath = builtins.toString wrapperManagerModules;
       };
+      modules = modules
+        ++ [ wrapperManagerModules ../modules/wrapper-manager/_private ];
+    };
 }

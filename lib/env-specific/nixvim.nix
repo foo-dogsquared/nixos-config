@@ -2,5 +2,5 @@
 
 {
   isStandalone = config:
-    !config?hmConfig && !config?nixosConfig && !config?darwinConfig;
+    !config ? hmConfig && !config ? nixosConfig && !config ? darwinConfig;
 }

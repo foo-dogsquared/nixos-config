@@ -1,7 +1,7 @@
 # No, this is not a flake of the library set, it is a library subset for
 # flake-related shtick. This should be used VERY RARELY in most parts of the
-# configuration because they are set up to be usable both in flakes- and
-# non-flakes-enabled environment.
+# configuration because they are set up to be usable both in flakes and
+# flake-less environment.
 #
 # Take note it has a very strict design constraint of not relying on the
 # `inputs` attribute of the flake output. Instead, we're relying on the
@@ -22,6 +22,5 @@ rec {
   fetchTree = metadata: inputName:
     builtins.fetchTree metadata.nodes.${inputName}.locked;
 
-  fetchInput = metadata: inputName:
-    (fetchTree metadata inputName).outPath;
+  fetchInput = metadata: inputName: (fetchTree metadata inputName).outPath;
 }

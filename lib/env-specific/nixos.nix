@@ -5,12 +5,10 @@
   # Checks if the NixOS configuration is part of the nixos-generator build.
   # Typically, we just check if there's a certain attribute that is imported
   # from it.
-  hasNixosFormat = config:
-    lib.hasAttrByPath [ "formatAttr" ] config;
+  hasNixosFormat = config: lib.hasAttrByPath [ "formatAttr" ] config;
 
   # Checks if the NixOS config is being built for a particular format.
-  isFormat = config: format:
-    (config.formatAttr or "") == format;
+  isFormat = config: format: (config.formatAttr or "") == format;
 
   # Create a separate environment similar to NixOS `system.path`. This is
   # typically used to create isolated environments for custom desktop sessions
@@ -21,17 +19,16 @@
     pkgs.buildEnv (args // {
       inherit (config.environment) pathsToLink extraOutputsToInstall;
       ignoreCollisions = true;
-      postBuild =
-       ''
-         # Remove wrapped binaries, they shouldn't be accessible via PATH.
-         find $out/bin -maxdepth 1 -name ".*-wrapped" -type l -delete
+      postBuild = ''
+        # Remove wrapped binaries, they shouldn't be accessible via PATH.
+        find $out/bin -maxdepth 1 -name ".*-wrapped" -type l -delete
 
-         if [ -x $out/bin/glib-compile-schemas -a -w $out/share/glib-2.0/schemas ]; then
-             $out/bin/glib-compile-schemas $out/share/glib-2.0/schemas
-         fi
+        if [ -x $out/bin/glib-compile-schemas -a -w $out/share/glib-2.0/schemas ]; then
+            $out/bin/glib-compile-schemas $out/share/glib-2.0/schemas
+        fi
 
-         ${config.environment.extraSetup}
-       '';
+        ${config.environment.extraSetup}
+      '';
     });
 
   # Given an environment (built with `pkgs.buildEnv`), create a systemd
@@ -44,26 +41,24 @@
 
   # Create a range object (as [start, end) in notation) that is typically used
   # in module options that accept them.
-  makeRange = start: range:
-    { from = start; to = start + range; };
+  makeRange = start: range: {
+    from = start;
+    to = start + range;
+  };
 
   # Create a range object (as [start + 1, end + 1] in notation) that is typically used
   # in module options that accept them except that the starting port is included.
   makeRange' = start: range:
-    let
-      start' = start + 1;
-    in
-    { from = start'; to = start' + range; };
+    let start' = start + 1;
+    in {
+      from = start';
+      to = start' + range;
+    };
 
-  /*
-    A specific function that checks if specific filesystem setups are set.
-  */
+  # A specific function that checks if specific filesystem setups are set.
   isFilesystemSet = config: setupName:
     config.suites.filesystem.setups.${setupName}.enable or false;
 
-  /*
-    Get the path from the state variable.
-  */
-  getFilesystem = config: setupName:
-    config.state.paths.${setupName};
+  # Get the path from the state variable.
+  getFilesystem = config: setupName: config.state.paths.${setupName};
 }

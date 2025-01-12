@@ -6,19 +6,18 @@
    create something like an entry for a desktop session.
 */
 {
-  # Name of the desktop entry. Only used as part of the package name and the
-  # default value of the destination path.
-  name,
+# Name of the desktop entry. Only used as part of the package name and the
+# default value of the destination path.
+name,
 
-  # Nix-representable data to be exported as the desktop entry.
-  config,
+# Nix-representable data to be exported as the desktop entry.
+config,
 
-  # Add a validation check for the exported desktop entry.
-  validate ? true,
+# Add a validation check for the exported desktop entry.
+validate ? true,
 
-  # Destination path relative to the output path.
-  destination ? "/share/applications/${name}.desktop",
-}:
+# Destination path relative to the output path.
+destination ? "/share/applications/${name}.desktop", }:
 
 writeTextFile {
   name = "xdg-desktop-entry-${name}";
@@ -26,14 +25,14 @@ writeTextFile {
     listsAsDuplicateKeys = false;
     mkKeyValue = lib.generators.mkKeyValueDefault {
       mkValueString = v:
-        if lib.isList v then lib.concatStringsSep ";" v
-        else lib.generators.mkValueStringDefault { } v;
+        if lib.isList v then
+          lib.concatStringsSep ";" v
+        else
+          lib.generators.mkValueStringDefault { } v;
     } "=";
   } config;
   inherit destination;
-  checkPhase =
-    lib.optionalString validate
-      ''
-        ${lib.getExe' desktop-file-utils "desktop-file-validate"} "$target"
-      '';
+  checkPhase = lib.optionalString validate ''
+    ${lib.getExe' desktop-file-utils "desktop-file-validate"} "$target"
+  '';
 }

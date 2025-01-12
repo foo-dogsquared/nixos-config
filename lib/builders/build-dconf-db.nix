@@ -4,6 +4,5 @@
 
 { dir, name ? baseNameOf dir, keyfiles, profile }@args:
 
-runCommand "dconf-${name}" {
-  nativeBuildInputs = [ (lib.getBin dconf) ];
-} "dconf compile $out ${dir}"
+runCommand "dconf-${name}" { nativeBuildInputs = [ (lib.getBin dconf) ]; }
+"dconf compile $out ${dir}"

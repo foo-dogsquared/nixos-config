@@ -3,10 +3,8 @@
 {
   # This is only used for home-manager users without a NixOS user counterpart.
   mapHomeManagerUser = user: settings:
-    let
-      homeDirectory = "/home/${user}";
-    in
-    ({ lib, ... }: {
+    let homeDirectory = "/home/${user}";
+    in ({ lib, ... }: {
       home-manager.users."${user}" = { ... }: {
         imports = [
           {

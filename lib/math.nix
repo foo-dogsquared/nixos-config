@@ -11,8 +11,7 @@ rec {
        abs (1 / 5)
        => 0.2
   */
-  abs = number:
-    if number < 0 then -(number) else number;
+  abs = number: if number < 0 then -(number) else number;
   /* Exponentiates the given base with the exponent.
 
      Example:
@@ -28,10 +27,10 @@ rec {
     let
       absValue = abs exponent;
       iter = product: counter: maxCount:
-        if counter > maxCount
-        then product
-        else iter (product * base) (counter + 1) maxCount;
+        if counter > maxCount then
+          product
+        else
+          iter (product * base) (counter + 1) maxCount;
       value = iter 1 1 absValue;
-    in
-    if exponent < 0 then (1 / value) else value;
+    in if exponent < 0 then (1 / value) else value;
 }
