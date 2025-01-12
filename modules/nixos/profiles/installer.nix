@@ -1,7 +1,7 @@
 # A dedicated profile for installers with some niceties in it. This is also
 # used for persistent live installers so you'll have to exclude setting up shop
 # and do that in the respective NixOS configuration instead.
-{ pkgs, lib, modulesPath, ... }:
+{ pkgs, lib, modulesPath, foodogsquaredLib, ... }:
 
 {
   imports = [
@@ -12,13 +12,14 @@
 
   # Include some modern niceties.
   environment.systemPackages = with pkgs; [
+    curl
     disko
     ripgrep
     git
     lazygit
     neovim
     zellij
-  ];
+  ] ++ foodogsquaredLib.stdenv;
 
   # Yeah, that's right, this is also a Guix System installer because SCREW YOU,
   # NIXOS USERS!
