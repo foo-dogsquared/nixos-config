@@ -23,6 +23,7 @@ set update.nativeinstallcmd echo
 
 " Additional and modified keybindings.
 bind yt tabduplicate
+bind yf hint -y
 
 bind gK elementunhide
 
@@ -32,6 +33,14 @@ bind gR reader --tab
 " with the `d` prefix.
 unbind d
 bind dd tabclose
+
+unbind f
+unbind F
+bind ff hint
+bind fF hint -t
+bind fB hint -b
+bind fI hint -I
+bind fz hint -z
 
 " Recontaining them nicefully.
 bind qQ recontain Personal

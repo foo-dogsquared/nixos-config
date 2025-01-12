@@ -53,6 +53,7 @@ flavorText = "No matter how hard I try, it's pretty crap"
 textOnly = true
 links = [
   { url = "https://app.diagrams.net/", text = "lazy way of drawing things" },
+  { url = "https://penpot.app", text = "Penpot" },
   { url = "https://figma.com", text = "Figma..." },
   { url = "https://www.awwwards.com/", text = "Awwwards" },
   { url = "https://dribbble.com", text = "Dribbble" },
