@@ -191,7 +191,7 @@ Sudden changes can happen at any point.
 This has been moved into its own dedicated page at the website.
 But still, we'll list it here.
 
-include::./docs/content/en-US/08-acknowledgement/index.adoc[tag=acknowledgement]
+include::./docs/website/content/en/08-acknowledgement/index.adoc[tag=acknowledgement]
 
 
 

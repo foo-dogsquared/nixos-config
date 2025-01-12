@@ -71,7 +71,8 @@ Take note, it requires `foo-dogsquared` to be defined in `setups.home-manager.co
   setups.nixos.ni = {
     systems = [ "x86_64-linux" ];
     formats = null;
-    homeManagerUsers = {
+    home-manager = {
+      branch = "home-manager-unstable";
       nixpkgsInstance = "global";
       users.foo-dogsquared = {
         userConfig = {
@@ -99,10 +100,10 @@ Take note, it requires `foo-dogsquared` to be defined in `setups.home-manager.co
 
 Points of interests include:
 
-* `homeManagerUsers.nixpkgsInstance = "global";` option where it enforces the system to use the same nixpkgs instance throughout all of the home-manager users.
+* `home-manager.nixpkgsInstance = "global";` option where it enforces the system to use the same nixpkgs instance throughout all of the home-manager users.
 As an effect, it will apply of the home-manager users' overlays into the nixpkgs instance of the NixOS system instead.
 
-* `homeManagerUsers.users.<name>.userConfig` where it simply maps the home-manager user into a NixOS system by applying `users.users.<name>` with the given `userConfig` value.
+* `home-manager.users.<name>.userConfig` where it simply maps the home-manager user into a NixOS system by applying `users.users.<name>` with the given `userConfig` value.
 
 While this method makes for an incomplete system declaration in the config file and fully relies on the declarative host module to handle it, it isn't that much of a problem especially that you have to import third-party modules somewhere, regardless if it's with flakes or not. footnote:[Similar to the <<design-constraints, following design constraints for NixOS systems>>, home-manager configurations also don't allow for `inputs` to be part of the module arguments.]
 --
@@ -118,6 +119,9 @@ This set of NixOS configuration have some constraints mainly for consistency (ea
 * All NixOS configurations are expected to be made with the baseline NixOS configuration from the declarative host config (in the `setups.nixos.configs` flake-parts module).
 If you want to add home-manager users to it, make sure the included home-manager user is only buildable with the baseline home-manager configuration.
 Otherwise, you'll have to use the `setups.nixos.configs.<name>.homeManagerUsers.users.<name>` interface for that.
+
+* Configuring nixpkgs instance is not allowed.
+This is because the setup module for NixOS sets the nixpkgs instance themselves and NixOS systems doesn't allow further configuring the nixpkgs instance if `pkgs` is set externally.
 
 * Private libraries and modules are allowed to be used here.
 Both custom-made libraries and modules are easy to setup both with flake and non-flake way so it isn't limiting us to lean one over the other.
