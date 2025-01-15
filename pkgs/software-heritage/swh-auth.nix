@@ -28,7 +28,8 @@ buildPythonPackage rec {
         pname = "python_keycloak";
         hash = "sha256-zIaBJvU1qk8yDcnqsk5GrzgcE7zIjZsHAbBCk+p1zSQ=";
       };
-      propagatedBuildInputs = prev.propagatedBuildInputs ++ [ setuptools deprecation ];
+      propagatedBuildInputs = prev.propagatedBuildInputs
+        ++ [ setuptools deprecation ];
     }))
 
     swh-core

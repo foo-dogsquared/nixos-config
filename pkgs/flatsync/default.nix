@@ -1,22 +1,6 @@
-{ stdenv
-, lib
-, fetchFromGitLab
-, rustPlatform
-, cargo
-, rustc
-, meson
-, ninja
-, pkg-config
-, glib
-, gobject-introspection
-, libadwaita
-, wrapGAppsHook4
-, openssl
-, appstream-glib
-, desktop-file-utils
-, blueprint-compiler
-, flatpak
-}:
+{ stdenv, lib, fetchFromGitLab, rustPlatform, cargo, rustc, meson, ninja
+, pkg-config, glib, gobject-introspection, libadwaita, wrapGAppsHook4, openssl
+, appstream-glib, desktop-file-utils, blueprint-compiler, flatpak }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "flatsync";
@@ -52,12 +36,7 @@ stdenv.mkDerivation (finalAttrs: {
     wrapGAppsHook4
   ];
 
-  buildInputs = [
-    glib
-    flatpak
-    libadwaita
-    openssl
-  ];
+  buildInputs = [ glib flatpak libadwaita openssl ];
 
   meta = with lib; {
     homepage = "https://gitlab.gnome.org/Cogitri/flatsync";

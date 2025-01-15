@@ -1,9 +1,4 @@
-{ lib
-, fetchFromGitHub
-, rustPlatform
-, pkg-config
-, openssl
-}:
+{ lib, fetchFromGitHub, rustPlatform, pkg-config, openssl }:
 
 rustPlatform.buildRustPackage rec {
   pname = "pigeon-mail";
@@ -18,9 +13,7 @@ rustPlatform.buildRustPackage rec {
 
   cargoHash = "sha256-MRSO89qg08GyyIuzEpSO4qQTZS876U3SeGJ6eCO+3BA=";
 
-  env = {
-    OPENSSL_NO_VENDOR = "1";
-  };
+  env = { OPENSSL_NO_VENDOR = "1"; };
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [ openssl ];

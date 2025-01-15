@@ -1,33 +1,14 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, autoreconfHook
-, desktop-file-utils
-, pkg-config
-, libwebsockets
-, ncurses
-, openssl
-, unixtools
-, zlib
-, rustPlatform
-, perl
-, qtbase
-, qtwebchannel
-, qtwebengine
-, wrapQtAppsHook
+{ lib, stdenv, fetchFromGitHub, autoreconfHook, desktop-file-utils, pkg-config
+, libwebsockets, ncurses, openssl, unixtools, zlib, rustPlatform, perl, qtbase
+, qtwebchannel, qtwebengine, wrapQtAppsHook
 
 , withQtDocking ? false
 
-, withKddockwidgets ? false
-, kddockwidgets
+, withKddockwidgets ? false, kddockwidgets
 
-, withAsciidoctor ? true
-, asciidoctor
+, withAsciidoctor ? true, asciidoctor
 
-, withDocbook ? true
-, docbook-xsl-ns
-, libxslt
-}:
+, withDocbook ? true, docbook-xsl-ns, libxslt }:
 
 stdenv.mkDerivation rec {
   pname = "domterm";
@@ -40,15 +21,12 @@ stdenv.mkDerivation rec {
     hash = "sha256-H1Nzqzz7dv4j9hkb08FCExLeq69EkFNXGzhhl/e+uxI=";
   };
 
-  configureFlags = [
-    "--with-libwebsockets"
-    "--enable-compiled-in-resources"
-    "--with-qt"
-  ]
-  ++ lib.optional withAsciidoctor "--with-asciidoctor"
-  ++ lib.optional withQtDocking "--with-qt-docking"
-  ++ lib.optional withKddockwidgets "--with-kddockwidgets"
-  ++ lib.optional withDocbook "--with-docbook";
+  configureFlags =
+    [ "--with-libwebsockets" "--enable-compiled-in-resources" "--with-qt" ]
+    ++ lib.optional withAsciidoctor "--with-asciidoctor"
+    ++ lib.optional withQtDocking "--with-qt-docking"
+    ++ lib.optional withKddockwidgets "--with-kddockwidgets"
+    ++ lib.optional withDocbook "--with-docbook";
 
   nativeBuildInputs = [
     autoreconfHook
@@ -68,13 +46,9 @@ stdenv.mkDerivation rec {
     perl
     unixtools.xxd
     zlib
-  ]
-  ++ lib.optional withKddockwidgets kddockwidgets
-  ++ lib.optional withAsciidoctor asciidoctor
-  ++ lib.optionals withDocbook [
-    docbook-xsl-ns
-    libxslt
-  ];
+  ] ++ lib.optional withKddockwidgets kddockwidgets
+    ++ lib.optional withAsciidoctor asciidoctor
+    ++ lib.optionals withDocbook [ docbook-xsl-ns libxslt ];
 
   meta = with lib; {
     homepage = "https://domterm.org/";

@@ -23,6 +23,7 @@ in lib.makeScope pkgs.newScope (self: {
   distant = callPackage ./distant.nix { };
   gnome-search-provider-recoll =
     callPackage ./gnome-search-provider-recoll.nix { };
+  #graphite-design-tool = callPackage ./graphite-design-tool { };
   go-avahi-cname = callPackage ./go-avahi-cname { };
   hush-shell = callPackage ./hush-shell.nix { };
   lazyjj = callPackage ./lazyjj { };
@@ -43,6 +44,10 @@ in lib.makeScope pkgs.newScope (self: {
   swh = callPackage ./software-heritage {
     python3Packages = pkgs.python310Packages;
   };
+  #pd-l2ork = callPackage ./pd-l2ork { };
+  #rotp-modnar = callPackage ./rotp-modnar { };
+  #rotp-fusion = callPackage ./rotp-fusion { };
+  #purrdata = callPackage ./purr-data { };
   speki = callPackage ./speki { };
   tic-80 = callPackage ./tic-80 { };
   smile = callPackage ./smile { };

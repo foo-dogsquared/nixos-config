@@ -1,10 +1,4 @@
-{ rustPlatform
-, lib
-, fetchFromGitHub
-, pkg-config
-, openssl
-, alsa-lib
-}:
+{ rustPlatform, lib, fetchFromGitHub, pkg-config, openssl, alsa-lib }:
 
 rustPlatform.buildRustPackage rec {
   pname = "speki";
@@ -17,9 +11,7 @@ rustPlatform.buildRustPackage rec {
     hash = "sha256-cvtMXtg2c9T4CaWAobagS9pW4pX4Q+nwdBvP+9A0er0=";
   };
 
-  cargoLock = {
-    lockFile = ./Cargo.lock;
-  };
+  cargoLock = { lockFile = ./Cargo.lock; };
 
   env.OPENSSL_NO_VENDOR = "1";
   nativeBuildInputs = [ pkg-config ];

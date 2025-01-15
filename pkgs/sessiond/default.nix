@@ -1,19 +1,6 @@
-{ lib
-, fetchFromGitHub
-, fetchpatch
-, meson
-, ninja
-, pkg-config
-, coreutils
-, glib
-, gobject-introspection
-, xorg
-, udev
-, wireplumber
-, pipewire
-, perl
-, python3Packages
-}:
+{ lib, fetchFromGitHub, fetchpatch, meson, ninja, pkg-config, coreutils, glib
+, gobject-introspection, xorg, udev, wireplumber, pipewire, perl
+, python3Packages }:
 
 python3Packages.buildPythonPackage rec {
   pname = "sessiond";
@@ -29,34 +16,21 @@ python3Packages.buildPythonPackage rec {
 
   patches = [
     (fetchpatch {
-      url = "https://github.com/jcrd/sessiond/commit/217ed63e2033c46c637e0564ef44ceaedff3e102.patch";
+      url =
+        "https://github.com/jcrd/sessiond/commit/217ed63e2033c46c637e0564ef44ceaedff3e102.patch";
       hash = "sha256-/GFPwJ4OBskavUJYhR5LGpt+HZABDOCpx6cVYDCYTNE=";
     })
 
     ./0002-meson-Add-python-sessiond-installation.patch
   ];
 
-  nativeBuildInputs = [
-    meson
-    ninja
-    pkg-config
-    glib
-    gobject-introspection
-    perl
-  ];
+  nativeBuildInputs =
+    [ meson ninja pkg-config glib gobject-introspection perl ];
 
-  buildInputs = [
-    udev
-    xorg.libXi
-    xorg.libX11
-    xorg.libXext
-    wireplumber
-    pipewire
-  ];
+  buildInputs =
+    [ udev xorg.libXi xorg.libX11 xorg.libXext wireplumber pipewire ];
 
-  propagatedBuildInputs = with python3Packages; [
-    dbus-python
-  ];
+  propagatedBuildInputs = with python3Packages; [ dbus-python ];
 
   postPatch = ''
     substituteInPlace ./systemd/sessiond.service \

@@ -1,14 +1,7 @@
-{
-  lib,
-  rustPlatform,
-  fetchFromGitHub,
-  jujutsu,
-}:
+{ lib, rustPlatform, fetchFromGitHub, jujutsu, }:
 
-let
-  version = "0.3.1";
-in
-rustPlatform.buildRustPackage {
+let version = "0.3.1";
+in rustPlatform.buildRustPackage {
   inherit version;
   pname = "lazyjj";
 

@@ -1,10 +1,4 @@
-{ lib
-, rustPlatform
-, fetchFromGitHub
-, cmake
-, pkg-config
-, openssl
-}:
+{ lib, rustPlatform, fetchFromGitHub, cmake, pkg-config, openssl }:
 
 rustPlatform.buildRustPackage rec {
   pname = "fastn";
@@ -20,7 +14,8 @@ rustPlatform.buildRustPackage rec {
   cargoLock = {
     lockFile = ./Cargo.lock;
     outputHashes = {
-      "fastn-observer-0.1.0" = "sha256-D7ch6zB1xw54vGbpcQ3hf+zG11Le/Fy01W3kHhc8bOg=";
+      "fastn-observer-0.1.0" =
+        "sha256-D7ch6zB1xw54vGbpcQ3hf+zG11Le/Fy01W3kHhc8bOg=";
     };
   };
 
@@ -28,9 +23,7 @@ rustPlatform.buildRustPackage rec {
   nativeBuildInputs = [ cmake pkg-config ];
   buildInputs = [ openssl ];
 
-  checkFlags = [
-    "--skip=tests::fbt"
-  ];
+  checkFlags = [ "--skip=tests::fbt" ];
 
   meta = with lib; {
     homepage = "https://fastn.com/";

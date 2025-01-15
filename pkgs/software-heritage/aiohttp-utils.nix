@@ -13,11 +13,7 @@ buildPythonPackage rec {
 
   doCheck = false;
 
-  propagatedBuildInputs = [
-    aiohttp
-    gunicorn
-    python-mimeparse
-  ];
+  propagatedBuildInputs = [ aiohttp gunicorn python-mimeparse ];
 
   meta = with lib; {
     homepage = "https://github.com/sloria/aiohttp-utils";

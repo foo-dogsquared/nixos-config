@@ -10,10 +10,7 @@ buildPythonPackage rec {
     sha256 = "sha256-YybB5RxP0v/8ndYH3sBsMa3WTu29N6ZR6oj2Y6N8Pxg";
   };
 
-  propagatedBuildInputs = [
-    setuptools-scm
-    attrs
-  ];
+  propagatedBuildInputs = [ setuptools-scm attrs ];
 
   meta = with lib; {
     homepage = "https://github.com/bloomberg/attrs-strict";

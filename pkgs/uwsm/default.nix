@@ -1,13 +1,7 @@
-{ lib
-, python311Packages
-, fetchFromGitHub
-, meson
-, ninja
-, pkg-config
+{ lib, python311Packages, fetchFromGitHub, meson, ninja, pkg-config
 
-  # This is for substituting shebangs in its plugins.
-, coreutils
-}:
+# This is for substituting shebangs in its plugins.
+, coreutils }:
 
 python311Packages.buildPythonPackage rec {
   pname = "uwsm";
@@ -21,20 +15,11 @@ python311Packages.buildPythonPackage rec {
     hash = "sha256-n80FZ6rEguTN9ouEqI+bc5FOSeFQ8ynV+XDL2K/ZIxI=";
   };
 
-  patches = [
-    ./0001-chore-add-build-backend-for-pyproject.patch
-  ];
+  patches = [ ./0001-chore-add-build-backend-for-pyproject.patch ];
 
-  nativeBuildInputs = [
-    meson
-    ninja
-    pkg-config
-  ];
+  nativeBuildInputs = [ meson ninja pkg-config ];
 
-  propagatedBuildInputs = with python311Packages; [
-    pyxdg
-    dbus-python
-  ];
+  propagatedBuildInputs = with python311Packages; [ pyxdg dbus-python ];
 
   postFixup = ''
     substituteInPlace $out/share/uwsm/plugins/*.sh \

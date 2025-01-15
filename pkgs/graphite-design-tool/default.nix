@@ -1,4 +1,5 @@
-{ rustPlatform, cargo-tauri_1, fetchFromGitHub, wrapGAppsHook, wasm-bindgen-cli, pkg-config, lib }:
+{ rustPlatform, cargo-tauri_1, fetchFromGitHub, wrapGAppsHook, wasm-bindgen-cli
+, pkg-config, lib }:
 
 rustPlatform.buildRustPackage rec {
   pname = "graphite-design-tool";
@@ -14,11 +15,13 @@ rustPlatform.buildRustPackage rec {
   useFetchCargoVendor = true;
   cargoHash = "sha256-+p9bpj+cSd0Bkpg+e4lwo4C7XqxZBc0McYYsNxAqzaA=";
 
-  nativeBuildInputs = [ cargo-tauri_1 pkg-config wrapGAppsHook wasm-bindgen-cli ];
+  nativeBuildInputs =
+    [ cargo-tauri_1 pkg-config wrapGAppsHook wasm-bindgen-cli ];
 
   meta = with lib; {
     homepage = "https://graphite.rs/";
-    description = "2D vector & raster editor that melds traditional layers & tools with a modern node-based, non-destructive, procedural workflow";
+    description =
+      "2D vector & raster editor that melds traditional layers & tools with a modern node-based, non-destructive, procedural workflow";
     license = licenses.asl20;
     maintainers = with maintainers; [ foo-dogsquared ];
     mainProgram = "graphite";

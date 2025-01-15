@@ -1,19 +1,6 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, meson
-, ninja
-, appstream-glib
-, desktop-file-utils
-, gettext
-, glib
-, gtk4
-, libwnck
-, wrapGAppsHook4
-, pkg-config
-, python3Packages
-, gobject-introspection
-}:
+{ stdenv, lib, fetchFromGitHub, meson, ninja, appstream-glib, desktop-file-utils
+, gettext, glib, gtk4, libwnck, wrapGAppsHook4, pkg-config, python3Packages
+, gobject-introspection }:
 
 python3Packages.buildPythonApplication rec {
   pname = "smile";
@@ -49,9 +36,7 @@ python3Packages.buildPythonApplication rec {
     wrapGAppsHook4
   ];
 
-  propagatedNativeBuildInputs = [
-    gobject-introspection
-  ];
+  propagatedNativeBuildInputs = [ gobject-introspection ];
 
   propagatedBuildInputs = with python3Packages; [
     pygobject3
@@ -59,10 +44,7 @@ python3Packages.buildPythonApplication rec {
     dbus-python
   ];
 
-  buildInputs = [
-    libwnck
-    gtk4
-  ];
+  buildInputs = [ libwnck gtk4 ];
 
   dontWrapGApps = true;
   preFixup = ''

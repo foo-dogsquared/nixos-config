@@ -1,12 +1,4 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, cmake
-, SDL2
-, xorg
-, xwayland
-, libconfig
-}:
+{ stdenv, lib, fetchFromGitHub, cmake, SDL2, xorg, xwayland, libconfig }:
 
 stdenv.mkDerivation rec {
   pname = "lwp";
@@ -20,12 +12,7 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ cmake ];
-  buildInputs = [
-    SDL2
-    xorg.libX11
-    xwayland
-    libconfig
-  ];
+  buildInputs = [ SDL2 xorg.libX11 xwayland libconfig ];
 
   # TODO: Add conditional for Mac systems.
   postPatch = ''
@@ -36,9 +23,7 @@ stdenv.mkDerivation rec {
       --replace "usr/local" "${placeholder "out"}"
   '';
 
-  cmakeFlags = [
-    "-DPROGRAM_VERSION=${version}"
-  ];
+  cmakeFlags = [ "-DPROGRAM_VERSION=${version}" ];
 
   meta = with lib; {
     homepage = "https://github.com/jszczerbinsky/lwp";

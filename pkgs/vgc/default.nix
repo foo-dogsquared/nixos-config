@@ -1,15 +1,5 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, wrapQtAppsHook
-, qtbase
-, cmake
-, python3
-, harfbuzz
-, freetype
-, libGLU
-, git
-}:
+{ stdenv, lib, fetchFromGitHub, wrapQtAppsHook, qtbase, cmake, python3, harfbuzz
+, freetype, libGLU, git }:
 
 stdenv.mkDerivation rec {
   pname = "vgc";
@@ -23,20 +13,11 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  patches = [
-    ./patches/set-reproducible-build.patch
-  ];
+  patches = [ ./patches/set-reproducible-build.patch ];
 
   nativeBuildInputs = [ wrapQtAppsHook cmake ];
 
-  buildInputs = [
-    python3
-    git
-    freetype
-    harfbuzz
-    libGLU
-    qtbase
-  ];
+  buildInputs = [ python3 git freetype harfbuzz libGLU qtbase ];
 
   meta = with lib; {
     homepage = "https://www.vgc.io/";
