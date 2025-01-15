@@ -29,5 +29,14 @@ in
     services.nginx.virtualHosts."rss.ni.local" = {
       locations."/".proxyPass = "http://ni.local:${builtins.toString port}";
     };
+
+    # Just make sure you execute this script as `miniflux` helper especially
+    # that it is configured with PostgreSQL.
+    wrapper-manager.packages.miniflux-helper = {
+      wrappers.miniflux-helper = {
+        arg0 = lib.getExe' config.services.miniflux.package "miniflux";
+        env = lib.mapAttrs (_: value: { value = builtins.toString value; }) config.services.miniflux.config;
+      };
+    };
   };
 }
