@@ -125,7 +125,9 @@ in
             updateswh
             zhongwen
             open-access-helper
-          ]);
+            rsshub-radar
+            ])
+          ++ lib.optionals config.programs.mpv.enable (with pkgs.nur.repos.rycee.firefox-addons; [ ff2mpv ]);
 
           # Much of the settings are affected by the policies set in the
           # package. See more information about them in
