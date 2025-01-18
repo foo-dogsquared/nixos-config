@@ -21,7 +21,8 @@ in {
       ];
 
       users.foo-dogsquared.programs = {
-        shell.enable = lib.mkDefault true;
+        shell.enable = true;
+        nushell.enable = true;
         git = {
           enable = lib.mkDefault true;
           instaweb.enable = true;

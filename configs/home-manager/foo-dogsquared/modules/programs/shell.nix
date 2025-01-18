@@ -24,15 +24,6 @@ in
       ];
     };
 
-    programs.nushell = {
-      enable = true;
-      plugins = with pkgs.nushellPlugins; [
-        dbus
-        query
-        skim
-      ];
-    };
-
     programs.atuin = {
       enable = true;
       settings = {

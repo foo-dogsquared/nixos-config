@@ -12,6 +12,7 @@
     ./programs/hledger.nix
     ./programs/keys.nix
     ./programs/nixvim
+    ./programs/nushell.nix
     ./programs/custom-homepage.nix
     ./programs/shell.nix
     ./programs/terminal-multiplexer.nix
