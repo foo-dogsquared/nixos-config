@@ -1,5 +1,6 @@
 { inputs
 , lib
+, config
 
 , defaultNixConf
 
@@ -25,6 +26,10 @@
 
             # Get all of the NUR.
             inputs.nur.overlays.default
+
+            # We have this since we want to compile those NixVim configuration
+            # ourselves.
+            inputs.nixvim-unstable.overlays.default
           ];
         };
         homeManagerBranch = "home-manager-unstable";
@@ -33,6 +38,16 @@
           inputs.nur.modules.homeManager.default
           inputs.sops-nix.homeManagerModules.sops
           inputs.wrapper-manager-fds.homeModules.wrapper-manager
+
+          {
+            _module.args = {
+              firstSetupArgs = {
+                baseNixvimModules =
+                  config.setups.nixvim.configs.fiesta.modules
+                  ++ config.setups.nixvim.sharedModules;
+              };
+            };
+          }
         ];
         nixvim = {
           instance = "fiesta";
