@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, helpers, ... }:
 
 let
   nixvimConfig = config.nixvimConfigs.fiesta;
@@ -15,6 +15,19 @@ in
     };
 
   config = lib.mkIf cfg.enable {
+    keymaps = [
+      {
+        mode = [ "n" ];
+        key = "<leader>Li";
+        options.desc = "Toggle inlay hints";
+        action = helpers.mkRaw ''
+          function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+          end
+        '';
+      }
+    ];
+
     plugins.lsp = {
       enable = true;
       inlayHints = true;

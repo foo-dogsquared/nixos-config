@@ -18,29 +18,6 @@ in
       nixGrammars = true;
       nixvimInjections = true;
 
-      # We'll just use the common languages out of the bat.
-      grammarPackages = with config.plugins.treesitter.package.builtGrammars; [
-        bash
-        c
-        cpp
-        css
-        dockerfile
-        go
-        graphql
-        html
-        http
-        javascript
-        json
-        json5
-        lua
-        nix
-        rust
-        toml
-        tsx
-        typescript
-        yaml
-      ];
-
       # Enable all of its useful features.
       folding = true;
       settings = {
