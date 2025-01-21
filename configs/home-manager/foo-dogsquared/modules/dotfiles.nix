@@ -41,8 +41,14 @@ in
       xdg.configFile.nyxt.source = getDotfiles "nyxt";
     })
 
-    (lib.mkIf (!userCfg.programs.nixvim.enable) {
+    # Comes with a heavy assumption that the Neovim configuration found in this
+    # home-manager environment will not write to the XDG config directory.
+    (lib.mkIf (!config.programs.nixvim.enable) {
       xdg.configFile.nvim.source = getDotfiles "nvim";
+    })
+
+    (lib.mkIf userCfg.programs.nushell.enable {
+      home.file."${config.xdg.dataHome}/nushell/vendor/autoload".source = getDotfiles "nu/autoload";
     })
   ]);
 }
