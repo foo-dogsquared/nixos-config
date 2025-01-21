@@ -3,6 +3,8 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.nushell;
+
+  nushellAutoloadScriptDir = "${config.xdg.dataHome}/nushell/vendor/autoload";
 in
 {
   options.users.foo-dogsquared.programs.nushell.enable =
@@ -16,22 +18,77 @@ in
           dbus
           query
           skim
+          polars
+          units
+          net
+          formats
+          highlight
         ];
         extraConfig = ''
-          $env.config.show_banner = false
+          $env.config = $env.config | merge deep --strategy=append {
+            show_banner: false
+
+            shell_integration: {
+              osc7: true
+              osc133: true
+              osc633: true
+            }
+          }
         '';
+        environmentVariables.NU_LIB_DIRS =
+          lib.concatStringsSep ":" [
+            "${config.xdg.cacheHome}/nushell/modules"
+            "${config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR}/nushell"
+          ];
       };
     }
 
-    (lib.mkIf config.programs.fzf.enable {
-      # TODO:
-      # - Learn how to define functions in Nushell.
-      # - Learn how to attach bindings in Nushell.
-      # - Port interactive selections from fzf.
-      home.file."${config.xdg.cacheHome}/nu
-      programs.nushell.extraConfig = ''
+    # Configuring our own completion thingy instead.
+    # Based from https://www.nushell.sh/cookbook/external_completers.html#multiple-completer.
+    (lib.mkIf config.programs.carapace.enable {
+      programs.carapace.enableNushellIntegration = lib.mkForce false;
 
-      '';
+      programs.nushell.extraConfig = lib.mkMerge [
+        (lib.mkIf config.programs.zoxide.enable ''
+          let zoxide_completer = {|spans|
+              $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+          }
+        '')
+
+        ''
+          let carapace_completer = {|spans: list<string>|
+            carapace $spans.0 nushell ...$spans
+            | from json
+            | if ($in | default [] | where value =~ '^-.*ERR$' | is-empty) { $in } else { null }
+          }
+
+          let external_completers = {|spans|
+            let expanded_alias = scope aliases
+              | where name == $spans.0
+              | get -i 0.expansion
+
+            let spans = if $expanded_alias != null {
+              $spans
+              | skip 1
+              | prepend ($expanded_alias | split row ' ' | take 1)
+            } else {
+              $spans
+            }
+
+            match $spans.0 {
+              ${lib.optionalString config.programs.zoxide.enable ''
+                __zoxide_z | __zoxide_zi => $zoxide_completer
+              ''}
+              _ => $carapace_completer
+            } | do $in $spans
+          }
+
+          $env.config.completions.external = $env.config.completions.external | merge deep --strategy=append {
+            enable: true
+            completer: $external_completers
+          }
+        ''
+      ];
     })
   ]);
 }
