@@ -24,6 +24,9 @@ in
       ];
     };
 
+    # Compile all of the completions.
+    programs.carapace.enable = true;
+
     programs.atuin = {
       enable = true;
       settings = {
