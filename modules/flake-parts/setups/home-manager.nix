@@ -120,6 +120,7 @@ let
       ];
 
       nixpkgs.config = cfg.sharedNixpkgsConfig;
+      specialArgs = cfg.sharedSpecialArgs;
     };
   };
 in
@@ -129,6 +130,13 @@ in
       description = ''
         nixpkgs configuration to be shared among home-manager configurations
         defined here.
+      '';
+    };
+
+    sharedSpecialArgs = options.setups.sharedSpecialArgs // {
+      description = ''
+        Shared set of module arguments as part of `_module.specialArgs` of the
+        configuration.
       '';
     };
 
@@ -165,6 +173,7 @@ in
         (import ./shared/nix-conf.nix { inherit inputs; })
         (import ./shared/config-options.nix { inherit (config) systems; })
         ./shared/nixpkgs-options.nix
+        ./shared/special-args-options.nix
         configType
       ]);
       default = { };

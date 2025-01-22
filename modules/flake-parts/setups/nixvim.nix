@@ -108,6 +108,8 @@ let
       modules = [
         "${partsConfig.setups.configDir}/nixvim/${config.configName}"
       ];
+
+      specialArgs = cfg.sharedSpecialArgs;
     };
   };
 
@@ -169,6 +171,7 @@ in
     configs = lib.mkOption {
       type = with lib.types; attrsOf (submodule [
         (import ./shared/config-options.nix { inherit (config) systems; })
+        ./shared/special-args-options.nix
         configType
       ]);
       default = { };
@@ -186,6 +189,14 @@ in
         environments when NixVim-specific integrations has been enabled.
       '';
     };
+
+    sharedSpecialArgs = options.setups.sharedSpecialArgs // {
+      description = ''
+        Shared set of module arguments as part of `_module.specialArgs` of the
+        configuration.
+      '';
+    };
+
     standaloneConfigModules = modulesOption' "standalone configuration";
 
     sharedNixpkgsConfig = options.setups.sharedNixpkgsConfig // {
