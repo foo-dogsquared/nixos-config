@@ -18,6 +18,7 @@ in
 
         # This is to make an exception for Archivebox.
         nixpkgs.config.permittedInsecurePackages = [
+          "archiver-3.5.1"
           "python3.12-django-3.1.14"
         ];
 
@@ -42,6 +43,19 @@ in
 
           inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
           inputs.nixos-hardware.nixosModules.common-cpu-amd-raphael-igpu
+
+          (
+            { config, ... }: let
+              hmCfg = config.home-manager.users;
+            in {
+              # Testing out Nushell for a spinerooski.
+              users.users.foo-dogsquared.shell =
+                if hmCfg.foo-dogsquared.programs.nushell.enable then
+                  hmCfg.foo-dogsquared.programs.nushell.package
+                else
+                  "/run/current-system/sw/bin/bash";
+            }
+          )
         ];
         home-manager = {
           branch = "home-manager-unstable";
