@@ -48,7 +48,12 @@ bind qW recontain Work
 bind qe recontain Banking
 bind qE recontain Shopping
 bind qC recontain Chat
-bind qq recontain
+bind qq recontain Cooking
+
+" Sorting them nicefully.
+bind qss tabsort --url
+bind qsS tabsort --containers
+bind qst tabsort --title
 
 bind <C-Q> fillcmdline containerclose
 
@@ -58,6 +63,7 @@ bind de containerclose Banking
 bind dE containerclose Shopping
 bind dg containerclose Gaming
 bind dC containerclose Chat
+bind dc containerclose Cooking
 
 " Assuming the Google and Facebook containers extensions are installed.
 bind dF containerclose Facebook
@@ -75,6 +81,7 @@ containercreate Banking green dollar
 containercreate Shopping pink cart
 containercreate Gaming turquoise chill
 containercreate Chat blue chill
+containercreate Cooking orange food
 
 " Most of the MOOC are for personal purposes so it is in "Personal" container.
 autocontain -s coursera\.org Personal
@@ -173,6 +180,11 @@ autocontain -s duotrigordle\.com Gaming
 seturl nytimes\.com/games disable true
 seturl merriam-webster\.com/games disable true
 seturl britannica\.com/games disable true
+
+" My cooking gotos.
+autocontain -s lecremedelacrumb\.com Cooking
+autocontain -s cookingclassy\.com Cooking
+autocontain -s panlasangpinoy\.com Cooking
 
 " Ignore all of the keybindings.
 blacklistadd https://design.penpot.app
