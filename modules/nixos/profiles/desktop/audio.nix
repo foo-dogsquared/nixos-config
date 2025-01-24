@@ -2,7 +2,7 @@
 { lib, ... }:
 
 {
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = lib.mkDefault true;
 
   # The main preferred setup of our audio system.
