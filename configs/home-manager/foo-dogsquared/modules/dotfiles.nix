@@ -45,6 +45,11 @@ in
     # home-manager environment will not write to the XDG config directory.
     (lib.mkIf (!config.programs.nixvim.enable) {
       xdg.configFile.nvim.source = getDotfiles "nvim";
+
+      programs.neovim.extraPackages = with pkgs; [
+        luarocks
+        shfmt
+      ];
     })
 
     (lib.mkIf userCfg.programs.nushell.enable {
