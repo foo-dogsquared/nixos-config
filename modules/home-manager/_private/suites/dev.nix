@@ -121,7 +121,7 @@ in {
         flags = [ "--disable-up-arrow" ];
         settings = {
           search_mode = "fuzzy";
-          filter_mode = "global";
+          filter_mode = "session";
         };
       };
 
