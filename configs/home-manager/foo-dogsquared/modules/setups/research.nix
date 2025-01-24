@@ -45,6 +45,7 @@ in
         curl # The general purpose downloader.
         fanficfare # It's for the badly written fanfics.
         gallery-dl # More potential for your image collection.
+        goldendict-ng # A golden dictionary for perfecting your diction.
         internetarchive # All of the potential vintage collection of questionable materials at your fingertips.
         kiwix # Offline reader for your fanon wiki.
         localsend # Local network syncing.
