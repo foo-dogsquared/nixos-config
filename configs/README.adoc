@@ -18,3 +18,12 @@ Here is the following list of them used in the repo history:
 These "codenames" are also used for their environment-specific module structuring (e.g., `hosts.ni.services.backup.enable` for NixOS, `nixvimConfigs.fiesta.setups.tree-sitter` for NixVim, `users.foo-dogsquared.setups.desktop.enable` for home-manager) with the exception of flake-parts where it is basically a free-for-all.
 
 Lastly, these modules are referred collectively in the commits as `modules`.
+
+
+[#conventions]
+== Conventions
+
+There's a few things you need to remember for these configurations.
+
+- Module arguments that are only suitable to be included in the first build step of the configuration are all under the `firstSetupArgs` namespace.
+- Module arguments that are only found inside of the configuration itself should be under the `configurationArgs` namespace.
