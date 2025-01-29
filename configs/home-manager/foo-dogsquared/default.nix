@@ -123,7 +123,7 @@ in
     diff = pkgs.diffoscope;
     pager = config.programs.bat.package;
     editor =
-      if userCfg.programs.nixvim.enable then
+      if config.programs.nixvim.enable then
         config.programs.nixvim.finalPackage
       else
         config.programs.neovim.package;

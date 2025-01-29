@@ -43,16 +43,22 @@ in
 
     # Comes with a heavy assumption that the Neovim configuration found in this
     # home-manager environment will not write to the XDG config directory.
-    (lib.mkIf (!config.programs.nixvim.enable) {
+    (lib.mkIf (config.programs.neovim.enable) {
       xdg.configFile.nvim.source = getDotfiles "nvim";
 
       programs.neovim.extraPackages = with pkgs; [
         luarocks
         shfmt
+        cmake
+
+        # Just assume that there is no clipboard thingy that is already managed
+        # within this home-manager configuration.
+        wl-clipboard
+        xclip
       ];
     })
 
-    (lib.mkIf userCfg.programs.nushell.enable {
+    (lib.mkIf config.programs.nushell.enable {
       home.file."${config.xdg.dataHome}/nushell/vendor/autoload".source = getDotfiles "nu/autoload";
     })
   ]);
