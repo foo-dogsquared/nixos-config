@@ -7,21 +7,16 @@ let
   sources = import ../npins;
   pkgs = import sources."nixos-${branch}" { inherit system; };
   bahaghariLib = import ./lib { inherit pkgs; };
-in
-{
+in {
   lib = bahaghariLib;
-  libTestPkg =
-    pkgs.runCommand "bahaghari-lib-test"
-      {
-        testData = builtins.toJSON bahaghariLib;
-        passAsFile = [ "testData" ];
-        nativeBuildInputs = with pkgs; [
-          yajsv
-          jq
-        ];
-      }
-      ''
-        yajsv -s "${./lib/tests.schema.json}" "$testDataPath" && touch $out || jq . "$testDataPath"
-      '';
+  libTestPkg = pkgs.runCommand "bahaghari-lib-test" {
+    testData = builtins.toJSON bahaghariLib;
+    passAsFile = [ "testData" ];
+    nativeBuildInputs = with pkgs; [ yajsv jq ];
+  } ''
+    yajsv -s "${
+      ./lib/tests.schema.json
+    }" "$testDataPath" && touch $out || jq . "$testDataPath"
+  '';
   #modules = import ./modules { inherit pkgs; };
 }

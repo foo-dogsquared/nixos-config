@@ -24,12 +24,12 @@ let
       # also detect this ourselves as well... but with Nixlang? REALLY!?!
       system = lib.mkOption {
         type = with lib.types; nullOr (enum [ "base16" "base24" ]);
-        default =
-          if (isBase24 config.palette)
-          then "base24"
-          else if (isBase16 config.palette)
-          then "base16"
-          else null;
+        default = if (isBase24 config.palette) then
+          "base24"
+        else if (isBase16 config.palette) then
+          "base16"
+        else
+          null;
         example = "base24";
         description = ''
           Indicates which system this scheme supports. This is mainly on the
@@ -74,9 +74,8 @@ let
       };
 
       palette = lib.mkOption {
-        type = with lib.types; attrsOf (
-          coercedTo str (lib.removePrefix "#") str
-        );
+        type = with lib.types;
+          attrsOf (coercedTo str (lib.removePrefix "#") str);
         default = { };
         example = {
           base00 = "2b221f";
@@ -104,8 +103,7 @@ let
       };
     };
   };
-in
-{
+in {
   options.bahaghari.tinted-theming = {
     schemes = lib.mkOption {
       type = with lib.types; attrsOf (submodule schemeType);

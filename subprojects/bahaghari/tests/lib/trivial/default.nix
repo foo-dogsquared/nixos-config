@@ -71,8 +71,7 @@ let
   };
 
   base24Set = self.trivial.generateBaseDigitType base24GlyphsList;
-in
-lib.runTests {
+in lib.runTests {
   testGenerateCustomGlyphSet = {
     expr = self.trivial.generateGlyphSet [ "A" "B" "C" "D" "E" "F" "G" "H" ];
     expected = customOctalGlyphs;
@@ -84,7 +83,8 @@ lib.runTests {
   };
 
   testGenerateConversionTable = {
-    expr = self.trivial.generateConversionTable [ "A" "B" "C" "D" "E" "F" "G" "H" ];
+    expr =
+      self.trivial.generateConversionTable [ "A" "B" "C" "D" "E" "F" "G" "H" ];
     expected = {
       "A" = 0;
       "B" = 1;
@@ -98,25 +98,24 @@ lib.runTests {
   };
 
   testGenerateConversionTable2 = {
-    expr = self.trivial.generateConversionTable
-      [
-        "0"
-        "1"
-        "2"
-        "3"
-        "4"
-        "5"
-        "6"
-        "7"
-        "8"
-        "9"
-        "A"
-        "B"
-        "C"
-        "D"
-        "E"
-        "F"
-      ];
+    expr = self.trivial.generateConversionTable [
+      "0"
+      "1"
+      "2"
+      "3"
+      "4"
+      "5"
+      "6"
+      "7"
+      "8"
+      "9"
+      "A"
+      "B"
+      "C"
+      "D"
+      "E"
+      "F"
+    ];
     expected = {
       "0" = 0;
       "1" = 1;
@@ -149,22 +148,22 @@ lib.runTests {
   };
 
   testBaseDigitWithCustomOctalGlyph = {
-    expr = self.trivial.toBaseDigitsWithGlyphs 8 9 customOctalGlyphs;
+    expr = self.trivial.toBaseDigitsWithGlyphs 8 customOctalGlyphs 9;
     expected = "BB";
   };
 
   testBaseDigitWithCustomOctalGlyph2 = {
-    expr = self.trivial.toBaseDigitsWithGlyphs 8 641 customOctalGlyphs;
+    expr = self.trivial.toBaseDigitsWithGlyphs 8 customOctalGlyphs 641;
     expected = "BCAB";
   };
 
   testBaseDigitWithProperBase24Glyph = {
-    expr = self.trivial.toBaseDigitsWithGlyphs 24 641 customBase24Glyphs;
+    expr = self.trivial.toBaseDigitsWithGlyphs 24 customBase24Glyphs 641;
     expected = "12H";
   };
 
   testBaseDigitWithProperBase24Glyph2 = {
-    expr = self.trivial.toBaseDigitsWithGlyphs 24 2583 customBase24Glyphs;
+    expr = self.trivial.toBaseDigitsWithGlyphs 24 customBase24Glyphs 2583;
     expected = "4BF";
   };
 
@@ -174,7 +173,9 @@ lib.runTests {
     expr = self.trivial.importYAML ./simple.yml;
     expected = {
       hello = "there";
-      how-are-you-doing = "I'm fine. Thank you for asking.\n";
+      how-are-you-doing = ''
+        I'm fine. Thank you for asking.
+      '';
       "It's a number" = 53;
       dog-breeds = [ "chihuahua" "golden retriever" ];
     };
@@ -212,7 +213,7 @@ lib.runTests {
   # YAML is a superset of JSON (or was it the other way around?) after v1.2.
   testToYAML = {
     expr = self.trivial.toYAML { } { hello = "there"; };
-    expected = "{\"hello\":\"there\"}";
+    expected = ''{"hello":"there"}'';
   };
 
   testNumberClamp = {
@@ -231,32 +232,62 @@ lib.runTests {
   };
 
   testNumberScale = {
-    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 15;
+    expr = self.trivial.scale {
+      inMin = 0;
+      inMax = 15;
+      outMin = 0;
+      outMax = 255;
+    } 15;
     expected = 255;
   };
 
   testNumberScale2 = {
-    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 4;
+    expr = self.trivial.scale {
+      inMin = 0;
+      inMax = 15;
+      outMin = 0;
+      outMax = 255;
+    } 4;
     expected = 68;
   };
 
   testNumberScale3 = {
-    expr = self.trivial.scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } (-4);
+    expr = self.trivial.scale {
+      inMin = 0;
+      inMax = 15;
+      outMin = 0;
+      outMax = 255;
+    } (-4);
     expected = (-68);
   };
 
   testNumberScaleFloat = {
-    expr = self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 255;
+    expr = self.trivial.scale {
+      inMin = 0;
+      inMax = 255;
+      outMin = 0.0;
+      outMax = 1.0;
+    } 255;
     expected = 1.0;
   };
 
   testNumberScaleFloat2 = {
-    expr = self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 127.5;
+    expr = self.trivial.scale {
+      inMin = 0;
+      inMax = 255;
+      outMin = 0.0;
+      outMax = 1.0;
+    } 127.5;
     expected = 0.5;
   };
 
   testNumberScaleFloat3 = {
-    expr = round' (self.trivial.scale { inMin = 0; inMax = 255; outMin = 0.0; outMax = 1.0; } 53);
+    expr = round' (self.trivial.scale {
+      inMin = 0;
+      inMax = 255;
+      outMin = 0.0;
+      outMax = 1.0;
+    } 53);
     expected = round' 0.207843;
   };
 

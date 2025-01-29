@@ -9,10 +9,8 @@ let
       maxDigitLength = lib.lists.length (lib.toBaseDigits 10 i);
       mkBaseAttr = hex: "base${self.hex.pad maxDigitLength hex}";
       schemeNames = builtins.map mkBaseAttr (self.hex.range 0 (i - 1));
-    in
-    (lib.count (name: lib.elem name schemeNames) paletteNames) == i;
-in
-rec {
+    in (lib.count (name: lib.elem name schemeNames) paletteNames) == i;
+in rec {
   /* Imports a Base16 scheme. This also handles converting the legacy Base16
      schema into the new one if it's detected. Take note, every single token
      that is not part of the legacy proper is assumed to be part of the
@@ -40,14 +38,10 @@ rec {
        }
   */
   importScheme = yamlpath:
-    let
-      scheme = self.importYAML yamlpath;
-    in
-    assert lib.assertMsg (isValidScheme scheme || isLegacyScheme scheme)
+    let scheme = self.importYAML yamlpath;
+    in assert lib.assertMsg (isValidScheme scheme || isLegacyScheme scheme)
       "bahaghariLib.tinted-theming.importScheme: Given data is not a valid Tinted Theming scheme";
-    if isLegacyScheme scheme
-    then modernizeLegacyScheme scheme
-    else scheme;
+    if isLegacyScheme scheme then modernizeLegacyScheme scheme else scheme;
 
   # TODO: Return a Nix object to generate a Tinted Theming color scheme from an
   # image.
@@ -94,8 +88,7 @@ rec {
        isValidScheme (bahaghariLib.tinted-theming.importScheme ./base16.yml)
        => true
   */
-  isValidScheme = scheme:
-    scheme?palette && scheme?author && scheme?name;
+  isValidScheme = scheme: scheme ? palette && scheme ? author && scheme ? name;
 
   /* Checks if the given scheme is in the deprecated Base16 legacy schema.
 
@@ -108,8 +101,7 @@ rec {
        isLegacyBase16 (bahaghariLib.tinted-theming.importScheme ./modern-base16-scheme.yml)
        => false
   */
-  isLegacyScheme = scheme:
-    scheme?scheme && scheme?author;
+  isLegacyScheme = scheme: scheme ? scheme && scheme ? author;
 
   /* Given a legacy BaseX scheme, update the scheme into the current iteration
      of the Tinted Theming scheme format.
@@ -129,22 +121,21 @@ rec {
   */
   modernizeLegacyScheme = scheme:
     let
-      system =
-        if isBase24 scheme
-        then "base24"
-        else if isBase16 scheme
-        then "base16"
-        else null;
+      system = if isBase24 scheme then
+        "base24"
+      else if isBase16 scheme then
+        "base16"
+      else
+        null;
 
       palette =
         lib.attrsets.removeAttrs scheme [ "author" "description" "scheme" ];
-    in
-    {
+    in {
       inherit (scheme) author;
       inherit palette;
 
       name = scheme.scheme;
-    }
-    // lib.optionalAttrs (scheme?description) { inherit (scheme) description; }
-    // lib.optionalAttrs (system != null) { inherit system; };
+    } // lib.optionalAttrs (scheme ? description) {
+      inherit (scheme) description;
+    } // lib.optionalAttrs (system != null) { inherit system; };
 }

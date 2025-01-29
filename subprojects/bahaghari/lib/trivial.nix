@@ -3,201 +3,193 @@
 rec {
   inherit (pkgs.lib.generators) toYAML;
 
-  /**
-    Read YAML files into a Nix expression similar to lib.importJSON and
-    lib.importTOML from nixpkgs standard library. Unlike both of them, this
-    unfortunately relies on an import-from-derivation (IFD) so it isn't exactly
-    perfect but it is very close.
+  /* *
+     Read YAML files into a Nix expression similar to lib.importJSON and
+     lib.importTOML from nixpkgs standard library. Unlike both of them, this
+     unfortunately relies on an import-from-derivation (IFD) so it isn't exactly
+     perfect but it is very close.
 
-    This relies on yaml2json which uses the following YAML library which you
-    can view the following link for more details on YAML compatibility.
+     This relies on yaml2json which uses the following YAML library which you
+     can view the following link for more details on YAML compatibility.
 
-    https://pkg.go.dev/gopkg.in/yaml.v3#readme-compatibility
+     https://pkg.go.dev/gopkg.in/yaml.v3#readme-compatibility
 
-    # Arguments
+     # Arguments
 
-    file
-    : The filepath of the YAML file.
+     file
+     : The filepath of the YAML file.
 
-    # Type
+     # Type
 
-    ```
-    importYAML :: Path -> any
-    ```
+     ```
+     importYAML :: Path -> any
+     ```
 
-    # Example
+     # Example
 
-    ```
-    importYAML ./simple.yml
-    =>
-    {
-      hello = "there";
-      how-are-you-doing = "I'm fine. Thank you for asking.";
-    }
-    ```
+     ```
+     importYAML ./simple.yml
+     =>
+     {
+       hello = "there";
+       how-are-you-doing = "I'm fine. Thank you for asking.";
+     }
+     ```
   */
   importYAML = path:
     let
       dataDrv = pkgs.runCommand "convert-yaml-to-json" { } ''
         ${lib.getExe' pkgs.yaml2json "yaml2json"} < "${path}" > "$out"
       '';
-    in
-    lib.importJSON dataDrv;
+    in lib.importJSON dataDrv;
 
-  /**
-    Convert a given decimal number to a specified base digit with the set of
-    glyphs for each digit as returned from lib.toBaseDigits.
+  /* *
+     Convert a given decimal number to a specified base digit with the set of
+     glyphs for each digit as returned from lib.toBaseDigits.
 
-    # Arguments
+     # Arguments
 
-    base
-    : The base index.
+     base
+     : The base index.
 
-    glyphs
-    : An attribute set of decimal values and their glyphs.
+     glyphs
+     : An attribute set of decimal values and their glyphs.
 
-    i
-    : The actual integer to be converted.
+     i
+     : The actual integer to be converted.
 
-    # Type
+     # Type
 
-    ```
-    toBaseDigitWithGlyphs :: Int -> Int -> Attrs -> String
-    ```
+     ```
+     toBaseDigitWithGlyphs :: Int -> Int -> Attrs -> String
+     ```
 
-    # Example
+     # Example
 
-    ```
-    toBaseDigitWithGlyphs 24 267 {
-       "0" = "0";
-       "1" = "1";
-       "2" = "2";
-       # ...
-       "22" = "M";
-       "23" = "N";
-     }
-    =>
-    "12H"
+     ```
+     toBaseDigitWithGlyphs 24 267 {
+        "0" = "0";
+        "1" = "1";
+        "2" = "2";
+        # ...
+        "22" = "M";
+        "23" = "N";
+      }
+     =>
+     "12H"
 
-    toBaseDigitWithGlyphs 
-    ```
+     toBaseDigitWithGlyphs
+     ```
   */
   toBaseDigitsWithGlyphs = base: glyphs: i:
     let
       baseDigits = lib.toBaseDigits base i;
       toBaseDigits = d: glyphs.${builtins.toString d};
-    in
-    lib.concatMapStrings toBaseDigits baseDigits;
+    in lib.concatMapStrings toBaseDigits baseDigits;
 
-  /**
-    Generates a glyph set usable for `toBaseDigitsWithGlyphs`. Take note the
-    given list is assumed to be sorted and the generated glyph set starts at
-    `0` up to (`listLength - 1`).
+  /* *
+     Generates a glyph set usable for `toBaseDigitsWithGlyphs`. Take note the
+     given list is assumed to be sorted and the generated glyph set starts at
+     `0` up to (`listLength - 1`).
 
-    # Arguments
+     # Arguments
 
-    glyphsList
-    : A sorted list of glyphs.
+     glyphsList
+     : A sorted list of glyphs.
 
-    # Type
+     # Type
 
-    ```
-    generateGlyphSet :: [ String ] -> Attrs
-    ```
+     ```
+     generateGlyphSet :: [ String ] -> Attrs
+     ```
 
-    # Example
+     # Example
 
-    ```
-    generateGlyphSet [ "0" "1" "2" "3" "4" "5" "6" "7" "8 "9" "A" "B" "C" "D" "E" "F" ]
-    =>
-    {
-      "0" = "0";
-      "1" = "1";
-      # ...
-      "14" = "E";
-      "15" = "F";
-    }
-    ```
+     ```
+     generateGlyphSet [ "0" "1" "2" "3" "4" "5" "6" "7" "8 "9" "A" "B" "C" "D" "E" "F" ]
+     =>
+     {
+       "0" = "0";
+       "1" = "1";
+       # ...
+       "14" = "E";
+       "15" = "F";
+     }
+     ```
   */
   generateGlyphSet = glyphsList:
     let
-      glyphsList' =
-        lib.lists.imap0
-          (i: glyph: lib.nameValuePair (builtins.toString i) glyph)
-          glyphsList;
-    in
-    lib.listToAttrs glyphsList';
+      glyphsList' = lib.lists.imap0
+        (i: glyph: lib.nameValuePair (builtins.toString i) glyph) glyphsList;
+    in lib.listToAttrs glyphsList';
 
-  /**
-    Generates a conversion table for a sorted list of glyphs to its decimal
-    number. Suitable for creating your own conversion function. Accepts the
-    same argument as `generateGlyphSet`.
+  /* *
+     Generates a conversion table for a sorted list of glyphs to its decimal
+     number. Suitable for creating your own conversion function. Accepts the
+     same argument as `generateGlyphSet`.
 
-    # Arguments
+     # Arguments
 
-    glyphsList
-    : A sorted list of glyphs.
+     glyphsList
+     : A sorted list of glyphs.
 
-    # Type
+     # Type
 
-    ```
-    generateConversionTable :: [ String ] -> Attrs
-    ```
+     ```
+     generateConversionTable :: [ String ] -> Attrs
+     ```
 
-    # Example
+     # Example
 
-    ```
-    generateConversionTable [ "0" "1" "2" "3" "4" "5" "6" "7" "8 "9" "A" "B" "C" "D" "E" "F" ]
-    =>
-    {
-      "0" = 0;
-      "1" = 1;
-      # ...
-      "E" = 14;
-      "F" = 15;
-    }
-    ```
+     ```
+     generateConversionTable [ "0" "1" "2" "3" "4" "5" "6" "7" "8 "9" "A" "B" "C" "D" "E" "F" ]
+     =>
+     {
+       "0" = 0;
+       "1" = 1;
+       # ...
+       "E" = 14;
+       "F" = 15;
+     }
+     ```
   */
   generateConversionTable = glyphsList:
     let
       glyphsList' =
-        lib.lists.imap0
-          (i: glyph: lib.nameValuePair glyph i)
-          glyphsList;
-    in
-    lib.listToAttrs glyphsList';
+        lib.lists.imap0 (i: glyph: lib.nameValuePair glyph i) glyphsList;
+    in lib.listToAttrs glyphsList';
 
-  /**
-    A factory function for generating an attribute set containing a glyph
-    set, a conversion table, and a conversion function to and from decimal.
-    Accepts the same list as `generateGlyphSet` and
-    `generateConversionTable` where it assumes it is sorted and
-    zero-indexed.
+  /* *
+     A factory function for generating an attribute set containing a glyph
+     set, a conversion table, and a conversion function to and from decimal.
+     Accepts the same list as `generateGlyphSet` and
+     `generateConversionTable` where it assumes it is sorted and
+     zero-indexed.
 
-    # Arguments
+     # Arguments
 
-    glyphsList
-    : A sorted list of glyphs.
+     glyphsList
+     : A sorted list of glyphs.
 
-    # Type
+     # Type
 
-    ```
-    generateBaseDigitType :: [ String ] -> Attrs
-    ```
+     ```
+     generateBaseDigitType :: [ String ] -> Attrs
+     ```
 
-    # Example
+     # Example
 
-    ```
-    generateBaseDigitType [ "0" "1" ]
-    =>
-    {
-      base = 2;
-      glyphSet = { "0" = "0"; "1" = "1"; };
-      conversionTable = { "0" = 0; "1" = 1; };
-      fromDec = <function>;
-      toDec = <function>;
-    }
-    ```
+     ```
+     generateBaseDigitType [ "0" "1" ]
+     =>
+     {
+       base = 2;
+       glyphSet = { "0" = "0"; "1" = "1"; };
+       conversionTable = { "0" = 0; "1" = 1; };
+       fromDec = <function>;
+       toDec = <function>;
+     }
+     ```
   */
   generateBaseDigitType = glyphsList: rec {
     base = lib.length glyphsList;
@@ -210,193 +202,185 @@ rec {
     # generation that typically uses hexadecimal (RGB). Plus I don't want to
     # open a can of worms about implementing this with stringy types.
     fromDec = decimal:
-      let
-        digits = lib.toBaseDigits base decimal;
-      in
-      lib.concatMapStrings (d: glyphSet.${builtins.toString d}) digits;
+      let digits = lib.toBaseDigits base decimal;
+      in lib.concatMapStrings (d: glyphSet.${builtins.toString d}) digits;
 
     toDec = digit:
       let
         chars = lib.stringToCharacters digit;
         maxDigits = (lib.length chars) - 1;
-        convertDigitToDec =
-          lib.lists.imap0 (i: v: conversionTable.${v} * (self.math.pow base (maxDigits - i))) chars;
-      in
-      lib.foldl (sum: v: sum + v) 0 convertDigitToDec;
+        convertDigitToDec = lib.lists.imap0
+          (i: v: conversionTable.${v} * (self.math.pow base (maxDigits - i)))
+          chars;
+      in lib.foldl (sum: v: sum + v) 0 convertDigitToDec;
   };
 
-  /**
-    Given a range of two numbers, ensure the value is only returned within the
-    range.
+  /* *
+     Given a range of two numbers, ensure the value is only returned within the
+     range.
 
-    # Arguments
+     # Arguments
 
-    min
-    : Minimum number of the range.
+     min
+     : Minimum number of the range.
 
-    max
-    : Maximum number of the range.
+     max
+     : Maximum number of the range.
 
-    value
-    : Number to be used for the function.
+     value
+     : Number to be used for the function.
 
-    # Type
+     # Type
 
-    ```
-    clamp :: Number -> Number -> Number -> Number
-    ```
+     ```
+     clamp :: Number -> Number -> Number -> Number
+     ```
 
-    # Example
+     # Example
 
-    ```
-    clamp 0 255 654
-    =>
-    255
+     ```
+     clamp 0 255 654
+     =>
+     255
 
-    clamp (-100) 100 (-234)
-    =>
-    -100
+     clamp (-100) 100 (-234)
+     =>
+     -100
 
-    clamp (-100) 100 54
-    =>
-    54
-    ```
+     clamp (-100) 100 54
+     =>
+     54
+     ```
   */
-  clamp = min: max: value:
-    lib.min max (lib.max min value);
+  clamp = min: max: value: lib.min max (lib.max min value);
 
-  /**
-    Given a value, check if it's a number type.
+  /* *
+     Given a value, check if it's a number type.
 
-    # Arguments
+     # Arguments
 
-    value
-    : Numerical value.
+     value
+     : Numerical value.
 
-    # Type
+     # Type
 
-    ```
-    isNumber :: Number -> bool
-    ```
+     ```
+     isNumber :: Number -> bool
+     ```
 
-    # Example:
+     # Example:
 
-    ```
-    isNumber 3.0
-    =>
-    true
+     ```
+     isNumber 3.0
+     =>
+     true
 
-    isNumber 653
-    =>
-    true
+     isNumber 653
+     =>
+     true
 
-    isNumber true
-    =>
-    false
-    ```
+     isNumber true
+     =>
+     false
+     ```
   */
-  isNumber = v:
-    lib.isInt v || lib.isFloat v;
+  isNumber = v: lib.isInt v || lib.isFloat v;
 
-  /**
-    Given a Nix number, force it to be a floating value.
+  /* *
+     Given a Nix number, force it to be a floating value.
 
-    # Arguments
+     # Arguments
 
-    value
-    : The numerical value.
+     value
+     : The numerical value.
 
-    # Type
+     # Type
 
-    ```
-    toFloat :: Number -> Float
-    ```
+     ```
+     toFloat :: Number -> Float
+     ```
 
-    # Example
+     # Example
 
-    ```
-    toFloat 5
-    =>
-    5.0
+     ```
+     toFloat 5
+     =>
+     5.0
 
-    toFloat 59.0
-    =>
-    59.0
-    ```
+     toFloat 59.0
+     =>
+     59.0
+     ```
   */
-  toFloat = x:
-    1.0 * x;
+  toFloat = x: 1.0 * x;
 
-  /**
-    Given an initial range of integers, scale the given number with its own
-    set of range.
+  /* *
+     Given an initial range of integers, scale the given number with its own
+     set of range.
 
-    # Arguments
+     # Arguments
 
-    rangeSet
-    : An attribute set containing the following attributes: `inMin` and `inMax`
-    for specifying the input's expected range and `outMin` and `outMax` for the
-    output's.
+     rangeSet
+     : An attribute set containing the following attributes: `inMin` and `inMax`
+     for specifying the input's expected range and `outMin` and `outMax` for the
+     output's.
 
-    value
-    : The numerical value.
+     value
+     : The numerical value.
 
-    # Type
+     # Type
 
-    ```
-    scale :: Attrs -> Number -> Number
-    ```
+     ```
+     scale :: Attrs -> Number -> Number
+     ```
 
-    # Example
+     # Example
 
-    ```
-    scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 4
-    =>
-    68
+     ```
+     scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 4
+     =>
+     68
 
-    scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } (-4)
-    =>
-    -68
+     scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } (-4)
+     =>
+     -68
 
-    scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 15
-    =>
-    255
-    ```
+     scale { inMin = 0; inMax = 15; outMin = 0; outMax = 255; } 15
+     =>
+     255
+     ```
   */
-  scale = { inMin, inMax, outMin, outMax }: v:
+  scale = { inMin, inMax, outMin, outMax }:
+    v:
     ((v - inMin) * (outMax - outMin)) / ((inMax - inMin) + outMin);
 
-  /**
-    Returns a null value if the condition fails. Otherwise, returns the given
-    value `as`.
+  /* *
+     Returns a null value if the condition fails. Otherwise, returns the given
+     value `as`.
 
-    # Arguments
+     # Arguments
 
-    cond
-    : Condition that should evaluate as a boolean.
+     cond
+     : Condition that should evaluate as a boolean.
 
-    as
-    : Value to be returned if condition returns true.
+     as
+     : Value to be returned if condition returns true.
 
-    # Type
+     # Type
 
-    ```
-    optionalNull :: Bool -> Any -> Any
-    ```
+     ```
+     optionalNull :: Bool -> Any -> Any
+     ```
 
-    # Example
+     # Example
 
-    ```
-    optionalNull true "HELLO"
-    => "HELLO"
+     ```
+     optionalNull true "HELLO"
+     => "HELLO"
 
-    optionalNull (null != null) "HELLO"
-    => null
-    ```
+     optionalNull (null != null) "HELLO"
+     => null
+     ```
   */
-  optionalNull = cond: as:
-    if cond then
-      as
-    else
-      null;
+  optionalNull = cond: as: if cond then as else null;
 }

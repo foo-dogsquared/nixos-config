@@ -3,7 +3,7 @@
 # npins sources in here.
 #
 # This is just kept for future compatiblity in case we require pkgs or something.
-{}:
+{ }:
 
 {
   nixosModules = rec {

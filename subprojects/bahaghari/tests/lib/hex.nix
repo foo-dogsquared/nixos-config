@@ -58,7 +58,8 @@ lib.runTests {
 
   testCreateHexRange2 = {
     expr = self.hex.range 64 76;
-    expected = [ "40" "41" "42" "43" "44" "45" "46" "47" "48" "49" "4A" "4B" "4C" ];
+    expected =
+      [ "40" "41" "42" "43" "44" "45" "46" "47" "48" "49" "4A" "4B" "4C" ];
   };
 
   testCreateHexWithHigherStart = {

@@ -1,12 +1,15 @@
 { pkgs, lib, self }:
 
 let
-  sampleBase16Scheme = self.tinted-theming.importScheme ./sample-base16-scheme.yml;
-  sampleBase16Scheme' = self.tinted-theming.importScheme ./sample-base16-scheme-with-missing-colors.yml;
-  sampleBase24Scheme = self.tinted-theming.importScheme ./sample-base24-scheme.yml;
-  sampleBase24Scheme' = self.tinted-theming.importScheme ./sample-base24-scheme-with-missing-colors.yml;
-in
-lib.runTests {
+  sampleBase16Scheme =
+    self.tinted-theming.importScheme ./sample-base16-scheme.yml;
+  sampleBase16Scheme' = self.tinted-theming.importScheme
+    ./sample-base16-scheme-with-missing-colors.yml;
+  sampleBase24Scheme =
+    self.tinted-theming.importScheme ./sample-base24-scheme.yml;
+  sampleBase24Scheme' = self.tinted-theming.importScheme
+    ./sample-base24-scheme-with-missing-colors.yml;
+in lib.runTests {
   testTintedThemingSchemeImport = {
     expr = self.tinted-theming.importScheme ./sample-base16-scheme.yml;
     expected = {
@@ -121,12 +124,14 @@ lib.runTests {
   };
 
   testIsALegacyBase16Scheme = {
-    expr = self.tinted-theming.isLegacyScheme (self.importYAML ./sample-legacy-base16.yml);
+    expr = self.tinted-theming.isLegacyScheme
+      (self.importYAML ./sample-legacy-base16.yml);
     expected = true;
   };
 
   testIsALegacyBase24Scheme = {
-    expr = self.tinted-theming.isLegacyScheme (self.importYAML ./sample-legacy-base24.yml);
+    expr = self.tinted-theming.isLegacyScheme
+      (self.importYAML ./sample-legacy-base24.yml);
     expected = true;
   };
 }

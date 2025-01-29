@@ -2,10 +2,6 @@
 # library anyways. This set is mostly copied over from nixpkgs' way of doing
 # things.
 #
-# Take note the `lib` attribute throughout all of the library files are
-# referring to the Bahaghari library set. We mostly rely on `pkgs.lib` as an
-# easy way to identify if we use nixpkgs' standard library.
-#
 # As a design constraint, since this is expected to be evaluated modularly, we
 # cannot have functions that is expected to be used in `imports` module
 # attribute such as functions generating a nixpkgs module. Otherwise, we'll
@@ -14,18 +10,25 @@
 # words, this is a strict utility library that is fully usable outside of
 # nixpkgs module system which is a happy accident. Hoorah for me?
 #
+# As an additional (and obvious) design constraint, we'll start testing these
+# against the Nix and nixpkgs version found on the stable release of NixOS.
+# Meaning this library should not rely on additional Nix plugins and only with
+# the upstream configuration.
+#
 # And another thing, keep the `pkgs` usage down to a minimum and select the
 # most oft-used packages as much as possible. We want Bahaghari to be a good
 # citizen of the Nix ecosystem after all and as a result, we have happy users
 # and happy dev running in a rainbow la-la land.
 { pkgs }:
 
-pkgs.lib.makeExtensible
-  (self:
+pkgs.lib.makeExtensible (self:
   let
-    callLibs = file: import file { inherit (pkgs) lib; inherit pkgs self; };
-  in
-  {
+    callLibs = file:
+      import file {
+        inherit (pkgs) lib;
+        inherit pkgs self;
+      };
+  in {
     trivial = callLibs ./trivial.nix;
     hex = callLibs ./hex.nix;
     math = callLibs ./math.nix;
@@ -44,11 +47,13 @@ pkgs.lib.makeExtensible
     # the namespace.
     tinted-theming = callLibs ./tinted-theming.nix;
 
-    inherit (self.trivial) importYAML toYAML toBaseDigitsWithGlyphs
-      generateGlyphSet generateConversionTable generateBaseDigitType clamp
-      isNumber scale optionalNull toFloat;
+    inherit (self.trivial)
+      importYAML toYAML toBaseDigitsWithGlyphs generateGlyphSet
+      generateConversionTable generateBaseDigitType clamp isNumber scale
+      optionalNull toFloat;
 
     inherit (self.hex) isHexString;
-    inherit (self.math) abs pow percentage factorial floor ceil round round'
-      summate product sqrt remainder mod radiansToDegrees degreesToRadians;
+    inherit (self.math)
+      abs pow percentage factorial floor ceil round round' summate product sqrt
+      remainder mod radiansToDegrees degreesToRadians;
   })
