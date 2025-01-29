@@ -20,15 +20,8 @@
       tmux configuration where it can be used inside of a TTY or something like
       that.
     '';
-    example = [
-      "a-happy-gnome"
-      "knome"
-      "horizontal-hunger"
-    ];
+    example = [ "a-happy-gnome" "knome" "horizontal-hunger" ];
   };
 
-  imports = [
-    ./a-happy-gnome
-    ./knome
-  ];
+  imports = [ ./a-happy-gnome ./knome ];
 }

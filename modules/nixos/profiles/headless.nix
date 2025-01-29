@@ -4,9 +4,7 @@
 { lib, modulesPath, ... }:
 
 {
-  imports = [
-    "${modulesPath}/profiles/headless.nix"
-  ];
+  imports = [ "${modulesPath}/profiles/headless.nix" ];
 
   # Bluetooth is so 2000s, my wireless earbuds are scratching all to hell.
   hardware.bluetooth.enable = lib.mkDefault false;

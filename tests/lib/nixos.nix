@@ -1,11 +1,7 @@
 { pkgs, lib, self }:
 
-let
-  testConfig = {
-    formatAttr = "isoImage";
-  };
-in
-lib.runTests {
+let testConfig = { formatAttr = "isoImage"; };
+in lib.runTests {
   testNixSystemHasFormat = {
     expr = self.nixos.hasNixosFormat testConfig;
     expected = true;

@@ -6,10 +6,8 @@
     archivePath = "${config.xdg.userDirs.documents}/ArchiveBox";
 
     jobs.art = {
-      links = [
-        "https://www.davidrevoy.com/"
-        "https://www.youtube.com/c/ronillust"
-      ];
+      links =
+        [ "https://www.davidrevoy.com/" "https://www.youtube.com/c/ronillust" ];
       startAt = "weekly";
     };
 

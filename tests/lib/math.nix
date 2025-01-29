@@ -1,6 +1,5 @@
 { pkgs, lib, self }:
 
-
 lib.runTests {
   testMathAbsoluteValue = {
     expr = self.math.abs 5493;

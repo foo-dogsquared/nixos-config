@@ -30,14 +30,12 @@ let
     let
       # Converts each of the highlight group into a function to be able parsed and
       # used by Lush.
-      highlightList =
-        lib.mapAttrsToList
-          (highlight: arguments: "${highlight}(${helpers.toLuaObject arguments})")
-          theme.highlights;
-    in
-    # This is based from rktjmp/lush-template. We'll improve on things from
+      highlightList = lib.mapAttrsToList
+        (highlight: arguments: "${highlight}(${helpers.toLuaObject arguments})")
+        theme.highlights;
+      # This is based from rktjmp/lush-template. We'll improve on things from
       # here whenever necessary.
-    lib.nameValuePair "colors/${name}.lua" {
+    in lib.nameValuePair "colors/${name}.lua" {
       text = ''
         ${cfg.extraConfigLua}
         ${theme.extraConfigLua}
@@ -58,8 +56,7 @@ let
         lush(spec)
       '';
     };
-in
-{
+in {
   options.colorschemes.lush = {
     enable = lib.mkEnableOption "theming with lush.nvim";
 
@@ -107,7 +104,6 @@ in
   config = lib.mkIf cfg.enable {
     extraPlugins = [ cfg.package ];
 
-    extraFiles =
-      lib.mapAttrs' mkLushColorSchemes cfg.themes;
+    extraFiles = lib.mapAttrs' mkLushColorSchemes cfg.themes;
   };
 }

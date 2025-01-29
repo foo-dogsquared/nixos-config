@@ -8,17 +8,18 @@
 # the filesystems' respective manual pages.
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.suites.filesystem;
-in
-{
+let cfg = config.suites.filesystem;
+in {
   options.suites.filesystem = {
     tools.enable = lib.mkEnableOption "filesystem-related settings";
     setups = {
       archive.enable = lib.mkEnableOption "automounting offline archive";
-      external-hdd.enable = lib.mkEnableOption "automounting personal external hard drive";
-      personal-webstorage.enable = lib.mkEnableOption "automounting of personal WebDAV directory";
-      laptop-ssd.enable = lib.mkEnableOption "automounting a leftover laptop SSD";
+      external-hdd.enable =
+        lib.mkEnableOption "automounting personal external hard drive";
+      personal-webstorage.enable =
+        lib.mkEnableOption "automounting of personal WebDAV directory";
+      laptop-ssd.enable =
+        lib.mkEnableOption "automounting a leftover laptop SSD";
     };
   };
 
@@ -28,10 +29,7 @@ in
       services.davfs2.enable = true;
 
       # Installing filesystem debugging utilities.
-      environment.systemPackages = with pkgs; [
-        afuse
-        ntfs3g
-      ];
+      environment.systemPackages = with pkgs; [ afuse ntfs3g ];
     })
 
     (lib.mkIf cfg.setups.archive.enable {
@@ -63,7 +61,8 @@ in
       state.paths.external-hdd = "/media/external-storage";
 
       fileSystems."${config.state.paths.external-hdd}" = {
-        device = lib.mkDefault "/dev/disk/by-partlabel/disk-live-installer-root";
+        device =
+          lib.mkDefault "/dev/disk/by-partlabel/disk-live-installer-root";
         fsType = "btrfs";
         noCheck = true;
         options = lib.mkDefault [

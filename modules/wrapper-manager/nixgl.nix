@@ -4,12 +4,9 @@ let
   cfg = config.nixgl;
 
   nixgl = variant: src:
-    let
-      nixgl = import src { inherit pkgs; };
-    in
-      lib.getAttrFromPath variant nixgl;
-in
-{
+    let nixgl = import src { inherit pkgs; };
+    in lib.getAttrFromPath variant nixgl;
+in {
   options.nixgl = {
     enableAll = lib.mkEnableOption "wrapping all wrappers with NixGL";
 
@@ -64,27 +61,22 @@ in
     };
   };
 
-  options.wrappers =
-    let
-      nixglWrapperModule = { config, lib, name, ... }: let
-        submoduleCfg = config.nixgl;
+  options.wrappers = let
+    nixglWrapperModule = { config, lib, name, ... }:
+      let submoduleCfg = config.nixgl;
       in {
         options.nixgl = {
           enable = lib.mkEnableOption "wrapping NixGL for this wrapper" // {
             default = cfg.enableAll;
           };
 
-          src = options.nixgl.src // {
-            default = cfg.src;
-          };
+          src = options.nixgl.src // { default = cfg.src; };
 
           executable = options.nixgl.executable // {
             default = lib.getExe (nixgl config.nixgl.variant config.nixgl.src);
           };
 
-          variant = options.nixgl.variant // {
-            default = cfg.variant;
-          };
+          variant = options.nixgl.variant // { default = cfg.variant; };
 
           wraparound = {
             arg0 = lib.mkOption {
@@ -113,15 +105,15 @@ in
         };
 
         config = lib.mkIf config.nixgl.enable {
-          arg0 =
-            if submoduleCfg.executable == null
-            then lib.getExe (nixgl config.nixgl.variant config.nixgl.src)
-            else submoduleCfg.executable;
-          prependArgs = lib.mkBefore ([ submoduleCfg.wraparound.arg0 ] ++ submoduleCfg.wraparound.extraArgs);
+          arg0 = if submoduleCfg.executable == null then
+            lib.getExe (nixgl config.nixgl.variant config.nixgl.src)
+          else
+            submoduleCfg.executable;
+          prependArgs = lib.mkBefore ([ submoduleCfg.wraparound.arg0 ]
+            ++ submoduleCfg.wraparound.extraArgs);
         };
       };
-    in
-    lib.mkOption {
-      type = lib.types.attrsOf (lib.types.submodule nixglWrapperModule);
-    };
+  in lib.mkOption {
+    type = lib.types.attrsOf (lib.types.submodule nixglWrapperModule);
+  };
 }

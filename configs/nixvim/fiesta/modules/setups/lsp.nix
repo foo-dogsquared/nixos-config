@@ -3,30 +3,26 @@
 let
   nixvimConfig = config.nixvimConfigs.fiesta;
   cfg = nixvimConfig.setups.lsp;
-in
-{
-  options.nixvimConfigs.fiesta.setups.lsp.enable =
-    lib.mkEnableOption null // {
-      description = ''
-        Whether to enable LSP setup. Take note you'll have to enable and
-        configure individual language servers yourself since the resulting
-        NixVim config can be pretty heavy.
-      '';
-    };
+in {
+  options.nixvimConfigs.fiesta.setups.lsp.enable = lib.mkEnableOption null // {
+    description = ''
+      Whether to enable LSP setup. Take note you'll have to enable and
+      configure individual language servers yourself since the resulting
+      NixVim config can be pretty heavy.
+    '';
+  };
 
   config = lib.mkIf cfg.enable {
-    keymaps = [
-      {
-        mode = [ "n" ];
-        key = "<leader>Li";
-        options.desc = "Toggle inlay hints";
-        action = helpers.mkRaw ''
-          function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-          end
-        '';
-      }
-    ];
+    keymaps = [{
+      mode = [ "n" ];
+      key = "<leader>Li";
+      options.desc = "Toggle inlay hints";
+      action = helpers.mkRaw ''
+        function()
+          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        end
+      '';
+    }];
 
     plugins.lsp = {
       enable = true;

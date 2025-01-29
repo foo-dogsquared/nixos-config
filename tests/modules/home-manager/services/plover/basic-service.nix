@@ -5,13 +5,9 @@
     enable = true;
     package = pkgs.plover-dev;
     settings = {
-      "Output Configuration" = {
-        undo_levels = 100;
-      };
+      "Output Configuration" = { undo_levels = 100; };
 
-      "Stroke Display" = {
-        show = true;
-      };
+      "Stroke Display" = { show = true; };
     };
   };
 

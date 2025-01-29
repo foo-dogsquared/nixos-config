@@ -1,3 +1,1 @@
-{
-  matcha-basic = ./basic.nix;
-}
+{ matcha-basic = ./basic.nix; }

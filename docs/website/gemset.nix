@@ -10,7 +10,12 @@
     version = "2.0.20";
   };
   asciidoctor-diagram = {
-    dependencies = [ "asciidoctor" "asciidoctor-diagram-ditaamini" "asciidoctor-diagram-plantuml" "rexml" ];
+    dependencies = [
+      "asciidoctor"
+      "asciidoctor-diagram-ditaamini"
+      "asciidoctor-diagram-plantuml"
+      "rexml"
+    ];
     groups = [ "default" ];
     platforms = [ ];
     source = {
@@ -193,7 +198,18 @@
     version = "4.1.2";
   };
   rubocop = {
-    dependencies = [ "json" "language_server-protocol" "parallel" "parser" "rainbow" "regexp_parser" "rexml" "rubocop-ast" "ruby-progressbar" "unicode-display_width" ];
+    dependencies = [
+      "json"
+      "language_server-protocol"
+      "parallel"
+      "parser"
+      "rainbow"
+      "regexp_parser"
+      "rexml"
+      "rubocop-ast"
+      "ruby-progressbar"
+      "unicode-display_width"
+    ];
     groups = [ "lint" ];
     platforms = [ ];
     source = {
@@ -215,7 +231,8 @@
     version = "1.29.0";
   };
   ruby-lsp = {
-    dependencies = [ "language_server-protocol" "sorbet-runtime" "syntax_tree" ];
+    dependencies =
+      [ "language_server-protocol" "sorbet-runtime" "syntax_tree" ];
     groups = [ "development" ];
     platforms = [ ];
     source = {

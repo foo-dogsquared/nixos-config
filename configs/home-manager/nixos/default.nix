@@ -24,13 +24,7 @@
   programs.bash = {
     enable = true;
     historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
-    historyIgnore = [
-      "cd"
-      "exit"
-      "lf"
-      "ls"
-      "nvim"
-    ];
+    historyIgnore = [ "cd" "exit" "lf" "ls" "nvim" ];
   };
 
   home.stateVersion = "23.11";

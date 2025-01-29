@@ -1,3 +1,1 @@
-{
-  basic = ./basic.nix;
-}
+{ basic = ./basic.nix; }

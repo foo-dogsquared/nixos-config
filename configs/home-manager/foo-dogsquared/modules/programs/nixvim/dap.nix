@@ -11,9 +11,7 @@
       args = [ "-i" "dap" ];
     };
 
-    lldb = {
-      command = "lldb-dap";
-    };
+    lldb = { command = "lldb-dap"; };
 
     dart = {
       command = "dart";

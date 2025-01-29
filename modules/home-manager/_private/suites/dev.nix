@@ -5,25 +5,23 @@
 let cfg = config.suites.dev;
 in {
   options.suites.dev = {
-    enable =
-      lib.mkEnableOption "basic set of programs for development setup";
-    shell.enable =
-      lib.mkEnableOption "enhanced shell configuration";
+    enable = lib.mkEnableOption "basic set of programs for development setup";
+    shell.enable = lib.mkEnableOption "enhanced shell configuration";
     extras.enable = lib.mkEnableOption "additional tools for development stuff";
     shaders.enable = lib.mkEnableOption "tools for developing shaders";
-    servers.enable = lib.mkEnableOption "toolkit for managing servers from your home";
-    funsies.enable = lib.mkEnableOption "installation of command-line applications for funsies";
-    coreutils-replacement.enable = lib.mkEnableOption "replacement of coreutils with sane default options";
+    servers.enable =
+      lib.mkEnableOption "toolkit for managing servers from your home";
+    funsies.enable = lib.mkEnableOption
+      "installation of command-line applications for funsies";
+    coreutils-replacement.enable =
+      lib.mkEnableOption "replacement of coreutils with sane default options";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     ({
       # Contains a dev-adjacent list of directory names to be ignored usually
       # used in walking through directories.
-      state.paths.ignoreDirectories = [
-        ".git"
-        ".direnv"
-      ];
+      state.paths.ignoreDirectories = [ ".git" ".direnv" ];
 
       home.packages = with pkgs; [
         cookiecutter # Cookiecutter templates for your mama (which is you).
@@ -93,26 +91,21 @@ in {
 
       # Echolocation. Since you're using a home-manager configuration, you're
       # most likely using Nix anyways.
-      programs.nix-index.enable = !attrs.nixosConfig.programs.nix-index.enable or false;
+      programs.nix-index.enable =
+        !attrs.nixosConfig.programs.nix-index.enable or false;
     })
 
     # Level up your terminal-dwelling skills with these.
     (lib.mkIf cfg.shell.enable {
       # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
-      programs.fzf =
-        let
-          fd = lib.getExe' pkgs.fd "fd";
-        in
-        {
-          enable = true;
-          changeDirWidgetCommand = "${fd} --type directory --unrestricted";
-          defaultCommand = "${fd} --type file --hidden";
-          defaultOptions = let
-            skipDirectories' = lib.concatStringsSep "," config.state.paths.ignoreDirectories;
-          in [
-            "--walker-skip=${skipDirectories'}"
-          ];
-        };
+      programs.fzf = {
+        enable = true;
+        changeDirWidgetCommand = "${fd} --type directory --unrestricted";
+        defaultOptions = let
+          skipDirectories' =
+            lib.concatStringsSep "," config.state.paths.ignoreDirectories;
+        in [ "--walker-skip=${skipDirectories'}" ];
+      };
 
       # Supercharging your shell history. Just don't forget to flush them out
       # before doing questionable things.
@@ -153,9 +146,10 @@ in {
 
     # Modern problems require modern tools.
     (lib.mkIf cfg.coreutils-replacement.enable {
-      home.packages = with pkgs; [
-        fd # Welp, a reliable find.
-      ];
+      home.packages = with pkgs;
+        [
+          fd # Welp, a reliable find.
+        ];
 
       # dog > sky dog > cat.
       programs.bat = {
@@ -171,7 +165,8 @@ in {
       programs.eza = {
         enable = true;
         extraOptions = let
-          ignoreDirectories = lib.concatStringsSep "|" config.state.paths.ignoreDirectories;
+          ignoreDirectories =
+            lib.concatStringsSep "|" config.state.paths.ignoreDirectories;
         in [
           "--group-directories-first"
           "--header"
@@ -183,10 +178,7 @@ in {
       # RIP indeed to grep.
       programs.ripgrep = {
         enable = true;
-        arguments = [
-          "--max-columns-preview"
-          "--colors=line:style:bold"
-        ];
+        arguments = [ "--max-columns-preview" "--colors=line:style:bold" ];
       };
     })
 

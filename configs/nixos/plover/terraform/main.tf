@@ -1,5 +1,5 @@
 variable "ssh_keys" {
-  type = list(number)
+  type        = list(number)
   description = "SSH keys for the associated server"
 }
 
@@ -23,7 +23,7 @@ resource "hcloud_server" "plover" {
 }
 
 resource "hcloud_ssh_key" "plover" {
-  name = "plover.foodogsquared.one"
+  name       = "plover.foodogsquared.one"
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGo3tfNQjWZ5pxlqREfBgQJxdNzGHKJIy5hDS9Z+Hpth plover.foodogsquared.one"
 }
 

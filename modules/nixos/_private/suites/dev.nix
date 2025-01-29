@@ -6,7 +6,8 @@ in {
   options.suites.dev = {
     enable = lib.mkEnableOption "basic configuration for software development";
     extras.enable = lib.mkEnableOption "additional shell utilities";
-    hardware.enable = lib.mkEnableOption "additional hardware-related dev utilities";
+    hardware.enable =
+      lib.mkEnableOption "additional hardware-related dev utilities";
     security.enable = lib.mkEnableOption "additional security-oriented tools";
     containers.enable = lib.mkEnableOption "containers setup";
     virtual-machines.enable = lib.mkEnableOption "virtual machines setup";
@@ -69,32 +70,33 @@ in {
     }
 
     (lib.mkIf cfg.extras.enable {
-      environment.systemPackages = with pkgs; [
-        bandwhich # Sniffing your packets.
-        cachix # Compile no more by using someone's binary cache!
-        direnv # The power of local development environment.
-        difftastic # Cracked version of diff.
-        lazygit # Git interface for the lazy.
-        lazydocker # Git interface for the lazy.
-        fd # Oh nice, a more reliable `find`.
-        ripgrep # On nice, a more reliable `grep`.
-        eza # Oh nice, a shinier `ls`.
-        bat # dog > sky dog > cat
-        fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
-        quilt # Patching right up yer' alley.
-        zoxide # Gain teleportation abilities!
-      ]
-      # Finally, a local environment for testing out GitHub workflows without
-      # embarassing yourself pushing a bunch of commits.
-      ++ (lib.optional config.virtualisation.docker.enable pkgs.act)
+      environment.systemPackages = with pkgs;
+        [
+          bandwhich # Sniffing your packets.
+          cachix # Compile no more by using someone's binary cache!
+          direnv # The power of local development environment.
+          difftastic # Cracked version of diff.
+          lazygit # Git interface for the lazy.
+          lazydocker # Git interface for the lazy.
+          fd # Oh nice, a more reliable `find`.
+          ripgrep # On nice, a more reliable `grep`.
+          eza # Oh nice, a shinier `ls`.
+          bat # dog > sky dog > cat
+          fzf # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
+          quilt # Patching right up yer' alley.
+          zoxide # Gain teleportation abilities!
+        ]
+        # Finally, a local environment for testing out GitHub workflows without
+        # embarassing yourself pushing a bunch of commits.
+        ++ (lib.optional config.virtualisation.docker.enable pkgs.act)
 
-      # Enable all of the gud things.
-      ++ (lib.optionals config.programs.git.enable (with pkgs; [
-        tea # Make some Tea...
-        hut # ...in the Hut...
-        github-cli # ...in the Git Hub...
-        git-filter-repo # History is written by the victors (and force-pushers which are surely not victors).
-      ]));
+        # Enable all of the gud things.
+        ++ (lib.optionals config.programs.git.enable (with pkgs; [
+          tea # Make some Tea...
+          hut # ...in the Hut...
+          github-cli # ...in the Git Hub...
+          git-filter-repo # History is written by the victors (and force-pushers which are surely not victors).
+        ]));
 
       # Make per-project devenvs more of a living thing.
       services.lorri.enable = true;
@@ -152,7 +154,8 @@ in {
             "/nix/store:/nix/store:r"
             "/etc/profiles/per-user:/etc/profiles/per-user:r"
           ];
-          container_image_default = "registry.opensuse.org/opensuse/distrobox-packaging:latest";
+          container_image_default =
+            "registry.opensuse.org/opensuse/distrobox-packaging:latest";
           container_command = "sh -norc";
         };
       };
@@ -165,20 +168,14 @@ in {
           enable = true;
           dates = "weekly";
         };
-        defaultNetwork.settings = {
-          dns_enabled = true;
-        };
+        defaultNetwork.settings = { dns_enabled = true; };
       };
 
       # Enable usual containers configuration.
       virtualisation.containers = {
         enable = true;
-        registries.search = [
-          "docker.io"
-          "ghcr.io"
-          "quay.io"
-          "registry.opensuse.org"
-        ];
+        registries.search =
+          [ "docker.io" "ghcr.io" "quay.io" "registry.opensuse.org" ];
       };
     })
 
@@ -203,7 +200,6 @@ in {
       # Easier, better, faster, stronger.
       programs.neovim = {
         enable = true;
-        defaultEditor = true;
         withNodeJs = true;
         withRuby = true;
       };

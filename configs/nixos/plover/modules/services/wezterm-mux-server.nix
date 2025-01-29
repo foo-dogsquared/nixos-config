@@ -13,8 +13,7 @@ let
     src = ../../config/wezterm/config.lua;
     listen_address = listenAddress;
   };
-in
-{
+in {
   options.hosts.plover.services.wezterm-mux-server.enable =
     lib.mkEnableOption "Wezterm mux server setup";
 
@@ -29,16 +28,14 @@ in
         requires = [ "acme-finished-${weztermDomain}.target" ];
         environment.WEZTERM_LOG = "info";
         serviceConfig = {
-          LoadCredential =
-            let
-              certDir = config.security.acme.certs."${weztermDomain}".directory;
-              credentialCertPath = path: "${path}:${certDir}/${path}";
-            in
-            [
-              (credentialCertPath "key.pem")
-              (credentialCertPath "cert.pem")
-              (credentialCertPath "fullchain.pem")
-            ];
+          LoadCredential = let
+            certDir = config.security.acme.certs."${weztermDomain}".directory;
+            credentialCertPath = path: "${path}:${certDir}/${path}";
+          in [
+            (credentialCertPath "key.pem")
+            (credentialCertPath "cert.pem")
+            (credentialCertPath "fullchain.pem")
+          ];
         };
       };
 

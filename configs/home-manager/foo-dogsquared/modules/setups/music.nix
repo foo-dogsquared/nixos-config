@@ -10,8 +10,7 @@ let
 
   musicDir = config.xdg.userDirs.music;
   playlistsDir = "${musicDir}/playlists";
-in
-{
+in {
   options.users.foo-dogsquared.setups.music = {
     enable = lib.mkEnableOption "foo-dogsquared's music setup";
     mpd.enable = lib.mkEnableOption "foo-dogsquared's MPD server setup";
@@ -28,9 +27,7 @@ in
       wrapper-manager.packages.music-setup = {
         wrappers.yt-dlp-audio = {
           arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
-          prependArgs = [
-            "--config-location" ../../config/yt-dlp/audio.conf
-          ];
+          prependArgs = [ "--config-location" ../../config/yt-dlp/audio.conf ];
         };
       };
 
@@ -107,12 +104,15 @@ in
       users.foo-dogsquared.programs.custom-homepage.sections = lib.mkMerge [
         (lib.mkIf (attrs.nixosConfig.services.gonic.enable or false) (let
           subsonicLink = {
-            url = "http://localhost:${builtins.toString attrs.nixosConfig.state.ports.gonic.value}";
+            url = "http://localhost:${
+                builtins.toString attrs.nixosConfig.state.ports.gonic.value
+              }";
             text = "Jukebox server";
           };
         in {
           services.links = lib.singleton subsonicLink;
-          music.links = lib.mkBefore [ (subsonicLink // { text = "Subsonic music server"; }) ];
+          music.links = lib.mkBefore
+            [ (subsonicLink // { text = "Subsonic music server"; }) ];
         }))
       ];
     }
@@ -120,26 +120,31 @@ in
     (lib.mkIf cfg.spotify.enable {
       home.packages = with pkgs; [ spotify ];
 
-      state.ports.spotifyd.value = attrs.nixosConfig.services.spotifyd.value or 9009;
+      state.ports.spotifyd.value =
+        attrs.nixosConfig.services.spotifyd.value or 9009;
 
       services.mopidy.extensionPackages = [ pkgs.mopidy-spotify ];
     })
 
-    (lib.mkIf (cfg.spotify.enable && !(attrs.nixosConfig.services.spotifyd.enable or false)) {
-      services.spotifyd = {
-        enable = true;
-        settings.global = {
-          use_mpris = true;
-          device_name = "foodogsquared's computer";
-          bitrate = 320;
-          device_type = "computer";
-          zeroconf_port = config.state.ports.spotifyd.value;
+    (lib.mkIf (cfg.spotify.enable
+      && !(attrs.nixosConfig.services.spotifyd.enable or false)) {
+        services.spotifyd = {
+          enable = true;
+          settings.global = {
+            use_mpris = true;
+            device_name = "foodogsquared's computer";
+            bitrate = 320;
+            device_type = "computer";
+            zeroconf_port = config.state.ports.spotifyd.value;
 
-          cache_path = "${config.xdg.cacheHome}/spotifyd";
-          max_cache_size = unitsToInt { size = 4; prefix = "G"; };
+            cache_path = "${config.xdg.cacheHome}/spotifyd";
+            max_cache_size = unitsToInt {
+              size = 4;
+              prefix = "G";
+            };
+          };
         };
-      };
-    })
+      })
 
     (lib.mkIf cfg.mpd.enable {
       state.ports.mopidy.value = 6680;
@@ -165,13 +170,10 @@ in
 
           file = {
             enabled = true;
-            media_dirs = [
-              "$XDG_MUSIC_DIR|Music"
-              "~/library/music|Library"
-            ]
-            ++ lib.optional (isFilesystemSet "external-hdd")
+            media_dirs = [ "$XDG_MUSIC_DIR|Music" "~/library/music|Library" ]
+              ++ lib.optional (isFilesystemSet "external-hdd")
               "${attrs.nixosConfig.state.paths.external-hdd}/Music|External storage"
-            ++ lib.optional (isFilesystemSet "archive")
+              ++ lib.optional (isFilesystemSet "archive")
               "${attrs.nixosConfig.state.paths.archive}/Music|Archive";
           };
 
@@ -207,12 +209,15 @@ in
       # Set this to the custom homepage.
       users.foo-dogsquared.programs.custom-homepage.sections = let
         mopidyLink = {
-          url = "http://localhost:${builtins.toString config.state.ports.mopidy.value}";
+          url = "http://localhost:${
+              builtins.toString config.state.ports.mopidy.value
+            }";
           text = "Music streaming server";
         };
       in {
         services.links = lib.singleton mopidyLink;
-        music.links = lib.mkBefore [ (mopidyLink // { text = "Mopidy server"; }) ];
+        music.links =
+          lib.mkBefore [ (mopidyLink // { text = "Mopidy server"; }) ];
       };
     })
   ]);

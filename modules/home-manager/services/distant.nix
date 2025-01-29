@@ -4,12 +4,13 @@ let
   cfg = config.services.distant;
 
   settingsFormat = pkgs.formats.toml { };
-  settingsFile = settingsFormat.generate "distant-settings-${config.home.username}" cfg.settings;
+  settingsFile =
+    settingsFormat.generate "distant-settings-${config.home.username}"
+    cfg.settings;
 
   hasCustomSocketPath = cfg.settings.manager.unix_socket != null;
   defaultSocketPath = "%t/distant/%u.distant.sock";
-in
-{
+in {
   options.services.distant = {
     enable = lib.mkEnableOption "Distant-related services";
 
@@ -47,7 +48,12 @@ in
 
       Service = {
         ExecStart = ''
-          ${lib.getBin cfg.package}/bin/distant manager listen --config ${settingsFile} ${lib.optionalString (!hasCustomSocketPath) "--unix-socket ${defaultSocketPath}"}
+          ${
+            lib.getBin cfg.package
+          }/bin/distant manager listen --config ${settingsFile} ${
+            lib.optionalString (!hasCustomSocketPath)
+            "--unix-socket ${defaultSocketPath}"
+          }
         '';
         Restart = "on-failure";
       };
@@ -61,7 +67,10 @@ in
         Documentation = [ "https://distant.dev" ];
       };
 
-      Socket.ListenStream = if hasCustomSocketPath then cfg.settings.manager.unix_socket else defaultSocketPath;
+      Socket.ListenStream = if hasCustomSocketPath then
+        cfg.settings.manager.unix_socket
+      else
+        defaultSocketPath;
     };
 
     systemd.user.services.distant-server = lib.mkIf cfg.server.enable {
@@ -72,7 +81,9 @@ in
 
       Service = {
         ExecStart = ''
-          ${lib.getBin cfg.package}/bin/distant server listen --config ${settingsFile}
+          ${
+            lib.getBin cfg.package
+          }/bin/distant server listen --config ${settingsFile}
         '';
         Restart = "on-failure";
         StandardInput = "socket";

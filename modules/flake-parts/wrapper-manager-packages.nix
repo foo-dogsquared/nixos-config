@@ -3,10 +3,8 @@
 # `wrapperManagerPackages` containing the derivations that can be run or build.
 { config, lib, flake-parts-lib, ... }:
 
-let
-  inherit (flake-parts-lib) mkSubmoduleOptions mkPerSystemOption;
-in
-{
+let inherit (flake-parts-lib) mkSubmoduleOptions mkPerSystemOption;
+in {
   options = {
     flake = mkSubmoduleOptions {
       wrapperManagerPackages = lib.mkOption {
@@ -32,13 +30,9 @@ in
   };
 
   config = {
-    flake.wrapperManagerPackages =
-      lib.mapAttrs
-        (k: v: v.wrapperManagerPackages)
-        (lib.filterAttrs
-          (k: v: v.wrapperManagerPackages != { })
-          config.allSystems
-        );
+    flake.wrapperManagerPackages = lib.mapAttrs (k: v: v.wrapperManagerPackages)
+      (lib.filterAttrs (k: v: v.wrapperManagerPackages != { })
+        config.allSystems);
 
     perInput = system: flake:
       lib.optionalAttrs (flake ? wrapperManagerPackages.${system}) {

@@ -7,15 +7,10 @@ let
     plugins.neorg.enable = true;
   };
 
-  nixosConfig = {
-    programs.firefox.enable = true;
-  };
+  nixosConfig = { programs.firefox.enable = true; };
 
-  nixvimConfig' = {
-    inherit nixosConfig;
-  } // nixvimConfig;
-in
-lib.runTests {
+  nixvimConfig' = { inherit nixosConfig; } // nixvimConfig;
+in lib.runTests {
   testNixvimIsStandalone = {
     expr = self.nixvim.isStandalone nixvimConfig;
     expected = true;

@@ -8,27 +8,26 @@
 
 (buildFHSUserEnv {
   name = "cloud-admin-env";
-  targetPkgs = pkgs: (with pkgs; [
-    awscli2 # For Amazon Web Services.
-    azure-cli # For Microsoft Azure.
+  targetPkgs = pkgs:
+    (with pkgs; [
+      awscli2 # For Amazon Web Services.
+      azure-cli # For Microsoft Azure.
 
-    # For Google Cloud Platform.
-    (google-cloud-sdk.withExtraComponents
-      (with google-cloud-sdk.components; [
+      # For Google Cloud Platform.
+      (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
         gcloud-man-pages
         cloud-run-proxy
-      ])
-    )
+      ]))
 
-    kubectl # For managing Kubernetes cluster if it is on one.
-    hcloud # For Hetzner Cloud.
-    linode-cli # For Linode.
-    vultr-cli # For Vultr.
+      kubectl # For managing Kubernetes cluster if it is on one.
+      hcloud # For Hetzner Cloud.
+      linode-cli # For Linode.
+      vultr-cli # For Vultr.
 
-    # It's here since Google Cloud SDK needs it.
-    python3
+      # It's here since Google Cloud SDK needs it.
+      python3
 
-    opentofu # The declarative thingy for cloud.
-  ]);
+      opentofu # The declarative thingy for cloud.
+    ]);
 }).env

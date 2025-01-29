@@ -10,12 +10,10 @@
   };
 
   build.extraPassthru.tests = {
-    runWithJujutsu = let
-      wrapper = config.build.toplevel;
+    runWithJujutsu = let wrapper = config.build.toplevel;
     in pkgs.runCommand ''
       [ -x ${lib.getExe' wrapper "jj"} ] && touch $out
     '';
   };
 }
-
 

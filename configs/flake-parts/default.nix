@@ -28,9 +28,7 @@
     defaultSystems = [ "x86_64-linux" ];
   };
 
-  setups.sharedNixpkgsConfig = {
-    allowUnfree = true;
-  };
+  setups.sharedNixpkgsConfig = { allowUnfree = true; };
 
   perSystem = { lib, system, ... }: {
     _module.args = {
@@ -39,9 +37,8 @@
       pkgs = import inputs.nixpkgs {
         inherit system;
         config = config.setups.sharedNixpkgsConfig;
-        overlays = lib.attrValues inputs.self.overlays ++ [
-          inputs.nur.overlays.default
-        ];
+        overlays = lib.attrValues inputs.self.overlays
+          ++ [ inputs.nur.overlays.default ];
       };
     };
   };

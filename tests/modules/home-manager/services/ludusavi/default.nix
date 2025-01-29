@@ -1,3 +1,1 @@
-{
-  ludusavi-basic = ./basic.nix;
-}
+{ ludusavi-basic = ./basic.nix; }

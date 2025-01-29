@@ -16,30 +16,21 @@ let
   settingsFormat = {
     type = with lib.types;
       let
-        valueType = (oneOf [
-          bool
-          float
-          int
-          str
-          (listOf valueType)
-        ]) // {
+        valueType = (oneOf [ bool float int str (listOf valueType) ]) // {
           description = "dconf value";
         };
-      in
-        attrsOf (attrsOf valueType);
+      in attrsOf (attrsOf valueType);
 
     generate = name: value:
       pkgs.writeTextDir "/dconf/${name}" (lib.generators.toDconfINI value);
   };
 
   dconfModuleFactory = { isGlobal ? false }: {
-    enable = lib.mkEnableOption "configuration with dconf" // lib.optionalAttrs (!isGlobal) {
-      default = cfg.enable;
-    };
+    enable = lib.mkEnableOption "configuration with dconf"
+      // lib.optionalAttrs (!isGlobal) { default = cfg.enable; };
 
-    package = lib.mkPackageOption pkgs "dconf" { } // lib.optionalAttrs (!isGlobal) {
-      default = cfg.package;
-    };
+    package = lib.mkPackageOption pkgs "dconf" { }
+      // lib.optionalAttrs (!isGlobal) { default = cfg.package; };
 
     settings = lib.mkOption {
       type = settingsFormat.type;
@@ -93,30 +84,30 @@ let
       '';
     };
   };
-in
-{
+in {
   options.dconf = dconfModuleFactory { isGlobal = true; };
 
-  options.wrappers =
-    let
-      dconfSubmodule = { config, lib, name, ... }: let
+  options.wrappers = let
+    dconfSubmodule = { config, lib, name, ... }:
+      let
         submoduleCfg = config.dconf;
 
-        dconfProfileFile =
-          pkgs.writeText
-            "dconf-profile"
-            (lib.concatMapStrings (db: "${db}\n") submoduleCfg.profile);
+        dconfProfileFile = pkgs.writeText "dconf-profile" (lib.concatMapStrings
+          (db: ''
+            ${db}
+          '') submoduleCfg.profile);
 
-        dconfSettings =
-          settingsFormat.generate "wrapper-manager-dconf-${config.executableName}-settings" submoduleCfg.settings;
+        dconfSettings = settingsFormat.generate
+          "wrapper-manager-dconf-${config.executableName}-settings"
+          submoduleCfg.settings;
 
         keyfilesDir = pkgs.symlinkJoin {
           name = "wrapper-manager-dconf-${config.executableName}";
           paths = submoduleCfg.keyfiles ++ [ "${dconfSettings}/dconf" ];
         };
 
-        dconfSettingsDatabase =
-          pkgs.runCommand "wrapper-manager-dconf-${config.executableName}-database" {
+        dconfSettingsDatabase = pkgs.runCommand
+          "wrapper-manager-dconf-${config.executableName}-database" {
             nativeBuildInputs = [ submoduleCfg.package ];
           } ''
             dconf compile ${builtins.placeholder "out"} "${keyfilesDir}"
@@ -148,8 +139,7 @@ in
           };
         };
       };
-    in
-      lib.mkOption {
-        type = with lib.types; attrsOf (submodule dconfSubmodule);
-      };
+  in lib.mkOption {
+    type = with lib.types; attrsOf (submodule dconfSubmodule);
+  };
 }

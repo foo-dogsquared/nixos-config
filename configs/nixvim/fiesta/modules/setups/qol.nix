@@ -3,8 +3,7 @@
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.devenvs;
-in
-{
+in {
   options.nixvimConfigs.fiesta.setups.qol.enable =
     lib.mkEnableOption "quality-of-life improvements";
 

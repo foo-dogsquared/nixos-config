@@ -3,11 +3,9 @@
 let
   workflowName = "knome";
   cfg = config.workflows.workflows.${workflowName};
-in
-{
-  options.workflows.enable = lib.mkOption {
-    type = with lib.types; listOf (enum [ workflowName ]);
-  };
+in {
+  options.workflows.enable =
+    lib.mkOption { type = with lib.types; listOf (enum [ workflowName ]); };
 
   config = lib.mkIf (lib.elem workflowName config.workflows.enable) {
     services.xserver = {
@@ -66,21 +64,23 @@ in
       "xdg/khotkeysrc".source = ./config/kde/khotkeysrc;
       "xdg/klaunchrc".source = ./config/kde/klaunchrc;
       "xdg/krunnerrc".source = ./config/kde/krunnerrc;
-      "xdg/plasma-org.kde.plasma.desktop-appletsrc".source = ./config/kde/plasma-org.kde.plasma.desktop-appletsrc;
+      "xdg/plasma-org.kde.plasma.desktop-appletsrc".source =
+        ./config/kde/plasma-org.kde.plasma.desktop-appletsrc;
       "xdg/plasmanotifyrc".source = ./config/kde/plasmanotifyrc;
       "xdg/plasmarc".source = ./config/kde/plasmarc;
     };
 
     # Install additional packages.
-    environment.systemPackages = with pkgs; [
-      kitty # The preferred terminal emulator.
-    ] ++ (with pkgs.plasma5Packages; [
-      bismuth # Tiling inside Plasma?
+    environment.systemPackages = with pkgs;
+      [
+        kitty # The preferred terminal emulator.
+      ] ++ (with pkgs.plasma5Packages; [
+        bismuth # Tiling inside Plasma?
 
-      # Powering up Krunner.
-      krunner-symbols
-      krunner-ssh
-    ]);
+        # Powering up Krunner.
+        krunner-symbols
+        krunner-ssh
+      ]);
 
     programs.kdeconnect.enable = true;
   };

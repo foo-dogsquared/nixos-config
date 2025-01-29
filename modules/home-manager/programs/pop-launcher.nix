@@ -9,8 +9,7 @@ let
     name = "pop-launcher-plugins-system";
     paths = builtins.map (p: "${p}/share/pop-launcher") cfg.plugins;
   };
-in
-{
+in {
   options.programs.pop-launcher = {
     enable = lib.mkOption {
       description = ''

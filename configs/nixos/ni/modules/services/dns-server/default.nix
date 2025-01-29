@@ -3,8 +3,7 @@
 let
   hostCfg = config.hosts.ni;
   cfg = hostCfg.services.dns-server;
-in
-{
+in {
   options.hosts.ni.services.dns-server.enable =
     lib.mkEnableOption "preferred DNS server";
 

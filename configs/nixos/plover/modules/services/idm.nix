@@ -10,9 +10,9 @@ let
   certsDir = config.security.acme.certs."${authDomain}".directory;
 
   backupsDir = "${config.state.paths.dataDir}/kanidm/backups";
-in
-{
-  options.hosts.plover.services.idm.enable = lib.mkEnableOption "preferred IDM server";
+in {
+  options.hosts.plover.services.idm.enable =
+    lib.mkEnableOption "preferred IDM server";
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
@@ -61,7 +61,10 @@ in
         # Integrating kanidm-unixd.
         UsePAM = true;
         PubkeyAuthentication = true;
-        AuthorizedKeysCommand = "${lib.getExe' config.services.kanidm.package "kanidm_ssh_authorizedkeys"} %u";
+        AuthorizedKeysCommand = "${
+            lib.getExe' config.services.kanidm.package
+            "kanidm_ssh_authorizedkeys"
+          } %u";
         AuthorizedKeysCommandUser = "nobody";
       };
 
@@ -73,7 +76,8 @@ in
           mkdir -p "${backupsDir}"
         '';
         serviceConfig = {
-          SupplementaryGroups = [ config.security.acme.certs."${authDomain}".group ];
+          SupplementaryGroups =
+            [ config.security.acme.certs."${authDomain}".group ];
         };
       };
     }
@@ -91,9 +95,7 @@ in
         extraConfig = ''
           zone services;
         '';
-        servers = {
-          "localhost:${builtins.toString port}" = { };
-        };
+        servers = { "localhost:${builtins.toString port}" = { }; };
       };
     })
 

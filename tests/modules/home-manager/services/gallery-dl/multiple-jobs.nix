@@ -10,8 +10,10 @@
       "--download-archive"
       "${config.services.gallery-dl.archivePath}/photos"
 
-      "--date" "today-1week" # get only videos from a week ago
-      "--output" "%(uploader)s/%(title)s.%(ext)s" # download them in the respective directory
+      "--date"
+      "today-1week" # get only videos from a week ago
+      "--output"
+      "%(uploader)s/%(title)s.%(ext)s" # download them in the respective directory
     ];
 
     jobs = {
@@ -29,7 +31,8 @@
         ];
         startAt = "daily";
         extraArgs = [
-          "--date" "today-2week" # get only videos from a week ago
+          "--date"
+          "today-2week" # get only videos from a week ago
         ];
       };
     };

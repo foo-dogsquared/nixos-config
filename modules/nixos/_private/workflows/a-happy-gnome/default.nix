@@ -4,15 +4,14 @@ let
   workflowName = "a-happy-gnome";
   cfg = config.workflows.workflows.${workflowName};
 
-  requiredApps = with pkgs; [
-    # The application menu.
-    junction
-  ];
-in
-{
-  options.workflows.enable = lib.mkOption {
-    type = with lib.types; listOf (enum [ workflowName ]);
-  };
+  requiredApps = with pkgs;
+    [
+      # The application menu.
+      junction
+    ];
+in {
+  options.workflows.enable =
+    lib.mkOption { type = with lib.types; listOf (enum [ workflowName ]); };
 
   options.workflows.workflows.${workflowName} = {
     shellExtensions = lib.mkOption {
@@ -66,6 +65,7 @@ in
         dconf-editor # A saner version of Windows registry.
         kando
         gnome-boxes # Virtual machines, son.
+        mission-center # It is your duty to monitor your system.
         polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
         gradience # Make it rain!
         handbrake # Take a break from those custom ffmpeg conversion scripts.
@@ -76,7 +76,7 @@ in
         gnome-backgrounds # Default backgrounds.
 
         gnome-menus # It is required for custom menus in extensions.
-        gnome-extension-manager # The cooler GNOME extensions app.
+        #gnome-extension-manager # The cooler GNOME extensions app.
         gnome-search-provider-recoll # This is here for some reason.
 
         # Nautilus extensions
@@ -89,9 +89,8 @@ in
     };
 
     disableSearchProviders = lib.mkOption {
-      type = with lib.types; listOf (
-        coercedTo str (lib.removeSuffix ".desktop") str
-      );
+      type = with lib.types;
+        listOf (coercedTo str (lib.removeSuffix ".desktop") str);
       description = ''
         A list of the application filenames (without the `.desktop` part) where
         its GNOME Shell search provider is to be disabled.
@@ -171,7 +170,8 @@ in
               disabled = cfg.disableSearchProviders;
             };
             "org/gnome/shell" = {
-              enabled-extensions = builtins.map (p: p.extensionUuid) cfg.shellExtensions;
+              enabled-extensions =
+                builtins.map (p: p.extensionUuid) cfg.shellExtensions;
             };
           }
 
@@ -180,8 +180,9 @@ in
           (lib.pipe cfg.disableNotifications [
             (builtins.map (app:
               lib.nameValuePair
-                "org/gnome/desktop/notifications/application/${app}"
-                { show-banners = false; }))
+              "org/gnome/desktop/notifications/application/${app}" {
+                show-banners = false;
+              }))
 
             lib.listToAttrs
           ])
@@ -204,6 +205,7 @@ in
       };
     };
 
-    environment.systemPackages = requiredApps ++ cfg.shellExtensions ++ cfg.extraApps;
+    environment.systemPackages = requiredApps ++ cfg.shellExtensions
+      ++ cfg.extraApps;
   };
 }

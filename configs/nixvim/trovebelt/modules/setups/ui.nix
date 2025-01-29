@@ -3,8 +3,7 @@
 let
   nixvimCfg = config.nixvimConfigs.trovebelt;
   cfg = nixvimCfg.setups.ui;
-in
-{
+in {
   options.nixvimConfigs.trovebelt.setups.ui.enable =
     lib.mkEnableOption "configuration for UI-related settings and plugins";
 

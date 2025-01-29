@@ -10,29 +10,37 @@ let
   # `services.gallery-dl`, and `services.archivebox`.
   mkJobs = { extraArgs ? [ ], db }:
     let
-      days = [ "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" ];
-      categories = lib.zipListsWith
-        (index: category: { inherit index; data = category; })
-        (lib.lists.range 1 (lib.length (lib.attrValues db)))
-        (lib.mapAttrsToList (name: value: { inherit name; inherit (value) subscriptions extraArgs; }) db);
-      jobsList = builtins.map
-        (category:
-          let
-            jobExtraArgs = lib.attrByPath [ "data" "extraArgs" ] [ ] category;
-          in
-          {
-            name = category.data.name;
-            value = {
-              extraArgs = extraArgs ++ jobExtraArgs;
-              urls = builtins.map (subscription: subscription.url) category.data.subscriptions;
-              startAt = lib.elemAt days (lib.mod category.index (lib.length days));
-            };
-          })
-        categories;
-    in
-    lib.listToAttrs jobsList;
-in
-{
+      days = [
+        "Monday"
+        "Tuesday"
+        "Wednesday"
+        "Thursday"
+        "Friday"
+        "Saturday"
+        "Sunday"
+      ];
+      categories = lib.zipListsWith (index: category: {
+        inherit index;
+        data = category;
+      }) (lib.lists.range 1 (lib.length (lib.attrValues db)))
+        (lib.mapAttrsToList (name: value: {
+          inherit name;
+          inherit (value) subscriptions extraArgs;
+        }) db);
+      jobsList = builtins.map (category:
+        let jobExtraArgs = lib.attrByPath [ "data" "extraArgs" ] [ ] category;
+        in {
+          name = category.data.name;
+          value = {
+            extraArgs = extraArgs ++ jobExtraArgs;
+            urls = builtins.map (subscription: subscription.url)
+              category.data.subscriptions;
+            startAt =
+              lib.elemAt days (lib.mod category.index (lib.length days));
+          };
+        }) categories;
+    in lib.listToAttrs jobsList;
+in {
   options.users.foo-dogsquared.setups.research.enable =
     lib.mkEnableOption "foo-dogsquared's usual toolbelt for research";
 
@@ -60,7 +68,9 @@ in
       services.syncthing = {
         enable = true;
         extraOptions = [
-          "--gui-address=http://localhost:${builtins.toString config.state.ports.syncthing.value}"
+          "--gui-address=http://localhost:${
+            builtins.toString config.state.ports.syncthing.value
+          }"
         ];
       };
 
@@ -70,7 +80,9 @@ in
 
       users.foo-dogsquared.programs.custom-homepage.sections.services.links =
         lib.singleton {
-          url = "http://localhost:${builtins.toString config.state.ports.syncthing.value}";
+          url = "http://localhost:${
+              builtins.toString config.state.ports.syncthing.value
+            }";
           text = "Local sync server";
         };
     }

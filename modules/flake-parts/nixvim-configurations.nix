@@ -1,9 +1,7 @@
 { config, lib, flake-parts-lib, ... }:
 
-let
-  inherit (flake-parts-lib) mkSubmoduleOptions mkPerSystemOption;
-in
-{
+let inherit (flake-parts-lib) mkSubmoduleOptions mkPerSystemOption;
+in {
   options = {
     flake = mkSubmoduleOptions {
       nixvimConfigurations = lib.mkOption {
@@ -33,13 +31,8 @@ in
   };
 
   config = {
-    flake.nixvimConfigurations =
-      lib.mapAttrs
-        (k: v: v.nixvimConfigurations)
-        (lib.filterAttrs
-          (k: v: v.nixvimConfigurations != { })
-          config.allSystems
-        );
+    flake.nixvimConfigurations = lib.mapAttrs (k: v: v.nixvimConfigurations)
+      (lib.filterAttrs (k: v: v.nixvimConfigurations != { }) config.allSystems);
 
     perInput = system: flake:
       lib.optionalAttrs (flake ? nixvimConfigurations.${system}) {

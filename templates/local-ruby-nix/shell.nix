@@ -1,7 +1,4 @@
-{ pkgs ? import <nixpkgs> { }
-, extraBuildInputs ? [ ]
-, extraPackages ? [ ]
-}:
+{ pkgs ? import <nixpkgs> { }, extraBuildInputs ? [ ], extraPackages ? [ ] }:
 
 with pkgs;
 

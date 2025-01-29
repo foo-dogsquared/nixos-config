@@ -17,7 +17,7 @@
 
     # For HTML.
     html = {
-      enable = true; 
+      enable = true;
       autostart = false;
     };
 

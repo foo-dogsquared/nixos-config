@@ -1,5 +1,5 @@
-{ pkgs ? import <nixpkgs> {
-  overlays = [ (import ../../../../../overlays).default ];
-} }:
+{ pkgs ?
+  import <nixpkgs> { overlays = [ (import ../../../../../overlays).default ]; }
+}:
 
 pkgs.callPackage ./package.nix { }

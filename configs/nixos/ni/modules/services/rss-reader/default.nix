@@ -5,14 +5,13 @@ let
   cfg = hostCfg.services.rss-reader;
 
   port = config.state.ports.miniflux.value;
-in
-{
+in {
   options.hosts.ni.services.rss-reader.enable =
     lib.mkEnableOption "preferred RSS reader service";
 
   config = lib.mkIf cfg.enable {
     sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml {
-      "miniflux/admin" = {};
+      "miniflux/admin" = { };
     };
 
     state.ports.miniflux.value = 9640;
@@ -35,7 +34,8 @@ in
     wrapper-manager.packages.miniflux-helper = {
       wrappers.miniflux-helper = {
         arg0 = lib.getExe' config.services.miniflux.package "miniflux";
-        env = lib.mapAttrs (_: value: { value = builtins.toString value; }) config.services.miniflux.config;
+        env = lib.mapAttrs (_: value: { value = builtins.toString value; })
+          config.services.miniflux.config;
       };
     };
   };

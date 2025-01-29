@@ -3,8 +3,7 @@
 let
   hostCfg = config.hosts.plover;
   cfg = hostCfg.services.crowdsec;
-in
-{
+in {
   options.hosts.plover.services.crowdsec.enable =
     lib.mkEnableOption "Crowdsec service";
 

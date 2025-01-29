@@ -35,18 +35,15 @@ let
       };
     };
   };
-in
-{
+in {
   options.keyunmaps = lib.mkOption {
     type = with lib.types; listOf (submodule keyunmapOption);
     default = [ ];
-    example = [
-      {
-        modes = [ "n" "i" ];
-        key = "<leader>w";
-        options.buffer = true;
-      }
-    ];
+    example = [{
+      modes = [ "n" "i" ];
+      key = "<leader>w";
+      options.buffer = true;
+    }];
     description = ''
       A list of keymaps to be removed. Take note, this will occur after
       setting the keymap.

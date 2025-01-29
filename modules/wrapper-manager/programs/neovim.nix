@@ -36,8 +36,7 @@ let
   };
 
   finalNeovimPackage = pkgs.wrapNeovimUnstable cfg.package neovimConfig;
-in
-{
+in {
   options.programs.neovim = {
     enable = lib.mkEnableOption "Neovim, a terminal text editor";
 

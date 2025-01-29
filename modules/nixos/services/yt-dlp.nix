@@ -72,25 +72,21 @@ let
       };
     };
 
-    config.extraArgs =
-      let
-        mkPathArg = n: v:
-          lib.optionals (v.output != null) [ "--output" "${n}:${v.output}" ]
-          ++ lib.optionals (v.path != null) [ "--paths" "${n}:${v.path}" ];
-      in
-        cfg.extraArgs
-        ++ (lib.lists.flatten (lib.mapAttrsToList mkPathArg config.metadata))
-        ++ [ "--paths" config.downloadPath ];
+    config.extraArgs = let
+      mkPathArg = n: v:
+        lib.optionals (v.output != null) [ "--output" "${n}:${v.output}" ]
+        ++ lib.optionals (v.path != null) [ "--paths" "${n}:${v.path}" ];
+    in cfg.extraArgs
+    ++ (lib.lists.flatten (lib.mapAttrsToList mkPathArg config.metadata))
+    ++ [ "--paths" config.downloadPath ];
   };
-in
-{
+in {
   options.services.yt-dlp = {
     enable = lib.mkEnableOption "archiving service with yt-dlp";
 
     package = lib.mkOption {
       type = lib.types.package;
-      description =
-        "The derivation that contains {command}`yt-dlp` binary.";
+      description = "The derivation that contains {command}`yt-dlp` binary.";
       default = pkgs.yt-dlp;
       defaultText = lib.literalExpression "pkgs.yt-dlp";
       example = lib.literalExpression
@@ -99,7 +95,8 @@ in
 
     downloadPath = lib.mkOption {
       type = lib.types.path;
-      description = "Download path of the service to be given per job (unless overridden).";
+      description =
+        "Download path of the service to be given per job (unless overridden).";
       default = "/var/yt-dlp";
       example = "/srv/Videos";
     };
@@ -121,8 +118,7 @@ in
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
-      description =
-        "Global list of arguments to be passed to each yt-dlp job.";
+      description = "Global list of arguments to be passed to each yt-dlp job.";
       default = [ ];
       example = lib.literalExpression ''
         [
@@ -163,67 +159,59 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.services = lib.mapAttrs'
-      (name: job:
-        lib.nameValuePair (jobUnitName name) {
-          inherit (job) startAt;
-          wantedBy = [ "multi-user.target" ];
-          wants = [ "network-online.target" ];
-          after = [ "network-online.target" ];
-          description = "yt-dlp archive job for group '${name}'";
-          documentation = [ "man:yt-dlp(1)" ];
-          enable = true;
-          script = ''
-            ${lib.getExe' cfg.package "yt-dlp"} \
-              ${lib.escapeShellArgs job.extraArgs} \
-              ${lib.escapeShellArgs job.urls}
-          '';
-          serviceConfig = {
-            ReadWritePaths =
-              [ job.downloadPath ]
-              ++ lib.lists.flatten (lib.mapAttrsToList (n: v: lib.optionals (v.path != null) v.path) job.metadata);
+    systemd.services = lib.mapAttrs' (name: job:
+      lib.nameValuePair (jobUnitName name) {
+        inherit (job) startAt;
+        wantedBy = [ "multi-user.target" ];
+        wants = [ "network-online.target" ];
+        after = [ "network-online.target" ];
+        description = "yt-dlp archive job for group '${name}'";
+        documentation = [ "man:yt-dlp(1)" ];
+        enable = true;
+        script = ''
+          ${lib.getExe' cfg.package "yt-dlp"} \
+            ${lib.escapeShellArgs job.extraArgs} \
+            ${lib.escapeShellArgs job.urls}
+        '';
+        serviceConfig = {
+          ReadWritePaths = [ job.downloadPath ] ++ lib.lists.flatten
+            (lib.mapAttrsToList (n: v: lib.optionals (v.path != null) v.path)
+              job.metadata);
 
-            LockPersonality = true;
-            NoNewPrivileges = true;
-            PrivateDevices = true;
-            PrivateTmp = true;
-            PrivateUsers = true;
-            PrivateMounts = true;
-            ProtectClock = true;
-            ProtectControlGroups = true;
-            ProtectHome = true;
-            ProtectKernelLogs = true;
-            ProtectKernelModules = true;
-            ProtectKernelTunables = true;
-            ProtectSystem = "full";
-            RemoveIPC = true;
-            StandardOutput = "journal";
-            StandardError = "journal";
-            SystemCallFilter = "@system-service";
-            SystemCallErrorNumber = "EPERM";
+          LockPersonality = true;
+          NoNewPrivileges = true;
+          PrivateDevices = true;
+          PrivateTmp = true;
+          PrivateUsers = true;
+          PrivateMounts = true;
+          ProtectClock = true;
+          ProtectControlGroups = true;
+          ProtectHome = true;
+          ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
+          ProtectSystem = "full";
+          RemoveIPC = true;
+          StandardOutput = "journal";
+          StandardError = "journal";
+          SystemCallFilter = "@system-service";
+          SystemCallErrorNumber = "EPERM";
 
-            CapabilityBoundingSet = lib.mkDefault [ ];
-            AmbientCapabilities = lib.mkDefault [ ];
-            RestrictAddressFamilies = [
-              "AF_LOCAL"
-              "AF_INET"
-              "AF_INET6"
-            ];
-            RestrictNamespaces = true;
-            RestrictSUIDGUID = true;
-            MemoryDenyWriteExecute = true;
-          };
-        })
-      cfg.jobs;
+          CapabilityBoundingSet = lib.mkDefault [ ];
+          AmbientCapabilities = lib.mkDefault [ ];
+          RestrictAddressFamilies = [ "AF_LOCAL" "AF_INET" "AF_INET6" ];
+          RestrictNamespaces = true;
+          RestrictSUIDGUID = true;
+          MemoryDenyWriteExecute = true;
+        };
+      }) cfg.jobs;
 
-    systemd.timers = lib.mapAttrs'
-      (name: value:
-        lib.nameValuePair (jobUnitName name) {
-          timerConfig = {
-            Persistent = true;
-            RandomizedDelaySec = "2min";
-          };
-        })
-      cfg.jobs;
+    systemd.timers = lib.mapAttrs' (name: value:
+      lib.nameValuePair (jobUnitName name) {
+        timerConfig = {
+          Persistent = true;
+          RandomizedDelaySec = "2min";
+        };
+      }) cfg.jobs;
   };
 }

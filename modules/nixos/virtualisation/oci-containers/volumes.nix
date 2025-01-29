@@ -12,9 +12,7 @@ let
         description = ''
           A list of labels to be attached to the volume at runtime.
         '';
-        example = {
-          "foo" = "baz";
-        };
+        example = { "foo" = "baz"; };
       };
 
       extraOptions = lib.mkOption {
@@ -34,43 +32,44 @@ let
       };
     };
 
-    config.extraOptions = lib.mapAttrsToList (name: value: "--label ${name}=${value}") config.labels;
+    config.extraOptions =
+      lib.mapAttrsToList (name: value: "--label ${name}=${value}")
+      config.labels;
   };
 
-  mkService = name: value: let
-    removeScript =
-      if cfg.backend == "podman"
-      then "podman volume rm --force ${name}"
-      else "${cfg.backend} volume rm -f ${name}";
+  mkService = name: value:
+    let
+      removeScript = if cfg.backend == "podman" then
+        "podman volume rm --force ${name}"
+      else
+        "${cfg.backend} volume rm -f ${name}";
 
-    preStartScript = pkgs.writeShellScript "pre-start-oci-container-volume-${name}" ''
-      ${removeScript}
-    '';
-  in {
-    path =
-      if cfg.backend == "docker" then [ config.virtualisation.docker.package ]
-      else if cfg.backend == "podman" then [ config.virtualisation.podman.package ]
-      else throw "Unhandled backend: ${cfg.backend}";
-    script = lib.concatStringsSep "  \\\n  " ([
-      "exec ${cfg.backend} "
-    ] ++ (map escapeShellArg value.preRunExtraOptions) ++ [
-      "volume create"
-    ] ++ (map escapeShellArg value.extraOptions) ++ [
-      name
-    ]);
-    postStop = removeScript;
+      preStartScript =
+        pkgs.writeShellScript "pre-start-oci-container-volume-${name}" ''
+          ${removeScript}
+        '';
+    in {
+      path = if cfg.backend == "docker" then
+        [ config.virtualisation.docker.package ]
+      else if cfg.backend == "podman" then
+        [ config.virtualisation.podman.package ]
+      else
+        throw "Unhandled backend: ${cfg.backend}";
+      script = lib.concatStringsSep "  \\\n  " ([ "exec ${cfg.backend} " ]
+        ++ (map escapeShellArg value.preRunExtraOptions) ++ [ "volume create" ]
+        ++ (map escapeShellArg value.extraOptions) ++ [ name ]);
+      postStop = removeScript;
 
-    serviceConfig = {
-      ExecStartPre = [ preStartScript ];
-      Type = "oneshot";
-      RemainAfterExit = true;
+      serviceConfig = {
+        ExecStartPre = [ preStartScript ];
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+
+      before = [ "multi-user.target" ];
+      wantedBy = [ "multi-user.target" ];
     };
-
-    before = [ "multi-user.target" ];
-    wantedBy = [ "multi-user.target" ];
-  };
-in
-{
+in {
   options.virtualisation.oci-containers.volumes = lib.mkOption {
     type = with lib.types; attrsOf (submodule volumeModule);
     description = ''
@@ -84,6 +83,8 @@ in
   };
 
   config = lib.mkIf (cfg.volumes != { }) {
-    systemd.services = lib.mapAttrs' (n: v: lib.nameValuePair "${cfg.backend}-volume-${n}" (mkService n v)) cfg.volumes;
+    systemd.services = lib.mapAttrs'
+      (n: v: lib.nameValuePair "${cfg.backend}-volume-${n}" (mkService n v))
+      cfg.volumes;
   };
 }

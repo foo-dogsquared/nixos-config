@@ -1,3 +1,1 @@
-{
-  bleachbit-basic-setup = ./basic-setup.nix;
-}
+{ bleachbit-basic-setup = ./basic-setup.nix; }

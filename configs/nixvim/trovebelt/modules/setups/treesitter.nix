@@ -3,8 +3,7 @@
 let
   nixvimCfg = config.nixvimConfigs.trovebelt;
   cfg = nixvimCfg.setups.treesitter;
-in
-{
+in {
   options.nixvimConfigs.trovebelt.setups.treesitter.enable =
     lib.mkEnableOption "tree-sitter setup with all parsers installed";
 

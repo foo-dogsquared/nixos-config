@@ -60,15 +60,13 @@ let
       };
     };
   };
-in
-{
+in {
   options.services.yt-dlp = {
     enable = lib.mkEnableOption "archiving service with yt-dlp";
 
     package = lib.mkOption {
       type = lib.types.package;
-      description =
-        "The derivation that contains {command}`yt-dlp` binary.";
+      description = "The derivation that contains {command}`yt-dlp` binary.";
       default = pkgs.yt-dlp;
       defaultText = lib.literalExpression "pkgs.yt-dlp";
       example = lib.literalExpression
@@ -92,8 +90,7 @@ in
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
-      description =
-        "List of arguments to be passed to {command}`yt-dlp`.";
+      description = "List of arguments to be passed to {command}`yt-dlp`.";
       default = [ "--download-archive '${cfg.archivePath}/download-list" ];
       example = lib.literalExpression ''
         [
@@ -133,55 +130,51 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.user.services = lib.mapAttrs'
-      (name: value:
-        lib.nameValuePair (jobUnitName name) {
-          Unit = {
-            Description = "yt-dlp archive job for group '${name}'";
-            After = [ "default.target" ];
-            Documentation = "man:yt-dlp(1)";
-          };
+    systemd.user.services = lib.mapAttrs' (name: value:
+      lib.nameValuePair (jobUnitName name) {
+        Unit = {
+          Description = "yt-dlp archive job for group '${name}'";
+          After = [ "default.target" ];
+          Documentation = "man:yt-dlp(1)";
+        };
 
-          Service = {
-            ExecStartPre = ''
-              ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p ${
-                lib.escapeShellArg cfg.archivePath
-              }"
+        Service = {
+          ExecStartPre = ''
+            ${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/mkdir -p ${
+              lib.escapeShellArg cfg.archivePath
+            }"
+          '';
+          ExecStart = let
+            scriptName =
+              "yt-dlp-archive-service-${config.home.username}-${name}";
+            jobLevelArgs = lib.escapeShellArgs value.extraArgs;
+            urls = lib.escapeShellArgs value.urls;
+            archiveScript = pkgs.writeShellScriptBin scriptName ''
+              ${cfg.package}/bin/yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
+                                        ${urls} --paths ${
+                                          lib.escapeShellArg cfg.archivePath
+                                        }
             '';
-            ExecStart =
-              let
-                scriptName =
-                  "yt-dlp-archive-service-${config.home.username}-${name}";
-                jobLevelArgs = lib.escapeShellArgs value.extraArgs;
-                urls = lib.escapeShellArgs value.urls;
-                archiveScript = pkgs.writeShellScriptBin scriptName ''
-                  ${cfg.package}/bin/yt-dlp ${serviceLevelArgs} ${jobLevelArgs} \
-                                            ${urls} --paths ${lib.escapeShellArg cfg.archivePath}
-                '';
-              in
-              "${archiveScript}/bin/${scriptName}";
-            StandardOutput = "journal";
-            StandardError = "journal";
-          };
-        })
-      cfg.jobs;
+          in "${archiveScript}/bin/${scriptName}";
+          StandardOutput = "journal";
+          StandardError = "journal";
+        };
+      }) cfg.jobs;
 
-    systemd.user.timers = lib.mapAttrs'
-      (name: value:
-        lib.nameValuePair (jobUnitName name) {
-          Unit = {
-            Description = "yt-dlp archive job for group '${name}'";
-            Documentation = "man:yt-dlp(1)";
-          };
+    systemd.user.timers = lib.mapAttrs' (name: value:
+      lib.nameValuePair (jobUnitName name) {
+        Unit = {
+          Description = "yt-dlp archive job for group '${name}'";
+          Documentation = "man:yt-dlp(1)";
+        };
 
-          Timer = {
-            OnCalendar = value.startAt;
-            RandomizedDelaySec = "2min";
-            Persistent = value.persistent;
-          };
+        Timer = {
+          OnCalendar = value.startAt;
+          RandomizedDelaySec = "2min";
+          Persistent = value.persistent;
+        };
 
-          Install.WantedBy = [ "timers.target" ];
-        })
-      cfg.jobs;
+        Install.WantedBy = [ "timers.target" ];
+      }) cfg.jobs;
   };
 }

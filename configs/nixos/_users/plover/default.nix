@@ -4,11 +4,11 @@
 let
   user = "plover";
   homeManagerUser = foodogsquaredUtils.getConfig "home-manager" user;
-in
-{
+in {
   users.users.${user} = {
     home = "/home/${user}";
-    hashedPassword = "$y$j9T$43ExH5GLbEGwgnNGhmcTD/$qXoZE5Cm9O2Z3zMM/VyCZ18qN2Hc9.KvCnVz6tmjVVD";
+    hashedPassword =
+      "$y$j9T$43ExH5GLbEGwgnNGhmcTD/$qXoZE5Cm9O2Z3zMM/VyCZ18qN2Hc9.KvCnVz6tmjVVD";
     extraGroups = [ "wheel" "kanidm" ];
     useDefaultShell = true;
     isNormalUser = true;
@@ -24,7 +24,5 @@ in
     ];
   };
 
-  home-manager.users.${user} = {
-    imports = [ homeManagerUser ];
-  };
+  home-manager.users.${user} = { imports = [ homeManagerUser ]; };
 }

@@ -1,10 +1,8 @@
 # It just contains a set of network-related variables mainly used for
 # network-related services. Make sure to change this every time you migrate to
 # a new server.
-let
-  inherit (builtins) toString;
-in
-rec {
+let inherit (builtins) toString;
+in rec {
   # This is expected to be /48 block (i.e., `fc00:b0de:5685::/48`).
   # The thing is generated using a ULA generator.
   privateIPv6Prefix = "fd89:c181:8016";

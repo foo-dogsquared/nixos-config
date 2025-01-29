@@ -11,15 +11,8 @@
   ];
 
   # Include some modern niceties.
-  environment.systemPackages = with pkgs; [
-    curl
-    disko
-    ripgrep
-    git
-    lazygit
-    neovim
-    zellij
-  ] ++ foodogsquaredLib.stdenv;
+  environment.systemPackages = with pkgs;
+    [ curl disko ripgrep git lazygit neovim zellij ] ++ foodogsquaredLib.stdenv;
 
   # Yeah, that's right, this is also a Guix System installer because SCREW YOU,
   # NIXOS USERS!

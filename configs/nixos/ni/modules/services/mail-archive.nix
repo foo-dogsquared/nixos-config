@@ -17,8 +17,7 @@ let
       newsgroup = "inbox.comp.systemd.devel";
     };
   };
-in
-{
+in {
   options.hosts.ni.services.mail-archive.enable =
     lib.mkEnableOption "preferred mail archiving service";
 
@@ -30,9 +29,7 @@ in
       http = {
         enable = true;
         port = "/run/public-inbox-http.sock";
-        mounts = [
-          "https://mail.ni.internal/inbox"
-        ];
+        mounts = [ "https://mail.ni.internal/inbox" ];
       };
       imap.enable = true;
       nntp.enable = true;
@@ -54,7 +51,8 @@ in
     services.nginx.virtualHosts."mail.ni.internal" = {
       locations."/".return = "302 /inbox";
       locations."= /inbox".return = "302 /inbox/";
-      locations."/inbox".proxyPass = "http://unix:${config.services.public-inbox.http.port}:/inbox";
+      locations."/inbox".proxyPass =
+        "http://unix:${config.services.public-inbox.http.port}:/inbox";
       locations."= /style/light.css".alias = pkgs.writeText "light.css" ''
         * { background:#fff; color:#000 }
 

@@ -16,7 +16,8 @@
     wraparound.variant = "boxxy";
     wraparound.subwrapper.arg0 = lib.getExe' pkgs.zellij "zellij";
     wraparound.boxxy.rules = {
-      "$XDG_CONFIG_HOME/zellij/hello.kdl".source = "$XDG_CONFIG_HOME/zellij/config.kdl";
+      "$XDG_CONFIG_HOME/zellij/hello.kdl".source =
+        "$XDG_CONFIG_HOME/zellij/config.kdl";
     };
   };
 }

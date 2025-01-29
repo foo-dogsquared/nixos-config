@@ -11,8 +11,7 @@ let
 
   atuinInternalDomain = "atuin.${config.networking.fqdn}";
   host = interfaces.lan.IPv4.address;
-in
-{
+in {
   options.hosts.plover.services.atuin.enable =
     lib.mkEnableOption "Atuin sync server setup";
 

@@ -2,9 +2,4 @@
 
 with pkgs;
 
-mkShell {
-  packages = [
-    rnix-lsp
-    nixpkgs-fmt
-  ];
-}
+mkShell { packages = [ rnix-lsp nixpkgs-fmt ]; }

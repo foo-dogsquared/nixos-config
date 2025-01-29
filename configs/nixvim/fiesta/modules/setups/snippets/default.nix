@@ -4,11 +4,8 @@ let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.snippets;
 
-  luasnipKeymapConfig = {
-    mode = [ "i" "s" ];
-  };
-in
-{
+  luasnipKeymapConfig = { mode = [ "i" "s" ]; };
+in {
   options.nixvimConfigs.fiesta.setups.snippets.enable =
     lib.mkEnableOption "snippets setup";
 
@@ -26,12 +23,10 @@ in
     plugins.friendly-snippets.enable = true;
 
     # Load all of the custom snippets.
-    plugins.luasnip.fromLua = [
-      {
-        lazyLoad = true;
-        paths = ./snippets;
-      }
-    ];
+    plugins.luasnip.fromLua = [{
+      lazyLoad = true;
+      paths = ./snippets;
+    }];
 
     # Set up the keymaps ourselves since LuaSnip doesn't provide one as a
     # config option.

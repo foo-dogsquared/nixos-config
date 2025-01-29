@@ -4,8 +4,7 @@ let
   cfg = config.programs.jujutsu;
 
   settingsFormat = pkgs.formats.toml { };
-in
-{
+in {
   options.programs.jujutsu = {
     enable = lib.mkEnableOption "Jujutsu, a Git-compatible DVCS";
 

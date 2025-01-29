@@ -3,8 +3,7 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.keys;
-in
-{
+in {
   options.users.foo-dogsquared.programs.keys = {
     ssh.enable = lib.mkEnableOption "foo-dogsquared's SSH config";
     gpg.enable = lib.mkEnableOption "foo-dogsquared's GPG config";

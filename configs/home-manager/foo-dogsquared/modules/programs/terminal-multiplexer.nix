@@ -3,8 +3,7 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.terminal-multiplexer;
-in
-{
+in {
   options.users.foo-dogsquared.programs.terminal-multiplexer.enable =
     lib.mkEnableOption "foo-dogsquared's terminal multiplexer setup";
 

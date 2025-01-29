@@ -3,10 +3,8 @@
 # section from the documentation.
 { config, lib, flake-parts-lib, ... }:
 
-let
-  inherit (flake-parts-lib) mkSubmoduleOptions mkPerSystemOption;
-in
-{
+let inherit (flake-parts-lib) mkSubmoduleOptions mkPerSystemOption;
+in {
   options = {
     flake = mkSubmoduleOptions {
       images = lib.mkOption {
@@ -37,13 +35,8 @@ in
   };
 
   config = {
-    flake.images =
-      lib.mapAttrs
-        (k: v: v.images)
-        (lib.filterAttrs
-          (k: v: v.images != { })
-          config.allSystems
-        );
+    flake.images = lib.mapAttrs (k: v: v.images)
+      (lib.filterAttrs (k: v: v.images != { }) config.allSystems);
 
     perInput = system: flake:
       lib.optionalAttrs (flake ? images.${system}) {

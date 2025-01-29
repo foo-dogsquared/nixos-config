@@ -4,8 +4,7 @@
 let
   userCfg = config.users.nixos;
   cfg = userCfg.programs.terminal-multiplexer;
-in
-{
+in {
   options.users.nixos.programs.terminal-multiplexer.enable =
     lib.mkEnableOption "terminal multiplexer";
 

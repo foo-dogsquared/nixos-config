@@ -12,7 +12,7 @@ lib.runTests {
   };
 
   testCountAttrs = {
-    expr = self.trivial.countAttrs (n: v: v?enable && v.enable) {
+    expr = self.trivial.countAttrs (n: v: v ? enable && v.enable) {
       hello.enable = true;
       what.enable = false;
       atro.enable = true;
@@ -31,7 +31,10 @@ lib.runTests {
     };
     expected = {
       ok = { a = 4; };
-      notOk = { e = 5; f = 7; };
+      notOk = {
+        e = 5;
+        f = 7;
+      };
     };
   };
 

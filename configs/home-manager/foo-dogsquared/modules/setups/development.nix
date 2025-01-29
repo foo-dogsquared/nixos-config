@@ -5,8 +5,7 @@ let
   cfg = userCfg.setups.development;
 in {
   options.users.foo-dogsquared.setups.development = {
-    enable =
-      lib.mkEnableOption "foo-dogsquared's software development setup";
+    enable = lib.mkEnableOption "foo-dogsquared's software development setup";
 
     creative-coding.enable =
       lib.mkEnableOption "foo-dogsquared's creative coding setup";
@@ -54,10 +53,12 @@ in {
 
       users.foo-dogsquared.programs.custom-homepage.sections.services.links =
         let
-          hasCockpitEnabled = attrs.nixosConfig.services.cockpit.enable or false;
-        in
-        lib.optionals hasCockpitEnabled (lib.singleton {
-          url = "http://localhost:${builtins.toString attrs.nixosConfig.services.cockpit.port}";
+          hasCockpitEnabled =
+            attrs.nixosConfig.services.cockpit.enable or false;
+        in lib.optionals hasCockpitEnabled (lib.singleton {
+          url = "http://localhost:${
+              builtins.toString attrs.nixosConfig.services.cockpit.port
+            }";
           text = "Cockpit WebUI";
         });
 
@@ -69,7 +70,7 @@ in {
       home.packages = with pkgs; [
         cachix # Compile no more by using someone's binary cache!
         regex-cli # Save some face of confusion for yourself.
-        dt # Get that functional gawk.
+        #dt # Get that functional gawk.
         jq # Get that JSON querying tool.
         recode # Convert between different encodings.
         go-migrate # Go potential migraines.
@@ -91,10 +92,9 @@ in {
       ];
     }
 
-    (lib.mkIf (!userCfg.programs.nixvim.enable) {
+    (lib.mkIf (!config.programs.nixvim.enable or false) {
       programs.neovim = {
         enable = true;
-        package = pkgs.neovim-nightly;
         vimAlias = true;
         vimdiffAlias = true;
 
@@ -105,9 +105,7 @@ in {
     })
 
     (lib.mkIf userCfg.programs.browsers.firefox.enable {
-      home.packages = with pkgs; [
-        (lowPrio firefox-devedition)
-      ];
+      home.packages = with pkgs; [ (lowPrio firefox-devedition) ];
     })
 
     (lib.mkIf userCfg.programs.git.enable {
@@ -145,7 +143,7 @@ in {
       home.packages = with pkgs; [
         supercollider-with-plugins
         processing
-        (puredata-with-plugins (with pkgs; [ zexy cyclone ]))
+        #(puredata-with-plugins (with pkgs; [ zexy cyclone ]))
       ];
     })
   ]);

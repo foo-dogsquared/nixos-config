@@ -9,24 +9,18 @@
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
-    let
-      inherit (inputs.flake-utils.lib) defaultSystems eachSystem flattenTree;
-    in
-    eachSystem defaultSystems
-      (system:
-        let
-          pkgs = import nixpkgs { inherit system; };
-        in
-        {
-          devShells.default =
-            import ./shell.nix { inherit pkgs; };
+    let inherit (inputs.flake-utils.lib) defaultSystems eachSystem flattenTree;
+    in eachSystem defaultSystems (system:
+      let pkgs = import nixpkgs { inherit system; };
+      in {
+        devShells.default = import ./shell.nix { inherit pkgs; };
 
-          formatter = pkgs.nixpkgs-fmt;
+        formatter = pkgs.nixpkgs-fmt;
 
-          packages = flattenTree (self.overlays.default pkgs pkgs);
-        }) // {
-      overlays.default = final: prev: import ./pkgs { pkgs = prev; };
+        packages = flattenTree (self.overlays.default pkgs pkgs);
+      }) // {
+        overlays.default = final: prev: import ./pkgs { pkgs = prev; };
 
-      nixosModules = { };
-    };
+        nixosModules = { };
+      };
 }

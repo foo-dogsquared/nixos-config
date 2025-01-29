@@ -1,11 +1,8 @@
-{ inputs
-, lib
-, config
+{ inputs, lib, config
 
 , defaultNixConf
 
-, ...
-}:
+, ... }:
 
 {
   setups.home-manager = {
@@ -42,8 +39,7 @@
           {
             _module.args = {
               firstSetupArgs = {
-                baseNixvimModules =
-                  config.setups.nixvim.configs.fiesta.modules
+                baseNixvimModules = config.setups.nixvim.configs.fiesta.modules
                   ++ config.setups.nixvim.sharedModules;
               };
             };

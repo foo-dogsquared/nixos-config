@@ -6,9 +6,7 @@ lib.runTests {
     expected = {
       hello = "world";
       whoa = 4566;
-      list-of-names = [
-        "Cheesy" "Angry" "Ash"
-      ];
+      list-of-names = [ "Cheesy" "Angry" "Ash" ];
     };
   };
 
@@ -17,9 +15,7 @@ lib.runTests {
     expected = {
       hello = "world";
       whoa = 4566;
-      list-of-names = [
-        "Cheesy" "Angry" "Ash"
-      ];
+      list-of-names = [ "Cheesy" "Angry" "Ash" ];
     };
   };
 

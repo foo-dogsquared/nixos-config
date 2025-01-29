@@ -16,32 +16,25 @@ let
     hash = "sha256-Qy5sZgNF/0uNCosj2NZEvyssXU9ln6ZsDjnt/orpt1k=";
     name = "ffmpeg-shadertoy";
   };
-in
-{
-  ffmpeg-foodogsquared = prev.ffmpeg-full.overrideAttrs (finalAttrs: prevAttrs: {
-    pname = "ffmpeg-foodogsquared";
-    srcs = [
-      prevAttrs.src
-      ffmpegGLTransitions
-      ffmpegShadertoy
-    ];
-    buildInputs = prevAttrs.buildInputs ++ (with prev; [
-      libGLU
-      glew
-    ]);
-    sourceRoot = ".";
-    patches = prevAttrs.patches ++ [
-      ./add-custom-filters.patch
-      ./update-ffmpeg-opengltransition.patch
-    ];
-    postUnpack = ''
-      cd ./${ffmpegGLTransitions.name}
-      cd ../
+in {
+  ffmpeg-foodogsquared = prev.ffmpeg-full.overrideAttrs
+    (finalAttrs: prevAttrs: {
+      pname = "ffmpeg-foodogsquared";
+      srcs = [ prevAttrs.src ffmpegGLTransitions ffmpegShadertoy ];
+      buildInputs = prevAttrs.buildInputs ++ (with prev; [ libGLU glew ]);
+      sourceRoot = ".";
+      patches = prevAttrs.patches ++ [
+        ./add-custom-filters.patch
+        ./update-ffmpeg-opengltransition.patch
+      ];
+      postUnpack = ''
+        cd ./${ffmpegGLTransitions.name}
+        cd ../
 
-      cp --no-preserve=mode ./${ffmpegGLTransitions.name}/vf_gltransition.c ./ffmpeg/libavfilter
-      cp --no-preserve=mode ./${ffmpegShadertoy.name}/vf_shadertoy.c ./ffmpeg/libavfilter
+        cp --no-preserve=mode ./${ffmpegGLTransitions.name}/vf_gltransition.c ./ffmpeg/libavfilter
+        cp --no-preserve=mode ./${ffmpegShadertoy.name}/vf_shadertoy.c ./ffmpeg/libavfilter
 
-      cd ffmpeg
-    '';
-  });
+        cd ffmpeg
+      '';
+    });
 }

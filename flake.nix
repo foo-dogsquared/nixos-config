@@ -52,7 +52,8 @@
     nixvim-unstable.inputs.home-manager.follows = "home-manager-unstable";
 
     # Make a wrapper.
-    wrapper-manager-fds.url = "github:foo-dogsquared/nix-module-wrapper-manager-fds";
+    wrapper-manager-fds.url =
+      "github:foo-dogsquared/nix-module-wrapper-manager-fds";
 
     # This is what AUR strives to be.
     nur.url = "github:nix-community/NUR";
@@ -99,7 +100,8 @@
     # Make a default.nix compatible stuff. Take note, we're giving this a
     # unique suffix since there are other flake inputs that uses the same flake
     # and we want our `default.nix` to refer to our version.
-    flake-compat-fds.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
+    flake-compat-fds.url =
+      "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
 
     # Someone had the idea to make the flake outputs be configured as a Nix
     # module and I love them for it.
@@ -108,14 +110,8 @@
 
   outputs = inputs@{ self, nixpkgs, ... }:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
+      systems = [ "x86_64-linux" "aarch64-linux" ];
 
-      imports = [
-        ./modules/flake-parts
-        ./configs/flake-parts
-      ];
+      imports = [ ./modules/flake-parts ./configs/flake-parts ];
     };
 }

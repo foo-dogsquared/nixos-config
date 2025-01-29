@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.shared-setups.server.crowdsec;
-in
-{
+let cfg = config.shared-setups.server.crowdsec;
+in {
   options.shared-setups.server.crowdsec.enable =
     lib.mkEnableOption "typical Crowdsec setup for public-facing servers";
 
@@ -29,9 +27,7 @@ in
       dataSources = {
         ssh = lib.mkIf config.services.sshd.enable {
           source = "journalctl";
-          journalctl_filter = [
-            "_SYSTEMD_UNIT=ssh.service"
-          ];
+          journalctl_filter = [ "_SYSTEMD_UNIT=ssh.service" ];
           labels.type = "syslog";
         };
       };

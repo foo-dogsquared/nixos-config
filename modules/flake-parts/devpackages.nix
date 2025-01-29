@@ -1,9 +1,7 @@
 { config, lib, flake-parts-lib, ... }:
 
-let
-  inherit (flake-parts-lib) mkSubmoduleOptions mkPerSystemOption;
-in
-{
+let inherit (flake-parts-lib) mkSubmoduleOptions mkPerSystemOption;
+in {
   options = {
     flake = mkSubmoduleOptions {
       devPackages = lib.mkOption {
@@ -31,13 +29,8 @@ in
   };
 
   config = {
-    flake.devPackages =
-      lib.mapAttrs
-        (k: v: v.devPackages)
-        (lib.filterAttrs
-          (k: v: v.devPackages != { })
-          config.allSystems
-        );
+    flake.devPackages = lib.mapAttrs (k: v: v.devPackages)
+      (lib.filterAttrs (k: v: v.devPackages != { }) config.allSystems);
 
     perInput = system: flake:
       lib.optionalAttrs (flake ? devPackages.${system}) {

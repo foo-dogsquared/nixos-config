@@ -1,5 +1,1 @@
-{
-  imports = [
-    ./extra-arguments.nix
-  ];
-}
+{ imports = [ ./extra-arguments.nix ]; }

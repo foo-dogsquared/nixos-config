@@ -25,8 +25,7 @@ let
     "Endless"
     "Old"
   ];
-in
-{
+in {
   options = {
     name = lib.mkOption {
       type = lib.types.nonEmptyStr;
@@ -68,13 +67,11 @@ in
       default = [ config.fullName ];
       defaultText = "[ <session>.fullName ]";
       apply = names:
-        builtins.map
-          (name:
-            if (lib.elem name validDesktopNames) || (lib.hasPrefix "X-" name) then
-              name
-            else
-              "X-${name}")
-          names;
+        builtins.map (name:
+          if (lib.elem name validDesktopNames) || (lib.hasPrefix "X-" name) then
+            name
+          else
+            "X-${name}") names;
       example = [ "GNOME" "Garden" ];
     };
 
@@ -84,22 +81,24 @@ in
         A one-sentence description of the desktop environment.
       '';
       default = "${config.fullName} desktop environment";
-      defaultText = lib.literalExpression "\${<name>.fullName} desktop environment";
+      defaultText =
+        lib.literalExpression "\${<name>.fullName} desktop environment";
       example = "A desktop environment featuring a scrolling compositor.";
     };
 
     components = lib.mkOption {
-      type = with lib.types; attrsOf (submoduleWith {
-        specialArgs = {
-          inherit utils pkgs;
-          session = {
-            inherit (config) fullName desktopNames description;
-            inherit name;
+      type = with lib.types;
+        attrsOf (submoduleWith {
+          specialArgs = {
+            inherit utils pkgs;
+            session = {
+              inherit (config) fullName desktopNames description;
+              inherit name;
+            };
           };
-        };
-        modules = [ ./component-type.nix ];
-        shorthandOnlyDefinesConfig = true;
-      });
+          modules = [ ./component-type.nix ];
+          shorthandOnlyDefinesConfig = true;
+        });
       description = ''
         The individual components to be launched with the desktop session.
       '';
@@ -131,10 +130,7 @@ in
         configuration.
         :::
       '';
-      example = [
-        "--systemd"
-        "--disable-acceleration-check"
-      ];
+      example = [ "--systemd" "--disable-acceleration-check" ];
     };
 
     settings = lib.mkOption {
@@ -175,7 +171,8 @@ in
         customized version of GNOME.
         :::
       '';
-      default = lib.mapAttrsToList (_: component: component.id) config.components;
+      default =
+        lib.mapAttrsToList (_: component: component.id) config.components;
       example = [
         "org.gnome.Shell"
         "org.gnome.SettingsDaemon.A11ySettings"
@@ -186,15 +183,10 @@ in
 
     systemd = {
       targetUnit = lib.mkOption {
-        type =
-          let
-            inherit (utils.systemdUtils.lib) unitConfig;
-            inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
-          in
-          lib.types.submodule [
-            commonUnitOptions
-            unitConfig
-          ];
+        type = let
+          inherit (utils.systemdUtils.lib) unitConfig;
+          inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
+        in lib.types.submodule [ commonUnitOptions unitConfig ];
         description = ''
           systemd target configuration to be generated for
           `gnome-session@<name>.target`. This should be configured if the
@@ -229,7 +221,8 @@ in
 
     systemd.targetUnit = {
       overrideStrategy = lib.mkForce "asDropin";
-      wants = lib.mkDefault (builtins.map (c: "${c}.target") config.requiredComponents);
+      wants = lib.mkDefault
+        (builtins.map (c: "${c}.target") config.requiredComponents);
     };
 
     settings."GNOME Session" = {

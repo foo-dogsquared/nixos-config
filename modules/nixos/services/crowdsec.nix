@@ -11,23 +11,19 @@ let
     # Set all of the related Crowdsec configuration options from the user-given
     # service module config.
     config = lib.mkMerge [
-      (
-        let
-          plugins = lib.filterAttrs (n: v: v.package != null) cfg.notificationPlugins;
-        in
-          lib.mkIf (plugins != { }) {
-            config_paths.plugin_dir = lib.mkDefault pluginsDir;
-          }
-      )
+      (let
+        plugins =
+          lib.filterAttrs (n: v: v.package != null) cfg.notificationPlugins;
+      in lib.mkIf (plugins != { }) {
+        config_paths.plugin_dir = lib.mkDefault pluginsDir;
+      })
 
-      (
-        let
-          pluginsSettings = lib.filterAttrs (n: v: v.settings != { }) cfg.notificationPlugins;
-        in
-          lib.mkIf (pluginsSettings != { }) {
-            config_paths.notification_dir = lib.mkDefault pluginsConfigDrv;
-          }
-      )
+      (let
+        pluginsSettings =
+          lib.filterAttrs (n: v: v.settings != { }) cfg.notificationPlugins;
+      in lib.mkIf (pluginsSettings != { }) {
+        config_paths.notification_dir = lib.mkDefault pluginsConfigDrv;
+      })
 
       (lib.mkIf (cfg.dataSources != { }) {
         crowdsec_service.acqusition_dir = lib.mkDefault acqusitionsDir;
@@ -37,28 +33,25 @@ let
 
   pluginsDir = pkgs.symlinkJoin {
     name = "crowdsec-system-notification-plugins";
-    paths =
-      let
-        plugins = lib.filterAttrs (n: v: v.package != null) cfg.notificationPlugins;
-      in
-        lib.mapAttrsToList (n: v: "${v.package}/share/crowdsec") plugins;
+    paths = let
+      plugins =
+        lib.filterAttrs (n: v: v.package != null) cfg.notificationPlugins;
+    in lib.mapAttrsToList (n: v: "${v.package}/share/crowdsec") plugins;
   };
 
   pluginsConfigDrv = let
-    pluginsConfigs =
-      lib.mapAttrsToList
-        (n: v: settingsFormat.generate "crowdsec-system-plugin-config-${n}" v.settings)
-        cfg.notificationPlugins;
+    pluginsConfigs = lib.mapAttrsToList (n: v:
+      settingsFormat.generate "crowdsec-system-plugin-config-${n}" v.settings)
+      cfg.notificationPlugins;
   in pkgs.symlinkJoin {
     name = "crowdsec-system-notification-plugins-configs";
     paths = pluginsConfigs;
   };
 
   acqusitionsDir = let
-    acqusitionConfigs =
-      lib.mapAttrsToList
-        (n: v: settingsFormat.generate "crowdsec-system-acqusition-config-${n}" v.settings)
-        cfg.dataSources;
+    acqusitionConfigs = lib.mapAttrsToList (n: v:
+      settingsFormat.generate "crowdsec-system-acqusition-config-${n}"
+      v.settings) cfg.dataSources;
   in pkgs.symlinkJoin {
     name = "crowdsec-system-acqusitions-configs";
     paths = acqusitionConfigs;
@@ -104,18 +97,16 @@ let
       default = { };
       example = {
         source = "journalctl";
-        journalctl_filter = [
-          "_SYSTEMD_UNIT=ssh.service"
-        ];
+        journalctl_filter = [ "_SYSTEMD_UNIT=ssh.service" ];
       };
     };
   };
 
   configFile = settingsFormat.generate "crowdsec-config" cfg.settings;
-in
-{
+in {
   options.services.crowdsec = {
-    enable = lib.mkEnableOption "[Crowdsec](https://crowdsec.net), a monitoring service using crowdsourced data";
+    enable = lib.mkEnableOption
+      "[Crowdsec](https://crowdsec.net), a monitoring service using crowdsourced data";
 
     package = lib.mkPackageOption pkgs "crowdsec" { };
 
@@ -188,9 +179,7 @@ in
       example = {
         ssh = {
           source = "journalctl";
-          journalctl_filter = [
-            "_SYSTEMD_UNIT=ssh.service"
-          ];
+          journalctl_filter = [ "_SYSTEMD_UNIT=ssh.service" ];
           labels.type = "syslog";
         };
       };
@@ -201,7 +190,9 @@ in
     systemd.services.crowdsec = {
       description = "Crowdsec monitoring server";
       script = ''
-        ${lib.getExe' cfg.package "crowdsec"} -c ${configFile} ${lib.escapeShellArgs cfg.extraArgs}
+        ${lib.getExe' cfg.package "crowdsec"} -c ${configFile} ${
+          lib.escapeShellArgs cfg.extraArgs
+        }
       '';
       after = [
         "syslog.target"
@@ -215,9 +206,8 @@ in
       serviceConfig = {
         ExecReload = "kill -HUP $MAINPID";
         ReadWritePaths =
-          lib.optionals (cfg.settings.common.log_media or "" == "file") [
-            cfg.settings.common.log_folder
-          ];
+          lib.optionals (cfg.settings.common.log_media or "" == "file")
+          [ cfg.settings.common.log_folder ];
 
         User = "crowdsec";
         Group = "crowdsec";
@@ -249,11 +239,7 @@ in
         SystemCallFilter = [ "@system-service" ];
         SystemCallErrorNumber = "EPERM";
 
-        RestrictAddressFamilies = [
-          "AF_LOCAL"
-          "AF_INET"
-          "AF_INET6"
-        ];
+        RestrictAddressFamilies = [ "AF_LOCAL" "AF_INET" "AF_INET6" ];
         RestrictNamespaces = true;
         RestrictSUIDGUID = true;
         MemoryDenyWriteExecute = true;

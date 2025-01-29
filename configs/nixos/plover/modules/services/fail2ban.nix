@@ -5,8 +5,7 @@ let
   cfg = hostCfg.services.fail2ban;
 
   inherit (import ../hardware/networks.nix) interfaces;
-in
-{
+in {
   options.hosts.plover.services.fail2ban.enable =
     lib.mkEnableOption "fail2ban monitoring";
 

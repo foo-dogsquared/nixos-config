@@ -1,3 +1,1 @@
-{
-  gonic-basic = ./basic.nix;
-}
+{ gonic-basic = ./basic.nix; }

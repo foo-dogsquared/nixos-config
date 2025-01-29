@@ -1,9 +1,7 @@
 { name, config, pkgs, lib, utils, session, ... }:
 
 let
-  optionalSystemdUnitOption = {
-    unitType, systemdModuleAttribute, otherType,
-  }:
+  optionalSystemdUnitOption = { unitType, systemdModuleAttribute, otherType, }:
     lib.mkOption {
       type = lib.types.nullOr otherType;
       description = ''
@@ -20,8 +18,7 @@ let
       visible = "shallow";
       default = null;
     };
-in
-{
+in {
   options = {
     name = lib.mkOption {
       type = lib.types.nonEmptyStr;
@@ -81,17 +78,16 @@ in
       # NixOS systemd extensions as much as possible. For more details, see
       # `config` attribute of the `sessionType`.
       serviceUnit = lib.mkOption {
-        type =
-          let
-            inherit (utils.systemdUtils.lib) unitConfig serviceConfig;
-            inherit (utils.systemdUtils.unitOptions) commonUnitOptions serviceOptions;
-          in
-          lib.types.submodule [
-            commonUnitOptions
-            serviceOptions
-            serviceConfig
-            unitConfig
-          ];
+        type = let
+          inherit (utils.systemdUtils.lib) unitConfig serviceConfig;
+          inherit (utils.systemdUtils.unitOptions)
+            commonUnitOptions serviceOptions;
+        in lib.types.submodule [
+          commonUnitOptions
+          serviceOptions
+          serviceConfig
+          unitConfig
+        ];
         description = ''
           systemd service configuration to be generated. This should be
           configured if the session is managed by systemd.
@@ -114,15 +110,10 @@ in
       };
 
       targetUnit = lib.mkOption {
-        type =
-          let
-            inherit (utils.systemdUtils.lib) unitConfig;
-            inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
-          in
-          lib.types.submodule [
-            commonUnitOptions
-            unitConfig
-          ];
+        type = let
+          inherit (utils.systemdUtils.lib) unitConfig;
+          inherit (utils.systemdUtils.unitOptions) commonUnitOptions;
+        in lib.types.submodule [ commonUnitOptions unitConfig ];
         description = ''
           systemd target configuration to be generated. This should be
           configured if the session is managed by systemd.
@@ -143,46 +134,31 @@ in
       timerUnit = optionalSystemdUnitOption {
         unitType = "timer";
         systemdModuleAttribute = "timers";
-        otherType =
-          let
-            inherit (utils.systemdUtils.unitOptions) timerOptions commonUnitOptions;
-            inherit (utils.systemdUtils.lib) unitConfig;
-          in
-          lib.types.submodule [
-            commonUnitOptions
-            timerOptions
-            unitConfig
-          ];
+        otherType = let
+          inherit (utils.systemdUtils.unitOptions)
+            timerOptions commonUnitOptions;
+          inherit (utils.systemdUtils.lib) unitConfig;
+        in lib.types.submodule [ commonUnitOptions timerOptions unitConfig ];
       };
 
       socketUnit = optionalSystemdUnitOption {
         unitType = "socket";
         systemdModuleAttribute = "sockets";
-        otherType =
-          let
-            inherit (utils.systemdUtils.unitOptions) socketOptions commonUnitOptions;
-            inherit (utils.systemdUtils.lib) unitConfig;
-          in
-          lib.types.submodule [
-            commonUnitOptions
-            socketOptions
-            unitConfig
-          ];
+        otherType = let
+          inherit (utils.systemdUtils.unitOptions)
+            socketOptions commonUnitOptions;
+          inherit (utils.systemdUtils.lib) unitConfig;
+        in lib.types.submodule [ commonUnitOptions socketOptions unitConfig ];
       };
 
       pathUnit = optionalSystemdUnitOption {
         unitType = "path";
         systemdModuleAttribute = "paths";
-        otherType =
-          let
-            inherit (utils.systemdUtils.unitOptions) pathOptions commonUnitOptions;
-            inherit (utils.systemdUtils.lib) unitConfig;
-          in
-          lib.types.submodule [
-            commonUnitOptions
-            pathOptions
-            unitConfig
-          ];
+        otherType = let
+          inherit (utils.systemdUtils.unitOptions)
+            pathOptions commonUnitOptions;
+          inherit (utils.systemdUtils.lib) unitConfig;
+        in lib.types.submodule [ commonUnitOptions pathOptions unitConfig ];
       };
     };
 
@@ -204,7 +180,9 @@ in
     desktopConfig = {
       name = lib.mkForce config.id;
       desktopName = lib.mkDefault "${session.fullName} - ${config.description}";
-      exec = lib.mkDefault (pkgs.writeShellScript "${session.name}-${config.name}-script" config.script);
+      exec = lib.mkDefault
+        (pkgs.writeShellScript "${session.name}-${config.name}-script"
+          config.script);
       noDisplay = lib.mkForce true;
       onlyShowIn = session.desktopNames;
 
@@ -219,32 +197,31 @@ in
       };
     };
 
-    /*
-      Setting some recommendation and requirements for systemd-managed
-      gnome-session components. Note there are the missing directives that
-      COULD include some sane defaults here.
+    /* Setting some recommendation and requirements for systemd-managed
+       gnome-session components. Note there are the missing directives that
+       COULD include some sane defaults here.
 
-      * The `Unit.OnFailure=` and `Unit.OnFailureJobMode=` directives. Since
-      different components don't have the same priority and don't handle
-      failures the same way, we didn't set it here. This is on the user to
-      know how different desktop components interact with each other
-      especially if one of them failed.
+       * The `Unit.OnFailure=` and `Unit.OnFailureJobMode=` directives. Since
+       different components don't have the same priority and don't handle
+       failures the same way, we didn't set it here. This is on the user to
+       know how different desktop components interact with each other
+       especially if one of them failed.
 
-      * Even if we have a way to limit starting desktop components with
-      `systemd-xdg-autostart-condition`, using `Service.ExecCondition=` would
-      severely limit possible reuse of desktop components with other
-      NixOS-module-generated gnome-session sessions so we're not bothering with
-      those.
+       * Even if we have a way to limit starting desktop components with
+       `systemd-xdg-autostart-condition`, using `Service.ExecCondition=` would
+       severely limit possible reuse of desktop components with other
+       NixOS-module-generated gnome-session sessions so we're not bothering with
+       those.
 
-      * `Service.Type=` is obviously not included since not all desktop
-      components are the same either. Some of them could be a D-Bus service,
-      some of them are oneshots, etc. Though, it might be better to have this
-      as an explicit option set by the user instead of setting `Type=notify` as
-      a default.
+       * `Service.Type=` is obviously not included since not all desktop
+       components are the same either. Some of them could be a D-Bus service,
+       some of them are oneshots, etc. Though, it might be better to have this
+       as an explicit option set by the user instead of setting `Type=notify` as
+       a default.
 
-      * Most sandboxing options. Aside from the fact we're dealing with a
-      systemd user unit, much of them are unnecessary and rarely needed (if
-      ever like `Service.PrivateTmp=`?) so we didn't set such defaults here.
+       * Most sandboxing options. Aside from the fact we're dealing with a
+       systemd user unit, much of them are unnecessary and rarely needed (if
+       ever like `Service.PrivateTmp=`?) so we didn't set such defaults here.
     */
     systemd.serviceUnit = {
       script = lib.mkAfter config.script;
@@ -283,15 +260,14 @@ in
       };
     };
 
-    /*
-      Take note, we'll assume the session target unit will be the one to set
-      the dependency-related directives (i.e., `After=`, `Before=`, `Requires=`)
-      so no need to set any in here.
+    /* Take note, we'll assume the session target unit will be the one to set
+       the dependency-related directives (i.e., `After=`, `Before=`, `Requires=`)
+       so no need to set any in here.
 
-      And another thing, we didn't set a default value for dependency-related
-      directives to one of the gnome-session-specific target unit. It is more
-      likely for a user to design their own desktop session with full control
-      so it would be better for these options to be empty for less confusion.
+       And another thing, we didn't set a default value for dependency-related
+       directives to one of the gnome-session-specific target unit. It is more
+       likely for a user to design their own desktop session with full control
+       so it would be better for these options to be empty for less confusion.
     */
     systemd.targetUnit = {
       # This should be the dependency-related directive to be configured. The
@@ -299,10 +275,7 @@ in
       wants = [ "${config.id}.service" ];
 
       description = lib.mkDefault config.description;
-      documentation = [
-        "man:gnome-session(1)"
-        "man:systemd.special(7)"
-      ];
+      documentation = [ "man:gnome-session(1)" "man:systemd.special(7)" ];
 
       # Similar to the service unit, this is very much required as noted from
       # the `gnome-session(1)` manual page.

@@ -1,31 +1,20 @@
 # Declarative NixVim configurations because everything under the Nix ecosystem
 # must be so declarative so we're setting up declarative ways of declaring
 # those accursed setups to be exported in this flake.
-{ inputs
-, lib
-, config
-, options
+{ inputs, lib, config, options
 
-, ...
-}:
+, ... }:
 
 let
   partsConfig = config;
   cfg = config.setups.nixvim;
   nixvimModules = ../../nixvim;
 
-  mkNixvimConfig = {
-    system,
-    pkgs,
-    nixvimBranch ? "nixvim",
-    modules ? [ ],
-    specialArgs ? { },
-  }:
+  mkNixvimConfig = { system, pkgs, nixvimBranch ? "nixvim", modules ? [ ]
+    , specialArgs ? { }, }:
     inputs.${nixvimBranch}.legacyPackages.${system}.makeNixvimWithModule {
       inherit pkgs;
-      module = {
-        imports = modules;
-      };
+      module = { imports = modules; };
       extraSpecialArgs = specialArgs // {
         foodogsquaredModulesPath = builtins.toString nixvimModules;
       };
@@ -35,12 +24,13 @@ let
     type = with lib.types; listOf deferredModule;
     default = [ ];
   };
-  modulesOption' = configEnv: modulesOption // {
-    description = ''
-      A list of NixVim modules to be applied across all NixVim configurations
-      when imported as part of ${configEnv}.
-    '';
-  };
+  modulesOption' = configEnv:
+    modulesOption // {
+      description = ''
+        A list of NixVim modules to be applied across all NixVim configurations
+        when imported as part of ${configEnv}.
+      '';
+    };
 
   componentType = { lib, config, ... }: {
     imports = [
@@ -83,9 +73,7 @@ let
       };
     };
 
-    config = {
-      nixpkgs.config = cfg.sharedNixpkgsConfig;
-    };
+    config = { nixpkgs.config = cfg.sharedNixpkgsConfig; };
   };
 
   configType = { name, lib, config, ... }: {
@@ -97,17 +85,26 @@ let
           built against.
         '';
         example = [
-          { nixpkgsBranch = "nixos-unstable"; nixvimBranch = "nixvim-unstable"; }
-          { nixpkgsBranch = "nixos-stable"; nixvimBranch = "nixvim-stable"; }
-          { nixpkgsBranch = "nixos-stable"; nixvimBranch = "nixvim-stable"; neovimPackage = pkgs: pkgs.neovim-nightly; }
+          {
+            nixpkgsBranch = "nixos-unstable";
+            nixvimBranch = "nixvim-unstable";
+          }
+          {
+            nixpkgsBranch = "nixos-stable";
+            nixvimBranch = "nixvim-stable";
+          }
+          {
+            nixpkgsBranch = "nixos-stable";
+            nixvimBranch = "nixvim-stable";
+            neovimPackage = pkgs: pkgs.neovim-nightly;
+          }
         ];
       };
     };
 
     config = {
-      modules = [
-        "${partsConfig.setups.configDir}/nixvim/${config.configName}"
-      ];
+      modules =
+        [ "${partsConfig.setups.configDir}/nixvim/${config.configName}" ];
 
       specialArgs = cfg.sharedSpecialArgs;
     };
@@ -165,15 +162,15 @@ let
       ];
     };
   };
-in
-{
+in {
   options.setups.nixvim = {
     configs = lib.mkOption {
-      type = with lib.types; attrsOf (submodule [
-        (import ./shared/config-options.nix { inherit (config) systems; })
-        ./shared/special-args-options.nix
-        configType
-      ]);
+      type = with lib.types;
+        attrsOf (submodule [
+          (import ./shared/config-options.nix { inherit (config) systems; })
+          ./shared/special-args-options.nix
+          configType
+        ]);
       default = { };
       description = ''
         A set of NixVim configurations to be integrated into the declarative
@@ -207,25 +204,25 @@ in
   };
 
   options.setups.nixos.configs = lib.mkOption {
-    type = with lib.types; attrsOf (submodule [
-      nixvimIntegrationModule
-      ({ config, lib, ... }: {
-        config.modules = [
-          inputs.${config.nixvim.branch}.nixosModules.nixvim
-        ];
-      })
-    ]);
+    type = with lib.types;
+      attrsOf (submodule [
+        nixvimIntegrationModule
+        ({ config, lib, ... }: {
+          config.modules =
+            [ inputs.${config.nixvim.branch}.nixosModules.nixvim ];
+        })
+      ]);
   };
 
   options.setups.home-manager.configs = lib.mkOption {
-    type = with lib.types; attrsOf (submodule [
-      nixvimIntegrationModule
-      ({ config, lib, ... }: {
-        config.modules = [
-          inputs.${config.nixvim.branch}.homeManagerModules.nixvim
-        ];
-      })
-    ]);
+    type = with lib.types;
+      attrsOf (submodule [
+        nixvimIntegrationModule
+        ({ config, lib, ... }: {
+          config.modules =
+            [ inputs.${config.nixvim.branch}.homeManagerModules.nixvim ];
+        })
+      ]);
   };
 
   config = lib.mkIf (cfg.configs != { }) {
@@ -239,56 +236,42 @@ in
     ];
 
     perSystem = { system, config, lib, ... }:
-      (
-        let
-          validConfigs = lib.filterAttrs
-            (_: metadata: lib.elem system metadata.systems)
-            cfg.configs;
+      (let
+        validConfigs =
+          lib.filterAttrs (_: metadata: lib.elem system metadata.systems)
+          cfg.configs;
 
-          nixvimConfigurations =
+        nixvimConfigurations = let
+          generateNixvimConfigs = name: metadata:
             let
-              generateNixvimConfigs = name: metadata:
+              mkNixvimConfig' = component:
                 let
-                  mkNixvimConfig' = component:
-                    let
-                      pkgs = import inputs.${component.nixpkgsBranch} {
-                        inherit (component.nixpkgs) config overlays;
-                        inherit system;
-                      };
-                      neovimPackage = component.neovimPackage pkgs;
-                    in
-                    lib.nameValuePair
-                      "${name}-${component.nixpkgsBranch}-${neovimPackage.pname}"
-                      (mkNixvimConfig {
-                        inherit system pkgs;
-                        inherit (component) nixvimBranch;
-                        modules =
-                          cfg.sharedModules
-                          ++ cfg.standaloneConfigModules
-                          ++ metadata.modules
-                          ++ [{ package = neovimPackage; }];
-                      });
-                  nixvimConfigs = builtins.map mkNixvimConfig' metadata.components;
-                in
-                lib.listToAttrs nixvimConfigs;
-            in
-            lib.concatMapAttrs generateNixvimConfigs validConfigs;
-        in
-        {
-          # We'll reuse these.
-          inherit nixvimConfigurations;
+                  pkgs = import inputs.${component.nixpkgsBranch} {
+                    inherit (component.nixpkgs) config overlays;
+                    inherit system;
+                  };
+                  neovimPackage = component.neovimPackage pkgs;
+                in lib.nameValuePair
+                "${name}-${component.nixpkgsBranch}-${neovimPackage.pname}"
+                (mkNixvimConfig {
+                  inherit system pkgs;
+                  inherit (component) nixvimBranch;
+                  modules = cfg.sharedModules ++ cfg.standaloneConfigModules
+                    ++ metadata.modules ++ [{ package = neovimPackage; }];
+                });
+              nixvimConfigs = builtins.map mkNixvimConfig' metadata.components;
+            in lib.listToAttrs nixvimConfigs;
+        in lib.concatMapAttrs generateNixvimConfigs validConfigs;
+      in {
+        # We'll reuse these.
+        inherit nixvimConfigurations;
 
-          checks =
-            lib.mapAttrs'
-              (name: nvim:
-                lib.nameValuePair
-                  "nixvim-check-${name}"
-                  (inputs.nixvim.lib.${system}.check.mkTestDerivationFromNvim {
-                    inherit nvim;
-                    name = "${name} configuration";
-                  }))
-              nixvimConfigurations;
-        }
-      );
+        checks = lib.mapAttrs' (name: nvim:
+          lib.nameValuePair "nixvim-check-${name}"
+          (inputs.nixvim.lib.${system}.check.mkTestDerivationFromNvim {
+            inherit nvim;
+            name = "${name} configuration";
+          })) nixvimConfigurations;
+      });
   };
 }

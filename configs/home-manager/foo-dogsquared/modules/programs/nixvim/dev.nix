@@ -22,7 +22,8 @@
 
   # Give language "support" through tree-sitter.
   plugins.treesitter.grammarPackages =
-    with config.plugins.treesitter.package.builtGrammars; [
+    with config.plugins.treesitter.package.builtGrammars;
+    [
       agda
       arduino
       astro
@@ -54,6 +55,7 @@
       kotlin
       make
       nickel
+      nix
       perl
       ruby
       rust
@@ -64,15 +66,7 @@
       wgsl
       wgsl_bevy
       zig
-    ]
-    ++ (with pkgs.tree-sitter-grammars; [
-      tree-sitter-elisp
-      tree-sitter-nu
-    ]);
+    ] ++ (with pkgs.tree-sitter-grammars; [ tree-sitter-elisp tree-sitter-nu ]);
 
-  extraPlugins = with pkgs.vimPlugins; [
-    vim-nickel
-    vim-nix
-    zig-vim
-  ];
+  extraPlugins = with pkgs.vimPlugins; [ vim-nickel vim-nix zig-vim ];
 }

@@ -22,9 +22,7 @@ in {
         withRuby = true;
         withNodeJs = true;
 
-        plugins = with pkgs.vimPlugins; [
-          parinfer-rust
-        ];
+        plugins = with pkgs.vimPlugins; [ parinfer-rust ];
       };
 
       xdg.mimeApps.defaultApplications = {

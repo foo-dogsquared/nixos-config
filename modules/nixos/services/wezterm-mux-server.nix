@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.services.wezterm-mux-server;
-in
-{
+let cfg = config.services.wezterm-mux-server;
+in {
   options.services.wezterm-mux-server = {
     enable = lib.mkEnableOption "Wezterm mux server";
 
@@ -37,7 +35,10 @@ in
 
       wantedBy = [ "multi-user.target" ];
       script = ''
-        wezterm-mux-server ${lib.optionalString (cfg.configFile != null) "--config-file ${cfg.configFile}"}
+        wezterm-mux-server ${
+          lib.optionalString (cfg.configFile != null)
+          "--config-file ${cfg.configFile}"
+        }
       '';
 
       # Give it some tough love.

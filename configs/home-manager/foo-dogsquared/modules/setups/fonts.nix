@@ -3,8 +3,7 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.fonts;
-in
-{
+in {
   options.users.foo-dogsquared.setups.fonts.enable =
     lib.mkEnableOption "foo-dogsquared's font setup";
 

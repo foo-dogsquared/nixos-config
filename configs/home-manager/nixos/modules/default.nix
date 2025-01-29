@@ -1,5 +1,1 @@
-{
-  imports = [
-    ./programs/terminal-multiplexer.nix
-  ];
-}
+{ imports = [ ./programs/terminal-multiplexer.nix ]; }

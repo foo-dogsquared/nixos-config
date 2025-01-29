@@ -9,8 +9,7 @@ let
       '';
     };
   };
-in
-{
+in {
   options = {
     flake = flake-parts-lib.mkSubmoduleOptions {
       deploy = lib.mkOption {

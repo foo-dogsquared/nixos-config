@@ -3,10 +3,4 @@
 # development with plain text cartridges.
 { mkShell, tic-80, imagemagick }:
 
-mkShell {
-  packages = [
-    tic-80
-    tic-80.dev
-    imagemagick
-  ];
-}
+mkShell { packages = [ tic-80 tic-80.dev imagemagick ]; }

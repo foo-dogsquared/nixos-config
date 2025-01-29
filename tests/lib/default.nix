@@ -5,18 +5,24 @@
 let
   inherit (pkgs) lib;
   foodogsquaredLib = (import ../../lib { inherit pkgs; }).extend (final: prev:
-  let
-    callLib = file: import file { inherit pkgs lib; self = prev; };
-  in
-  {
-    nixos = callLib ../../lib/env-specific/nixos.nix;
-    home-manager = callLib ../../lib/env-specific/home-manager.nix;
-    nixvim = callLib ../../lib/env-specific/nixvim.nix;
-  });
+    let
+      callLib = file:
+        import file {
+          inherit pkgs lib;
+          self = prev;
+        };
+    in {
+      nixos = callLib ../../lib/env-specific/nixos.nix;
+      home-manager = callLib ../../lib/env-specific/home-manager.nix;
+      nixvim = callLib ../../lib/env-specific/nixvim.nix;
+    });
 
-  callLib = file: import file { inherit pkgs lib; self = foodogsquaredLib; };
-in
-{
+  callLib = file:
+    import file {
+      inherit pkgs lib;
+      self = foodogsquaredLib;
+    };
+in {
   builders = callLib ./builders.nix;
   trivial = callLib ./trivial.nix;
   data = callLib ./data;

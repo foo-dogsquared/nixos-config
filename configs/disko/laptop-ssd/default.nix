@@ -17,13 +17,8 @@
 
               subvolumes = {
                 "/root" = {
-                  mountOptions = [
-                    "rw"
-                    "user"
-                    "noauto"
-                    "nofail"
-                    "compress=zstd:10"
-                  ];
+                  mountOptions =
+                    [ "rw" "user" "noauto" "nofail" "compress=zstd:10" ];
                   mountpoint = "/media/laptop-ssd";
                 };
               };

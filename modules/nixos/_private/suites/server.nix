@@ -3,10 +3,8 @@
 # between them.
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.suites.server;
-in
-{
+let cfg = config.suites.server;
+in {
   options.suites.server = {
     enable = lib.mkEnableOption "server-related settings";
     cleanup.enable = lib.mkEnableOption "cleanup service for the system";
@@ -16,8 +14,8 @@ in
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       assertions = lib.singleton {
-        assertion =
-          !config.suites.desktop.enable || !config.suites.server.enable;
+        assertion = !config.suites.desktop.enable
+          || !config.suites.server.enable;
         message = ''
           Desktop profile is also enabled. The profiles `desktop` and `server`
           are mutually exclusive.

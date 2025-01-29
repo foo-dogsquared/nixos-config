@@ -3,13 +3,10 @@
 {
   services.ludusavi = {
     enable = true;
-    extraArgs = [
-      "--force"
-      "--compression zstd"
-      "--compression-level 15"
-    ];
+    extraArgs = [ "--force" "--compression zstd" "--compression-level 15" ];
     settings = {
-      manifest.url = "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
+      manifest.url =
+        "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml";
       backup.path = "${config.xdg.cacheHome}/ludusavi/backups";
       restore.path = "${config.xdg.cacheHome}/ludusavi/backups";
     };

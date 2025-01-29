@@ -8,9 +8,11 @@ let
 
   borgJobsModule = { name, lib, config, ... }: {
     options = {
-      exportWrapperScript = lib.mkEnableOption "export wrapper script as part of the environment" // {
-        default = true;
-      };
+      exportWrapperScript =
+        lib.mkEnableOption "export wrapper script as part of the environment"
+        // {
+          default = true;
+        };
 
       extraArgs = lib.mkOption {
         type = with lib.types; listOf str;
@@ -25,9 +27,7 @@ let
           :::
         '';
         default = [ ];
-        example = [
-          "--remote-path=/path/to/borg/repo"
-        ];
+        example = [ "--remote-path=/path/to/borg/repo" ];
       };
 
       extraCreateArgs = lib.mkOption {
@@ -36,10 +36,7 @@ let
           Additional arguments for `borg create`.
         '';
         default = [ ];
-        example = [
-          "--stats"
-          "--checkpoint-interval" "600"
-        ];
+        example = [ "--stats" "--checkpoint-interval" "600" ];
       };
 
       extraInitArgs = lib.mkOption {
@@ -48,10 +45,7 @@ let
           Extra arguments to be passed to `borg init`, when applicable.
         '';
         default = [ ];
-        example = [
-          "--make-parent-dirs"
-          "--append-only"
-        ];
+        example = [ "--make-parent-dirs" "--append-only" ];
       };
 
       patternFiles = lib.mkOption {
@@ -129,60 +123,85 @@ let
 
   mkPassEnv = v:
     # Prefer the pass command option since it is the safer option.
-    if v.encryption.passCommand != null
-    then { BORG_PASSCOMMAND = v.encryption.passCommand; }
-    else if v.encryption.passphrase != null
-    then { BORG_PASSPHRASE = v.encryption.passphrase; }
-    else { };
+    if v.encryption.passCommand != null then {
+      BORG_PASSCOMMAND = v.encryption.passCommand;
+    } else if v.encryption.passphrase != null then {
+      BORG_PASSPHRASE = v.encryption.passphrase;
+    } else
+      { };
   makeJobName = name: "borg-job-${name}";
 
   mkBorgWrapperScripts = n: v:
     let
       executableName = makeJobName n;
       setEnv = { BORG_REPO = v.repo; } // (mkPassEnv v) // v.environment;
-      mkWrapperFlag = n: v:
-        ''--set ${lib.escapeShellArg n} "${v}"'';
-    in
-    pkgs.runCommand "${n}-wrapper" {
+      mkWrapperFlag = n: v: ''--set ${lib.escapeShellArg n} "${v}"'';
+    in pkgs.runCommand "${n}-wrapper" {
       nativeBuildInputs = [ pkgs.makeWrapper ];
     } ''
-      makeWrapper "${lib.getExe' cfg.package "borg"} "$out/bin/${executableName}" \
-        ${lib.concatStringsSep " \\\n" (lib.mapAttrsToList mkWrapperFlag setEnv)}
+      makeWrapper "${
+        lib.getExe' cfg.package "borg"
+      } "$out/bin/${executableName}" \
+        ${
+          lib.concatStringsSep " \\\n" (lib.mapAttrsToList mkWrapperFlag setEnv)
+        }
     '';
 
   mkBorgServiceUnit = n: v:
     lib.nameValuePair (makeJobName n) {
-      Unit = {
-        Description = "Periodic BorgBackup job '${n}'";
-      };
+      Unit = { Description = "Periodic BorgBackup job '${n}'"; };
 
       Service = {
         CPUSchedulingPolicy = "idle";
         IOSchedulingClass = "idle";
-        Environment =
-          lib.attrsToList (n: v: "${n}=${v}") (
-            {
-              inherit (v) extraArgs extraInitArgs extraCreateArgs;
-            }
-            // v.environment // (mkPassEnv v)
-          )
-          ++ [
-            "BORG_REPO=${v.repo}"
-          ];
+        Environment = lib.attrsToList (n: v: "${n}=${v}") ({
+          inherit (v) extraArgs extraInitArgs extraCreateArgs;
+        } // v.environment // (mkPassEnv v)) ++ [ "BORG_REPO=${v.repo}" ];
 
-        ExecStart =
-          let
-            borgScript = pkgs.writeShellApplication {
-              name = "borg-job-${n}-script";
-              runtimeInputs = [ cfg.package ];
-              text = ''
-                on_exit() {
-                }
-                trap on_exit EXIT
-              '';
-            };
-          in
-            lib.getExe borgScript;
+        ExecStart = let
+          borgScript = pkgs.writeShellApplication {
+            name = "borg-job-${n}-script";
+            runtimeInputs = [ cfg.package ];
+            text = ''
+              on_exit() {
+                exitStatus=$?
+                ${cfg.postHook}
+                exit $exitStatus
+              }
+              trap on_exit EXIT
+
+              borgWrapper () {
+                local result
+                borg "$@" && result=$? || result=$?
+                if [[ -z "${
+                  toString cfg.failOnWarnings
+                }" ]] && [[ "$result" == 1 ]]; then
+                  echo "ignoring warning return value 1"
+                  return 0
+                else
+                  return "$result"
+                fi
+              }
+
+              archiveName="${
+                lib.optionalString (cfg.archiveBaseName != null)
+                (cfg.archiveBaseName + "-")
+              }$(date ${cfg.dateFormat})"
+              archiveSuffix="${
+                lib.optionalString cfg.appendFailedSuffix ".failed"
+              }"
+              ${cfg.preHook}
+            '' + lib.optionalString cfg.doInit ''
+              # Run borg init if the repo doesn't exist yet
+              if ! borgWrapper list $extraArgs > /dev/null; then
+                borgWrapper init $extraArgs \
+                  --encryption ${cfg.encryption.mode} \
+                  $extraInitArgs
+                ${cfg.postInit}
+              fi
+            '';
+          };
+        in lib.getExe borgScript;
       };
     };
 
@@ -198,8 +217,7 @@ let
 
       Install.WantedBy = [ "timers.target" ];
     };
-in
-{
+in {
   options.services.borgbackup = {
     enable = lib.mkEnableOption "periodic backups with BorgBackup";
 
@@ -235,15 +253,11 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages =
-      let
-        jobs' = lib.filterAttrs (n: v: v.exportWrapperScript) cfg.jobs;
-      in
-      lib.mapAttrsToList mkBorgWrapperScripts jobs';
+      let jobs' = lib.filterAttrs (n: v: v.exportWrapperScript) cfg.jobs;
+      in lib.mapAttrsToList mkBorgWrapperScripts jobs';
 
-    systemd.user.services =
-      lib.mapAttrs' mkBorgServiceUnit cfg.jobs;
+    systemd.user.services = lib.mapAttrs' mkBorgServiceUnit cfg.jobs;
 
-    systemd.user.timers =
-      lib.mapAttrs' mkBorgTimerUnit cfg.jobs;
+    systemd.user.timers = lib.mapAttrs' mkBorgTimerUnit cfg.jobs;
   };
 }

@@ -14,14 +14,16 @@ let
       };
     };
   };
-in 
-{
+in {
   # This option is for the wider-scoped environment to be easily compatible
   # with the home-manager flake-parts module where it also shares the Nix
   # configuration submodule. Without this option, it would not work (or we
   # could just rename the options from the home-manager module).
   imports = [
-    (lib.mkAliasOptionModule [ "homeManagerBranch" ] [ "home-manager" "branch" ])
+    (lib.mkAliasOptionModule [ "homeManagerBranch" ] [
+      "home-manager"
+      "branch"
+    ])
   ];
 
   options.home-manager = {
@@ -61,12 +63,7 @@ in
           };
         };
 
-        plover.userConfig = {
-          extraGroups = [
-            "adm"
-            "wheel"
-          ];
-        };
+        plover.userConfig = { extraGroups = [ "adm" "wheel" ]; };
       };
     };
   };

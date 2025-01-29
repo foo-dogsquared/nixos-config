@@ -9,8 +9,7 @@ let
   cfg = userCfg.programs.doom-emacs;
 
   doomEmacsInstallation = "${config.xdg.configHome}/emacs";
-in
-{
+in {
   options.users.foo-dogsquared.programs.doom-emacs.enable =
     lib.mkEnableOption "foo-dogsquared's Doom Emacs configuration";
 
@@ -18,12 +17,13 @@ in
     programs.emacs = {
       enable = true;
       package = pkgs.emacs;
-      extraPackages = epkgs: with epkgs; [
-        org-noter-pdftools
-        org-pdftools
-        pdf-tools
-        vterm
-      ];
+      extraPackages = epkgs:
+        with epkgs; [
+          org-noter-pdftools
+          org-pdftools
+          pdf-tools
+          vterm
+        ];
     };
 
     # Automatically install Doom Emacs from here.
@@ -58,16 +58,13 @@ in
       # :lang org +roam2
       texlive.combined.scheme-medium
       sqlite
-      anystyle-cli
+      #anystyle-cli
     ];
 
     programs.python = {
       enable = true;
       package = pkgs.python3;
-      modules = ps: with ps; [
-        jupyter
-        jupyter-book
-      ];
+      modules = ps: with ps; [ jupyter jupyter-book ];
     };
 
     # Enable Emacs server for them quicknotes.

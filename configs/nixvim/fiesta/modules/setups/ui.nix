@@ -1,10 +1,9 @@
-{ config, lib, helpers,... }:
+{ config, lib, helpers, ... }:
 
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.ui;
-in
-{
+in {
   options.nixvimConfigs.fiesta.setups.ui.enable =
     lib.mkEnableOption "configuration for UI-related settings and plugins";
 
@@ -46,9 +45,7 @@ in
     plugins.indent-blankline = {
       enable = true;
       settings = {
-        indent = {
-          char = "┊";
-        };
+        indent = { char = "┊"; };
         scope.char = "┃";
       };
     };

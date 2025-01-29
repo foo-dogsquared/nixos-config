@@ -2,14 +2,12 @@
 
 , defaultNixConf
 
-, ...
-}:
+, ... }:
 
 let
   domain = "foodogsquared.one";
   subdomain = name: "${name}.${domain}";
-in
-{
+in {
   setups.nixos = {
     configs = {
       # The main desktop.
@@ -17,10 +15,8 @@ in
         nixpkgs.branch = "nixos-unstable";
 
         # This is to make an exception for Archivebox.
-        nixpkgs.config.permittedInsecurePackages = [
-          "archiver-3.5.1"
-          "python3.12-django-3.1.14"
-        ];
+        nixpkgs.config.permittedInsecurePackages =
+          [ "archiver-3.5.1" "python3.12-django-3.1.14" ];
 
         systems = [ "x86_64-linux" ];
         formats = null;
@@ -30,10 +26,8 @@ in
 
           inputs.wrapper-manager-fds.nixosModules.wrapper-manager
           {
-            documentation.nixos.extraModules = [
-              ../../modules/nixos
-              ../../modules/nixos/_private
-            ];
+            documentation.nixos.extraModules =
+              [ ../../modules/nixos ../../modules/nixos/_private ];
             wrapper-manager.documentation.manpage.enable = true;
             wrapper-manager.documentation.extraModules = [
               ../../modules/wrapper-manager
@@ -44,9 +38,8 @@ in
           inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
           inputs.nixos-hardware.nixosModules.common-cpu-amd-raphael-igpu
 
-          (
-            { config, ... }: let
-              hmCfg = config.home-manager.users;
+          ({ config, ... }:
+            let hmCfg = config.home-manager.users;
             in {
               # Testing out Nushell for a spinerooski.
               users.users.foo-dogsquared.shell =
@@ -54,8 +47,7 @@ in
                   hmCfg.foo-dogsquared.programs.nushell.package
                 else
                   "/run/current-system/sw/bin/bash";
-            }
-          )
+            })
         ];
         home-manager = {
           branch = "home-manager-unstable";
@@ -99,10 +91,8 @@ in
           activationTimeout = 1200;
         };
 
-        modules = [
-          inputs.disko.nixosModules.disko
-          inputs.sops-nix.nixosModules.sops
-        ];
+        modules =
+          [ inputs.disko.nixosModules.disko inputs.sops-nix.nixosModules.sops ];
       };
 
       # The barely customized non-graphical installer.
@@ -126,9 +116,7 @@ in
       winnowing = {
         nixpkgs = {
           branch = "nixos-unstable";
-          overlays = [
-            inputs.neovim-nightly-overlay.overlays.default
-          ];
+          overlays = [ inputs.neovim-nightly-overlay.overlays.default ];
         };
         home-manager.branch = "home-manager-unstable";
         systems = [ "x86_64-linux" ];

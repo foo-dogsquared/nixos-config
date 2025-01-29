@@ -16,7 +16,7 @@
       nvidia-ai-what = {
         hawk-hawk = true;
         reduce-muffled-sounds = true;
-        noise-gate = 5.60;
+        noise-gate = 5.6;
         abc = [ "d" "e" "f" ];
       };
     };

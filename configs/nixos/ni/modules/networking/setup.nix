@@ -3,8 +3,7 @@
 let
   hostCfg = config.hosts.ni;
   cfg = hostCfg.networking;
-in
-{
+in {
   options.hosts.ni.networking = {
     enable = lib.mkEnableOption "networking setup";
 
@@ -31,9 +30,7 @@ in
         :::
       '';
       default =
-        if config.networking.useNetworkd
-        then "networkd"
-        else "networkmanager";
+        if config.networking.useNetworkd then "networkd" else "networkmanager";
       defaultText = ''
         When networkd is enabled, `networkd`, otherwise `networkmanager` as the
         general fallback value.
@@ -54,11 +51,8 @@ in
       };
 
       # Add these timeservers.
-      networking.timeServers = lib.mkBefore [
-        "ntp.nict.jp"
-        "time.nist.gov"
-        "time.facebook.com"
-      ];
+      networking.timeServers =
+        lib.mkBefore [ "ntp.nict.jp" "time.nist.gov" "time.facebook.com" ];
 
       # Put on your cloak, kid.
       suites.vpn.personal.enable = true;
@@ -148,9 +142,7 @@ in
           dhcp = lib.mkIf (config.networking.dhcpcd.enable) "dhcpcd";
         }
 
-        (lib.mkIf config.services.resolved.enable {
-          dns = "systemd-resolved";
-        })
+        (lib.mkIf config.services.resolved.enable { dns = "systemd-resolved"; })
       ];
 
       # We'll configure individual network interfaces to use DHCP since it can

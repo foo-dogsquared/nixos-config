@@ -10,13 +10,12 @@ let
 
     packages = lib.mkOption {
       type = with lib.types; listOf package;
-      description =
-        if isGlobal then ''
-          Global list of fonts to be added per wrapper (with the local fonts
-          support enabled anyways).
-        '' else ''
-          List of fonts to be added to the wrapper.
-        '';
+      description = if isGlobal then ''
+        Global list of fonts to be added per wrapper (with the local fonts
+        support enabled anyways).
+      '' else ''
+        List of fonts to be added to the wrapper.
+      '';
       default = [ ];
       example = lib.literalExpression ''
         with pkgs; [
@@ -28,14 +27,12 @@ let
       '';
     };
   };
-in
-{
+in {
   options.fonts = fontsModuleFactory { isGlobal = true; };
 
-  wrappers =
-    let
-      fontsSubmodule = { config, lib, name, pkgs, ... }: let
-        submoduleCfg = config.fonts;
+  wrappers = let
+    fontsSubmodule = { config, lib, name, pkgs, ... }:
+      let submoduleCfg = config.fonts;
       in {
         options.fonts = fontsModuleFactory { isGlobal = false; };
 
@@ -44,11 +41,9 @@ in
             inherit (pkgs) fontconfig;
             fontsDirectories = submoduleCfg.packages;
           };
-        in lib.mkIf submoduleCfg.enable {
-          fonts.packages = cfg.packages;
-        };
+        in lib.mkIf submoduleCfg.enable { fonts.packages = cfg.packages; };
       };
-    in lib.mkOption {
-      type = with lib.types; attrsOf (submodule fontsSubmodule);
-    };
+  in lib.mkOption {
+    type = with lib.types; attrsOf (submodule fontsSubmodule);
+  };
 }

@@ -1,10 +1,8 @@
 # Enables all of my usual setup for desktop-oriented stuff.
 { config, lib, pkgs, ... }@attrs:
 
-let
-  cfg = config.suites.desktop;
-in
-{
+let cfg = config.suites.desktop;
+in {
   options.suites.desktop = {
     enable = lib.mkEnableOption "installations of desktop apps";
     graphics.enable =
@@ -29,45 +27,41 @@ in
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     (lib.mkIf cfg.graphics.enable {
-      home.packages = with pkgs; [
-        aseprite # Pixel art wannabe tool.
-        emulsion-palette # Manage your color palettes.
-        eyedropper # Gotta keep your monitor moist.
-        inkscape-with-extensions # Illustration wannabe tool.
-        gimp-with-plugins # Photo editing wannabe tool.
-        krita # Digital art wannabe tool.
-        pureref # Pure references.
+      home.packages = with pkgs;
+        [
+          aseprite # Pixel art wannabe tool.
+          emulsion-palette # Manage your color palettes.
+          eyedropper # Gotta keep your monitor moist.
+          inkscape-with-extensions # Illustration wannabe tool.
+          gimp-with-plugins # Photo editing wannabe tool.
+          krita # Digital art wannabe tool.
+          pureref # Pure references.
 
-        ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
-        imagemagick # Ah yes, everyman's image manipulation tool.
-        gmic # Don't let the gimmicks fool you, it's a magical image framework.
-      ]
-      ++ (
-        let
-          hasBlenderNixOSModule = attrs.nixosConfig.programs.blender.enable or false;
-        in
-        lib.optional (!hasBlenderNixOSModule) pkgs.blender
-      );
+          ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
+          imagemagick # Ah yes, everyman's image manipulation tool.
+          gmic # Don't let the gimmicks fool you, it's a magical image framework.
+        ] ++ (let
+          hasBlenderNixOSModule =
+            attrs.nixosConfig.programs.blender.enable or false;
+        in lib.optional (!hasBlenderNixOSModule) pkgs.blender);
     })
 
     (lib.mkIf cfg.audio.enable {
-      home.packages = with pkgs; [
-        audacity # EGADS!!!
-        musescore # You won't find muses to score, only music: a common misconception.
-        zrythm # The freer FL Studio (if you're sailing by the high seven seas).
-        supercollider-with-plugins # Not to be confused with the other Super Collider.
-        sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
-        ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
-      ]
-      ++ (
-        let
-          hasDesktopSuiteEnabled = attrs.nixosConfig.suites.desktop.enable or false;
-        in
-        lib.optionals hasDesktopSuiteEnabled (with pkgs; [
+      home.packages = with pkgs;
+        [
+          audacity # EGADS!!!
+          musescore # You won't find muses to score, only music: a common misconception.
+          zrythm # The freer FL Studio (if you're sailing by the high seven seas).
+          supercollider-with-plugins # Not to be confused with the other Super Collider.
+          sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
+          ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
+        ] ++ (let
+          hasDesktopSuiteEnabled =
+            attrs.nixosConfig.suites.desktop.enable or false;
+        in lib.optionals hasDesktopSuiteEnabled (with pkgs; [
           yabridge # Building bridges to Windows and Linux audio tools.
           yabridgectl # The bridge controller.
-        ])
-      );
+        ]));
     })
 
     (lib.mkIf cfg.audio.pipewire.enable {
@@ -75,11 +69,10 @@ in
       services.easyeffects.enable = true;
       services.fluidsynth = {
         enable = true;
-        soundService =
-          let
-            hasNixOSPipewirePulseEnabled = attrs.nixosConfig.services.pipewire.enable or false;
-          in
-          lib.mkIf hasNixOSPipewirePulseEnabled "pipewire-pulse";
+        soundService = let
+          hasNixOSPipewirePulseEnabled =
+            attrs.nixosConfig.services.pipewire.enable or false;
+        in lib.mkIf hasNixOSPipewirePulseEnabled "pipewire-pulse";
       };
 
       home.packages = with pkgs; [
@@ -116,14 +109,10 @@ in
         enable = true;
         config = {
           ytdl-format = "(webm,mkv,mp4)[height<=?1280]";
-          ytdl-raw-options-append =
-            let
-              options = {
-                yes-playlist = "";
-              };
-              options' = lib.mapAttrsToList (n: v: "${n}=${v}") options;
-            in
-            lib.concatStringsSep "," options';
+          ytdl-raw-options-append = let
+            options = { yes-playlist = ""; };
+            options' = lib.mapAttrsToList (n: v: "${n}=${v}") options;
+          in lib.concatStringsSep "," options';
           ordered-chapters = true;
           ab-loop-count = "inf";
           chapter-seek-threshold = 15.0;
@@ -156,7 +145,8 @@ in
             profile-desc = "CJK prioritization";
             vlang = "zho,zh,kor,ko,jpn,ja,eng,en";
             alang = vlang;
-            slang = with lib; concatStringsSep "," (reverseList (splitString "," vlang));
+            slang = with lib;
+              concatStringsSep "," (reverseList (splitString "," vlang));
           };
 
           "extension.gif" = {
@@ -189,10 +179,8 @@ in
       ];
 
       xdg.mimeApps.defaultApplications = {
-        "application/pdf" = [
-          "sioyek.desktop"
-          "com.github.johnfactotum.Foliate.desktop"
-        ];
+        "application/pdf" =
+          [ "sioyek.desktop" "com.github.johnfactotum.Foliate.desktop" ];
       };
 
       # Some PDF viewer with a penchant for research.

@@ -22,19 +22,13 @@
           ruby = pkgs.ruby_3_1;
           gemset = ./gemset.nix;
         };
-      in
-      {
-        devShells.default =
-          import ./shell.nix {
-            inherit pkgs;
-            extraBuildInputs = [
-              gems.env
-              gems.ruby
-            ];
-            extraPackages = [
-              inputs.ruby-nix-bundix.packages."${system}".default
-            ];
-          };
+      in {
+        devShells.default = import ./shell.nix {
+          inherit pkgs;
+          extraBuildInputs = [ gems.env gems.ruby ];
+          extraPackages =
+            [ inputs.ruby-nix-bundix.packages."${system}".default ];
+        };
 
         formatter = pkgs.treefmt;
       });

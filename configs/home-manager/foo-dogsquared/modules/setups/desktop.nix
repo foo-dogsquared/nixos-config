@@ -4,18 +4,14 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.setups.desktop;
-in
-{
+in {
   options.users.foo-dogsquared.setups.desktop.enable =
     lib.mkEnableOption "a set of usual desktop productivity services";
 
   config = lib.mkIf cfg.enable {
     state.ports.activitywatch.value = 5600;
 
-    home.packages = with pkgs; [
-      bitwarden-cli
-      bitwarden-desktop
-    ];
+    home.packages = with pkgs; [ bitwarden-cli bitwarden-desktop ];
 
     # Install all of the desktop stuff.
     suites.desktop = {
@@ -66,19 +62,14 @@ in
       startAt = "daily";
       settings = {
         topdirs = "~/Downloads ~/Documents ~/library";
-        "skippedNames+" =
-          let
-            inherit (config.state.paths) ignoreDirectories;
-          in
-          lib.concatStringsSep " " ignoreDirectories;
+        "skippedNames+" = let inherit (config.state.paths) ignoreDirectories;
+        in lib.concatStringsSep " " ignoreDirectories;
 
         "~/library/projects" = {
           "skippedNames+" = ".editorconfig .gitignore result flake.lock go.sum";
         };
 
-        "~/library/projects/software" = {
-          "skippedNames+" = "target result";
-        };
+        "~/library/projects/software" = { "skippedNames+" = "target result"; };
       };
     };
 
@@ -92,9 +83,12 @@ in
       startAt = "daily";
     };
 
-    users.foo-dogsquared.programs.custom-homepage.sections.services.links = lib.singleton {
-      url = "http://localhost:${builtins.toString config.state.ports.activitywatch.value}";
-      text = "Telemetry server";
-    };
+    users.foo-dogsquared.programs.custom-homepage.sections.services.links =
+      lib.singleton {
+        url = "http://localhost:${
+            builtins.toString config.state.ports.activitywatch.value
+          }";
+        text = "Telemetry server";
+      };
   };
 }

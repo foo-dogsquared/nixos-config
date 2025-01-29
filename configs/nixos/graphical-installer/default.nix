@@ -1,8 +1,4 @@
-{ lib
-, config
-, pkgs
-, foodogsquaredLib
-, foodogsquaredUtils
+{ lib, config, pkgs, foodogsquaredLib, foodogsquaredUtils
 , foodogsquaredModulesPath
 
 , ... }:
@@ -34,9 +30,7 @@
       # closure size smaller.
       workflows = {
         enable = [ "a-happy-gnome" ];
-        workflows.a-happy-gnome = {
-          extraApps = lib.mkForce [ ];
-        };
+        workflows.a-happy-gnome = { extraApps = lib.mkForce [ ]; };
       };
 
       # Install the web browser of course. What would be a graphical installer
@@ -63,8 +57,7 @@
       system.stateVersion = "23.11";
     }
 
-    (lib.mkIf
-      (foodogsquaredLib.nixos.isFormat config "isoImage") {
+    (lib.mkIf (foodogsquaredLib.nixos.isFormat config "isoImage") {
       isoImage = {
         isoBaseName = config.networking.hostName;
         edition = "a-happy-gnome";

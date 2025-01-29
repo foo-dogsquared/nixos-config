@@ -1,10 +1,7 @@
 # We're basically reimplmenting parts from the home-manager test suite here
 # just with our own modules included.
-{ pkgs ? import <nixpkgs> { }
-, utils ? import ../../utils.nix { inherit pkgs; }
-, homeManagerSrc ? <home-manager>
-, enableBig ? true
-}:
+{ pkgs ? import <nixpkgs> { }, utils ? import ../../utils.nix { inherit pkgs; }
+, homeManagerSrc ? <home-manager>, enableBig ? true }:
 
 let
   nmt = pkgs.nix-lib-nmt;
@@ -47,8 +44,7 @@ let
   ];
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
-in
-import nmt {
+in import nmt {
   inherit pkgs lib modules;
   testedAttrPath = [ "home" "activationPackage" ];
   # TODO: Fix nmt to accept specialArgs or something.
@@ -57,8 +53,7 @@ import nmt {
     ./programs/pipewire
     ./programs/pop-launcher
     ./programs/zed-editor
-  ]
-  ++ lib.optionals isLinux [
+  ] ++ lib.optionals isLinux [
     ./services/archivebox
     #./services/borgmatic
     ./services/bleachbit

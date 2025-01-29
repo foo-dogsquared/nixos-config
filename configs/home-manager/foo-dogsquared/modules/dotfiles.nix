@@ -7,10 +7,10 @@ let
   projectsDir = config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR;
 
   dotfiles = "${projectsDir}/packages/dotfiles";
-  dotfiles' = config.lib.file.mkOutOfStoreSymlink config.home.mutableFile."${dotfiles}".path;
+  dotfiles' = config.lib.file.mkOutOfStoreSymlink
+    config.home.mutableFile."${dotfiles}".path;
   getDotfiles = path: "${dotfiles'}/${path}";
-in
-{
+in {
   options.users.foo-dogsquared.dotfiles.enable =
     lib.mkEnableOption "custom outside dotfiles for other programs";
 
@@ -21,9 +21,7 @@ in
         type = "git";
       };
 
-      home.sessionPath = [
-        "${config.home.mutableFile.${dotfiles}.path}/bin"
-      ];
+      home.sessionPath = [ "${config.home.mutableFile.${dotfiles}.path}/bin" ];
     }
 
     (lib.mkIf (userCfg.programs.doom-emacs.enable) {
@@ -59,7 +57,8 @@ in
     })
 
     (lib.mkIf config.programs.nushell.enable {
-      home.file."${config.xdg.dataHome}/nushell/vendor/autoload".source = getDotfiles "nu/autoload";
+      home.file."${config.xdg.dataHome}/nushell/vendor/autoload".source =
+        getDotfiles "nu/autoload";
     })
   ]);
 }

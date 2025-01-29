@@ -3,8 +3,7 @@
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.desktop-utils;
-in
-{
+in {
   options.nixvimConfigs.fiesta.setups.desktop-utils.enable =
     lib.mkEnableOption "desktop utilities to be used for this Neovim setup";
 

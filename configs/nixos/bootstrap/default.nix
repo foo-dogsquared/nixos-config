@@ -6,9 +6,7 @@
 #
 # This means, there will be a "nixos" user among other things.
 {
-  imports = [
-    "${foodogsquaredModulesPath}/profiles/installer.nix"
-  ];
+  imports = [ "${foodogsquaredModulesPath}/profiles/installer.nix" ];
 
   config = lib.mkMerge [
     {

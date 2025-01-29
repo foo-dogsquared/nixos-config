@@ -3,8 +3,7 @@
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.completion;
-in
-{
+in {
   options.nixvimConfigs.fiesta.setups.completion.enable =
     lib.mkEnableOption "debugging setup for Fiesta NixVim";
 
@@ -26,11 +25,8 @@ in
           "<S-Tab>" = "cmp.mapping.select_prev_item()";
         };
 
-        settings.sources = [
-          { name = "nvim_lsp"; }
-          { name = "path"; }
-          { name = "buffer"; }
-        ];
+        settings.sources =
+          [ { name = "nvim_lsp"; } { name = "path"; } { name = "buffer"; } ];
       };
 
       # All of the typical completion sources I would need.

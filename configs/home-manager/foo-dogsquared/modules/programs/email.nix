@@ -8,7 +8,8 @@ let
     address = "${name}@${domain}";
     userName = "${name}@${domain}";
     realName = lib.mkDefault "${name}@${domain}";
-    passwordCommand = lib.mkDefault "gopass show email/${domain}/${name} | head -n 1";
+    passwordCommand =
+      lib.mkDefault "gopass show email/${domain}/${name} | head -n 1";
 
     imap = {
       host = "heracles.mxrouting.net";
@@ -23,11 +24,11 @@ let
       tls.enable = true;
     };
   };
-in
-{
+in {
   options.users.foo-dogsquared.programs.email = {
     enable = lib.mkEnableOption "foo-dogsquared's email setup";
-    thunderbird.enable = lib.mkEnableOption "foo-dogsquared's Thunderbird configuration";
+    thunderbird.enable =
+      lib.mkEnableOption "foo-dogsquared's Thunderbird configuration";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -64,7 +65,8 @@ in
           realName = config.accounts.email.accounts.personal.realName;
           userName = "foo.dogsquared@gmail.com";
           flavor = "gmail.com";
-          passwordCommand = "gopass show websites/accounts.google.com/foo.dogsquared | head -n 1";
+          passwordCommand =
+            "gopass show websites/accounts.google.com/foo.dogsquared | head -n 1";
         };
       };
     }

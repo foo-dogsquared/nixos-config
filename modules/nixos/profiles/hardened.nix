@@ -3,9 +3,7 @@
 { pkgs, lib, modulesPath, ... }:
 
 {
-  imports = [
-    "${modulesPath}/profiles/hardened.nix"
-  ];
+  imports = [ "${modulesPath}/profiles/hardened.nix" ];
 
   # Don't replace it mid-way! DON'T TURN LEFT!!!!
   security.protectKernelImage = true;

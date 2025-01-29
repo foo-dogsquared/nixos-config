@@ -3,10 +3,8 @@
 # "enterprise" is for all of the users which is me, myself, and I).
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.suites.browsers;
-in
-{
+let cfg = config.suites.browsers;
+in {
   options.suites.browsers = {
     firefox.enable = lib.mkEnableOption "Firefox and its fixed configuration";
     chromium.enable = lib.mkEnableOption "Chromium and its fixed configuration";
@@ -14,9 +12,7 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.chromium.enable {
-      environment.systemPackages = with pkgs; [
-        chromium
-      ];
+      environment.systemPackages = with pkgs; [ chromium ];
 
       programs.chromium = {
         enable = true;
@@ -49,12 +45,8 @@ in
           AppAutoUpdate = false;
 
           Containers.Default =
-            let
-              mkContainer = name: color: icon: {
-                inherit name color icon;
-              };
-            in
-            [
+            let mkContainer = name: color: icon: { inherit name color icon; };
+            in [
               (mkContainer "Personal" "blue" "fingerprint")
               (mkContainer "Self-hosted" "pink" "fingerprint")
               (mkContainer "Work" "red" "briefcase")
@@ -69,42 +61,47 @@ in
           DisableSetDesktopBackground = true;
           DontCheckDefaultBrowser = true;
 
-          ExtensionSettings =
-            let
-              mozillaAddon = id: "https://addons.mozilla.org/firefox/downloads/latest/${id}/latest.xpi";
+          ExtensionSettings = let
+            mozillaAddon = id:
+              "https://addons.mozilla.org/firefox/downloads/latest/${id}/latest.xpi";
 
-              # Unlike the user-specific browser configuration, we're just
-              # considering the bare minimum set of preferred extensions.
-              extensions = {
-                "@contain-facebook".install_url = mozillaAddon "facebook-container";
-                "@contain-google".install_url = mozillaAddon "google-container";
-                "@testpilot-containers".install_url = mozillaAddon "multi-account-containers";
-                "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
-                  install_url = mozillaAddon "bitwarden-password-manager";
-                  installation_mode = "force_installed";
-                  default_area = "navbar";
-                };
-                "ff2mpv@yossarian.net" = {
-                  install_url = mozillaAddon "ff2mpv";
-                  default_area = "navbar";
-                };
-                "firefox-translations-addon@mozilla.org".install_url = mozillaAddon "firefox-translations";
-                "jid1-MnnxcxisBPnSXQ@jetpack".install_url = mozillaAddon "privacy-badger17";
-                "tridactyl.vim@cmcaine.co.uk".install_url = mozillaAddon "tridactyl-vim";
-                "uBlock0@raymondhill.net".install_url = mozillaAddon "ublock-origin";
-                "wayback_machine@mozilla.org" = {
-                  install_url = mozillaAddon "wayback-machine_new";
-                  default_area = "navbar";
-                };
+            # Unlike the user-specific browser configuration, we're just
+            # considering the bare minimum set of preferred extensions.
+            extensions = {
+              "@contain-facebook".install_url =
+                mozillaAddon "facebook-container";
+              "@contain-google".install_url = mozillaAddon "google-container";
+              "@testpilot-containers".install_url =
+                mozillaAddon "multi-account-containers";
+              "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+                install_url = mozillaAddon "bitwarden-password-manager";
+                installation_mode = "force_installed";
+                default_area = "navbar";
               };
+              "ff2mpv@yossarian.net" = {
+                install_url = mozillaAddon "ff2mpv";
+                default_area = "navbar";
+              };
+              "firefox-translations-addon@mozilla.org".install_url =
+                mozillaAddon "firefox-translations";
+              "jid1-MnnxcxisBPnSXQ@jetpack".install_url =
+                mozillaAddon "privacy-badger17";
+              "tridactyl.vim@cmcaine.co.uk".install_url =
+                mozillaAddon "tridactyl-vim";
+              "uBlock0@raymondhill.net".install_url =
+                mozillaAddon "ublock-origin";
+              "wayback_machine@mozilla.org" = {
+                install_url = mozillaAddon "wayback-machine_new";
+                default_area = "navbar";
+              };
+            };
 
-              applyInstallationMode = name: value:
-                lib.nameValuePair name (value //
-                  (lib.optionalAttrs
-                    (! (lib.hasAttrByPath [ "installation_mode" ] value))
-                    { installation_mode = "normal_installed"; }));
-            in
-            lib.mapAttrs' applyInstallationMode extensions;
+            applyInstallationMode = name: value:
+              lib.nameValuePair name (value // (lib.optionalAttrs
+                (!(lib.hasAttrByPath [ "installation_mode" ] value)) {
+                  installation_mode = "normal_installed";
+                }));
+          in lib.mapAttrs' applyInstallationMode extensions;
 
           FirefoxHome = {
             Highlights = false;
@@ -116,9 +113,7 @@ in
           NoDefaultBookmarks = true;
           OfferToSaveLoginsDefault = false;
           PasswordManagerEnabled = false;
-          SanitizeOnShutdown = {
-            FormData = true;
-          };
+          SanitizeOnShutdown = { FormData = true; };
 
           SearchEngines = {
             Add = [
@@ -126,16 +121,20 @@ in
                 Name = "Brave";
                 URLTemplate = "https://search.brave.com/search?q={searchTerms}";
                 Method = "GET";
-                IconURL = "https://brave.com/static-assets/images/brave-favicon.png";
+                IconURL =
+                  "https://brave.com/static-assets/images/brave-favicon.png";
                 Alias = "brave";
-                SuggestURLTemplate = "https://search.brave.com/api/suggest?q={searchTerms}";
+                SuggestURLTemplate =
+                  "https://search.brave.com/api/suggest?q={searchTerms}";
               }
 
               {
                 Name = "nixpkgs";
-                URLTemplate = "https://search.nixos.org/packages?type=packages&query={searchTerms}";
+                URLTemplate =
+                  "https://search.nixos.org/packages?type=packages&query={searchTerms}";
                 Method = "GET";
-                IconURL = "file://${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                IconURL =
+                  "file://${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
               }
             ];
             Default = "Brave";

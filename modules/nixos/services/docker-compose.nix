@@ -20,7 +20,7 @@ let
         description = ''
           List of files to be used when setting up the docker-compose service.
         '';
-        default = [];
+        default = [ ];
         example = lib.literalExpression ''
           [
             /path/to/docker-compose.yml
@@ -34,18 +34,17 @@ let
           Configuration to be used for the docker-compose process.
         '';
         default = { };
-        example = {
-        };
+        example = { };
       };
     };
 
     config = {
-      extraArgs =
-        cfg.extraArgs
+      extraArgs = cfg.extraArgs
         ++ lib.concatMap (f: [ "--file" f ]) config.files;
 
       files = lib.optionals (config.settings != { }) [
-        (settingsFormat.generate "docker-compose-generated-${name}" config.settings)
+        (settingsFormat.generate "docker-compose-generated-${name}"
+          config.settings)
       ];
     };
   };
@@ -61,14 +60,13 @@ let
         RemainAfterExit = true;
       };
     };
-in
-{
+in {
   options.services.docker-compose = {
     enable = lib.mkEnableOption "integration with docker-compose";
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
-      default = [];
+      default = [ ];
     };
 
     jobs = lib.mkOption {

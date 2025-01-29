@@ -3,8 +3,7 @@
 let
   nixvimCfg = config.nixvimConfigs.trovebelt;
   cfg = nixvimCfg.setups.debugging;
-in
-{
+in {
   options.nixvimConfigs.trovebelt.setups.debugging.enable =
     lib.mkEnableOption "debugging setup";
 
@@ -19,9 +18,7 @@ in
         args = [ "-i" "dap" ];
       };
 
-      lldb = {
-        command = "lldb-dap";
-      };
+      lldb = { command = "lldb-dap"; };
 
       dart = {
         command = "dart";
@@ -37,6 +34,5 @@ in
     # Enable all of the debugging extensoins.
     plugins.dap.extensions.dap-go.enable = true;
     plugins.dap.extensions.dap-python.enable = true;
-    plugins.rustaceanvim.enable = true;
   };
 }

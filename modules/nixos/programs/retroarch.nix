@@ -3,11 +3,8 @@
 let
   cfg = config.programs.retroarch;
 
-  finalPkg = pkgs.wrapRetroArch {
-    inherit (cfg) cores settings;
-  };
-in
-{
+  finalPkg = pkgs.wrapRetroArch { inherit (cfg) cores settings; };
+in {
   options.programs.retroarch = {
     enable = lib.mkEnableOption "configuring Retroarch";
 
@@ -43,7 +40,5 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ finalPkg ];
-  };
+  config = lib.mkIf cfg.enable { environment.systemPackages = [ finalPkg ]; };
 }

@@ -1,15 +1,16 @@
 # NixOS gaming.
 { lib, config, pkgs, ... }:
 
-let
-  cfg = config.suites.gaming;
-in
-{
+let cfg = config.suites.gaming;
+in {
   options.suites.gaming = {
     enable = lib.mkEnableOption "basic gaming setup";
-    emulators.enable = lib.mkEnableOption "installation of individual game emulators";
-    retro-computing.enable = lib.mkEnableOption "installation of retro computer systems";
-    games.enable = lib.mkEnableOption "installation of certain FOSS games for funsies";
+    emulators.enable =
+      lib.mkEnableOption "installation of individual game emulators";
+    retro-computing.enable =
+      lib.mkEnableOption "installation of retro computer systems";
+    games.enable =
+      lib.mkEnableOption "installation of certain FOSS games for funsies";
   };
 
   # Just don't ask where you can sail getting the games. :)
@@ -19,12 +20,7 @@ in
       # initializing sessions.
       programs.retroarch = {
         enable = true;
-        cores = with pkgs.libretro; [
-          bsnes-hd
-          desmume
-          dosbox-pure
-          ppsspp
-        ];
+        cores = with pkgs.libretro; [ bsnes-hd desmume dosbox-pure ppsspp ];
       };
 
       # Setup the go-to platform for Linux gaming. Most of the

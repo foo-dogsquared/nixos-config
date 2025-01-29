@@ -47,8 +47,7 @@ let
       };
     };
   };
-in
-{
+in {
   options.users.foo-dogsquared.services.archivebox = {
     enable = lib.mkEnableOption "ArchiveBox web UI server (through Podman)";
 
@@ -97,24 +96,28 @@ in
     };
 
     services.podman.containers = lib.mkMerge [
-      (lib.mapAttrs' (name: value: lib.nameValuePair (jobUnitName name) {
-        image = "docker.io/archivebox/archivebox:latest";
-        description = "ArchiveBox job '${name}'";
-        volumes = [ "${archiveboxDir}:/data" ];
-        autoUpdate = "registry";
-        exec = ''echo "${lib.concatStringsSep "\n" value.links}" | archivebox add ${lib.concatStringsSep " " value.extraArgs}'';
-        environmentFile = config.services.podman.containers.archivebox-webui.environmentFile;
-        environment = config.services.podman.containers.archivebox-webui.environment;
-      }) cfg.jobs)
+      (lib.mapAttrs' (name: value:
+        lib.nameValuePair (jobUnitName name) {
+          image = "docker.io/archivebox/archivebox:latest";
+          description = "ArchiveBox job '${name}'";
+          volumes = [ "${archiveboxDir}:/data" ];
+          autoUpdate = "registry";
+          exec = ''
+            echo "${lib.concatStringsSep "\n" value.links}" | archivebox add ${
+              lib.concatStringsSep " " value.extraArgs
+            }'';
+          environmentFile =
+            config.services.podman.containers.archivebox-webui.environmentFile;
+          environment =
+            config.services.podman.containers.archivebox-webui.environment;
+        }) cfg.jobs)
 
       {
         archivebox-webui = {
           image = "docker.io/archivebox/archivebox:latest";
           description = "ArchiveBox web server";
           ports = [ "${port}:${port}" ];
-          volumes = [
-            "${archiveboxDir}:/data"
-          ];
+          volumes = [ "${archiveboxDir}:/data" ];
           autoUpdate = "registry";
           exec = "archivebox server ${url}";
           environmentFile = [ "${config.sops.secrets."archivebox/env".path}" ];
@@ -135,8 +138,7 @@ in
         archivebox-sonic-search = {
           image = "docker.io/archivebox/sonic:latest";
           description = "Sonic search instance for ArchiveBox";
-          ports = let
-            port = builtins.toString config.state.ports.sonic.value;
+          ports = let port = builtins.toString config.state.ports.sonic.value;
           in [ "${port}:${port}" ];
           environmentFile = [ "${config.sops.secrets."sonic/env".path}" ];
           volumes = [
@@ -148,9 +150,10 @@ in
       }
     ];
 
-    users.foo-dogsquared.programs.custom-homepage.sections.services.links = lib.singleton {
-      url = "${url}/public";
-      text = "Link archive";
-    };
+    users.foo-dogsquared.programs.custom-homepage.sections.services.links =
+      lib.singleton {
+        url = "${url}/public";
+        text = "Link archive";
+      };
   };
 }

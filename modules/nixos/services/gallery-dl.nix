@@ -70,15 +70,13 @@ let
       settings = cfg.settings;
     };
   };
-in
-{
+in {
   options.services.gallery-dl = {
     enable = lib.mkEnableOption "archiving services with gallery-dl";
 
     package = lib.mkOption {
       type = lib.types.package;
-      description =
-        "Package containing the {command}`gallery-dl` binary.";
+      description = "Package containing the {command}`gallery-dl` binary.";
       default = pkgs.gallery-dl;
       defaultText = lib.literalExpression "pkgs.gallery-dl";
     };
@@ -150,67 +148,61 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.services = lib.mapAttrs'
-      (name: value:
-        lib.nameValuePair (jobUnitName name) {
-          wantedBy = [ "multi-user.target" ];
-          description = "gallery-dl archive job for group '${name}'";
-          documentation = [ "man:gallery-dl(1)" ];
-          enable = true;
-          path = with pkgs; [ brotli ffmpeg cfg.package ];
-          preStart = ''
-            mkdir -p ${lib.escapeShellArg value.downloadPath}
-          '';
+    systemd.services = lib.mapAttrs' (name: value:
+      lib.nameValuePair (jobUnitName name) {
+        wantedBy = [ "multi-user.target" ];
+        description = "gallery-dl archive job for group '${name}'";
+        documentation = [ "man:gallery-dl(1)" ];
+        enable = true;
+        path = with pkgs; [ brotli ffmpeg cfg.package ];
+        preStart = ''
+          mkdir -p ${lib.escapeShellArg value.downloadPath}
+        '';
 
-          # Order matters here. We're letting service-level arguments and
-          # settings to be overridden with job-specific things as much as
-          # possible especially with the settings.
-          #
-          # Regarding to settings (`settings`) and extra arguments
-          # (`extraArgs`), the settings is the last applied argument with
-          # `--config` option. This means that it will cascade resultings
-          # settings from `extraArgs` if there's any related option that is
-          # given like another `--config` for example.
-          script =
-            let
-              jobLevelSettingsFile =
-                settingsFormat.generate "gallery-dl-job-${name}-settings"
-                  value.settings;
-            in
-            ''
-              gallery-dl ${lib.escapeShellArgs value.extraArgs} ${
-                lib.optionalString (value.settings != null)
-                "--config ${jobLevelSettingsFile}"
-              } --destination ${lib.escapeShellArg value.downloadPath} ${
-                lib.escapeShellArgs value.urls
-              }
-            '';
-          startAt = value.startAt;
-          serviceConfig = {
-            LockPersonality = true;
-            NoNewPrivileges = true;
-            PrivateTmp = true;
-            PrivateUsers = true;
-            PrivateDevices = true;
-            ProtectControlGroups = true;
-            ProtectClock = true;
-            ProtectKernelLogs = true;
-            ProtectKernelModules = true;
-            ProtectKernelTunables = true;
-            SystemCallFilter = "@system-service";
-            SystemCallErrorNumber = "EPERM";
-          };
-        })
-      cfg.jobs;
+        # Order matters here. We're letting service-level arguments and
+        # settings to be overridden with job-specific things as much as
+        # possible especially with the settings.
+        #
+        # Regarding to settings (`settings`) and extra arguments
+        # (`extraArgs`), the settings is the last applied argument with
+        # `--config` option. This means that it will cascade resultings
+        # settings from `extraArgs` if there's any related option that is
+        # given like another `--config` for example.
+        script = let
+          jobLevelSettingsFile =
+            settingsFormat.generate "gallery-dl-job-${name}-settings"
+            value.settings;
+        in ''
+          gallery-dl ${lib.escapeShellArgs value.extraArgs} ${
+            lib.optionalString (value.settings != null)
+            "--config ${jobLevelSettingsFile}"
+          } --destination ${lib.escapeShellArg value.downloadPath} ${
+            lib.escapeShellArgs value.urls
+          }
+        '';
+        startAt = value.startAt;
+        serviceConfig = {
+          LockPersonality = true;
+          NoNewPrivileges = true;
+          PrivateTmp = true;
+          PrivateUsers = true;
+          PrivateDevices = true;
+          ProtectControlGroups = true;
+          ProtectClock = true;
+          ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
+          SystemCallFilter = "@system-service";
+          SystemCallErrorNumber = "EPERM";
+        };
+      }) cfg.jobs;
 
-    systemd.timers = lib.mapAttrs'
-      (name: value:
-        lib.nameValuePair (jobUnitName name) {
-          timerConfig = {
-            Persistent = true;
-            RandomizedDelaySec = "2min";
-          };
-        })
-      cfg.jobs;
+    systemd.timers = lib.mapAttrs' (name: value:
+      lib.nameValuePair (jobUnitName name) {
+        timerConfig = {
+          Persistent = true;
+          RandomizedDelaySec = "2min";
+        };
+      }) cfg.jobs;
   };
 }

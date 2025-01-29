@@ -5,8 +5,7 @@ let
   cfg = userCfg.programs.nushell;
 
   nushellAutoloadScriptDir = "${config.xdg.dataHome}/nushell/vendor/autoload";
-in
-{
+in {
   options.users.foo-dogsquared.programs.nushell.enable =
     lib.mkEnableOption "Nushell setup";
 
@@ -20,7 +19,6 @@ in
           skim
           polars
           units
-          net
           formats
           highlight
         ];
@@ -35,11 +33,10 @@ in
             }
           }
         '';
-        environmentVariables.NU_LIB_DIRS =
-          lib.concatStringsSep ":" [
-            "${config.xdg.cacheHome}/nushell/modules"
-            "${config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR}/nushell"
-          ];
+        environmentVariables.NU_LIB_DIRS = lib.concatStringsSep ":" [
+          "${config.xdg.cacheHome}/nushell/modules"
+          "${config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR}/nushell"
+        ];
       };
     }
 
@@ -76,9 +73,11 @@ in
             }
 
             match $spans.0 {
-              ${lib.optionalString config.programs.zoxide.enable ''
-                __zoxide_z | __zoxide_zi => $zoxide_completer
-              ''}
+              ${
+                lib.optionalString config.programs.zoxide.enable ''
+                  __zoxide_z | __zoxide_zi => $zoxide_completer
+                ''
+              }
               _ => $carapace_completer
             } | do $in $spans
           }

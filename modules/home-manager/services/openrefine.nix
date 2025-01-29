@@ -4,8 +4,7 @@ let
   cfg = config.services.openrefine;
 
   settingsFormat = pkgs.formats.ini { };
-in
-{
+in {
   options.services.openrefine = {
     enable = lib.mkEnableOption "OpenRefine server";
 
@@ -14,8 +13,7 @@ in
     settings = lib.mkOption {
       type = settingsFormat.type;
       default = { };
-      example = lib.literalExpression ''
-      '';
+      example = lib.literalExpression "";
     };
 
     extraFlags = lib.mkOption {
@@ -35,15 +33,14 @@ in
         Description = "OpenRefine server";
         Documentation = [ "https://openrefine.org/docs" ];
 
-        After = [
-          "network-online.target"
-          "default.target"
-        ];
+        After = [ "network-online.target" "default.target" ];
       };
 
       Service = {
         ExecStart = ''
-          ${lib.getExe' cfg.package "refine"} ${lib.concatStringsSep " " cfg.extraFlags}
+          ${lib.getExe' cfg.package "refine"} ${
+            lib.concatStringsSep " " cfg.extraFlags
+          }
         '';
         Restart = "on-failure";
       };

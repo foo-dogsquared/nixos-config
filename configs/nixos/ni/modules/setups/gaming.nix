@@ -3,10 +3,8 @@
 let
   hostCfg = config.hosts.ni;
   cfg = hostCfg.setups.gaming;
-in
-{
-  options.hosts.ni.setups.gaming.enable =
-    lib.mkEnableOption "gaming setup";
+in {
+  options.hosts.ni.setups.gaming.enable = lib.mkEnableOption "gaming setup";
 
   config = lib.mkIf cfg.enable {
     # Bring all of the goodies.
@@ -16,12 +14,7 @@ in
       retro-computing.enable = true;
     };
 
-    programs.retroarch.cores = with pkgs.libretro; [
-      pcsx2
-      dolphin
-      citra
-      mame
-    ];
+    programs.retroarch.cores = with pkgs.libretro; [ pcsx2 dolphin citra mame ];
 
     # Bring more of them games.
     environment.systemPackages = with pkgs; [

@@ -23,15 +23,12 @@ let
       };
     };
   };
-in
-{
+in {
   options.setups.disko = {
     configs = lib.mkOption {
       type = with lib.types; attrsOf (submodule diskoConfigType);
       default = { };
-      example = {
-        archive = { };
-      };
+      example = { archive = { }; };
       description = ''
         A set of declarative Disko configurations only used for integrating
         with NixOS and itself by exporting into `diskoConfigurations` which is
@@ -40,42 +37,37 @@ in
     };
   };
 
-  options.setups.nixos.configs =
-    let
-      diskoIntegrationModule = { config, lib, name, ... }: {
-        options = {
-          diskoConfigs = lib.mkOption {
-            type = with lib.types; listOf str;
-            default = [ ];
-            example = [ "external-hdd" ];
-            description = ''
-              A list of declarative Disko configurations to be included alongside
-              the NixOS configuration.
-            '';
-          };
+  options.setups.nixos.configs = let
+    diskoIntegrationModule = { config, lib, name, ... }: {
+      options = {
+        diskoConfigs = lib.mkOption {
+          type = with lib.types; listOf str;
+          default = [ ];
+          example = [ "external-hdd" ];
+          description = ''
+            A list of declarative Disko configurations to be included alongside
+            the NixOS configuration.
+          '';
         };
-
-        config = lib.mkIf (config.diskoConfigs != [ ]) (
-          let
-            diskoConfigs =
-              builtins.map (name: "${partsConfig.setups.configDir}/disko/${name}") config.diskoConfigs;
-          in
-          {
-            modules = lib.singleton {
-              imports =
-                [ inputs.disko.nixosModules.disko ]
-                ++ diskoConfigs;
-            };
-          }
-        );
       };
-    in
-    lib.mkOption {
-      type = with lib.types; attrsOf (submodule diskoIntegrationModule);
+
+      config = lib.mkIf (config.diskoConfigs != [ ]) (let
+        diskoConfigs =
+          builtins.map (name: "${partsConfig.setups.configDir}/disko/${name}")
+          config.diskoConfigs;
+      in {
+        modules = lib.singleton {
+          imports = [ inputs.disko.nixosModules.disko ] ++ diskoConfigs;
+        };
+      });
     };
+  in lib.mkOption {
+    type = with lib.types; attrsOf (submodule diskoIntegrationModule);
+  };
 
   config = {
-    flake.diskoConfigurations =
-      lib.mapAttrs (name: _: import "${partsConfig.setups.configDir}/disko/${name}") cfg.configs;
+    flake.diskoConfigurations = lib.mapAttrs
+      (name: _: import "${partsConfig.setups.configDir}/disko/${name}")
+      cfg.configs;
   };
 }

@@ -23,13 +23,14 @@ let
     { id = "palihjnakafgffnompkdfgbgdbcagbko"; } # UpdateSWH
     { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
   ];
-in
-{
+in {
   options.users.foo-dogsquared.programs.browsers = {
     firefox.enable = lib.mkEnableOption "foo-dogsquared's Firefox setup";
     brave.enable = lib.mkEnableOption "foo-dogsquared's Brave setup";
-    google-chrome.enable = lib.mkEnableOption "foo-dogsquared's Google Chrome setup";
-    misc.enable = lib.mkEnableOption "foo-dogsquared's miscellaneous browsers setup";
+    google-chrome.enable =
+      lib.mkEnableOption "foo-dogsquared's Google Chrome setup";
+    misc.enable =
+      lib.mkEnableOption "foo-dogsquared's miscellaneous browsers setup";
 
     plugins.firenvim.enable = lib.mkEnableOption "setting up Firenvim";
   };
@@ -39,10 +40,8 @@ in
     (lib.mkIf cfg.brave.enable {
       programs.brave = {
         enable = true;
-        commandLineArgs = [
-          "--no-default-browser-check"
-          "--use-system-default-printer"
-        ];
+        commandLineArgs =
+          [ "--no-default-browser-check" "--use-system-default-printer" ];
         extensions = commonExtensions;
       };
 
@@ -63,71 +62,70 @@ in
       programs.firefox = {
         enable = true;
 
-        package = with pkgs; wrapFirefox firefox-unwrapped {
-          nativeMessagingHosts = with pkgs; [
-            bukubrow
-            tridactyl-native
-          ] ++ lib.optional config.programs.mpv.enable pkgs.ff2mpv;
+        package = with pkgs;
+          wrapFirefox firefox-unwrapped {
+            nativeMessagingHosts = with pkgs;
+              [ bukubrow tridactyl-native ]
+              ++ lib.optional config.programs.mpv.enable pkgs.ff2mpv;
 
-          extraPolicies = {
-            AppAutoUpdate = false;
-            DisableAppUpdate = true;
-            DisableMasterPasswordCreation = true;
-            DisablePocket = true;
-            DisableSetDesktopBackground = true;
-            DontCheckDefaultBrowser = true;
-            EnableTrackingProtection = true;
-            FirefoxHome = {
-              Highlights = false;
-              Pocket = false;
-              Snippets = false;
-              SponsporedPocket = false;
-              SponsporedTopSites = false;
+            extraPolicies = {
+              AppAutoUpdate = false;
+              DisableAppUpdate = true;
+              DisableMasterPasswordCreation = true;
+              DisablePocket = true;
+              DisableSetDesktopBackground = true;
+              DontCheckDefaultBrowser = true;
+              EnableTrackingProtection = true;
+              FirefoxHome = {
+                Highlights = false;
+                Pocket = false;
+                Snippets = false;
+                SponsporedPocket = false;
+                SponsporedTopSites = false;
+              };
+              NoDefaultBookmarks = true;
+              OfferToSaveLoginsDefault = false;
+              PasswordManagerEnabled = false;
+              SanitizeOnShutdown = { FormData = true; };
+              UseSystemPrintDialog = true;
             };
-            NoDefaultBookmarks = true;
-            OfferToSaveLoginsDefault = false;
-            PasswordManagerEnabled = false;
-            SanitizeOnShutdown = {
-              FormData = true;
-            };
-            UseSystemPrintDialog = true;
           };
-        };
 
         profiles.personal = {
           isDefault = true;
 
-          extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-            aw-watcher-web
-            bitwarden
-            browserpass
-            facebook-container
-            firefox-color
-            firefox-translations
-            firenvim
-            languagetool
-            multi-account-containers
-            privacy-badger
-            search-by-image
-            tampermonkey
-            tridactyl
-            ublock-origin
-            vimium
-            wayback-machine
-          ] ++ (with pkgs.firefox-addons; [
-            get-rss-feed-url
-            google-container
-            microsoft-container
-            regretsreporter
-            simple-translate
-            sourcegraph-for-firefox
-            tineye-reverse-image-search
-            updateswh
-            zhongwen
-            open-access-helper
-            rsshub-radar
-            ])
-          ++ lib.optionals config.programs.mpv.enable (with pkgs.nur.repos.rycee.firefox-addons; [ ff2mpv ]);
+          extensions = with pkgs.nur.repos.rycee.firefox-addons;
+            [
+              aw-watcher-web
+              bitwarden
+              browserpass
+              facebook-container
+              firefox-color
+              firefox-translations
+              firenvim
+              languagetool
+              multi-account-containers
+              privacy-badger
+              search-by-image
+              tampermonkey
+              tridactyl
+              ublock-origin
+              vimium
+              wayback-machine
+            ] ++ (with pkgs.firefox-addons; [
+              get-rss-feed-url
+              google-container
+              microsoft-container
+              regretsreporter
+              simple-translate
+              sourcegraph-for-firefox
+              tineye-reverse-image-search
+              updateswh
+              zhongwen
+              open-access-helper
+              rsshub-radar
+            ]) ++ lib.optionals config.programs.mpv.enable
+            (with pkgs.nur.repos.rycee.firefox-addons; [ ff2mpv ]);
 
           # Much of the settings are affected by the policies set in the
           # package. See more information about them in
@@ -140,7 +138,8 @@ in
             "browser.search.widget.inNavBar" = true;
             "browser.search.openintab" = true;
             "browser.startup.homepage" =
-              lib.mkIf userCfg.programs.custom-homepage.enable "file://${config.xdg.dataHome}/foodogsquared/homepage";
+              lib.mkIf userCfg.programs.custom-homepage.enable
+              "file://${config.xdg.dataHome}/foodogsquared/homepage";
 
             # Some privacy settings...
             "privacy.donottrackheader.enabled" = true;
@@ -162,22 +161,25 @@ in
           search = {
             default = "Brave";
             force = true;
-            order = [
-              "Brave"
-              "Nix Packages"
-              "Google"
-            ];
+            order = [ "Brave" "Nix Packages" "Google" ];
             engines = {
               "Brave" = {
                 urls = [{
                   template = "https://search.brave.com/search";
                   params = [
-                    { name = "type"; value = "search"; }
-                    { name = "q"; value = "{searchTerms}"; }
+                    {
+                      name = "type";
+                      value = "search";
+                    }
+                    {
+                      name = "q";
+                      value = "{searchTerms}";
+                    }
                   ];
                 }];
 
-                icon = "${config.programs.brave.package}/share/icons/hicolor/64x64/apps/brave-browser.png";
+                icon =
+                  "${config.programs.brave.package}/share/icons/hicolor/64x64/apps/brave-browser.png";
                 definedAliases = [ "@brave" "@b" ];
               };
 
@@ -185,12 +187,19 @@ in
                 urls = [{
                   template = "https://search.nixos.org/packages";
                   params = [
-                    { name = "type"; value = "packages"; }
-                    { name = "query"; value = "{searchTerms}"; }
+                    {
+                      name = "type";
+                      value = "packages";
+                    }
+                    {
+                      name = "query";
+                      value = "{searchTerms}";
+                    }
                   ];
                 }];
 
-                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                icon =
+                  "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                 definedAliases = [ "@np" ];
               };
 
@@ -239,10 +248,8 @@ in
     (lib.mkIf cfg.google-chrome.enable {
       programs.google-chrome.enable = true;
 
-      programs.google-chrome.commandLineArgs = [
-        "--no-default-browser-check"
-        "--use-system-default-printer"
-      ];
+      programs.google-chrome.commandLineArgs =
+        [ "--no-default-browser-check" "--use-system-default-printer" ];
 
       services.bleachbit.cleaners = [
         "google_chrome.cookies"
@@ -257,30 +264,19 @@ in
     })
 
     # Goes with whatever you want to.
-    (lib.mkIf cfg.misc.enable {
-      home.packages = with pkgs; [
-        nyxt
-      ];
-    })
+    (lib.mkIf cfg.misc.enable { home.packages = with pkgs; [ nyxt ]; })
 
-    (lib.mkIf cfg.plugins.firenvim.enable
-      (let
-        supportedBrowsers = [
-          "brave"
-          "chromium"
-          "google-chrome"
-          "vivaldi"
-        ];
-        enableSupportedBrowser = acc: name: acc // {
-          programs.${name}.extensions = [
-            { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; }
-          ];
+    (lib.mkIf cfg.plugins.firenvim.enable (let
+      supportedBrowsers = [ "brave" "chromium" "google-chrome" "vivaldi" ];
+      enableSupportedBrowser = acc: name:
+        acc // {
+          programs.${name}.extensions =
+            [{ id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; }];
         };
-      in
-      lib.foldl' enableSupportedBrowser { } supportedBrowsers // {
-        programs.firefox.profiles.personal.extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-          firenvim
-        ];
-      }))
+    in lib.foldl' enableSupportedBrowser { } supportedBrowsers // {
+      programs.firefox.profiles.personal.extensions =
+        with pkgs.nur.repos.rycee.firefox-addons;
+        [ firenvim ];
+    }))
   ];
 }

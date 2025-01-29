@@ -25,11 +25,9 @@
 
   # Append with the default time servers. It is becoming more unresponsive as
   # of 2023-10-28.
-  networking.timeServers = [
-    "europe.pool.ntp.org"
-    "asia.pool.ntp.org"
-    "time.cloudflare.com"
-  ] ++ options.networking.timeServers.default;
+  networking.timeServers =
+    [ "europe.pool.ntp.org" "asia.pool.ntp.org" "time.cloudflare.com" ]
+    ++ options.networking.timeServers.default;
 
   # Disable channel state files. This shouldn't break any existing
   # programs as long as we manage them NIX_PATH ourselves.

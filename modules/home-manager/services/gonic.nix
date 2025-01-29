@@ -8,8 +8,7 @@ let
     listsAsDuplicateKeys = true;
   };
   settingsFile = settingsFormat.generate "gonic-settings-config" cfg.settings;
-in
-{
+in {
   options.services.gonic = {
     enable = lib.mkEnableOption "Gonic, a Subsonic-compatible music server";
 
@@ -44,7 +43,8 @@ in
       };
 
       Service = {
-        ExecStart = "${lib.getExe' cfg.package "gonic"} -config-path ${settingsFile}";
+        ExecStart =
+          "${lib.getExe' cfg.package "gonic"} -config-path ${settingsFile}";
         Restart = "on-failure";
       };
 

@@ -2,23 +2,13 @@
 { config, lib, pkgs, ... }:
 
 {
-  home.packages = with pkgs; [
-    glances
-    wireshark-cli
-    jq
-  ];
+  home.packages = with pkgs; [ glances wireshark-cli jq ];
 
   # My user shell of choice because I'm not a hipster.
   programs.bash = {
     enable = true;
     historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
-    historyIgnore = [
-      "cd"
-      "exit"
-      "lf"
-      "ls"
-      "nvim"
-    ];
+    historyIgnore = [ "cd" "exit" "lf" "ls" "nvim" ];
   };
 
   suites = {
@@ -39,10 +29,7 @@
 
   services.bleachbit = {
     enable = true;
-    cleaners = [
-      "bash.history"
-      "vim.history"
-    ];
+    cleaners = [ "bash.history" "vim.history" ];
     startAt = "weekly";
   };
 

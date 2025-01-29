@@ -3,8 +3,7 @@
 let
   hostCfg = config.hosts.ni;
   cfg = hostCfg.services.monitoring;
-in
-{
+in {
   options.hosts.ni.services.monitoring.enable =
     lib.mkEnableOption "enable local desktop monitoring service";
 
@@ -13,9 +12,8 @@ in
 
     services.grafana.enable = true;
 
-    services.grafana.declarativePlugins = with pkgs.grafanaPlugins; [
-      grafana-piechart-panel
-    ];
+    services.grafana.declarativePlugins = with pkgs.grafanaPlugins;
+      [ grafana-piechart-panel ];
 
     services.grafana.settings = {
       database.type = "sqlite3";

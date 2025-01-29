@@ -3,8 +3,7 @@
 let
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.jujutsu;
-in
-{
+in {
   options.users.foo-dogsquared.programs.jujutsu.enable =
     lib.mkEnableOption "foo-dogsquared's Jujutsu configuration";
 

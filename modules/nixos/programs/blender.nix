@@ -3,18 +3,13 @@
 let
   cfg = config.programs.blender;
 
-  addons =
-    let
-      blenderVersion = lib.versions.majorMinor cfg.package.version;
-    in
-    pkgs.symlinkJoin {
-      name = "blender-${blenderVersion}-addons";
-      paths = let
-        _paths = cfg.addons ++ [ cfg.package ];
-      in lib.concatMap (p: [ "${p}/share/blender" ]) _paths;
-    };
-in
-{
+  addons = let blenderVersion = lib.versions.majorMinor cfg.package.version;
+  in pkgs.symlinkJoin {
+    name = "blender-${blenderVersion}-addons";
+    paths = let _paths = cfg.addons ++ [ cfg.package ];
+    in lib.concatMap (p: [ "${p}/share/blender" ]) _paths;
+  };
+in {
   options.programs.blender = {
     enable = lib.mkEnableOption "Blender, a 3D computer graphics tool";
 
@@ -51,6 +46,7 @@ in
     # on `/usr/share/blender/$MAJOR.$MINOR`, we'll have to modify it with an
     # environment variable. This means in a NixOS system, it is only expected
     # to have one instance of the system resources.
-    environment.sessionVariables.BLENDER_SYSTEM_RESOURCES = lib.mkIf (builtins.length cfg.addons > 0) addons;
+    environment.sessionVariables.BLENDER_SYSTEM_RESOURCES =
+      lib.mkIf (builtins.length cfg.addons > 0) addons;
   };
 }

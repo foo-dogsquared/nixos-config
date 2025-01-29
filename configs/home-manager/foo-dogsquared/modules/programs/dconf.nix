@@ -4,8 +4,7 @@ let
   inherit (config.xdg) userDirs;
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.dconf;
-in
-{
+in {
   options.users.foo-dogsquared.programs.dconf.enable =
     lib.mkEnableOption "dconf configuration";
 
@@ -13,10 +12,11 @@ in
     dconf.settings = {
       # My GNOME Shell and programs configuration.
       "org/gnome/shell" = {
-        favorite-apps =
-          lib.optional userCfg.programs.browsers.firefox.enable "firefox.desktop"
+        favorite-apps = lib.optional userCfg.programs.browsers.firefox.enable
+          "firefox.desktop"
           ++ lib.optional userCfg.setups.desktop.enable "thunderbird.desktop"
-          ++ lib.optional userCfg.setups.development.enable "org.wezfurlong.wezterm.desktop"
+          ++ lib.optional userCfg.setups.development.enable
+          "org.wezfurlong.wezterm.desktop"
           ++ lib.optional userCfg.programs.doom-emacs.enable "emacs.desktop"
           ++ lib.optional userCfg.programs.vs-code.enable "code.desktop";
       };

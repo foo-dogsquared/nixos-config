@@ -3,8 +3,7 @@
 let
   hostCfg = config.hosts.ni;
   cfg = hostCfg.setups.music;
-in
-{
+in {
   options.hosts.ni.setups.music.enable =
     lib.mkEnableOption "music streaming and organizing setup";
 
@@ -29,7 +28,8 @@ in
       };
       uxplay = {
         value = 10001;
-        openFirewall = true; };
+        openFirewall = true;
+      };
       uxplayClients = {
         value = foodogsquaredLib.nixos.makeRange' uxplay.value 10;
         openFirewall = true;
@@ -40,12 +40,10 @@ in
     services.gonic = {
       enable = true;
       settings = rec {
-        listen-addr = "localhost:${builtins.toString config.state.ports.gonic.value}";
+        listen-addr =
+          "localhost:${builtins.toString config.state.ports.gonic.value}";
         cache-path = "${config.state.paths.cacheDir}/gonic";
-        music-path =
-          [
-            "/srv/Music"
-          ];
+        music-path = [ "/srv/Music" ];
         podcast-path = "${cache-path}/podcasts";
         playlists-path = "${cache-path}/playlists";
 
@@ -102,9 +100,7 @@ in
         airplay = {
           type = "airplay";
           location = lib.getExe' pkgs.shairport-sync "shairport-sync";
-          query = {
-            devicename = "Snapcast";
-          };
+          query = { devicename = "Snapcast"; };
         };
 
         spotify = {

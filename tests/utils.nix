@@ -4,8 +4,7 @@
 let
   nixpkgsPath = pkgs.path;
   nixosLib = import "${nixpkgsPath}/nixos/lib" { };
-in
-rec {
+in rec {
   # We're not using this to test the hosts configuration (that would be
   # atrocious). We're only using this for NixOS modules.
   nixosTest = test:

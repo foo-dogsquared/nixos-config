@@ -5,8 +5,7 @@ let
 
   settingsFormat = pkgs.formats.yaml { };
   settingsFile = settingsFormat.generate "matcha-config" cfg.settings;
-in
-{
+in {
   options.services.matcha = {
     enable = lib.mkEnableOption "Matcha periodic feed digest generator";
 

@@ -5,9 +5,9 @@ let
   cfg = hostCfg.setups.desktop;
 
   hasAnyWorkflowEnabled = workflows:
-    lib.lists.any (workflow: lib.elem workflow config.workflows.enable) workflows;
-in
-{
+    lib.lists.any (workflow: lib.elem workflow config.workflows.enable)
+    workflows;
+in {
   options.hosts.ni.setups.desktop.enable =
     lib.mkEnableOption "desktop environment setup";
 

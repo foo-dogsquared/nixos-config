@@ -1,10 +1,7 @@
 { lib, ... }:
 
 {
-  imports = [
-    ./paths.nix
-    ./ports.nix
-  ];
+  imports = [ ./paths.nix ./ports.nix ];
 
   # We can basically dump everything that is supposed to hold values for the
   # entire system. This entry module should contain NOTHING ELSE!

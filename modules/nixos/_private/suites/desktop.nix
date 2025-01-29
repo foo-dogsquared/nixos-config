@@ -8,8 +8,10 @@ in {
   options.suites.desktop = {
     enable =
       lib.mkEnableOption "basic desktop-related services and default programs";
-    cleanup.enable = lib.mkEnableOption "activation of various cleanup services";
-    autoUpgrade.enable = lib.mkEnableOption "auto-upgrade service with this system";
+    cleanup.enable =
+      lib.mkEnableOption "activation of various cleanup services";
+    autoUpgrade.enable =
+      lib.mkEnableOption "auto-upgrade service with this system";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -18,33 +20,29 @@ in {
       services.flatpak.enable = true;
       xdg.portal.enable = true;
 
-      environment.etc =
-        let
-          urls = {
-            "flathub" = {
-              url = "https://flathub.org/repo/flathub.flatpakrepo";
-              hash = "sha256-M3HdJQ5h2eFjNjAHP+/aFTzUQm9y9K+gwzc64uj+oDo=";
-            };
-            "flathub-beta" = {
-              url = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
-              hash = "sha256-WCyuPJ+dRjnwJ976/m+jO9oKOk1EEpDZJq2For4PcgY=";
-            };
-            "gnome-nightly" = {
-              url = "https://nightly.gnome.org/gnome-nightly.flatpakrepo";
-              hash = "sha256-rFluVpCvgs1iy7YKVnkPh3p6YuF4orbVuOhLUUFRyYM=";
-            };
-            "kdeapps" = {
-              url = "https://distribute.kde.org/kdeapps.flatpakrepo";
-              hash = "sha256-dCF9QQYMmqMuzwAS+HYoPAAtwfzO7aVCl8s4RwhneqI=";
-            };
+      environment.etc = let
+        urls = {
+          "flathub" = {
+            url = "https://flathub.org/repo/flathub.flatpakrepo";
+            hash = "sha256-M3HdJQ5h2eFjNjAHP+/aFTzUQm9y9K+gwzc64uj+oDo=";
           };
-        in
-        lib.mapAttrs'
-          (name: remote:
-            lib.nameValuePair
-              "flatpak/remotes.d/${name}.flatpakrepo"
-              { source = pkgs.fetchurl remote; })
-          urls;
+          "flathub-beta" = {
+            url = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
+            hash = "sha256-WCyuPJ+dRjnwJ976/m+jO9oKOk1EEpDZJq2For4PcgY=";
+          };
+          "gnome-nightly" = {
+            url = "https://nightly.gnome.org/gnome-nightly.flatpakrepo";
+            hash = "sha256-rFluVpCvgs1iy7YKVnkPh3p6YuF4orbVuOhLUUFRyYM=";
+          };
+          "kdeapps" = {
+            url = "https://distribute.kde.org/kdeapps.flatpakrepo";
+            hash = "sha256-dCF9QQYMmqMuzwAS+HYoPAAtwfzO7aVCl8s4RwhneqI=";
+          };
+        };
+      in lib.mapAttrs' (name: remote:
+        lib.nameValuePair "flatpak/remotes.d/${name}.flatpakrepo" {
+          source = pkgs.fetchurl remote;
+        }) urls;
 
       programs.extra-container.enable = true;
 
@@ -54,50 +52,44 @@ in {
       # Run unpatched binaries with these!
       programs.nix-ld = {
         enable = true;
-        libraries =
-          let
-            xorgLibs = with pkgs.xorg; [
-              libX11
-              libXScrnSaver
-              libXcomposite
-              libXcursor
-              libXdamage
-              libXext
-              libXfixes
-              libXi
-              libXrandr
-              libXrender
-              libXtst
-              libxcb
-              libxkbfile
-              libxshmfence
-            ];
-            commonLibs = with pkgs; [
-              alsa-lib
-              cairo
-              freetype
-              dbus
-              icu
-              libGL
-              libnotify
-              mesa
-              nss
-              pango
-              pipewire
-            ];
-            desktopLibs = with pkgs; [
-              qt5.full
-              qt6.full
-              gtk3
-              gtk4
-            ];
-          in
-          commonLibs ++ xorgLibs ++ desktopLibs;
+        libraries = let
+          xorgLibs = with pkgs.xorg; [
+            libX11
+            libXScrnSaver
+            libXcomposite
+            libXcursor
+            libXdamage
+            libXext
+            libXfixes
+            libXi
+            libXrandr
+            libXrender
+            libXtst
+            libxcb
+            libxkbfile
+            libxshmfence
+          ];
+          commonLibs = with pkgs; [
+            alsa-lib
+            cairo
+            freetype
+            dbus
+            icu
+            libGL
+            libnotify
+            mesa
+            nss
+            pango
+            pipewire
+          ];
+          desktopLibs = with pkgs; [ qt5.full qt6.full gtk3 gtk4 ];
+        in commonLibs ++ xorgLibs ++ desktopLibs;
       };
 
-      environment.systemPackages = with pkgs; [
-        steam-run # For the heathens that still uses FHS.
-      ];
+      environment.systemPackages = with pkgs;
+        [
+          steam-run # For the heathens that still uses FHS.
+        ];
 
       # Enable running GNOME apps outside GNOME.
       programs.dconf.enable = true;

@@ -1,9 +1,7 @@
 { config, lib, pkgs, helpers, ... }:
 
-let
-  cfg = config.plugins.dressing-nvim;
-in
-{
+let cfg = config.plugins.dressing-nvim;
+in {
   options.plugins.dressing-nvim = {
     enable = lib.mkEnableOption "dressing.nvim configuration";
 

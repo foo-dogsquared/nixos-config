@@ -3,8 +3,7 @@
 let
   inherit (hmConfig.xdg) userDirs;
   telescopeExtensions = config.plugins.telescope.extensions;
-in
-{
+in {
   plugins.telescope.extensions.frecency = {
     enable = true;
     settings = {
@@ -18,15 +17,14 @@ in
     };
   };
 
-  plugins.telescope.extensions.live-grep-args = {
-    enable = true;
-  };
+  plugins.telescope.extensions.live-grep-args = { enable = true; };
 
-  keymaps =
-    lib.optionals telescopeExtensions.live-grep-args.enable (lib.singleton {
+  keymaps = lib.optionals telescopeExtensions.live-grep-args.enable
+    (lib.singleton {
       mode = "n";
       key = "<leader>fG";
       options.desc = "Live grep (with args) for the whole project";
-      action = helpers.mkRaw "require('telescope').extensions.live_grep_args.live_grep_args";
+      action = helpers.mkRaw
+        "require('telescope').extensions.live_grep_args.live_grep_args";
     });
 }

@@ -21,78 +21,73 @@ let
   cfg = config.wraparound.bubblewrap;
 
   bubblewrapModuleFactory = { isGlobal ? false }: {
-    package = lib.mkPackageOption pkgs "bubblewrap" { } // lib.optionalAttrs isGlobal {
-      default = cfg.package;
-    };
+    package = lib.mkPackageOption pkgs "bubblewrap" { }
+      // lib.optionalAttrs isGlobal { default = cfg.package; };
 
     extraArgs = lib.mkOption {
       type = with lib.types; listOf str;
       default = [ ];
-      description =
-        if isGlobal
-        then ''
-          Global list of extra arguments to be given to all Bubblewrap-enabled
-          wrappers.
-        ''
-        else ''
-          List of extra arguments to be given to the Bubblewrap executable.
-        '';
+      description = if isGlobal then ''
+        Global list of extra arguments to be given to all Bubblewrap-enabled
+        wrappers.
+      '' else ''
+        List of extra arguments to be given to the Bubblewrap executable.
+      '';
     };
 
     enableNetwork = lib.mkEnableOption "sharing of the host network" // {
       default = if isGlobal then true else cfg.enableNetwork;
     };
 
-    enableBundledCertificates = lib.mkEnableOption "bundling additional certificates from nixpkgs" // {
-      default = if isGlobal then true else cfg.enableBundledCertificates;
-    };
+    enableBundledCertificates =
+      lib.mkEnableOption "bundling additional certificates from nixpkgs" // {
+        default = if isGlobal then true else cfg.enableBundledCertificates;
+      };
 
     enableIsolation = lib.mkEnableOption "unsharing most of the system" // {
       default = if isGlobal then true else cfg.enableIsolation;
     };
 
-    enableEnsureChildDiesWithParent = lib.mkEnableOption "ensuring child processes die with parent" // {
-      default = if isGlobal then true else cfg.enableEnsureChildDiesWithParent;
-    };
+    enableEnsureChildDiesWithParent =
+      lib.mkEnableOption "ensuring child processes die with parent" // {
+        default =
+          if isGlobal then true else cfg.enableEnsureChildDiesWithParent;
+      };
   };
-in
-{
-  imports = [
-    ./launcher.nix
-    ./dbus-filter.nix
-    ./filesystem.nix
-  ];
+in {
+  imports = [ ./launcher.nix ./dbus-filter.nix ./filesystem.nix ];
 
   options.wraparound.bubblewrap = bubblewrapModuleFactory { isGlobal = true; };
 
-  options.wrappers =
-    let
-      bubblewrapModule = { name, config, lib, ... }:
-        let
-          submoduleCfg = config.wraparound.bubblewrap;
-          env' = lib.filterAttrs (n: _: !(lib.strings.hasPrefix "WRAPPER_MANAGER_BWRAP_LAUNCHER" n)) config.env;
-        in
-        {
-          options.wraparound.variant = lib.mkOption {
-            type = with lib.types; nullOr (enum [ "bubblewrap" ]);
-          };
+  options.wrappers = let
+    bubblewrapModule = { name, config, lib, ... }:
+      let
+        submoduleCfg = config.wraparound.bubblewrap;
+        env' = lib.filterAttrs
+          (n: _: !(lib.strings.hasPrefix "WRAPPER_MANAGER_BWRAP_LAUNCHER" n))
+          config.env;
+      in {
+        options.wraparound.variant = lib.mkOption {
+          type = with lib.types; nullOr (enum [ "bubblewrap" ]);
+        };
 
-          options.wraparound.bubblewrap = bubblewrapModuleFactory { isGlobal = false; };
+        options.wraparound.bubblewrap =
+          bubblewrapModuleFactory { isGlobal = false; };
 
-          config = lib.mkIf (config.wraparound.variant == "bubblewrap") (lib.mkMerge [
+        config = lib.mkIf (config.wraparound.variant == "bubblewrap")
+          (lib.mkMerge [
             {
               # Ordering of the arguments here matter(?).
-              wraparound.bubblewrap.extraArgs =
-                cfg.extraArgs
-                ++ lib.mapAttrsToList
-                  (var: metadata:
-                    if metadata.action == "unset" then
-                      "--unsetenv ${var}"
-                    else if lib.elem metadata.action [ "prefix" "suffix" ] then
-                      "--setenv ${var} ${lib.concatStringsSep metadata.separator metadata.value}"
-                    else
-                      "--setenv ${var} ${metadata.value}")
-                  env';
+              wraparound.bubblewrap.extraArgs = cfg.extraArgs
+                ++ lib.mapAttrsToList (var: metadata:
+                  if metadata.action == "unset" then
+                    "--unsetenv ${var}"
+                  else if lib.elem metadata.action [ "prefix" "suffix" ] then
+                    "--setenv ${var} ${
+                      lib.concatStringsSep metadata.separator metadata.value
+                    }"
+                  else
+                    "--setenv ${var} ${metadata.value}") env';
             }
 
             (lib.mkIf submoduleCfg.enableNetwork {
@@ -103,12 +98,8 @@ in
               # The most common network-related files found on most
               # distributions. This should be enough in most cases. If not,
               # we'll probably let the launcher handle this.
-              wraparound.bubblewrap.binds.ro = [
-                "/etc/ssh"
-                "/etc/ssl"
-                "/etc/hosts"
-                "/etc/resolv.conf"
-              ];
+              wraparound.bubblewrap.binds.ro =
+                [ "/etc/ssh" "/etc/ssl" "/etc/hosts" "/etc/resolv.conf" ];
             })
 
             (lib.mkIf submoduleCfg.enableBundledCertificates {
@@ -120,16 +111,17 @@ in
             })
 
             (lib.mkIf submoduleCfg.enableIsolation {
-              wraparound.bubblewrap.extraArgs = lib.mkBefore [ "--unshare-all" ];
+              wraparound.bubblewrap.extraArgs =
+                lib.mkBefore [ "--unshare-all" ];
             })
 
             (lib.mkIf submoduleCfg.enableEnsureChildDiesWithParent {
-              wraparound.bubblewrap.extraArgs = lib.mkBefore [ "--die-with-parent" ];
+              wraparound.bubblewrap.extraArgs =
+                lib.mkBefore [ "--die-with-parent" ];
             })
           ]);
-        };
-    in
-    lib.mkOption {
-      type = with lib.types; attrsOf (submodule bubblewrapModule);
-    };
+      };
+  in lib.mkOption {
+    type = with lib.types; attrsOf (submodule bubblewrapModule);
+  };
 }

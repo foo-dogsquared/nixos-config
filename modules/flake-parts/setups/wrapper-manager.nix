@@ -4,18 +4,9 @@ let
   partsConfig = config;
   cfg = config.setups.wrapper-manager;
 
-  mkWrapperManagerPackage = {
-    pkgs,
-    src,
-    modules ? [ ],
-    specialArgs ? { },
-  }:
-    let
-      wrapperManagerEntrypoint = import src { };
-    in
-    wrapperManagerEntrypoint.lib.build {
-      inherit pkgs modules specialArgs;
-    };
+  mkWrapperManagerPackage = { pkgs, src, modules ? [ ], specialArgs ? { }, }:
+    let wrapperManagerEntrypoint = import src { };
+    in wrapperManagerEntrypoint.lib.build { inherit pkgs modules specialArgs; };
 
   wrapperManagerIntegrationModule = { name, config, lib, ... }: {
     options.wrapper-manager = {
@@ -38,16 +29,17 @@ let
       };
 
       packages = lib.mkOption {
-        type = with lib.types; attrsOf (submodule {
-          options.additionalModules = lib.mkOption {
-            type = with lib.types; listOf deferredModule;
-            description = ''
-              Additional wrapper-manager modules to be included into the given
-              declarative wrapper-manager configuration.
-            '';
-            default = [ ];
-          };
-        });
+        type = with lib.types;
+          attrsOf (submodule {
+            options.additionalModules = lib.mkOption {
+              type = with lib.types; listOf deferredModule;
+              description = ''
+                Additional wrapper-manager modules to be included into the given
+                declarative wrapper-manager configuration.
+              '';
+              default = [ ];
+            };
+          });
         default = { };
         description = ''
           Include declared wrapper-manager packages into the wider environment.
@@ -58,15 +50,13 @@ let
     config = lib.mkIf (config.wrapper-manager.packages != { }) {
       modules = [
         ({ lib, ... }: {
-          wrapper-manager.sharedModules =
-            cfg.sharedModules ++ config.wrapper-manager.additionalModules;
+          wrapper-manager.sharedModules = cfg.sharedModules
+            ++ config.wrapper-manager.additionalModules;
 
-          wrapper-manager.packages =
-            lib.mapAttrs (name: wmPackage: {
-              imports =
-                partsConfig.setups.wrapper-manager.configs.${name}.modules
-                ++ wmPackage.additionalModules;
-            }) config.wrapper-manager.packages;
+          wrapper-manager.packages = lib.mapAttrs (name: wmPackage: {
+            imports = partsConfig.setups.wrapper-manager.configs.${name}.modules
+              ++ wmPackage.additionalModules;
+          }) config.wrapper-manager.packages;
         })
       ];
     };
@@ -90,8 +80,7 @@ let
       ];
     };
   };
-in
-{
+in {
   options.setups.wrapper-manager = {
     sharedNixpkgsConfig = options.setups.sharedNixpkgsConfig // {
       description = ''
@@ -101,11 +90,12 @@ in
     };
 
     configs = lib.mkOption {
-      type = with lib.types; attrsOf (submodule [
-        (import ./shared/config-options.nix { inherit (config) systems; })
-        ./shared/nixpkgs-options.nix
-        wrapperManagerConfigModule
-      ]);
+      type = with lib.types;
+        attrsOf (submodule [
+          (import ./shared/config-options.nix { inherit (config) systems; })
+          ./shared/nixpkgs-options.nix
+          wrapperManagerConfigModule
+        ]);
       default = { };
       description = ''
         Declarative wrapper-manager packages to be exported into the flake.
@@ -141,62 +131,56 @@ in
 
   # Integrations with the composable environments such as NixOS and home-manager.
   options.setups.nixos.configs = lib.mkOption {
-    type = with lib.types; attrsOf (submodule [
-      wrapperManagerIntegrationModule
-      ({ config, lib, ... }: {
-        config = lib.mkIf (config.wrapper-manager.packages != { }) {
-          modules = [
-            (import config.wrapper-manager.src { }).nixosModules.default
-          ];
-        };
-      })
-    ]);
+    type = with lib.types;
+      attrsOf (submodule [
+        wrapperManagerIntegrationModule
+        ({ config, lib, ... }: {
+          config = lib.mkIf (config.wrapper-manager.packages != { }) {
+            modules =
+              [ (import config.wrapper-manager.src { }).nixosModules.default ];
+          };
+        })
+      ]);
   };
 
   options.setups.home-manager.configs = lib.mkOption {
-    type = with lib.types; attrsOf (submodule [
-      wrapperManagerIntegrationModule
-      ({ config, lib, ... }: {
-        config = lib.mkIf (config.wrapper-manager.packages != { }) {
-          modules = [
-            (import config.wrapper-manager.src { }).homeModules.default
-          ];
-        };
-      })
-    ]);
+    type = with lib.types;
+      attrsOf (submodule [
+        wrapperManagerIntegrationModule
+        ({ config, lib, ... }: {
+          config = lib.mkIf (config.wrapper-manager.packages != { }) {
+            modules =
+              [ (import config.wrapper-manager.src { }).homeModules.default ];
+          };
+        })
+      ]);
   };
 
   config = lib.mkIf (cfg.configs != { }) {
-    setups.wrapper-manager.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+    setups.wrapper-manager.sharedNixpkgsConfig =
+      config.setups.sharedNixpkgsConfig;
 
-    setups.wrapper-manager.sharedModules = [
-      ../../wrapper-manager
-      ../../wrapper-manager/_private
-    ];
+    setups.wrapper-manager.sharedModules =
+      [ ../../wrapper-manager ../../wrapper-manager/_private ];
 
-    perSystem = { system, config, lib, ... }: let
-      validWrapperManagerConfigs =
-        lib.filterAttrs (_: metadata: lib.elem system metadata.systems) cfg.configs;
-    in {
-      wrapperManagerPackages =
-        lib.mapAttrs
-          (name: metadata:
-            let
-              pkgs = import inputs.${metadata.nixpkgs.branch} {
-                inherit (metadata.nixpkgs) config;
-                inherit system;
-              };
-            in
-            mkWrapperManagerPackage {
-              inherit pkgs;
-              inherit (metadata.wrapper-manager) src;
-              modules =
-                cfg.sharedModules
-                ++ cfg.standaloneModules
-                ++ metadata.modules;
-            }
-          )
-          validWrapperManagerConfigs;
-    };
+    perSystem = { system, config, lib, ... }:
+      let
+        validWrapperManagerConfigs =
+          lib.filterAttrs (_: metadata: lib.elem system metadata.systems)
+          cfg.configs;
+      in {
+        wrapperManagerPackages = lib.mapAttrs (name: metadata:
+          let
+            pkgs = import inputs.${metadata.nixpkgs.branch} {
+              inherit (metadata.nixpkgs) config;
+              inherit system;
+            };
+          in mkWrapperManagerPackage {
+            inherit pkgs;
+            inherit (metadata.wrapper-manager) src;
+            modules = cfg.sharedModules ++ cfg.standaloneModules
+              ++ metadata.modules;
+          }) validWrapperManagerConfigs;
+      };
   };
 }

@@ -62,20 +62,17 @@ let
     let
       inherit (instance) settings settingsFile;
       settingsFile' = "/var/lib/vouch-proxy/${name}-config.yml";
-    in
-    lib.nameValuePair "vouch-proxy-${utils.escapeSystemdPath name}" {
-      preStart =
-        if (settings != { } && settingsFile == null)
-        then ''
-          ${pkgs.writeScript
-            "vouch-proxy-replace-secrets"
-            (utils.genJqSecretsReplacementSnippet settings settingsFile')}
-          chmod 0600 "${settingsFile'}"
-        ''
-        else ''
-          install -Dm0600 "${settingsFile}" "${settingsFile'}"
-        '';
-      script = "${lib.getExe' instance.package "vouch-proxy"} -config ${settingsFile'}";
+    in lib.nameValuePair "vouch-proxy-${utils.escapeSystemdPath name}" {
+      preStart = if (settings != { } && settingsFile == null) then ''
+        ${pkgs.writeScript "vouch-proxy-replace-secrets"
+        (utils.genJqSecretsReplacementSnippet settings settingsFile')}
+        chmod 0600 "${settingsFile'}"
+      '' else ''
+        install -Dm0600 "${settingsFile}" "${settingsFile'}"
+      '';
+      script = "${
+          lib.getExe' instance.package "vouch-proxy"
+        } -config ${settingsFile'}";
       serviceConfig = {
         User = config.users.users.vouch-proxy.name;
         Group = config.users.groups.vouch-proxy.name;
@@ -119,19 +116,15 @@ let
         AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
 
         # Limit this service to Unix sockets and IPs.
-        RestrictAddressFamilies = [
-          "AF_LOCAL"
-          "AF_INET"
-          "AF_INET6"
-        ];
+        RestrictAddressFamilies = [ "AF_LOCAL" "AF_INET" "AF_INET6" ];
         RestrictNamespaces = true;
       };
       wantedBy = [ "multi-user.target" ];
     };
-in
-{
+in {
   options.services.vouch-proxy = {
-    enable = lib.mkEnableOption "Vouch Proxy, a proxy for SSO and OAuth/OIDC logins";
+    enable =
+      lib.mkEnableOption "Vouch Proxy, a proxy for SSO and OAuth/OIDC logins";
 
     instances = lib.mkOption {
       type = with lib.types; attrsOf (submodule instanceType);
@@ -155,7 +148,7 @@ in
               code_challenge_method = "S256";
               auth_url = "https://auth.example.com/ui/oauth2";
               token_url = "https://auth.example.com/oauth2/token";
-              user_info_url = "https://auth.example.com/oauth2/openid/$${client_id}/userinfo";
+              user_info_url = "https://auth.example.com/oauth2/openid/$''${client_id}/userinfo";
               scopes = [ "login" "email" ];
               callback_url = "https://auth.example.com/auth";
             };

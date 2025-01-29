@@ -1,10 +1,8 @@
 # Mainly used for managing the installations with deploy-rs.
 { config, lib, pkgs, ... }:
 
-let
-  name = "admin";
-in
-{
+let name = "admin";
+in {
   users.users.${name} = {
     description = "The administrator account for the servers.";
     isNormalUser = true;

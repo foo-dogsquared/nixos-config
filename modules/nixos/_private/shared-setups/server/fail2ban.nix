@@ -1,11 +1,9 @@
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.shared-setups.server.fail2ban;
-in
-{
-  options.shared-setups.server.fail2ban.enable =
-    lib.mkEnableOption "typical fail2ban configuration for public-facing servers";
+let cfg = config.shared-setups.server.fail2ban;
+in {
+  options.shared-setups.server.fail2ban.enable = lib.mkEnableOption
+    "typical fail2ban configuration for public-facing servers";
 
   config = lib.mkIf cfg.enable {
     services.fail2ban = {

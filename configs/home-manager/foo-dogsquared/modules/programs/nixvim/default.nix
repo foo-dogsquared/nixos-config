@@ -14,8 +14,7 @@ let
       module.imports = firstSetupArgs.baseNixvimModules ++ [ module ];
       extraSpecialArgs.hmConfig = config;
     };
-in
-{
+in {
   options.users.foo-dogsquared.programs.nixvim.enable =
     lib.mkEnableOption "NixVim setup";
 
@@ -29,22 +28,21 @@ in
     wrapper-manager.packages.neovim-flavors = {
       wrappers.nvim-fiesta.arg0 = let
         nvimPkg = createNixvimFlavor {
-          imports =
-            [
-              ./colorschemes.nix
-              ./fuzzy-finding.nix
-              ./misc.nix
-              ./note-taking.nix
-            ]
-            ++ lib.optionals userCfg.setups.development.enable [
-              ./dev.nix
-              ./lsp.nix
-              ./dap.nix
-            ];
+          imports = [
+            ./colorschemes.nix
+            ./fuzzy-finding.nix
+            ./misc.nix
+            ./note-taking.nix
+          ] ++ lib.optionals userCfg.setups.development.enable [
+            ./dev.nix
+            ./lsp.nix
+            ./dap.nix
+          ];
 
           config = {
             # Inherit all of the schemes.
-            bahaghari.tinted-theming.schemes = hmCfg.bahaghari.tinted-theming.schemes;
+            bahaghari.tinted-theming.schemes =
+              hmCfg.bahaghari.tinted-theming.schemes;
           };
         };
       in lib.getExe' nvimPkg "nvim";

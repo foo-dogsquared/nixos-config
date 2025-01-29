@@ -1,6 +1,1 @@
-{
-  imports = [
-    ./networks.nix
-    ./volumes.nix
-  ];
-}
+{ imports = [ ./networks.nix ./volumes.nix ]; }

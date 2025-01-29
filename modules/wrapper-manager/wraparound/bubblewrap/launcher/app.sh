@@ -11,10 +11,11 @@
 # * Using only the nixpkgs runtime shell and a few common dependencies found on
 # Unix-adjacent systems.
 # * No additional command-line options which means no flags and command-line
-# parsing. This is essentially just a Bubblewrap wrapper.
+# parsing. This is essentially just a Bubblewrap wrapper AND ONLY just a
+# Bubblewrap wrapper.
 # * If we ever let the user configure things, it should be done with
 # environment variables with `WRAPPER_MANAGER_BWRAP_LAUNCHER` prefix. It's very
-# long but who cares.
+# long but who cares. It's made to be that tedious. ;D
 # * Ideally, there should be no options to clear the environment in this
 # launcher. Let the user do it themselves if they want.
 

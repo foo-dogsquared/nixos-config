@@ -1,11 +1,10 @@
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.suites.vpn;
-in
-{
+let cfg = config.suites.vpn;
+in {
   options.suites.vpn = {
-    personal.enable = lib.mkEnableOption "personal VPN configuration with Wireguard";
+    personal.enable =
+      lib.mkEnableOption "personal VPN configuration with Wireguard";
   };
 
   config = lib.mkMerge [

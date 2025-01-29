@@ -4,8 +4,7 @@
 let
   hostCfg = config.hosts.ni;
   cfg = hostCfg.hardware.qol;
-in
-{
+in {
   options.hosts.ni.hardware.qol.enable =
     lib.mkEnableOption "quality-of-life hardware features";
 
@@ -17,10 +16,7 @@ in
     services.printing = {
       enable = true;
       browsing = true;
-      drivers = with pkgs; [
-        gutenprint
-        splix
-      ];
+      drivers = with pkgs; [ gutenprint splix ];
     };
 
     # Extend the life of an SSD.

@@ -1,9 +1,7 @@
 { lib, pkgs, config, ... }:
 
-let
-  cfg = config.programs.zellij;
-in
-{
+let cfg = config.programs.zellij;
+in {
   options.programs.zellij = {
     enable = lib.mkEnableOption "Zellij, a terminal multiplexer";
 

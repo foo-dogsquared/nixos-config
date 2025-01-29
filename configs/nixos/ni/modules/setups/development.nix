@@ -3,8 +3,7 @@
 let
   hostCfg = config.hosts.ni;
   cfg = hostCfg.setups.development;
-in
-{
+in {
   options.hosts.ni.setups.development.enable =
     lib.mkEnableOption "software development setup";
 
@@ -33,15 +32,14 @@ in
         logDriver = "journald";
       };
 
-      environment.systemPackages = with pkgs;
-        [
-          # For debugging build environments in Nix packages.
-          cntr
+      environment.systemPackages = with pkgs; [
+        # For debugging build environments in Nix packages.
+        cntr
 
-          devpod-desktop
+        devpod-desktop
 
-          freecad
-        ];
+        freecad
+      ];
 
       # Enable the terminal emulator of choice.
       programs.wezterm.enable = true;
@@ -60,10 +58,7 @@ in
       };
 
       # Adding a bunch of emulated systems for cross-system building.
-      boot.binfmt.emulatedSystems = [
-        "aarch64-linux"
-        "riscv64-linux"
-      ];
+      boot.binfmt.emulatedSystems = [ "aarch64-linux" "riscv64-linux" ];
     }
 
     (lib.mkIf config.suites.dev.containers.enable {
@@ -72,9 +67,7 @@ in
       services.cockpit = {
         enable = true;
         port = config.state.ports.cockpit.value;
-        settings = {
-          WebService.AllowUnencrypted = true;
-        };
+        settings = { WebService.AllowUnencrypted = true; };
       };
 
       # Setting up a single-node k3s cluster for learning purposes.

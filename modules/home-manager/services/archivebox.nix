@@ -40,8 +40,7 @@ let
       };
     };
   };
-in
-{
+in {
   options.services.archivebox = {
     enable = lib.mkEnableOption "Archivebox service";
 
@@ -93,91 +92,83 @@ in
     };
   };
 
-  config =
-    let
-      pkgSet = [ pkgs.archivebox ] ++ (lib.optionals cfg.withDependencies
-        (with pkgs; [ chromium nodejs_latest wget curl youtube-dl ]));
-    in
-    lib.mkIf cfg.enable {
-      assertions = [
-        (lib.hm.assertions.assertPlatform "services.archivebox" pkgs
-          lib.platforms.linux)
-      ];
+  config = let
+    pkgSet = [ pkgs.archivebox ] ++ (lib.optionals cfg.withDependencies
+      (with pkgs; [ chromium nodejs_latest wget curl youtube-dl ]));
+  in lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "services.archivebox" pkgs
+        lib.platforms.linux)
+    ];
 
-      home.packages = pkgSet;
+    home.packages = pkgSet;
 
-      systemd.user.services = lib.mkMerge [
-        (lib.mapAttrs'
-          (name: value:
-            lib.nameValuePair (jobUnitName name) {
-              Unit = {
-                Description =
-                  "Archivebox archive group '${name}' for ${cfg.archivePath}";
-                After = [ "network-online.target" ];
-                Documentation = [ "https://docs.archivebox.io/" ];
-              };
+    systemd.user.services = lib.mkMerge [
+      (lib.mapAttrs' (name: value:
+        lib.nameValuePair (jobUnitName name) {
+          Unit = {
+            Description =
+              "Archivebox archive group '${name}' for ${cfg.archivePath}";
+            After = [ "network-online.target" ];
+            Documentation = [ "https://docs.archivebox.io/" ];
+          };
 
-              Service =
-                let
-                  scriptName = "archivebox-job-${config.home.username}-${name}";
-                  script = pkgs.writeShellApplication {
-                    name = scriptName;
-                    runtimeInputs = with pkgs;
-                      [ ripgrep coreutils ] ++ pkgSet
-                      ++ [ config.programs.git.package ];
-                    text = ''
-                      echo "${lib.concatStringsSep "\n" value.links}" \
-                        | archivebox add ${lib.concatStringsSep " " value.extraArgs}
-                    '';
-                  };
-                in
-                {
-                  ExecStart = "${script}/bin/${scriptName}";
-                  WorkingDirectory = cfg.archivePath;
-                };
-            })
-          cfg.jobs)
-
-        (lib.mkIf cfg.webserver.enable {
-          archivebox-server = {
-            Unit = {
-              Description = "Archivebox server for ${cfg.archivePath}";
-              After = [ "network-online.target" ];
-              Wants = [ "network-online.target" ];
-              Documentation = [ "https://docs.archivebox.io/" ];
+          Service = let
+            scriptName = "archivebox-job-${config.home.username}-${name}";
+            script = pkgs.writeShellApplication {
+              name = scriptName;
+              runtimeInputs = with pkgs;
+                [ ripgrep coreutils ] ++ pkgSet
+                ++ [ config.programs.git.package ];
+              text = ''
+                echo "${lib.concatStringsSep "\n" value.links}" \
+                  | archivebox add ${lib.concatStringsSep " " value.extraArgs}
+              '';
             };
+          in {
+            ExecStart = "${script}/bin/${scriptName}";
+            WorkingDirectory = cfg.archivePath;
+          };
+        }) cfg.jobs)
 
-            Install.WantedBy = [ "graphical-session.target" ];
+      (lib.mkIf cfg.webserver.enable {
+        archivebox-server = {
+          Unit = {
+            Description = "Archivebox server for ${cfg.archivePath}";
+            After = [ "network-online.target" ];
+            Wants = [ "network-online.target" ];
+            Documentation = [ "https://docs.archivebox.io/" ];
+          };
 
-            Service = {
-              ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${
+          Install.WantedBy = [ "graphical-session.target" ];
+
+          Service = {
+            ExecStart = "${pkgs.archivebox}/bin/archivebox server localhost:${
                 toString cfg.webserver.port
               }";
-              WorkingDirectory = cfg.archivePath;
-              Restart = "on-failure";
-            };
+            WorkingDirectory = cfg.archivePath;
+            Restart = "on-failure";
           };
-        })
-      ];
+        };
+      })
+    ];
 
-      systemd.user.timers = lib.mapAttrs'
-        (name: value:
-          lib.nameValuePair (jobUnitName name) {
-            Unit = {
-              Description = "Archivebox additions for ${cfg.archivePath}";
-              After = [ "network-online.target" ];
-              Wants = [ "network-online.target" ];
-              Documentation = [ "https://docs.archivebox.io/" ];
-            };
+    systemd.user.timers = lib.mapAttrs' (name: value:
+      lib.nameValuePair (jobUnitName name) {
+        Unit = {
+          Description = "Archivebox additions for ${cfg.archivePath}";
+          After = [ "network-online.target" ];
+          Wants = [ "network-online.target" ];
+          Documentation = [ "https://docs.archivebox.io/" ];
+        };
 
-            Timer = {
-              Persistent = true;
-              OnCalendar = value.startAt;
-              RandomizedDelaySec = 120;
-            };
+        Timer = {
+          Persistent = true;
+          OnCalendar = value.startAt;
+          RandomizedDelaySec = 120;
+        };
 
-            Install.WantedBy = [ "timers.target" ];
-          })
-        cfg.jobs;
-    };
+        Install.WantedBy = [ "timers.target" ];
+      }) cfg.jobs;
+  };
 }

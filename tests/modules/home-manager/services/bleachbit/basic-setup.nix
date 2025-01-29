@@ -4,12 +4,8 @@
   services.bleachbit = {
     enable = true;
     startAt = "weekly";
-    cleaners = [
-      "firefox.cookies"
-      "firefox.history"
-      "discord.logs"
-      "zoom.logs"
-    ];
+    cleaners =
+      [ "firefox.cookies" "firefox.history" "discord.logs" "zoom.logs" ];
   };
 
   test.stubs.bleachbit = { };

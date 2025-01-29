@@ -3,10 +3,8 @@
 # this module will stay aiming for desktop.
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.suites.i18n;
-in
-{
+let cfg = config.suites.i18n;
+in {
   options.suites.i18n = {
     enable = lib.mkEnableOption "main i18n config";
     setup = lib.mkOption {
@@ -45,9 +43,7 @@ in
       ];
     }
 
-    (lib.mkIf (cfg.setup != null) {
-      i18n.inputMethod.enable = true;
-    })
+    (lib.mkIf (cfg.setup != null) { i18n.inputMethod.enable = true; })
 
     (lib.mkIf (cfg.setup == "ibus") {
       i18n.inputMethod = {

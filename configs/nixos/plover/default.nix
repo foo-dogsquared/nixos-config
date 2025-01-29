@@ -39,7 +39,8 @@
   };
 
   # Overriding the kernel version for ourselves.
-  boot.kernelPackages = lib.mkOverride 500 pkgs.linuxKernel.packages.linux_6_11_hardened;
+  boot.kernelPackages =
+    lib.mkOverride 500 pkgs.linuxKernel.packages.linux_6_11_hardened;
 
   # We're using our own VPN configuration for this one.
   suites.vpn.personal.enable = true;

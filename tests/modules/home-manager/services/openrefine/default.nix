@@ -1,3 +1,1 @@
-{
-  openrefine-basic = ./basic.nix;
-}
+{ openrefine-basic = ./basic.nix; }

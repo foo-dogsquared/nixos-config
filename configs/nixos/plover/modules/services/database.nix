@@ -7,8 +7,7 @@ let
   cfg = hostCfg.services.database;
 
   postgresqlDomain = "postgres.${config.networking.domain}";
-in
-{
+in {
   options.hosts.plover.services.database.enable =
     lib.mkEnableOption "preferred service SQL database";
 
@@ -22,10 +21,8 @@ in
         enableTCPIP = true;
 
         settings =
-          let
-            credsDir = path: "/run/credentials/postgresql.service/${path}";
-          in
-          {
+          let credsDir = path: "/run/credentials/postgresql.service/${path}";
+          in {
             port = config.state.ports.postgresql.value;
 
             # Still doing the secure schema usage pattern.
@@ -50,16 +47,15 @@ in
       # Setting this up for TLS.
       systemd.services.postgresql = {
         requires = [ "acme-finished-${postgresqlDomain}.target" ];
-        serviceConfig.LoadCredential =
-          let
-            certDirectory = config.security.acme.certs."${postgresqlDomain}".directory;
-            certCredentialPath = path: "${path}:${certDirectory}/${path}";
-          in
-          [
-            (certCredentialPath "cert.pem")
-            (certCredentialPath "key.pem")
-            (certCredentialPath "fullchain.pem")
-          ];
+        serviceConfig.LoadCredential = let
+          certDirectory =
+            config.security.acme.certs."${postgresqlDomain}".directory;
+          certCredentialPath = path: "${path}:${certDirectory}/${path}";
+        in [
+          (certCredentialPath "cert.pem")
+          (certCredentialPath "key.pem")
+          (certCredentialPath "fullchain.pem")
+        ];
       };
 
       security.acme.certs."${postgresqlDomain}".postRun = ''
@@ -69,7 +65,8 @@ in
 
     (lib.mkIf hostCfg.services.backup.enable {
       # Add the dumps to be backed up.
-      services.borgbackup.jobs.services-backup.paths = [ config.services.postgresqlBackup.location ];
+      services.borgbackup.jobs.services-backup.paths =
+        [ config.services.postgresqlBackup.location ];
     })
   ]);
 }

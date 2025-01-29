@@ -19,7 +19,8 @@ let
   borgmaticProgramModule = { name, lib, ... }: {
     options = {
       initService = {
-        enable = lib.mkEnableOption "include this particular backup as part of Borgmatic jobset at {option}`services.borgmatic.jobs`";
+        enable = lib.mkEnableOption
+          "include this particular backup as part of Borgmatic jobset at {option}`services.borgmatic.jobs`";
 
         startAt = lib.mkOption {
           type = lib.types.nonEmptyStr;
@@ -34,88 +35,86 @@ let
     };
   };
 
-  borgmaticJobModule = { config, lib, name, ... }: let
-    settingsFile = settingsFormat.generate "borgmatic-job-config-${name}" config.settings;
-  in {
-    options = {
-      settings = lib.mkOption {
-        type = settingsFormat.type;
-        description = ''
-          Configuration settings associated with the job. If this is set, the
-          generated output is added as an additional argument (i.e., `--config
-          SETTINGSFILE`) in the service script.
-        '';
-        default = { };
-        example = lib.literalExpression ''
-          {
-            source_directories = [
-              config.xdg.userDirs.document
-              config.xdg.userDirs.download
-              config.xdg.userDirs.music
-              config.xdg.userDirs.video
-            ];
+  borgmaticJobModule = { config, lib, name, ... }:
+    let
+      settingsFile =
+        settingsFormat.generate "borgmatic-job-config-${name}" config.settings;
+    in {
+      options = {
+        settings = lib.mkOption {
+          type = settingsFormat.type;
+          description = ''
+            Configuration settings associated with the job. If this is set, the
+            generated output is added as an additional argument (i.e., `--config
+            SETTINGSFILE`) in the service script.
+          '';
+          default = { };
+          example = lib.literalExpression ''
+            {
+              source_directories = [
+                config.xdg.userDirs.document
+                config.xdg.userDirs.download
+                config.xdg.userDirs.music
+                config.xdg.userDirs.video
+              ];
 
-            keep_daily = 5;
-            keep_weekly = 10;
-            keep_monthly = 20;
+              keep_daily = 5;
+              keep_weekly = 10;
+              keep_monthly = 20;
 
-            repositories = lib.singleton {
-              path = "ssh://asodajdoiasjdoij";
-              label = "remote";
-            };
-          }
-        '';
+              repositories = lib.singleton {
+                path = "ssh://asodajdoiasjdoij";
+                label = "remote";
+              };
+            }
+          '';
+        };
+
+        startAt = lib.mkOption {
+          type = lib.types.nonEmptyStr;
+          description = ''
+            Indicates how often backup will occur. This is to be used as value
+            for `Timer.OnCalendar=` in the systemd unit. See
+            {manpage}`systemd.time(7)` for more details.
+          '';
+          default = "daily";
+          example = "04:30";
+        };
+
+        extraArgs = lib.mkOption {
+          type = with lib.types; listOf str;
+          description = ''
+            List of arguments to be passed to the Borgmatic backup service.
+          '';
+          default = [ ];
+          example = lib.literalExpression ''
+            [
+              "--stats"
+              "--verbosity" "1"
+              "--syslog-verbosity" "1"
+              "--list"
+            ]
+          '';
+        };
       };
 
-      startAt = lib.mkOption {
-        type = lib.types.nonEmptyStr;
-        description = ''
-          Indicates how often backup will occur. This is to be used as value
-          for `Timer.OnCalendar=` in the systemd unit. See
-          {manpage}`systemd.time(7)` for more details.
-        '';
-        default = "daily";
-        example = "04:30";
-      };
+      config = {
+        extraArgs = lib.mkMerge [
+          cfg.extraArgs
 
-      extraArgs = lib.mkOption {
-        type = with lib.types; listOf str;
-        description = ''
-          List of arguments to be passed to the Borgmatic backup service.
-        '';
-        default = [ ];
-        example = lib.literalExpression ''
-          [
-            "--stats"
-            "--verbosity" "1"
-            "--syslog-verbosity" "1"
-            "--list"
-          ]
-        '';
+          (lib.optionals (config.settings != { })
+            (lib.mkBefore [ "--config" settingsFile ]))
+        ];
       };
     };
-
-    config = {
-      extraArgs = lib.mkMerge [
-        cfg.extraArgs
-
-        (lib.optionals (config.settings != {}) (
-          lib.mkBefore [
-            "--config" settingsFile
-          ]
-        ))
-      ];
-    };
-  };
 
   formatUnitName = name: "borgmatic-job-${name}";
   mkBorgmaticServiceUnit = n: v:
     lib.nameValuePair (formatUnitName n) {
       Unit = {
         Description = "Borgmatic backup job '${n}'";
-        Documentation = [
-          "https://torsion.org/borgmatic/docs/reference/configuration"
-        ];
+        Documentation =
+          [ "https://torsion.org/borgmatic/docs/reference/configuration" ];
         ConditionACPower = true;
         StartLimitBurst = 5;
       };
@@ -132,7 +131,9 @@ let
         LogRateLimitIntervalSec = 0;
 
         ExecStart = ''
-          ${lib.getExe' cfg.package "borgmatic"} ${lib.concatStringsSep " " v.extraArgs}
+          ${lib.getExe' cfg.package "borgmatic"} ${
+            lib.concatStringsSep " " v.extraArgs
+          }
         '';
 
         PrivateTmp = true;
@@ -155,12 +156,10 @@ let
   mkBorgmaticServiceFromConfig = n: v:
     lib.nameValuePair "borgmatic-config-${n}" {
       inherit (v.initService) startAt;
-      extraArgs = [
-        "--config" "${config.xdg.configHome}/borgmatic.d/${n}.yaml"
-      ];
+      extraArgs =
+        [ "--config" "${config.xdg.configHome}/borgmatic.d/${n}.yaml" ];
     };
-in
-{
+in {
   disabledModules = [ "services/borgmatic.nix" ];
   options.programs.borgmatic.backups = lib.mkOption {
     type = with lib.types; attrsOf (submodule borgmaticProgramModule);
@@ -175,60 +174,54 @@ in
         Global list of additional arguments for all of the jobs.
       '';
       default = [ ];
-      example = [
-        "--stats"
-        "--verbosity" "1"
-      ];
+      example = [ "--stats" "--verbosity" "1" ];
     };
 
     jobs = lib.mkOption {
       type = with lib.types; attrsOf (submodule borgmaticJobModule);
       default = { };
-        example = lib.literalExpression ''
-          {
-            personal = {
-              startAt = "05:30";
-              settings = {
-                source_directories = [
-                  "''${config.xdg.configHome}"
-                  "''${config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR}"
-                  "''${config.home.homeDirectory}/.thunderbird"
-                  "''${config.home.homeDirectory}/Zotero"
-                ];
+      example = lib.literalExpression ''
+        {
+          personal = {
+            startAt = "05:30";
+            settings = {
+              source_directories = [
+                "''${config.xdg.configHome}"
+                "''${config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR}"
+                "''${config.home.homeDirectory}/.thunderbird"
+                "''${config.home.homeDirectory}/Zotero"
+              ];
 
-                repositories = [
-                  {
-                    path = "ssh://k8pDxu32@k8pDxu32.repo.borgbase.com/./repo";
-                    label = "borgbase";
-                  }
+              repositories = [
+                {
+                  path = "ssh://k8pDxu32@k8pDxu32.repo.borgbase.com/./repo";
+                  label = "borgbase";
+                }
 
-                  {
-                    path = "/var/lib/backups/local.borg";
-                    label = "local";
-                  }
-                ];
+                {
+                  path = "/var/lib/backups/local.borg";
+                  label = "local";
+                }
+              ];
 
-                keep_daily = 7;
-                keep_weekly = 4;
-                keep_monthly = 6;
-              };
+              keep_daily = 7;
+              keep_weekly = 4;
+              keep_monthly = 6;
             };
-          }
-        '';
-      };
+          };
+        }
+      '';
     };
+  };
 
   config = {
-    systemd.user.services =
-      lib.mapAttrs' mkBorgmaticServiceUnit cfg.jobs;
+    systemd.user.services = lib.mapAttrs' mkBorgmaticServiceUnit cfg.jobs;
 
-    systemd.user.timers =
-      lib.mapAttrs' mkBorgmaticTimerUnit cfg.jobs;
+    systemd.user.timers = lib.mapAttrs' mkBorgmaticTimerUnit cfg.jobs;
 
-    services.borgmatic.jobs =
-      let
-        validService = lib.filterAttrs (n: v: v.initService.enable) programCfg.backups;
-      in
-      lib.mapAttrs' mkBorgmaticServiceFromConfig validService;
+    services.borgmatic.jobs = let
+      validService =
+        lib.filterAttrs (n: v: v.initService.enable) programCfg.backups;
+    in lib.mapAttrs' mkBorgmaticServiceFromConfig validService;
   };
 }

@@ -1,18 +1,6 @@
-{ mkShell
-, lib
-, wrapGAppsHook
-, desktop-file-utils
-, glib
-, appstream-glib
-, blueprint-compiler
-, libadwaita
-, libportal
-, libportal-gtk
-, gtk
-, meson
-, ninja
-, pkg-config
-}:
+{ mkShell, lib, wrapGAppsHook, desktop-file-utils, glib, appstream-glib
+, blueprint-compiler, libadwaita, libportal, libportal-gtk, gtk, meson, ninja
+, pkg-config }:
 
 mkShell {
   packages = [

@@ -7,8 +7,7 @@
 let
   pkgs = import <nixpkgs> { };
   lib = pkgs.lib;
-in
-import <nixpkgs/nixos/lib/eval-config.nix> {
+in import <nixpkgs/nixos/lib/eval-config.nix> {
   inherit lib;
   specialArgs = {
     foodogsquaredUtils = import <config/lib/utils/nixos.nix> { inherit lib; };

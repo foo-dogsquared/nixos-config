@@ -1,9 +1,7 @@
 { config, lib, pkgs, helpers, ... }:
 
-let
-  cfg = config.plugins.nvim-config-local;
-in
-{
+let cfg = config.plugins.nvim-config-local;
+in {
   options.plugins.nvim-config-local = {
     enable = lib.mkEnableOption "nvim-config-local";
 
@@ -26,12 +24,11 @@ in
     };
   };
 
-  config =
-    lib.mkIf cfg.enable {
-      extraPlugins = [ cfg.package ];
+  config = lib.mkIf cfg.enable {
+    extraPlugins = [ cfg.package ];
 
-      extraConfigLua = ''
-        require("config-local").setup(${helpers.toLuaConfig cfg.settings})
-      '';
-    };
+    extraConfigLua = ''
+      require("config-local").setup(${helpers.toLuaConfig cfg.settings})
+    '';
+  };
 }

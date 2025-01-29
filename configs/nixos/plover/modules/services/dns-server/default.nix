@@ -26,8 +26,7 @@ let
   };
 
   dnsSubdomain = "ns1.${domain}";
-in
-{
+in {
   options.hosts.plover.services.dns-server.enable =
     lib.mkEnableOption "preferred DNS server";
 
@@ -39,19 +38,17 @@ in
         dnsOverTLS.value = 853;
       };
 
-      sops.secrets =
-        let
-          dnsFileAttribute = {
-            owner = config.users.users.named.name;
-            group = config.users.users.named.group;
-            mode = "0400";
-          };
-        in
-        foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml {
-          "dns/${domain}/rfc2136-key" = dnsFileAttribute // {
-            reloadUnits = [ "bind.service" ];
-          };
+      sops.secrets = let
+        dnsFileAttribute = {
+          owner = config.users.users.named.name;
+          group = config.users.users.named.group;
+          mode = "0400";
         };
+      in foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml {
+        "dns/${domain}/rfc2136-key" = dnsFileAttribute // {
+          reloadUnits = [ "bind.service" ];
+        };
+      };
 
       # Install the utilities.
       environment.systemPackages = [ config.services.bind.package ];
@@ -60,137 +57,141 @@ in
         enable = true;
         forward = "first";
 
-        cacheNetworks = [
-          "127.0.0.1"
-          "::1"
-        ];
+        cacheNetworks = [ "127.0.0.1" "::1" ];
 
-        listenOn = [
-          "127.0.0.1"
-          wan.ipv4
-          lan.ipv4
-        ];
+        listenOn = [ "127.0.0.1" wan.ipv4 lan.ipv4 ];
 
-        listenOnIpv6 = [
-          "::1"
-          wan.ipv6
-          lan.ipv6
-        ];
+        listenOnIpv6 = [ "::1" wan.ipv6 lan.ipv6 ];
 
         # Welp, since the template is pretty limited, we'll have to go with our
         # own. This is partially based from the NixOS Bind module except without
         # the template for filling in zones since we use views.
-        configFile =
-          let
-            cfg = config.services.bind;
-            certDir = path: "/run/credentials/bind.service/${path}";
-            listenInterfaces = lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOn;
-            listenInterfacesIpv6 = lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOnIpv6;
-          in
-          pkgs.writeText "named.conf" ''
-            include "/etc/bind/rndc.key";
-            include "${config.sops.secrets."dns/${domain}/rfc2136-key".path}";
+        configFile = let
+          cfg = config.services.bind;
+          certDir = path: "/run/credentials/bind.service/${path}";
+          listenInterfaces =
+            lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOn;
+          listenInterfacesIpv6 =
+            lib.concatMapStrings (entry: " ${entry}; ") cfg.listenOnIpv6;
+        in pkgs.writeText "named.conf" ''
+          include "/etc/bind/rndc.key";
+          include "${config.sops.secrets."dns/${domain}/rfc2136-key".path}";
 
-            controls {
-              inet 127.0.0.1 allow {localhost;} keys {"rndc-key";};
+          controls {
+            inet 127.0.0.1 allow {localhost;} keys {"rndc-key";};
+          };
+
+          tls ${dnsSubdomain} {
+            key-file "${certDir "key.pem"}";
+            cert-file "${certDir "cert.pem"}";
+            dhparam-file "${config.security.dhparams.params.bind.path}";
+            ciphers "HIGH:!kRSA:!aNULL:!eNULL:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:!SHA1:!SHA256:!SHA384";
+            prefer-server-ciphers yes;
+            session-tickets no;
+          };
+
+          http ${dnsSubdomain} {
+            endpoints { "/dns-query"; };
+          };
+
+          acl trusted { ${
+            lib.concatStringsSep "; " [ "10.0.0.0/8" ]
+          }; localhost; };
+          acl cachenetworks { ${
+            lib.concatMapStrings (entry: " ${entry}; ") cfg.cacheNetworks
+          } };
+          acl badnetworks { ${
+            lib.concatMapStrings (entry: " ${entry}; ") cfg.blockedNetworks
+          } };
+
+          options {
+            # Native DNS.
+            listen-on { ${listenInterfaces} };
+            listen-on-v6 { ${listenInterfacesIpv6} };
+
+            # DNS-over-TLS.
+            listen-on tls ${dnsSubdomain} { ${listenInterfaces} };
+            listen-on-v6 tls ${dnsSubdomain} { ${listenInterfacesIpv6} };
+
+            # DNS-over-HTTPS.
+            tls-port ${builtins.toString config.state.ports.dnsOverTLS.value};
+            https-port ${
+              builtins.toString config.state.ports.dnsOverHTTPS.value
+            };
+            listen-on tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfaces} };
+            listen-on-v6 tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfacesIpv6} };
+
+            allow-query { cachenetworks; };
+            blackhole { badnetworks; };
+            forward ${cfg.forward};
+            forwarders { ${
+              lib.concatMapStrings (entry: " ${entry}; ") cfg.forwarders
+            } };
+            directory "${cfg.directory}";
+            pid-file "/run/named/named.pid";
+          };
+
+          view internal {
+            match-clients { trusted; };
+
+            allow-query { any; };
+            allow-recursion { any; };
+
+            // We'll use systemd-resolved as our forwarder.
+            forwarders { 127.0.0.53 port 53; };
+
+            zone "${fqdn}" {
+              type primary;
+              file "${getZoneFile fqdn}";
             };
 
-            tls ${dnsSubdomain} {
-              key-file "${certDir "key.pem"}";
-              cert-file "${certDir "cert.pem"}";
-              dhparam-file "${config.security.dhparams.params.bind.path}";
-              ciphers "HIGH:!kRSA:!aNULL:!eNULL:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:!SHA1:!SHA256:!SHA384";
-              prefer-server-ciphers yes;
-              session-tickets no;
-            };
+            zone "${domain}" {
+              type primary;
 
-            http ${dnsSubdomain} {
-              endpoints { "/dns-query"; };
-            };
-
-            acl trusted { ${lib.concatStringsSep "; " [ "10.0.0.0/8" ]}; localhost; };
-            acl cachenetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.cacheNetworks} };
-            acl badnetworks { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.blockedNetworks} };
-
-            options {
-              # Native DNS.
-              listen-on { ${listenInterfaces} };
-              listen-on-v6 { ${listenInterfacesIpv6} };
-
-              # DNS-over-TLS.
-              listen-on tls ${dnsSubdomain} { ${listenInterfaces} };
-              listen-on-v6 tls ${dnsSubdomain} { ${listenInterfacesIpv6} };
-
-              # DNS-over-HTTPS.
-              tls-port ${builtins.toString config.state.ports.dnsOverTLS.value};
-              https-port ${builtins.toString config.state.ports.dnsOverHTTPS.value};
-              listen-on tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfaces} };
-              listen-on-v6 tls ${dnsSubdomain} http ${dnsSubdomain} { ${listenInterfacesIpv6} };
-
-              allow-query { cachenetworks; };
-              blackhole { badnetworks; };
-              forward ${cfg.forward};
-              forwarders { ${lib.concatMapStrings (entry: " ${entry}; ") cfg.forwarders} };
-              directory "${cfg.directory}";
-              pid-file "/run/named/named.pid";
-            };
-
-            view internal {
-              match-clients { trusted; };
-
-              allow-query { any; };
-              allow-recursion { any; };
-
-              // We'll use systemd-resolved as our forwarder.
-              forwarders { 127.0.0.53 port 53; };
-
-              zone "${fqdn}" {
-                type primary;
-                file "${getZoneFile fqdn}";
+              file "${getZoneFile domain}";
+              allow-transfer { ${
+                lib.concatStringsSep "; "
+                config.state.network.secondaryNameservers
+              }; };
+              update-policy {
+                grant rfc2136key.${domain}. zonesub TXT;
               };
-
-              zone "${domain}" {
-                type primary;
-
-                file "${getZoneFile domain}";
-                allow-transfer { ${lib.concatStringsSep "; " config.state.network.secondaryNameservers}; };
-                update-policy {
-                  grant rfc2136key.${domain}. zonesub TXT;
-                };
-              };
             };
+          };
 
-            view external {
-              match-clients { any; };
+          view external {
+            match-clients { any; };
 
-              forwarders { };
-              empty-zones-enable yes;
-              allow-query { any; };
-              allow-recursion { none; };
+            forwarders { };
+            empty-zones-enable yes;
+            allow-query { any; };
+            allow-recursion { none; };
 
-              zone "${domain}" {
-                in-view internal;
-              };
+            zone "${domain}" {
+              in-view internal;
             };
+          };
 
-            ${cfg.extraConfig}
-          '';
+          ${cfg.extraConfig}
+        '';
       };
 
       systemd.services.bind = {
         path = with pkgs; [ replace-secret ];
-        preStart =
-          let
-            domainZone' = getZoneFile domain;
-            fqdnZone' = getZoneFile fqdn;
-          in
-          lib.mkAfter ''
-            # Install the domain zone.
-            [ -f ${lib.escapeShellArg domainZone'} ] || install -Dm0600 ${zonefile} ${lib.escapeShellArg domainZone'}
+        preStart = let
+          domainZone' = getZoneFile domain;
+          fqdnZone' = getZoneFile fqdn;
+        in lib.mkAfter ''
+          # Install the domain zone.
+          [ -f ${
+            lib.escapeShellArg domainZone'
+          } ] || install -Dm0600 ${zonefile} ${lib.escapeShellArg domainZone'}
 
-            # Install the internal DNS zones.
-            [ -f ${lib.escapeShellArg fqdnZone'} ] || install -Dm0600 '${fqdnZone}' ${lib.escapeShellArg fqdnZone'}
-          '';
+          # Install the internal DNS zones.
+          [ -f ${
+            lib.escapeShellArg fqdnZone'
+          } ] || install -Dm0600 '${fqdnZone}' ${lib.escapeShellArg fqdnZone'}
+        '';
 
         serviceConfig = {
           # Additional service hardening. You can see most of the options from
@@ -200,16 +201,15 @@ in
           UMask = "0037";
 
           # Get the credentials into the service.
-          LoadCredential =
-            let
-              certDirectory = config.security.acme.certs."${dnsSubdomain}".directory;
-              certCredentialPath = path: "${path}:${certDirectory}/${path}";
-            in
-            [
-              (certCredentialPath "cert.pem")
-              (certCredentialPath "key.pem")
-              (certCredentialPath "fullchain.pem")
-            ];
+          LoadCredential = let
+            certDirectory =
+              config.security.acme.certs."${dnsSubdomain}".directory;
+            certCredentialPath = path: "${path}:${certDirectory}/${path}";
+          in [
+            (certCredentialPath "cert.pem")
+            (certCredentialPath "key.pem")
+            (certCredentialPath "fullchain.pem")
+          ];
 
           LogFilterPatterns = [
             # systemd-resolved doesn't have DNS cookie support, it seems.
@@ -232,10 +232,7 @@ in
 
           # Make the filesystem invisible to the service.
           ProtectSystem = "strict";
-          ReadWritePaths = [
-            config.services.bind.directory
-            "/etc/bind"
-          ];
+          ReadWritePaths = [ config.services.bind.directory "/etc/bind" ];
           ReadOnlyPaths = [
             config.security.dhparams.params.bind.path
             config.security.acme.certs."${dnsSubdomain}".directory
@@ -262,13 +259,8 @@ in
           AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
 
           # Restrict what address families can it access.
-          RestrictAddressFamilies = [
-            "AF_LOCAL"
-            "AF_NETLINK"
-            "AF_BRIDGE"
-            "AF_INET"
-            "AF_INET6"
-          ];
+          RestrictAddressFamilies =
+            [ "AF_LOCAL" "AF_NETLINK" "AF_BRIDGE" "AF_INET" "AF_INET6" ];
 
           # Restricting what namespaces it can create.
           RestrictNamespaces = true;
@@ -284,14 +276,18 @@ in
 
       services.bind.extraConfig = ''
         statistics-channels {
-          inet 127.0.0.1 port ${builtins.toString config.state.ports.bindStatistics.value} allow { 127.0.0.1; };
+          inet 127.0.0.1 port ${
+            builtins.toString config.state.ports.bindStatistics.value
+          } allow { 127.0.0.1; };
         };
       '';
 
       services.prometheus.exporters = {
         bind = {
           enable = true;
-          bindURI = "http://127.0.0.1/${builtins.toString config.state.ports.bindStatistics.value}";
+          bindURI = "http://127.0.0.1/${
+              builtins.toString config.state.ports.bindStatistics.value
+            }";
         };
       };
     })
@@ -303,7 +299,9 @@ in
           zone dns 64k;
         '';
         servers = {
-          "127.0.0.1:${builtins.toString config.state.ports.dnsOverHTTPS.value}" = { };
+          "127.0.0.1:${
+            builtins.toString config.state.ports.dnsOverHTTPS.value
+          }" = { };
         };
       };
 

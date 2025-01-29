@@ -42,55 +42,48 @@ let
   };
 
   mkJobService = name: value:
-    lib.nameValuePair
-      (jobUnitName name)
-      {
-        description = "Archivebox download group '${name}'";
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        documentation = [ "https://docs.archivebox.io/" ];
-        path = [ cfg.package ] ++ cfg.extraPackages;
-        script = ''
-          echo "${lib.concatStringsSep "\n" value.urls}" \
-            | archivebox add ${lib.escapeShellArgs value.extraArgs}
-        '';
-        serviceConfig = {
-          User = "archivebox";
-          Group = "archivebox";
+    lib.nameValuePair (jobUnitName name) {
+      description = "Archivebox download group '${name}'";
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      documentation = [ "https://docs.archivebox.io/" ];
+      path = [ cfg.package ] ++ cfg.extraPackages;
+      script = ''
+        echo "${lib.concatStringsSep "\n" value.urls}" \
+          | archivebox add ${lib.escapeShellArgs value.extraArgs}
+      '';
+      serviceConfig = {
+        User = "archivebox";
+        Group = "archivebox";
 
-          LockPersonality = true;
-          NoNewPrivileges = true;
+        LockPersonality = true;
+        NoNewPrivileges = true;
 
-          PrivateTmp = true;
-          PrivateDevices = true;
+        PrivateTmp = true;
+        PrivateDevices = true;
 
-          ProtectControlGroups = true;
-          ProtectClock = true;
-          ProtectKernelLogs = true;
-          ProtectKernelModules = true;
-          ProtectKernelTunables = true;
-          ProtectProc = "invisible";
-          ProtectHome = true;
-          ProtectSystem = "strict";
+        ProtectControlGroups = true;
+        ProtectClock = true;
+        ProtectKernelLogs = true;
+        ProtectKernelModules = true;
+        ProtectKernelTunables = true;
+        ProtectProc = "invisible";
+        ProtectHome = true;
+        ProtectSystem = "strict";
 
-          RestrictAddressFamilies = [
-            "AF_LOCAL"
-            "AF_INET"
-            "AF_INET6"
-          ];
-          RestrictNamespaces = true;
+        RestrictAddressFamilies = [ "AF_LOCAL" "AF_INET" "AF_INET6" ];
+        RestrictNamespaces = true;
 
-          SystemCallFilter = [ "@system-service" ];
-          SystemCallErrorNumber = "EPERM";
+        SystemCallFilter = [ "@system-service" ];
+        SystemCallErrorNumber = "EPERM";
 
-          StateDirectory = "archivebox";
-        };
+        StateDirectory = "archivebox";
       };
+    };
 
   mkTimerUnit = name: value:
     lib.nameValuePair (jobUnitName name) {
-      description =
-        "Archivebox download job '${name}'";
+      description = "Archivebox download job '${name}'";
       documentation = [ "https://docs.archivebox.io/" ];
       timerConfig = {
         Persistent = true;
@@ -99,8 +92,7 @@ let
       };
       wantedBy = [ "timers.target" ];
     };
-in
-{
+in {
   options.services.archivebox = {
     enable = lib.mkEnableOption "Archivebox service";
 
@@ -121,10 +113,7 @@ in
         };
 
         research = {
-          urls = [
-            "https://arxiv.org/rss/cs"
-            "https://distill.pub/"
-          ];
+          urls = [ "https://arxiv.org/rss/cs" "https://distill.pub/" ];
           extraArgs = [ "--depth" "1" ];
           startAt = "daily";
         };
@@ -138,14 +127,9 @@ in
         default, it sets the optional dependencies of ArchiveBox for additional
         download formats and capabilities.
       '';
-      default = with pkgs; [
-        chromium
-        nodejs_latest
-        wget
-        curl
-        yt-dlp
-        readability-cli
-      ] ++ lib.optional config.programs.git.enable config.programs.git.package;
+      default = with pkgs;
+        [ chromium nodejs_latest wget curl yt-dlp readability-cli ]
+        ++ lib.optional config.programs.git.enable config.programs.git.package;
       defaultText = ''
         Chromium, NodeJS, wget, yt-dlp, and git if enabled.
       '';
@@ -194,9 +178,10 @@ in
           User = "archivebox";
           Group = "archivebox";
 
-          ExecStart = "${lib.getExe' cfg.package "archivebox"} server localhost:${
-            toString cfg.webserver.port
-          }";
+          ExecStart =
+            "${lib.getExe' cfg.package "archivebox"} server localhost:${
+              toString cfg.webserver.port
+            }";
 
           CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
 
@@ -213,11 +198,7 @@ in
           ProtectKernelModules = true;
           ProtectKernelTunables = true;
 
-          RestrictAddressFamilies = [
-            "AF_LOCAL"
-            "AF_INET"
-            "AF_INET6"
-          ];
+          RestrictAddressFamilies = [ "AF_LOCAL" "AF_INET" "AF_INET6" ];
           RestrictNamespaces = true;
 
           SystemCallFilter = [ "@system-service" ];

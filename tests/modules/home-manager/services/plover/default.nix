@@ -1,3 +1,1 @@
-{
-  plover-basic-service = ./basic-service.nix;
-}
+{ plover-basic-service = ./basic-service.nix; }

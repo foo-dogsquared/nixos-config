@@ -8,33 +8,30 @@ let
   # values with shell expansions.
   toDistroboxConf = lib.generators.toKeyValue {
     listsAsDuplicateKeys = false;
-    mkKeyValue = lib.generators.mkKeyValueDefault
-      {
-        mkValueString = v:
-          if v == true then "1"
-          else if v == false then "0"
-          else if lib.isString v then ''"${v}"''
-          else if lib.isPath v then lib.escapeShellArg v
-          else if lib.isList v then ''"${lib.concatStringsSep " " v}"''
-          else lib.generators.mkValueStringDefault { } v;
-      } "=";
+    mkKeyValue = lib.generators.mkKeyValueDefault {
+      mkValueString = v:
+        if v == true then
+          "1"
+        else if v == false then
+          "0"
+        else if lib.isString v then
+          ''"${v}"''
+        else if lib.isPath v then
+          lib.escapeShellArg v
+        else if lib.isList v then
+          ''"${lib.concatStringsSep " " v}"''
+        else
+          lib.generators.mkValueStringDefault { } v;
+    } "=";
   };
 
-  distroboxConf = {}: {
+  distroboxConf = { }: {
     type = with lib.types;
       let
-        valueType = (oneOf [
-          bool
-          float
-          int
-          path
-          str
-          (listOf valueType)
-        ]) // {
+        valueType = (oneOf [ bool float int path str (listOf valueType) ]) // {
           description = "Distrobox settings value";
         };
-      in
-      attrsOf valueType;
+      in attrsOf valueType;
 
     generate = name: value: pkgs.writeText name (toDistroboxConf value);
   };
@@ -45,8 +42,7 @@ let
     ${toDistroboxConf cfg.settings}
     ${cfg.extraConfig}
   '';
-in
-{
+in {
   options.programs.distrobox = {
     enable = lib.mkEnableOption "Distrobox";
 

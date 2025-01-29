@@ -25,9 +25,7 @@
       };
 
       music = {
-        extraArgs = [
-          "--extract-audio"
-        ];
+        extraArgs = [ "--extract-audio" ];
         urls = [
           "https://www.youtube.com/@dragonforce"
           "https://www.youtube.com/channel/UCjZjUymRDAhp9c1rb0X6aww" # 500L/g

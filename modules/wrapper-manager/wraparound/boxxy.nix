@@ -34,9 +34,8 @@ let
   };
 
   boxxyModuleFactory = { isGlobal ? false }: {
-    package = lib.mkPackageOption pkgs "boxxy" { } // lib.optionalAttrs (!isGlobal) {
-      default = cfg.package;
-    };
+    package = lib.mkPackageOption pkgs "boxxy" { }
+      // lib.optionalAttrs (!isGlobal) { default = cfg.package; };
 
     # TODO: Perhaps, consider creating a PR to upstream repo to pass a config file?
     # Boxxy doesn't have a way to pass a custom configuration file so we're
@@ -73,49 +72,38 @@ let
       example = [ "--immutable" "--daemon" ];
     };
   };
-in
-{
+in {
   options.wraparound.boxxy = boxxyModuleFactory { isGlobal = true; };
 
-  options.wrappers =
-    let
-      boxxySandboxModule = { name, lib, config, pkgs, ... }:
-        let
-          submoduleCfg = config.wraparound.boxxy;
-        in
-        {
-          options.wraparound.variant = lib.mkOption {
-            type = with lib.types; nullOr (enum [ "boxxy" ]);
-          };
+  options.wrappers = let
+    boxxySandboxModule = { name, lib, config, pkgs, ... }:
+      let submoduleCfg = config.wraparound.boxxy;
+      in {
+        options.wraparound.variant =
+          lib.mkOption { type = with lib.types; nullOr (enum [ "boxxy" ]); };
 
-          options.wraparound.boxxy = boxxyModuleFactory { isGlobal = false; };
+        options.wraparound.boxxy = boxxyModuleFactory { isGlobal = false; };
 
-          config = lib.mkIf (config.wraparound.variant == "boxxy") {
-            wraparound.boxxy.rules = cfg.rules;
+        config = lib.mkIf (config.wraparound.variant == "boxxy") {
+          wraparound.boxxy.rules = cfg.rules;
 
-            wraparound.boxxy.extraArgs =
-              cfg.extraArgs
-              ++ (lib.mapAttrsToList
-                (_: metadata:
-                  let
-                    inherit (metadata) source destination mode;
-                    ruleArg =
-                      if mode != null
-                        then "${source}:${destination}:${mode}"
-                        else "${source}:${destination}";
-                  in
-                  "--rule ${ruleArg}")
-                submoduleCfg.rules);
+          wraparound.boxxy.extraArgs = cfg.extraArgs ++ (lib.mapAttrsToList
+            (_: metadata:
+              let
+                inherit (metadata) source destination mode;
+                ruleArg = if mode != null then
+                  "${source}:${destination}:${mode}"
+                else
+                  "${source}:${destination}";
+              in "--rule ${ruleArg}") submoduleCfg.rules);
 
-            arg0 = lib.getExe' submoduleCfg.package "boxxy";
-            prependArgs = lib.mkBefore
-              (submoduleCfg.extraArgs
-                ++ [ "--" config.wraparound.subwrapper.arg0 ]
-                ++ config.wraparound.subwrapper.extraArgs);
-          };
+          arg0 = lib.getExe' submoduleCfg.package "boxxy";
+          prependArgs = lib.mkBefore (submoduleCfg.extraArgs
+            ++ [ "--" config.wraparound.subwrapper.arg0 ]
+            ++ config.wraparound.subwrapper.extraArgs);
         };
-    in
-    lib.mkOption {
-      type = with lib.types; attrsOf (submodule boxxySandboxModule);
-    };
+      };
+  in lib.mkOption {
+    type = with lib.types; attrsOf (submodule boxxySandboxModule);
+  };
 }

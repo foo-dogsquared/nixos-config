@@ -1,10 +1,8 @@
 # The reverse proxy of choice. Logs should be rotated weekly.
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.shared-setups.server.nginx;
-in
-{
+let cfg = config.shared-setups.server.nginx;
+in {
   options.shared-setups.server.nginx.enable =
     lib.mkEnableOption "typical Nginx configuration for public-facing servers";
 
@@ -59,9 +57,7 @@ in
           extraConfig = ''
             zone services 64k;
           '';
-          servers = {
-            "localhost:80" = { };
-          };
+          servers = { "localhost:80" = { }; };
         };
       };
 

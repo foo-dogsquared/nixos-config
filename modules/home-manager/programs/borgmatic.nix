@@ -46,7 +46,8 @@ let
       };
 
       validateConfig =
-        lib.mkEnableOption "validation step for the resulting configuration" // {
+        lib.mkEnableOption "validation step for the resulting configuration"
+        // {
           default = true;
         };
     };
@@ -55,26 +56,25 @@ let
   mkBorgmaticConfig = n: v:
     lib.nameValuePair "borgmatic.d/${n}.yaml" {
       source = let
-        settingsFile = settingsFormat.generate "borgmatic-config-${n}" v.settings;
+        settingsFile =
+          settingsFormat.generate "borgmatic-config-${n}" v.settings;
 
         borgmaticValidateCmd =
           if lib.versionOlder cfg.package.version "1.7.15" then
             "borgmatic config validate --config ${settingsFile}"
           else
             "validate-borgmatic-config --config ${settingsFile}";
-      in
-        if v.validateConfig then
-          pkgs.runCommand "generate-borgmatic-config-with-validation" {
-            buildInputs = [ cfg.package ];
-            preferLocalBuild = true;
-          } ''
-            ${borgmaticValidateCmd} && install ${settingsFile} $out
-          ''
-        else
-          settingsFile;
+      in if v.validateConfig then
+        pkgs.runCommand "generate-borgmatic-config-with-validation" {
+          buildInputs = [ cfg.package ];
+          preferLocalBuild = true;
+        } ''
+          ${borgmaticValidateCmd} && install ${settingsFile} $out
+        ''
+      else
+        settingsFile;
     };
-  in
-{
+in {
   disabledModules = [ "programs/borgmatic.nix" ];
   options.programs.borgmatic = {
     enable = lib.mkEnableOption "configuring Borg backups with Borgmatic";

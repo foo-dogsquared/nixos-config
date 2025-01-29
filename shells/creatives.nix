@@ -1,12 +1,6 @@
 # Trying to be creative with coding while endlessly referring to some tutorials
 # on the internet.
-{ mkShell
-, supercollider
-, bonzomatic
-, processing
-, puredata
-, shaderc
-}:
+{ mkShell, supercollider, bonzomatic, processing, puredata, shaderc }:
 
 mkShell {
   packages = [
