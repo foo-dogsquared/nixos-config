@@ -43,7 +43,10 @@
 
     # Packages that are meant to be consumed inside of a development
     # environment.
-    devPackages = { inherit (import ../../docs { inherit pkgs; }) website; };
+    devPackages = {
+      inherit (import ../../docs { inherit pkgs; }) website;
+      foodogsquared-homepage = pkgs.callPackage ../../configs/home-manager/foo-dogsquared/files/homepage/package.nix { };
+    };
 
     # All of the typical devcontainers to be used.
     devContainers = import ../../devcontainers { inherit pkgs; };
