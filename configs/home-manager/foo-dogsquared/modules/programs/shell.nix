@@ -24,6 +24,13 @@ in
       ];
     };
 
+    # Additional formatting thingies for your fuzzy finder.
+    programs.fzf.defaultOptions = [
+      "--height=40%"
+      "--bind=ctrl-z:ignore"
+      "--reverse"
+    ];
+
     # Compile all of the completions.
     programs.carapace.enable = true;
 
