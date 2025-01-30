@@ -76,6 +76,9 @@ in {
         go-migrate # Go potential migraines.
         oils-for-unix # Rev them up, reverent admin.
         lnav # Navigate with some logs like what some pirates do.
+        inotify-tools # I notify things with tools like these.
+        watchman # He ain't a superhero though, he's a creeper (for your files that is).
+        devbox # Create a Nix devshell without Nixlang.
 
         # Testing REST and all about backend development.
         httpie
@@ -89,6 +92,9 @@ in {
 
         # Testing out LLMs.
         plandex
+
+        # Testing out your web app #532.
+        mysql-workbench
       ];
     }
 
