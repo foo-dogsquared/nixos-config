@@ -55,11 +55,18 @@ links = [
   { url = "https://app.diagrams.net/", text = "lazy way of drawing things" },
   { url = "https://penpot.app", text = "Penpot" },
   { url = "https://figma.com", text = "Figma..." },
+  { url = "https://editor.graphite.rs", text = "Graphite" },
   { url = "https://www.awwwards.com/", text = "Awwwards" },
   { url = "https://dribbble.com", text = "Dribbble" },
+  { url = "https://coolors.co", text = "Coolors" },
+  { url = "https://www.colourlovers.com", text = "ColourLovers" },
+  { url = "https://www.typewolf.com", text = "Typewolf" },
+  { url = "https://www.fontpair.co", text = "FontPair" },
+  { url = "https://color.adobe.com", text = "Adobe Color CC" },
   { url = "https://simpleicons.org/", text = "Simple Icons" },
   { url = "https://pictogrammers.com/library/mdi/", text = "Material Design Icons" },
 ]
+grid.row = 2
 icon.iconset = "material-design-icons"
 icon.name = "pencil-ruler"
 
