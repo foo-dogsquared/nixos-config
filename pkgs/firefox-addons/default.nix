@@ -1,5 +1,25 @@
 { buildFirefoxXpiAddon, fetchurl, lib, stdenv }:
   {
+    "cookies-txt" = buildFirefoxXpiAddon {
+      pname = "cookies-txt";
+      version = "0.7";
+      addonId = "{12cf650b-1822-40aa-bff0-996df6948878}";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4368538/cookies_txt-0.7.xpi";
+      sha256 = "04ff7cf1fbebdba3c112fbd4d4ea83f90a08d8a267e63d44cca210659080930e";
+      meta = with lib;
+      {
+        description = "Exports all cookies to a Netscape HTTP Cookie File, as used by curl, wget, and youtube-dl, among others.";
+        license = licenses.gpl3;
+        mozPermissions = [
+          "cookies"
+          "downloads"
+          "contextualIdentities"
+          "<all_urls>"
+          "tabs"
+        ];
+        platforms = platforms.all;
+      };
+    };
     "extended-color-management" = buildFirefoxXpiAddon {
       pname = "extended-color-management";
       version = "1.1.1";
@@ -196,6 +216,27 @@
         description = "Click on any image on the web to search for it on TinEye. Recommended by Firefox! \r\nDiscover where an image came from, see how it is being used, check if modified versions exist or locate high resolution versions. Made with love by the TinEye team.";
         license = licenses.mit;
         mozPermissions = [ "contextMenus" "storage" ];
+        platforms = platforms.all;
+      };
+    };
+    "tor-control" = buildFirefoxXpiAddon {
+      pname = "tor-control";
+      version = "0.1.5";
+      addonId = "{d22a1484-dcef-44e9-ab52-80f0f4a331a3}";
+      url = "https://addons.mozilla.org/firefox/downloads/file/3698582/tor_control-0.1.5.xpi";
+      sha256 = "3b529ee8993e1bdb374bb8f1fb926564eb10cd4403c09bc55077a0b72f6ff937";
+      meta = with lib;
+      {
+        homepage = "https://add0n.com/tor-control.html";
+        description = "Brings the anonymity of the Tor network and modifies few settings to protect user privacy";
+        license = licenses.mpl20;
+        mozPermissions = [
+          "storage"
+          "proxy"
+          "privacy"
+          "notifications"
+          "nativeMessaging"
+        ];
         platforms = platforms.all;
       };
     };
