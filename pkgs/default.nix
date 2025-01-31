@@ -49,6 +49,7 @@ in lib.makeScope pkgs.newScope (self: {
   #rotp-fusion = callPackage ./rotp-fusion { };
   #purrdata = callPackage ./purr-data { };
   speki = callPackage ./speki { };
+  sqlc-gen-from-template = callPackage ./sqlc-gen-from-template { };
   tic-80 = callPackage ./tic-80 { };
   smile = callPackage ./smile { };
   sessiond = callPackage ./sessiond { };
