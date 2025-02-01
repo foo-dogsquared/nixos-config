@@ -7,6 +7,7 @@ in pkgs.mkShell {
       # My internal applications.
       run-workflow-in-vm
 
+      just
       age
       asciidoctor
       disko
