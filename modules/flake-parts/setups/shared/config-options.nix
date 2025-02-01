@@ -30,5 +30,30 @@
         of the same declarative environment.
       '';
     };
+
+    firstSetupArgs = lib.mkOption {
+      type = with lib.types; attrsOf anything;
+      default = {};
+      example = lib.literalExpression ''
+        {
+          baseSpecificConfigModules = [
+            ./whatwhatwut/base.nix
+          ];
+        }
+      '';
+      description = ''
+        A set of module arguments intended to be set as part of the module
+        argument namespace `firstSetupArgs` in the configuration.
+
+        :::{.note}
+        Functionally similar to {option}`specialArgs` but only different in
+        intent and also for organization purposes.
+        :::
+      '';
+    };
+  };
+
+  config.modules = lib.singleton {
+    _module.args = { inherit (config) firstSetupArgs; }
   };
 }

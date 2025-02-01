@@ -31,19 +31,14 @@
         };
         homeManagerBranch = "home-manager-unstable";
         systems = [ "aarch64-linux" "x86_64-linux" ];
+        firstSetupArgs = {
+          baseNixvimModules = config.setups.nixvim.configs.fiesta.modules
+            ++ config.setups.nixvim.sharedModules;
+        };
         modules = [
           inputs.nur.modules.homeManager.default
           inputs.sops-nix.homeManagerModules.sops
           inputs.wrapper-manager-fds.homeModules.wrapper-manager
-
-          {
-            _module.args = {
-              firstSetupArgs = {
-                baseNixvimModules = config.setups.nixvim.configs.fiesta.modules
-                  ++ config.setups.nixvim.sharedModules;
-              };
-            };
-          }
         ];
         nixvim = {
           instance = "fiesta";
