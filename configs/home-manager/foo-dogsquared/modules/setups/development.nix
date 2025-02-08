@@ -94,7 +94,7 @@ in {
         plandex
 
         # Testing out your web app #532.
-        mysql-workbench
+        dbeaver-bin
       ];
     }
 

@@ -37,6 +37,7 @@ in {
           "${config.xdg.cacheHome}/nushell/modules"
           "${config.xdg.userDirs.extraConfig.XDG_PROJECTS_DIR}/nushell"
         ];
+        environmentVariables.NIX_PATH = config.nix.nixPath;
       };
     }
 

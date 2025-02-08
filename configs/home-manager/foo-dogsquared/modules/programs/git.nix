@@ -95,12 +95,12 @@ in {
       };
 
       users.foo-dogsquared.programs.custom-homepage.sections.quicklinks.links =
-        lib.mkBefore (lib.singleton {
+        lib.singleton {
           text = "Current git repo";
           url = "http://localhost:${
               builtins.toString config.state.ports.git-instaweb.value
             }";
-        });
+        };
     })
   ]);
 }
