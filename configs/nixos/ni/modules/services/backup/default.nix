@@ -45,7 +45,7 @@ let
   pathPrefix = "borg-backup";
 in {
   options.hosts.ni.services.backup.enable =
-    lib.mkEnableOption "backup setup with BorgBackup";
+    lib.mkEnableOption "backup setup with BorgBackup and Snapper";
 
   config = lib.mkIf cfg.enable {
     sops.secrets = foodogsquaredLib.sops-nix.getSecrets ./secrets.yaml
@@ -88,6 +88,41 @@ in {
         environment.BORG_RSH = "ssh -i ${
             config.sops.secrets."${pathPrefix}/repos/hetzner-box/ssh-key".path
           }";
+      };
+    };
+
+    # The filesystem snapshots.
+    services.snapper = {
+      snapshotInterval = "hourly";
+      persistentTimer = true;
+
+      configs = {
+        root = {
+          SUBVOLUME = "/";
+          SPACE_LIMIT = "0.25";
+          FREE_LIMIT = "0.25";
+          BACKGROUND_COMPARISION = "yes";
+          NUMBER_CLEANUP = true;
+          TIMELINE_CREATE = true;
+          TIMELINE_CLEANUP = true;
+          TIMELINE_LIMIT_HOURLY = 48;
+          TIMELINE_LIMIT_DAILY = 30;
+          TIMELINE_LIMIT_WEEKLY = 8;
+          TIMELINE_LIMIT_MONTHLY = 24;
+          TIMELINE_LIMIT_QUARTERLY = 10;
+          TIMELINE_LIMIT_YEARLY = 8;
+        };
+
+        home = {
+          SUBVOLUME = "/home";
+          ALLOW_USERS = [ "foo-dogsquared" ];
+          TIMELINE_CREATE = true;
+          TIMELINE_CLEANUP = true;
+          TIMELINE_MIN_AGE = 300;
+          TIMELINE_LIMIT_HOURLY = 24;
+          TIMELINE_LIMIT_DAILY = 30;
+          TIMELINE_LIMIT_WEEKLY = 12;
+        };
       };
     };
   };
