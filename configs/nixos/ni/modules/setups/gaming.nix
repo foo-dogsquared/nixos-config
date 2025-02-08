@@ -19,6 +19,7 @@ in {
     # Bring more of them games.
     environment.systemPackages = with pkgs; [
       rpcs3
+      ryubing
 
       dwarf-fortress # Losing only means more possibilities to play.
       mindustry # Not a Minecraft industry simulator.
