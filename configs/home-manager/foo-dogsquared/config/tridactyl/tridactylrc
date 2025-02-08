@@ -2,7 +2,7 @@
 " Also the first time you open Firefox with this Tridactyl configuration, you
 " might want to restart immediately since the autocontainers are not in
 " effect.
-sanitise tridactyllocal tridactylsync
+sanitise commandline tridactyllocal tridactylsync
 
 " Tridactyl settings.
 set viewsource default
@@ -24,6 +24,7 @@ set update.nativeinstallcmd echo
 " Additional and modified keybindings.
 bind yt tabduplicate
 bind yf hint -y
+bind i mode ignore
 
 bind gK elementunhide
 
@@ -116,6 +117,7 @@ autocontain -s .+\.local Self-hosted
 autocontain -s .+\.internal Self-hosted
 autocontain -s .+\.theinternaltld Self-hosted
 autocontain -s foodogsquared\.one Self-hosted
+autocontain -s localhost Self-hosted
 
 " Most software forges should be separated.
 autocontain -s github\.com Work
@@ -188,5 +190,7 @@ autocontain -s panlasangpinoy\.com Cooking
 
 " Ignore all of the keybindings.
 blacklistadd https://design.penpot.app
+blacklistadd https://discord.com
+blacklistadd https://messenger.com
 
 " vim: ft=vim
