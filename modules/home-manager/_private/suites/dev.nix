@@ -100,7 +100,7 @@ in {
       # A fuzzy finder that enables fuzzy finding not furry finding, a common misconception.
       programs.fzf = {
         enable = true;
-        changeDirWidgetCommand = "${fd} --type directory --unrestricted";
+        changeDirWidgetCommand = "${lib.getExe pkgs.fd} --type directory --unrestricted";
         defaultOptions = let
           skipDirectories' =
             lib.concatStringsSep "," config.state.paths.ignoreDirectories;
