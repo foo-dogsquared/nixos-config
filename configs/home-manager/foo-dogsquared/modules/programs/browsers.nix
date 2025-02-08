@@ -226,6 +226,10 @@ in {
             name = "tridactyl-nix-generated";
             text = ''
               set newtab file://${config.xdg.dataHome}/foodogsquared/homepage/index.html
+            ''
+            + lib.optionalString attrs.nixosConfig.services.miniflux.enable ''
+              # This is to take advantage of Miniflux shortcuts.
+              blacklistadd localhost:${builtins.toString attrs.nixosConfig.state.ports.miniflux.value}
             '';
           })
         ];
