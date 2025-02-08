@@ -151,8 +151,8 @@ in {
         enable = true;
         settings = {
           container_additional_volumes = [
-            "/nix/store:/nix/store:r"
-            "/etc/profiles/per-user:/etc/profiles/per-user:r"
+            "/nix/store:/nix/store:ro"
+            "/etc/profiles/per-user:/etc/profiles/per-user:ro"
           ];
           container_image_default =
             "registry.opensuse.org/opensuse/distrobox-packaging:latest";
