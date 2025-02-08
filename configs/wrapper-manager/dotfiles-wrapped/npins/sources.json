@@ -8,9 +8,9 @@
         "repo": "doomemacs"
       },
       "branch": "master",
-      "revision": "8b9168de6e6a9cabf13d1c92558e2ef71aa37a72",
-      "url": "https://github.com/doomemacs/doomemacs/archive/8b9168de6e6a9cabf13d1c92558e2ef71aa37a72.tar.gz",
-      "hash": "1b3dwzvxa3svi5bmzwbx847b0g9fggfdjbjacp7vy936x6ld51bc"
+      "revision": "2bc052425ca45a41532be0648ebd976d1bd2e6c1",
+      "url": "https://github.com/doomemacs/doomemacs/archive/2bc052425ca45a41532be0648ebd976d1bd2e6c1.tar.gz",
+      "hash": "0a1px0igzhzl7mjl0wkp9jnb3sjggpbi2rnj0w2kga08d8frahcb"
     },
     "dotfiles": {
       "type": "Git",
@@ -20,9 +20,9 @@
         "repo": "dotfiles"
       },
       "branch": "master",
-      "revision": "0766497a925b0e87efa7b319e823aeaa77f2e1dd",
-      "url": "https://github.com/foo-dogsquared/dotfiles/archive/0766497a925b0e87efa7b319e823aeaa77f2e1dd.tar.gz",
-      "hash": "0435h4cgz9wgyp9j6vygcbxp3i66vn29ab2jqpcpfgligipjnhhm"
+      "revision": "f2f7a9e221635e7e857b96ced7d651fc8e059a66",
+      "url": "https://github.com/foo-dogsquared/dotfiles/archive/f2f7a9e221635e7e857b96ced7d651fc8e059a66.tar.gz",
+      "hash": "181z505yqsscjngk78dpzfgw47a4ravr5xpfqyal9b38b2kvc6i9"
     },
     "nixgl": {
       "type": "Git",
