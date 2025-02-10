@@ -151,10 +151,10 @@
     };
     "rsshub-radar" = buildFirefoxXpiAddon {
       pname = "rsshub-radar";
-      version = "2.0.21";
+      version = "2.1.0";
       addonId = "i@diygod.me";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4369623/rsshub_radar-2.0.21.xpi";
-      sha256 = "ffa6bd7d98080feea5e551f4873b02ec923af061f1db79c22accad2e14458e1e";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4433666/rsshub_radar-2.1.0.xpi";
+      sha256 = "2a373e95677e5252f9819e636d955b1ad81e593ac638dbd7db317c4f2889b5b7";
       meta = with lib;
       {
         homepage = "https://github.com/DIYgod/RSSHub-Radar";
