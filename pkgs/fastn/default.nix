@@ -2,7 +2,7 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "fastn";
-  version = "0.4.79";
+  version = "0.4.87";
 
   src = fetchFromGitHub {
     owner = "fastn-stack";
@@ -14,8 +14,7 @@ rustPlatform.buildRustPackage rec {
   cargoLock = {
     lockFile = ./Cargo.lock;
     outputHashes = {
-      "fastn-observer-0.1.0" =
-        "sha256-D7ch6zB1xw54vGbpcQ3hf+zG11Le/Fy01W3kHhc8bOg=";
+      "fastn-observer-0.1.0" = "sha256-D7ch6zB1xw54vGbpcQ3hf+zG11Le/Fy01W3kHhc8bOg=";
     };
   };
 
