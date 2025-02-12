@@ -5,6 +5,10 @@ update:
     git checkout -- flake.lock
     nix flake update --commit-lock-file
 
+# Update a package with nix-update.
+pkg-update PKG:
+    nix-update -f pkgs {{PKG}}
+
 # Build a package from `pkgs/` folder.
 pkg-build PKG:
     nix-build pkgs -A {{PKG}}
