@@ -10,6 +10,7 @@ links = [
   { url = "https://search.brave.com", text = "Brave Search" },
   { url = "https://login.tailscale.com", text = "Tailscale" },
   { url = "https://devdocs.io", text = "Devdocs" },
+  { url = "https://chat.deepseek.com", text = "Your uncomplaining junior" },
 ]
 icon.iconset = "material-design-icons"
 icon.name = "fast-forward"
@@ -23,7 +24,7 @@ links = [
   { url = "https://start.foodogsquared.one", text = "The other homepage" },
   { url = "https://code.foodogsquared.one", icon = "gitea", text = "Personal forge" },
   { url = "https://pass.foodogsquared.one", icon = "bitwarden", text = "Password manager" },
-  { url = "https://monitoring.foodogsquared.one", icon = "grafana", text = "Monitoring application" },
+  { url = "https://monitoring.foodogsquared.one/grafana", icon = "grafana", text = "Monitoring dashboard" },
 ]
 icon.iconset = "material-design-icons"
 icon.name = "developer-board"
@@ -34,14 +35,21 @@ flavorText = "...is just standing on a house of cards"
 textOnly = true
 weight = -25
 links = [
+  { subsection = true, text = "Search" },
   { url = "https://github.com", text = "GitHub" },
-  { url = "https://sourcegraph.com", text = "SourceGraph" },
-  { url = "https://devdocs.io", text = "Devdocs" },
+  { url = "https://sourcegraph.com/search", text = "SourceGraph" },
+  { url = "https://archive.softwareheritage.org", text = "Software Heritage" },
+
+  { subsection = true, text = "Cloud platforms" },
   { url = "https://vscode.dev", text = "Online Visual Studio Code" },
   { url = "https://cloud.oracle.com", text = "Oracle Cloud" },
   { url = "https://cloud.hetzner.com", text = "Hetzner Cloud" },
   { url = "https://portal.azure.com", text = "Azure Cloud" },
+
+  { subsection = true, text = "References" },
+  { url = "https://devdocs.io", text = "Devdocs" },
   { url = "https://manpages.debian.org", text = "Debian Manpages" },
+  { url = "https://nixos.org/manual/nixpkgs/unstable", text = "nixpkgs reference" },
 ]
 grid.row = 2
 icon.iconset = "simple-icons"
@@ -52,17 +60,26 @@ name = "Design"
 flavorText = "No matter how hard I try, it's pretty crap"
 textOnly = true
 links = [
+  { subsection = true, text = "References" },
+  { url = "https://www.awwwards.com/", text = "Awwwards" },
+  { url = "https://dribbble.com", text = "Dribbble" },
+
+  { subsection = true, text = "Apps" },
   { url = "https://app.diagrams.net/", text = "lazy way of drawing things" },
   { url = "https://penpot.app", text = "Penpot" },
   { url = "https://figma.com", text = "Figma..." },
   { url = "https://editor.graphite.rs", text = "Graphite" },
-  { url = "https://www.awwwards.com/", text = "Awwwards" },
-  { url = "https://dribbble.com", text = "Dribbble" },
+
+  { subsection = true, text = "Color" },
   { url = "https://coolors.co", text = "Coolors" },
   { url = "https://www.colourlovers.com", text = "ColourLovers" },
+
+  { subsection = true, text = "Font" },
   { url = "https://www.typewolf.com", text = "Typewolf" },
   { url = "https://www.fontpair.co", text = "FontPair" },
   { url = "https://color.adobe.com", text = "Adobe Color CC" },
+
+  { subsection = true, text = "Icon sets" },
   { url = "https://simpleicons.org/", text = "Simple Icons" },
   { url = "https://pictogrammers.com/library/mdi/", text = "Material Design Icons" },
 ]
@@ -104,10 +121,11 @@ flavorText = "Let's get down to bidness"
 textOnly = true
 weight = 25
 links = [
-  { url = "https://webmail.foodogsquared.one", text = "Mail" },
+  { url = "https://webmail.foodogsquared.one", text = "Mail (just use an email client)" },
   { url = "https://microsoft365.com/", text = "Microsoft 365" },
-  { url = "https://messenger.com/", text = "Messenger" },
-  { url = "https://discord.com/", text = "Discord" },
+  { url = "https://app.element.io", text = "Element (just use a Matrix client)" },
+  { url = "https://app.messenger.com/", text = "Messenger" },
+  { url = "https://app.discord.com/", text = "Discord" },
 ]
 icon.iconset = "material-design-icons"
 icon.name = "card-account-details"

@@ -25,8 +25,12 @@
                 <hr />
 
                 <nav>
-                {{ range $link := $value.links }}
-                    <a href="{{ safeURL $link.url }}">{{ $link.text }}</a>
+                {{ range $item := $value.links }}
+                    {{ if $item.subsection }}
+                        <span class="nav-subsection">{{ $item.text }}</span>
+                    {{ else }}
+                        <a href="{{ safeURL $item.url }}">{{ $item.text }}</a>
+                    {{ end }}
                 {{ end }}
                 </nav>
             </section>

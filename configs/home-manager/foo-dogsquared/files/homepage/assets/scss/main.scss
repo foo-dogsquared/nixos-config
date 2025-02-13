@@ -48,6 +48,23 @@ body {
       font-weight: bolder;
     }
 
+    .nav-subsection {
+      font-style: italic;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      color: var(--base07);
+      margin: 0.5em;
+    }
+
+    .nav-subsection::before,
+    .nav-subsection::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--base0B);
+      margin: 0 0.5em;
+    }
+
     .flavor-text {
       font-size: 0.9em;
       font-style: italic;
