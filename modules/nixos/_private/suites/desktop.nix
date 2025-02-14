@@ -131,9 +131,6 @@ in {
         };
         dates = "weekly";
         flags = [
-          "--update-input"
-          "nixpkgs"
-          "--commit-lock-file"
           "--no-write-lock-file"
         ];
         randomizedDelaySec = "1min";
