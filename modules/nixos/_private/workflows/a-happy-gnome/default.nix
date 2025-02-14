@@ -192,7 +192,7 @@ in {
 
     xdg.mime = {
       enable = true;
-      defaultApplications = {
+      desktops.gnome.defaultApplications = {
         # Default application for web browser.
         "text/html" = "re.sonny.Junction.desktop";
 
