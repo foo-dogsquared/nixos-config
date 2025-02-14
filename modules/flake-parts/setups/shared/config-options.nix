@@ -1,6 +1,6 @@
 { systems }:
 
-{ lib, name, ... }: {
+{ lib, name, config, ... }: {
   options = {
     systems = lib.mkOption {
       type = with lib.types; listOf str;
@@ -54,6 +54,6 @@
   };
 
   config.modules = lib.singleton {
-    _module.args = { inherit (config) firstSetupArgs; }
+    _module.args = { inherit (config) firstSetupArgs; };
   };
 }

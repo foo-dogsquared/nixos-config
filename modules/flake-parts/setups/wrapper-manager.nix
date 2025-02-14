@@ -156,31 +156,32 @@ in {
       ]);
   };
 
-  config = lib.mkIf (cfg.configs != { }) {
-    setups.wrapper-manager.sharedNixpkgsConfig =
-      config.setups.sharedNixpkgsConfig;
+  config = lib.mkMerge [
+    {
+      setups.wrapper-manager.sharedNixpkgsConfig =
+        config.setups.sharedNixpkgsConfig;
+    }
 
-    setups.wrapper-manager.sharedModules =
-      [ ../../wrapper-manager ../../wrapper-manager/_private ];
-
-    perSystem = { system, config, lib, ... }:
-      let
-        validWrapperManagerConfigs =
-          lib.filterAttrs (_: metadata: lib.elem system metadata.systems)
-          cfg.configs;
-      in {
-        wrapperManagerPackages = lib.mapAttrs (name: metadata:
-          let
-            pkgs = import inputs.${metadata.nixpkgs.branch} {
-              inherit (metadata.nixpkgs) config;
-              inherit system;
-            };
-          in mkWrapperManagerPackage {
-            inherit pkgs;
-            inherit (metadata.wrapper-manager) src;
-            modules = cfg.sharedModules ++ cfg.standaloneModules
-              ++ metadata.modules;
-          }) validWrapperManagerConfigs;
-      };
-  };
+    (lib.mkIf (cfg.configs != { }) {
+      perSystem = { system, config, lib, ... }:
+        let
+          validWrapperManagerConfigs =
+            lib.filterAttrs (_: metadata: lib.elem system metadata.systems)
+            cfg.configs;
+        in {
+          wrapperManagerPackages = lib.mapAttrs (name: metadata:
+            let
+              pkgs = import inputs.${metadata.nixpkgs.branch} {
+                inherit (metadata.nixpkgs) config;
+                inherit system;
+              };
+            in mkWrapperManagerPackage {
+              inherit pkgs;
+              inherit (metadata.wrapper-manager) src;
+              modules = cfg.sharedModules ++ cfg.standaloneModules
+                ++ metadata.modules;
+            }) validWrapperManagerConfigs;
+        };
+    });
+  ];
 }

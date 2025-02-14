@@ -4,8 +4,13 @@
     ./packages.nix
     ./templates.nix
 
+    # Here's where the shared setup configurations for this entire cluster came
+    # from.
+    ./setups.nix
+
     # Environment configurations.
     ./disko.nix
+    ./flake-parts.nix
     ./home-manager.nix
     ./nixos.nix
     ./nixvim.nix

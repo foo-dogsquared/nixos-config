@@ -6,17 +6,13 @@
 let
   cfg = config.setups.home-manager;
   partsConfig = config;
-  homeManagerModules = ../../home-manager;
 
   # A thin wrapper around the home-manager configuration function.
   mkHome = { pkgs, lib ? pkgs.lib, system, homeManagerBranch ? "home-manager"
     , extraModules ? [ ], specialArgs ? { } }:
     inputs.${homeManagerBranch}.lib.homeManagerConfiguration {
-      extraSpecialArgs = specialArgs // {
-        foodogsquaredModulesPath = builtins.toString homeManagerModules;
-      };
-
       inherit pkgs lib;
+      extraSpecialArgs = specialArgs;
       modules = extraModules;
     };
 
@@ -219,6 +215,8 @@ in {
               config = let
                 hmUserConfig = partsConfig.setups.home-manager.configs.${name};
               in {
+                # The rationale for this is we're making sure that it is
+                # synced with the NixOS user settings.
                 userConfig = {
                   isNormalUser = lib.mkDefault true;
                   createHome = lib.mkDefault true;
@@ -348,64 +346,60 @@ in {
       ]);
   };
 
-  config = lib.mkIf (cfg.configs != { }) {
-    setups.home-manager.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+  config = lib.mkMerge [
+    {
+      setups.home-manager.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+    }
 
-    # Import our own home-manager modules.
-    setups.home-manager.sharedModules = [
-      homeManagerModules
+    (lib.mkIf (cfg.configs != { }) {
+      flake = let
+        # A quick data structure we can pass through multiple build pipelines.
+        pureHomeManagerConfigs = let
+          generatePureConfigs = username: metadata:
+            lib.listToAttrs (builtins.map (system:
+              let
+                nixpkgs = inputs.${metadata.nixpkgs.branch};
 
-      # Import our private modules...
-      ../../home-manager/_private
-    ];
+                # We won't apply the overlays here since it is set
+                # modularly.
+                pkgs = import nixpkgs {
+                  inherit system;
+                  inherit (metadata.nixpkgs) config;
+                };
+              in lib.nameValuePair system (mkHome {
+                inherit pkgs system;
+                inherit (metadata) homeManagerBranch;
+                extraModules = cfg.sharedModules ++ cfg.standaloneConfigModules
+                  ++ metadata.modules;
+              })) metadata.systems);
+        in lib.mapAttrs generatePureConfigs cfg.configs;
+      in {
+        homeConfigurations = let
+          renameSystems = name: system: config:
+            lib.nameValuePair "${name}-${system}" config;
+        in lib.concatMapAttrs
+        (name: configs: lib.mapAttrs' (renameSystems name) configs)
+        pureHomeManagerConfigs;
 
-    flake = let
-      # A quick data structure we can pass through multiple build pipelines.
-      pureHomeManagerConfigs = let
-        generatePureConfigs = username: metadata:
-          lib.listToAttrs (builtins.map (system:
-            let
-              nixpkgs = inputs.${metadata.nixpkgs.branch};
+        deploy.nodes = let
+          validConfigs =
+            lib.filterAttrs (name: _: cfg.configs.${name}.deploy != null)
+            pureHomeManagerConfigs;
 
-              # We won't apply the overlays here since it is set
-              # modularly.
-              pkgs = import nixpkgs {
-                inherit system;
-                inherit (metadata.nixpkgs) config;
+          generateDeployNode = name: system: config:
+            lib.nameValuePair "home-manager-${name}-${system}" (let
+              deployConfig = cfg.configs.${name}.deploy;
+              deployConfig' =
+                lib.attrsets.removeAttrs deployConfig [ "profiles" ];
+            in deployConfig' // {
+              profiles = cfg.configs.${name}.deploy.profiles {
+                inherit name config system;
               };
-            in lib.nameValuePair system (mkHome {
-              inherit pkgs system;
-              inherit (metadata) homeManagerBranch;
-              extraModules = cfg.sharedModules ++ cfg.standaloneConfigModules
-                ++ metadata.modules;
-            })) metadata.systems);
-      in lib.mapAttrs generatePureConfigs cfg.configs;
-    in {
-      homeConfigurations = let
-        renameSystems = name: system: config:
-          lib.nameValuePair "${name}-${system}" config;
-      in lib.concatMapAttrs
-      (name: configs: lib.mapAttrs' (renameSystems name) configs)
-      pureHomeManagerConfigs;
-
-      deploy.nodes = let
-        validConfigs =
-          lib.filterAttrs (name: _: cfg.configs.${name}.deploy != null)
-          pureHomeManagerConfigs;
-
-        generateDeployNode = name: system: config:
-          lib.nameValuePair "home-manager-${name}-${system}" (let
-            deployConfig = cfg.configs.${name}.deploy;
-            deployConfig' =
-              lib.attrsets.removeAttrs deployConfig [ "profiles" ];
-          in deployConfig' // {
-            profiles = cfg.configs.${name}.deploy.profiles {
-              inherit name config system;
-            };
-          });
-      in lib.concatMapAttrs
-      (name: configs: lib.mapAttrs' (generateDeployNode name) configs)
-      validConfigs;
-    };
-  };
+            });
+        in lib.concatMapAttrs
+        (name: configs: lib.mapAttrs' (generateDeployNode name) configs)
+        validConfigs;
+      };
+    })
+  ];
 }

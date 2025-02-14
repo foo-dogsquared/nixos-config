@@ -7,7 +7,6 @@
 let
   cfg = config.setups.nixos;
   partsConfig = config;
-  nixosModules = ../../nixos;
 
   # A thin wrapper around the NixOS configuration function.
   mkHost =
@@ -17,12 +16,7 @@ let
       # on nixpkgs.lib.nixosSystem flake output.
       nixosSystem = args: import "${pkgs.path}/nixos/lib/eval-config.nix" args;
     in (lib.makeOverridable nixosSystem) {
-      inherit pkgs;
-      specialArgs = specialArgs // {
-        foodogsquaredUtils =
-          import ../../../lib/utils/nixos.nix { inherit lib; };
-        foodogsquaredModulesPath = builtins.toString nixosModules;
-      };
+      inherit pkgs specialArgs;
       modules = extraModules
         ++ [{ nixpkgs.hostPlatform = lib.mkForce system; }];
 
@@ -272,88 +266,85 @@ in {
     };
   };
 
-  config = lib.mkIf (cfg.configs != { }) {
-    setups.nixos.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+  config = lib.mkMerge [
+    {
+      setups.nixos.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+    }
 
-    setups.nixos.sharedModules = [
-      # Import our own public NixOS modules.
-      nixosModules
+    (lib.mkIf (cfg.configs != { }) {
 
-      # Import our private modules.
-      ../../nixos/_private
-    ];
+      flake = let
+        # A quick data structure we can pass through multiple build pipelines.
+        pureNixosConfigs = let
+          validConfigs =
+            lib.filterAttrs (_: v: v.shouldBePartOfNixOSConfigurations)
+            cfg.configs;
 
-    flake = let
-      # A quick data structure we can pass through multiple build pipelines.
-      pureNixosConfigs = let
-        validConfigs =
-          lib.filterAttrs (_: v: v.shouldBePartOfNixOSConfigurations)
-          cfg.configs;
+          generatePureConfigs = hostname: metadata:
+            lib.listToAttrs (builtins.map (system:
+              let
+                nixpkgs = inputs.${metadata.nixpkgs.branch};
 
-        generatePureConfigs = hostname: metadata:
-          lib.listToAttrs (builtins.map (system:
-            let
-              nixpkgs = inputs.${metadata.nixpkgs.branch};
-
-              # We won't apply the overlays here since it is set
-              # modularly.
-              pkgs = import nixpkgs {
-                inherit system;
-                inherit (metadata.nixpkgs) config;
-              };
-            in lib.nameValuePair system (mkHost {
-              inherit pkgs system;
-              inherit (metadata) specialArgs;
-              extraModules = cfg.sharedModules ++ metadata.modules;
-            })) metadata.systems);
-      in lib.mapAttrs generatePureConfigs validConfigs;
-    in {
-      nixosConfigurations = let
-        renameSystem = name: system: config:
-          lib.nameValuePair "${name}-${system}" config;
-      in lib.concatMapAttrs
-      (name: configs: lib.mapAttrs' (renameSystem name) configs)
-      pureNixosConfigs;
-
-      deploy.nodes = let
-        validConfigs =
-          lib.filterAttrs (name: _: cfg.configs.${name}.deploy != null)
-          pureNixosConfigs;
-
-        generateDeployNode = name: system: config:
-          lib.nameValuePair "nixos-${name}-${system}"
-          (let deployConfig = cfg.configs.${name}.deploy;
-          in deployConfig // {
-            profiles = cfg.configs.${name}.deploy.profiles {
-              inherit name config system;
-            };
-          });
-      in lib.concatMapAttrs
-      (name: configs: lib.mapAttrs' (generateDeployNode name) configs)
-      validConfigs;
-    };
-
-    perSystem = { system, lib, ... }: {
-      images = let
-        validImages = lib.filterAttrs (host: metadata:
-          metadata.formats != null && (lib.elem system metadata.systems))
-          cfg.configs;
-
-        generateImages = name: metadata:
-          let
-            buildImage = format:
-              lib.nameValuePair "${name}-${format}" (mkImage {
-                inherit format system;
-                pkgs = import inputs.${metadata.nixpkgs.branch} {
+                # We won't apply the overlays here since it is set
+                # modularly.
+                pkgs = import nixpkgs {
                   inherit system;
                   inherit (metadata.nixpkgs) config;
                 };
+              in lib.nameValuePair system (mkHost {
+                inherit pkgs system;
+                inherit (metadata) specialArgs;
                 extraModules = cfg.sharedModules ++ metadata.modules;
-              });
+              })) metadata.systems);
+        in lib.mapAttrs generatePureConfigs validConfigs;
+      in {
+        nixosConfigurations = let
+          renameSystem = name: system: config:
+            lib.nameValuePair "${name}-${system}" config;
+        in lib.concatMapAttrs
+        (name: configs: lib.mapAttrs' (renameSystem name) configs)
+        pureNixosConfigs;
 
-            images = builtins.map buildImage metadata.formats;
-          in lib.listToAttrs images;
-      in lib.concatMapAttrs generateImages validImages;
-    };
-  };
+        deploy.nodes = let
+          validConfigs =
+            lib.filterAttrs (name: _: cfg.configs.${name}.deploy != null)
+            pureNixosConfigs;
+
+          generateDeployNode = name: system: config:
+            lib.nameValuePair "nixos-${name}-${system}"
+            (let deployConfig = cfg.configs.${name}.deploy;
+            in deployConfig // {
+              profiles = cfg.configs.${name}.deploy.profiles {
+                inherit name config system;
+              };
+            });
+        in lib.concatMapAttrs
+        (name: configs: lib.mapAttrs' (generateDeployNode name) configs)
+        validConfigs;
+      };
+
+      perSystem = { system, lib, ... }: {
+        images = let
+          validImages = lib.filterAttrs (host: metadata:
+            metadata.formats != null && (lib.elem system metadata.systems))
+            cfg.configs;
+
+          generateImages = name: metadata:
+            let
+              buildImage = format:
+                lib.nameValuePair "${name}-${format}" (mkImage {
+                  inherit format system;
+                  pkgs = import inputs.${metadata.nixpkgs.branch} {
+                    inherit system;
+                    inherit (metadata.nixpkgs) config;
+                  };
+                  extraModules = cfg.sharedModules ++ metadata.modules;
+                });
+
+              images = builtins.map buildImage metadata.formats;
+            in lib.listToAttrs images;
+        in lib.concatMapAttrs generateImages validImages;
+      };
+    })
+];
 }
