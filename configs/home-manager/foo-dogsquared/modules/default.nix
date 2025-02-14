@@ -15,6 +15,7 @@
     ./programs/nushell.nix
     ./programs/custom-homepage.nix
     ./programs/shell.nix
+    ./programs/password-utilities.nix
     ./programs/terminal-multiplexer.nix
     ./programs/terminal-emulator.nix
     ./programs/vs-code.nix

@@ -117,11 +117,6 @@ in {
   nixpkgs.config = import ./config/nixpkgs/config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./config/nixpkgs/config.nix;
 
-  home.packages = with pkgs;
-    [
-      gopass # An improved version of the password manager for hipsters.
-    ];
-
   home.stateVersion = "23.11";
 
   xdg.configFile = {
