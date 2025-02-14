@@ -51,6 +51,7 @@ in import nmt {
   tests = builtins.foldl' (a: b: a // (import b)) { } ([
     #./programs/borgmatic
     ./programs/diceware
+    ./programs/sesh
     ./programs/pipewire
     ./programs/pop-launcher
     ./programs/zed-editor

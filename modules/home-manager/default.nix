@@ -6,6 +6,7 @@
     ./programs/borgmatic.nix
     ./programs/diceware.nix
     ./programs/nushell.nix
+    ./programs/sesh.nix
     ./programs/python.nix
     ./services/archivebox.nix
     ./services/borgbackup.nix
