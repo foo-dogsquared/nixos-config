@@ -269,6 +269,8 @@ in {
   config = lib.mkMerge [
     {
       setups.nixos.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+
+      setups.nixos.sharedSpecialArgs = config.setups.sharedSpecialArgs;
     }
 
     (lib.mkIf (cfg.configs != { }) {

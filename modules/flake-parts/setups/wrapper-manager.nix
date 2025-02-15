@@ -63,17 +63,9 @@ let
   };
 
   wrapperManagerConfigModule = { name, config, lib, ... }: {
-    options.wrapper-manager.src = lib.mkOption {
-      type = lib.types.path;
-      default = ../../../subprojects/wrapper-manager-fds;
-      description = ''
-        The path containing wrapper-manager-fds source code to be used to
-        properly initialize and create the wrapper-manager environment.
-      '';
-    };
-
     config = {
       nixpkgs.config = cfg.sharedNixpkgsConfig;
+      specialArgs = cfg.sharedSpecialArgs;
 
       modules = [
         "${partsConfig.setups.configDir}/wrapper-manager/${config.configName}"
@@ -94,6 +86,7 @@ in {
         attrsOf (submodule [
           (import ./shared/config-options.nix { inherit (config) systems; })
           ./shared/nixpkgs-options.nix
+          ./shared/special-args-options.nix
           wrapperManagerConfigModule
         ]);
       default = { };
@@ -108,6 +101,13 @@ in {
             ];
           };
         }
+      '';
+    };
+
+    sharedSpecialArgs = options.setups.sharedSpecialArgs // {
+      description = ''
+        Shared set of module arguments as part of `_module.specialArgs` of the
+        configuration.
       '';
     };
 
@@ -160,6 +160,9 @@ in {
     {
       setups.wrapper-manager.sharedNixpkgsConfig =
         config.setups.sharedNixpkgsConfig;
+
+      setups.wrapper-manager.sharedSpecialArgs =
+        config.setups.sharedSpecialArgs;
     }
 
     (lib.mkIf (cfg.configs != { }) {
@@ -177,11 +180,12 @@ in {
               };
             in mkWrapperManagerPackage {
               inherit pkgs;
+              inherit (metadata) specialArgs;
               inherit (metadata.wrapper-manager) src;
               modules = cfg.sharedModules ++ cfg.standaloneModules
                 ++ metadata.modules;
             }) validWrapperManagerConfigs;
         };
-    });
+    })
   ];
 }

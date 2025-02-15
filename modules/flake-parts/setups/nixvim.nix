@@ -225,6 +225,8 @@ in {
   config = lib.mkMerge [
     {
       setups.nixvim.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+
+      setups.nixvim.sharedSpecialArgs = config.setups.sharedSpecialArgs;
     }
 
     (lib.mkIf (cfg.configs != { }) {

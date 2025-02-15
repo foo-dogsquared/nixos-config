@@ -349,6 +349,8 @@ in {
   config = lib.mkMerge [
     {
       setups.home-manager.sharedNixpkgsConfig = config.setups.sharedNixpkgsConfig;
+
+      setups.home-manager.sharedSpecialArgs = config.setups.sharedSpecialArgs;
     }
 
     (lib.mkIf (cfg.configs != { }) {
