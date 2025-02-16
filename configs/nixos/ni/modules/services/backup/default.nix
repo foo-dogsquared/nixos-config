@@ -124,6 +124,14 @@ in {
           TIMELINE_LIMIT_WEEKLY = 12;
         };
       };
+
+      filters = ''
+        /tmp
+        /var/tmp
+        /var/log
+        /var/lib/libvirt/images
+        /srv
+      '';
     };
   };
 }

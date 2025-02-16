@@ -60,6 +60,16 @@
                     mountpoint = "/gnu";
                   };
                 })
+
+                (lib.mkIf (config.services.snapper.configs != {}) {
+                  "/home/.snapshots" = {
+                    mountOptions = [ "compress=zstd" ];
+                  };
+
+                  "/.snapshots" = {
+                    mountOptions = [ "compress=zstd" ];
+                  };
+                })
               ];
             };
           };
