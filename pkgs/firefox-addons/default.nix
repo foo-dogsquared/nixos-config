@@ -204,21 +204,6 @@
         platforms = platforms.all;
       };
     };
-    "tineye-reverse-image-search" = buildFirefoxXpiAddon {
-      pname = "tineye-reverse-image-search";
-      version = "2.0.4";
-      addonId = "tineye@ideeinc.com";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4074627/tineye_reverse_image_search-2.0.4.xpi";
-      sha256 = "cece89c89f4480c6b69336b43c0dd2970058f2658e6cfd0160d05ba3c0cfc1b0";
-      meta = with lib;
-      {
-        homepage = "https://tineye.com/";
-        description = "Click on any image on the web to search for it on TinEye. Recommended by Firefox! \r\nDiscover where an image came from, see how it is being used, check if modified versions exist or locate high resolution versions. Made with love by the TinEye team.";
-        license = licenses.mit;
-        mozPermissions = [ "contextMenus" "storage" ];
-        platforms = platforms.all;
-      };
-    };
     "tor-control" = buildFirefoxXpiAddon {
       pname = "tor-control";
       version = "0.1.5";
