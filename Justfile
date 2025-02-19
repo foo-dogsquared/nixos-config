@@ -1,17 +1,22 @@
 default:
     just --list
 
+# Update the flake lockfile.
 update:
     git checkout -- flake.lock
     nix flake update --commit-lock-file
 
+# Small wrapper around nixos-rebuild.
+host-build HOST *ARGS:
+    nixos-rebuild --flake '.#{{HOST}}-{{arch()}}-{{os()}}' {{ARGS}}
+
 # Update a package with nix-update.
-pkg-update PKG:
-    nix-update -f pkgs {{PKG}}
+pkg-update PKG *ARGS:
+    nix-update -f pkgs {{PKG}} {{ARGS}}
 
 # Build a package from `pkgs/` folder.
-pkg-build PKG:
-    nix-build pkgs -A {{PKG}}
+pkg-build PKG *ARGS:
+    nix-build pkgs -A {{PKG}} {{ARGS}}
 
 # Build Firefox addons.
 pkg-build-firefox-addons:
@@ -26,5 +31,9 @@ docs-build:
     hugo -s ./docs/
 
 # Deploy NixOS system.
-deploy-nixos HOST:
-    deploy '.#nixos-${HOST}' --skip-checks
+deploy-nixos HOST *ARGS:
+    deploy '.#nixos-{{HOST}}' --skip-checks {{ARGS}}
+
+# Deploy home environment.
+deploy-hm USER *ARGS:
+    deploy '.#home-manager-{{USER}}' --skip-checks {{ARGS}}
