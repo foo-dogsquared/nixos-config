@@ -58,13 +58,12 @@ in {
       # :lang org +roam2
       texlive.combined.scheme-medium
       sqlite
-      #anystyle-cli
     ];
 
     programs.python = {
       enable = true;
       package = pkgs.python3;
-      modules = ps: with ps; [ jupyter jupyter-book ];
+      modules = ps: with ps; [ jupyter ];
     };
 
     # Enable Emacs server for them quicknotes.
@@ -75,10 +74,12 @@ in {
 
     # Add org-protocol support.
     xdg.desktopEntries.org-protocol = {
-      name = "Org protocol";
-      exec = "emacsclient %u";
-      icon = "emacs";
+      name = "org-protocol";
+      exec = "emacsclient -- %u";
       mimeType = [ "x-scheme-handler/org-protocol" ];
+      terminal = false;
+      comment = "Intercept calls from emacsclient to trigger custom actions";
+      noDisplay = true;
     };
 
     xdg.mimeApps.defaultApplications = {

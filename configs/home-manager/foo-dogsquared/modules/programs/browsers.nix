@@ -91,124 +91,150 @@ in {
             };
           };
 
-        profiles.personal = {
-          isDefault = true;
+        profiles.personal = lib.mkMerge [
+          {
+            isDefault = true;
 
-          extensions = with pkgs.nur.repos.rycee.firefox-addons;
-            [
-              aw-watcher-web
-              bitwarden
-              browserpass
-              facebook-container
-              firefox-color
-              firefox-translations
-              firenvim
-              languagetool
-              multi-account-containers
-              privacy-badger
-              search-by-image
-              tampermonkey
-              tridactyl
-              ublock-origin
-              vimium
-              wayback-machine
-            ] ++ (with pkgs.firefox-addons; [
-              get-rss-feed-url
-              google-container
-              microsoft-container
-              regretsreporter
-              simple-translate
-              sourcegraph-for-firefox
-              tineye-reverse-image-search
-              updateswh
-              zhongwen
-              open-access-helper
-              rsshub-radar
-            ]) ++ lib.optionals config.programs.mpv.enable
-            (with pkgs.nur.repos.rycee.firefox-addons; [ ff2mpv ]);
+            extensions = with pkgs.nur.repos.rycee.firefox-addons;
+              [
+                aw-watcher-web
+                bitwarden
+                browserpass
+                facebook-container
+                firefox-color
+                firefox-translations
+                firenvim
+                languagetool
+                multi-account-containers
+                privacy-badger
+                search-by-image
+                tampermonkey
+                tridactyl
+                ublock-origin
+                vimium
+                wayback-machine
+              ] ++ (with pkgs.firefox-addons; [
+                get-rss-feed-url
+                google-container
+                microsoft-container
+                regretsreporter
+                simple-translate
+                sourcegraph-for-firefox
+                updateswh
+                zhongwen
+                open-access-helper
+                rsshub-radar
+              ]) ++ lib.optionals config.programs.mpv.enable
+              (with pkgs.nur.repos.rycee.firefox-addons; [ ff2mpv ]);
 
-          # Much of the settings are affected by the policies set in the
-          # package. See more information about them in
-          # https://mozilla.github.io/policy-templates/.
-          settings = {
-            # Disable the UI tour.
-            "browser.uitour.enabled" = false;
+            # Much of the settings are affected by the policies set in the
+            # package. See more information about them in
+            # https://mozilla.github.io/policy-templates/.
+            settings = lib.mkMerge [
+              {
+                # Disable the UI tour.
+                "browser.uitour.enabled" = false;
 
-            # Some quality of lifes.
-            "browser.search.widget.inNavBar" = true;
-            "browser.search.openintab" = true;
-            "browser.startup.homepage" =
-              lib.mkIf userCfg.programs.custom-homepage.enable
-              "file://${config.xdg.dataHome}/foodogsquared/homepage";
+                # Some quality of lifes.
+                "browser.search.widget.inNavBar" = true;
+                "browser.search.openintab" = true;
 
-            # Some privacy settings...
-            "privacy.donottrackheader.enabled" = true;
+                # Some privacy settings...
+                "privacy.donottrackheader.enabled" = true;
 
-            # Burn our own fingers.
-            "privacy.resistFingerprinting" = true;
-            "privacy.fingerprintingProtection" = true;
-            "privacy.fingerprintingProtection.pbmode" = true;
+                # Burn our own fingers.
+                "privacy.resistFingerprinting" = true;
+                "privacy.fingerprintingProtection" = true;
+                "privacy.fingerprintingProtection.pbmode" = true;
 
-            "privacy.query_stripping.enabled" = true;
-            "privacy.query_stripping.enabled.pbmode" = true;
+                "privacy.query_stripping.enabled" = true;
+                "privacy.query_stripping.enabled.pbmode" = true;
 
-            "dom.security.https_first" = true;
-            "dom.security.https_first_pbm" = true;
+                "dom.security.https_first" = true;
+                "dom.security.https_first_pbm" = true;
 
-            "privacy.firstparty.isolate" = true;
-          };
+                "privacy.firstparty.isolate" = true;
+              }
 
-          search = {
-            default = "Brave";
-            force = true;
-            order = [ "Brave" "Nix Packages" "Google" ];
-            engines = {
-              "Brave" = {
-                urls = [{
-                  template = "https://search.brave.com/search";
-                  params = [
-                    {
-                      name = "type";
-                      value = "search";
-                    }
-                    {
-                      name = "q";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }];
+              (lib.mkIf userCfg.programs.custom-homepage.enable {
+                "browser.startup.homepage" = "file://${config.xdg.dataHome}/foodogsquared/homepage";
+              })
+            ];
 
-                icon =
-                  "${config.programs.brave.package}/share/icons/hicolor/64x64/apps/brave-browser.png";
-                definedAliases = [ "@brave" "@b" ];
+            search = {
+              default = "Brave";
+              force = true;
+              order = [ "Brave" "Nix Packages" "Google" ];
+              engines = {
+                "Brave" = {
+                  urls = [{
+                    template = "https://search.brave.com/search";
+                    params = [
+                      {
+                        name = "type";
+                        value = "search";
+                      }
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }];
+
+                  icon =
+                    "${config.programs.brave.package}/share/icons/hicolor/64x64/apps/brave-browser.png";
+                  definedAliases = [ "@brave" "@b" ];
+                };
+
+                "Nix Packages" = {
+                  urls = [{
+                    template = "https://search.nixos.org/packages";
+                    params = [
+                      {
+                        name = "type";
+                        value = "packages";
+                      }
+                      {
+                        name = "query";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }];
+
+                  icon =
+                    "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                  definedAliases = [ "@np" ];
+                };
+
+                "Bing".metaData.hidden = true;
+                "Duckduckgo".metaData.hidden = true;
+                "Google".metaData.alias = "@g";
               };
-
-              "Nix Packages" = {
-                urls = [{
-                  template = "https://search.nixos.org/packages";
-                  params = [
-                    {
-                      name = "type";
-                      value = "packages";
-                    }
-                    {
-                      name = "query";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }];
-
-                icon =
-                  "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-                definedAliases = [ "@np" ];
-              };
-
-              "Bing".metaData.hidden = true;
-              "Duckduckgo".metaData.hidden = true;
-              "Google".metaData.alias = "@g";
             };
-          };
-        };
+          }
+
+          (lib.mkIf userCfg.programs.doom-emacs.enable {
+            settings."network.protocol-handler.expose.org-protocol" = true;
+
+            bookmarks = [
+              {
+                name = "Refer to org-roam node";
+                tags = [ "org-roam" ];
+
+                # Formatted like this for ease of modifying.
+                url = lib.concatStrings [
+                  "javascript:location.href="
+                  "'org-protocol://roam-ref?template=r&ref='"
+                  "+encodeURIComponent(location.href)"
+                  "+'&title='"
+                  "+encodeURIComponent(document.title)"
+                  "+'&body='"
+                  "+encodeURIComponent(window.getSelection())"
+                ];
+              }
+            ];
+          })
+        ];
 
         profiles.guest = {
           search.default = "Google";
@@ -224,13 +250,15 @@ in {
 
           (pkgs.writeTextFile {
             name = "tridactyl-nix-generated";
-            text = ''
-              set newtab file://${config.xdg.dataHome}/foodogsquared/homepage/index.html
-            ''
-            + lib.optionalString attrs.nixosConfig.services.miniflux.enable ''
-              # This is to take advantage of Miniflux shortcuts.
-              blacklistadd localhost:${builtins.toString attrs.nixosConfig.state.ports.miniflux.value}
-            '';
+            text =
+              lib.optionalString userCfg.programs.custom-homepage.enable ''
+                bind gT tabopen file://${config.xdg.dataHome}/foodogsquared/homepage/index.html
+                set newtab file://${config.xdg.dataHome}/foodogsquared/homepage/index.html
+              ''
+              + lib.optionalString attrs.nixosConfig.services.miniflux.enable ''
+                # This is to take advantage of Miniflux shortcuts.
+                blacklistadd localhost:${builtins.toString attrs.nixosConfig.state.ports.miniflux.value}
+              '';
           })
         ];
       };

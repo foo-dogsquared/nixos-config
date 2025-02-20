@@ -149,7 +149,7 @@ in {
       home.packages = with pkgs; [
         supercollider-with-plugins
         processing
-        #(puredata-with-plugins (with pkgs; [ zexy cyclone ]))
+        (puredata-with-plugins (with pkgs; [ zexy ]))
       ];
     })
   ]);

@@ -32,7 +32,9 @@ in {
           alefragnani.project-manager
           fill-labs.dependi
         ] ++ lib.optionals userCfg.programs.browsers.firefox.enable
-        [ firefox-devtools.vscode-firefox-debug ];
+        [ firefox-devtools.vscode-firefox-debug ]
+        ++ lib.optionals config.programs.python.enable
+        [ ms-toolsai.jupyter ms-toolsai.jupyter-renderers ];
 
       userSettings = { "extensions.ignoreRecommendations" = true; };
     };
