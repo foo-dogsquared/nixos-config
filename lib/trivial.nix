@@ -1,36 +1,89 @@
 { pkgs, lib, self }:
 
 rec {
-  /* Force a numerical value to be a floating value.
+  /**
+    Force a numerical value to be a floating value.
 
-     Example:
-       toFloat 5698
-       => 5698.0
+    # Arguments
 
-       toFloat 9859.55
-       => 9859.55
+    x
+    : The (numerical) value to be converted.
+
+    # Type
+
+    ```
+    toFloat :: Number -> Float
+    ```
+
+    # Examples
+
+    ```nix
+    toFloat 5698
+    => 5698.0
+
+    toFloat 9859.55
+    => 9859.55
+    ```
   */
   toFloat = x: x / 1.0;
 
-  /* Count the attributes with the given predicate.
+  /**
+    Count the attributes with the given predicate.
 
-     Examples:
-       countAttrs (name: value: value) { d = true; f = true; a = false; }
-       => 2
+    # Arguments
 
-       countAttrs (name: value: value.enable) { d = { enable = true; }; f = { enable = false; package = [ ]; }; }
-       => 1
+    pred
+    : The predicate function to be used per-attribute key-value. Its expected
+    arguments are the attribute key and the attribute value in that order.
+
+    attrs
+    : The attribute set to be used.
+
+    # Type
+
+    ```
+    countAttrs :: Function -> Attr -> Integer
+    ```
+
+    # Examples
+
+    ```nix
+    countAttrs (name: value: value) { d = true; f = true; a = false; }
+    => 2
+
+    countAttrs (name: value: value.enable) { d = { enable = true; }; f = { enable = false; package = [ ]; }; }
+    => 1
+    ```
   */
   countAttrs = pred: attrs:
     lib.count (attr: pred attr.name attr.value)
     (lib.mapAttrsToList lib.nameValuePair attrs);
 
-  /* Filters and groups the attribute set into two separate attribute where it
-     either accepted or denied from a given predicate function.
+  /**
+    Filters and groups the attribute set into two separate attribute where it
+    either accepted or denied from a given predicate function.
 
-     Example:
-       filterAttrs' (n: v: v == 4) { a = 4; b = 2; c = 6; }
-       => { ok = { a = 4; }; notOk = { b = 2; c = 6; }; }
+    # Arguments
+
+    f
+    : The filter function to be used per-attribute. Its expected arguments are
+    the attribute key and the attribute value, in that order.
+
+    attrs
+    : The attribute set to be used.
+
+    # Type
+
+    ```
+    filterAttrs :: Function -> Attr -> Attr
+    ```
+
+    # Example
+
+    ```nix
+    filterAttrs' (n: v: v == 4) { a = 4; b = 2; c = 6; }
+    => { ok = { a = 4; }; notOk = { b = 2; c = 6; }; }
+    ```
   */
   filterAttrs' = f: attrs:
     lib.foldlAttrs (acc: name: value:
@@ -43,22 +96,52 @@ rec {
         notOk = { };
       } attrs;
 
-  /* Convenient function for converting bits to bytes.
+  /**
+    Convenient function for converting bits to bytes.
 
-     Example:
-       bitsToBytes 1600
-       => 200
+    # Arguments
+
+    x
+    : An integer value expected to be the number of bits.
+
+    # Type
+
+    ```
+    bitsToBytes :: Integer -> Integer
+    ```
+
+    # Example
+
+    ```nix
+    bitsToBytes 1600
+    => 200
+    ```
   */
   bitsToBytes = x: x / 8.0;
 
-  /* Gives the exponent with the associated SI prefix.
+  /**
+    Gives the exponent with the associated SI prefix.
 
-     Example:
-       SIPrefixExponent "M"
-       => 6
+    # Arguments
 
-       SIPrefixExponent "Q"
-       => 30
+    c
+    : The SI prefix itself.
+
+    # Type
+
+    ```
+    SIPrefixExponent :: String -> Integer
+    ```
+
+    # Example
+
+    ```nix
+    SIPrefixExponent "M"
+    => 6
+
+    SIPrefixExponent "Q"
+    => 30
+    ```
   */
   SIPrefixExponent = c:
     let
@@ -90,28 +173,45 @@ rec {
       };
     in prefixes.${c};
 
-  /* Gives the multiplier for the metric units.
+  /**
+    Gives the multiplier for the metric units.
 
-     Example:
-      metricPrefixMultiplier "M"
-      => 1000000
+    # Arguments
 
-      metricPrefixMultiplier "G"
-      => 1000000000
+    It has a similar argument to `foodogsquaredLib.trivial.SIPrefixExponent`.
+
+    # Examples
+
+    ```nix
+    metricPrefixMultiplier "M"
+    => 1000000
+
+    metricPrefixMultiplier "G"
+    => 1000000000
+    ```
   */
   metricPrefixMultiplier = c: self.math.pow 10 (SIPrefixExponent c);
 
-  /* Gives the exponent with the associated binary prefix.
+  /**
+    Gives the exponent with the associated binary prefix.
 
-     As an implementation detail, we don't follow the proper IEC unit prefixes
-     and instead mapping this to the SI prefix for convenience.
+    As an implementation detail, we don't follow the proper IEC unit prefixes
+    and instead mapping this to the SI prefix for convenience.
 
-     Example:
-       SIPrefixExponent "M"
-       => 6
+    # Arguments
 
-       SIPrefixExponent "Q"
-       => 30
+    Similar argument to `foodogsquaredLib.trivial.SIPrefixExponent` but only
+    for select SI prefixes instead.
+
+    # Examples
+
+    ```nix
+    SIPrefixExponent "M"
+    => 6
+
+    SIPrefixExponent "Q"
+    => 30
+    ```
   */
   binaryPrefixExponent = c:
     let
@@ -127,30 +227,48 @@ rec {
       };
     in prefixes.${c};
 
-  /* Gives the multiplier for the given byte unit. Essentially returns the
-     value in number of bytes.
+  /**
+    Gives the multiplier for the given byte unit. Essentially returns the
+    value in number of bytes.
 
-     Example:
-       binaryPrefixMultiplier "M"
-       => 1048576
+    # Argument
 
-       binaryPrefixMultiplier "G"
-       => 1.099511628×10¹²
+    Similar argument to `foodogsquaredLib.trivial.binaryPrefixExponent`.
+
+    # Examples
+
+    ```nix
+    binaryPrefixMultiplier "M"
+    => 1048576
+
+    binaryPrefixMultiplier "G"
+    => 1.099511628×10¹²
+    ```
   */
   binaryPrefixMultiplier = c: self.math.pow 2 (binaryPrefixExponent c);
 
-  /* Parse the given string containing the size into its appropriate value.
-     Returns the value in number of bytes.
+  /**
+    Parse the given string containing the size into its appropriate value.
+    Returns the value in number of bytes.
 
-     Example:
-      parseBytesSizeIntoInt "4GiB"
-      => 4294967296
+    # Arguments
 
-      parseBytesSizeIntoInt "2 MB"
-      => 2000000
+    str
+    : The string expecting to contain an integer and its suffix (e.g., `4GiB`,
+    `2 Mb`). Whitespace characters in between them is accepted.
 
-      parseBytesSizeIntoInt "2 Mb"
-      => 250000
+    # Examples
+
+    ```nix
+    parseBytesSizeIntoInt "4GiB"
+    => 4294967296
+
+    parseBytesSizeIntoInt "2 MB"
+    => 2000000
+
+    parseBytesSizeIntoInt "2 Mb"
+    => 250000
+    ```
   */
   parseBytesSizeIntoInt = str:
     let
@@ -169,14 +287,32 @@ rec {
       bitDivider = if lib.hasSuffix "b" suffix then 8 else 1;
     in numeral * multiplier / bitDivider;
 
-  /* Given an attrset of unit size object, return the size in bytes.
+  /**
+    Given an attrset of unit size object, return the size in bytes.
 
-     Example:
-       unitsToInt { size = 4; prefix = "G"; type = "binary"; }
-       => 4294967296
+    # Arguments
 
-       unitsToInt { size = 4; prefix = "G"; type = "metric"; }
-       => 4000000000
+    It is a sole attribute set with the following attributes:
+
+    size
+    : An integer value representing the numerical value of the unit.
+
+    prefix
+    : The SI prefix similar to `foodogsquaredLib.trivial.SIPrefixExponent`.
+
+    type
+    : Indicates the type of multiplier to be used. Only accepts `binary` and
+    `metric` as the value.
+
+    # Examples
+
+    ```nix
+    unitsToInt { size = 4; prefix = "G"; type = "binary"; }
+    => 4294967296
+
+    unitsToInt { size = 4; prefix = "G"; type = "metric"; }
+    => 4000000000
+    ```
   */
   unitsToInt = { size, prefix, type ? "binary" }:
     let

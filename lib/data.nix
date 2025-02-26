@@ -5,14 +5,27 @@
 { pkgs, lib, self }:
 
 {
-  /* Import the YAML file and return it as a Nix object. Unfortunately, this is
-     implemented as an import-from-derivation (IFD) so it will not be pretty.
+  /**
+    Import the YAML file and return it as a Nix object. Unfortunately, this is
+    implemented as an import-from-derivation (IFD) so it will not be pretty.
 
-     Type: importYAML :: Path -> Attrs
+    # Arguments
 
-     Example:
-       importYAML ./your-mom.yaml
-       => { name = "Yor Mum"; age = 56; world = "Herown"; }
+    path
+    : The path of the YAML file.
+
+    # Type
+
+    ```
+    importYAML :: Path -> Attrs
+    ```
+
+    # Examples
+
+    ```nix
+    importYAML ./your-mom.yaml
+    => { name = "Yor Mum"; age = 56; world = "Herown"; }
+    ```
   */
   importYAML = path:
     let
@@ -21,14 +34,37 @@
       '';
     in lib.importJSON dataDrv;
 
-  /* Render a Tera template given a parameter set powered by `tera-cli`. Also
-     typically used as an IFD.
+  /**
+    Render a Tera template given a parameter set powered by `tera-cli`. Also
+    typically used as an IFD.
 
-     Type: renderTeraTemplate :: Attrs -> Path
+    # Arguments
 
-     Example:
-       renderTeraTemplate { path = ./template.tera; context = { hello = 34; }; }
-       => /nix/store/HASH-tera-render-template
+    It's a sole attribute set with the following attributes:
+
+    template
+    : The template file to be used.
+
+    context
+    : An attribute set containing the data used alongside the template.
+
+    extraArgs
+    : An attrset of command line arguments (same as
+    `lib.cli.toGNUCommandLineShell`) to be added on top of the typical
+    arguments used by the function.
+
+    # Type
+
+    ```
+    renderTeraTemplate :: Attrs -> Path
+    ```
+
+    # Example
+
+    ```nix
+    renderTeraTemplate { path = ./template.tera; context = { hello = 34; }; }
+    => /nix/store/HASH-tera-render-template
+    ```
   */
   renderTeraTemplate = { template, context, extraArgs ? { } }:
     let
@@ -45,14 +81,37 @@
       tera --out "$out" ${extraArgs'} --template "${template}" "${contextFile}"
     '';
 
-  /* Render a Mustache template given a parameter set powered by `mustache-go`.
-     Also typically used as an IFD.
+  /**
+    Render a Mustache template given a parameter set powered by `mustache-go`.
+    Also typically used as an IFD.
 
-     Type: renderMustacheTemplate :: Attrs -> Path
+    # Arguments
 
-     Example:
-       renderMustacheTemplate { path = ./template.mustache; context = { hello = 34; }; }
-       => /nix/store/HASH-mustache-render-template
+    It's a sole attribute set with the following attributes:
+
+    template
+    : The path containing the template file.
+
+    context
+    : An attribute set of metadata used in the template file.
+
+    extraArgs
+    : An attrset of additional command line arguments (same as the argument
+    used in `lib.cli.toGNUCommandLineShell`) on top of the typical arguments
+    used in the function.
+
+    # Type
+
+    ```
+    renderMustacheTemplate :: Attrs -> Path
+    ```
+
+    # Examples
+
+    ```nix
+    renderMustacheTemplate { path = ./template.mustache; context = { hello = 34; }; }
+    => /nix/store/HASH-mustache-render-template
+    ```
   */
   renderMustacheTemplate = { template, context, extraArgs ? { } }:
     let extraArgs' = lib.cli.toGNUCommandLineShell { } extraArgs;

@@ -2,24 +2,58 @@
 { pkgs, lib, self }:
 
 rec {
-  /* Returns the absolute value of the given number.
+  /**
+    Returns the absolute value of the given number.
 
-     Example:
-       abs -4
-       => 4
+    # Arguments
 
-       abs (1 / 5)
-       => 0.2
+    number
+    : The numerical value.
+
+    # Type
+
+    ```
+    abs :: Number -> Number
+    ```
+
+    # Examples
+
+    ```nix
+    abs -4
+    => 4
+
+    abs (1 / 5)
+    => 0.2
+    ```
   */
   abs = number: if number < 0 then -(number) else number;
-  /* Exponentiates the given base with the exponent.
 
-     Example:
-       pow 2 3
-       => 8
+  /**
+    Exponentiates the given base with the exponent.
 
-       pow 6 4
-       => 1296
+    # Arguments
+
+    base
+    : The base value.
+
+    exponent
+    : The exponent value.
+
+    # Type
+
+    ```
+    pow :: Integer -> Integer -> Integer
+    ```
+
+    # Examples
+
+    ```nix
+    pow 2 3
+    => 8
+
+    pow 6 4
+    => 1296
+    ```
   */
   pow = base: exponent:
     # Just to be a contrarian, I'll just make this as a tail recursive function
