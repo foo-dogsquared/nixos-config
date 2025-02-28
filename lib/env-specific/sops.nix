@@ -1,7 +1,18 @@
 # A library specifically for environments with sops-nix.
 { pkgs, lib, self }:
 
-{
+let
+  inferFormat = sopsFile:
+    let endsWith = ext: lib.hasSuffix ext sopsFile;
+    in
+      if (endsWith ".env") then "dotenv"
+      else if (endsWith ".yaml") then "yaml"
+      else if (endsWith ".json") then "json"
+      else if (endsWith ".ini") then "ini"
+      else if (endsWith ".bin") then "binary"
+      else "yaml";
+in
+rec {
   /* Get the secrets from a given sops file. This will set the individual
      attributes `sopsFile` with the given file to not interrupt as much as
      possible with your own sops-nix workflow.
@@ -18,8 +29,20 @@
       }
   */
   getSecrets = sopsFile: secrets:
-    let getKey = key: { inherit key sopsFile; };
+    let getKey = key: {
+      inherit key sopsFile;
+      format = inferFormat sopsFile;
+    };
     in lib.mapAttrs (path: attrs: (getKey path) // attrs) secrets;
+
+  getAsOneSecret = sopsFile:
+    {
+      inherit sopsFile;
+      format = inferFormat sopsFile;
+
+      # This value basically means it's the whole file.
+      key = "";
+    };
 
   /* Prepend a prefix for the given secrets. This allows a workflow for
      separate sops file.
