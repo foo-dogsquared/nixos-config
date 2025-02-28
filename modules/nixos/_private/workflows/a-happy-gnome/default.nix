@@ -82,6 +82,9 @@ in {
         # Nautilus extensions
         nautilus-annotations
         nautilus-open-any-terminal
+
+        fedora-backgrounds.f38
+        fedora-backgrounds.f37
       ];
       example = lib.literalExpression ''
         with pkgs; [ gnome.polari ];
