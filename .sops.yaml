@@ -6,9 +6,9 @@ keys:
   - &ni age1jxna9vm7nx4g69s84qgjptxvuzszcypf2rfk4ss2lyhnpe3yxdnqusu6jp
   - &plover age1yftkhugwrdnlpl45lthrhvvk720zza2nd085sxvjcxg2guavz3kquktplx
 creation_rules:
-  - path_regex: configs/nixos/ni/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|ini|env)$
+  - path_regex: configs/nixos/ni/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|ini|env|bin)$
     age: *ni
-  - path_regex: configs/nixos/plover/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|ini|env)$
+  - path_regex: configs/nixos/plover/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|ini|env|bin)$
     age: *plover
-  - path_regex: configs/home-manager/foo-dogsquared/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|inienv)$
+  - path_regex: configs/home-manager/foo-dogsquared/(modules/.+/secrets|secrets/[^/]+)\.(yaml|json|ini|env|bin)$
     age: *foo-dogsquared-age
