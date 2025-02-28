@@ -35,7 +35,7 @@ flavorText = "...is just standing on a house of cards"
 textOnly = true
 weight = -25
 links = [
-  { subsection = true, text = "Search" },
+  { subsection = true, text = "Code search" },
   { url = "https://github.com", text = "GitHub" },
   { url = "https://sourcegraph.com/search", text = "SourceGraph" },
   { url = "https://archive.softwareheritage.org", text = "Software Heritage" },
@@ -48,8 +48,11 @@ links = [
 
   { subsection = true, text = "References" },
   { url = "https://devdocs.io", text = "Devdocs" },
+  { url = "https://gjs-docs.gnome.org/", text = "GNOME DevDocs" },
   { url = "https://manpages.debian.org", text = "Debian Manpages" },
   { url = "https://nixos.org/manual/nixpkgs/unstable", text = "nixpkgs reference" },
+  { url = "https://documentation.suse.com/", text = "SUSE Documentation" },
+  { url = "https://docs.redhat.com/en", text = "Red Hat Documentation" },
 ]
 grid.row = 2
 icon.iconset = "simple-icons"
@@ -129,3 +132,39 @@ links = [
 ]
 icon.iconset = "material-design-icons"
 icon.name = "card-account-details"
+
+[awesome-metalist]
+name = "Awesome metalist"
+flavorText = "This list has more character than meets the eye being a 2-dimensional list and all"
+textOnly = true
+weight = 1000
+links = [
+  { url = "https://github.com/pingcap/awesome-database-learning", text = "Database learning" },
+  { url = "https://github.com/mgramin/awesome-db-tools", text = "Database tools" },
+  { url = "https://teachyourselfcs.com/", text = "Teach Yourself CS" },
+  { url = "https://github.com/ossu/computer-science", text = "OSSU (not that one)" },
+  { url = "https://github.com/goabstract/Awesome-Design-Tools", text = "Design tools" },
+]
+icon.iconset = "simple-icons"
+icon.name = "awesomelists"
+
+[games]
+name = "Games"
+flavorText = "Pure unadulterated gaming"
+textOnly = true
+links = [
+  { url = "https://wafflegame.net", text = "Waffle" },
+  { url = "https://duotrigordle.com", text = "Duotrigordle" },
+  { url = "https://www.merriam-webster.com/games/quordle/", text = "Quordle" },
+]
+icon.iconset = "material-design-icons"
+icon.name = "gamepad-variant"
+
+[miscellanea]
+name = "Miscellanea"
+flavorText = "Your extra dump of links"
+links = [
+  { url = "https://globaltracktrace.ptc.post/gtt.web/", text = "Global parcel tracker" },
+]
+icon.iconset = "material-design-icons"
+icon.name = "apps"

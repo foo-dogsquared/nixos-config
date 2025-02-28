@@ -109,6 +109,7 @@ in {
               path = removablePath;
               label = "local-external-hdd";
             };
+            relocated_repo_access_is_ok = true;
             before_backup =
               lib.singleton "${checkRemovableMountScript} ${removablePath}";
           };
