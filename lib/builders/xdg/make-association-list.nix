@@ -10,6 +10,11 @@
 # with.
 desktopName ? "",
 
+# Optional Nix-representable settings in INI format. Mutually exclusive with
+# `addedAssociations`, `removedAssociations`, and `defaultApplications` and
+# basically ignores proper checking if set.
+settings ? { },
+
 # Applications to be put in `Added Associations`. This is not set when the
 # database is desktop-specific (when the `desktopName` is non-empty.)
 addedAssociations ? { },
@@ -28,12 +33,14 @@ writeTextFile {
   text =
     # Non-desktop-specific mimeapps.list are only allowed to specify
     # default applications.
-    lib.generators.toINI { } ({
-      "Default Applications" = defaultApplications;
-    } // (lib.optionalAttrs (desktopName == "") {
-      "Added Associations" = addedAssociations;
-      "Removed Associations" = removedAssociations;
-    }));
+    lib.generators.toINI { } (
+      if (settings != { }) then settings
+      else {
+        "Default Applications" = defaultApplications;
+      } // (lib.optionalAttrs (desktopName == "") {
+        "Added Associations" = addedAssociations;
+        "Removed Associations" = removedAssociations;
+      }));
   destination = "/share/applications/${
       lib.optionalString (desktopName != "") "${desktopName}-"
     }mimeapps.list";
