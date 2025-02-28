@@ -26,7 +26,7 @@
     ./setups/desktop.nix
     ./setups/development.nix
     ./setups/fonts.nix
-    ./setups/music.nix
+    ./setups/music
     ./setups/research.nix
   ];
 }

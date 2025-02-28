@@ -27,7 +27,7 @@ in {
       wrapper-manager.packages.music-setup = {
         wrappers.yt-dlp-audio = {
           arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
-          prependArgs = [ "--config-location" ../../config/yt-dlp/audio.conf ];
+          prependArgs = [ "--config-location" ../../../config/yt-dlp/audio.conf ];
         };
       };
 
@@ -120,10 +120,15 @@ in {
     (lib.mkIf cfg.spotify.enable {
       home.packages = with pkgs; [ spotify ];
 
+      sops.secrets."spotify_env" = foodogsquaredLib.sops-nix.getAsOneSecret ./secrets.bin;
+
       state.ports.spotifyd.value =
         attrs.nixosConfig.services.spotifyd.value or 9009;
 
-      services.mopidy.extensionPackages = [ pkgs.mopidy-spotify ];
+      services.mopidy = {
+        extensionPackages = [ pkgs.mopidy-spotify ];
+        extraConfigFiles = lib.singleton config.sops.secrets."spotify_env".path;
+      };
     })
 
     (lib.mkIf (cfg.spotify.enable
