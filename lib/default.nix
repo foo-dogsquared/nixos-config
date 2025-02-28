@@ -24,7 +24,7 @@ in pkgs.lib.makeExtensible (self:
     # developer-oriented dependencies.
     stdenv = with pkgs;
       [ direnv cookiecutter oils-for-unix nushell ipcalc ]
-      ++ lib.optional stdenv.isLinux [
+      ++ lib.optionals stdenv.isLinux [
         gdb
         moreutils
         meson
