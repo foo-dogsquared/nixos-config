@@ -19,6 +19,7 @@ in pkgs.mkShell {
       git
       sops
       nix-update
+      nixdoc
 
       bind
       opentofu
