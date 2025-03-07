@@ -32,7 +32,7 @@ in {
     };
 
     # Enable all of the debugging extensoins.
-    plugins.dap.extensions.dap-go.enable = true;
-    plugins.dap.extensions.dap-python.enable = true;
+    plugins.dap-go.enable = true;
+    plugins.dap-python.enable = true;
   };
 }

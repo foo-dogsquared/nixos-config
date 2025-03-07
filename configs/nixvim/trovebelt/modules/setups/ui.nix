@@ -41,19 +41,23 @@ in {
     # Enable them status bars.
     plugins.lualine = {
       enable = true;
-      iconsEnabled = true;
-      globalstatus = true;
-      alwaysDivideMiddle = true;
+      settings = {
+        options = {
+          icons_enabled = true;
+          globalstatus = true;
+          always_divide_middle = true;
+        };
 
-      # Disable the section separators.
-      sectionSeparators = {
-        left = "";
-        right = "";
-      };
+        # Disable the section separators.
+        section_separators = {
+          left = "";
+          right = "";
+        };
 
-      sections = {
-        lualine_a = [ "mode" ];
-        lualine_z = [ "location" ];
+        sections = {
+          lualine_a = [ "mode" ];
+          lualine_z = [ "location" ];
+        };
       };
     };
   };
