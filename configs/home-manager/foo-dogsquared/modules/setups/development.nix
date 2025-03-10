@@ -111,7 +111,7 @@ in {
     })
 
     (lib.mkIf userCfg.programs.browsers.firefox.enable {
-      home.packages = with pkgs; [ (lowPrio firefox-devedition) ];
+      # home.packages = with pkgs; [ (lowPrio firefox-devedition) ];
     })
 
     (lib.mkIf userCfg.programs.git.enable {

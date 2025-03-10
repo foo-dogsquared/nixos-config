@@ -8,6 +8,10 @@ in {
     lib.mkEnableOption "business setup";
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [ collabora-online libreoffice zoom-us ];
+    home.packages = with pkgs; [
+      libreoffice zoom-us
+    ];
+
+    # TODO: Create desktop entries for several web apps for generic thing?
   };
 }
