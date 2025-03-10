@@ -163,6 +163,8 @@ icon.name = "gamepad-variant"
 [miscellanea]
 name = "Miscellanea"
 flavorText = "Your extra dump of links"
+textOnly = true
+weight = 10000
 links = [
   { url = "https://globaltracktrace.ptc.post/gtt.web/", text = "Global parcel tracker" },
 ]

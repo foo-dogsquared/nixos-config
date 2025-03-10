@@ -42,6 +42,7 @@ bind fF hint -t
 bind fB hint -b
 bind fI hint -I
 bind fz hint -z
+bind fy hint -y
 
 " Recontaining them nicefully.
 bind qQ recontain Personal
