@@ -15,7 +15,6 @@ in {
           # Additional language support.
           bbenoist.nix
           graphql.vscode-graphql
-          ms-python.python
           ms-azuretools.vscode-docker
           ms-vscode.cmake-tools
           ms-vscode.cpptools

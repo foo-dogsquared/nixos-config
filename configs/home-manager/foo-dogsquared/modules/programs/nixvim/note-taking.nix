@@ -49,7 +49,6 @@
       ledger
       markdown
       markdown_inline
-      org
       po
       pod
       rst
