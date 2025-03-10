@@ -248,7 +248,7 @@
       meta = with lib;
       {
         homepage = "https://github.com/cschiller/zhongwen";
-        description = "Official Firefox port of the Zhongwen Chrome extension (<a href=\"https://prod.outgoing.prod.webservices.mozgcp.net/v1/4d8401bdeba5d777261b82f644f164d046c1c71c9382465493a10144cbd23de0/http%3A//github.com/cschiller/zhongwen\" rel=\"nofollow\">http://github.com/cschiller/zhongwen</a>). Translate Chinese characters by hovering over them with the mouse. Includes internal word list, links to Chinese Grammar Wiki, tone colors, and more.";
+        description = "Official Firefox port of the Zhongwen Chrome extension (http://github.com/cschiller/zhongwen). Translate Chinese characters by hovering over them with the mouse. Includes internal word list, links to Chinese Grammar Wiki, tone colors, and more.";
         license = licenses.gpl2;
         mozPermissions = [ "contextMenus" "tabs" "<all_urls>" ];
         platforms = platforms.all;
