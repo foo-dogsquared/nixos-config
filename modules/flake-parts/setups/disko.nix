@@ -66,6 +66,10 @@ in {
   };
 
   config = {
+    # Most of the disko configurations are basically lambdas that have yet to
+    # be evaluated. That's how it can also apply those arguments.
+    # Unfortunately, it also means you cannot make typical configurations with
+    # a generic nixpkgs module.
     flake.diskoConfigurations = lib.mapAttrs
       (name: _: import "${partsConfig.setups.configDir}/disko/${name}")
       cfg.configs;
