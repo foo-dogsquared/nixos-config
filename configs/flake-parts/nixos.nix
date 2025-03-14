@@ -98,8 +98,10 @@ in {
       # The barely customized non-graphical installer.
       bootstrap = {
         nixpkgs.branch = "nixos-unstable-small";
+        home-manager.branch = "home-manager-unstable";
         systems = [ "aarch64-linux" "x86_64-linux" ];
         formats = [ "install-iso" ];
+        shouldBePartOfNixOSConfigurations = true;
       };
 
       # The barely customized graphical installer.
