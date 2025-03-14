@@ -10,7 +10,7 @@
 
   config = lib.mkMerge [
     {
-      boot.kernelPackages = pkgs.linuxPackages_6_6;
+      boot.kernelPackages = pkgs.linuxPackages_6_12;
 
       # Assume that this will be used for remote installations.
       services.openssh = {
@@ -23,7 +23,7 @@
 
     (lib.mkIf (foodogsquaredLib.nixos.isFormat config "isoImage") {
       isoImage = {
-        isoBaseName = config.networking.hostName;
+        isoBaseName = lib.mkForce "${config.networking.hostName}-${config.isoImage.edition}-${config.system.nixos.label}-${config.nixpkgs.hostSystem}";
         edition = "minimal";
 
         squashfsCompression = "zstd -Xcompression-level 11";
