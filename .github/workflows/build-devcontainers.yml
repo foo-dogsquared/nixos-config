@@ -21,8 +21,10 @@ jobs:
           NIXPKGS_ALLOW_UNFREE: "1"
       - name: Deploy devcontainers to GitHub registry
         run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | skopeo login ghcr.io -u ${{ github.actor }} --password-stdin
+
           for image_archive in $(< build_paths); do
-            skopeo --insecure-policy copy \
-                --dest-creds="${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}" \
-                "docker-archive:${image_archive}" "docker://${{ github.repository }}"
+            CONTAINER_TAG=$(echo $image_archive | awk 'match($0, /docker-image-(\S+).tar.gz/, arr) {print arr[1]}')
+            skopeo copy \
+                "docker-archive:${image_archive}" "docker://ghcr.io/${{ github.repository }}:${CONTAINER_TAG}"
           done
