@@ -18,7 +18,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@v8
       - name: Build ISO
         run: |
-          nix build .#images.${{ matrix.arch }}.bootstrap-install-iso --impure --out-link build-iso-result
+          nix build .#images.${{ matrix.arch }}.bootstrap-install-iso --out-link build-iso-result
         env:
           NIXPKGS_ALLOW_BROKEN: "1"
           NIXPKGS_ALLOW_UNFREE: "1"
