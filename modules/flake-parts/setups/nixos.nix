@@ -37,11 +37,11 @@ let
   in inputs.nixos-generators.nixosModules // customFormats;
 
   # A very very thin wrapper around `mkHost` to build with the given format.
-  mkImage = { pkgs, system, extraModules ? [ ], format ? "iso", }:
+  mkImage = { pkgs, system, extraModules ? [ ], format ? "iso", specialArgs ? { } }:
     let
       extraModules' = extraModules ++ [ nixosGeneratorsModulesSet.${format} ];
       image = mkHost {
-        inherit pkgs system;
+        inherit pkgs system specialArgs;
         extraModules = extraModules';
       };
     in image.config.system.build.${image.config.formatAttr};
@@ -336,6 +336,7 @@ in {
               buildImage = format:
                 lib.nameValuePair "${name}-${format}" (mkImage {
                   inherit format system;
+                  inherit (metadata) specialArgs;
                   pkgs = import inputs.${metadata.nixpkgs.branch} {
                     inherit system;
                     inherit (metadata.nixpkgs) config;
