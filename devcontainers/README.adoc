@@ -1,0 +1,19 @@
+= devcontainers
+:toc:
+
+
+Docker/OCI containers that are entirely built with Nix ecosystem.
+For now, it is required to have `flakes` experimental feature enabled since some of the containers make use of them. footnote:[Ideally, it shouldn't but importing other Nix projects is pretty painful unless we go with either flakes and a dedicated pinning tool all the way.]
+
+You can build this set of containers with the following command:
+
+[source, shell]
+----
+# Either by referring to the files (which is easier IMO)...
+nix build -f ./devcontainers [NAME] # or no name at all to build all of them.
+
+# ...or by referring to the flake output.
+nix build .#devContainers.$SYSTEM.$NAME
+----
+
+This set of containers should also be published at GitHub Container Registry at `ghcr.io/foo-dogsquared/nixos-config/$NAME`
