@@ -59,7 +59,7 @@
 
     (lib.mkIf (foodogsquaredLib.nixos.isFormat config "isoImage") {
       isoImage = {
-        isoBaseName = config.networking.hostName;
+        isoBaseName = lib.mkForce "${config.networking.hostName}-${config.isoImage.edition}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}";
         edition = "a-happy-gnome";
 
         squashfsCompression = "zstd -Xcompression-level 12";
