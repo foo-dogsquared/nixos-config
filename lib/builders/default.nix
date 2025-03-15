@@ -224,4 +224,50 @@
     ```
   */
   buildDconfDb = pkgs.callPackage ./build-dconf-db.nix { };
+
+  /**
+    A wrapper for building Docker images.
+
+    # Arguments
+
+    A sole attribute set with the following attributes:
+
+    name
+    : Name of the container.
+
+    contents
+    : The contents of the FDS environment to be built with.
+
+    pathsToLink
+    : A list of directories to be shared with all of the derivations listed
+    from `contents`.
+
+    enableTypicalSetup
+    : Enable typical configuration.
+
+    The rest of the attributes are considered as part of the
+    `dockerTools.buildImage` argument.
+
+    # Type
+
+    ```
+    buildDockerImage :: Attr -> Derivation
+    ```
+
+    # Example
+
+    ```nix
+    buildDockerImage {
+      name = "typical-webdev";
+      contents = with pkgs; [
+        hello
+        ruby
+        npm
+        pnpm
+      ];
+      enableTypicalSetup = true;
+    }
+    ```
+  */
+  buildDockerImage = pkgs.callPackage ./build-docker-image.nix { foodogsquaredLib = self; };
 }
