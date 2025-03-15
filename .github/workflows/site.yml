@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v16
-      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - uses: DeterminateSystems/magic-nix-cache-action@v9
       - env:
           NIXPKGS_ALLOW_UNFREE: "1"
         run: nix build .#devPackages.x86_64-linux.website
