@@ -1,12 +1,12 @@
-{ dockerTools, ruby, bundix, foodogsquaredLib }:
+{ dockerTools, ruby, bundix, mruby, rails-new, foodogsquaredLib }:
 
 let name = s: "fds-ruby-on-rails-${ruby.version}${s}";
 in dockerTools.buildImage {
   name = name "";
 
   copyToRoot = foodogsquaredLib.buildFDSEnv {
-    name = name "root";
-    paths = [ ruby bundix ];
+    name = name "-root";
+    paths = [ ruby bundix mruby rails-new ];
   };
 
   runAsRoot = ''
