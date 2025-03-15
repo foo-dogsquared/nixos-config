@@ -82,6 +82,12 @@ nix-shell -p disko git
 # Run the following commands as root.
 disko --mode disko [--arg disk "/dev/sda"] --flake {canonical_flake_url}#external-hdd
 nixos-install --no-root-passwd --root /mnt --flake {canonical_flake_url}#graphical-installer-x86_64-linux
+
+# As an alternative, you can also run the following command.
+disko-install --mode disko --flake {canonical_flake_url}#graphical-installer-x86_64-linux
+
+# Or this...
+just nixos-install graphical-installer
 ----
 
 Also, the installer configuration also includes Guix which means it's also a Guix System installer.
@@ -96,6 +102,12 @@ NO ADDITIONAL `mount` COMMANDS NEEDED!
 # Also run these as root.
 disko --mode disko [--arg disk "/dev/nvme0n1"] --flake {canonical_flake_url}#ni-x86_64-linux
 nixos-install --flake {canonical_flake_url}#ni-x86_64-linux
+
+# Or just run this.
+disko-install --mode disko --flake {canonical_flake_url}#ni-x86_64-linux
+
+# Or this...
+just nixos-install ni
 ----
 
 And voilà!

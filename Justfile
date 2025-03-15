@@ -10,6 +10,10 @@ update:
 host-build HOST *ARGS:
     nixos-rebuild --flake '.#{{HOST}}-{{arch()}}-{{os()}}' {{ARGS}}
 
+# Small wrapper for installing NixOS systems.
+nixos-install HOST *ARGS:
+    disko-install --flake '.#{{HOST}}-{{arch()}}-{{os()}}' {{ARGS}}
+
 # Update a package with nix-update.
 pkg-update PKG *ARGS:
     nix-update -f pkgs {{PKG}} {{ARGS}}
