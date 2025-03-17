@@ -1,8 +1,11 @@
-{ dockerTools, foodogsquaredLib }:
+{ dockerTools, lib, foodogsquaredLib }:
 
 { name, contents ? [ ], pathsToLink ? [ ], enableTypicalSetup ? true, ... }@attrs:
 
-dockerTools.buildImage (attrs // {
+let
+  attrs' = lib.removeAttrs attrs [ "contents" "pathsToLink" "enableTypicalSetup" "name" ];
+in
+dockerTools.buildImage (attrs' // {
   name = "fds-${name}";
 
   copyToRoot = foodogsquaredLib.buildFDSEnv {
@@ -22,10 +25,10 @@ dockerTools.buildImage (attrs // {
     ${lib.optionalString enableTypicalSetup ''
       mkdir -p /data
     ''}
-    ${attrs.runAsRoot}
+    ${attrs.runAsRoot or ""}
   '';
 
-  config = attrs.config // lib.optionalAttrs enableTypicalSetup {
+  config = (attrs.config or {}) // lib.optionalAttrs enableTypicalSetup {
     Cmd = [ "/bin/bash" ];
     WorkingDir = "/data";
     Volumes."/data" = { };
