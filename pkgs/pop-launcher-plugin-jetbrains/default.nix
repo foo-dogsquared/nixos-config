@@ -2,16 +2,17 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "pop-launcher-plugin-jetbrains";
-  version = "2022-08-07";
+  version = "2024-04-04";
 
   src = fetchFromGitHub {
     owner = "oknozor";
     repo = "pop-launcher-jetbrains-plugin";
-    rev = "9883ee1361c2de0bdd8ba4438a8e854303cdece6";
-    sha256 = "sha256-yvkKZTulgDqr2k9M1rEEHc52IDcqMw9UA3xe/HOLD9M";
+    rev = "18a3d3d32c5760ad2086380a47f684c7b12b5d68";
+    hash = "sha256-lBv1jwekbod3H1ANzAEKAHDNHdRb3LD2PM1LXiLErv8=";
   };
 
-  cargoSha256 = "sha256-WuqRU+dkRVGQL+fb3utcuS4HZRTGkBtcnri7lqO9rZk=";
+  cargoHash = "sha256-d54PlaKZaDhQ6PI/J1+IOMqgC/h5XUuEkULLbSTIcUw=";
+  useFetchCargoVendor = true;
 
   postInstall = ''
     install -Dm644 plugin.ron -t "$out/share/pop-launcher/plugins/jetbrains"
