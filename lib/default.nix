@@ -13,6 +13,7 @@ in pkgs.lib.makeExtensible (self:
     trivial = callLib ./trivial.nix;
     data = callLib ./data.nix;
     math = callLib ./math.nix;
+    xdg = callLib ./xdg.nix;
 
     # For future references, these are the only attributes that are going to be
     # exported as part of nixpkgs overlay.
@@ -43,6 +44,7 @@ in pkgs.lib.makeExtensible (self:
     inherit (self.trivial) countAttrs filterAttrs';
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
     inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver;
+    inherit (self.xdg) getXdgDesktop;
   } // lib.optionalAttrs (builtins ? fetchTree) {
     flake = callLib ./flake.nix;
 

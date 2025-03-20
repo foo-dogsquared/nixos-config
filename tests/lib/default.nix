@@ -27,6 +27,7 @@ in {
   trivial = callLib ./trivial.nix;
   data = callLib ./data;
   math = callLib ./math.nix;
+  xdg = callLib ./xdg.nix;
 
   # Environment-specific subset.
   home-manager = callLib ./home-manager.nix;
