@@ -17,7 +17,6 @@ in {
           query
           polars
           formats
-          highlight
         ];
         extraConfig = ''
           $env.config = $env.config | merge deep --strategy=append {

@@ -1,6 +1,8 @@
-{ config, lib, pkgs, ... }@attrs:
+{ config, lib, pkgs, foodogsquaredLib, ... }@attrs:
 
 let
+  inherit (foodogsquaredLib.xdg) getXdgDesktop;
+
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.terminal-emulator;
 
@@ -10,6 +12,31 @@ let
   '';
 
   hasNixosModuleEnable = attrs.nixosConfig.programs.wezterm.enable or false;
+
+  weztermUserDefaultDesktop = pkgs.makeDesktopItem {
+    name = "org.wezfurlong.wezterm";
+    desktopName = "WezTerm (user)";
+    comment = "Wez's Terminal Emulator";
+    keywords = [ "shell" "prompt" "command" "commandline" "cmd" ];
+    icon = "org.wezfurlong.wezterm";
+    startupWMClass = "org.wezfurlong.wezterm";
+    tryExec = "wezterm";
+    exec = "wezterm";
+    type = "Application";
+    categories = [ "System" "TerminalEmulator" "Utility" ];
+  };
+  weztermTypicalDesktop = pkgs.makeDesktopItem {
+    name = "wezterm-start";
+    desktopName = "WezTerm";
+    comment = "Wez's Terminal Emulator";
+    keywords = [ "shell" "prompt" "command" "commandline" "cmd" ];
+    icon = "org.wezfurlong.wezterm";
+    startupWMClass = "org.wezfurlong.wezterm";
+    tryExec = "wezterm";
+    exec = "wezterm start --cwd .";
+    type = "Application";
+    categories = [ "System" "TerminalEmulator" "Utility" ];
+  };
 in {
   options.users.foo-dogsquared.programs.terminal-emulator.enable =
     lib.mkEnableOption "foo-dogsquared's terminal emulator setup";
@@ -20,31 +47,10 @@ in {
       # the user has them.
       home.packages = let
         inherit (pkgs) wezterm hiPrio;
-        weztermUserDefaultDesktop = pkgs.makeDesktopItem {
-          name = "org.wezfurlong.wezterm";
-          desktopName = "WezTerm (user)";
-          comment = "Wez's Terminal Emulator";
-          keywords = [ "shell" "prompt" "command" "commandline" "cmd" ];
-          icon = "org.wezfurlong.wezterm";
-          startupWMClass = "org.wezfurlong.wezterm";
-          tryExec = "wezterm";
-          exec = "wezterm";
-          type = "Application";
-          categories = [ "System" "TerminalEmulator" "Utility" ];
-        };
-        weztermTypicalDesktop = pkgs.makeDesktopItem {
-          name = "wezterm-start";
-          desktopName = "WezTerm";
-          comment = "Wez's Terminal Emulator";
-          keywords = [ "shell" "prompt" "command" "commandline" "cmd" ];
-          icon = "org.wezfurlong.wezterm";
-          startupWMClass = "org.wezfurlong.wezterm";
-          tryExec = "wezterm";
-          exec = "wezterm start --cwd .";
-          type = "Application";
-          categories = [ "System" "TerminalEmulator" "Utility" ];
-        };
       in [ wezterm (hiPrio weztermUserDefaultDesktop) weztermTypicalDesktop ];
+
+      xdg.autostart.entries =
+        lib.singleton (getXdgDesktop weztermUserDefaultDesktop "org.wezfurlong.wezterm");
     }
 
     (lib.mkIf (!hasNixosModuleEnable) {

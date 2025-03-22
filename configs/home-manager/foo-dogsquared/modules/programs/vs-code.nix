@@ -9,7 +9,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     suites.editors.vscode.enable = true;
-    programs.vscode = {
+    programs.vscode.profiles.default = {
       extensions = with pkgs.vscode-extensions;
         [
           # Additional language support.

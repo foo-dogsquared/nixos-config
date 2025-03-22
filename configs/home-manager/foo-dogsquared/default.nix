@@ -113,6 +113,9 @@ in {
   xdg.userDirs.extraConfig.XDG_PROJECTS_DIR =
     "${config.home.homeDirectory}/Projects";
 
+  # Only enable autostart inside of NixOS systems.
+  xdg.autostart.enable = attrs ? nixosConfig;
+
   # Set nixpkgs config both outside and inside of home-manager.
   nixpkgs.config = import ./config/nixpkgs/config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./config/nixpkgs/config.nix;

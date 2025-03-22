@@ -1,7 +1,8 @@
 # WHOA! Even browsers with extensions can be declarative!
-{ config, lib, pkgs, ... }@attrs:
+{ config, lib, pkgs, foodogsquaredLib, ... }@attrs:
 
 let
+  inherit (foodogsquaredLib.xdg) getXdgDesktop;
   userCfg = config.users.foo-dogsquared;
   cfg = userCfg.programs.browsers;
 
@@ -95,7 +96,7 @@ in {
           {
             isDefault = true;
 
-            extensions = with pkgs.nur.repos.rycee.firefox-addons;
+            extensions.packages = with pkgs.nur.repos.rycee.firefox-addons;
               [
                 aw-watcher-web
                 bitwarden
@@ -206,9 +207,9 @@ in {
                   definedAliases = [ "@np" ];
                 };
 
-                "Bing".metaData.hidden = true;
-                "Duckduckgo".metaData.hidden = true;
-                "Google".metaData.alias = "@g";
+                "bing".metaData.hidden = true;
+                "duckduckgo".metaData.hidden = true;
+                "google".metaData.alias = "@g";
               };
             };
           }
@@ -263,6 +264,9 @@ in {
         ];
       };
 
+      xdg.autostart.entries =
+        lib.singleton (getXdgDesktop config.programs.firefox.package "firefox");
+
       # Configuring Bleachbit for Firefox cleaning.
       services.bleachbit.cleaners = [
         "firefox.backup"
@@ -306,7 +310,7 @@ in {
             [{ id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; }];
         };
     in lib.foldl' enableSupportedBrowser { } supportedBrowsers // {
-      programs.firefox.profiles.personal.extensions =
+      programs.firefox.profiles.personal.extensions.packages =
         with pkgs.nur.repos.rycee.firefox-addons;
         [ firenvim ];
     }))

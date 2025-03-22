@@ -120,6 +120,9 @@ in {
     (lib.mkIf cfg.spotify.enable {
       home.packages = with pkgs; [ spotify ];
 
+      xdg.autostart.entries =
+        lib.singleton (foodogsquaredLib.xdg.getXdgDesktop pkgs.spotify "spotify");
+
       sops.secrets."spotify_env" = foodogsquaredLib.sops-nix.getAsOneSecret ./secrets.bin;
 
       state.ports.spotifyd.value =

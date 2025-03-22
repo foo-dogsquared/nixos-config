@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   userCfg = config.users.foo-dogsquared;
@@ -79,6 +79,9 @@ in {
       xdg.mimeApps.defaultApplications = {
         "application/vnd.anki" = [ "anki.desktop" ];
       };
+
+      xdg.autostart.entries =
+        lib.singleton (foodogsquaredLib.xdg.getXdgDesktop pkgs.zotero "zotero");
 
       users.foo-dogsquared.programs.custom-homepage.sections.services.links =
         lib.singleton {
