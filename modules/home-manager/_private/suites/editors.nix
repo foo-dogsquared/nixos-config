@@ -38,41 +38,44 @@ in {
     (lib.mkIf cfg.vscode.enable {
       programs.vscode = {
         enable = true;
-        extensions = with pkgs.vscode-extensions; [
-          # All the niceties for developmenties.
-          ms-vscode-remote.vscode-remote-extensionpack
-          ms-vsliveshare.vsliveshare
-          tailscale.vscode-tailscale
-
-          # The other niceties.
-          vscode-icons-team.vscode-icons
-        ];
 
         # Yay! Thank you!
         mutableExtensionsDir = true;
 
-        userSettings = {
-          # Editor configurations.
-          "editor.fontFamily" = "monospace";
-          "editor.fontSize" = 16;
-          "editor.cursorStyle" = "block";
-          "editor.minimap.renderCharacters" = false;
-          "workbench.iconTheme" = "vscode-icons";
-          "window.autoDetectColorScheme" = true;
-          "accessibility.dimUnfocused.enable" = true;
-          "accessibility.dimUnfocused.opacity" = 0.35;
+        profiles.default = {
+          userSettings = {
+            # Editor configurations.
+            "editor.fontFamily" = "monospace";
+            "editor.fontSize" = 16;
+            "editor.cursorStyle" = "block";
+            "editor.minimap.renderCharacters" = false;
+            "workbench.iconTheme" = "vscode-icons";
+            "window.autoDetectColorScheme" = true;
+            "accessibility.dimUnfocused.enable" = true;
+            "accessibility.dimUnfocused.opacity" = 0.35;
 
-          # Putting some conveniences.
-          "files.autoSave" = "off";
-          "update.showReleaseNotes" = false;
-          "extensions.autoUpdate" = "onlyEnabledExtensions";
-          "github.copilot.enable"."*" = false;
+            # Putting some conveniences.
+            "files.autoSave" = "off";
+            "update.showReleaseNotes" = false;
+            "extensions.autoUpdate" = "onlyEnabledExtensions";
+            "github.copilot.enable"."*" = false;
 
-          # Extensions settings.
-          "direnv.restart.automatic" = true;
-          "gitlens.showWhatsNewAfterUpgrade" = false;
-          "gitlens.showWelcomeOnInstall" = false;
-          "gitlens.plusFeatures.enabled" = false;
+            # Extensions settings.
+            "direnv.restart.automatic" = true;
+            "gitlens.showWhatsNewAfterUpgrade" = false;
+            "gitlens.showWelcomeOnInstall" = false;
+            "gitlens.plusFeatures.enabled" = false;
+          };
+
+          extensions = with pkgs.vscode-extensions; [
+            # All the niceties for developmenties.
+            ms-vscode-remote.vscode-remote-extensionpack
+            ms-vsliveshare.vsliveshare
+            tailscale.vscode-tailscale
+
+            # The other niceties.
+            vscode-icons-team.vscode-icons
+          ];
         };
       };
 
