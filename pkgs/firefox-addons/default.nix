@@ -2,10 +2,10 @@
   {
     "cookies-txt" = buildFirefoxXpiAddon {
       pname = "cookies-txt";
-      version = "0.7";
+      version = "0.8";
       addonId = "{12cf650b-1822-40aa-bff0-996df6948878}";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4368538/cookies_txt-0.7.xpi";
-      sha256 = "04ff7cf1fbebdba3c112fbd4d4ea83f90a08d8a267e63d44cca210659080930e";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4451023/cookies_txt-0.8.xpi";
+      sha256 = "0cfa85e4f1defc0f0e72c4b7a26372d7890d52780e555b868ef4a3759d7bc3ec";
       meta = with lib;
       {
         description = "Exports all cookies to a Netscape HTTP Cookie File, as used by curl, wget, and youtube-dl, among others.";
