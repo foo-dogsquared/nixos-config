@@ -15,7 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v16
-      - uses: DeterminateSystems/magic-nix-cache-action@v9
       - name: Build ISO
         run: |
           nix build .#images.${{ matrix.arch }}.bootstrap-install-iso --out-link build-iso-result
