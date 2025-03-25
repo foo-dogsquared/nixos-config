@@ -3,18 +3,17 @@
 with python3Packages;
 buildPythonPackage rec {
   pname = "swh-model";
-  version = "6.7.0";
+  version = "7.1.0";
+  pyproject = true;
 
   src = fetchPypi {
     inherit version;
-    pname = "swh.model";
-    sha256 = "sha256-88xlN/vGXMG858+0A1Wb4EIYC9btRTopY7Ryvw/huDo=";
+    pname = "swh_model";
+    hash = "sha256-MdyhpKm4UzIFVMhIlAT75OMUmfDcOFZzk/dJIZASwmE=";
   };
 
   doCheck = false;
   propagatedBuildInputs = [
-    click
-    dulwich
     deprecated
     typing-extensions
     hypothesis
@@ -22,8 +21,14 @@ buildPythonPackage rec {
     python-dateutil
     attrs
     attrs-strict
+    aiohttp
+    pytz
 
     swh-core
+
+    # requirements for CLI
+    click
+    dulwich
   ];
 
   meta = with lib; {
