@@ -3,12 +3,13 @@
 with python3Packages;
 buildPythonPackage rec {
   pname = "swh-fuse";
-  version = "1.0.6";
+  version = "1.1.0";
+  pyproject = true;
 
   src = fetchPypi {
     inherit version;
     pname = "swh.fuse";
-    sha256 = "sha256-b1k4XJxaSGrdqQnKnu6EAaZoEVkdZqjt0vd6k+q+H3k=";
+    hash = "sha256-pkTZiUm+Sun+7gBNWXJUHUXTmEIz5tjvfGcU4cUL9Xg=";
   };
 
   doCheck = false;
