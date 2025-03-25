@@ -3,12 +3,13 @@
 with python3Packages;
 buildPythonPackage rec {
   pname = "swh-core";
-  version = "2.24.0";
+  version = "4.0.0";
+  pyproject = true;
 
   src = fetchPypi {
     inherit version;
-    pname = "swh.core";
-    sha256 = "sha256-62xFSPxW/XvK5v1i4RA7Iwrr4V5nfxrs+PGHHC56trQ=";
+    pname = "swh_core";
+    hash = "sha256-da0Kx/pyHybW8oSIyH0/UqivGkSsvnQe7OoVY2p0glA=";
   };
 
   # Tests require network access.
@@ -19,7 +20,7 @@ buildPythonPackage rec {
     deprecated
     pyyaml
     python-magic
-    sentry-sdk
+    sentry-sdk_2
 
     # swh.core.db
     psycopg2
@@ -36,6 +37,7 @@ buildPythonPackage rec {
     flask
     iso8601
     msgpack
+    backports-entry-points-selectable
 
     setuptools-scm
   ];
