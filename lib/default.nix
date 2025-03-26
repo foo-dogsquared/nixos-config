@@ -15,6 +15,10 @@ in pkgs.lib.makeExtensible (self:
     math = callLib ./math.nix;
     xdg = callLib ./xdg.nix;
 
+    # Just like from its inspiration, this contains Nix-representable data
+    # formats and won't have any attributes exported at the top-level.
+    formats = callLib ./formats.nix;
+
     # For future references, these are the only attributes that are going to be
     # exported as part of nixpkgs overlay.
     fetchers = callLib ./fetchers;
