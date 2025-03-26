@@ -23,7 +23,7 @@ let
 
     generate = name: value:
       pkgs.callPackage
-      ({ writeText }: writeText name (lib.generators.toDconfINI value));
+      ({ writeText, lib }: writeText name (lib.generators.toDconfINI value)) { };
   };
 
   # The bulk of the work. Pretty much the main purpose of this module.
@@ -111,8 +111,8 @@ in {
   options.programs.gnome-session = {
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.gnome.gnome-session;
-      defaultText = "pkgs.gnome.gnome-session";
+      default = pkgs.gnome-session;
+      defaultText = "pkgs.gnome-session";
       description = ''
         The package containing gnome-session binary and systemd units. This
         module will use the `gnome-session` executable for the generated
