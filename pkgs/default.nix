@@ -50,7 +50,7 @@ in lib.makeScope pkgs.newScope (self: {
   #purrdata = callPackage ./purr-data { };
   speki = callPackage ./speki { };
   sqlc-gen-from-template = callPackage ./sqlc-gen-from-template { };
-  tic-80 = callPackage ./tic-80 { };
+  tic-80-unstable = callPackage ./tic-80 { };
   smile = callPackage ./smile { };
   sessiond = callPackage ./sessiond { };
   uwsm = callPackage ./uwsm { };
