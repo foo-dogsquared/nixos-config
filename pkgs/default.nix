@@ -20,7 +20,6 @@ in lib.makeScope pkgs.newScope (self: {
   fastn = callPackage ./fastn { };
   flatsync = callPackage ./flatsync { };
   freerct = callPackage ./freerct.nix { };
-  distant = callPackage ./distant.nix { };
   gnome-search-provider-recoll =
     callPackage ./gnome-search-provider-recoll.nix { };
   #graphite-design-tool = callPackage ./graphite-design-tool { };
