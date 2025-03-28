@@ -142,14 +142,18 @@ in {
       home.packages = with pkgs;
         [
           d-spy # Some GNOME dev probably developed this.
+          bustle # Hustle and...
         ];
     })
 
     (lib.mkIf cfg.creative-coding.enable {
       home.packages = with pkgs; [
+        decker
+        uxn
         supercollider-with-plugins
         processing
         (puredata-with-plugins (with pkgs; [ zexy ]))
+        tic-80-unstable
       ];
     })
   ]);
