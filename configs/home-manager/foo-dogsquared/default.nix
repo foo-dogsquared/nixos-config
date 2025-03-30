@@ -101,6 +101,13 @@ in {
     };
   };
 
+  # GARBAGE DAY!
+  nix.gc = {
+    automatic = true;
+    frequency = "weekly";
+    randomizedDelaySec = "5m";
+  };
+
   # Set the profile picture. Most of the desktop environments should support
   # this.
   home.file.".face".source = ./files/logo.png;
