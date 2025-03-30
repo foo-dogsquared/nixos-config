@@ -90,6 +90,13 @@ in {
             }";
           text = "Local sync server";
         };
+
+      programs.python.modules = ps: with pkgs.swh; [
+        swh-core
+        swh-fuse
+        swh-model
+        swh-web-client
+      ];
     }
 
     (lib.mkIf userCfg.programs.shell.enable {
