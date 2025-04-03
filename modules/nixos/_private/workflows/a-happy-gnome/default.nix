@@ -36,6 +36,7 @@ in {
         paperwm
         runcat
         windownavigator
+        valent
       ];
       example = lib.literalExpression ''
         with pkgs.gnomeExtensions; [
@@ -72,11 +73,12 @@ in {
         shortwave # Yer' humble internet radio.
         tangram # Your social media manager, probably.
         ymuse # Simple MPD client.
+        valent # ...ines 'tis season to share... phone data or something.
 
         gnome-backgrounds # Default backgrounds.
 
         gnome-menus # It is required for custom menus in extensions.
-        #gnome-extension-manager # The cooler GNOME extensions app.
+        gnome-extension-manager # The cooler GNOME extensions app.
         gnome-search-provider-recoll # This is here for some reason.
 
         # Nautilus extensions
