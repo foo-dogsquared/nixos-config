@@ -3,6 +3,8 @@
 with pkgs; {
   cloud = callPackage ./cloud.nix { };
   creatives = callPackage ./creatives.nix { };
+  dotnet_8 = callPackage ./dotnet.nix { dotnet-sdk = dotnet-sdk_8; dotnet-runtime = dotnet-runtime_8; };
+  dotnet_9 = callPackage ./dotnet.nix { dotnet-sdk = dotnet-sdk_9; dotnet-runtime = dotnet-runtime_9; };
   flatpak = callPackage ./flatpak.nix { };
   gnu = callPackage ./gnu.nix { };
   gnome = callPackage ./gnome.nix { };
