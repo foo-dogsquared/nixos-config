@@ -60,5 +60,9 @@ in {
       home.file."${config.xdg.dataHome}/nushell/vendor/autoload".source =
         getDotfiles "nu/autoload";
     })
+
+    (lib.mkIf config.programs.helix.enable {
+      xdg.configFile.helix.source = getDotfiles "helix";
+    })
   ]);
 }

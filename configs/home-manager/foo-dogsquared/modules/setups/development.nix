@@ -96,6 +96,9 @@ in {
         # Testing out your web app #532.
         dbeaver-bin
       ];
+
+      # Text editors galore.
+      programs.helix.enable = true;
     }
 
     (lib.mkIf (!config.programs.nixvim.enable or false) {
