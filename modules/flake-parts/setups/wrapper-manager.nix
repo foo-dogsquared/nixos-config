@@ -4,27 +4,26 @@ let
   partsConfig = config;
   cfg = config.setups.wrapper-manager;
 
-  mkWrapperManagerPackage = { pkgs, src, modules ? [ ], specialArgs ? { }, }:
-    let wrapperManagerEntrypoint = import src { };
-    in wrapperManagerEntrypoint.lib.build { inherit pkgs modules specialArgs; };
+  mkWrapperManagerPackage = { pkgs, wrapperManagerBranch ? "wrapper-manager-fds", modules ? [ ], specialArgs ? { }, }:
+    inputs.${wrapperManagerBranch}.lib.build { inherit pkgs modules specialArgs; };
 
   wrapperManagerIntegrationModule = { name, config, lib, ... }: {
     options.wrapper-manager = {
-      src = lib.mkOption {
-        type = lib.types.path;
-        default = ../../../subprojects/wrapper-manager-fds;
-        description = ''
-          The path of the wrapper-manager-fds to be used to properly initialize
-          to the environment.
-        '';
-      };
-
       additionalModules = lib.mkOption {
         type = with lib.types; listOf deferredModule;
         default = [ ];
         description = ''
           Additional wrapper-manager modules to be included in the wider-scoped
           environment.
+        '';
+      };
+
+      branch = lib.mkOption {
+        type = lib.types.str;
+        default = "wrapper-manager-fds";
+        example = "wrapper-manager-fds-stable";
+        description = ''
+          Name of the flake input containing the wrapper-manager-fds dependency.
         '';
       };
 
@@ -137,7 +136,9 @@ in {
         ({ config, lib, ... }: {
           config = lib.mkIf (config.wrapper-manager.packages != { }) {
             modules =
-              [ (import config.wrapper-manager.src { }).nixosModules.default ];
+              [
+                inputs.${config.wrapper-manager.branch}.nixosModules.default
+              ];
           };
         })
       ]);
@@ -150,7 +151,9 @@ in {
         ({ config, lib, ... }: {
           config = lib.mkIf (config.wrapper-manager.packages != { }) {
             modules =
-              [ (import config.wrapper-manager.src { }).homeModules.default ];
+              [
+                inputs.${config.wrapper-manager.branch}.homeModules.default
+              ];
           };
         })
       ]);
@@ -181,7 +184,7 @@ in {
             in mkWrapperManagerPackage {
               inherit pkgs;
               inherit (metadata) specialArgs;
-              inherit (metadata.wrapper-manager) src;
+              wrapperManagerBranch = metadata.wrapper-manager.branch;
               modules = cfg.sharedModules ++ cfg.standaloneModules
                 ++ metadata.modules;
             }) validWrapperManagerConfigs;
