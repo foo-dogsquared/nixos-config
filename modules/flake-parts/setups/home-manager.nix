@@ -283,6 +283,11 @@ in {
                   # setups are already done so...
                   home-manager.useUserPackages = lib.mkDefault true;
                   home-manager.useGlobalPkgs = lib.mkDefault true;
+
+                  # !!! Welp, this is basically incomplete since we also have
+                  # to consider user-specific specialArgs which is not set.
+                  home-manager.extraSpecialArgs =
+                    partsConfig.setups.home-manager.sharedSpecialArgs;
                 })
 
                 (lib.mkIf hasHomeManagerUsers ({ lib, pkgs, ... }: {

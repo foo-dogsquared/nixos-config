@@ -138,6 +138,12 @@ in {
             modules =
               [
                 inputs.${config.wrapper-manager.branch}.nixosModules.default
+
+                {
+                  # Welp, it's not complete since each package will not its
+                  # package-specific specialArgs.
+                  wrapper-manager.extraSpecialArgs = cfg.specialArgs;
+                }
               ];
           };
         })
@@ -153,6 +159,12 @@ in {
             modules =
               [
                 inputs.${config.wrapper-manager.branch}.homeModules.default
+
+                {
+                  # Welp, it's not complete since each package will not its
+                  # package-specific specialArgs.
+                  wrapper-manager.extraSpecialArgs = cfg.specialArgs;
+                }
               ];
           };
         })
