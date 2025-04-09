@@ -71,6 +71,8 @@ in {
         gradience # Make it rain!
         handbrake # Take a break from those custom ffmpeg conversion scripts.
         shortwave # Yer' humble internet radio.
+        symbolic-preview # Them symbols... it's important.
+        gtranslator # It's not a Google translator app, I'll tell you that.
         tangram # Your social media manager, probably.
         ymuse # Simple MPD client.
         valent # ...ines 'tis season to share... phone data or something.
