@@ -43,6 +43,9 @@ in {
     # home-manager environment will not write to the XDG config directory.
     (lib.mkIf (config.programs.neovim.enable) {
       xdg.configFile.nvim.source = getDotfiles "nvim";
+      xdg.configFile.neovide.source = getDotfiles "neovide";
+
+      home.packages = with pkgs; [ neovide ];
 
       programs.neovim.extraPackages = with pkgs; [
         luarocks
