@@ -142,7 +142,7 @@ in {
                 {
                   # Welp, it's not complete since each package will not its
                   # package-specific specialArgs.
-                  wrapper-manager.extraSpecialArgs = cfg.specialArgs;
+                  wrapper-manager.extraSpecialArgs = cfg.sharedSpecialArgs;
                 }
               ];
           };
@@ -163,7 +163,7 @@ in {
                 {
                   # Welp, it's not complete since each package will not its
                   # package-specific specialArgs.
-                  wrapper-manager.extraSpecialArgs = cfg.specialArgs;
+                  wrapper-manager.extraSpecialArgs = cfg.sharedSpecialArgs;
                 }
               ];
           };
