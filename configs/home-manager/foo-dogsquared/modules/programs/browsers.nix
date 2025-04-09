@@ -63,34 +63,31 @@ in {
       programs.firefox = {
         enable = true;
 
-        package = with pkgs;
-          wrapFirefox firefox-unwrapped {
-            nativeMessagingHosts = with pkgs;
-              [ bukubrow tridactyl-native ]
-              ++ lib.optional config.programs.mpv.enable pkgs.ff2mpv;
+        nativeMessagingHosts = with pkgs;
+          [ bukubrow tridactyl-native ]
+          ++ lib.optional config.programs.mpv.enable pkgs.ff2mpv;
 
-            extraPolicies = {
-              AppAutoUpdate = false;
-              DisableAppUpdate = true;
-              DisableMasterPasswordCreation = true;
-              DisablePocket = true;
-              DisableSetDesktopBackground = true;
-              DontCheckDefaultBrowser = true;
-              EnableTrackingProtection = true;
-              FirefoxHome = {
-                Highlights = false;
-                Pocket = false;
-                Snippets = false;
-                SponsporedPocket = false;
-                SponsporedTopSites = false;
-              };
-              NoDefaultBookmarks = true;
-              OfferToSaveLoginsDefault = false;
-              PasswordManagerEnabled = false;
-              SanitizeOnShutdown = { FormData = true; };
-              UseSystemPrintDialog = true;
-            };
+        policies = {
+          AppAutoUpdate = false;
+          DisableAppUpdate = true;
+          DisableMasterPasswordCreation = true;
+          DisablePocket = true;
+          DisableSetDesktopBackground = true;
+          DontCheckDefaultBrowser = true;
+          EnableTrackingProtection = true;
+          FirefoxHome = {
+            Highlights = false;
+            Pocket = false;
+            Snippets = false;
+            SponsporedPocket = false;
+            SponsporedTopSites = false;
           };
+          NoDefaultBookmarks = true;
+          OfferToSaveLoginsDefault = false;
+          PasswordManagerEnabled = false;
+          SanitizeOnShutdown = { FormData = true; };
+          UseSystemPrintDialog = true;
+        };
 
         profiles.personal = lib.mkMerge [
           {
@@ -165,10 +162,10 @@ in {
             search = {
               default = "Brave";
               force = true;
-              order = [ "Brave" "Nix Packages" "Google" ];
+              order = [ "Brave" "Nix Packages" "google" ];
               engines = {
                 "Brave" = {
-                  urls = [{
+                  urls = lib.singleton {
                     template = "https://search.brave.com/search";
                     params = [
                       {
@@ -180,7 +177,7 @@ in {
                         value = "{searchTerms}";
                       }
                     ];
-                  }];
+                  };
 
                   icon =
                     "${config.programs.brave.package}/share/icons/hicolor/64x64/apps/brave-browser.png";
@@ -188,7 +185,7 @@ in {
                 };
 
                 "Nix Packages" = {
-                  urls = [{
+                  urls = lib.singleton {
                     template = "https://search.nixos.org/packages";
                     params = [
                       {
@@ -200,7 +197,7 @@ in {
                         value = "{searchTerms}";
                       }
                     ];
-                  }];
+                  };
 
                   icon =
                     "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
