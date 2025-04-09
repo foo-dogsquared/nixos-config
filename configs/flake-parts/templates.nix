@@ -30,5 +30,9 @@
       path = ../../templates/local-ruby-nix;
       description = "Local Ruby app development with ruby-nix";
     };
+    fds-private-config = {
+      path = ../../templates/fds-private-config;
+      description = "Basic template for private Nix environment configuration that uses this flake";
+    };
   };
 }
