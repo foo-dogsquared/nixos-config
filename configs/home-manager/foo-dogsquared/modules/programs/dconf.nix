@@ -41,6 +41,8 @@ in {
           userDirs.extraConfig.XDG_PROJECTS_DIR
         ];
       };
+
+      "org/gnome/epiphany".homepage-url = lib.mkIf userCfg.programs.custom-homepage.enable "file://${config.xdg.dataHome}/foodogsquared/homepage/index.html";
     };
   };
 }

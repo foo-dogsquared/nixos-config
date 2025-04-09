@@ -62,7 +62,7 @@ in {
 
     programs.python = {
       enable = true;
-      package = pkgs.python3;
+      package = pkgs.python313;
       modules = ps: with ps; [ jupyter ];
     };
 

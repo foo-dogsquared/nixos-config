@@ -25,7 +25,7 @@ in {
       ];
 
       wrapper-manager.packages.music-setup = {
-        wrappers.yt-dlp-audio = {
+        wrappers.yt-dlp-music = {
           arg0 = lib.getExe' pkgs.yt-dlp "yt-dlp";
           prependArgs = [ "--config-location" ../../../config/yt-dlp/audio.conf ];
         };

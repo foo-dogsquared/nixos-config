@@ -39,6 +39,7 @@ links = [
   { url = "https://github.com", text = "GitHub" },
   { url = "https://sourcegraph.com/search", text = "SourceGraph" },
   { url = "https://archive.softwareheritage.org", text = "Software Heritage" },
+  { url = "https://codesearch.debian.net", text = "Debian Codesearch" },
 
   { subsection = true, text = "Cloud platforms" },
   { url = "https://vscode.dev", text = "Online Visual Studio Code" },
