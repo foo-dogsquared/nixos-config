@@ -45,6 +45,10 @@
           autoRollback = true;
           magicRollback = true;
         };
+        wrapper-manager = {
+          branch = "wrapper-manager-fds";
+          packages.archive-setup = { };
+        };
       };
 
       # The typical user in server environments.
