@@ -8,7 +8,29 @@ let
     [
       # The application menu.
       junction
+
+      # The application launcher for your one-handed keyboard handling (the
+      # other is in the mouse, if you're thinking something else).
+      kando
+      (makeDesktopItem {
+        name = "kando";
+        desktopName = "Kando";
+        destination = "/etc/xdg/autostart";
+        exec = "${lib.getExe kando} --gapplication-service";
+        icon = "kando";
+        genericName = "Pie Menu";
+      })
+
+      # Valent...ines 'tis season to share... phone data or something.
+      valent
     ];
+
+  # All of the shell extensions plus their required extensions.
+  shellExtensions' = cfg.shellExtensions ++ (with pkgs.gnomeExtensions; [
+    valent
+    kando-integration
+    paperwm
+  ]);
 in {
   options.workflows.enable =
     lib.mkOption { type = with lib.types; listOf (enum [ workflowName ]); };
@@ -17,9 +39,9 @@ in {
     shellExtensions = lib.mkOption {
       type = with lib.types; listOf package;
       description = ''
-        A list of GNOME Shell extensions to be included. Take note the package
-        should contain `passthru.extensionUuid` to be used for enabling the
-        extensions.
+        A list of extra GNOME Shell extensions to be included. Take note the
+        package should contain `passthru.extensionUuid` to be used for enabling
+        the extensions.
       '';
       default = with pkgs.gnomeExtensions; [
         alphabetical-app-grid
@@ -28,15 +50,11 @@ in {
         burn-my-windows
         caffeine
         fly-pie
-        gsconnect
         just-perfection
-        kando-integration
         kimpanel
         light-style
-        paperwm
         runcat
         windownavigator
-        valent
       ];
       example = lib.literalExpression ''
         with pkgs.gnomeExtensions; [
@@ -64,7 +82,6 @@ in {
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
         dconf-editor # A saner version of Windows registry.
-        kando
         gnome-boxes # Virtual machines, son.
         mission-center # It is your duty to monitor your system.
         polari # Your gateway to one of the most hidden and cobweb-ridden parts of the internet. ;)
@@ -74,8 +91,8 @@ in {
         symbolic-preview # Them symbols... it's important.
         gtranslator # It's not a Google translator app, I'll tell you that.
         tangram # Your social media manager, probably.
-        ymuse # Simple MPD client.
-        valent # ...ines 'tis season to share... phone data or something.
+        ymuse # I muse with a simple MPD client.
+        gnome-secrets # Feel the secureness, O Keeper of Secrets.
 
         gnome-backgrounds # Default backgrounds.
 
@@ -87,6 +104,7 @@ in {
         nautilus-annotations
         nautilus-open-any-terminal
 
+        # Extra background images.
         fedora-backgrounds.f38
         fedora-backgrounds.f37
       ];
@@ -155,12 +173,6 @@ in {
     # It makes Nix store directory read/write so no...
     services.packagekit.enable = false;
 
-    # Since we're using KDE Connect, we'll have to use gsconnect.
-    programs.kdeconnect = {
-      enable = true;
-      package = pkgs.gnomeExtensions.gsconnect;
-    };
-
     # Bring all of the dconf keyfiles in there.
     programs.dconf = {
       enable = true;
@@ -178,7 +190,7 @@ in {
             };
             "org/gnome/shell" = {
               enabled-extensions =
-                builtins.map (p: p.extensionUuid) cfg.shellExtensions;
+                builtins.map (p: p.extensionUuid) shellExtensions';
             };
           }
 
@@ -197,6 +209,8 @@ in {
       };
     };
 
+    xdg.autostart.enable = true;
+
     xdg.mime = {
       enable = true;
       desktops.gnome.defaultApplications = {
@@ -212,7 +226,7 @@ in {
       };
     };
 
-    environment.systemPackages = requiredApps ++ cfg.shellExtensions
+    environment.systemPackages = requiredApps ++ shellExtensions'
       ++ cfg.extraApps;
   };
 }
