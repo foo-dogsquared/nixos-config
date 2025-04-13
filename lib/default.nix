@@ -45,7 +45,10 @@ in pkgs.lib.makeExtensible (self:
     inherit (self.builders)
       makeXDGMimeAssociationList makeXDGPortalConfiguration makeXDGDesktopEntry
       buildHugoSite buildFDSEnv buildDconfDb buildDockerImage;
-    inherit (self.trivial) countAttrs filterAttrs';
+    inherit (self.trivial)
+      countAttrs filterAttrs' bitsToBytes SIPrefixExponent
+      metricPrefixMultiplier binaryPrefixExponent binaryPrefixMultiplier
+      parseBytesSizeIntoInt unitsToInt;
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
     inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver;
     inherit (self.xdg) getXdgDesktop;
