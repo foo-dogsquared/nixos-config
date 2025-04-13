@@ -151,6 +151,38 @@ in {
         "thunderbird"
       ];
     };
+
+    winprops = lib.mkOption {
+      type = let
+        inherit (lib.types) listOf;
+        settingsFormat = pkgs.formats.json { };
+      in with lib.types; listOf (settingsFormat.type);
+      description = ''
+        A list of default winprops settings for PaperWM.
+      '';
+      default = [ ];
+      example = lib.literalExpression ''
+        [
+          {
+            wm_class = "Firefox";
+            preferredWidth = "100%";
+            spaceIndex = 0;
+          }
+
+          {
+            wm_class = "org.wezfurlong.wezterm";
+            preferredWidth = "100%";
+            spaceIndex = 1;
+          }
+
+          {
+            wm_class = "Spotify";
+            title = "Spotify Premium";
+            spaceIndex = 0;
+          }
+        ]
+      '';
+    };
   };
 
   config = lib.mkIf (lib.elem workflowName config.workflows.enable) {
@@ -205,6 +237,11 @@ in {
 
             lib.listToAttrs
           ])
+
+          (lib.mkIf (cfg.winprops != [ ]) {
+            "org/gnome/shell/extensions/paperwm".winprops =
+              lib.map lib.strings.toJSON cfg.winprops;
+          })
         ];
       };
     };
