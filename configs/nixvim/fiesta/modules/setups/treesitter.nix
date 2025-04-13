@@ -88,7 +88,7 @@ in {
           # A set of bindings to be used for each jump direction.
           bindings:
           let
-            mappings = builtins.map (motion:
+            mappings = lib.map (motion:
               let
                 inherit (motion) region jumpDirection variant;
                 jumpDirection' = lib.strings.toLower jumpDirection;
@@ -164,7 +164,7 @@ in {
             binding:
 
             let
-              mappingsList = builtins.map (variant:
+              mappingsList = lib.map (variant:
                 let prefixMap' = prefixMap.${variant};
                 in lib.nameValuePair "${prefixMap'.key}${binding}" {
                   query = "@${query}.${variant}";
@@ -200,7 +200,7 @@ in {
 
         mkQueryMappings = acc: query: bindings:
           let
-            mappings = builtins.map (motion:
+            mappings = lib.map (motion:
               let
                 inherit (motion) jumpDirection variant;
                 jumpDirection' = lib.strings.toLower jumpDirection;

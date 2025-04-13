@@ -53,7 +53,7 @@ in {
 
       config = lib.mkIf (config.diskoConfigs != [ ]) (let
         diskoConfigs =
-          builtins.map (name: "${partsConfig.setups.configDir}/disko/${name}")
+          lib.map (name: "${partsConfig.setups.configDir}/disko/${name}")
           config.diskoConfigs;
       in {
         modules = lib.singleton {

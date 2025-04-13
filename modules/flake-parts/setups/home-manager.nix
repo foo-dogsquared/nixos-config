@@ -363,7 +363,7 @@ in {
         # A quick data structure we can pass through multiple build pipelines.
         pureHomeManagerConfigs = let
           generatePureConfigs = username: metadata:
-            lib.listToAttrs (builtins.map (system:
+            lib.listToAttrs (lib.map (system:
               let
                 nixpkgs = inputs.${metadata.nixpkgs.branch};
 

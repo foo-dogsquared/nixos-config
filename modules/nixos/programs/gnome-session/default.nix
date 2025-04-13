@@ -158,7 +158,7 @@ in {
             requiredComponents =
               let
                 gsdComponents =
-                  builtins.map
+                  lib.map
                     (gsdc: "org.gnome.SettingsDaemon.''${gsdc}")
                     [
                       "A11ySettings"
@@ -175,7 +175,7 @@ in {
 
             systemd.targetUnit = {
               requires = [ "org.gnome.Shell.target" ];
-              wants = builtins.map (c: "''${c}.target") (lib.lists.remove "org.gnome.Shell" sessionCfg.requiredComponents);
+              wants = lib.map (c: "''${c}.target") (lib.lists.remove "org.gnome.Shell" sessionCfg.requiredComponents);
             };
           };
 

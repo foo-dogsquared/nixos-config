@@ -110,8 +110,8 @@ in {
       config.extraArgs = let inherit (config) policies;
       in lib.optionals (policies.level != null)
       [ "--${policies.level}=${name}" ]
-      ++ builtins.map (rule: "--call=${name}=${rule}") policies.call
-      ++ builtins.map (rule: "--broadcast=${name}=${rule}") policies.broadcast;
+      ++ lib.map (rule: "--call=${name}=${rule}") policies.call
+      ++ lib.map (rule: "--broadcast=${name}=${rule}") policies.broadcast;
     };
 
     bubblewrapModule = { config, lib, pkgs, name, ... }:

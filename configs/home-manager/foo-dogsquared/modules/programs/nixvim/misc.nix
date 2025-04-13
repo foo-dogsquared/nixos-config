@@ -2,7 +2,7 @@
 
 let userConfig = hmConfig.users.foo-dogsquared;
 in {
-  extraPlugins = builtins.map (path:
+  extraPlugins = lib.map (path:
     pkgs.runCommand "vim-plugin-bare" { } ''
       mkdir -p "$out"
       cp -r ${path}/* "$out"

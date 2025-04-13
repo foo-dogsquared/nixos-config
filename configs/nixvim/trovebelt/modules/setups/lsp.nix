@@ -65,7 +65,7 @@ in {
 
         mkEnableServerConfig = server:
           lib.nameValuePair server { enable = true; };
-      in lib.listToAttrs (builtins.map mkEnableServerConfig servers);
+      in lib.listToAttrs (lib.map mkEnableServerConfig servers);
     }
 
     {

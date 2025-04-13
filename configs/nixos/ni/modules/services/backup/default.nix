@@ -16,7 +16,7 @@ let
         mode = "repokey-blake2";
       };
       extraCreateArgs = lib.concatStringsSep " "
-        (builtins.map (patternFile: "--patterns-from ${patternFile}") patterns);
+        (lib.map (patternFile: "--patterns-from ${patternFile}") patterns);
       extraInitArgs = "--make-parent-dirs";
 
       # We're emptying them since we're specifying them all through the patterns file.

@@ -235,13 +235,13 @@ in {
             (lib.mkIf (submoduleCfg.sharedNixPaths != [ ]) {
               wraparound.bubblewrap.extraArgs =
                 let closurePaths = getClosurePaths submoduleCfg.sharedNixPaths;
-                in builtins.map (p: "--ro-bind ${p} ${p}") closurePaths;
+                in lib.map (p: "--ro-bind ${p} ${p}") closurePaths;
             })
 
             (lib.mkIf submoduleCfg.dbus.enable {
               wraparound.bubblewrap.dbus.filter.bwrapArgs =
                 let closurePaths = getClosurePaths submoduleCfg.sharedNixPaths;
-                in builtins.map (p: "--ro-bind ${p} ${p}") closurePaths;
+                in lib.map (p: "--ro-bind ${p} ${p}") closurePaths;
             })
           ]);
       };

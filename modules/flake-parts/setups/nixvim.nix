@@ -254,7 +254,7 @@ in {
                     modules = cfg.sharedModules ++ cfg.standaloneConfigModules
                       ++ metadata.modules ++ [{ package = neovimPackage; }];
                   });
-                nixvimConfigs = builtins.map mkNixvimConfig' metadata.components;
+                nixvimConfigs = lib.map mkNixvimConfig' metadata.components;
               in lib.listToAttrs nixvimConfigs;
           in lib.concatMapAttrs generateNixvimConfigs validConfigs;
         in {

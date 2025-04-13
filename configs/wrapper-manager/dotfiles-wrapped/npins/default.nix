@@ -63,7 +63,7 @@ let
       sha256 = hash;
     };
 in if version == 3 then
-  builtins.mapAttrs (_: mkSource) data.pins
+  lib.mapAttrs (_: mkSource) data.pins
 else
   throw "Unsupported format version ${
     toString version

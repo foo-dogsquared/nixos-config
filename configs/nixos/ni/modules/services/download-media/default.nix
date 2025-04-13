@@ -92,13 +92,13 @@ in {
             inherit name;
             inherit (value) subscriptions extraArgs;
           }) db);
-        jobsList = builtins.map (category:
+        jobsList = lib.map (category:
           let jobExtraArgs = lib.attrByPath [ "data" "extraArgs" ] [ ] category;
           in {
             name = category.data.name;
             value = {
               extraArgs = extraArgs ++ jobExtraArgs;
-              urls = builtins.map (subscription: subscription.url)
+              urls = lib.map (subscription: subscription.url)
                 category.data.subscriptions;
               startAt =
                 lib.elemAt days (lib.mod category.index (lib.length days));

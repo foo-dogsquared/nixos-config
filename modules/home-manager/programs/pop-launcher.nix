@@ -7,7 +7,7 @@ let
   # `$out/share/pop-launcher`.
   pluginsDir = pkgs.symlinkJoin {
     name = "pop-launcher-plugins-system";
-    paths = builtins.map (p: "${p}/share/pop-launcher") cfg.plugins;
+    paths = lib.map (p: "${p}/share/pop-launcher") cfg.plugins;
   };
 in {
   options.programs.pop-launcher = {

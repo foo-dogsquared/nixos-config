@@ -70,7 +70,7 @@ in {
       default = [ config.fullName ];
       defaultText = "[ <session>.fullName ]";
       apply = names:
-        builtins.map (name:
+        lib.map (name:
           if (lib.elem name validDesktopNames) || (lib.hasPrefix "X-" name) then
             name
           else

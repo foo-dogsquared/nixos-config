@@ -103,7 +103,7 @@ in {
         };
         applySystemdAttr = secretPaths:
           lib.listToAttrs
-          (builtins.map (path: lib.nameValuePair path systemdNetworkFileAttrs))
+          (lib.map (path: lib.nameValuePair path systemdNetworkFileAttrs))
           secretPaths;
       in applySystemdAttr [
         "wireguard/private-key"

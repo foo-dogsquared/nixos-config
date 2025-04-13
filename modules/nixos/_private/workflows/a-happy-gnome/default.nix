@@ -131,7 +131,7 @@ in {
         "app.drey.Dialect"
         "com.belmoussaoui.Authenticator"
       ];
-      apply = builtins.map (x: "${x}.desktop");
+      apply = lib.map (x: "${x}.desktop");
     };
 
     disableNotifications = lib.mkOption {
@@ -222,14 +222,14 @@ in {
             };
             "org/gnome/shell" = {
               enabled-extensions =
-                builtins.map (p: p.extensionUuid) shellExtensions';
+                lib.map (p: p.extensionUuid) shellExtensions';
             };
           }
 
           # Disable all of the messenger's notification (only the annoying
           # ones).
           (lib.pipe cfg.disableNotifications [
-            (builtins.map (app:
+            (lib.map (app:
               lib.nameValuePair
               "org/gnome/desktop/notifications/application/${app}" {
                 show-banners = false;

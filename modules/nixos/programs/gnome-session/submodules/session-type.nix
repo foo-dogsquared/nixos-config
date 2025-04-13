@@ -67,7 +67,7 @@ in {
       default = [ config.fullName ];
       defaultText = "[ <session>.fullName ]";
       apply = names:
-        builtins.map (name:
+        lib.map (name:
           if (lib.elem name validDesktopNames) || (lib.hasPrefix "X-" name) then
             name
           else
@@ -222,7 +222,7 @@ in {
     systemd.targetUnit = {
       overrideStrategy = lib.mkForce "asDropin";
       wants = lib.mkDefault
-        (builtins.map (c: "${c}.target") config.requiredComponents);
+        (lib.map (c: "${c}.target") config.requiredComponents);
     };
 
     settings."GNOME Session" = {

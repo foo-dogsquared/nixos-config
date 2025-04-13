@@ -283,7 +283,7 @@ in {
             cfg.configs;
 
           generatePureConfigs = hostname: metadata:
-            lib.listToAttrs (builtins.map (system:
+            lib.listToAttrs (lib.map (system:
               let
                 nixpkgs = inputs.${metadata.nixpkgs.branch};
 
@@ -344,7 +344,7 @@ in {
                   extraModules = cfg.sharedModules ++ metadata.modules;
                 });
 
-              images = builtins.map buildImage metadata.formats;
+              images = lib.map buildImage metadata.formats;
             in lib.listToAttrs images;
         in lib.concatMapAttrs generateImages validImages;
       };

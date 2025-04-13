@@ -22,10 +22,10 @@ let
       };
       extraCreateArgs = let
         args = lib.flatten [
-          (builtins.map
+          (lib.map
             (patternFile: "--patterns-from ${lib.escapeShellArg patternFile}")
             patternFiles)
-          (builtins.map (pattern: "--pattern ${lib.escapeShellArg pattern}")
+          (lib.map (pattern: "--pattern ${lib.escapeShellArg pattern}")
             patterns)
         ];
       in lib.concatStringsSep " " args;
