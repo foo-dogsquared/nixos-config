@@ -2,16 +2,16 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "fastn";
-  version = "0.4.99";
+  version = "0.4.100";
 
   src = fetchFromGitHub {
     owner = "fastn-stack";
     repo = finalAttrs.pname;
     rev = finalAttrs.version;
-    hash = "sha256-oomlLE0lha1b9N7CvQKsvlvcLZ8+f5aWjTWqzzgBDUk=";
+    hash = "sha256-4tON3VXFUs8gSRKmWk9eOwuP43DhMzchnve5ZpVpSbg=";
   };
 
-  cargoHash = "sha256-6WXhxHDqlPJLBgG2VkEQgMV58s6MiAAhQkLQOPBtqpo=";
+  cargoHash = "sha256-HfzWaE5/j5IGz+n3EsQh8iYhKWZV1d40UKKMy2yY6D4=";
   cargoBuildFeatures = [ "edition2024" ];
   useFetchCargoVendor = true;
 
