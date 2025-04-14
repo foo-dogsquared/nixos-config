@@ -47,42 +47,170 @@ in {
       };
     }
 
+    # For everything else, pls refer to the "A happy GNOME" workflow module to
+    # know what workspaces has been set.
+    #
+    # Also, this config block comes with the following assumptions:
+    #
+    # * ALL workspaces has been configured with an index.
+    # * The preset workspace option for the workflow module has been enabled
+    # and exclusively configured around that.
+    # * The default list of applications from the workflow module.
     (lib.mkIf (lib.elem "a-happy-gnome" attrs.nixosConfig.workflows.enable or []) {
       dconf.settings = {
         "org/gnome/shell/extensions/paperwm" = {
           winprops =
             let
+              inherit (attrs.nixosConfig.workflows.workflows.a-happy-gnome.paperwm) workspaces;
+
+              # A small convenience to make memorizing the index of a workspace
+              # not a thing.
+              wmIndexOf = name: workspaces.${name}.index.value;
+
+              # Another small convenience for making matches with Epiphany-made PWAs.
+              mkEpiphanyWebAppMatch = attr: attr // {
+                wm_class = "/org.gnome.Epiphany.WebApp_[A-Za-z0-9]+/";
+              };
+
               winpropRules =
-                lib.optionals userCfg.setups.development.enable [{
-                  wm_class = "org.wezfurlong.wezterm";
-                  preferredWidth = "100%";
-                  spaceIndex = 1;
-                }]
+                lib.optionals userCfg.setups.development.enable [
+                  {
+                    wm_class = "org.wezfurlong.wezterm";
+                    preferredWidth = "100%";
+                    spaceIndex = wmIndexOf "dev";
+                  }
+
+                  # All Epiphany-created web apps with DevDocs.
+                  (mkEpiphanyWebAppMatch {
+                    title = "/.*DevDocs.*/";
+                    spaceIndex = wmIndexOf "dev";
+                  })
+
+                  (mkEpiphanyWebAppMatch {
+                    title = "/.*GNOME DevDocs.*/";
+                    spaceIndex = wmIndexOf "dev";
+                  })
+                ]
+                ++ lib.optionals userCfg.setups.development.creative-coding.enable [
+                  {
+                    wm_class = "Processing";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "scide";
+                    title = "SuperCollider IDE";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "Pure Data";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "Sonic Pi";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+                ]
                 ++ lib.optionals userCfg.programs.doom-emacs.enable [{
                   wm_class = "Emacs";
-                  preferredWidth = "100%";
-                  spaceIndex = 2;
+                  spaceIndex = wmIndexOf "research";
                 }]
                 ++ lib.optionals userCfg.setups.research.enable [
                   {
                     wm_class = "Zotero";
-                    spaceIndex = 2;
+                    spaceIndex = wmIndexOf "research";
                   }
 
                   {
                     wm_class = "Kiwix";
-                    spaceIndex = 2;
+                    spaceIndex = wmIndexOf "research";
                   }
                 ]
-                ++ lib.optionals userCfg.programs.browsers.firefox.enable [{
-                  wm_class = "Firefox";
+                ++ lib.optionals config.suites.desktop.audio.enable [
+                  {
+                    wm_class = "Audacity";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "zrythm";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "Musescore4";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+                ]
+                ++ lib.optionals config.suites.desktop.audio.pipewire.enable [
+                  {
+                    wm_class = "org.pipewire.Helvum";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "Carla2";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+                ]
+                ++ lib.optionals config.suites.desktop.graphics.enable [
+                  {
+                    wm_class = "org.inkscape.Inkscape";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "GIMP";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "krita";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "Pureref";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  {
+                    wm_class = "io.github.lainsce.Emulsion";
+                    spaceIndex = wmIndexOf "creative";
+                  }
+
+                  (mkEpiphanyWebAppMatch {
+                    title = "Penpot";
+                    spaceIndex = wmIndexOf "creative";
+                  })
+                ]
+                ++ lib.optionals userCfg.programs.email.thunderbird.enable [{
+                  wm_class = "thunderbird";
                   preferredWidth = "100%";
-                  spaceIndex = 0;
+                  spaceIndex = wmIndexOf "work";
+                }]
+                ++ lib.optionals userCfg.programs.vs-code.enable [{
+                  wm_class = "Code";
+                  preferredWidth = "100%";
+                  spaceIndex = wmIndexOf "dev";
+                }]
+                ++ lib.optionals userCfg.programs.browsers.firefox.enable [{
+                  wm_class = "firefox";
+                  spaceIndex = wmIndexOf "media";
+                }]
+                ++ lib.optionals userCfg.programs.browsers.brave.enable [{
+                  wm_class = "Brave";
+                  spaceIndex = wmIndexOf "media";
+                }]
+                ++ lib.optionals userCfg.programs.browsers.google-chrome.enable [{
+                  wm_class = "Google-chrome";
+                  spaceIndex = wmIndexOf "media";
                 }]
                 ++ lib.optionals userCfg.setups.music.spotify.enable [{
                   wm_class = "Spotify";
-                  preferredWidth = "100%";
-                  spaceIndex = 0;
+                  spaceIndex = wmIndexOf "media";
                 }];
             in
             lib.map lib.strings.toJSON winpropRules;
