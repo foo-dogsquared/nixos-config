@@ -31,6 +31,18 @@ let
     kando-integration
     paperwm
   ]);
+
+  workspaceSubmodule = { name, ... }: {
+    freeformType = with lib.types; attrsOf anything;
+    options = {
+      name = lib.mkOption {
+        type = lib.types.str;
+        default = name;
+        description = "The formal name of the workspace.";
+        example = "Software development";
+      };
+    };
+  };
 in {
   options.workflows.enable =
     lib.mkOption { type = with lib.types; listOf (enum [ workflowName ]); };
@@ -152,36 +164,65 @@ in {
       ];
     };
 
-    winprops = lib.mkOption {
-      type = let
-        inherit (lib.types) listOf;
-        settingsFormat = pkgs.formats.json { };
-      in with lib.types; listOf (settingsFormat.type);
-      description = ''
-        A list of default winprops settings for PaperWM.
-      '';
-      default = [ ];
-      example = lib.literalExpression ''
-        [
+    paperwm = {
+      workspaces = lib.mkOption {
+        type = with lib.types; attrsOf (submodule workspaceSubmodule);
+        default = { };
+        description = ''
+          A set of workspaces and their properties for PaperWM.
+        '';
+        example = lib.literalExpression ''
           {
-            wm_class = "Firefox";
-            preferredWidth = "100%";
-            spaceIndex = 0;
-          }
+            media = {
+              name = "Media";
+              index = lib.gvariant.mkInt32 0;
+              color = "rgb(98,160,234)";
+            };
 
-          {
-            wm_class = "org.wezfurlong.wezterm";
-            preferredWidth = "100%";
-            spaceIndex = 1;
+            dev = {
+              name = "Software dev't";
+              index = lib.gvariant.mkInt32 1;
+              color = "#99c1f1";
+            };
           }
+        '';
+      };
 
-          {
-            wm_class = "Spotify";
-            title = "Spotify Premium";
-            spaceIndex = 0;
-          }
-        ]
-      '';
+      enablePresetWorkspaces = lib.mkEnableOption "preset workspace options for PaperWM" // {
+        default = true;
+      };
+
+      winprops = lib.mkOption {
+        type = let
+          inherit (lib.types) listOf;
+          settingsFormat = pkgs.formats.json { };
+        in with lib.types; listOf (settingsFormat.type);
+        description = ''
+          A list of default winprops settings for PaperWM.
+        '';
+        default = [ ];
+        example = lib.literalExpression ''
+          [
+            {
+              wm_class = "Firefox";
+              preferredWidth = "100%";
+              spaceIndex = 0;
+            }
+
+            {
+              wm_class = "org.wezfurlong.wezterm";
+              preferredWidth = "100%";
+              spaceIndex = 1;
+            }
+
+            {
+              wm_class = "Spotify";
+              title = "Spotify Premium";
+              spaceIndex = 0;
+            }
+          ]
+        '';
+      };
     };
   };
 
@@ -191,6 +232,39 @@ in {
       enable = true;
       desktopManager.gnome.enable = true;
     };
+
+    workflows.workflows.a-happy-gnome.paperwm.workspaces =
+      lib.mkIf cfg.paperwm.enablePresetWorkspaces {
+        media = {
+          name = "Media";
+          index = lib.gvariant.mkInt32 0;
+          color = "#99c1f1"; # GNOME Blue 1
+        };
+
+        research = {
+          name = "Research";
+          index = lib.gvariant.mkInt32 1;
+          color = "#613583"; # GNOME Purple 5
+        };
+
+        creative = {
+          name = "Creative work";
+          index = lib.gvariant.mkInt32 2;
+          color = "#f8e45c"; # GNOME Yellow 2
+        };
+
+        dev = {
+          name = "Software dev't";
+          index = lib.gvariant.mkInt32 3;
+          color = "#1c71d8"; # GNOME Blue 4
+        };
+
+        work = {
+          name = "Work";
+          index = lib.gvariant.mkInt32 4;
+          color = "#ff7800"; # GNOME Orange 3
+        };
+      };
 
     # All GNOME-related additional options.
     services.gnome = {
@@ -238,10 +312,22 @@ in {
             lib.listToAttrs
           ])
 
-          (lib.mkIf (cfg.winprops != [ ]) {
+          (lib.mkIf (cfg.paperwm.winprops != [ ]) {
             "org/gnome/shell/extensions/paperwm".winprops =
               lib.map lib.strings.toJSON cfg.winprops;
           })
+
+          (lib.mkIf (cfg.paperwm.workspaces != { }) (
+            let
+              mkWorkspaceConfig = name: value:
+                lib.nameValuePair "org/gnome/shell/extensions/paperwm/workspaces/${name}" value;
+            in
+            {
+              "org/gnome/shell/extensions/paperwm/workspaces".list =
+                lib.attrNames cfg.paperwm.workspaces;
+            }
+            // lib.mapAttrs' mkWorkspaceConfig cfg.paperwm.workspaces
+          ))
         ];
       };
     };
