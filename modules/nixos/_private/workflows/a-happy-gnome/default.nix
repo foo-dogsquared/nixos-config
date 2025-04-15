@@ -192,6 +192,8 @@ in {
         default = true;
       };
 
+      enableStaticWorkspace = lib.mkEnableOption "static workspaces configuration for PaperWM";
+
       winprops = lib.mkOption {
         type = let
           inherit (lib.types) listOf;
@@ -321,13 +323,24 @@ in {
             let
               mkWorkspaceConfig = name: value:
                 lib.nameValuePair "org/gnome/shell/extensions/paperwm/workspaces/${name}" value;
+
+              workspaces = lib.attrNames cfg.paperwm.workspaces;
             in
             {
-              "org/gnome/shell/extensions/paperwm/workspaces".list =
-                lib.attrNames cfg.paperwm.workspaces;
+              "org/gnome/shell/extensions/paperwm/workspaces".list = workspaces;
             }
             // lib.mapAttrs' mkWorkspaceConfig cfg.paperwm.workspaces
           ))
+
+          (lib.mkIf cfg.paperwm.enableStaticWorkspace {
+            "org/gnome/mutter/dynamic-workspaces" = false;
+
+            "org/gnome/desktop/wm/preferences/num-workspaces" =
+              let
+                workspaces = lib.attrNames cfg.paperwm.workspaces;
+              in
+              lib.gvariant.mkInt32 (lib.length workspaces);
+          })
         ];
       };
     };
