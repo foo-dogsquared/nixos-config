@@ -28,13 +28,13 @@ in {
 
   options.home-manager = {
     branch = lib.mkOption {
-      type = lib.types.nonEmptyStr;
+      type = with lib.types; nullOr nonEmptyStr;
       description = ''
         The name of the home-manager branch to be used. Take note this should
         be set with care as home-manager typically recommends to be used with
         the apprioriate nixpkgs branch.
       '';
-      default = "home-manager";
+      default = null;
       example = "home-manager-stable";
     };
 

@@ -121,8 +121,8 @@ let
       };
 
       branch = lib.mkOption {
-        type = lib.types.nonEmptyStr;
-        default = "nixvim";
+        type = with lib.types; nullOr nonEmptyStr;
+        default = null;
         example = "nixvim-stable";
         description = ''
           The branch of NixVim to be used for the module.
@@ -145,7 +145,7 @@ let
       };
     };
 
-    config = lib.mkIf (config.nixvim.instance != null) {
+    config = lib.mkIf (config.nixvim.branch != null && config.nixvim.instance != null) {
       modules = [
         ({ lib, ... }: {
           programs.nixvim = { ... }: {
@@ -205,7 +205,7 @@ in {
       attrsOf (submodule [
         nixvimIntegrationModule
         ({ config, lib, ... }: {
-          config.modules = lib.optionals (config.nixvim.instance != null)
+          config.modules = lib.optionals (config.nixvim.branch != null)
             [ inputs.${config.nixvim.branch}.nixosModules.nixvim ];
         })
       ]);
@@ -216,7 +216,7 @@ in {
       attrsOf (submodule [
         nixvimIntegrationModule
         ({ config, lib, ... }: {
-          config.modules = lib.optionals (config.nixvim.instance != null)
+          config.modules = lib.optionals (config.nixvim.branch != null)
             [ inputs.${config.nixvim.branch}.homeManagerModules.nixvim ];
         })
       ]);

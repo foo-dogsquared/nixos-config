@@ -199,6 +199,7 @@ in {
             inherit (config.home-manager) nixpkgsInstance;
             setupConfig = config;
 
+            hasHMBranch = config.home-manager.branch != null;
             hasHomeManagerUsers = config.home-manager.users != { };
             isNixpkgs = state: hasHomeManagerUsers && nixpkgsInstance == state;
             homeManagerUserType = { name, config, lib, ... }: {
@@ -269,12 +270,14 @@ in {
             # users.
             config = {
               modules = [
-                # For declarative NixOS systems, importing home-manager module is
-                # mandatory.
-                inputs.${config.home-manager.branch}.nixosModules.home-manager
+                (lib.mkIf hasHMBranch ({ lib, ... }: {
+                  imports = [
+                    # For declarative NixOS systems, importing home-manager module is
+                    # mandatory.
+                    inputs.${config.home-manager.branch}.nixosModules.home-manager
+                  ];
 
-                # Set the home-manager-related settings.
-                ({ lib, ... }: {
+                  # Set the home-manager-related settings.
                   home-manager.sharedModules =
                     partsConfig.setups.home-manager.sharedModules;
 
@@ -288,63 +291,64 @@ in {
                   # to consider user-specific specialArgs which is not set.
                   home-manager.extraSpecialArgs =
                     partsConfig.setups.home-manager.sharedSpecialArgs;
-                })
+                }))
 
-                (lib.mkIf hasHomeManagerUsers ({ lib, pkgs, ... }: {
-                  config = lib.mkMerge [
-                    {
-                      users.users =
-                        lib.mapAttrs (name: hmUser: hmUser.userConfig)
-                        setupConfig.home-manager.users;
-
-                      home-manager.users = lib.mapAttrs (name: hmUser: {
-                        imports =
-                          partsConfig.setups.home-manager.configs.${name}.modules
-                          ++ hmUser.additionalModules;
-                      }) setupConfig.home-manager.users;
-                    }
-
-                    (lib.mkIf (isNixpkgs "global") {
-                      home-manager.useGlobalPkgs = lib.mkForce true;
-
-                      # Disable all options that are going to be blocked once
-                      # `home-manager.useGlobalPkgs` is used.
-                      home-manager.users = lib.mapAttrs (name: _: {
-                        nixpkgs.overlays = lib.mkForce null;
-                        nixpkgs.config = lib.mkForce null;
-                      }) setupConfig.home-manager.users;
-
-                      # Then apply all of the user overlays into the nixpkgs instance
-                      # of the NixOS system.
-                      nixpkgs.overlays = let
-                        hmUsersOverlays = lib.mapAttrsToList (name: _:
-                          partsConfig.setups.home-manager.configs.${name}.nixpkgs.overlays)
+                (lib.mkIf (hasHMBranch && hasHomeManagerUsers)
+                  ({ lib, pkgs, ... }: {
+                    config = lib.mkMerge [
+                      {
+                        users.users =
+                          lib.mapAttrs (name: hmUser: hmUser.userConfig)
                           setupConfig.home-manager.users;
 
-                        overlays = lib.lists.flatten hmUsersOverlays;
-                        # Most of the overlays are going to be imported from a
-                        # variable anyways. This should massively reduce the step
-                        # needed for nixpkgs to do its thing.
-                        #
-                        # Though, it becomes unpredictable due to the way how the
-                        # overlay list is constructed. However, this is much more
-                        # preferable than letting a massive list with duplicated
-                        # overlays from different home-manager users to be applied.
-                        #
-                        # Anyways, all I'm saying is that this is a massive hack
-                        # because it isn't correct.
-                      in lib.lists.unique overlays;
-                    })
+                        home-manager.users = lib.mapAttrs (name: hmUser: {
+                          imports =
+                            partsConfig.setups.home-manager.configs.${name}.modules
+                            ++ hmUser.additionalModules;
+                        }) setupConfig.home-manager.users;
+                      }
 
-                    (lib.mkIf (isNixpkgs "separate") {
-                      home-manager.useGlobalPkgs = lib.mkForce false;
-                      home-manager.users = lib.mapAttrs (name: _: {
-                        nixpkgs.overlays =
-                          partsConfig.setups.home-manager.configs.${name}.nixpkgs.overlays;
-                      }) setupConfig.home-manager.users;
-                    })
-                  ];
-                }))
+                      (lib.mkIf (isNixpkgs "global") {
+                        home-manager.useGlobalPkgs = lib.mkForce true;
+
+                        # Disable all options that are going to be blocked once
+                        # `home-manager.useGlobalPkgs` is used.
+                        home-manager.users = lib.mapAttrs (name: _: {
+                          nixpkgs.overlays = lib.mkForce null;
+                          nixpkgs.config = lib.mkForce null;
+                        }) setupConfig.home-manager.users;
+
+                        # Then apply all of the user overlays into the nixpkgs instance
+                        # of the NixOS system.
+                        nixpkgs.overlays = let
+                          hmUsersOverlays = lib.mapAttrsToList (name: _:
+                            partsConfig.setups.home-manager.configs.${name}.nixpkgs.overlays)
+                            setupConfig.home-manager.users;
+
+                          overlays = lib.lists.flatten hmUsersOverlays;
+                          # Most of the overlays are going to be imported from a
+                          # variable anyways. This should massively reduce the step
+                          # needed for nixpkgs to do its thing.
+                          #
+                          # Though, it becomes unpredictable due to the way how the
+                          # overlay list is constructed. However, this is much more
+                          # preferable than letting a massive list with duplicated
+                          # overlays from different home-manager users to be applied.
+                          #
+                          # Anyways, all I'm saying is that this is a massive hack
+                          # because it isn't correct.
+                        in lib.lists.unique overlays;
+                      })
+
+                      (lib.mkIf (isNixpkgs "separate") {
+                        home-manager.useGlobalPkgs = lib.mkForce false;
+                        home-manager.users = lib.mapAttrs (name: _: {
+                          nixpkgs.overlays =
+                            partsConfig.setups.home-manager.configs.${name}.nixpkgs.overlays;
+                        }) setupConfig.home-manager.users;
+                      })
+                    ];
+                  }))
               ];
             };
           })

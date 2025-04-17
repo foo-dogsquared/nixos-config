@@ -19,7 +19,7 @@ let
       };
 
       branch = lib.mkOption {
-        type = lib.types.str;
+        type = with lib.types; nullOr nonEmptyStr;
         default = "wrapper-manager-fds";
         example = "wrapper-manager-fds-stable";
         description = ''
@@ -155,18 +155,17 @@ in {
       attrsOf (submodule [
         wrapperManagerIntegrationModule
         ({ config, lib, ... }: {
-          config = lib.mkIf (config.wrapper-manager.packages != { }) {
-            modules =
-              [
+          config = lib.mkMerge [
+            (lib.mkIf (config.wrapper-manager.branch != null) {
+              modules = [
                 inputs.${config.wrapper-manager.branch}.homeModules.default
 
-                {
-                  # Welp, it's not complete since each package will not its
-                  # package-specific specialArgs.
-                  wrapper-manager.extraSpecialArgs = cfg.sharedSpecialArgs;
-                }
+                # Welp, it's not complete since each package will not its
+                # package-specific specialArgs.
+                { wrapper-manager.extraSpecialArgs = cfg.sharedSpecialArgs; }
               ];
-          };
+            })
+          ];
         })
       ]);
   };
