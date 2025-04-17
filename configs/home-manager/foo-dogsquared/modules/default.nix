@@ -10,6 +10,7 @@
     ./programs/git.nix
     ./programs/jujutsu.nix
     ./programs/hledger.nix
+    ./programs/kando.nix
     ./programs/keys.nix
     ./programs/nixvim
     ./programs/nushell.nix

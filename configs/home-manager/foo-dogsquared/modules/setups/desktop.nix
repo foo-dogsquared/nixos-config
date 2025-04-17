@@ -20,6 +20,8 @@ in {
       librecad
     ];
 
+    users.foo-dogsquared.programs.kando.enable = true;
+
     # Install all of the desktop stuff.
     suites.desktop = {
       enable = true;
