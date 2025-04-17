@@ -2,6 +2,7 @@
 
 let inherit (pkgs) callPackage;
 in {
+  creatives = callPackage ./creatives.nix { };
   rustBackend = callPackage ./rust-backend.nix { };
   jsBackend = callPackage ./js-backend.nix { };
   ruby_3_2 = callPackage ./ruby-on-rails.nix { ruby = pkgs.ruby_3_2; };
