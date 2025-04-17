@@ -50,6 +50,7 @@ in import nmt {
   # TODO: Fix nmt to accept specialArgs or something.
   tests = builtins.foldl' (a: b: a // (import b)) { } ([
     #./programs/borgmatic
+    ./programs/kando
     ./programs/diceware
     ./programs/sesh
     ./programs/pipewire
