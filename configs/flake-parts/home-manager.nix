@@ -39,7 +39,6 @@
           inputs.nur.modules.homeManager.default
           inputs.sops-nix.homeManagerModules.sops
           inputs.wrapper-manager-fds.homeModules.wrapper-manager
-          inputs.nixvim.homeManagerModules.default
         ];
         deploy = {
           autoRollback = true;

@@ -16,15 +16,10 @@ let
     };
 in {
   options.users.foo-dogsquared.programs.nixvim.enable =
-    lib.mkEnableOption "NixVim setup";
+    lib.mkEnableOption "editors made with NixVim";
 
   config = lib.mkIf cfg.enable {
     # Basically, we're creating Neovim flavors with NixVim so no need for it.
-    #
-    # Also another reason we're forcibly disabling that it is heavily assumed
-    # that it is using the Neovim configuration found from the dotfiles repo.
-    programs.nixvim.enable = lib.mkForce false;
-
     wrapper-manager.packages.neovim-flavors = {
       wrappers.nvim-fiesta.arg0 = let
         nvimPkg = createNixvimFlavor {
