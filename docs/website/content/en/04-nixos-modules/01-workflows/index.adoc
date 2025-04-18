@@ -53,4 +53,4 @@ Whippersnappers with your "riced"-up systems...
 ====
 
 
-include::../../../../../modules/nixos/_private/workflows/README.adoc#design-constraints[]
+include:../../../../../../modules/nixos/_private/workflows/README.adoc#design-constraints[]

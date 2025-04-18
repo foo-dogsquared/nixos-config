@@ -23,7 +23,7 @@ Here's an example of a NixOS user with a home-manager config.
 
 [source, nix]
 ----
-include::../../../../users/nixos/plover/default.nix[]
+include::../../../../../configs/nixos/_users/plover/default.nix[]
 ----
 
 On the host configuration, you can then import it like so.
