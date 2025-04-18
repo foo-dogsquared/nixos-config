@@ -22,5 +22,5 @@ jobs:
           for image_archive in $(< build_paths); do
             CONTAINER_TAG=$(echo $image_archive | awk 'match($0, /docker-image-(\S+).tar.gz/, arr) {print arr[1]}')
             skopeo copy \
-                "docker-archive:${image_archive}" "docker://ghcr.io/${{ github.repository }}"
+            "docker-archive:${image_archive}" "docker://ghcr.io/${{ github.repository }}:$CONTAINER_TAG"
           done
