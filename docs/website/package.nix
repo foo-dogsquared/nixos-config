@@ -16,7 +16,7 @@ in buildHugoSite {
 
   src = lib.cleanSource ./.;
 
-  vendorHash = "sha256-HWvwr2n6M84nAZFGESBRCtC0I6MuxnCRljRfhkpZlSo=";
+  vendorHash = "sha256-B/RTL61HcqTF78UmKgc5Jko4BKVT98LfuISc85v+Scg=";
 
   nativeBuildInputs = [ asciidoctorWrapper ];
   buildInputs = [ gems ];
