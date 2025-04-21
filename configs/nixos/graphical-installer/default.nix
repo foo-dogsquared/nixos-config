@@ -21,7 +21,7 @@
         netbootxyz.enable = true;
       };
       boot.loader.efi.canTouchEfiVariables = true;
-      boot.kernelPackages = pkgs.linuxPackages_6_6;
+      boot.kernelPackages = pkgs.linuxPackages_6_12;
 
       # We'll make NetworkManager manage all of them networks.
       networking.wireless.enable = false;
