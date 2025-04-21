@@ -4,10 +4,10 @@
 { lib, ... }:
 
 let
-  homeManagerModules = ../../modules/home-manager;
-  nixosModules = ../../modules/nixos;
-  nixvimModules = ../../modules/nixvim;
-  wrapperManagerModules = ../../modules/wrapper-manager;
+  homeManagerModules = ../../home-manager;
+  nixosModules = ../../nixos;
+  nixvimModules = ../../nixvim;
+  wrapperManagerModules = ../../wrapper-manager;
 in {
   setups.home-manager = {
     sharedSpecialArgs = {
@@ -15,19 +15,19 @@ in {
     };
     sharedModules = [
       homeManagerModules
-      ../../modules/home-manager/_private
+      ../../home-manager/_private
     ];
   };
 
   setups.nixos = {
     sharedSpecialArgs = {
       foodogsquaredUtils =
-        import ../../lib/utils/nixos.nix { inherit lib; };
+        import ../../../lib/utils/nixos.nix { inherit lib; };
         foodogsquaredModulesPath = builtins.toString nixosModules;
     };
     sharedModules = [
       nixosModules
-      ../../modules/nixos/_private
+      ../../nixos/_private
     ];
   };
 
@@ -37,7 +37,7 @@ in {
     };
     sharedModules = [
       nixvimModules
-      ../../modules/nixvim/_private
+      ../../nixvim/_private
     ];
   };
 
@@ -47,7 +47,7 @@ in {
     };
     sharedModules = [
       wrapperManagerModules
-      ../../modules/wrapper-manager/_private
+      ../../wrapper-manager/_private
     ];
   };
 }

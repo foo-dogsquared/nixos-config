@@ -6,7 +6,7 @@
 
     # Here's where the shared setup configurations for this entire cluster came
     # from.
-    ./setups.nix
+    ../../modules/flake-parts/profiles/fds-template.nix
 
     # Environment configurations.
     ./disko.nix
