@@ -97,6 +97,13 @@ let
           }
         ];
       };
+
+      standaloneConfigModules = options.setups.nixvim.standaloneConfigModules // {
+        description = ''
+          A list of config-specific modules to be included when deployed as a
+          standalone NixVim package.
+        '';
+      };
     };
 
     config = {
@@ -252,7 +259,7 @@ in {
                     inherit system pkgs;
                     inherit (component) nixvimBranch;
                     modules = cfg.sharedModules ++ cfg.standaloneConfigModules
-                      ++ metadata.modules ++ [{ package = neovimPackage; }];
+                      ++ metadata.modules ++ metadata.standaloneConfigModules ++ [{ package = neovimPackage; }];
                   });
                 nixvimConfigs = lib.map mkNixvimConfig' metadata.components;
               in lib.listToAttrs nixvimConfigs;

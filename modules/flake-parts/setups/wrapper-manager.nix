@@ -62,6 +62,15 @@ let
   };
 
   wrapperManagerConfigModule = { name, config, lib, ... }: {
+    options = {
+      standaloneConfigModules = options.setups.wrapper-manager.standaloneConfigModules // {
+        description = ''
+          A list of config-specific modules to be included when the
+          wrapper-manager package is deployed as a standalone package.
+        '';
+      };
+    };
+
     config = {
       nixpkgs.config = cfg.sharedNixpkgsConfig;
       specialArgs = cfg.sharedSpecialArgs;
@@ -119,7 +128,7 @@ in {
       '';
     };
 
-    standaloneModules = lib.mkOption {
+    standaloneConfigModules = lib.mkOption {
       type = with lib.types; listOf deferredModule;
       default = [ ];
       description = ''
@@ -196,8 +205,8 @@ in {
               inherit pkgs;
               inherit (metadata) specialArgs;
               wrapperManagerBranch = metadata.wrapper-manager.branch;
-              modules = cfg.sharedModules ++ cfg.standaloneModules
-                ++ metadata.modules;
+              modules = cfg.sharedModules ++ cfg.standaloneConfigModules
+                ++ metadata.modules ++ metadata.standaloneConfigModules;
             }) validWrapperManagerConfigs;
         };
     })

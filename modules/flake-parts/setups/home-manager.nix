@@ -91,6 +91,13 @@ let
           node.
         '';
       };
+
+      standaloneConfigModules = options.setups.home-manager.standaloneConfigModules // {
+        description = ''
+          A list of config-specific modules to be used when deployed as a
+          standalone home-manager environment.
+        '';
+      };
     };
 
     config = {
@@ -381,7 +388,7 @@ in {
                 inherit pkgs system;
                 inherit (metadata) homeManagerBranch;
                 extraModules = cfg.sharedModules ++ cfg.standaloneConfigModules
-                  ++ metadata.modules;
+                  ++ metadata.modules ++ metadata.standaloneConfigModules;
               })) metadata.systems);
         in lib.mapAttrs generatePureConfigs cfg.configs;
       in {
