@@ -15,6 +15,7 @@
     ./services/wezterm-mux-server.nix
     ./services/vouch-proxy.nix
     ./services/yt-dlp.nix
+    ./xdg/autostart-entries.nix
     ./xdg/mime-desktop-specific.nix
     ./virtualisation/oci-containers
   ];
