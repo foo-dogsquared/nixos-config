@@ -52,8 +52,6 @@ in {
           audacity # EGADS!!!
           musescore # You won't find muses to score, only music: a common misconception.
           zrythm # The freer FL Studio (if you're sailing by the high seven seas).
-          supercollider-with-plugins # Not to be confused with the other Super Collider.
-          sonic-pi # The only pie you'll get from this is worms which I heard is addicting.
           ffmpeg-full # Ah yes, everyman's multimedia swiss army knife.
         ] ++ (let
           hasDesktopSuiteEnabled =
