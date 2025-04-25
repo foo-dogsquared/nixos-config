@@ -12,14 +12,6 @@ let
       # The application launcher for your one-handed keyboard handling (the
       # other is in the mouse, if you're thinking something else).
       kando
-      (makeDesktopItem {
-        name = "kando";
-        desktopName = "Kando";
-        destination = "/etc/xdg/autostart";
-        exec = "${lib.getExe kando} --gapplication-service";
-        icon = "kando";
-        genericName = "Pie Menu";
-      })
 
       # Valent...ines 'tis season to share... phone data or something.
       valent
@@ -164,6 +156,17 @@ in {
       ];
     };
 
+    kando = {
+      extraArgs = lib.mkOption {
+        type = with lib.types; listOf str;
+        default = [ ];
+        description = ''
+          A list of extra arguments to be added to Kando autostart service.
+        '';
+        example = [ "--settings" ];
+      };
+    };
+
     paperwm = {
       workspaces = lib.mkOption {
         type = with lib.types; attrsOf (submodule workspaceSubmodule);
@@ -233,6 +236,16 @@ in {
     services.xserver = {
       enable = true;
       desktopManager.gnome.enable = true;
+    };
+
+    xdg.autostart.entries = {
+      "${workflowName}-kando" = {
+        name = "kando";
+        desktopName = "Kando";
+        exec = "${lib.getExe pkgs.kando} --gapplication-service ${lib.concatStringsSep " " cfg.kando.extraArgs}";
+        icon = "kando";
+        genericName = "Pie Menu";
+      };
     };
 
     workflows.workflows.a-happy-gnome.paperwm.workspaces =
