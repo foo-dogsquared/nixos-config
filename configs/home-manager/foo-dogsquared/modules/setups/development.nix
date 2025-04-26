@@ -154,9 +154,11 @@ in {
         decker
         uxn
         supercollider-with-plugins
+        sonic-pi
         processing
         (puredata-with-plugins (with pkgs; [ zexy ]))
         tic-80-unstable
+        shader-slang
       ];
     })
   ]);
