@@ -19,9 +19,11 @@ let
     { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
     { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
     { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
-    { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
     { id = "dgjhfomjieaadpoljlnidmbgkdffpack"; } # Sourcegraph
     { id = "palihjnakafgffnompkdfgbgdbcagbko"; } # UpdateSWH
+  ] ++ lib.optionals config.services.activitywatch.enable [
+    { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
+  ] ++ lib.optionals (lib.elem "a-happy-gnome" attrs.nixosConfig.workflows.enable or []) [
     { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
   ];
 in {
@@ -95,7 +97,6 @@ in {
 
             extensions.packages = with pkgs.nur.repos.rycee.firefox-addons;
               [
-                aw-watcher-web
                 bitwarden
                 browserpass
                 facebook-container
@@ -112,7 +113,6 @@ in {
                 vimium
                 wayback-machine
               ] ++ (with pkgs.firefox-addons; [
-                get-rss-feed-url
                 google-container
                 microsoft-container
                 regretsreporter
@@ -123,7 +123,9 @@ in {
                 open-access-helper
                 rsshub-radar
               ]) ++ lib.optionals config.programs.mpv.enable
-              (with pkgs.nur.repos.rycee.firefox-addons; [ ff2mpv ]);
+              (with pkgs.nur.repos.rycee.firefox-addons; [ ff2mpv ])
+              ++ lib.optionals config.services.activitywatch.enable
+              (with pkgs.nur.repos.rycee.firefox-addons; [ aw-watcher-web ]);
 
             # Much of the settings are affected by the policies set in the
             # package. See more information about them in
