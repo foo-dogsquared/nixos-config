@@ -99,7 +99,29 @@ rec {
        => 0.36787944117144233
   */
   exp = x:
-    pow constants.e x;
+    let
+      inherit (constants) epsilon e ln2;
+
+      taylorExp = x: n: sum:
+        let
+          term = (pow x n) / (factorial n);
+          newSum = sum + term;
+        in
+        if term < epsilon then newSum
+        else taylorExp x (n + 1) newSum;
+    in
+    if x == 0 then 1
+    else if x == 1 then e
+    else if x < 0 then 1 / (exp (-x))
+    else
+      let
+        # Range reduction: x = k*ln2 + r
+        k = floor (x / ln2);
+        r = x - k * ln2;
+        # Calculate exp(r) using Taylor series
+        expR = taylorExp r 0 0;
+      in
+        expR * (pow 2 k);
 
   /* Given a number, find its square root. This method is implemented using
      Newton's method.

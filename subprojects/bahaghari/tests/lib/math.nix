@@ -340,7 +340,7 @@ lib.runTests {
 
   testMathExp = {
     expr = self.math.exp 1;
-    expected = 2.7182818284590452353602874713527;
+    expected = 2.718281828459045;
   };
 
   testMathExp2 = {
@@ -351,6 +351,30 @@ lib.runTests {
   testMathExp3 = {
     expr = round' (self.math.exp 2);
     expected = 7.3890560989;
+  };
+
+  testMathExp4 = let
+    round' = self.math.round' (-8);
+  in {
+    expr = round' (self.math.exp 8);
+    expected = round' 2980.95798704;
+  };
+
+  testMathExp5 = let
+    round' = self.math.round' (-8);
+  in {
+    expr = round' (self.math.exp 8.1);
+    expected = 3294.46807528;
+  };
+
+  testMathExp6 = {
+    expr = round' (self.math.exp (-9.5));
+    expected = round' 0.00007485182;
+  };
+
+  testMathExpZeroIsOne = {
+    expr = self.math.exp 0;
+    expected = 1;
   };
 
   testDegreesToRadians = {
