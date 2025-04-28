@@ -123,6 +123,67 @@ rec {
       in
         expR * (pow 2 k);
 
+  /**
+    Given a list of numbers, return the arithmetic mean.
+
+    # Arguments
+
+    list
+    : A list of numbers.
+
+    # Type
+
+    ```
+    arithmeticMean :: [ Number ] -> Number
+    ```
+
+    # Example
+
+    ```
+    arithmeticMean (lib.range 1 10)
+    => 5.5
+    ```
+  */
+  arithmeticMean = list:
+    summate list / (self.toFloat (lib.length list));
+
+  /**
+    Given a pair of numbers, return the arithmetic-geometric mean (typically
+    written as M(x, y)).
+
+    # Arguments
+
+    x, y
+    : The pair of values to be applied.
+
+    # Type
+
+    ```
+    agm :: Number -> Number -> Number
+    ```
+
+    # Example
+
+    ```
+    agm 24 6
+    => 13.4581714817256
+
+    agm 1 5
+    => 2.6040081905309407
+    ```
+  */
+  agm = x: y:
+    assert lib.assertMsg (x >= 0 && y >= 0)
+      "bahaghariLib.math.agm: both numbers should be positive";
+    let
+      x' = (x + y) / 2;
+      y' = sqrt (x * y);
+    in
+      if abs (x' - y') > constants.epsilon then
+        agm x' y'
+      else
+        x;
+
   /* Given a number, find its square root. This method is implemented using
      Newton's method.
 

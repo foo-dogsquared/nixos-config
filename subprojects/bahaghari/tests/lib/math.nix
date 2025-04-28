@@ -377,6 +377,25 @@ lib.runTests {
     expected = 1;
   };
 
+  testMathAGM = {
+    expr = round' (self.math.agm 24 6);
+    expected = round' 13.4581714817256;
+  };
+
+  testMathAGM2 = let
+    round' = self.math.round' (-9);
+  in {
+    expr = round' (self.math.agm 1 5);
+    expected = round' 2.6040081905309407;
+  };
+
+  testMathAGM3 = let
+    round' = self.math.round' (-4);
+  in {
+    expr = round' (self.math.agm 1123.0 576.756);
+    expected = round' 827.1835522818762;
+  };
+
   testDegreesToRadians = {
     expr = self.math.degreesToRadians 180;
     expected = self.math.constants.pi;
@@ -494,5 +513,15 @@ lib.runTests {
   testMathTangent5 = {
     expr = round' (self.math.tan (-152));
     expected = round' (-2.5994579438382797);
+  };
+
+  testMathArithmeticMean = {
+    expr = self.math.arithmeticMean (lib.range 1 10);
+    expected = 5.5;
+  };
+
+  testMathArithmeticMean2 = {
+    expr = self.math.arithmeticMean (lib.range 1 20);
+    expected = 10.5;
   };
 }
