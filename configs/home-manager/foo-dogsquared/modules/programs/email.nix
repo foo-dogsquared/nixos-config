@@ -29,13 +29,17 @@ in {
     enable = lib.mkEnableOption "foo-dogsquared's email setup";
     thunderbird.enable =
       lib.mkEnableOption "foo-dogsquared's Thunderbird configuration";
+    himalaya.enable =
+      lib.mkEnableOption "foo-dogsquared's email client on the command line";
+    aerc.enable =
+      lib.mkEnableOption "foo-dogsquared's TUI email client";
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       accounts.email.accounts = {
         # TODO: Enable offlineimap once maildir support is stable in Thunderbird.
-        personal = lib.mkMerge [
+        work = lib.mkMerge [
           (mkEmailAccount { name = "foodogsquared"; })
 
           {
@@ -57,10 +61,22 @@ in {
           }
         ];
 
+        personal = lib.mkMerge [
+          (mkEmailAccount { name = "__personal__"; })
+
+          {
+            realName = "Gabriel Arazas";
+            signature = {
+              delimiter = "--<----<---->---->--";
+              text = "HEYHEYComeOnOverAndHaveFunWithSomeCRAZYTAXI";
+            };
+          }
+        ];
+
         postmaster = mkEmailAccount { name = "postmaster"; };
         webmaster = mkEmailAccount { name = "webmaster"; };
 
-        old_personal = {
+        old_work = {
           address = "foo.dogsquared@gmail.com";
           realName = config.accounts.email.accounts.personal.realName;
           userName = "foo.dogsquared@gmail.com";
@@ -155,6 +171,67 @@ in {
         "thunderbird.sessionjson"
         "thunderbird.vacuum"
       ];
+    })
+
+    (lib.mkIf cfg.himalaya.enable {
+      accounts.email.accounts =
+        let
+          enabledEmails = [
+            "personal"
+            "work"
+            "old_work"
+          ];
+
+          mkEmailAccount = name: { himalaya.enable = true; };
+        in
+        lib.genAttrs enabledEmails mkEmailAccount;
+
+      programs.himalaya = {
+        enable = true;
+        settings = {
+          signature-delim = "-- \n";
+          downloads-dir = config.xdg.userDirs.download;
+        };
+      };
+    })
+
+    (lib.mkIf cfg.aerc.enable {
+      accounts.email.accounts =
+        let
+          enabledEmails = [
+            "personal"
+            "work"
+            "old_work"
+          ];
+
+          mkEmailAccount = name: { aerc.enable = true; };
+        in
+        lib.genAttrs enabledEmails mkEmailAccount;
+
+      programs.aerc = {
+        enable = true;
+        extraConfig = {
+          general = {
+            default-save-path = config.xdg.userDirs.download;
+            unsafe-accounts-conf = false;
+            enable-osc8 = userCfg.setups.development.enable;
+          };
+
+          viewer.pager = config.systemd.user.sessionVariables.PAGER;
+
+          ui = {
+            fuzzy-complete = true;
+            empty-subject = "[EMPTY SUBJECT]";
+            empty-message = "[EMPTY MESSAGE]";
+            mouse-enabled = true;
+          };
+
+          compose = {
+            empty-subject-warning = true;
+            focus-body = true;
+          };
+        };
+      };
     })
   ]);
 }
