@@ -88,8 +88,21 @@ in {
     }
 
     (lib.mkIf cfg.thunderbird.enable {
+      home.packages = lib.singleton pkgs.thunderbird-foodogsquared;
+
+      accounts.email.accounts =
+        let
+          enabledEmails = [
+            "personal"
+            "work"
+            "old_work"
+          ];
+          enableThunderbirdAccount = name: { thunderbird.enable = true; };
+        in
+        lib.genAttrs enabledEmails enableThunderbirdAccount;
+
       programs.thunderbird = {
-        enable = true;
+        # enable = true;
         package = pkgs.thunderbird-foodogsquared;
         profiles.personal = {
           isDefault = true;
@@ -102,6 +115,11 @@ in {
             "mail.identity.default.sig_on_reply" = true;
 
             "mail.server.default.canDelete" = true;
+          };
+
+          feedAccounts = {
+            "Project activities" = { };
+            "Blogs and articles" = { };
           };
         };
 
