@@ -123,14 +123,14 @@ in {
       xdg.autostart.entries =
         lib.singleton (foodogsquaredLib.xdg.getXdgDesktop pkgs.spotify "spotify");
 
-      sops.secrets."spotify_env" = foodogsquaredLib.sops-nix.getAsOneSecret ./secrets.bin;
+      sops.secrets."mopidy/spotify" = foodogsquaredLib.sops-nix.getAsOneSecret ./spotify.secrets.bin;
 
       state.ports.spotifyd.value =
         attrs.nixosConfig.services.spotifyd.value or 9009;
 
       services.mopidy = {
         extensionPackages = [ pkgs.mopidy-spotify ];
-        extraConfigFiles = lib.singleton config.sops.secrets."spotify_env".path;
+        extraConfigFiles = lib.singleton config.sops.secrets."mopidy/spotify".path;
       };
     })
 
@@ -157,11 +157,19 @@ in {
     (lib.mkIf cfg.mpd.enable {
       state.ports.mopidy.value = 6680;
 
+      sops.secrets."mopidy/listenbrainz" = foodogsquaredLib.sops-nix.getAsOneSecret ./mopidy-listenbrainz.secrets.bin;
+
       services.mopidy = {
         enable = true;
+
+        extraConfigFiles = [
+          config.sops.secrets."mopidy/listenbrainz".path
+        ];
+
         extensionPackages = with pkgs; [
           mopidy-funkwhale
           mopidy-internetarchive
+          mopidy-listenbrainz
           mopidy-iris
           mopidy-local
           mopidy-mpd
@@ -169,7 +177,12 @@ in {
           mopidy-youtube
         ];
 
-        settings = {
+        settings = let
+          # Typically used for conditional portions of the configuration. Any
+          # part that doesn't have the check typically means it's always used
+          # or assumed to be a part of the bundled extensions.
+          isInPackageList = pkg: lib.elem pkg config.services.mopidy.extensionPackages;
+        in {
           http = {
             hostname = "127.0.0.1";
             port = config.state.ports.mopidy.value;
@@ -185,7 +198,7 @@ in {
               "${attrs.nixosConfig.state.paths.archive}/Music|Archive";
           };
 
-          internetarchive = {
+          internetarchive = lib.mkIf (isInPackageList pkgs.mopidy-internetarchive) {
             enabled = true;
             browse_limit = 150;
             search_limit = 150;
@@ -198,7 +211,17 @@ in {
             ];
           };
 
-          m3u = {
+          listenbrainz = lib.mkIf (isInPackageList pkgs.mopidy-listenbrainz) {
+            enabled = true;
+            import_playlists = true;
+            search_schemes =
+              lib.optionals (isInPackageList pkgs.mopidy-local) [ "local:" ]
+              ++ lib.optionals (isInPackageList pkgs.mopidy-spotify) [ "spotify:" ]
+              ++ lib.optionals (isInPackageList pkgs.mopidy-funkwhale) [ "funkwhale:" ]
+              ++ lib.optionals (isInPackageList pkgs.mopidy-youtube) [ "youtube:" ];
+          };
+
+          m3u = lib.mkIf (isInPackageList pkgs.mopidy-local) {
             enabled = true;
             base_dir = musicDir;
             playlists_dir = playlistsDir;
