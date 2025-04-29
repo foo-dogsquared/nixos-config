@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ inputs, lib, ... }:
 
 {
   setups.wrapper-manager = {
@@ -20,5 +20,5 @@
     };
   };
 
-  flake.wrapperManagerModules.default = ../../modules/wrapper-manager;
+  flake.wrapperManagerModules.default = inputs.fds-core.wrapperManagerModules.default;
 }

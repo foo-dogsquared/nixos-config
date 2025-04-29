@@ -154,6 +154,6 @@ in {
 
   flake = {
     # Listing my public NixOS modules if anyone cares.
-    nixosModules.default = ../../modules/nixos;
+    nixosModules.default = inputs.fds-core.nixosModules.default;
   };
 }

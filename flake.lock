@@ -84,6 +84,17 @@
         "type": "github"
       }
     },
+    "fds-core": {
+      "locked": {
+        "path": "./nix",
+        "type": "path"
+      },
+      "original": {
+        "path": "./nix",
+        "type": "path"
+      },
+      "parent": []
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -996,6 +1007,7 @@
         "deploy": "deploy",
         "disko": "disko",
         "emacs-overlay": "emacs-overlay",
+        "fds-core": "fds-core",
         "flake-compat-fds": "flake-compat-fds",
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",

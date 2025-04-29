@@ -100,6 +100,6 @@
 
   flake = {
     # Extending home-manager with my custom modules, if anyone cares.
-    homeModules.default = ../../modules/home-manager;
+    homeModules.default = inputs.fds-core.homeModules.default;
   };
 }

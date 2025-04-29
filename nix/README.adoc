@@ -1,0 +1,7 @@
+= Core Nix entrypoint
+:toc:
+
+This contains the entrypoint for all of the components found in the project.
+It comes both in flake and non-flake entrypoints.
+Most of the components exported here shouldn't require anything from other Nix projects to Nix flake inputs.
+Examples of this includes modules and Nix objects that is meant to be imported in the environment.

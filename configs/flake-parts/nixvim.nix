@@ -26,5 +26,5 @@
     inputs.self.nixvimModules.bahaghari
   ];
 
-  flake = { nixvimModules.default = ../../modules/nixvim; };
+  flake = { nixvimModules.default = inputs.fds-core.nixvimModules.default; };
 }

@@ -15,6 +15,9 @@
   # branches at the following section, that's edging on the "too-much" scale
   # for my fragile internet bandwidth.
   inputs = {
+    # The core modules found in this project.
+    fds-core.url = "path:./nix";
+
     # I know NixOS can be stable but we're going cutting edge, baybee! While
     # `nixpkgs-unstable` branch could be faster delivering updates, it is
     # looser when it comes to stability for the entirety of this
@@ -112,6 +115,6 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" "aarch64-linux" ];
 
-      imports = [ ./modules/flake-parts ./configs/flake-parts ];
+      imports = [ inputs.fds-core.flakeModules.default  ./configs/flake-parts ];
     };
 }
