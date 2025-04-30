@@ -26,6 +26,10 @@ in {
           enable = lib.mkDefault true;
           instaweb.enable = true;
         };
+        email = {
+          aerc.enable = lib.mkDefault true;
+          himalaya.enable = lib.mkDefault true;
+        };
         jujutsu.enable = lib.mkDefault true;
         keys.gpg.enable = true;
         keys.ssh.enable = true;

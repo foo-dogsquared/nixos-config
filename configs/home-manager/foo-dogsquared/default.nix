@@ -18,8 +18,6 @@ in {
       browsers.misc.enable = true;
       doom-emacs.enable = true;
       nixvim.enable = true;
-      email.enable = true;
-      email.thunderbird.enable = true;
       vs-code.enable = true;
       hledger.enable = true;
 

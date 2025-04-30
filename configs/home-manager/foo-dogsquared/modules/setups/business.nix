@@ -8,6 +8,13 @@ in {
     lib.mkEnableOption "business setup";
 
   config = lib.mkIf cfg.enable {
+    users.foo-dogsquared.programs = {
+      email = {
+        enable = true;
+        thunderbird.enable = true;
+      };
+    };
+
     home.packages = with pkgs; [
       libreoffice zoom-us
     ];
