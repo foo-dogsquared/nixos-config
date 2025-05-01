@@ -86,11 +86,11 @@
     },
     "fds-core": {
       "locked": {
-        "path": "./nix",
+        "path": "./core",
         "type": "path"
       },
       "original": {
-        "path": "./nix",
+        "path": "./core",
         "type": "path"
       },
       "parent": []

@@ -16,7 +16,7 @@
   # for my fragile internet bandwidth.
   inputs = {
     # The core modules found in this project.
-    fds-core.url = "path:./nix";
+    fds-core.url = "path:./core";
 
     # I know NixOS can be stable but we're going cutting edge, baybee! While
     # `nixpkgs-unstable` branch could be faster delivering updates, it is
