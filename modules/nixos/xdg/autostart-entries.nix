@@ -5,6 +5,17 @@ let
 
   xdgDesktopEntrySubmodule = { name, ... }: {
     freeformType = with lib.types; attrsOf anything;
+
+    options = {
+      name = lib.mkOption {
+        type = lib.types.nonEmptyStr;
+        default = name;
+        description = ''
+          The name of autostart file to be generated.
+        '';
+        example = "hello";
+      };
+    };
   };
 in
 {
@@ -17,7 +28,6 @@ in
     example = lib.literalExpression ''
       {
         kando = {
-          name = "kando";
           desktopName = "Kando";
           exec = lib.getExe pkgs.kando;
           icon = "kando";
