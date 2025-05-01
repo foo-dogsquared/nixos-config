@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/nix-installer-action@v17
       - name: Prepare push to binary cache
         uses: cachix/cachix-action@v16
         if: ${{ github.ref == 'refs/heads/master' }}
