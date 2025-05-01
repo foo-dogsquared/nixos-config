@@ -15,5 +15,10 @@ in {
         inherit pkgs lib;
         self = final;
       };
+    } // lib.optionalAttrs (options ? wrapper-manager) {
+      wrapper-manager = import ../../../lib/env-specific/wrapper-manager.nix {
+        inherit pkgs lib;
+        self = final;
+      };
     });
 }
