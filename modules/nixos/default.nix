@@ -1,6 +1,7 @@
 {
   imports = [
     ./programs/blender.nix
+    ./programs/dwarf-fortress.nix
     ./programs/distrobox.nix
     ./programs/gnome-session
     ./programs/pop-launcher.nix
