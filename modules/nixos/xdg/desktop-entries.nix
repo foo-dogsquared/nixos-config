@@ -5,6 +5,16 @@ let
 
   xdgDesktopEntrySubmodule = { name, ... }: {
     freeformType = with lib.types; attrsOf anything;
+    options = {
+      name = lib.mkOption {
+        type = lib.types.nonEmptyStr;
+        default = name;
+        description = ''
+          Filename of the desktop entry.
+        '';
+        example = "hello";
+      };
+    };
   };
 in
 {
