@@ -6,10 +6,11 @@ let
     let endsWith = ext: lib.hasSuffix ext sopsFile;
     in
       if (endsWith ".env") then "dotenv"
-      else if (endsWith ".yaml") then "yaml"
+      else if (endsWith ".yaml" || endsWith ".yml") then "yaml"
       else if (endsWith ".json") then "json"
       else if (endsWith ".ini") then "ini"
       else if (endsWith ".bin") then "binary"
+      # The fallback format.
       else "yaml";
 in
 rec {
