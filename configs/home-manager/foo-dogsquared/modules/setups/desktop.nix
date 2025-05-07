@@ -1,5 +1,5 @@
 # Makes you infinitesimally productive.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   userCfg = config.users.foo-dogsquared;
@@ -20,7 +20,7 @@ in {
       librecad
     ];
 
-    users.foo-dogsquared.programs.kando.enable = true;
+    # users.foo-dogsquared.programs.kando.enable = true;
 
     # Install all of the desktop stuff.
     suites.desktop = {
@@ -99,5 +99,60 @@ in {
           }";
         text = "Telemetry server";
       };
+
+    wrapper-manager.packages.web-apps.wrappers = let
+      inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp;
+
+      chromiumPackage = pkgs.chromium;
+
+      # If you want to explore what them flags are doing, you can see them in
+      # their codesearch at:
+      # https://source.chromium.org/chromium/chromium/ (chrome_switches.cc file)
+      mkFlags = name: [
+        "--user-data-dir=${config.xdg.configHome}/chromium-${name}"
+        "--disable-sync"
+        "--no-service-autorun"
+      ];
+    in {
+      penpot = wrapChromiumWebApp {
+        name = "Penpot";
+        url = "https://design.penpot.app";
+        imageHash = "sha256-nE/AYk35eWSQIstZ6Bwc95I+OQ4SLjPGHIgFfoc0ilg=";
+        appendArgs = mkFlags "penpot";
+        xdg.desktopEntry.settings = {
+          categories = [ "Graphics" ];
+        };
+      };
+
+      graphite = wrapChromiumWebApp {
+        name = "Graphite";
+        url = "https://editor.graphite.rs";
+        imageHash = "sha256-1OTwNSmvz5jve3P5Z6LcPTiW1zDI8Vqqe/i9F1DcsaA=";
+        appendArgs = mkFlags "graphite";
+        xdg.desktopEntry.settings = {
+          categories = [ "Graphics" ];
+        };
+      };
+
+      devdocs = wrapChromiumWebApp {
+        name = "DevDocs";
+        url = "https://devdocs.io";
+        imageHash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
+        appendArgs = mkFlags "devdocs";
+        xdg.desktopEntry.settings = {
+          categories = [ "Development" ];
+        };
+      };
+
+      gnome-devdocs = wrapChromiumWebApp {
+        name = "GNOME DevDocs";
+        url = "https://gjs-docs.gnome.org";
+        imageHash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
+        appendArgs = mkFlags "gnome-devdocs";
+        xdg.desktopEntry.settings = {
+          categories = [ "Development" ];
+        };
+      };
+    };
   };
 }

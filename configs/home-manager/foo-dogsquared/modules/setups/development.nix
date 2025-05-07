@@ -1,4 +1,4 @@
-{ config, lib, pkgs, options, ... }@attrs:
+{ config, lib, pkgs, options, foodogsquaredLib, ... }@attrs:
 
 let
   userCfg = config.users.foo-dogsquared;
@@ -145,6 +145,47 @@ in {
       };
     })
 
+    (lib.mkIf userCfg.programs.browsers.google-chrome.enable {
+      wrapper-manager.packages.web-apps.wrappers = let
+        inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp;
+
+        chromiumPackage = config.state.packages.chromiumWrapper;
+
+        # If you want to explore what them flags are doing, you can see them in
+        # their codesearch at:
+        # https://source.chromium.org/chromium/chromium/ (chrome_switches.cc file)
+        mkFlags = name: [
+          "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
+          "--disable-sync"
+          "--no-service-autorun"
+        ];
+      in {
+        devdocs = wrapChromiumWebApp {
+          inherit chromiumPackage;
+          name = "DevDocs";
+          url = "https://devdocs.io";
+          imageHash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
+          appendArgs = mkFlags "devdocs";
+          xdg.desktopEntry.settings = {
+            categories = [ "Development" ];
+            comment = "One-stop shop for API documentation";
+          };
+        };
+
+        gnome-devdocs = wrapChromiumWebApp {
+          inherit chromiumPackage;
+          name = "GNOME DevDocs";
+          url = "https://gjs-docs.gnome.org";
+          imageHash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
+          appendArgs = mkFlags "gnome-devdocs";
+          xdg.desktopEntry.settings = {
+            categories = [ "Development" ];
+            comment = "DevDocs instance for GNOME tech stack";
+          };
+        };
+      };
+    })
+
     (lib.mkIf (userCfg.setups.desktop.enable && pkgs.stdenv.isLinux) {
       home.packages = with pkgs;
         [
@@ -158,7 +199,7 @@ in {
         decker
         uxn
         supercollider-with-plugins
-        sonic-pi
+        # sonic-pi
         processing
         (puredata-with-plugins (with pkgs; [ zexy ]))
         tic-80-unstable

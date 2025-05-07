@@ -142,6 +142,8 @@ in {
       config.programs.neovim.package;
     browser =
       config.programs.chromium.package;
+    chromiumWrapper =
+      config.programs.google-chrome.package or pkgs.google-chrome;
   };
 
   # Automating some files to be fetched on activation.
