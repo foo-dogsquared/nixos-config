@@ -140,6 +140,8 @@ in {
       config.programs.nixvim.finalPackage
     else
       config.programs.neovim.package;
+    browser =
+      config.programs.chromium.package;
   };
 
   # Automating some files to be fetched on activation.

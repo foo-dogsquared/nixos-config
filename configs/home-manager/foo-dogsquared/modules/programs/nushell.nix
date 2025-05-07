@@ -49,7 +49,7 @@ in {
           }
         '')
 
-        ''
+        (lib.mkAfter ''
           let carapace_completer = {|spans: list<string>|
             carapace $spans.0 nushell ...$spans
             | from json
@@ -83,7 +83,7 @@ in {
             enable: true
             completer: $external_completers
           }
-        ''
+        '')
       ];
     })
   ]);

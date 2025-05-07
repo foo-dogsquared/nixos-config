@@ -231,7 +231,7 @@ in {
         extraConfig = {
           general = {
             default-save-path = config.xdg.userDirs.download;
-            unsafe-accounts-conf = false;
+            unsafe-accounts-conf = true;
             enable-osc8 = userCfg.setups.development.enable;
           };
 

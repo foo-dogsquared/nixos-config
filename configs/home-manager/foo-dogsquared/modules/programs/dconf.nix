@@ -69,7 +69,7 @@ in {
 
               # Another small convenience for making matches with Epiphany-made PWAs.
               mkEpiphanyWebAppMatch = attr: attr // {
-                wm_class = "/org.gnome.Epiphany.WebApp_[A-Za-z0-9]+/";
+                wm_class = "/org\\.gnome\\.Epiphany\\.WebApp_[A-Za-z0-9]+/";
               };
 
               winpropRules =
@@ -183,6 +183,11 @@ in {
 
                   (mkEpiphanyWebAppMatch {
                     title = "Penpot";
+                    spaceIndex = wmIndexOf "creative";
+                  })
+
+                  (mkEpiphanyWebAppMatch {
+                    title = "Graphite";
                     spaceIndex = wmIndexOf "creative";
                   })
                 ]
