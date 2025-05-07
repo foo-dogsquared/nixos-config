@@ -82,4 +82,48 @@ rec {
         "wraparoundArgs"
       ])
     ];
+
+  wrapChromiumWebApp =
+    { chromiumPackage ? pkgs.chromium, url, imageHash ? null, name, ... }@module:
+    lib.mkMerge [
+      {
+        arg0 = lib.getExe chromiumPackage;
+
+        # If you want to explore what them flags are doing, you can see them in
+        # their codesearch at:
+        # https://source.chromium.org/chromium/chromium/ (chrome_switches.cc file)
+        #
+        # For now, the user directory is not dynamically set since the default
+        # wrapper arguments is placed in a binary-based wrapper which doesn't
+        # accept shell-escaped arguments well.
+        appendArgs = [
+          "--app=${url}"
+        ];
+
+        xdg.desktopEntry = {
+          enable = true;
+          settings = {
+            desktopName = name;
+            terminal = false;
+            genericName = lib.mkDefault name;
+            startupWMClass = lib.mkDefault "${chromiumPackage.pname}-${name}";
+          };
+        };
+      }
+
+      (lib.mkIf (imageHash != null) {
+        xdg.desktopEntry.settings.icon =
+          let
+            iconDrv = self.fetchers.fetchWebsiteIcon { inherit url; hash = imageHash; };
+          in
+          lib.mkDefault iconDrv;
+      })
+
+      (builtins.removeAttrs module [
+        "chromiumPackage"
+        "url"
+        "imageHash"
+        "name"
+      ])
+    ];
 }
