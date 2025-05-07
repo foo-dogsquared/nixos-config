@@ -34,10 +34,10 @@ let
         }
       '';
       gopass = ''
-        [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path} ${extraArgs}
+        [ -e ${path} ] || gopass clone ${extraArgs} ${url} --path ${path}
       '';
       custom = ''
-        [ -e ${path} ] || ${extraArgs}
+        [ -e ${path} ] || ${value.executable} ${url} ${path} ${extraArgs}
       '';
     };
 
@@ -106,6 +106,19 @@ let
           '';
           default = "fetch";
           example = "git";
+        };
+
+        executable = lib.mkOption {
+          type = with lib.types; nullOr nonEmptyStr;
+          description = ''
+            The path of the executable for the fetch job. This is automatically
+            configured if {option}`type` is set other than `custom` which is
+            left alone intended for the user to set.
+          '';
+          default = null;
+          example = lib.literalExpression ''
+            lib.getExe pkgs.hello
+          '';
         };
 
         extraArgs = lib.mkOption {
