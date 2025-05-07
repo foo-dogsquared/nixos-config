@@ -84,4 +84,16 @@ in lib.runTests {
     "${xdgDesktopEntry}/share/wayland-sessions/${sampleDesktopName}.desktop";
     expected = builtins.readFile ./data/fixtures/xdg-desktop-session.desktop;
   };
+
+  testsBuilderExtractWebsiteIcon = {
+    expr =
+      let
+        websiteIcon = self.builders.extractWebsiteIcon {
+          url = "https://devdocs.io";
+          hash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
+        };
+      in
+      lib.isDerivation websiteIcon;
+    expected = true;
+  };
 }

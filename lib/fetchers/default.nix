@@ -81,4 +81,30 @@
     ```
   */
   fetchUgeeDriver = pkgs.callPackage ./fetch-ugee-driver { };
+
+  /**
+    A builder for extracting the website icon into an output.
+
+    # Arguments
+
+    It is a sole attribute set with the following required attributes:
+
+    url
+    : The URL of the webpage to have its icon extracted.
+
+    # Type
+
+    ```
+    extractWebsiteIcon :: Attr -> Derivation
+    ```
+
+    # Example
+
+    ```nix
+    extractWebsiteIcon {
+      url = "https://google.com";
+    }
+    ```
+  */
+  fetchWebsiteIcon = pkgs.callPackage ./fetch-website-icon { };
 }

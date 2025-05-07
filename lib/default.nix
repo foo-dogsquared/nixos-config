@@ -50,8 +50,8 @@ in pkgs.lib.makeExtensible (self:
       metricPrefixMultiplier binaryPrefixExponent binaryPrefixMultiplier
       parseBytesSizeIntoInt unitsToInt;
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
-    inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver;
     inherit (self.xdg) getXdgDesktop;
+    inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver fetchWebsiteIcon;
   } // lib.optionalAttrs (builtins ? fetchTree) {
     flake = callLib ./flake.nix;
 
