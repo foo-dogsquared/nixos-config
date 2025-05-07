@@ -4,7 +4,7 @@ rec {
   /* Given a Blender package and its addons to be wrapped, create a derivation
      containing all of the addons properly placed as a system resource folder.
   */
-  wrapBlenderAddons = { blenderPackage, addons }:
+  wrapBlenderAddons = { blenderPackage ? pkgs.blender, addons }:
     let blenderVersion = lib.versions.majorMinor blenderPackage.version;
     in pkgs.runCommand "blender-system-resources" {
       passAsFile = [ "paths" ];
@@ -22,7 +22,7 @@ rec {
     '';
 
   makeBlenderWrapper =
-    module@{ blenderPackage, blenderArgs ? [ ], addons ? [ ], ... }:
+    module@{ blenderPackage ? pkgs.blender, blenderArgs ? [ ], addons ? [ ], ... }:
     let blenderAddons = wrapBlenderAddons { inherit blenderPackage addons; };
     in lib.mkMerge [
       {
