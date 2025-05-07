@@ -33,6 +33,7 @@
 
     publicModules = default;
     privateModules = ../modules/wrapper-manager/_private;
+    bahaghari = ../subprojects/bahaghari/modules;
   };
 
   flakeModules = {
@@ -40,5 +41,6 @@
     baseSetupConfig = ../modules/flake-parts/profiles/fds-template.nix;
   };
 
+  lib = ../lib;
   bahaghariLib = ../subprojects/bahaghari/lib;
 }
