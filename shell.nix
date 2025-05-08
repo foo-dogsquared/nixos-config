@@ -24,6 +24,8 @@ in pkgs.mkShell {
       bind
       opentofu
 
+      # The typical scripting toolkit.
+      go
       jq
       wl-clipboard
 
@@ -32,6 +34,7 @@ in pkgs.mkShell {
       pyright
       nil
       terraform-ls
+      gopls
 
       # Formatters...
       treefmt # The universal formatter (if you configured it).
