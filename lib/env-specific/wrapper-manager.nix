@@ -84,7 +84,7 @@ rec {
     ];
 
   wrapChromiumWebApp =
-    { chromiumPackage ? pkgs.chromium, url, imageHash ? null, name, ... }@module:
+    { name, url, chromiumPackage ? pkgs.chromium, imageHash ? null, imageSize ? 256, ... }@module:
     lib.mkMerge [
       {
         arg0 = lib.getExe chromiumPackage;
@@ -96,8 +96,12 @@ rec {
         # For now, the user directory is not dynamically set since the default
         # wrapper arguments is placed in a binary-based wrapper which doesn't
         # accept shell-escaped arguments well.
+        #
+        # Also, we're keeping a minimal list for now to consider the other
+        # Chromium-based browsers such as Brave and Google Chrome.
         appendArgs = [
           "--app=${url}"
+          "--no-first-run"
         ];
 
         xdg.desktopEntry = {
@@ -114,7 +118,11 @@ rec {
       (lib.mkIf (imageHash != null) {
         xdg.desktopEntry.settings.icon =
           let
-            iconDrv = self.fetchers.fetchWebsiteIcon { inherit url; hash = imageHash; };
+            iconDrv = self.fetchers.fetchWebsiteIcon {
+              inherit url;
+              hash = imageHash;
+              size = imageSize;
+            };
           in
           lib.mkDefault iconDrv;
       })
@@ -126,4 +134,9 @@ rec {
         "name"
       ])
     ];
+
+  commonChromiumFlags = [
+    "--disable-sync"
+    "--no-service-autorun"
+  ];
 }
