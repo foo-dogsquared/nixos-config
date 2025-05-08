@@ -25,7 +25,9 @@
     defaultNixConf = { config, lib, pkgs, ... }: {
       # Extend nixpkgs with our overlays except for the NixOS-focused modules
       # here.
-      nixpkgs.overlays = lib.attrValues inputs.self.overlays;
+      nixpkgs.overlays =
+        lib.attrValues inputs.self.overlays
+        ++ [ inputs.wrapper-manager-fds.overlays.default ];
     };
 
     defaultOverlays = lib.attrValues inputs.self.overlays;

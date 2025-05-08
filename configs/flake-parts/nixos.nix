@@ -69,7 +69,7 @@ in {
               ];
               hashedPassword =
                 "$6$.cMYto0K0CHbpIMT$dRqyKs4q1ppzmTpdzy5FWP/V832a6X..FwM8CJ30ivK0nfLjQ7DubctxOZbeOtygfjcUd1PZ0nQoQpOg/WMvg.";
-              description = "Da-ba-dee-da-ba-di-da-ba-dee-da-ba-di";
+              description = "Du-bi-dabi-du-bida-du-dubi-du-dubi-du";
             };
           };
         };
