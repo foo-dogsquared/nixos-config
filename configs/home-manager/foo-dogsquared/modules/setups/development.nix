@@ -147,28 +147,24 @@ in {
 
     (lib.mkIf userCfg.programs.browsers.google-chrome.enable {
       wrapper-manager.packages.web-apps.wrappers = let
-        inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp;
+        inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp commonChromiumFlags;
 
         chromiumPackage = config.state.packages.chromiumWrapper;
 
-        # If you want to explore what them flags are doing, you can see them in
-        # their codesearch at:
-        # https://source.chromium.org/chromium/chromium/ (chrome_switches.cc file)
-        mkFlags = name: [
+        mkFlags = name: commonChromiumFlags ++ [
           "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
-          "--disable-sync"
-          "--no-service-autorun"
         ];
       in {
         devdocs = wrapChromiumWebApp {
           inherit chromiumPackage;
           name = "DevDocs";
           url = "https://devdocs.io";
-          imageHash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
+          imageHash = "sha512-n6Z7qEalwI0skzWRO0h9tGm4USaUdOLHJ1zh5Sg5fNFPLsj9INcGUn9j7DgbDkLCXaIkAvcqhJMSxXdBtinHrA==";
           appendArgs = mkFlags "devdocs";
           xdg.desktopEntry.settings = {
             categories = [ "Development" ];
             comment = "One-stop shop for API documentation";
+            keywords = [ "Documentation" "HTML" "CSS" "JavaScript" ];
           };
         };
 
@@ -176,11 +172,12 @@ in {
           inherit chromiumPackage;
           name = "GNOME DevDocs";
           url = "https://gjs-docs.gnome.org";
-          imageHash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
+          imageHash = "sha512-odmJsmPk582oEL+lmhjp9OJkVOXgY0shCw4eaJx5hui2+V07+AskBzlyVvWVbhuI+efldA06ySqWJtEbS1pF4A==";
           appendArgs = mkFlags "gnome-devdocs";
           xdg.desktopEntry.settings = {
             categories = [ "Development" ];
             comment = "DevDocs instance for GNOME tech stack";
+            keywords = [ "Documentation" "GTK" "GJS" "glib" ];
           };
         };
       };

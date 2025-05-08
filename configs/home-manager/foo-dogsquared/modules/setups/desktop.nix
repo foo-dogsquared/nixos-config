@@ -101,56 +101,40 @@ in {
       };
 
     wrapper-manager.packages.web-apps.wrappers = let
-      inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp;
+      inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp commonChromiumFlags;
 
-      chromiumPackage = pkgs.chromium;
+      chromiumPackage = config.state.packages.chromiumWrapper;
 
-      # If you want to explore what them flags are doing, you can see them in
-      # their codesearch at:
-      # https://source.chromium.org/chromium/chromium/ (chrome_switches.cc file)
-      mkFlags = name: [
-        "--user-data-dir=${config.xdg.configHome}/chromium-${name}"
-        "--disable-sync"
-        "--no-service-autorun"
+      mkFlags = name: commonChromiumFlags ++ [
+        "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
       ];
     in {
       penpot = wrapChromiumWebApp {
         name = "Penpot";
         url = "https://design.penpot.app";
-        imageHash = "sha256-nE/AYk35eWSQIstZ6Bwc95I+OQ4SLjPGHIgFfoc0ilg=";
+        imageHash = null;
         appendArgs = mkFlags "penpot";
         xdg.desktopEntry.settings = {
           categories = [ "Graphics" ];
+          comment = "Design and code collaboration tool";
+          keywords = [ "Design" "Wireframing" "Website" ];
         };
       };
 
       graphite = wrapChromiumWebApp {
         name = "Graphite";
         url = "https://editor.graphite.rs";
-        imageHash = "sha256-1OTwNSmvz5jve3P5Z6LcPTiW1zDI8Vqqe/i9F1DcsaA=";
+        imageHash = "sha512-bakt/iIYVi0Vq67LPxM3Dy10WCNZmYVcjjxV2hNDnpxSLUCqDk59xboFGs2QVVV8qQavhN9B8KC80dhr8f3Ivw==";
         appendArgs = mkFlags "graphite";
         xdg.desktopEntry.settings = {
           categories = [ "Graphics" ];
-        };
-      };
-
-      devdocs = wrapChromiumWebApp {
-        name = "DevDocs";
-        url = "https://devdocs.io";
-        imageHash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
-        appendArgs = mkFlags "devdocs";
-        xdg.desktopEntry.settings = {
-          categories = [ "Development" ];
-        };
-      };
-
-      gnome-devdocs = wrapChromiumWebApp {
-        name = "GNOME DevDocs";
-        url = "https://gjs-docs.gnome.org";
-        imageHash = "sha256-UfW5nGOCLuQJCSdjnV6RVFP7f6cK7KHclDuCvrfFavM=";
-        appendArgs = mkFlags "gnome-devdocs";
-        xdg.desktopEntry.settings = {
-          categories = [ "Development" ];
+          comment = "Procedural toolkit for 2D content creation";
+          keywords = [
+            "Procedural Generation"
+            "Photoshop"
+            "Illustration"
+            "Photo Editing"
+          ];
         };
       };
     };

@@ -21,24 +21,27 @@ in {
 
     wrapper-manager.packages.web-apps.wrappers = lib.mkIf userCfg.programs.browsers.google-chrome.enable (
       let
-        inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp;
+        inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp commonChromiumFlags;
 
         chromiumPackage = config.state.packages.chromiumWrapper;
 
-        mkFlags = name: [
+        mkFlags = name: commonChromiumFlags ++ [
           "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
-          "--disable-sync"
-          "--no-service-autorun"
         ];
       in {
         google-workspace = wrapChromiumWebApp {
           inherit chromiumPackage;
           name = "Google Workspace";
           url = "https://workspace.google.com";
-          imageHash = "";
+          imageHash = "sha512-fdbTvnDTU7DQLSGth8hcsnTNWnBK1qc8Rvmak4oaOE+35YTJ9G8q+BdTqoYxUBxq9Dv9TkAB8Vu7UKjZL1GMcQ==";
           appendArgs = mkFlags "google-workspace";
           xdg.desktopEntry.settings = {
             comment = "Collection of Google cloud tools";
+            keywords = [
+              "Microsoft 365"
+              "Google Docs"
+              "Gmail"
+            ];
           };
         };
 
@@ -46,10 +49,11 @@ in {
           inherit chromiumPackage;
           name = "Microsoft Teams";
           url = "https://teams.microsoft.com";
-          imageHash = "";
+          imageHash = "sha512-p71hFz3xGNCThfzgA00icEpmH8XKeRHLxwIwDruiixBmwFa/LbCkzwrkXZS4xntPrysObCsM7L0vvWl6Iq1ZAA==";
           appendArgs = mkFlags "microsoft-teams";
           xdg.desktopEntry.settings = {
             comment = "Video conferencing software";
+            keywords = [ "Zoom" "Jitsi" ];
           };
         };
 
@@ -57,10 +61,14 @@ in {
           inherit chromiumPackage;
           name = "Messenger";
           url = "https://www.messenger.com";
-          imageHash = "sha512-3rbCuiW14TVu8G+VU7hEDsmW4Q7XTx6ZLeEeFtY3XUB9ylzkNSJPwz6U8EiA5vOF1f6qeO4RVWVi8n5jibPouQ==";
+          imageHash = "sha512-0VDdOCfJMWbC+jHz7wn7qTA0pShCydf+n9ePaFnNxyQ+1tVppaPymu4YHfGDJ3J7823GFuwa4VvkdH08suMiww==";
           appendArgs = mkFlags "messenger";
           xdg.desktopEntry.settings = {
             comment = "Instant messaging network";
+            keywords = [
+              "Facebook Messenger"
+              "Instant Messenging"
+            ];
           };
         };
       }
