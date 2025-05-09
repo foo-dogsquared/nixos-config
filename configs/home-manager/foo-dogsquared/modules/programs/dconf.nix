@@ -68,8 +68,8 @@ in {
               wmIndexOf = name: workspaces.${name}.index.value;
 
               # Another small convenience for making matches with Epiphany-made PWAs.
-              mkEpiphanyWebAppMatch = attr: attr // {
-                wm_class = "/org\\.gnome\\.Epiphany\\.WebApp_[A-Za-z0-9]+/";
+              mkChromiumWrapperMatch = name: attr: attr // {
+                wm_class = "${config.state.packages.chromiumWrapper.pname}-${name}";
               };
 
               winpropRules =
@@ -80,14 +80,11 @@ in {
                     spaceIndex = wmIndexOf "dev";
                   }
 
-                  # All Epiphany-created web apps with DevDocs.
-                  (mkEpiphanyWebAppMatch {
-                    title = "/.*DevDocs.*/";
+                  (mkChromiumWrapperMatch "devdocs" {
                     spaceIndex = wmIndexOf "dev";
                   })
 
-                  (mkEpiphanyWebAppMatch {
-                    title = "/.*GNOME DevDocs.*/";
+                  (mkChromiumWrapperMatch "gnome-devdocs" {
                     spaceIndex = wmIndexOf "dev";
                   })
                 ]
@@ -180,14 +177,13 @@ in {
                     wm_class = "io.github.lainsce.Emulsion";
                     spaceIndex = wmIndexOf "creative";
                   }
-
-                  (mkEpiphanyWebAppMatch {
-                    title = "Penpot";
+                ]
+                ++ lib.optionals userCfg.setups.desktop.enable [
+                  (mkChromiumWrapperMatch "penpot" {
                     spaceIndex = wmIndexOf "creative";
                   })
 
-                  (mkEpiphanyWebAppMatch {
-                    title = "Graphite";
+                  (mkChromiumWrapperMatch "graphite" {
                     spaceIndex = wmIndexOf "creative";
                   })
                 ]
@@ -216,7 +212,28 @@ in {
                 ++ lib.optionals userCfg.setups.music.spotify.enable [{
                   wm_class = "Spotify";
                   spaceIndex = wmIndexOf "media";
-                }];
+                }]
+                ++ lib.optionals userCfg.setups.business.enable [
+                  (mkChromiumWrapperMatch "discord" {
+                    spaceIndex = wmIndexOf "work";
+                  })
+
+                  (mkChromiumWrapperMatch "microsoft-teams" {
+                    spaceIndex = wmIndexOf "work";
+                  })
+
+                  (mkChromiumWrapperMatch "zoom" {
+                    spaceIndex = wmIndexOf "work";
+                  })
+
+                  (mkChromiumWrapperMatch "google-workspace" {
+                    spaceIndex = wmIndexOf "work";
+                  })
+
+                  (mkChromiumWrapperMatch "messenger" {
+                    spaceIndex = wmIndexOf "work";
+                  })
+                ];
             in
             lib.map lib.strings.toJSON winpropRules;
         };
