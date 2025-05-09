@@ -48,6 +48,7 @@ in {
       home.packages = with pkgs; [ neovide ];
 
       programs.neovim.extraPackages = with pkgs; [
+        charm-freeze
         luarocks
         shfmt
         cmake

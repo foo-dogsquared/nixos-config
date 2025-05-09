@@ -136,7 +136,7 @@ in {
   state.packages = {
     diff = pkgs.diffoscope;
     pager = config.programs.bat.package;
-    editor = if config.programs.nixvim.enable then
+    editor = if config.programs.nixvim.enable or false then
       config.programs.nixvim.finalPackage
     else
       config.programs.neovim.package;
