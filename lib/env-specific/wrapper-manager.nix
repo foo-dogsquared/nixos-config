@@ -102,14 +102,13 @@ rec {
         appendArgs = [
           "--app=${url}"
           "--no-first-run"
+          "--class=${chromiumPackage.pname}-${name}"
         ];
 
         xdg.desktopEntry = {
           enable = true;
           settings = {
-            desktopName = name;
             terminal = false;
-            genericName = lib.mkDefault name;
             startupWMClass = lib.mkDefault "${chromiumPackage.pname}-${name}";
           };
         };
