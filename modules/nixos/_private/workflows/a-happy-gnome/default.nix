@@ -201,7 +201,7 @@ in {
         type = let
           inherit (lib.types) listOf;
           settingsFormat = pkgs.formats.json { };
-        in with lib.types; listOf (settingsFormat.type);
+        in listOf (settingsFormat.type);
         description = ''
           A list of default winprops settings for PaperWM.
         '';
@@ -228,6 +228,19 @@ in {
           ]
         '';
       };
+
+      enablePresetWinprops = lib.mkEnableOption null // {
+        default = true;
+        description = ''
+          Whether to enable preset winprops for common programs.
+
+          ::: {.note}
+          This depends if the preset workspaces
+          ({option}`workspaces.workspaces.a-happy-gnome.paperwm.enablePresetWorkspaces`)
+          is enabled.
+          :::
+        '';
+      };
     };
   };
 
@@ -240,7 +253,6 @@ in {
 
     xdg.autostart.entries = {
       "${workflowName}-kando" = {
-        name = "kando";
         desktopName = "Kando";
         exec = "${lib.getExe pkgs.kando} --gapplication-service ${lib.concatStringsSep " " cfg.kando.extraArgs}";
         icon = "kando";
@@ -262,16 +274,16 @@ in {
           color = "#613583"; # GNOME Purple 5
         };
 
-        creative = {
-          name = "Creative work";
-          index = lib.gvariant.mkInt32 2;
-          color = "#f8e45c"; # GNOME Yellow 2
-        };
-
         dev = {
           name = "Software dev't";
-          index = lib.gvariant.mkInt32 3;
+          index = lib.gvariant.mkInt32 2;
           color = "#1c71d8"; # GNOME Blue 4
+        };
+
+        creative = {
+          name = "Creative work";
+          index = lib.gvariant.mkInt32 3;
+          color = "#f8e45c"; # GNOME Yellow 2
         };
 
         work = {
@@ -280,6 +292,35 @@ in {
           color = "#ff7800"; # GNOME Orange 3
         };
       };
+
+    workflows.workflows.a-happy-gnome.paperwm.winprops =
+      let
+        wmIndexOf = name: cfg.paperwm.workspaces.${name}.index.value;
+      in
+      lib.optionals (cfg.paperwm.enablePresetWinprops && cfg.paperwm.enablePresetWorkspaces) [
+        {
+          wm_class = "re.sonny.Junction";
+          scratch_layer = true;
+        }
+      ]
+      ++ lib.optionals config.programs.steam.enable [
+        {
+          wm_class = "steam";
+          spaceIndex = wmIndexOf "media";
+        }
+      ]
+      ++ lib.optionals config.programs.chromium.enable [
+        {
+          wm_class = "chromium";
+          spaceIndex = wmIndexOf "chromium";
+        }
+      ]
+      ++ lib.optionals config.programs.firefox.enable [
+        {
+          wm_class = "firefox";
+          spaceIndex = wmIndexOf "media";
+        }
+      ];
 
     # All GNOME-related additional options.
     services.gnome = {
@@ -313,6 +354,18 @@ in {
               enabled-extensions =
                 lib.map (p: p.extensionUuid) shellExtensions';
             };
+
+            "org/gnome/mutter" = {
+              dynamic-workspaces = !cfg.paperwm.enableStaticWorkspace;
+            };
+
+            "org/gnome/desktop/wm/preferences" = {
+              num-workspaces =
+                let
+                  workspaces = lib.attrNames cfg.paperwm.workspaces;
+                in
+                lib.gvariant.mkInt32 (lib.length workspaces);
+            };
           }
 
           # Disable all of the messenger's notification (only the annoying
@@ -329,7 +382,7 @@ in {
 
           (lib.mkIf (cfg.paperwm.winprops != [ ]) {
             "org/gnome/shell/extensions/paperwm".winprops =
-              lib.map lib.strings.toJSON cfg.winprops;
+              lib.map lib.strings.toJSON cfg.paperwm.winprops;
           })
 
           (lib.mkIf (cfg.paperwm.workspaces != { }) (
@@ -344,16 +397,6 @@ in {
             }
             // lib.mapAttrs' mkWorkspaceConfig cfg.paperwm.workspaces
           ))
-
-          (lib.mkIf cfg.paperwm.enableStaticWorkspace {
-            "org/gnome/mutter/dynamic-workspaces" = false;
-
-            "org/gnome/desktop/wm/preferences/num-workspaces" =
-              let
-                workspaces = lib.attrNames cfg.paperwm.workspaces;
-              in
-              lib.gvariant.mkInt32 (lib.length workspaces);
-          })
         ];
       };
     };
