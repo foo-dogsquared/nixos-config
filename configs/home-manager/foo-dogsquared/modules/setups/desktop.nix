@@ -100,43 +100,51 @@ in {
         text = "Telemetry server";
       };
 
-    wrapper-manager.packages.web-apps.wrappers = let
-      inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp commonChromiumFlags;
+    wrapper-manager.packages.web-apps.wrappers = lib.mkIf userCfg.programs.browsers.google-chrome.enable (
+      let
+        inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp commonChromiumFlags;
 
-      chromiumPackage = config.state.packages.chromiumWrapper;
+        chromiumPackage = config.state.packages.chromiumWrapper;
 
-      mkFlags = name: commonChromiumFlags ++ [
-        "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
-      ];
-    in {
-      penpot = wrapChromiumWebApp {
-        name = "Penpot";
-        url = "https://design.penpot.app";
-        imageHash = null;
-        appendArgs = mkFlags "penpot";
-        xdg.desktopEntry.settings = {
-          categories = [ "Graphics" ];
-          comment = "Design and code collaboration tool";
-          keywords = [ "Design" "Wireframing" "Website" ];
+        mkFlags = name: commonChromiumFlags ++ [
+          "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
+        ];
+      in {
+        penpot = wrapChromiumWebApp rec {
+          inherit chromiumPackage;
+          name = "penpot";
+          url = "https://design.penpot.app";
+          imageHash = null;
+          appendArgs = mkFlags name;
+          xdg.desktopEntry.settings = {
+            desktopName = "Penpot";
+            genericName = "Wireframing Tool";
+            categories = [ "Graphics" ];
+            comment = "Design and code collaboration tool";
+            keywords = [ "Design" "Wireframing" "Website" ];
+          };
         };
-      };
 
-      graphite = wrapChromiumWebApp {
-        name = "Graphite";
-        url = "https://editor.graphite.rs";
-        imageHash = "sha512-bakt/iIYVi0Vq67LPxM3Dy10WCNZmYVcjjxV2hNDnpxSLUCqDk59xboFGs2QVVV8qQavhN9B8KC80dhr8f3Ivw==";
-        appendArgs = mkFlags "graphite";
-        xdg.desktopEntry.settings = {
-          categories = [ "Graphics" ];
-          comment = "Procedural toolkit for 2D content creation";
-          keywords = [
-            "Procedural Generation"
-            "Photoshop"
-            "Illustration"
-            "Photo Editing"
-          ];
+        graphite = wrapChromiumWebApp rec {
+          inherit chromiumPackage;
+          name = "graphite";
+          url = "https://editor.graphite.rs";
+          imageHash = "sha512-bakt/iIYVi0Vq67LPxM3Dy10WCNZmYVcjjxV2hNDnpxSLUCqDk59xboFGs2QVVV8qQavhN9B8KC80dhr8f3Ivw==";
+          appendArgs = mkFlags name;
+          xdg.desktopEntry.settings = {
+            desktopName = "Graphite";
+            genericName = "Procedural Generation Image Editor";
+            categories = [ "Graphics" ];
+            comment = "Procedural toolkit for 2D content creation";
+            keywords = [
+              "Procedural Generation"
+              "Photoshop"
+              "Illustration"
+              "Photo Editing"
+            ];
+          };
         };
-      };
-    };
+      }
+    );
   };
 }

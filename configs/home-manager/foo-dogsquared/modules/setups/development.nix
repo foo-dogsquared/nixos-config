@@ -155,26 +155,30 @@ in {
           "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
         ];
       in {
-        devdocs = wrapChromiumWebApp {
+        devdocs = wrapChromiumWebApp rec {
           inherit chromiumPackage;
-          name = "DevDocs";
+          name = "devdocs";
           url = "https://devdocs.io";
-          imageHash = "sha512-n6Z7qEalwI0skzWRO0h9tGm4USaUdOLHJ1zh5Sg5fNFPLsj9INcGUn9j7DgbDkLCXaIkAvcqhJMSxXdBtinHrA==";
-          appendArgs = mkFlags "devdocs";
+          imageHash = "sha512-odmJsmPk582oEL+lmhjp9OJkVOXgY0shCw4eaJx5hui2+V07+AskBzlyVvWVbhuI+efldA06ySqWJtEbS1pF4A==";
+          appendArgs = mkFlags name;
           xdg.desktopEntry.settings = {
+            desktopName = "DevDocs";
+            genericName = "Documentation Browser";
             categories = [ "Development" ];
             comment = "One-stop shop for API documentation";
             keywords = [ "Documentation" "HTML" "CSS" "JavaScript" ];
           };
         };
 
-        gnome-devdocs = wrapChromiumWebApp {
+        gnome-devdocs = wrapChromiumWebApp rec {
           inherit chromiumPackage;
-          name = "GNOME DevDocs";
+          name = "gnome-devdocs";
           url = "https://gjs-docs.gnome.org";
           imageHash = "sha512-odmJsmPk582oEL+lmhjp9OJkVOXgY0shCw4eaJx5hui2+V07+AskBzlyVvWVbhuI+efldA06ySqWJtEbS1pF4A==";
-          appendArgs = mkFlags "gnome-devdocs";
+          appendArgs = mkFlags name;
           xdg.desktopEntry.settings = {
+            desktopName = "GNOME DevDocs";
+            genericName = "Documentation Browser";
             categories = [ "Development" ];
             comment = "DevDocs instance for GNOME tech stack";
             keywords = [ "Documentation" "GTK" "GJS" "glib" ];
