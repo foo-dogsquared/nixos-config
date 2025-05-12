@@ -1,12 +1,15 @@
-{ buildGoModule, lib }:
+{ buildGoModule, lib, pkg-config, fontconfig }:
 
 buildGoModule (finalAttrs: {
   pname = "foodogsquared-extract-website-icon";
-  version = "0.1.0";
+  version = "0.2.0";
+
+  nativeBuildInputs = [ pkg-config ];
+  buildInputs = [ fontconfig ];
 
   src = lib.cleanSource ./.;
 
-  vendorHash = "sha256-DpTh15/7npw07gX7PdC8IbbyEHlhqHl+puaDMsKaRWQ=";
+  vendorHash = "sha256-0g9hObQL3AacYZoj1ddTsFpjRQ3NvaDsie+N0pwxduQ=";
 
   meta = with lib; {
     description = "Small utility for extracting website icon";

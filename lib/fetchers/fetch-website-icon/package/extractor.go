@@ -13,7 +13,33 @@ import (
 	"golang.org/x/net/html"
 )
 
-func ExtractIcon(r io.Reader, u string) ([]Icon, error) {
+// Given a URL, extract all of the icons (`Icon`) found in the document head.
+func getIconFromHTML(rawURL string) (*http.Response, error) {
+	res, err := http.Get(rawURL)
+
+	// We're also anticipating if the request is invalid (e.g., not a
+	// reachable/real domain).
+	if err != nil || res == nil { return res, err }
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK { return res, err }
+
+	icons, err := extractIcon(res.Body, rawURL)
+	if err != nil { return nil, err }
+
+	// This is for pages with no icons at all which basically means it's up to
+	// generating our own at this point.
+	if len(icons) <= 0 { return nil, nil }
+
+	icon := findLargestIcon(icons)
+	iconURL, err := url.JoinPath(rawURL, icon.path)
+	if err != nil { return nil, err }
+
+	return http.Get(iconURL)
+}
+
+// Extract all of the possible icon elements of an HTML document.
+func extractIcon(r io.Reader, u string) ([]Icon, error) {
 	var icons []Icon
 	tokenizer := html.NewTokenizer(r)
 
@@ -54,7 +80,7 @@ func ExtractIcon(r io.Reader, u string) ([]Icon, error) {
 						defer res.Body.Close()
 
 						if res.StatusCode == http.StatusOK {
-							var manifest WebManifest
+							var manifest webManifest
 
 							body, err := io.ReadAll(res.Body)
 							if err != nil {
@@ -69,7 +95,7 @@ func ExtractIcon(r io.Reader, u string) ([]Icon, error) {
 							}
 
 							for _, v := range manifest.icons {
-								icons = append(icons, NewIcon(v.src, v.sizes))
+								icons = append(icons, NewIcon(v.src, v.sizes, ManifestIcon))
 							}
 						}
 					// A bunch of common quirky ways to specify the icon
@@ -86,13 +112,15 @@ func ExtractIcon(r io.Reader, u string) ([]Icon, error) {
 					case "apple-touch-icon-precomposed":
 						fallthrough
 					// This is apparently used as part of MacOS dock icon.
-					case "fluid-icon":
-						fallthrough
 					// The canonical way.
 					case "icon":
 						hasSizeAttr := slices.IndexFunc(token.Attr, func(a html.Attribute) bool { return a.Key == "sizes" })
-						iconSize := GetOrDefault(token.Attr, hasSizeAttr, html.Attribute{Key: "size", Val: ""})
-						icons = append(icons, NewIcon(token.Attr[hasHrefAttr].Val, iconSize.Val))
+						iconSize := getOrDefault(token.Attr, hasSizeAttr, html.Attribute{Key: "size", Val: ""})
+						icons = append(icons, NewIcon(token.Attr[hasHrefAttr].Val, iconSize.Val, NormalIcon))
+					case "fluid-icon":
+						hasSizeAttr := slices.IndexFunc(token.Attr, func(a html.Attribute) bool { return a.Key == "sizes" })
+						iconSize := getOrDefault(token.Attr, hasSizeAttr, html.Attribute{Key: "size", Val: ""})
+						icons = append(icons, NewIcon(token.Attr[hasHrefAttr].Val, iconSize.Val, FluidIcon))
 					}
 				}
 			// We're only going to parse the document head anyways since that
@@ -106,39 +134,60 @@ func ExtractIcon(r io.Reader, u string) ([]Icon, error) {
 	}
 }
 
-type WebManifest struct {
+type webManifest struct {
 	name      string            `json:","`
 	shortName string            `json:"short_name"`
-	icons     []WebManifestIcon `json:","`
+	icons     []webManifestIcon `json:","`
 }
 
-type WebManifestIcon struct {
+type webManifestIcon struct {
 	src   string `json:","`
 	sizes string `json:","`
 }
 
+type IconType uint
+const (
+	NormalIcon IconType = iota
+	FluidIcon
+	ManifestIcon
+)
+
 type Icon struct {
 	path  string
 	sizes []uint
+	priority IconType
 }
 
-func NewIcon(path string, size string) Icon {
+func NewIcon(path string, size string, iconType IconType) Icon {
 	return Icon{
 		path:  path,
-		sizes: ParseSize(size),
+		sizes: parseSize(size),
+		priority: iconType,
 	}
 }
 
-func FindLargestIcon(icons []Icon) Icon {
-	var largestIconSize uint
-	var icon Icon
+// Find the possible largest icon in the icon list.
+//
+// As an implementation detail, this function doesn't do any downloading and
+// can only look at the possible data without the inspecting the image file on
+// the remote side. We also sort this from our list of priorities (from
+// `IconType`). All in all, this function could be entirely wrong.
+func findLargestIcon(icons []Icon) Icon {
+	var (
+		largestIconSize uint
+		icon Icon
+	)
 
 	for _, i := range icons {
-		for _, size := range i.sizes {
-			if largestIconSize < size {
-				largestIconSize = size
-				icon = i
+		if len(i.sizes) > 0 {
+			for _, size := range i.sizes {
+				if largestIconSize < size {
+					largestIconSize = size
+					icon = i
+				}
 			}
+		} else if i.priority > icon.priority {
+			icon = i
 		}
 	}
 
@@ -146,7 +195,7 @@ func FindLargestIcon(icons []Icon) Icon {
 }
 
 // Return all of icons with square sizes.
-func ParseSize(s string) []uint {
+func parseSize(s string) []uint {
 	sizes := strings.Split(s, " ")
 
 	var result []uint
@@ -170,7 +219,7 @@ func ParseSize(s string) []uint {
 	return result
 }
 
-func GetOrDefault[T any](arr []T, index int, defaultValue T) T {
+func getOrDefault[T any](arr []T, index int, defaultValue T) T {
 	if index < 0 || index >= len(arr) {
 		return defaultValue
 	}

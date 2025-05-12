@@ -1,2 +1,10 @@
+github.com/danielgatis/go-findfont v1.0.1 h1:OgCyoo8OakOsBBK7+XUpEAQJxEXu1h6Us4wFm+xykSE=
+github.com/danielgatis/go-findfont v1.0.1/go.mod h1:q9XXqsU66wHmkDw0sCvpcZEHQp2AZyDOA4SieOUrnVo=
+github.com/danielgatis/go-ptrloop v1.0.0 h1:KN5JdmnUQk4fut4JdT4U5y/oPpf8dkPhWlJ/yHGdKlA=
+github.com/danielgatis/go-ptrloop v1.0.0/go.mod h1:N31QEYrIGZyIRef9W1ci2wGMY2myDb89oC3wEkTBz6I=
+golang.org/x/image v0.27.0 h1:C8gA4oWU/tKkdCfYT6T2u4faJu3MeNS5O8UPWlPF61w=
+golang.org/x/image v0.27.0/go.mod h1:xbdrClrAUway1MUTEZDq9mz/UpRwYAkFFNUslZtcB+g=
 golang.org/x/net v0.39.0 h1:ZCu7HMWDxpXpaiKdhzIfaltL9Lp31x/3fCP11bc6/fY=
 golang.org/x/net v0.39.0/go.mod h1:X7NRbYVEA+ewNkCNyJ513WmMdQ3BineSwVtN2zD/d+E=
+golang.org/x/text v0.25.0 h1:qVyWApTSYLk/drJRO5mDlNYskwQznZmkpV2c8q9zls4=
+golang.org/x/text v0.25.0/go.mod h1:WEdwpYrmk1qmdHvhkSTNPm3app7v4rsT8F2UD6+VHIA=
