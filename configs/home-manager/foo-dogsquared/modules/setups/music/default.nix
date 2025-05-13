@@ -118,8 +118,6 @@ in {
     }
 
     (lib.mkIf cfg.spotify.enable {
-      home.packages = with pkgs; [ spotify ];
-
       xdg.autostart.entries =
         lib.singleton (foodogsquaredLib.xdg.getXdgDesktop pkgs.spotify "spotify");
 
@@ -131,6 +129,38 @@ in {
       services.mopidy = {
         extensionPackages = [ pkgs.mopidy-spotify ];
         extraConfigFiles = lib.singleton config.sops.secrets."mopidy/spotify".path;
+      };
+
+      wrapper-manager.packages.web-apps.wrappers = let
+        inherit (foodogsquaredLib.wrapper-manager) wrapChromiumWebApp commonChromiumFlags;
+
+        chromiumPackage = config.state.packages.chromiumWrapper;
+
+        mkFlags = name: commonChromiumFlags ++ [
+          "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
+        ];
+      in {
+        spotify = wrapChromiumWebApp rec {
+          inherit chromiumPackage;
+          name = "spotify";
+          url = "https://open.spotify.com/";
+          imageHash = "sha512-caFOXceJa0q+/LVOrKbR5wviSJFwrahehdZ2Dmv+BTmAkDhfWjwl6tpf690vI17S998Ohe+J9trLMjYX+BihEQ==";
+          appendArgs = mkFlags name ++ [
+            # This is required for DRM.
+            "--enable-nacl"
+          ];
+          xdg.desktopEntry.settings = {
+            desktopName = "Spotify";
+            genericName = "Music streaming client";
+            comment = "Play with a music library from millions of artists";
+            mimeTypes = [ "x-scheme-handler/spotify" ];
+            categories = [ "Audio" "Music" "Player" "AudioVideo" ];
+            keywords = [
+              "Music Player"
+              "Online Music Streaming"
+            ];
+          };
+        };
       };
     })
 
