@@ -144,6 +144,43 @@ in {
             ];
           };
         };
+
+        google-maps = wrapChromiumWebApp rec {
+          inherit chromiumPackage;
+          name = "google-maps";
+          url = "https://maps.google.com";
+          imageHash = "sha512-vjo1kMyvm/q/N6zF+hwgRYuIjjJ3MHjgNVGQd4SbvMZZzS3Df+CzqCKDHPPfPYjKwSA+ustuIlEzE8FrmKDgzA==";
+          appendArgs = mkFlags name;
+          xdg.desktopEntry.settings = {
+            desktopName = "Google Maps";
+            genericName = "Map Viewer";
+            keywords = [
+              "Maps"
+              "Geographic"
+              "Locations"
+              "Geospatial Data"
+              "Satellite Imagery"
+            ];
+          };
+        };
+
+        google-earth = wrapChromiumWebApp rec {
+          inherit chromiumPackage;
+          name = "google-earth";
+          url = "https://earth.google.com";
+          imageHash = "sha512-nNhrwyQStOU/yMDVcFP/qL2QOLORynhbGG0tu4Yh5Y8x/FfhCAR8+sxVfKQ1KG2LDopo6icUrSWn0bshrSlWQw==";
+          appendArgs = mkFlags name;
+          xdg.desktopEntry.settings = {
+            desktopName = "Google Earth";
+            genericName = "3D Planet Viewer";
+            comment = "View the earth in 3D";
+            keywords = [
+              "Maps"
+              "Geographic"
+              "Locations"
+            ];
+          };
+        };
       }
     );
   };

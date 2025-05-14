@@ -60,7 +60,7 @@ in {
             desktopName = "Microsoft Teams";
             genericName = "Video Conferencing";
             comment = "Video conferencing software";
-            keywords = [ "Zoom" "Jitsi" ];
+            keywords = [ "Zoom" "Jitsi" "Work Chat" ];
           };
         };
 
@@ -77,7 +77,9 @@ in {
             keywords = [
               "Facebook Messenger"
               "Meta Messenger"
+              "Chat"
             ];
+            mimeTypes = [ "x-scheme-handler/fb-messenger" ];
           };
         };
 
@@ -92,6 +94,7 @@ in {
             genericName = "Group Messaging Client";
             comment = "Group text and voice messaging";
             keywords = [
+              "Chat"
               "Instant Messaging"
               "Video Conferencing"
               "Video Calls"
@@ -113,6 +116,7 @@ in {
             keywords = [
               "Audio Calls"
               "Video Calls"
+              "Work Chat"
             ];
           };
         };
