@@ -84,7 +84,7 @@ rec {
     ];
 
   wrapChromiumWebApp =
-    { name, url, chromiumPackage ? pkgs.chromium, imageHash ? null, imageSize ? 256, ... }@module:
+    { name, url, chromiumPackage ? pkgs.chromium, imageHash ? null, imageSize ? 256, imageBuildFlags ? [ ], ... }@module:
     lib.mkMerge [
       {
         arg0 = lib.getExe chromiumPackage;
@@ -121,6 +121,7 @@ rec {
               inherit url;
               hash = imageHash;
               size = imageSize;
+              buildFlags = imageBuildFlags;
             };
           in
           lib.mkDefault iconDrv;
