@@ -88,8 +88,6 @@ in {
     }
 
     (lib.mkIf cfg.thunderbird.enable {
-      home.packages = lib.singleton pkgs.thunderbird-foodogsquared;
-
       accounts.email.accounts =
         let
           enabledEmails = [
@@ -102,7 +100,7 @@ in {
         lib.genAttrs enabledEmails enableThunderbirdAccount;
 
       programs.thunderbird = {
-        # enable = true;
+        enable = true;
         package = pkgs.thunderbird-foodogsquared;
         profiles.personal = {
           isDefault = true;

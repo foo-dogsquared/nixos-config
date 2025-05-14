@@ -8,23 +8,27 @@ let
 
   commonExtensions = [
     { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
-    { id = "ekhagklcjbdpajgpjgmbionohlpdbjgc"; } # Zotero connector
-    { id = "jfnifeihccihocjbfcfhicmmgpjicaec"; } # GSConnect
     { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # Google Translate
     { id = "egpjdkipkomnmjhjmdamaniclmdlobbo"; } # Firenvim
-    { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
-    { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
     { id = "haebnnbpedcbhciplfhjjkbafijpncjl"; } # TinEye Reverse Image Search
     { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; } # Tampermonkey
     { id = "kkmlkkjojmombglmlpbpapmhcaljjkde"; } # Zhongwen
     { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
     { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
-    { id = "dgjhfomjieaadpoljlnidmbgkdffpack"; } # Sourcegraph
-    { id = "palihjnakafgffnompkdfgbgdbcagbko"; } # UpdateSWH
   ] ++ lib.optionals config.services.activitywatch.enable [
     { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
   ] ++ lib.optionals (lib.elem "a-happy-gnome" attrs.nixosConfig.workflows.enable or []) [
     { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
+    { id = "jfnifeihccihocjbfcfhicmmgpjicaec"; } # GSConnect
+  ] ++ lib.optionals userCfg.services.archivebox.enable [
+    { id = "habonpimjphpdnmcfkaockjnffodikoj"; } # ArchiveBox Extractor
+  ] ++ lib.optionals userCfg.setups.research.enable [
+    { id = "gknkbkaapnhpmkcgkmdekdffgcddoiel"; } # Open Access Button
+    { id = "fpnmgdkabkmnadcjpehmlllkndpkmiak"; } # Wayback Machine
+    { id = "ekhagklcjbdpajgpjgmbionohlpdbjgc"; } # Zotero connector
+    { id = "palihjnakafgffnompkdfgbgdbcagbko"; } # UpdateSWH
+  ] ++ lib.optionals userCfg.setups.development.enable [
+    { id = "dgjhfomjieaadpoljlnidmbgkdffpack"; } # Sourcegraph
   ];
 in {
   options.users.foo-dogsquared.programs.browsers = {

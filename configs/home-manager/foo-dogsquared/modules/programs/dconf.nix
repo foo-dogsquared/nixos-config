@@ -186,6 +186,14 @@ in {
                   (mkChromiumWrapperMatch "graphite" {
                     spaceIndex = wmIndexOf "creative";
                   })
+
+                  (mkChromiumWrapperMatch "google-earth" {
+                    spaceIndex = wmIndexOf "media";
+                  })
+
+                  (mkChromiumWrapperMatch "google-maps" {
+                    spaceIndex = wmIndexOf "media";
+                  })
                 ]
                 ++ lib.optionals userCfg.programs.email.thunderbird.enable [{
                   wm_class = "thunderbird";
@@ -209,10 +217,11 @@ in {
                   wm_class = "Google-chrome";
                   spaceIndex = wmIndexOf "media";
                 }]
-                ++ lib.optionals userCfg.setups.music.spotify.enable [{
-                  wm_class = "Spotify";
-                  spaceIndex = wmIndexOf "media";
-                }]
+                ++ lib.optionals userCfg.setups.music.spotify.enable [
+                  (mkChromiumWrapperMatch "spotify" {
+                    spaceIndex = wmIndexOf "media";
+                  })
+                ]
                 ++ lib.optionals userCfg.setups.business.enable [
                   (mkChromiumWrapperMatch "discord" {
                     spaceIndex = wmIndexOf "work";
