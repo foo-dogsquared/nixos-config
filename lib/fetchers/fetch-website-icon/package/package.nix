@@ -9,7 +9,7 @@ buildGoModule (finalAttrs: {
 
   src = lib.cleanSource ./.;
 
-  vendorHash = "sha256-0g9hObQL3AacYZoj1ddTsFpjRQ3NvaDsie+N0pwxduQ=";
+  vendorHash = "sha256-BGxu9fqPZ564d5puazmQm1ed9uXgFb5/Aupb/HYj+Tk=";
 
   meta = with lib; {
     description = "Small utility for extracting website icon";

@@ -1,4 +1,4 @@
-{ lib, callPackage, stdenv, cacert, pkg-config, makeFontsCache, fontconfig, noto-fonts, noto-fonts-emoji }:
+{ lib, callPackage, stdenv, cacert, pkg-config, makeFontsConf, fontconfig, noto-fonts, noto-fonts-emoji }:
 
 let
   extractWebsiteIcon = callPackage ./package/package.nix { };
@@ -32,9 +32,9 @@ lib.extendMkDerivation {
       ...
     }@args:
     let
-      cacheConf = makeFontsCache {
+      cacheConf = makeFontsConf {
         inherit fontconfig;
-        fontsDirectories = fonts;
+        fontDirectories = fonts;
       };
     in
     {
@@ -47,14 +47,13 @@ lib.extendMkDerivation {
       buildFlags = buildFlags ++ [
         "--url" url
         "--largest-only"
-        "--output-dir" "icons"
         "--size" size
       ];
 
       impureEnvVars = lib.fetchers.proxyImpureEnvVars;
 
       buildCommand = ''
-        export $FONTCONFIG_FILE=${cacheConf}
+        export FONTCONFIG_FILE=${cacheConf}
         extract-website-icon ''${buildFlags[@]}
         mv ./icon $out
       '';

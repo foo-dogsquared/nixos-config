@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -89,6 +90,7 @@ func extractIcon(r io.Reader, u string) ([]Icon, error) {
 							}
 
 							err = json.Unmarshal(body, &manifest)
+							fmt.Println(manifest)
 							if err != nil {
 								log.Println(err)
 								continue
@@ -172,22 +174,27 @@ func NewIcon(path string, size string, iconType IconType) Icon {
 // can only look at the possible data without the inspecting the image file on
 // the remote side. We also sort this from our list of priorities (from
 // `IconType`). All in all, this function could be entirely wrong.
-func findLargestIcon(icons []Icon) Icon {
+func findLargestIcon(icons []Icon) *Icon {
 	var (
 		largestIconSize uint
-		icon Icon
+		icon *Icon
 	)
 
 	for _, i := range icons {
+		if icon == nil {
+			icon = &i
+			continue
+		}
+
 		if len(i.sizes) > 0 {
 			for _, size := range i.sizes {
 				if largestIconSize < size {
 					largestIconSize = size
-					icon = i
+					icon = &i
 				}
 			}
 		} else if i.priority > icon.priority {
-			icon = i
+			icon = &i
 		}
 	}
 
