@@ -1,0 +1,68 @@
+= fds fetcher flock
+:toc:
+
+Better be known as foodogsquared's flock of fetchers (or ffof for short).
+This is a set of utilities specifically suited for my link:../../lib/fetchers[custom Nix fetchers].
+Its main purpose is to easily create a command-line interface that can be made into a Nix fetcher function and handle more cases than it would be possible in a more appropriate language (since it would be a LOT MORE TEDIOUS to deal with while coding in Nix). footnote:[OK, I made this because I want to be more familiar with Go and it's a perfect project to start with, OK?]
+So far, there are several fetchers for the following websites:
+
+// TODO: Create list of fetchers here.
+* Unsplash
+
+[#user-guide]
+== User guide
+
+Much of the program is basically structured like a typical modern command-line program like Git, Go... and Cargo.
+This program is single-mindedly and laser-focused-ly focused on being a dedicated fetcher program.
+You could view this as with the following command samples (except mentally replace `ffof` with `fetch`):
+
+[source, shell]
+----
+ffof unsplash by-id
+ffof swh 
+----
+
+Majority of the design when developing this program is making it easy to create a custom Nix fetcher function for it.
+The most obvious of these are basically those with the `by-id` subcommand such as the examples above.
+
+[NOTE]
+====
+Some of the services here require an API key.
+The developer doesn't want to share them so you'll have to provide your own.
+
+Here's an exhaustive list of them to ease your pain.
+
+* You need one for Unsplash fetcher.
+This is required for ALL of its subcommands which you can either supply with `--api-key` or through the `FOODOGSQUARED_FFOF_UNSPLASH_API_KEY` environment variable.
+
+* Also one for all subcommands for Pexels fetcher.
+Similar deal to Unsplash fetcher requirements except with `FOODOGSQUARED_FFOF_PEXELS_API_KEY` for the envvar.
+====
+
+[#dev-setup]
+== Development setup
+
+For an easy way to setup devshell, just make sure Nix and direnv is installed and put the following line in its `.envrc`.
+It is implemented as a (Go) Cobra application so it is pretty much a Go application.
+
+[source, bash]
+----
+use nix ./nix
+----
+
+[#dev-guidelines]
+== Development guidelines
+
+Anyways, there's a few things to keep in mind when developing this project and I'll just list it here.
+
+* Design the program to be as https://en.wikipedia.org/wiki/Idempotence[idempotent] as possible.
+This means the same command should return the same result every time we run the thing.
+For example, an invocation of `fds-flock-of-fetchers unsplash ID` should always return the same Unsplash image.
+
+* If it's not explicitly not meant to be idempotent, *always* have the subcommand `ruin` beforehand footnote:[Or "really unreliable & is 'not-idempotent'" for short ;p].
+This is to have a consistent and predictable design while having additional features for us since we're already using its respective API anyways (such as the "Curated Collection" from Pexels which will always be different every time we're querying from it).
+
+* All API keys have to be sourced from environment variables first and foremost.
+We'll probably take advantage of the Viper library for this.
+
+* Its environment variable prefix of choice is `FOODOGSQUARED_FFOF_`.
