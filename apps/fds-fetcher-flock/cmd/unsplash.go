@@ -15,7 +15,7 @@ import (
 
 var (
 	unsplashCmd = &cobra.Command{
-		Use: "unsplash [--api-key STRING]",
+		Use:   "unsplash [--api-key STRING]",
 		Short: "Utility for interacting with Unsplash",
 		Long: `Commands for fetching assets from Unsplash.
 
@@ -26,25 +26,27 @@ operations.`,
 	unsplashApiKey string
 
 	unsplashFetchByIDCmd = &cobra.Command{
-		Use: "by-id ID [ID...]",
+		Use:   "by-id ID [ID...]",
 		Short: "fetch an asset from Unsplash given its ID",
-		Run: runUnsplashFetchByIDCmd,
-		Args: cobra.MinimumNArgs(1),
+		Run:   runUnsplashFetchByIDCmd,
+		Args:  cobra.MinimumNArgs(1),
 	}
 
 	unsplashFetchByEditorialFeedCmd = &cobra.Command{
-		Use: "editorial-feed",
+		Use:   "editorial-feed",
 		Short: "fetch assets from Unsplash editorial feed",
-		Run: runUnsplashFetchByEditorialFeedCmd,
+		Run:   runUnsplashFetchByEditorialFeedCmd,
 	}
 
 	unsplashFetchByRandom = &cobra.Command{
-		Use: "random",
+		Use:   "random",
 		Short: "fetch a random asset from Unsplash",
-		Run: runUnsplashFetchByRandomCmd,
+		Run:   runUnsplashFetchByRandomCmd,
 		Args: func(cmd *cobra.Command, args []string) error {
 			v, err := cmd.Flags().GetUint8("count")
-			if err != nil { return err }
+			if err != nil {
+				return err
+			}
 
 			if v > 30 {
 				return fmt.Errorf("random count is more than 30")
@@ -56,10 +58,12 @@ operations.`,
 )
 
 func runUnsplashFetchByIDCmd(cmd *cobra.Command, ids []string) {
-	client := unsplash.NewUnsplashClient(getUnsplashApiKey())
+	client := unsplash.NewClient(getUnsplashApiKey())
 
 	photoVariant, err := cmd.Flags().GetString("photo-variant")
-	if err != nil { cmd.PrintErrln(err) }
+	if err != nil {
+		cmd.PrintErrln(err)
+	}
 
 	for _, id := range ids {
 		if id == "" {
@@ -80,7 +84,7 @@ func runUnsplashFetchByIDCmd(cmd *cobra.Command, ids []string) {
 
 		defer res.Body.Close()
 
-		var photo unsplash.UnsplashPhoto
+		var photo unsplash.Photo
 		resDecoder := json.NewDecoder(res.Body)
 
 		if err := resDecoder.Decode(&photo); err != nil {
@@ -99,11 +103,13 @@ func runUnsplashFetchByIDCmd(cmd *cobra.Command, ids []string) {
 	}
 }
 
-func runUnsplashFetchByEditorialFeedCmd(cmd *cobra.Command, args[] string) {
-	client := unsplash.NewUnsplashClient(getUnsplashApiKey())
+func runUnsplashFetchByEditorialFeedCmd(cmd *cobra.Command, args []string) {
+	client := unsplash.NewClient(getUnsplashApiKey())
 
 	photoVariant, err := cmd.Flags().GetString("photo-variant")
-	if err != nil { cmd.PrintErrln(err) }
+	if err != nil {
+		cmd.PrintErrln(err)
+	}
 
 	cmdFlags := cmd.Flags()
 	query, _ := url.ParseQuery("")
@@ -121,7 +127,7 @@ func runUnsplashFetchByEditorialFeedCmd(cmd *cobra.Command, args[] string) {
 
 	defer res.Body.Close()
 
-	var photos []unsplash.UnsplashPhoto
+	var photos []unsplash.Photo
 
 	dec := json.NewDecoder(res.Body)
 	if err := dec.Decode(&photos); err != nil {
@@ -142,11 +148,13 @@ func runUnsplashFetchByEditorialFeedCmd(cmd *cobra.Command, args[] string) {
 	}
 }
 
-func runUnsplashFetchByRandomCmd(cmd *cobra.Command, args[] string) {
-	client := unsplash.NewUnsplashClient(getUnsplashApiKey())
+func runUnsplashFetchByRandomCmd(cmd *cobra.Command, args []string) {
+	client := unsplash.NewClient(getUnsplashApiKey())
 
 	photoVariant, err := cmd.Flags().GetString("photo-variant")
-	if err != nil { cmd.PrintErrln(err) }
+	if err != nil {
+		cmd.PrintErrln(err)
+	}
 
 	cmdFlags := cmd.Flags()
 	query, _ := url.ParseQuery("")
@@ -187,7 +195,7 @@ func runUnsplashFetchByRandomCmd(cmd *cobra.Command, args[] string) {
 	}
 	defer res.Body.Close()
 
-	var photos []unsplash.UnsplashPhoto
+	var photos []unsplash.Photo
 
 	dec := json.NewDecoder(res.Body)
 	if err := dec.Decode(&photos); err != nil {
@@ -216,7 +224,7 @@ func getUnsplashApiKey() string {
 	return ffofViper.GetString("unsplash_api_key")
 }
 
-func formatUnsplashAffiliationLine(photo *unsplash.UnsplashPhoto) string {
+func formatUnsplashAffiliationLine(photo *unsplash.Photo) string {
 	photoName := photo.Description
 	userName := photo.User.Name
 
@@ -250,7 +258,7 @@ func init() {
 
 	ffofViper.BindPFlag("unsplash.api_key", unsplashCmd.PersistentFlags().Lookup("api-key"))
 	ffofViper.BindEnv("unsplash_api_key")
-	
+
 	// Set up the subcommands and its root.
 	unsplashCmd.AddCommand(unsplashFetchByIDCmd)
 	unsplashCmd.AddCommand(unsplashFetchByEditorialFeedCmd)

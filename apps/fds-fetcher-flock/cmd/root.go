@@ -12,7 +12,7 @@ import (
 
 var (
 	rootCmd = &cobra.Command{
-		Use: "fds-flock-of-fetchers",
+		Use:   "fds-flock-of-fetchers",
 		Short: "Specialized utility for foodogsquared's custom Nix fetchers",
 		Long: `fds-fetcher-flock is a set of utilities specifically
 suited for integrating with foodogsquared's custom Nix fetchers.
@@ -66,7 +66,9 @@ func initConfig() {
 func downloadFile(r io.Reader, u string) error {
 	fn := path.Base(u)
 	f, err := os.Create(path.Join(outputDir, fn))
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	defer f.Close()
 
 	if _, err := f.ReadFrom(r); err != nil {
