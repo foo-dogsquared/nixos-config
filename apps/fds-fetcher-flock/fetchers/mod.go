@@ -62,7 +62,7 @@ func DefaultDownloadFile(dlable Downloadable) downloadFileFunc {
 
 // Common implementation for using an HTTP API service that returns a JSON
 // response.
-func DefaultJsonRequestImpl[T Downloadable](c ClientInterface) func(p string, body io.Reader) (T, error) {
+func DefaultJsonRequestImpl[T any](c ClientInterface) func(p string, body io.Reader) (T, error) {
 	return func(p string, body io.Reader) (T, error) {
 		var v T
 

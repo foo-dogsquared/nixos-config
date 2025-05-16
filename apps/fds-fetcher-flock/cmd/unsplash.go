@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"encoding/json"
 	"errors"
 	"fds-flock-of-fetchers/fetchers/unsplash"
 	"fmt"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 
@@ -71,24 +69,10 @@ func runUnsplashFetchByIDCmd(cmd *cobra.Command, ids []string) {
 			continue
 		}
 
-		res, err := client.Request(fmt.Sprintf("/photos/%s", id), "GET", nil)
+		photo, err := client.GetPhoto(id)
 		if err != nil {
 			cmd.PrintErrln(err)
 			continue
-		}
-
-		if res == nil {
-			cmd.PrintErrln(fmt.Errorf("unsplash: given ID '%s' does not exist", id))
-			continue
-		}
-
-		defer res.Body.Close()
-
-		var photo unsplash.Photo
-		resDecoder := json.NewDecoder(res.Body)
-
-		if err := resDecoder.Decode(&photo); err != nil {
-			cmd.PrintErrln(err)
 		}
 
 		dlOpts := make(map[string]string)
@@ -112,28 +96,14 @@ func runUnsplashFetchByEditorialFeedCmd(cmd *cobra.Command, args []string) {
 	}
 
 	cmdFlags := cmd.Flags()
-	query, _ := url.ParseQuery("")
+	query := url.Values{}
 
 	if v, err := cmdFlags.GetUint8("count"); err == nil {
 		query.Set("per_page", strconv.Itoa(int(v)))
 	}
 
-	urlPath := fmt.Sprintf("/photos?%s", query.Encode())
-	res, err := client.Request(urlPath, "GET", nil)
-	if err != nil {
-		cmd.PrintErrln(err)
-		os.Exit(1)
-	}
-
-	defer res.Body.Close()
-
-	var photos []unsplash.Photo
-
-	dec := json.NewDecoder(res.Body)
-	if err := dec.Decode(&photos); err != nil {
-		cmd.PrintErrln(err)
-		os.Exit(1)
-	}
+	photos, err := client.GetPhotoEditorialFeed(query)
+	if err != nil { cobra.CheckErr(err) }
 
 	for _, photo := range photos {
 		dlOpts := make(map[string]string)
@@ -187,21 +157,8 @@ func runUnsplashFetchByRandomCmd(cmd *cobra.Command, args []string) {
 		query.Set("orientation", v)
 	}
 
-	urlPath := fmt.Sprintf("/photos/random?%s", query.Encode())
-	res, err := client.Request(urlPath, "GET", nil)
-	if err != nil {
-		cmd.PrintErrln(err)
-		os.Exit(1)
-	}
-	defer res.Body.Close()
-
-	var photos []unsplash.Photo
-
-	dec := json.NewDecoder(res.Body)
-	if err := dec.Decode(&photos); err != nil {
-		cmd.PrintErrln(err)
-		os.Exit(1)
-	}
+	photos, err := client.GetRandomPhotos(query)
+	if err != nil { cobra.CheckErr(err) }
 
 	for _, photo := range photos {
 		dlOpts := make(map[string]string)

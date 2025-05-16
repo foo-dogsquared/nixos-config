@@ -60,7 +60,15 @@ func (c *Client) Request(path, method string, body io.Reader) (*http.Response, e
 
 // Get an image resource from Unsplash by its ID.
 func (c *Client) GetPhoto(id string) (*Photo, error) {
-	return fetchers.DefaultJsonRequestImpl[*Photo](c)(fmt.Sprintf("/photos?%s", id), nil)
+	return fetchers.DefaultJsonRequestImpl[*Photo](c)(fmt.Sprintf("photos/%s", id), nil)
+}
+
+func (c *Client) GetPhotoEditorialFeed(q url.Values) ([]*Photo, error) {
+	return fetchers.DefaultJsonRequestImpl[[]*Photo](c)(fmt.Sprintf("photos?%s", q.Encode()), nil)
+}
+
+func (c *Client) GetRandomPhotos(q url.Values) ([]*Photo, error) {
+	return fetchers.DefaultJsonRequestImpl[[]*Photo](c)(fmt.Sprintf("photos/random?%s", q.Encode()), nil)
 }
 
 // Create a new Unsplash client with all of the required context to add for the
