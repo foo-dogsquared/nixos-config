@@ -99,7 +99,7 @@ func runUnsplashFetchByIDCmd(cmd *cobra.Command, ids []string) {
 			continue
 		}
 
-		cmd.Println(formatUnsplashAffiliationLine(&photo))
+		cmd.Println(photo.GetAffiliationLine())
 	}
 }
 
@@ -144,7 +144,7 @@ func runUnsplashFetchByEditorialFeedCmd(cmd *cobra.Command, args []string) {
 			continue
 		}
 
-		cmd.Println(formatUnsplashAffiliationLine(&photo))
+		cmd.Println(photo.GetAffiliationLine())
 	}
 }
 
@@ -212,7 +212,7 @@ func runUnsplashFetchByRandomCmd(cmd *cobra.Command, args []string) {
 			continue
 		}
 
-		cmd.Println(formatUnsplashAffiliationLine(&photo))
+		cmd.Println(photo.GetAffiliationLine())
 	}
 }
 
@@ -222,24 +222,6 @@ func getUnsplashApiKey() string {
 	}
 
 	return ffofViper.GetString("unsplash_api_key")
-}
-
-func formatUnsplashAffiliationLine(photo *unsplash.Photo) string {
-	photoName := photo.Description
-	userName := photo.User.Name
-
-	if photoName == "" {
-		photoName = fmt.Sprintf("<%s>", photo.Links["html"])
-	}
-
-	if userName == "" {
-		userName = photo.User.Username
-	}
-
-	return fmt.Sprintf(
-		"%s by '%s' <%s>",
-		photoName, userName, photo.User.Links["html"],
-	)
 }
 
 func init() {

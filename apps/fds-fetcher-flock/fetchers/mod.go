@@ -1,6 +1,7 @@
 package fetchers
 
 import (
+	"encoding/json"
 	"image"
 	"io"
 	"net/http"
@@ -15,6 +16,7 @@ const (
 
 type fetcherRequestFunc func(c *http.Client, p, m string, body io.Reader) (*http.Response, error)
 type downloadFileFunc func(dlOpts map[string]string, o string) error
+type jsonRequestFunc func(p string, o *Downloadable) (*Downloadable, error)
 
 type ClientInterface interface {
 	Request(p, method string, body io.Reader) (*http.Response, error)
@@ -58,8 +60,33 @@ func DefaultDownloadFile(dlable Downloadable) downloadFileFunc {
 	}
 }
 
+// Common implementation for using an HTTP API service that returns a JSON
+// response.
+func DefaultJsonRequestImpl[T Downloadable](c ClientInterface) func(p string, body io.Reader) (T, error) {
+	return func(p string, body io.Reader) (T, error) {
+		var v T
+
+		res, err := c.Request(p, "GET", body)
+		if err != nil {
+			return v, err
+		}
+		defer res.Body.Close()
+
+		dec := json.NewDecoder(res.Body)
+		if err := dec.Decode(&v); err != nil {
+			return v, err
+		}
+
+		return v, nil
+	}
+}
+
 type TwoDimensional interface {
 	GetWidth() float64
 	GetHeight() float64
 	Rectangle() image.Rectangle
+}
+
+type Attribution interface {
+	GetAttributionLine() string
 }
