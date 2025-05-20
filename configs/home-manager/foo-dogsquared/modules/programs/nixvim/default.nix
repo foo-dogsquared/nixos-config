@@ -26,6 +26,7 @@ let
       ./dev.nix
       ./lsp.nix
       ./dap.nix
+      ./qol.nix
     ];
 
     config = {
@@ -33,6 +34,7 @@ let
         colorschemes.enable = true;
         fuzzy-finding.enable = true;
         note-taking.enable = true;
+        qol.enable = true;
         misc.enable = true;
         dev.enable = userCfg.setups.development.enable;
         lsp.enable = userCfg.setups.development.enable;
