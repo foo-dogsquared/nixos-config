@@ -20,3 +20,8 @@ includes = [ "*.py" ]
 command = "tofu"
 options = [ "fmt" ]
 includes = [ "*.tf" ]
+
+[formatter.go]
+command = "go"
+options = [ "fmt" ]
+includes = [ "*.go" ]
