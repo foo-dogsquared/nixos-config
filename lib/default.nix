@@ -51,7 +51,8 @@ in pkgs.lib.makeExtensible (self:
       parseBytesSizeIntoInt unitsToInt;
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
     inherit (self.xdg) getXdgDesktop;
-    inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver fetchWebsiteIcon;
+    inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver
+      fetchWebsiteIcon fetchPexelImages fetchPexelVideos fetchUnsplashImages;
   } // lib.optionalAttrs (builtins ? fetchTree) {
     flake = callLib ./flake.nix;
 

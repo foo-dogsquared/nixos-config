@@ -107,4 +107,79 @@
     ```
   */
   fetchWebsiteIcon = pkgs.callPackage ./fetch-website-icon { };
+
+  /**
+    Fetch images from Pexels.
+
+    # Arguments
+
+    It is a sole attribute set with the following attributes:
+
+    ids
+    : A list of image IDs (string) to be downloaded.
+
+    # Type
+
+    ```
+    fetchPexelImages :: Attr -> Derivation
+    ```
+
+    # Examples
+
+    ```nix
+    fetchPexelImages {
+      ids = [ "31735589" ];
+      hash = "";
+    }
+    ```
+  */
+  fetchPexelsImages = pkgs.callPackage ./fetch-pexels-asset/images.nix { };
+
+  /**
+    Fetch videos from Pexels.
+
+    # Arguments
+
+    Same as `fetchPexelImages`.
+
+    # Type
+
+    ```
+    fetchPexelsVideos :: Attr -> Derivation
+    ```
+
+    # Examples
+
+    ```nix
+    fetchPexelVideos {
+      ids = [ "31735589" ];
+      hash = "";
+    }
+    ```
+  */
+  fetchPexelsVideos = pkgs.callPackage ./fetch-pexels-asset/videos.nix { };
+
+  /**
+    Fetch images from Unsplash.
+
+    # Arguments
+
+    Same as `fetchPexelsImages`
+
+    # Type
+
+    ```
+    fetchUnsplashImages :: Attr -> Derivation
+    ```
+
+    # Examples
+
+    ```nix
+    fetchUnsplashImages {
+      ids = [ "" ];
+      hash = "";
+    }
+    ```
+  */
+  fetchUnsplashImages = pkgs.callPackage ./fetch-unsplash-asset/images.nix { };
 }
