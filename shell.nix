@@ -1,11 +1,16 @@
 { pkgs ? import <nixpkgs> { }, extraPackages ? [ ] }:
 
-let run-workflow-in-vm = pkgs.callPackage ./apps/run-workflow-with-vm { };
+let
+  run-workflow-in-vm = pkgs.callPackage ./apps/run-workflow-with-vm { };
+  fetch-website-icon = pkgs.callPackage ./lib/fetchers/fetch-website-icon/package/package.nix { };
+  fds-flock-of-fetchers = pkgs.callPackage ./apps/fds-fetcher-flock/nix/package.nix { };
 in pkgs.mkShell {
   packages = with pkgs;
     [
       # My internal applications.
       run-workflow-in-vm
+      fetch-website-icon
+      fds-flock-of-fetchers
 
       just
       age
@@ -41,5 +46,8 @@ in pkgs.mkShell {
       stylua # ...for Lua.
       black # ...for Python.
       nixfmt # ...for Nix.
+
+      # Debuggers...
+      delve
     ] ++ extraPackages;
 }
