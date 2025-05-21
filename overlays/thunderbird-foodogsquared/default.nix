@@ -32,8 +32,8 @@ final: prev:
               }));
         in lib.mapAttrs' applyInstallationMode extensions;
 
-        OfferToSaveLoginsDefault = false;
-        PasswordManagerEnabled = false;
+        OfferToSaveLoginsDefault = true;
+        PasswordManagerEnabled = true;
       };
     };
 }
