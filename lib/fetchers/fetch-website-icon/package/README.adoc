@@ -1,0 +1,34 @@
+= extract-website-icon
+:toc:
+
+Custom utility to fetch website icons.
+
+[#quickstart]
+== Quickstart
+
+[source, shell]
+----
+extract-website-icon -url $URL
+----
+
+This will create a file named `icon` in the current directory.
+The current process basically goes like the following:
+
+* It will get the icons through parsing the HTML document of the given URL.
+Specifically, through its declared icons and the webmanifest.
+If any of the icons exist, it will get it from there.
+
+* If fetching icon from the previous source failed, it will fall back with Google icons API service.
+
+* If there's no such icon returned from the icon service, it will generate a generic one instead.
+
+[#building-from-source]
+== Building from source
+
+You simply need Go toolchain, pkg-config, and fontconfig (required for the icon generation step since it will get font files through it).
+And simply run the following:
+
+[source, shell]
+----
+go build .
+----

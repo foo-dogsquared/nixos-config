@@ -13,7 +13,7 @@ buildGoModule (finalAttrs: {
 
   meta = with lib; {
     description = "Small utility for extracting website icon";
-    mainProgram = finalAttrs.pname;
+    mainProgram = "extract-website-icon";
     license = with licenses; [ bsd3 ];
   };
 })
