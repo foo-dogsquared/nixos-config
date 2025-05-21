@@ -19,6 +19,15 @@
         type = "app";
         program = "${script}/bin/run-workflow-with-vm";
       };
+
+      ffof = {
+        type = "app";
+        program =
+          let
+            package = pkgs.callPackage ../../apps/fds-fetcher-flock { };
+          in
+          lib.getExe package;
+      };
     };
 
     # No amount of formatters will make this codebase nicer but it sure does
