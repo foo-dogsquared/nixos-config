@@ -39,6 +39,27 @@
         platforms = platforms.all;
       };
     };
+    "font-inspect" = buildFirefoxXpiAddon {
+      pname = "font-inspect";
+      version = "0.6.1";
+      addonId = "{a658a273-612e-489e-b4f1-5344e672f4f5}";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4433654/font_inspect-0.6.1.xpi";
+      sha256 = "d9274d90b7fc7c17ab417a37254de8c4d43625284d43427c9a350b7a017810c0";
+      meta = with lib;
+      {
+        homepage = "https://webextension.org/listing/font-finder.html";
+        description = "An easy-to-use font inspector to get CSS styles of the selected element";
+        license = licenses.mpl20;
+        mozPermissions = [
+          "storage"
+          "contextMenus"
+          "notifications"
+          "scripting"
+          "activeTab"
+        ];
+        platforms = platforms.all;
+      };
+    };
     "get-rss-feed-url" = buildFirefoxXpiAddon {
       pname = "get-rss-feed-url";
       version = "2.2";
@@ -125,6 +146,20 @@
           "*://*/*"
           "https://www.oahelper.org/backend/institutes/"
         ];
+        platforms = platforms.all;
+      };
+    };
+    "open-in-visual-studio-code" = buildFirefoxXpiAddon {
+      pname = "open-in-visual-studio-code";
+      version = "1.0.2";
+      addonId = "{90404617-2d7e-4bde-9d55-e9eda31ca5b3}";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4010707/open_in_visual_studio_code-1.0.2.xpi";
+      sha256 = "8112606071800fef4e47472cab302b645546102b547132a37557a39be9da510b";
+      meta = with lib;
+      {
+        description = "Adds an \"Open in Visual Studio Code\" button to GitHub repos";
+        license = licenses.mit;
+        mozPermissions = [ "*://github.com/*" ];
         platforms = platforms.all;
       };
     };
