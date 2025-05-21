@@ -168,6 +168,40 @@
   buildHugoSite = pkgs.callPackage ./hugo-build-site { };
 
   /**
+    A wrapper for building with mdbook.
+
+    # Arguments
+
+    It's a sole attribute set with the following attributes:
+
+    `buildDir`
+    : The output directory used in the build phase of the package.
+    By default, it is set to `book`.
+
+    # Type
+
+    ```
+    buildMdbookSite :: Attr -> Derivation
+    ```
+
+    # Examples
+
+    ```nix
+    buildMdbookSite {
+      pname = "foodogsquared-hm-startpage";
+      version = "0.3.0";
+      src = lib.cleanSource ./.;
+
+      meta = with lib; {
+        description = "foodogsquared's homepage";
+        license = licenses.gpl3Only;
+      };
+    }
+    ```
+  */
+  buildMdbookSite = pkgs.callPackage ./build-mdbook-site { };
+
+  /**
     An convenient function for building with the custom extended stdenv.
 
     # Arguments
