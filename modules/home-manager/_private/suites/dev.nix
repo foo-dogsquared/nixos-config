@@ -185,6 +185,7 @@ in {
     # Extra extras.
     (lib.mkIf cfg.extras.enable {
       home.packages = with pkgs; [
+        charm-freeze # Hands in the air with your code in the air(waves).
         gum # The fancy shell script toolkit.
         hyperfine # Making sure your apps are not just fine but REEEEEEAAAAALY fine.
         license-cli # A nice generator template for license files.
