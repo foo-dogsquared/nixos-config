@@ -11,6 +11,8 @@ in
   config = lib.mkIf cfg.enable {
     nixvimConfigs.fiesta.setups.qol.enable = lib.mkForce false;
 
+    plugins.indent-blankline.enable = lib.mkForce false;
+
     plugins.snacks = {
       enable = lib.mkForce true;
       settings = {

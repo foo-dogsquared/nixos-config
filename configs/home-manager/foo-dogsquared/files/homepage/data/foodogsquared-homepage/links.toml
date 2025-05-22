@@ -145,9 +145,25 @@ links = [
   { url = "https://teachyourselfcs.com/", text = "Teach Yourself CS" },
   { url = "https://github.com/ossu/computer-science", text = "OSSU (not that one)" },
   { url = "https://github.com/goabstract/Awesome-Design-Tools", text = "Design tools" },
+  { url = "https://github.com/rossant/awesome-math", text = "Math (not meth)" },
+  { url = "https://github.com/jnv/lists", text = "Someone's list of awesome lists" },
 ]
 icon.iconset = "simple-icons"
 icon.name = "awesomelists"
+
+[search]
+name = "Search"
+flavorText = "your soul"
+textOnly = true
+links = [
+  { url = "https://search.brave.com", text = "Brave Search" },
+  { url = "https://sourcegraph.com/search", text = "SourceGraph" },
+  { url = "https://phind.com/", text = "Phind" },
+  { url = "https://grok.com/", text = "Grok" },
+  { url = "https://learn-anything.xyz/", text = "Learn anything" },
+]
+icon.iconset = "material-design-icons"
+icon.name = "search-web"
 
 [games]
 name = "Games"

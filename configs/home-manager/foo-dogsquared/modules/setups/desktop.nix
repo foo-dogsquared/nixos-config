@@ -12,6 +12,7 @@ in {
     state.ports.activitywatch.value = 5600;
 
     home.packages = with pkgs; [
+      komikku
       bitwarden-cli bitwarden-desktop
 
       freecad
@@ -114,9 +115,12 @@ in {
           inherit chromiumPackage;
           name = "penpot";
           url = "https://design.penpot.app";
-          imageHash = null;
           appendArgs = mkFlags name;
           xdg.desktopEntry.settings = {
+            icon = pkgs.fetchurl {
+              url = "https://github.com/penpot.png?s=460";
+              hash = "sha256-Ft9AIWyMe8UcENeBLnKtxNW2DfLMwMqTYTha/FtEpwI=";
+            };
             desktopName = "Penpot";
             genericName = "Wireframing Tool";
             categories = [ "Graphics" ];

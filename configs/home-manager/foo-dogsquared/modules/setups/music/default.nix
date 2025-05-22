@@ -115,6 +115,37 @@ in {
             [ (subsonicLink // { text = "Subsonic music server"; }) ];
         }))
       ];
+
+      wrapper-manager.packages.web-apps.wrappers = let
+        inherit (foodogsquaredLib.wrapper-manager) commonChromiumFlags wrapChromiumWebApp;
+        chromiumPackage = config.state.packages.chromiumWrapper;
+
+        mkFlags = name: commonChromiumFlags ++ [
+          "--user-data-dir=${config.xdg.configHome}/${chromiumPackage.pname}-${name}"
+        ];
+      in {
+        yt-music = wrapChromiumWebApp rec {
+          inherit chromiumPackage;
+          name = "yt-music";
+          url = "https://music.youtube.com";
+          imageHash = "";
+          appendArgs = mkFlags name ++ [
+            # This is required for DRM.
+            "--enable-nacl"
+          ];
+          xdg.desktopEntry.settings = {
+            desktopName = "YouTube Music";
+            genericName = "Music Streaming Service";
+            comment = "Music streaming from YouTube";
+            categories = [ "Audio" "Music" "Player" "AudioVideo" ];
+            keywords = [
+              "YouTube"
+              "Music Player"
+              "Online Music Streaming"
+            ];
+          };
+        };
+      };
     }
 
     (lib.mkIf cfg.spotify.enable {
@@ -151,7 +182,7 @@ in {
           ];
           xdg.desktopEntry.settings = {
             desktopName = "Spotify";
-            genericName = "Music streaming client";
+            genericName = "Music Streaming Client";
             comment = "Play with a music library from millions of artists";
             mimeTypes = [ "x-scheme-handler/spotify" ];
             categories = [ "Audio" "Music" "Player" "AudioVideo" ];

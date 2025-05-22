@@ -158,6 +158,10 @@ in {
                 "dom.security.https_first_pbm" = true;
 
                 "privacy.firstparty.isolate" = true;
+
+                # Enable them vertical bars.
+                "sidebar.revamp" = true;
+                "sidebar.verticalTabs" = true;
               }
 
               (lib.mkIf userCfg.programs.custom-homepage.enable {
