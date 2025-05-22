@@ -1,13 +1,17 @@
 # This is where extra desktop goodies can be found.
 # As a note, this is not where you set the aesthetics of your graphical sessions.
 # That can be found in the `themes` module.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let cfg = config.suites.desktop;
 in {
   options.suites.desktop = {
     enable =
       lib.mkEnableOption "basic desktop-related services and default programs";
+    audio.enable =
+      lib.mkEnableOption "audio production setup";
+    windows-compatibility.enable =
+      lib.mkEnableOption "Windows compatibility toolkit";
     cleanup.enable =
       lib.mkEnableOption "activation of various cleanup services";
     autoUpgrade.enable =
@@ -96,6 +100,29 @@ in {
 
       # Enable virtual camera.
       boot.kernelModules = [ "v4l2loopback" ];
+    })
+
+    (lib.mkIf cfg.windows-compatibility.enable {
+      environment.systemPackages = with pkgs; [
+        # Setup the WINE environment.
+        wineWowPackages.stable
+        bottles # The Windows environment package manager.
+      ];
+    })
+
+    (lib.mkIf cfg.audio.enable {
+      environment.systemPackages = lib.optionals cfg.windows-compatibility.enable (with pkgs; [
+        yabridge
+        yabridgectl
+      ]);
+
+      environment.profileRelativeSessionVariables =
+        let
+          audioPluginFormats =
+            [ "LV2" "DSSI" "CLAP" ]
+            ++ lib.optionals cfg.windows-compatibility.enable [ "VST" "VST3" ];
+        in
+        foodogsquaredLib.genAttrs' audioPluginFormats (s: lib.nameValuePair "${s}_PATH" [ "/lib" ]);
     })
 
     (lib.mkIf cfg.cleanup.enable {
