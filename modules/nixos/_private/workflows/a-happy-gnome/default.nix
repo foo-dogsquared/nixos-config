@@ -57,6 +57,7 @@ in {
         just-perfection
         kimpanel
         light-style
+        mpris-label
         runcat
         windownavigator
       ];
@@ -195,7 +196,9 @@ in {
         default = true;
       };
 
-      enableStaticWorkspace = lib.mkEnableOption "static workspaces configuration for PaperWM";
+      enableStaticWorkspace = lib.mkEnableOption "static workspaces configuration for PaperWM" // {
+        default = cfg.paperwm.enablePresetWorkspaces;
+      };
 
       winprops = lib.mkOption {
         type = let
@@ -245,6 +248,16 @@ in {
   };
 
   config = lib.mkIf (lib.elem workflowName config.workflows.enable) {
+    assertions = [
+      {
+        assertion = !cfg.paperwm.enablePresetWinprops || cfg.paperwm.enablePresetWorkspaces;
+        message = ''
+          `workflows.workflows.a-happy-gnome` preset winprops option requires
+          the preset workspaces to be enabled.
+        '';
+      }
+    ];
+
     # Enable GNOME.
     services.xserver = {
       enable = true;
@@ -297,7 +310,7 @@ in {
       let
         wmIndexOf = name: cfg.paperwm.workspaces.${name}.index.value;
       in
-      lib.optionals (cfg.paperwm.enablePresetWinprops && cfg.paperwm.enablePresetWorkspaces) [
+      lib.optionals (cfg.paperwm.enablePresetWinprops) [
         {
           wm_class = "re.sonny.Junction";
           scratch_layer = true;
