@@ -48,7 +48,7 @@ in pkgs.lib.makeExtensible (self:
     inherit (self.trivial)
       countAttrs filterAttrs' bitsToBytes SIPrefixExponent
       metricPrefixMultiplier binaryPrefixExponent binaryPrefixMultiplier
-      parseBytesSizeIntoInt unitsToInt;
+      parseBytesSizeIntoInt unitsToInt genAttrs';
     inherit (self.data) importYAML renderTeraTemplate renderMustacheTemplate;
     inherit (self.xdg) getXdgDesktop;
     inherit (self.fetchers) fetchInternetArchive fetchUgeeDriver

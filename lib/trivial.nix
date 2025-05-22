@@ -323,4 +323,32 @@ rec {
       else
         builtins.throw "no multiplier type ${type}";
     in size * (multiplierFn prefix);
+
+  /**
+    Similar to nixpkgs' `lib.genAttrs` but requiring the return value to be a
+    name-value pair.
+
+    # Arguments
+
+    names
+    : List of attribute names.
+
+    f
+    : The function to be applied requiring a name-value pair (i.e., return
+    value from `lib.nameValuePair`).
+
+    # Examples
+
+    ```nix
+    genAttrs' [ "HELLO" "WORLD" ] (n: lib.nameValuePair "HELLO_PATH" [ "/lib" ])
+    => {
+      HELLO_PATH = [ "/lib" ];
+      WORLD_PATH = [ "/lib" ];
+    }
+    ```
+  */
+  genAttrs' =
+    names:
+    f:
+    lib.listToAttrs (map (n: (f n)) names);
 }

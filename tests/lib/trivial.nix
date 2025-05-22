@@ -133,4 +133,12 @@ lib.runTests {
     };
     expected = 532000000;
   };
+
+  testGenAttrs' = {
+    expr = self.trivial.genAttrs' [ "THERE" "WORLD" ] (n: lib.nameValuePair "HELLO_${n}" "Hello ${n}");
+    expected = {
+      HELLO_THERE = "Hello THERE";
+      HELLO_WORLD = "Hello WORLD";
+    };
+  };
 }
