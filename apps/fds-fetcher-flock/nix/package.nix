@@ -14,7 +14,11 @@ buildGoModule (finalAttrs: {
   src = lib.cleanSource ../.;
 
   # This uses a lot of network checks so no.
-  doCheck = false;
+  checkFlags =
+    let
+      testCases = [ ];
+    in
+      lib.singleton "-skip=^${lib.concatStringsSep "$|^" testCases}$";
 
   postInstall = ''
     ln -sf $out/bin/${finalAttrs.pname} $out/bin/ffof

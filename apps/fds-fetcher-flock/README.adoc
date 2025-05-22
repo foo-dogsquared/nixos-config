@@ -8,6 +8,7 @@ So far, there are several fetchers for the following websites:
 
 // TODO: Create list of fetchers here.
 * Unsplash
+* Pexels
 
 [#user-guide]
 == User guide
@@ -54,6 +55,10 @@ use nix ./nix
 == Development guidelines
 
 Anyways, there's a few things to keep in mind when developing this project and I'll just list it here.
+
+* No scraping, no whammy, pls.
+We're only going for services with official APIs.
+There's also a crapton of projects that do that anyways (e.g., yt-dlp for audio/video, gallery-dl for images).
 
 * Design the program to be as https://en.wikipedia.org/wiki/Idempotence[idempotent] as possible.
 This means the same command should return the same result every time we run the thing.
