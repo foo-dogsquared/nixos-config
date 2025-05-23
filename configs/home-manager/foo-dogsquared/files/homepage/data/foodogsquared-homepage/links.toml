@@ -173,6 +173,7 @@ links = [
   { url = "https://wafflegame.net", text = "Waffle" },
   { url = "https://duotrigordle.com", text = "Duotrigordle" },
   { url = "https://www.merriam-webster.com/games/quordle/", text = "Quordle" },
+  { url = "https://www.nytimes.com/crosswords/game/mini", text = "The Mini Crossword" },
 ]
 icon.iconset = "material-design-icons"
 icon.name = "gamepad-variant"
@@ -184,6 +185,7 @@ textOnly = true
 weight = 10000
 links = [
   { url = "https://globaltracktrace.ptc.post/gtt.web/", text = "Global parcel tracker" },
+  { url = "https://n2t.net/", text = "Name-to-Thing (N2T)" },
 ]
 icon.iconset = "material-design-icons"
 icon.name = "apps"

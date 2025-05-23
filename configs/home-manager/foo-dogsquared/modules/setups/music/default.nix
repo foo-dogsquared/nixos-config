@@ -128,7 +128,11 @@ in {
           inherit chromiumPackage;
           name = "yt-music";
           url = "https://music.youtube.com";
-          imageHash = "";
+          imageHash = "sha512-xAe9P125GE+uLymWuKi5cDpFlKyFWPUytoUMSoLwkjzUKlZyuDbHrKAvcHKvdOjc+Nr4SS+LEXnNg3bsNECU6w==";
+          imageBuildFlags = [
+            # Because the service only accepts browser views.
+            "--disable-html-download"
+          ];
           appendArgs = mkFlags name ++ [
             # This is required for DRM.
             "--enable-nacl"

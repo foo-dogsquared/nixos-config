@@ -103,6 +103,9 @@ in {
 
         # Testing out your web app #532.
         dbeaver-bin
+      ]
+      ++ lib.optionals (attrs.nixosConfig.suites.vpn.personal.enable or false) [
+        trayscale
       ];
 
       # Text editors galore.
