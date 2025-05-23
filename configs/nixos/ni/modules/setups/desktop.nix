@@ -32,7 +32,7 @@ in {
       suites.i18n.enable = true;
 
       # ...which is by the way is this one.
-      workflows.enable = [ "a-happy-gnome" ];
+      workflows.enable = [ "one.foodogsquared.AHappyGNOME" ];
     }
 
     (lib.mkIf (hasAnyWorkflowEnabled [ "a-happy-gnome" "knome" ]) {

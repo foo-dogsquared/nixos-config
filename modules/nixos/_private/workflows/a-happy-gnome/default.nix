@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  workflowName = "a-happy-gnome";
+  workflowName = "one.foodogsquared.AHappyGNOME";
   cfg = config.workflows.workflows.${workflowName};
 
   requiredApps = with pkgs;
@@ -127,7 +127,7 @@ in {
 
         By default, it disables some of the search providers from the default
         list of applications in
-        {option}`workflows.workflows.a-happy-gnome.extraApps`.
+        {option}`workflows.workflows.${workflowName}.extraApps`.
       '';
       default = [
         "org.gnome.seahorse.Application"
@@ -146,7 +146,7 @@ in {
         within GNOME Shell.
 
         By default, it just list a few from the default value of
-        {option}`workflows.workflows.a-happy-gnome.extraApps`.
+        {option}`workflows.workflows.${workflowName}.extraApps`.
       '';
       default = [
         "re-sonny-tangram"
@@ -239,7 +239,7 @@ in {
 
           ::: {.note}
           This depends if the preset workspaces
-          ({option}`workspaces.workspaces.a-happy-gnome.paperwm.enablePresetWorkspaces`)
+          ({option}`workspaces.workspaces.${workflowName}.paperwm.enablePresetWorkspaces`)
           is enabled.
           :::
         '';
@@ -252,8 +252,10 @@ in {
       {
         assertion = !cfg.paperwm.enablePresetWinprops || cfg.paperwm.enablePresetWorkspaces;
         message = ''
-          `workflows.workflows.a-happy-gnome` preset winprops option requires
-          the preset workspaces to be enabled.
+          {option}`workflows.workflows.${workflowName}.paperwm.enablePresetWinprops`
+          option requires
+          {option}`workflows.workflows.${workflowName}.paperwm.enablePresetWorkspaces`
+          to be enabled.
         '';
       }
     ];
@@ -273,7 +275,7 @@ in {
       };
     };
 
-    workflows.workflows.a-happy-gnome.paperwm.workspaces =
+    workflows.workflows.${workflowName}.paperwm.workspaces =
       lib.mkIf cfg.paperwm.enablePresetWorkspaces {
         media = {
           name = "Media";
@@ -306,7 +308,7 @@ in {
         };
       };
 
-    workflows.workflows.a-happy-gnome.paperwm.winprops =
+    workflows.workflows.${workflowName}.paperwm.winprops =
       let
         wmIndexOf = name: cfg.paperwm.workspaces.${name}.index.value;
       in
@@ -339,7 +341,7 @@ in {
     services.gnome = {
       core-os-services.enable = true;
       core-shell.enable = true;
-      core-utilities.enable = true;
+      core-apps.enable = true;
 
       # It doesn't need to since we're not first-timers, yeah?
       gnome-initial-setup.enable = false;
