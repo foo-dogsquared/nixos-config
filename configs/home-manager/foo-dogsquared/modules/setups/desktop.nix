@@ -21,7 +21,13 @@ in {
       librecad
     ];
 
-    # users.foo-dogsquared.programs.kando.enable = true;
+    users.foo-dogsquared = {
+      programs = {
+        browsers.brave.enable = true;
+        browsers.google-chrome.enable = true;
+        browsers.firefox.enable = true;
+      };
+    };
 
     # Install all of the desktop stuff.
     suites.desktop = {

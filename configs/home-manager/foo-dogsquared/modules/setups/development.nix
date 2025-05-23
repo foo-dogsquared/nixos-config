@@ -35,6 +35,10 @@ in {
         keys.ssh.enable = true;
         terminal-multiplexer.enable = lib.mkDefault true;
         terminal-emulator.enable = lib.mkDefault true;
+
+        # Enable them text editors.
+        nixvim.enable = true;
+        vs-code.enable = true;
       };
 
       suites.dev = {
