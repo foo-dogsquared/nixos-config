@@ -29,6 +29,8 @@ lib.extendMkDerivation {
       # fontconfig utilities to access the fonts.
       fonts ? [ noto-fonts noto-fonts-emoji ],
 
+      disableHTMLDownload ? false,
+      disableGoogleIconsDownload ? false,
       ...
     }@args:
     let
@@ -48,7 +50,9 @@ lib.extendMkDerivation {
         "--url" url
         "--largest-only"
         "--size" size
-      ];
+      ]
+      ++ lib.optionals (!disableHTMLDownload) [ "--disable-html-download" ]
+      ++ lib.optionals (!disableGoogleIconsDownload) [ "--disable-google-icons" ];
 
       impureEnvVars = lib.fetchers.proxyImpureEnvVars;
 
