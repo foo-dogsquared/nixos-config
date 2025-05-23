@@ -125,7 +125,7 @@ lib.extendMkDerivation {
       '';
 
       buildFlags = args.buildFlags or [ ] ++ [ "--destination" "public" ];
-      buildPhase = ''
+      buildPhase = args.buildPhase or ''
         runHook preBuild
 
         hugo ''${buildFlags[@]}
@@ -133,7 +133,7 @@ lib.extendMkDerivation {
         runHook postBuild
       '';
 
-      installPhase = ''
+      installPhase = args.installPhase or ''
         runHook preInstall
 
         mkdir -p $out && cp -r public/* $out
