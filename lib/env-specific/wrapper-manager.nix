@@ -85,6 +85,9 @@ rec {
 
   wrapChromiumWebApp =
     { name, url, chromiumPackage ? pkgs.chromium, imageHash ? null, imageSize ? 256, imageBuildFlags ? [ ], ... }@module:
+    let
+      className = "${chromiumPackage.pname}-${name}";
+    in
     lib.mkMerge [
       {
         arg0 = lib.getExe chromiumPackage;
@@ -98,18 +101,19 @@ rec {
         # accept shell-escaped arguments well.
         #
         # Also, we're keeping a minimal list for now to consider the other
-        # Chromium-based browsers such as Brave and Google Chrome.
+        # Chromium-based browsers such as Brave, Microsoft Edge, and Google
+        # Chrome.
         appendArgs = [
           "--app=${url}"
           "--no-first-run"
-          "--class=${chromiumPackage.pname}-${name}"
+          "--class=${className}"
         ];
 
         xdg.desktopEntry = {
           enable = true;
           settings = {
             terminal = false;
-            startupWMClass = lib.mkDefault "${chromiumPackage.pname}-${name}";
+            startupWMClass = lib.mkDefault className;
           };
         };
       }
@@ -131,6 +135,8 @@ rec {
         "chromiumPackage"
         "url"
         "imageHash"
+        "imageBuildFlags"
+        "imageSize"
         "name"
       ])
     ];
@@ -138,5 +144,16 @@ rec {
   commonChromiumFlags = [
     "--disable-sync"
     "--no-service-autorun"
+  ];
+
+  # List of Chromium flags to be as least intrusive as possible. This should be
+  # used sparingly though if you're sure that the web application doesn't make
+  # full use of Chromium's capabilities.
+  commonMinimalChromiumFlags = [
+    "--disable-background-networking"
+    "--disable-default-apps"
+    "--dns-prefetch-disable"
+    "--disable-component-extensions-with-background-pages"
+    "--disable-backgrounding-occluded-windows"
   ];
 }
