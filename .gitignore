@@ -12,6 +12,7 @@ configs/nixos/*/terraform/network.json
 todo.*
 
 # These are dotenv files with sensitive data so we won't have to include them.
+*/.envrc
 .*.envrc
 
 ### Terraform ###
