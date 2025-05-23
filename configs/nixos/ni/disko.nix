@@ -22,7 +22,7 @@
           };
 
           swap = {
-            start = "-8GiB";
+            start = "-64GiB";
             end = "-0";
             type = "8200";
             content = {
