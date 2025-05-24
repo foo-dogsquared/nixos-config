@@ -172,7 +172,8 @@
 
     # Arguments
 
-    It's a sole attribute set with the following attributes:
+    Similar to `stdenv.mkDerivation` but with a few attributes specific for
+    this builder function:
 
     `buildDir`
     : The output directory used in the build phase of the package.
@@ -206,7 +207,8 @@
 
     # Arguments
 
-    It's a sole attribute set with the following attributes:
+    Similar to `stdenv.mkDerivation` but with a few attributes specific for
+    this builder function:
 
     `buildDir`
     : The output directory used in the build phase of the package.
@@ -265,20 +267,48 @@
     pkgs.callPackage ./build-fds-env.nix { extendedStdenv = self.stdenv; };
 
   /**
-    A wrapper for creating dconf databases.
+    A builder for creating a dconf configuration file.
 
     # Arguments
 
-    A sole attribute set with the following attributes:
+    Similar to `stdenv.mkDerivation` but with a few attributes specific for
+    this builder function:
 
-    dir
-    : The directory of the dconf keyfiles.
+    settings
+    : The dconf INI value as an attribute set to be passed onto
+    `lib.generators.toDconfINI`.
 
     name
-    : The name of the dconf database. By default, it is based from the directory name.
+    : The name of the dconf file.
 
-    keyfiles
-    : A list of keyfiles to be included in the dconf database compilation.
+    # Type
+
+    ```
+    buildDconfConf :: Attrs -> Derivation
+    ```
+
+    # Example
+
+    ```nix
+    buildDconfConf (finalAttrs: {
+      settings = {
+        "org/gnome/wm/preferences".num-workspaces = lib.gvariant.mkInt32 6;
+      };
+    })
+    ```
+  */
+  buildDconfConf = pkgs.callPackage ./dconf/build-conf.nix { };
+
+  /**
+    A builder for creating dconf databases.
+
+    # Arguments
+
+    Similar to `stdenv.mkDerivation` but with a few attributes specific for
+    this builder function:
+
+    paths
+    : A list of directories containing the keyfiles.
 
     # Type
 
@@ -290,12 +320,71 @@
 
     ```nix
     buildDconfDb {
-      dir = ./config/dconf;
-      name = "custom-gnome";
+      paths = [
+        ./config/dconf
+      ];
+      pname = "custom-gnome-dconf-db";
     }
     ```
   */
-  buildDconfDb = pkgs.callPackage ./build-dconf-db.nix { };
+  buildDconfDb = pkgs.callPackage ./dconf/build-db.nix { };
+
+  /**
+    Builder for creating a package containing dconf keyfiles and a dconf
+    profile given a name. The output is typically composed as part of an
+    environment (e.g., `programs.dconf.packages` in NixOS).
+
+    ::: {.note}
+    This doesn't build any dconf databases. That is where `buildDconfDb` comes
+    in.
+    :::
+
+    # Arguments
+
+    Similar to `stdenv.mkDerivation` but with a few attributes specific for
+    this builder function:
+
+    name
+    : The name of the dconf profile.
+
+    keyfiles
+    : A list of directories containing the keyfiles to be exported at
+    `$out/etc/dconf/db/$NAME.d`.
+
+    profile
+    : A list of configuration database for dconf to look into. This will be
+    exported at `$out/etc/dconf/profile/$NAME`.
+
+    enableLocalUserProfile
+    : Enable setting `user-db:user` as the first item in the dconf profile.
+    By default, this is set to `false`. This is only meant for convenience for
+    building a profile list and can screw up the profile list if improperly
+    used.
+
+    enableSystemUserProfile
+    : Enable setting `system-db:$NAME` as the second item in the dconf profile.
+    By default, this is set to `false`. This is only meant for convenience for
+    building a profile list and can screw up the profile list order if
+    improperly used.
+
+    # Examples
+
+    ```nix
+    buildDconfPackage {
+      name = "one.foodogsquared.AHappyGNOME";
+      keyfiles = [
+        ./config/dconf
+        ../../workflows/extended-gnome-config/config/dconf
+      ];
+      enableLocalUserProfile = true;
+      enableSystemUserProfile = true;
+      profile = [
+        "system-db:local"
+      ];
+    }
+    ```
+  */
+  buildDconfPackage = pkgs.callPackage ./dconf/build-package.nix { };
 
   /**
     A wrapper for building Docker images.
