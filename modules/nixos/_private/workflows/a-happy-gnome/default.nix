@@ -275,8 +275,8 @@ in {
       };
     };
 
-    workflows.workflows.${workflowName}.paperwm.workspaces =
-      lib.mkIf cfg.paperwm.enablePresetWorkspaces {
+    workflows.workflows.${workflowName} = {
+      paperwm.workspaces = lib.mkIf cfg.paperwm.enablePresetWorkspaces {
         media = {
           name = "Media";
           index = lib.gvariant.mkInt32 0;
@@ -308,34 +308,35 @@ in {
         };
       };
 
-    workflows.workflows.${workflowName}.paperwm.winprops =
-      let
-        wmIndexOf = name: cfg.paperwm.workspaces.${name}.index.value;
-      in
-      lib.optionals (cfg.paperwm.enablePresetWinprops) [
-        {
-          wm_class = "re.sonny.Junction";
-          scratch_layer = true;
-        }
-      ]
-      ++ lib.optionals config.programs.steam.enable [
-        {
-          wm_class = "steam";
-          spaceIndex = wmIndexOf "media";
-        }
-      ]
-      ++ lib.optionals config.programs.chromium.enable [
-        {
-          wm_class = "chromium";
-          spaceIndex = wmIndexOf "chromium";
-        }
-      ]
-      ++ lib.optionals config.programs.firefox.enable [
-        {
-          wm_class = "firefox";
-          spaceIndex = wmIndexOf "media";
-        }
-      ];
+      paperwm.winprops =
+        let
+          wmIndexOf = name: cfg.paperwm.workspaces.${name}.index.value;
+        in
+        lib.optionals (cfg.paperwm.enablePresetWinprops) [
+          {
+            wm_class = "re.sonny.Junction";
+            scratch_layer = true;
+          }
+        ]
+        ++ lib.optionals config.programs.steam.enable [
+          {
+            wm_class = "steam";
+            spaceIndex = wmIndexOf "media";
+          }
+        ]
+        ++ lib.optionals config.programs.chromium.enable [
+          {
+            wm_class = "chromium";
+            spaceIndex = wmIndexOf "chromium";
+          }
+        ]
+        ++ lib.optionals config.programs.firefox.enable [
+          {
+            wm_class = "firefox";
+            spaceIndex = wmIndexOf "media";
+          }
+        ];
+    };
 
     # All GNOME-related additional options.
     services.gnome = {
