@@ -330,6 +330,37 @@
   buildDconfDb = pkgs.callPackage ./dconf/build-db.nix { };
 
   /**
+    Builder function for creating dconf profile.
+
+    # Arguments
+
+    Similar to `stdenv.mkDerivation` but with a few attributes specific for
+    this builder function:
+
+    profile
+    : A list of profile for dconf to consult as with its inputs documented from
+    {manpage}`dconf(7)`.
+
+    enableLocalUserProfile
+    : Convenience parameter for setting user database as the first dconf
+    database in the profile list. By default, it is set to `false`.
+
+    # Examples
+
+    ```nix
+    buildDconfProfile {
+      enableLocalUserProfile = true;
+      profile = [
+        "system-db:local"
+        "system-db:site"
+        "file-db:${buildDconfDb { ... }}"
+      ];
+    }
+    ```
+  */
+  buildDconfProfile = pkgs.callPackage ./dconf/build-profile.nix { };
+
+  /**
     Builder for creating a package containing dconf keyfiles and a dconf
     profile given a name. The output is typically composed as part of an
     environment (e.g., `programs.dconf.packages` in NixOS).
