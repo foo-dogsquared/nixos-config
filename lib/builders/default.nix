@@ -202,6 +202,44 @@
   buildMdbookSite = pkgs.callPackage ./build-mdbook-site { };
 
   /**
+    A wrapper for building with mkdocs.
+
+    # Arguments
+
+    It's a sole attribute set with the following attributes:
+
+    `buildDir`
+    : The output directory used in the build phase of the package.
+    By default, it is set to `book`.
+
+    # Type
+
+    ```
+    buildMdbookSite :: Attr -> Derivation
+    ```
+
+    # Examples
+
+    ```nix
+    buildMkdocsSite {
+      pname = "foodogsquared-mkdocs-project-docs";
+      version = "1.0.0";
+      src = lib.cleanSource ./.;
+
+      propagatedBuildInputs = with python3Packages; [
+        mkdocs-material
+      ];
+
+      meta = with lib; {
+        description = "foodogsquared's homepage";
+        license = licenses.gpl3Only;
+      };
+    }
+    ```
+  */
+  buildMkdocsSite = pkgs.callPackage ./build-mkdocs-site { };
+
+  /**
     An convenient function for building with the custom extended stdenv.
 
     # Arguments

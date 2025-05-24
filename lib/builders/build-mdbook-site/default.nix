@@ -35,7 +35,11 @@ lib.extendMkDerivation {
         runHook postInstall
       '';
 
+      doCheck = args.doCheck or true;
+      dontFixup = args.dontFixup or true;
+
       passthru = args.passthru or { } // {
+        inherit rustPlatforms;
         inherit mdbook;
       };
     };
