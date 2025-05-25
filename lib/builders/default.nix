@@ -242,6 +242,41 @@
   buildMkdocsSite = pkgs.callPackage ./mkdocs/build-site.nix { };
 
   /**
+    Builder for Antora sites.
+
+    # Arguments
+
+    Similar to `stdenv.mkDerivation` but with a few attributes specific for
+    this builder function:
+
+    buildDir
+    : The output directory used in the build phase of the package.
+    By default, it is set to `build/site`.
+
+    vendorHash
+    : An optional string containing an SRI hash of the `package.json` of the
+    source root. If this attribute is set, the builder includes NodeJS
+    toolchain.
+
+    npmRoot
+    : The root directory where `package.json` is located. This attribute is
+    only used when `vendorHash` is a non-null value.
+
+    # Examples
+
+    ```nix
+    buildAntoraSite {
+      pname = "fds-nix-module-wrapper-manager-docs-site";
+
+      src = lib.cleanSource ./.;
+
+      vendorHash = "";
+    }
+    ```
+  */
+  buildAntoraSite = pkgs.callPackage ./antora/build-site.nix { foodogsquaredLib = self; };
+
+  /**
     An convenient function for building with the custom extended stdenv.
 
     # Arguments
