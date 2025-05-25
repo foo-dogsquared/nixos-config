@@ -1,6 +1,25 @@
 { pkgs, lib, self }:
 
 {
+  # Similar to `lib.fetchers.proxyImpureEnvVars` but for Git.
+  #
+  # !!! I don't know which is important among them (except for a handful of
+  # envvars) so I'm taking most of them.
+  gitImpureEnvVars = [
+    "GIT_PROXY"
+    "GIT_HTTP_PROXY_AUTHMETHOD"
+    "GIT_SSL_VERSION"
+    "GIT_PROXY_COMMAND"
+    "GIT_SSH_COMMAND"
+    "GIT_CREDENTIALS"
+    "GIT_SSL_CERT"
+    "GIT_SSL_KEY"
+    "GIT_SSL_CERT_TYPE"
+    "GIT_PROXY_SSL_CERT"
+    "GIT_PROXY_SSL_KEY"
+    "GIT_HTTP_USER_AGENT"
+  ];
+
   /**
     A convenient wrapper for fetching contents from the Internet Archive.
 
