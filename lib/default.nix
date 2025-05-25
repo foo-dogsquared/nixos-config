@@ -44,7 +44,9 @@ in pkgs.lib.makeExtensible (self:
 
     inherit (self.builders)
       makeXDGMimeAssociationList makeXDGPortalConfiguration makeXDGDesktopEntry
-      buildHugoSite buildMdbookSite buildFDSEnv buildDconfDb buildDockerImage;
+      buildHugoSite buildMdbookSite buildMkdocsSite buildAntoraSite buildFDSEnv
+      buildDconfDb buildDconfProfile buildDconfConf buildDconfPackage
+      buildDockerImage;
     inherit (self.trivial)
       countAttrs filterAttrs' bitsToBytes SIPrefixExponent
       metricPrefixMultiplier binaryPrefixExponent binaryPrefixMultiplier
