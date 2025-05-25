@@ -78,7 +78,7 @@ in {
       home.packages = with pkgs; [
         cachix # Compile no more by using someone's binary cache!
         regex-cli # Save some face of confusion for yourself.
-        #dt # Get that functional gawk.
+        dt # Get that functional gawk.
         jq # Get that JSON querying tool.
         recode # Convert between different encodings.
         go-migrate # Go potential migraines.
@@ -125,7 +125,7 @@ in {
     })
 
     (lib.mkIf userCfg.programs.browsers.firefox.enable {
-      # home.packages = with pkgs; [ (lowPrio firefox-devedition) ];
+      home.packages = with pkgs; [ (lowPrio firefox-devedition) ];
     })
 
     (lib.mkIf userCfg.programs.git.enable {

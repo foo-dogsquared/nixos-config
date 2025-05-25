@@ -307,7 +307,12 @@ in {
     })
 
     # Goes with whatever you want to.
-    (lib.mkIf cfg.misc.enable { home.packages = with pkgs; [ nyxt ]; })
+    (lib.mkIf cfg.misc.enable {
+      home.packages = with pkgs; [
+        nyxt
+        tor-browser
+      ];
+    })
 
     (lib.mkIf cfg.plugins.firenvim.enable (let
       supportedBrowsers = [ "brave" "chromium" "google-chrome" "vivaldi" ];

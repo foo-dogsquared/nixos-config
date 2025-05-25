@@ -128,7 +128,7 @@ in {
           inherit chromiumPackage;
           name = "yt-music";
           url = "https://music.youtube.com";
-          imageHash = "sha512-xAe9P125GE+uLymWuKi5cDpFlKyFWPUytoUMSoLwkjzUKlZyuDbHrKAvcHKvdOjc+Nr4SS+LEXnNg3bsNECU6w==";
+          imageHash = "sha512-H3azlziVUDBI/4wYqR1cBGzV3pSLL1VENDuti/k868rpdqbtGg7CEcN/h2NALc1hUaRPSEjJ1PjN1VshyVej5w==";
           imageBuildFlags = [
             # Because the service only accepts browser views.
             "--disable-html-download"
