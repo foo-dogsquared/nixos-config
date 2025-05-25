@@ -1,6 +1,6 @@
 # Trying to be creative with coding while endlessly referring to some tutorials
 # on the internet.
-{ mkShell, supercollider, bonzomatic, processing, puredata, shaderc }:
+{ mkShell, supercollider, bonzomatic, processing, puredata, shaderc, shader-slang }:
 
 mkShell {
   packages = [
@@ -8,6 +8,7 @@ mkShell {
     bonzomatic # Shadertoy for desktop bozos.
     processing # All aboard the creative coding train.
     puredata # Pure unadulterated data: all of them.
+    shader-slang # A bunch of colloquial terms used by them shady people.
     shaderc # Tools to be a shady person.
   ];
 }
