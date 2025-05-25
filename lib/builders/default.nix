@@ -309,12 +309,20 @@
     Similar to `stdenv.mkDerivation` but with a few attributes specific for
     this builder function:
 
+    name
+    : The name of the dconf file.
+
     settings
     : The dconf INI value as an attribute set to be passed onto
     `lib.generators.toDconfINI`.
 
-    name
-    : The name of the dconf file.
+    locks
+    : A list of dconf keys to be locked. This will be generated as a separate
+    file in `$out/locks/$NAME`.
+
+    lockAll
+    : Lock all of the keys as given from `settings`. Effectively overrides the
+    `locks` option with all of the given keys instead of select few.
 
     # Type
 
