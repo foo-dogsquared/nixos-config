@@ -165,7 +165,7 @@
     }
     ```
   */
-  buildHugoSite = pkgs.callPackage ./hugo-build-site { };
+  buildHugoSite = pkgs.callPackage ./hugo/build-site.nix { };
 
   /**
     A wrapper for building with mdbook.
@@ -200,7 +200,7 @@
     }
     ```
   */
-  buildMdbookSite = pkgs.callPackage ./build-mdbook-site { };
+  buildMdbookSite = pkgs.callPackage ./mdbook/build-site.nix { };
 
   /**
     A wrapper for building with mkdocs.
@@ -239,7 +239,7 @@
     }
     ```
   */
-  buildMkdocsSite = pkgs.callPackage ./build-mkdocs-site { };
+  buildMkdocsSite = pkgs.callPackage ./mkdocs/build-site.nix { };
 
   /**
     An convenient function for building with the custom extended stdenv.
