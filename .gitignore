@@ -1,6 +1,9 @@
-.direnv
+# Typical generated files in development.
 result*
 *.qcow2
+
+# All of the encrypted secrets (so it cannot be added to index more than once).
+*.bin
 
 # Generated Tailscale authentication keys.
 *-tailscale-auth-key
@@ -50,4 +53,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+
+### direnv ###
+.direnv
+.envrc
 
