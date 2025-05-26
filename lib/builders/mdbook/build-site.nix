@@ -9,6 +9,8 @@ lib.extendMkDerivation {
     finalAttrs:
     {
       buildDir ? "book",
+
+      ...
     }@args:
     {
       nativeBuildInputs = args.nativeBuildInputs or [ ] ++ [
