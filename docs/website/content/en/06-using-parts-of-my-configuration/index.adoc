@@ -60,7 +60,7 @@ In that case, you can simply plop them into your list of imports for your NixOS 
   ];
 
   # Use my GNOME desktop configuration for some reason.
-  workflows.workflows.a-happy-gnome.enable = true;
+  workflows.workflows."one.foodogsquared.AHappyGNOME".enable = true;
 }
 ----
 
@@ -102,7 +102,7 @@ in {
   ];
 
   # Still using my GNOME desktop configuration for some reason.
-  workflows.workflows.a-happy-gnome.enable = true;
+  workflows.workflows."one.foodogsquared.AHappyGNOME".enable = true;
 }
 ----
 
@@ -125,6 +125,6 @@ in {
   ];
 
   # GNOME4LIFE!!!
-  workflows.workflows.a-happy-gnome.enable = true;
+  workflows.workflows."one.foodogsquared.AHappyGNOME".enable = true;
 }
 ----

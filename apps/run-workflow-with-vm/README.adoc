@@ -8,7 +8,7 @@ It only expects the name of the workflow as the first argument with the rest to 
 
 [source, shell]
 ----
-run-workflow-with-vm a-happy-gnome
+run-workflow-with-vm one.foodogsquared.AHappyGNOME
 ----
 
 When run, it should build a VM with its script to easily initialize it.
@@ -35,7 +35,7 @@ Once you have an folder containing those extra snippets, you can simply include 
 
 [source, shell]
 ----
-run-workflow-with-vm a-happy-gnome -I extra-config=./extra-config-stuff
+run-workflow-with-vm one.foodogsquared.AHappyGNOME -I extra-config=./extra-config-stuff
 ----
 
 Another thing, this script is using https://github.com/nix-community/nixos-generators[nixos-generators] to build the VM which in turn basically uses nixpkgs' integration of it (at `${pkgs.path}/nixos/modules/virtualisation/build-vm.nix`).

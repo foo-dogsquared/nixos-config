@@ -17,7 +17,7 @@ let
     { id = "oldceeleldhonbafppcapldpdifcinji"; } # LanguageTool checker
   ] ++ lib.optionals config.services.activitywatch.enable [
     { id = "nglaklhklhcoonedhgnpgddginnjdadi"; } # ActivityWatch Web Watcher
-  ] ++ lib.optionals (lib.elem "a-happy-gnome" attrs.nixosConfig.workflows.enable or []) [
+  ] ++ lib.optionals (lib.elem "one.foodogsquared.AHappyGNOME" attrs.nixosConfig.workflows.enable or []) [
     { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # GNOME Shell integration
     { id = "jfnifeihccihocjbfcfhicmmgpjicaec"; } # GSConnect
   ] ++ lib.optionals userCfg.services.archivebox.enable [

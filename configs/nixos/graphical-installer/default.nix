@@ -29,8 +29,8 @@
       # Use my desktop environment configuration without the apps just to make the
       # closure size smaller.
       workflows = {
-        enable = [ "a-happy-gnome" ];
-        workflows.a-happy-gnome = { extraApps = lib.mkForce [ ]; };
+        enable = [ "one.foodogsquared.AHappyGNOME" ];
+        workflows."one.foodogsquared.AHappyGNOME" = { extraApps = lib.mkForce [ ]; };
       };
 
       # Install the web browser of course. What would be a graphical installer

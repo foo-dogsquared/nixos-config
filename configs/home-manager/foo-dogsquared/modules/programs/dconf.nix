@@ -56,12 +56,12 @@ in {
     # * The preset workspace option for the workflow module has been enabled
     # and exclusively configured around that.
     # * The default list of applications from the workflow module.
-    (lib.mkIf (lib.elem "a-happy-gnome" attrs.nixosConfig.workflows.enable or []) {
+    (lib.mkIf (lib.elem "one.foodogsquared.AHappyGNOME" attrs.nixosConfig.workflows.enable or []) {
       dconf.settings = {
         "org/gnome/shell/extensions/paperwm" = {
           winprops =
             let
-              inherit (attrs.nixosConfig.workflows.workflows.a-happy-gnome.paperwm) workspaces;
+              inherit (attrs.nixosConfig.workflows.workflows."one.foodogsquared.AHappyGNOME".paperwm) workspaces;
 
               # A small convenience to make memorizing the index of a workspace
               # not a thing.

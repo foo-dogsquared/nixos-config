@@ -19,7 +19,7 @@ The workflow namespace mainly contains the `enable` option where you can enable 
 
 {
   workflows.enable = [
-    "a-happy-gnome"
+    "one.foodogsquared.AHappyGNOME"
     "beepeedobolyuessemm"
   ];
 }

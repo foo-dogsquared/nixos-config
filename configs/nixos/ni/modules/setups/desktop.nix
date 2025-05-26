@@ -35,7 +35,7 @@ in {
       workflows.enable = [ "one.foodogsquared.AHappyGNOME" ];
     }
 
-    (lib.mkIf (hasAnyWorkflowEnabled [ "a-happy-gnome" "knome" ]) {
+    (lib.mkIf (hasAnyWorkflowEnabled [ "one.foodogsquared.AHappyGNOME" "knome" ]) {
       hosts.ni.networking.setup = "networkmanager";
       suites.i18n.setup = "ibus";
     })
