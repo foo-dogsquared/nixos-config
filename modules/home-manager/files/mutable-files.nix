@@ -192,9 +192,9 @@ in {
               path = lib.escapeShellArg value.path;
             in ''
               (
-                URL=${url}
-                FILEPATH=${path}
-                DIRNAME=$(dirname ${path})
+                URL=${lib.escapeShellArg url}
+                FILEPATH=${lib.escapeShellArg path}
+                DIRNAME=$(dirname ${lib.escapeShellArg path})
                 mkdir -p "$DIRNAME"
                 ${(fetchScript path value).${value.type}}
               )
