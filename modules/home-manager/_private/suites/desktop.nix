@@ -33,7 +33,7 @@ in {
           emulsion-palette # Manage your color palettes.
           eyedropper # Gotta keep your monitor moist.
           inkscape-with-extensions # Illustration wannabe tool.
-          gimp-with-plugins # Photo editing wannabe tool.
+          gimp3-with-plugins # Photo editing wannabe tool.
           krita # Digital art wannabe tool.
           pureref # Pure references.
 
