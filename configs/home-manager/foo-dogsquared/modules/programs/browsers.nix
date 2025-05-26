@@ -245,7 +245,7 @@ in {
         ];
 
         profiles.guest = {
-          search.default = "Google";
+          search.default = "google";
           id = 1;
         };
       };

@@ -254,6 +254,13 @@ in {
             default_app = "iris";
           };
 
+          core.restore_state = true;
+
+          audio = {
+            mixer = "software";
+            mixer_volume = 50;
+          };
+
           file = {
             enabled = true;
             media_dirs = [ "$XDG_MUSIC_DIR|Music" "~/library/music|Library" ]

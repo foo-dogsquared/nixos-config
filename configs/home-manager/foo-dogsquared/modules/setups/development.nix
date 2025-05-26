@@ -76,6 +76,7 @@ in {
       };
 
       home.packages = with pkgs; [
+        comma # You come and go.
         cachix # Compile no more by using someone's binary cache!
         regex-cli # Save some face of confusion for yourself.
         dt # Get that functional gawk.

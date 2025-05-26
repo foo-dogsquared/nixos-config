@@ -45,12 +45,13 @@ bind fz hint -z
 bind fy hint -y
 
 " Recontaining them nicefully.
+bind qq recontain
 bind qQ recontain Personal
 bind qW recontain Work
 bind qe recontain Banking
 bind qE recontain Shopping
 bind qC recontain Chat
-bind qq recontain Cooking
+bind qc recontain Cooking
 
 " Sorting them nicefully.
 bind qss tabsort --url
