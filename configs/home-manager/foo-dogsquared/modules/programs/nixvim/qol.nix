@@ -3,6 +3,9 @@
 let
   nixvimCfg = config.nixvimConfigs.fiesta-fds;
   cfg = nixvimCfg.setups.qol;
+
+  bindingPrefix = "<leader>g";
+  bindingPrefix' = k: "${bindingPrefix}${k}";
 in
 {
   options.nixvimConfigs.fiesta-fds.setups.qol.enable =
@@ -36,32 +39,35 @@ in
       };
     };
 
+    plugins.which-key.settings.spec = lib.singleton
+      (helpers.listToUnkeyedAttrs [ bindingPrefix ] // { group = "Git"; });
+
     keymaps = [
       {
-        key = "<leader>gb";
+        options.desc = "Open blame lines for the current line";
+        key = bindingPrefix' "b";
         action = helpers.mkRaw ''function()
           Snacks.git.blame_line()
         end
         '';
-        options.desc = "Open blame lines for the current line";
       }
     ] ++ lib.optionals config.plugins.snacks.settings.lazygit.enabled [
       {
-        key = "<leader>gg";
+        options.desc = "Open lazygit";
+        key = bindingPrefix' "g";
         action = helpers.mkRaw ''function()
           Snacks.lazygit()
         end
         '';
-        options.desc = "Open lazygit";
       }
 
       {
-        key = "<leader>gf";
+        options.desc = "Open current file history in lazygit";
+        key = bindingPrefix' "f";
         action = helpers.mkRaw ''function()
           Snacks.lazygit.log_file()
         end
         '';
-        options.desc = "Open current file history in lazygit";
       }
     ];
   };
