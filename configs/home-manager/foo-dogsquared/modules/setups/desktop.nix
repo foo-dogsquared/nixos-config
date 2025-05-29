@@ -191,6 +191,30 @@ in {
             ];
           };
         };
+
+        netflix = wrapChromiumWebApp rec {
+          inherit chromiumPackage;
+          name = "netflix";
+          url = "https://netflix.com";
+          imageHash = "sha512-V5TfMR+Je7QNS8Nsh+M8M0I7KU2oxDnqPVcu1LS2wa/gkf67V6fQeWW0Q5AzzIdNbMy1Vp9CEw0DkAotRcvkDg==";
+          appendArgs = mkFlags name ++ [
+            "--enable-nacl"
+          ];
+          xdg.desktopEntry.settings = {
+            desktopName = "Netflix";
+            genericName = "Online Video Stream Client";
+            comment = "Video stream from a wide library of shows";
+            categories = [ "AudioVideo" ];
+            keywords = [
+              "TV Shows"
+              "Anime"
+              "Documentaries"
+              "KDrama"
+              "CDrama"
+              "JDrama"
+            ];
+          };
+        };
       }
     );
   };
