@@ -101,7 +101,6 @@ in {
 
         gnome-backgrounds # Default backgrounds.
 
-        gnome-menus # It is required for custom menus in extensions.
         gnome-extension-manager # The cooler GNOME extensions app.
         gnome-search-provider-recoll # This is here for some reason.
 
@@ -116,6 +115,17 @@ in {
       example = lib.literalExpression ''
         with pkgs; [ gnome.polari ];
       '';
+    };
+
+    sessionPath = lib.mkOption {
+      type = with lib.types; listOf package;
+      description = ''
+        Additional list of packages to be added to the session search path.
+        Typically used on additional dependencies for GNOME Shell extensions.
+      '';
+      default = with pkgs; [
+        gnome-menus # It is required for custom menus in extensions.
+      ];
     };
 
     disableSearchProviders = lib.mkOption {
@@ -263,7 +273,10 @@ in {
     # Enable GNOME.
     services.xserver = {
       enable = true;
-      desktopManager.gnome.enable = true;
+      desktopManager.gnome = {
+        inherit (cfg) sessionPath;
+        enable = true;
+      };
     };
 
     xdg.autostart.entries = {
