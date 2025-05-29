@@ -1,8 +1,10 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, helpers, ... }:
 
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.treesitter;
+
+  lspSwapBindingPrefix = "<leader>s";
 in {
   options.nixvimConfigs.fiesta.setups.treesitter.enable =
     lib.mkEnableOption "tree-sitter setup for Fiesta NixVim";
@@ -33,6 +35,11 @@ in {
       navigation.enable = true;
       smartRename.enable = true;
     };
+
+    plugins.which-key.settings.spec =
+      lib.optionals config.plugins.treesitter-textobjects.swap.enable [
+        (helpers.listToUnkeyedAttrs [ lspSwapBindingPrefix ] // { group = "Swap"; })
+      ];
 
     # Show me your moves.
     plugins.treesitter-textobjects = {
@@ -105,19 +112,19 @@ in {
           in acc ++ mappings;
       in lib.foldlAttrs mkQueryMappings [ ] {
         "function" = {
-          previous = "M";
+          previous = "m";
           next = "m";
         };
         "block" = {
-          previous = "B";
+          previous = "b";
           next = "b";
         };
         "call" = {
-          previous = "F";
+          previous = "f";
           next = "f";
         };
         "class" = {
-          previous = "C";
+          previous = "c";
           next = "c";
         };
         "conditional" = {
@@ -187,11 +194,6 @@ in {
           variant = [ "outer" ];
         };
 
-        motionMap = {
-          "outerPrevious" = "<leader>S";
-          "outerNext" = "<leader>s";
-        };
-
         actionDesc = variant: jumpDirection: query:
           if variant == "inner" then
             "Jump to inner part of the ${jumpDirection} ${query}"
@@ -204,11 +206,9 @@ in {
               let
                 inherit (motion) jumpDirection variant;
                 jumpDirection' = lib.strings.toLower jumpDirection;
-                binding' = bindings.${jumpDirection'};
-                bindingPrefix = motionMap."${variant}${jumpDirection}";
               in {
                 "swap${jumpDirection}" = {
-                  "${bindingPrefix}${binding'}" = {
+                  "${lspSwapBindingPrefix}${bindings.${jumpDirection'}}" = {
                     desc = actionDesc variant jumpDirection' query;
                     query = "@${query}.${variant}";
                   };

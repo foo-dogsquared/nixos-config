@@ -3,6 +3,7 @@
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.fuzzy-finder;
+  bindingPrefix = "<leader>f";
 in {
   options.nixvimConfigs.fiesta.setups.fuzzy-finder.enable =
     lib.mkEnableOption "fuzzy finder setup";
@@ -15,9 +16,13 @@ in {
       enableTelescope = true;
     };
 
+    plugins.which-key.settings.spec =
+      lib.optionals config.plugins.telescope.enable [
+        (helpers.listToUnkeyedAttrs [ bindingPrefix ] // { group = "Telescope"; })
+      ];
+
     # Configure all of the keymaps.
     keymaps = let
-      bindingPrefix = "<leader>f";
       mkTelescopeKeymap = binding: settings:
         lib.mergeAttrs {
           mode = "n";
@@ -71,6 +76,11 @@ in {
       "t" = {
         options.desc = "List symbols from treesitter queries";
         action = helpers.mkRaw "require('telescope.builtin').treesitter";
+      };
+    } // lib.optionalAttrs nixvimCfg.setups.lsp.enable {
+      "d" = {
+        options.desc = "List LSP definitions";
+        action = helpers.mkRaw "require('telescope.builtin').lsp_definitions";
       };
     });
   };

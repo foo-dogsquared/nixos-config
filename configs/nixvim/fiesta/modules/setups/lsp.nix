@@ -13,7 +13,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    keymaps = [{
+    keymaps = lib.optionals config.plugins.lsp.inlayHints [{
       mode = [ "n" ];
       key = "<leader>Li";
       options.desc = "Toggle inlay hints";
@@ -29,20 +29,59 @@ in {
       inlayHints = true;
     };
 
-    # Keymaps for moving around in the buffer.
-    plugins.lsp.keymaps.lspBuf = {
-      K = "hover";
-      gD = "references";
-      gd = "definition";
-      gi = "implementation";
-      gt = "type_definition";
-    };
+    lsp.keymaps = [
+      {
+        options.desc = "Go to next diagnostic";
+        key = "gj";
+        action = helpers.mkRaw
+          /* lua */ ''
+            function()
+              vim.diagnostic.jump({ count = -1, float = true })
+            end
+          '';
+      }
 
-    # Keymaps for moving around with the doctor.
-    plugins.lsp.keymaps.diagnostic = {
-      "<leader>j" = "goto_next";
-      "<leader>k" = "goto_prev";
-    };
+      {
+        options.desc = "Go to previous diagnostic";
+        key = "gk";
+        action = helpers.mkRaw
+          /* lua */ ''
+            function()
+              vim.diagnostic.jump({ count = 1, float = true })
+            end
+          '';
+      }
+
+      {
+        options.desc = "Hover";
+        key = "K";
+        lspBufAction = "hover";
+      }
+
+      {
+        options.desc = "Go to references";
+        key = "gD";
+        lspBufAction = "references";
+      }
+
+      {
+        options.desc = "Go to definition";
+        key = "gd";
+        lspBufAction = "definition";
+      }
+
+      {
+        options.desc = "Go to implementation";
+        key = "gi";
+        lspBufAction = "implementation";
+      }
+
+      {
+        options.desc = "Go to type definition";
+        key = "gt";
+        lspBufAction = "type_definition";
+      }
+    ];
 
     # Make those diagnostics fit the screen, GODDAMNIT!
     plugins.lsp-lines.enable = true;

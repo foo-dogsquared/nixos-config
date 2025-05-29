@@ -3,6 +3,7 @@
 let
   nixvimCfg = config.nixvimConfigs.fiesta;
   cfg = nixvimCfg.setups.debugging;
+  bindingPrefix = "<Leader>d";
 in {
   options.nixvimConfigs.fiesta.setups.debugging.enable =
     lib.mkEnableOption "debugging setup for Fiesta NixVim";
@@ -19,8 +20,12 @@ in {
       };
     };
 
+    plugins.which-key.settings.spec = [
+      (helpers.listToUnkeyedAttrs [ bindingPrefix ] // { group = "Debug"; })
+      (helpers.listToUnkeyedAttrs [ "${bindingPrefix}D" ] // { group = "Within session"; })
+    ];
+
     keymaps = let
-      bindingPrefix = "<Leader>d";
       mkDAPBinding = binding: settings:
         {
           mode = "n";
@@ -32,14 +37,14 @@ in {
         action = helpers.mkRaw "require('dap').toggle_breakpoint";
       };
 
-      "B" = {
+      "Bb" = {
         options.desc = "Set breakpoint";
         action = helpers.mkRaw "require('dap').set_breakpoint";
       };
 
       "Bp" = {
         options.desc = "Set breakpoint with log message";
-        action = helpers.mkRaw ''
+        action = helpers.mkRaw /* lua */ ''
           function()
             require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
           end
@@ -63,77 +68,87 @@ in {
         action = helpers.mkRaw "require('dap').terminate";
       };
 
-      "l" = {
+      "Dl" = {
         options.desc = "Step over";
         action = helpers.mkRaw "require('dap').step_over";
       };
 
-      "j" = {
+      "Dj" = {
         options.desc = "Step into";
         action = helpers.mkRaw "require('dap').step_into";
       };
 
-      "J" = {
+      "DJ" = {
         options.desc = "Go up";
         action = helpers.mkRaw "require('dap').up";
       };
 
-      "k" = {
+      "Dk" = {
         options.desc = "Step out";
         action = helpers.mkRaw "require('dap').step_out";
       };
 
-      "K" = {
+      "DK" = {
         options.desc = "Go down";
         action = helpers.mkRaw "require('dap').down";
       };
 
-      "rs" = {
+      "R" = {
         options.desc = "Restart session";
         action = helpers.mkRaw "require('dap').restart";
       };
 
-      "rr" = {
-        options.desc = "Open debugging REPL";
-        action = helpers.mkRaw "require('dap').repl.open";
+      "r" = {
+        options.desc = "Toggle REPL";
+        action = helpers.mkRaw "require('dap').repl.toggle";
       };
 
-      "rl" = {
+      "." = {
         options.desc = "Run last configuration";
         action = helpers.mkRaw "require('dap').run_last";
       };
 
-      "ph" = {
+      "Dh" = {
         options.desc = "View the value under the cursor";
         action = helpers.mkRaw "require('dap.ui.widgets').hover";
         mode = [ "n" "v" ];
       };
 
-      "pp" = {
+      "Dp" = {
         options.desc = "See value in preview window";
         action = helpers.mkRaw "require('dap.ui.widgets').preview";
         mode = [ "n" "v" ];
       };
-    } ++ lib.mapAttrsToList mkDAPBinding {
-      "<F5>" = {
+    } ++ [
+      {
+        key = "<F5>";
         options.desc = "Continue";
         action = helpers.mkRaw "require('dap').continue";
-      };
+      }
 
-      "<F10>" = {
+      {
+        key = "<F9>";
+        options.desc = "Toggle breakpoint";
+        action = helpers.mkRaw "require('dap').toggle_breakpoint";
+      }
+
+      {
+        key = "<F10>";
         options.desc = "Step over";
         action = helpers.mkRaw "require('dap').step_over";
-      };
+      }
 
-      "<F11>" = {
+      {
+        key = "<F11>";
         options.desc = "Step into";
         action = helpers.mkRaw "require('dap').step_into";
-      };
+      }
 
-      "<F12>" = {
+      {
+        key = "<F12>";
         options.desc = "Step out";
         action = helpers.mkRaw "require('dap').step_out";
-      };
-    };
+      }
+    ];
   };
 }
