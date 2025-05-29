@@ -31,6 +31,7 @@ lib.extendMkDerivation {
 
       disableHTMLDownload ? false,
       disableGoogleIconsDownload ? false,
+      disableDuckduckgoIconsDownload ? true,
       ...
     }@args:
     let
@@ -51,13 +52,14 @@ lib.extendMkDerivation {
         "--largest-only"
         "--size" size
       ]
-      ++ lib.optionals (!disableHTMLDownload) [ "--disable-html-download" ]
-      ++ lib.optionals (!disableGoogleIconsDownload) [ "--disable-google-icons" ];
+      ++ lib.optionals disableHTMLDownload [ "--disable-html-download" ]
+      ++ lib.optionals disableGoogleIconsDownload [ "--disable-google-icons" ]
+      ++ lib.optionals disableDuckduckgoIconsDownload [ "--disable-duckduckgo-icons" ];
 
       impureEnvVars = lib.fetchers.proxyImpureEnvVars;
 
       buildCommand = ''
-        export FONTCONFIG_FILE=${cacheConf}
+        export FONTCONFIG_FILE="${cacheConf}" XDG_CACHE_HOME="$(mktemp -d)"
         extract-website-icon ''${buildFlags[@]}
         mv ./icon $out
       '';
