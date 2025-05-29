@@ -5,6 +5,7 @@
 
   config = {
     nixvimConfigs.fiesta.setups = {
+      buffers.enable = true;
       devenvs.enable = true;
       snippets.enable = true;
       ui.enable = true;
@@ -38,13 +39,6 @@
         key = "jk";
         action = "<Esc>";
         options.desc = "Escape";
-      }
-
-      {
-        mode = "n";
-        key = "<leader>bd";
-        action = helpers.mkRaw "vim.cmd.bdelete";
-        options.desc = "Delete current buffer";
       }
     ];
   };

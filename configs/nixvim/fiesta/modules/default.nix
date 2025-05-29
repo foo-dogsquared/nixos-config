@@ -1,5 +1,6 @@
 {
   imports = [
+    ./setups/buffers.nix
     ./setups/completion.nix
     ./setups/debugging.nix
     ./setups/desktop-utils.nix
