@@ -165,6 +165,13 @@ let
             })
           ];
         })
+
+        (import ./shared/nix-conf.nix {
+          inherit inputs;
+          inputOverride = {
+            nixpkgs = inputs.${config.nixpkgs.branch};
+          };
+        })
       ];
     };
 in {
@@ -201,7 +208,6 @@ in {
     configs = lib.mkOption {
       type = with lib.types;
         attrsOf (submodule [
-          (import ./shared/nix-conf.nix { inherit inputs; })
           (import ./shared/config-options.nix { inherit (config) systems; })
           ./shared/nixpkgs-options.nix
           ./shared/special-args-options.nix

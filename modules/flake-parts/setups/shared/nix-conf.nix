@@ -1,31 +1,21 @@
-{ inputs }:
-
-{ config, lib, ... }:
+{ inputs, inputOverride }:
 
 let
-  inputs' = inputs // {
-    nixpkgs = inputs.${config.nixpkgs.branch};
-    home-manager = inputs.${config.homeManagerBranch};
-  };
+  inputs' = inputs // inputOverride;
 
   flakeInputName = name: if name == "self" then "config" else name;
-
+in ({ lib, ... }: let
   nixChannels =
-    lib.mapAttrsToList (name: source: "${flakeInputName name}=${source}")
-    inputs' ++ [ "/nix/var/nix/profiles/per-user/root/channels" ];
+    lib.mapAttrsToList (name: source: "${flakeInputName name}=${source}") inputs';
 in {
-  config.modules = [
-    ({ lib, ... }: {
-      # I want to capture the usual flakes to its exact version so we're
-      # making them available to our system. This will also prevent the
-      # annoying downloads since it always get the latest revision.
-      nix.registry = lib.mapAttrs' (name: flake:
-        lib.nameValuePair (flakeInputName name) { inherit flake; }) inputs';
+  # I want to capture the usual flakes to its exact version so we're
+  # making them available to our system. This will also prevent the
+  # annoying downloads since it always get the latest revision.
+  nix.registry = lib.mapAttrs' (name: flake:
+    lib.nameValuePair (flakeInputName name) { inherit flake; }) inputs';
 
-      nix.settings.nix-path = nixChannels;
+  nix.settings.nix-path = nixChannels;
 
-      # It doesn't work on the traditional tools like nix-shell so ehhh...
-      nix.nixPath = nixChannels;
-    })
-  ];
-}
+  # It doesn't work on the traditional tools like nix-shell so ehhh...
+  nix.nixPath = nixChannels;
+})

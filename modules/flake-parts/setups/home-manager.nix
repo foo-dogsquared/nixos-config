@@ -112,6 +112,15 @@ let
         })
       ];
 
+      standaloneConfigModules =
+        lib.singleton (import ./shared/nix-conf.nix {
+          inherit inputs lib;
+          inputOverrides = {
+            nixpkgs = inputs.${config.nixpkgs.branch};
+            home-manager = inputs.${config.homeManagerBranch};
+          };
+        });
+
       nixpkgs.config = cfg.sharedNixpkgsConfig;
       specialArgs = cfg.sharedSpecialArgs;
     };
@@ -163,7 +172,6 @@ in {
     configs = lib.mkOption {
       type = with lib.types;
         attrsOf (submodule [
-          (import ./shared/nix-conf.nix { inherit inputs; })
           (import ./shared/config-options.nix { inherit (config) systems; })
           ./shared/nixpkgs-options.nix
           ./shared/special-args-options.nix
