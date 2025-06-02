@@ -20,6 +20,14 @@
     "GIT_HTTP_USER_AGENT"
   ];
 
+  # Basically `lib.fetchers.proxyImpureEnvVars` but for the
+  # fds-flock-of-fetchers application. In case it needs all of it for some
+  # reason.
+  ffofImpureEnvVars = lib.map (k: "FOODOGSQUARED_FFOF_${k}") [
+    "UNSPLASH_API_KEY"
+    "PEXELS_API_KEY"
+  ];
+
   /**
     A convenient wrapper for fetching contents from the Internet Archive.
 
