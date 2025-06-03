@@ -15,11 +15,6 @@
           default = null;
           example = "bubblewrap";
         };
-
-        subwrapper = {
-          arg0 = options.arg0;
-          extraArgs = options.prependArgs;
-        };
       };
     };
   in lib.mkOption {

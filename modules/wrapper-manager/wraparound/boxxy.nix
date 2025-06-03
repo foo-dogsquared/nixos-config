@@ -76,13 +76,18 @@ in {
   options.wraparound.boxxy = boxxyModuleFactory { isGlobal = true; };
 
   options.wrappers = let
-    boxxySandboxModule = { name, lib, config, pkgs, ... }:
+    boxxySandboxModule = { name, lib, config, pkgs, options, ... }:
       let submoduleCfg = config.wraparound.boxxy;
       in {
         options.wraparound.variant =
           lib.mkOption { type = with lib.types; nullOr (enum [ "boxxy" ]); };
 
-        options.wraparound.boxxy = boxxyModuleFactory { isGlobal = false; };
+        options.wraparound.boxxy = boxxyModuleFactory { isGlobal = false; } // {
+          subwrapper = {
+            arg0 = options.arg0;
+            extraArgs = options.prependArgs;
+          };
+        };
 
         config = lib.mkIf (config.wraparound.variant == "boxxy") {
           wraparound.boxxy.rules = cfg.rules;
@@ -99,8 +104,8 @@ in {
 
           arg0 = lib.getExe' submoduleCfg.package "boxxy";
           prependArgs = lib.mkBefore (submoduleCfg.extraArgs
-            ++ [ "--" config.wraparound.subwrapper.arg0 ]
-            ++ config.wraparound.subwrapper.extraArgs);
+            ++ [ "--" submoduleCfg.subwrapper.arg0 ]
+            ++ submoduleCfg.subwrapper.extraArgs);
         };
       };
   in lib.mkOption {

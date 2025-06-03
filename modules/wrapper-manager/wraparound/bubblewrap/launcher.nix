@@ -3,7 +3,7 @@
 # would spelunk any other project. So far, the subproject itself doesn't have a
 # good state of testing (which is just used as a program for this very purpose)
 # so just use wrapper-manager's testing infra instead.
-{ config, lib, options, pkgs, ... }:
+{ config, lib, pkgs, wrapperManagerLib, ... }:
 
 let
   cfg = config.wraparound.bubblewrap.launcher;
@@ -40,22 +40,27 @@ in {
     bubblewrapModuleFactory { isGlobal = true; };
 
   options.wrappers = let
-    bubblewrapLauncherSubmodule = { config, lib, name, ... }:
+    bubblewrapLauncherSubmodule = { config, lib, name, options, ... }:
       let
         submoduleCfg = config.wraparound.bubblewrap.launcher;
         envSuffix = word: "WRAPPER_MANAGER_BWRAP_LAUNCHER_${word}";
       in {
         options.wraparound.bubblewrap.launcher =
-          bubblewrapModuleFactory { isGlobal = false; };
+          bubblewrapModuleFactory { isGlobal = false; } // {
+            subwrapper = {
+              arg0 = options.arg0;
+              extraArgs = options.prependArgs;
+            };
+          };
 
         config = lib.mkIf (config.wraparound.variant == "bubblewrap")
           (lib.mkMerge [
             {
               arg0 = lib.getExe' submoduleCfg.package
                 "wrapper-manager-bubblewrap-launcher";
-              prependArgs = lib.mkBefore (config.wraparound.bubblewrap.extraArgs
-                ++ [ "--" config.wraparound.subwrapper.arg0 ]
-                ++ config.wraparound.subwrapper.extraArgs);
+              prependArgs = wrapperManagerLib.mkWraparoundBefore (config.wraparound.bubblewrap.extraArgs
+                ++ [ "--" submoduleCfg.subwrapper.arg0 ]
+                ++ submoduleCfg.subwrapper.extraArgs);
               env = {
                 "${envSuffix "BWRAP"}".value =
                   lib.getExe' config.wraparound.bubblewrap.package "bwrap";
