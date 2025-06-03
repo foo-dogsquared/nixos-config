@@ -22,9 +22,16 @@ in {
       # Enable all of its useful features.
       folding = true;
       settings = {
+        highlight.enable = true;
         indent.enable = true;
         incremental_selection.enable = true;
       };
+    };
+
+    opts = {
+      foldenable = config.plugins.treesitter.folding;
+      foldlevelstart = 3;
+      foldlevel = 5;
     };
 
     # Some niceties for refactoring.
@@ -35,6 +42,9 @@ in {
       navigation.enable = true;
       smartRename.enable = true;
     };
+
+    # Bring some convenience to editing them.
+    plugins.ts-autotag.enable = true;
 
     plugins.which-key.settings.spec =
       lib.optionals config.plugins.treesitter-textobjects.swap.enable [
