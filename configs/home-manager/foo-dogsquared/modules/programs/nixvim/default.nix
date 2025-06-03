@@ -17,7 +17,7 @@ let
 
   # The main NixVim flavor and also where the extra files in the environment
   # will come from.
-  nvimPkg = createNixvimFlavor {
+  nvimPkg = createNixvimFlavor ({ config, ... }: {
     imports = [
       ./colorschemes.nix
       ./fuzzy-finding.nix
@@ -44,8 +44,12 @@ let
       # Inherit all of the schemes.
       bahaghari.tinted-theming.schemes =
         hmCfg.bahaghari.tinted-theming.schemes;
+
+      # Install ALL OF THEM tree-sitter grammers instead.
+      plugins.treesitter.grammarPackages =
+        lib.mkForce config.plugins.treesitter.package.passthru.allGrammars;
     };
-  };
+  });
 
   nixvimManpage = pkgs.runCommand "get-main-nixvim-manpage" { } ''
     mkdir -p $out/share && cp -r "${nvimPkg}/share/man" $out/share
