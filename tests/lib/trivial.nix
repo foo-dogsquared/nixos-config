@@ -141,4 +141,19 @@ lib.runTests {
       HELLO_WORLD = "Hello WORLD";
     };
   };
+
+  testSplitStringOnce = {
+    expr = self.trivial.splitStringOnce "/" "foodogsquared/hello/there";
+    expected = [ "foodogsquared" "hello/there" ];
+  };
+
+  testSplitStringOnce2 = {
+    expr = self.trivial.splitStringOnce "/" "foo@.service/10-hello.conf";
+    expected = [ "foo@.service" "10-hello.conf" ];
+  };
+
+  testSplitStringOnce3 = {
+    expr = self.trivial.splitStringOnce ":" "there/is/no/colon/here";
+    expected = [ "there/is/no/colon/here" ];
+  };
 }

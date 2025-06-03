@@ -351,4 +351,40 @@ rec {
     names:
     f:
     lib.listToAttrs (map (n: (f n)) names);
+
+  /**
+    Split a string only once with the rest of the string intact.
+
+    # Arguments
+
+    Same as `lib.splitString` from nixpkgs.
+
+    # Type
+
+    ```
+    splitStringOnce :: str -> str -> [ str str ]
+    ```
+
+    # Example
+
+    ```nix
+    splitStringOnce "/" "foodogsquared@.d/custom-settings"
+    => [ "foodogsquared@.d" "custom-settings" ]
+
+    splitStringOnce "/" "hello/there/world"
+    => [ "hello" "there/world" ]
+
+    splitStringOnce ":" "HELLO/THERE/DOGGO"
+    => [ "HELLO/THERE/DOGGO" "" ]
+    ```
+  */
+  splitStringOnce =
+    sep: s:
+      let
+        s' = lib.splitString sep s;
+      in
+      if lib.length s' == 1 then
+        s'
+      else
+        [ (lib.head s') ] ++ [ (lib.concatStringsSep sep (lib.drop 1 s')) ];
 }
