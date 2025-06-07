@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, foodogsquaredLib, ... }:
 
 let
   workflowName = "one.foodogsquared.AHappyGNOME";
@@ -83,6 +83,7 @@ in {
         eyedropper # Some nice eyedropper tool.
         flowtime # Some nice timer for those overworking.
         fractal # Your gateway to the matrix.
+        gapless # Like your teeth, probably.
         gnome-decoder # Go with them QR codes.
         gnome-frog # Graphical OCR with Tesseract that I always wanted.
         gnome-solanum # Cute little matodor timers.
@@ -94,6 +95,7 @@ in {
         handbrake # Take a break from those custom ffmpeg conversion scripts.
         shortwave # Yer' humble internet radio.
         symbolic-preview # Them symbols... it's important.
+        icon-library # Them symbols... it's hard to find.
         gtranslator # It's not a Google translator app, I'll tell you that.
         tangram # Your social media manager, probably.
         ymuse # I muse with a simple MPD client.
@@ -255,6 +257,22 @@ in {
         '';
       };
     };
+
+    settings = lib.mkOption {
+      description = ''
+        dconf-specific settings for the specific desktop session.
+      '';
+      type = with lib.types; attrsOf anything;
+      default = { };
+      example = lib.literalExpression ''
+        with lib.gvariant; {
+          "com/raggesilver/BlackBox" = {
+            scrollback-lines = mkUint32 10000;
+            theme-dark = "Tommorow Night";
+          };
+        }
+      '';
+    };
   };
 
   config = lib.mkIf (lib.elem workflowName config.workflows.enable) {
@@ -271,12 +289,9 @@ in {
     ];
 
     # Enable GNOME.
-    services.xserver = {
+    services.desktopManager.gnome = {
+      inherit (cfg) sessionPath;
       enable = true;
-      desktopManager.gnome = {
-        inherit (cfg) sessionPath;
-        enable = true;
-      };
     };
 
     xdg.autostart.entries = {
@@ -289,6 +304,60 @@ in {
     };
 
     workflows.workflows.${workflowName} = {
+      settings = lib.mkMerge [
+        {
+          "org/gnome/desktop/search-providers" = {
+            disabled = cfg.disableSearchProviders;
+          };
+          "org/gnome/shell" = {
+            enabled-extensions =
+              lib.map (p: p.extensionUuid) shellExtensions';
+          };
+
+          "org/gnome/mutter" = {
+            dynamic-workspaces = !cfg.paperwm.enableStaticWorkspace;
+          };
+
+          "org/gnome/desktop/wm/preferences" = {
+            num-workspaces =
+              let
+                workspaces = lib.attrNames cfg.paperwm.workspaces;
+              in
+              lib.gvariant.mkInt32 (lib.length workspaces);
+          };
+        }
+
+        # Disable all of the messenger's notification (only the annoying
+        # ones).
+        (lib.pipe cfg.disableNotifications [
+          (lib.map (app:
+            lib.nameValuePair
+            "org/gnome/desktop/notifications/application/${app}" {
+              show-banners = false;
+            }))
+
+          lib.listToAttrs
+        ])
+
+        (lib.mkIf (cfg.paperwm.winprops != [ ]) {
+          "org/gnome/shell/extensions/paperwm".winprops =
+            lib.map lib.strings.toJSON cfg.paperwm.winprops;
+        })
+
+        (lib.mkIf (cfg.paperwm.workspaces != { }) (
+          let
+            mkWorkspaceConfig = name: value:
+              lib.nameValuePair "org/gnome/shell/extensions/paperwm/workspaces/${name}" value;
+
+            workspaces = lib.attrNames cfg.paperwm.workspaces;
+          in
+          {
+            "org/gnome/shell/extensions/paperwm/workspaces".list = workspaces;
+          }
+          // lib.mapAttrs' mkWorkspaceConfig cfg.paperwm.workspaces
+        ))
+      ];
+
       paperwm.workspaces = lib.mkIf cfg.paperwm.enablePresetWorkspaces {
         media = {
           name = "Media";
@@ -361,6 +430,8 @@ in {
       gnome-initial-setup.enable = false;
     };
 
+    environment.sessionVariables.DCONF_PROFILE = workflowName;
+
     # It makes Nix store directory read/write so no...
     services.packagekit.enable = false;
 
@@ -370,63 +441,10 @@ in {
 
       # In this case, we're using the default user dconf profile which is the
       # fallback for every dconf-using components. Pretty handy.
-      profiles.user.databases = lib.singleton {
+      profiles.${workflowName}.databases = lib.singleton {
         # Get them keyfiles.
         keyfiles = [ ./config/dconf ];
-
-        settings = lib.mkMerge [
-          {
-            "org/gnome/desktop/search-providers" = {
-              disabled = cfg.disableSearchProviders;
-            };
-            "org/gnome/shell" = {
-              enabled-extensions =
-                lib.map (p: p.extensionUuid) shellExtensions';
-            };
-
-            "org/gnome/mutter" = {
-              dynamic-workspaces = !cfg.paperwm.enableStaticWorkspace;
-            };
-
-            "org/gnome/desktop/wm/preferences" = {
-              num-workspaces =
-                let
-                  workspaces = lib.attrNames cfg.paperwm.workspaces;
-                in
-                lib.gvariant.mkInt32 (lib.length workspaces);
-            };
-          }
-
-          # Disable all of the messenger's notification (only the annoying
-          # ones).
-          (lib.pipe cfg.disableNotifications [
-            (lib.map (app:
-              lib.nameValuePair
-              "org/gnome/desktop/notifications/application/${app}" {
-                show-banners = false;
-              }))
-
-            lib.listToAttrs
-          ])
-
-          (lib.mkIf (cfg.paperwm.winprops != [ ]) {
-            "org/gnome/shell/extensions/paperwm".winprops =
-              lib.map lib.strings.toJSON cfg.paperwm.winprops;
-          })
-
-          (lib.mkIf (cfg.paperwm.workspaces != { }) (
-            let
-              mkWorkspaceConfig = name: value:
-                lib.nameValuePair "org/gnome/shell/extensions/paperwm/workspaces/${name}" value;
-
-              workspaces = lib.attrNames cfg.paperwm.workspaces;
-            in
-            {
-              "org/gnome/shell/extensions/paperwm/workspaces".list = workspaces;
-            }
-            // lib.mapAttrs' mkWorkspaceConfig cfg.paperwm.workspaces
-          ))
-        ];
+        inherit (cfg) settings;
       };
     };
 
