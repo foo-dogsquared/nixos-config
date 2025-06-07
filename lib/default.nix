@@ -14,6 +14,7 @@ in pkgs.lib.makeExtensible (self:
     data = callLib ./data.nix;
     math = callLib ./math.nix;
     xdg = callLib ./xdg.nix;
+    sources = callLib ./sources.nix;
 
     # Just like from its inspiration, this contains Nix-representable data
     # formats and won't have any attributes exported at the top-level.
