@@ -158,6 +158,7 @@ let
             {
               nixpkgs.overlays = setupConfig.nixpkgs.overlays;
               networking.hostName = lib.mkDefault setupConfig.hostname;
+              nix.nixPath = lib.singleton "nixos-config=${partsConfig.setups.configDir}/nixos/${setupConfig.configName}";
             }
 
             (lib.mkIf (setupConfig.domain != null) {
