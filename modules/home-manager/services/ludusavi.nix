@@ -10,6 +10,8 @@ let
   else
     cfg.configFile;
 in {
+  disabledModules = [ "services/ludusavi.nix" ];
+
   options.services.ludusavi = {
     enable = lib.mkEnableOption "Ludusavi game backup";
 
