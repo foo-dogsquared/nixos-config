@@ -23,6 +23,9 @@ in {
         modules = [
           inputs.disko.nixosModules.disko
           inputs.sops-nix.nixosModules.sops
+          ({ lib, ... }: {
+            documentation.man.generateCaches = lib.mkForce false;
+          })
 
           inputs.wrapper-manager-fds.nixosModules.wrapper-manager
           {
