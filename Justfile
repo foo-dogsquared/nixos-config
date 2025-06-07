@@ -41,3 +41,11 @@ deploy-nixos HOST *ARGS:
 # Deploy home environment.
 deploy-hm USER *ARGS:
     deploy '.#home-manager-{{USER}}' --skip-checks {{ARGS}}
+
+# Build NixVim configurations.
+nixvim-build INSTANCE *ARGS:
+    nix build .#nixvimConfigurations.{{arch()}}.{{INSTANCE}} {{ARGS}}
+
+# Run NixVim configurations.
+nixvim-run INSTANCE *ARGS:
+    nix run .#nixvimConfigurations.{{arch()}}.{{INSTANCE}} {{ARGS}}
