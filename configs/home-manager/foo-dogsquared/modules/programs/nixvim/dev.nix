@@ -19,13 +19,13 @@ in
       enable = true;
       settings.formatters = rec {
         bash = [ "shfmt" ];
-        c = lib.singleton [ "clang_format" ];
+        c = [ "clang_format" ];
         cpp = c;
-        javascript = lib.singleton [ "prettierd" "prettier" ];
+        javascript = [ "prettierd" "prettier" ];
         lua = [ "stylua" ];
-        nix = lib.singleton [ "nixpkgs-fmt" "alejandra" ];
+        nix = [ "nixpkgs-fmt" "alejandra" ];
         python = [ "isort" "black" ];
-        ruby = lib.singleton [ "rubocop" "rufo" ];
+        ruby = [ "rubocop" "rufo" ];
         typescript = javascript;
         typst = [ "typstfmt" ];
       };

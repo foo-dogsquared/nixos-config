@@ -12,8 +12,8 @@ in
     lib.mkEnableOption "quality-of-life features within fiesta-fds";
 
   config = lib.mkIf cfg.enable {
-    nixvimConfigs.fiesta.setups.qol.enable = lib.mkForce false;
-
+    # We're replacing them with snacks.nvim's implementation.
+    plugins.mini.enable = lib.mkForce false;
     plugins.indent-blankline.enable = lib.mkForce false;
 
     plugins.snacks = {
