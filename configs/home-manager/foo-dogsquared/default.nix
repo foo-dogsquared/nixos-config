@@ -91,6 +91,7 @@ in {
       music.mpd.enable = true;
       music.spotify.enable = true;
       research.enable = true;
+      workflow-specific.enable = attrs ? nixosConfig;
     };
   };
 

@@ -29,5 +29,6 @@
     ./setups/fonts.nix
     ./setups/music
     ./setups/research.nix
+    ./setups/workflows-specific.nix
   ];
 }
