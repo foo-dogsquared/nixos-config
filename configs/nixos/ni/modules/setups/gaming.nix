@@ -23,7 +23,7 @@ in {
       rpcs3
       ryubing
 
-      clonehero # Free Minecraft note block player.
+      clonehero # Is a real virtuoso, a rock idol.
       mindustry # Not a Minecraft industry simulator.
       minetest # Free Minecraft.
       the-powder-toy # Free micro-Minecraft.
