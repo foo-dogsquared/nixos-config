@@ -41,10 +41,10 @@
     };
     "font-inspect" = buildFirefoxXpiAddon {
       pname = "font-inspect";
-      version = "0.6.1";
+      version = "0.6.3.1";
       addonId = "{a658a273-612e-489e-b4f1-5344e672f4f5}";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4433654/font_inspect-0.6.1.xpi";
-      sha256 = "d9274d90b7fc7c17ab417a37254de8c4d43625284d43427c9a350b7a017810c0";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4510426/font_inspect-0.6.3.1.xpi";
+      sha256 = "5ab50fcdde1bd4e8cf620107d4f5fba605d26da420538a4933591776b2dcc3f9";
       meta = with lib;
       {
         homepage = "https://webextension.org/listing/font-finder.html";
