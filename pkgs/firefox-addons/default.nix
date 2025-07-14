@@ -186,15 +186,24 @@
     };
     "rsshub-radar" = buildFirefoxXpiAddon {
       pname = "rsshub-radar";
-      version = "2.1.0";
+      version = "1.10.3";
       addonId = "i@diygod.me";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4433666/rsshub_radar-2.1.0.xpi";
-      sha256 = "2a373e95677e5252f9819e636d955b1ad81e593ac638dbd7db317c4f2889b5b7";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4197124/rsshub_radar-1.10.3.xpi";
+      sha256 = "66a2aec4f67e27dd6a4a768ee8e87b3b321bac5385e3241b1664b95aae25077d";
       meta = with lib;
       {
         homepage = "https://github.com/DIYgod/RSSHub-Radar";
         description = "Easily find and subscribe to RSS and RSSHub.";
-        mozPermissions = [ "storage" "tabs" "offscreen" "alarms" "<all_urls>" ];
+        license = licenses.mit;
+        mozPermissions = [
+          "tabs"
+          "storage"
+          "notifications"
+          "alarms"
+          "idle"
+          "https://*/*"
+          "http://*/*"
+        ];
         platforms = platforms.all;
       };
     };
