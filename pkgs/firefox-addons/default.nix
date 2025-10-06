@@ -22,10 +22,10 @@
     };
     "extended-color-management" = buildFirefoxXpiAddon {
       pname = "extended-color-management";
-      version = "1.1.1";
+      version = "1.1.2";
       addonId = "{816dd215-0e91-4621-9d89-3bac78798e6f}";
-      url = "https://addons.mozilla.org/firefox/downloads/file/3966904/extended_color_management-1.1.1.xpi";
-      sha256 = "8b09d9fb312635c428571bd74beacf67e426089ebc812c7f39e9c3b4dad05a0b";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4581050/extended_color_management-1.1.2.xpi";
+      sha256 = "3b877b0f8425031fd73adc940b9439fc0847301d5f1cb7947ae9f6957eb56642";
       meta = with lib;
       {
         description = "Ever wish that Firefox didn't use color management when viewing images or video? Turn it off easily with this add-on.";
@@ -129,10 +129,10 @@
     };
     "open-access-helper" = buildFirefoxXpiAddon {
       pname = "open-access-helper";
-      version = "2025.6";
+      version = "2025.10";
       addonId = "info@oahelper.org";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4504929/open_access_helper-2025.6.xpi";
-      sha256 = "85b2165afd584027dbba84af0ebb8bbaa2d60e0aa53b20bcf1b2ee577ea3b943";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4591354/open_access_helper-2025.10.xpi";
+      sha256 = "77074701ce842f96aff5b69a93d87ea2e4ae1aed0bc33155f2e06ca20e12c4f7";
       meta = with lib;
       {
         homepage = "https://www.oahelper.org";
