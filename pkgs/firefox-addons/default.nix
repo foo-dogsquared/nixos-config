@@ -130,10 +130,10 @@
     };
     "open-access-helper" = buildFirefoxXpiAddon {
       pname = "open-access-helper";
-      version = "2026.2";
+      version = "2026.5";
       addonId = "info@oahelper.org";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4687629/open_access_helper-2026.2.xpi";
-      sha256 = "b2abdf12b567427c337b016c2b5159240a5418b5760ce4b2a9becbe69ea311ea";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4795938/open_access_helper-2026.5.xpi";
+      sha256 = "baf0b677af6d4b0e717fb98c8a1c4e86ed9a3805cfe94995690535fad7faf1f1";
       meta = with lib;
       {
         homepage = "https://www.oahelper.org";
