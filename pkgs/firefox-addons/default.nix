@@ -130,14 +130,14 @@
     };
     "open-access-helper" = buildFirefoxXpiAddon {
       pname = "open-access-helper";
-      version = "2026.5";
+      version = "2026.6";
       addonId = "info@oahelper.org";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4795938/open_access_helper-2026.5.xpi";
-      sha256 = "baf0b677af6d4b0e717fb98c8a1c4e86ed9a3805cfe94995690535fad7faf1f1";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4839789/open_access_helper-2026.6.xpi";
+      sha256 = "f0e99b5fbe80e433ad3081aace4af041c41b21e7b4c9706118d6a4e0872073dc";
       meta = with lib;
       {
         homepage = "https://www.oahelper.org";
-        description = "Effortless legal access to full text scholarly articles: \r\nOpen Access Helper will help you identify legal open access copies of academic articles, using unpaywall.org and core.ac.uk";
+        description = "Effortless legal access to full text scholarly articles: \nOpen Access Helper will help you identify legal open access copies of academic articles, using unpaywall.org and other sources.";
         mozPermissions = [
           "tabs"
           "storage"
@@ -287,10 +287,10 @@
     };
     "updateswh" = buildFirefoxXpiAddon {
       pname = "updateswh";
-      version = "0.9.0";
+      version = "0.9.2";
       addonId = "{157eb9f0-9814-4fcc-b0b7-586b3093c641}";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4778739/updateswh-0.9.0.xpi";
-      sha256 = "21af7eb3a4cf3e2de54d579da34d7401fe4244e42a6f567c521ebf6cd1f1f623";
+      url = "https://addons.mozilla.org/firefox/downloads/file/4836256/updateswh-0.9.2.xpi";
+      sha256 = "db33f60b9a02539d061c2678f9defdcbc02a8e6a241678e9510f7b4895cb5a3b";
       meta = with lib;
       {
         description = "Check archival state of a source code repository and propose to update it if needed.";
@@ -304,6 +304,8 @@
           "*://github.com/*"
           "*://bitbucket.org/*"
           "*://gitlab.com/*"
+          "*://gitee.com/*"
+          "*://pagure.io/*"
           "*://0xacab.org/*"
           "*://gite.lirmm.fr/*"
           "*://framagit.org/*"
