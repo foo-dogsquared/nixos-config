@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v17
+      - uses: DeterminateSystems/nix-installer-action@v20
       - env:
           NIXPKGS_ALLOW_UNFREE: "1"
         run: nix build .#devPackages.x86_64-linux.website
