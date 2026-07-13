@@ -8,7 +8,7 @@ jobs:
   build-custom-packages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: DeterminateSystems/nix-installer-action@v17
       - name: Prepare push to binary cache
         uses: cachix/cachix-action@v16
