@@ -42,10 +42,10 @@
     };
     "font-inspect" = buildFirefoxXpiAddon {
       pname = "font-inspect";
-      version = "0.6.5";
+      version = "0.6.6";
       addonId = "{a658a273-612e-489e-b4f1-5344e672f4f5}";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4752199/font_inspect-0.6.5.xpi";
-      sha256 = "f6af6b2fcbf5dc9a9afd026174ac6e8340659e408a4e326da9bc048ec1b41f8d";
+      url = "https://addons.mozilla.org/firefox/downloads/file/5211030/font_inspect-0.6.6.xpi";
+      sha256 = "98fceac8b5fa89e4dc8b039ed2d03a15c14c36548aa531c687cace1aee64513b";
       meta = with lib;
       {
         homepage = "https://webextension.org/listing/font-finder.html";
@@ -187,24 +187,15 @@
     };
     "rsshub-radar" = buildFirefoxXpiAddon {
       pname = "rsshub-radar";
-      version = "1.10.3";
+      version = "2.3.1";
       addonId = "i@diygod.me";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4197124/rsshub_radar-1.10.3.xpi";
-      sha256 = "66a2aec4f67e27dd6a4a768ee8e87b3b321bac5385e3241b1664b95aae25077d";
+      url = "https://addons.mozilla.org/firefox/downloads/file/5198364/rsshub_radar-2.3.1.xpi";
+      sha256 = "d4f86a77b7bd6759ede3918cfc94ef3b0c272f37ae7d3c8e74b784ae261c626a";
       meta = with lib;
       {
         homepage = "https://github.com/DIYgod/RSSHub-Radar";
         description = "Easily find and subscribe to RSS and RSSHub.";
-        license = licenses.mit;
-        mozPermissions = [
-          "tabs"
-          "storage"
-          "notifications"
-          "alarms"
-          "idle"
-          "https://*/*"
-          "http://*/*"
-        ];
+        mozPermissions = [ "tabs" "storage" "alarms" "<all_urls>" ];
         platforms = platforms.all;
       };
     };
@@ -287,10 +278,10 @@
     };
     "updateswh" = buildFirefoxXpiAddon {
       pname = "updateswh";
-      version = "0.9.2";
+      version = "0.9.3";
       addonId = "{157eb9f0-9814-4fcc-b0b7-586b3093c641}";
-      url = "https://addons.mozilla.org/firefox/downloads/file/4836256/updateswh-0.9.2.xpi";
-      sha256 = "db33f60b9a02539d061c2678f9defdcbc02a8e6a241678e9510f7b4895cb5a3b";
+      url = "https://addons.mozilla.org/firefox/downloads/file/5220846/updateswh-0.9.3.xpi";
+      sha256 = "f9e5312662b6eda945164c4ac7c0f6f3dc68465cc0daa0f37c3f30682c49df6d";
       meta = with lib;
       {
         description = "Check archival state of a source code repository and propose to update it if needed.";
