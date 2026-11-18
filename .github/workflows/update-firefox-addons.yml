@@ -17,7 +17,7 @@ jobs:
       - name: Set the date
         id: metadata
         run: echo "DATE=$(date +%F)" >> "$GITHUB_OUTPUT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: DeterminateSystems/nix-installer-action@v17
       - env:
           NIXPKGS_ALLOW_UNFREE: "1"
